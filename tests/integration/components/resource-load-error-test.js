@@ -1,38 +1,37 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | resource load error', function () {
-  setupComponentTest('resource-load-error', {
-    integration: true,
+  setupRenderingTest();
+
+  it('renders show details button if reason is provided', async function () {
+    await render(hbs `{{resource-load-error reason="some reason"}}`);
+    expect(findAll('.promise-error-show-details')).to.have.length(1);
   });
 
-  it('renders show details button if reason is provided', function () {
-    this.render(hbs `{{resource-load-error reason="some reason"}}`);
-    expect(this.$('.promise-error-show-details')).to.have.length(1);
+  it('does not renders show details button if reason is not provided', async function () {
+    await render(hbs `{{resource-load-error}}`);
+    expect(find('.promise-error-show-details')).to.not.exist;
   });
 
-  it('does not renders show details button if reason is not provided', function () {
-    this.render(hbs `{{resource-load-error}}`);
-    expect(this.$('.promise-error-show-details')).to.have.length(0);
-  });
-
-  it('renders custom message if provided', function () {
+  it('renders custom message if provided', async function () {
     const message = 'some message';
     this.set('message', message);
-    this.render(hbs `{{resource-load-error message=message}}`);
-    expect(this.$().text()).to.match(new RegExp(message));
+    await render(hbs `{{resource-load-error message=message}}`);
+    expect(this.element.textContent).to.match(new RegExp(message));
   });
 
-  it('displays error string if an error is plain string', function () {
+  it('displays error string if an error is plain string', async function () {
     const reason = 'some reason';
     this.set('reason', reason);
-    this.render(hbs `{{resource-load-error reason=reason}}`);
-    expect(this.$().text()).to.match(new RegExp(reason));
+    await render(hbs `{{resource-load-error reason=reason}}`);
+    expect(this.element.textContent).to.match(new RegExp(reason));
   });
 
-  it('gets description of error when it\'s a response error type ', function () {
+  it('gets description of error when it\'s a response error type ', async function () {
     const description = 'some description';
     const reason = {
       response: {
@@ -42,7 +41,7 @@ describe('Integration | Component | resource load error', function () {
       },
     };
     this.set('reason', reason);
-    this.render(hbs `{{resource-load-error reason=reason}}`);
-    expect(this.$().text()).to.match(new RegExp(description));
+    await render(hbs `{{resource-load-error reason=reason}}`);
+    expect(this.element.textContent).to.match(new RegExp(description));
   });
 });

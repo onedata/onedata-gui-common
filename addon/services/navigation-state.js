@@ -16,7 +16,11 @@
  */
 
 import Service, { inject as service } from '@ember/service';
-import EmberObject, { computed, observer, get } from '@ember/object';
+import EmberObject, {
+  computed,
+  observer,
+  get,
+} from '@ember/object';
 import { gt, or } from '@ember/object/computed';
 import { later, cancel } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';

@@ -53,6 +53,6 @@ export default Component.extend({
   },
 
   updateTooltipText() {
-    this.set('tooltipText', this.$().text().trim());
+    this.set('tooltipText', this.get('element').textContent.trim());
   },
 });

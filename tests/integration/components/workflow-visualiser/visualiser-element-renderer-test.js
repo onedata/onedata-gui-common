@@ -1,34 +1,37 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { get } from '@ember/object';
 
 describe('Integration | Component | workflow visualiser/visualiser element renderer', function () {
-  setupComponentTest('workflow-visualiser/visualiser-element-renderer', {
-    integration: true,
+  setupRenderingTest();
+
+  it('renders nothing when lane element is not defined', async function () {
+    await render(hbs `{{workflow-visualiser/visualiser-element-renderer}}`);
+
+    expect(this.element.children).to.have.length(0);
   });
 
-  it('renders nothing when lane element is not defined', function () {
-    this.render(hbs `{{workflow-visualiser/visualiser-element-renderer}}`);
+  it('renders lane element using component specified by element\'s "renderer" field', async function () {
+    this.set('elementModel', { renderer: 'test-component' });
 
-    expect(this.$().children()).to.have.length(0);
+    await render(hbs `{{workflow-visualiser/visualiser-element-renderer
+      elementModel=elementModel
+    }}`);
+
+    expect(findAll('.test-component')).to.have.length(1);
   });
 
-  it('renders lane element using component specified by element\'s "renderer" field', function () {
-    this.set('element', { renderer: 'test-component' });
+  it('passes lane element instance to the renderer lane element component', async function () {
+    const elementModel = this.set('elementModel', { renderer: 'test-component' });
 
-    this.render(hbs `{{workflow-visualiser/visualiser-element-renderer elementModel=element}}`);
+    await render(hbs `{{workflow-visualiser/visualiser-element-renderer
+      elementModel=elementModel
+    }}`);
 
-    expect(this.$('.test-component')).to.have.length(1);
-  });
-
-  it('passes lane element instance to the renderer lane element component', function () {
-    const element = this.set('element', { renderer: 'test-component' });
-
-    this.render(hbs `{{workflow-visualiser/visualiser-element-renderer elementModel=element}}`);
-
-    const renderedComponent = this.$('.test-component')[0].componentInstance;
-    expect(get(renderedComponent, 'elementModel')).to.equal(element);
+    const renderedComponent = find('.test-component').componentInstance;
+    expect(get(renderedComponent, 'elementModel')).to.equal(elementModel);
   });
 });

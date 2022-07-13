@@ -31,8 +31,8 @@
         as |popover|
       }}
         {{#click-outside
-          action=(action "toggleActionsOpen" false)
-          except-selector=(concat ".actions-trigger-" elementId)
+          onClickOutside=(action "toggleActionsOpen" false)
+          exceptSelector=(concat ".actions-trigger-" elementId)
         }}
           {{actions-popover-content
             actionsArray=parallelBoxActions

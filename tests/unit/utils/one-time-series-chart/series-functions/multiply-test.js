@@ -2,8 +2,15 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import multiply from 'onedata-gui-common/utils/one-time-series-chart/series-functions/multiply';
 import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
-import { createContext, expectFunctionsEvaluation, createConstArgument, stringifyArgumentData } from './helpers';
-import { casesToCheck as transformCasesToCheck } from '../transform-functions/multiply-test';
+import {
+  createContext,
+  expectFunctionsEvaluation,
+  createConstArgument,
+  stringifyArgumentData,
+} from './helpers';
+import {
+  casesToCheck as transformCasesToCheck,
+} from '../transform-functions/multiply-test';
 
 const normalizedTransformCasesToCheck =
   transformCasesToCheck.map(({ input, output }) => ({

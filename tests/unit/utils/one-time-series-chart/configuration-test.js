@@ -1,10 +1,17 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach, afterEach, context } from 'mocha';
+import {
+  describe,
+  it,
+  beforeEach,
+  afterEach,
+  context,
+} from 'mocha';
 import sinon from 'sinon';
 import Configuration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
 import { run } from '@ember/runloop';
 import moment from 'moment';
+import { settled } from '@ember/test-helpers';
 
 describe('Unit | Utility | one time series chart/configuration', function () {
   beforeEach(function () {
@@ -47,7 +54,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     expect(handler2).to.be.calledOnce;
   });
 
-  it('calls state change handlers repeatedly due to chart updates in live mode', function () {
+  it('calls state change handlers repeatedly due to chart updates in live mode', async function () {
     const config = new Configuration({
       timeResolutionSpecs: [{
         timeResolution: 1,
@@ -61,18 +68,50 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     expect(handler).to.be.not.called;
     for (let i = 1; i <= 5; i++) {
       this.fakeClock.tick(520);
+      await settled();
       expect(handler).to.have.callCount(i);
     }
   });
 
-  it('changes frequency of calling state change handlers in live mode after chaging time resolution', function () {
+  it('changes frequency of calling state change handlers in live mode after chaging time resolution',
+    async function () {
+      const config = new Configuration({
+        timeResolutionSpecs: [{
+          timeResolution: 1,
+          updateInterval: 0.5,
+        }, {
+          timeResolution: 2,
+          updateInterval: 1,
+        }],
+      });
+      config.setViewParameters({ live: true, timeResolution: 1 });
+      const handler = sinon.spy();
+      config.registerStateChangeHandler(handler);
+
+      this.fakeClock.tick(520);
+      await settled();
+      expect(handler).to.be.calledOnce;
+      config.setViewParameters({ timeResolution: 2 });
+      expect(handler).to.be.calledTwice;
+      this.fakeClock.tick(520);
+      await settled();
+      expect(handler).to.be.calledTwice;
+      this.fakeClock.tick(520);
+      await settled();
+      expect(handler).to.be.calledThrice;
+
+      for (let i = 1; i <= 5; i++) {
+        this.fakeClock.tick(1020);
+        await settled();
+        expect(handler).to.have.callCount(i + 3);
+      }
+    });
+
+  it('does not call state change handlers repeatedly when live mode is off', async function () {
     const config = new Configuration({
       timeResolutionSpecs: [{
         timeResolution: 1,
         updateInterval: 0.5,
-      }, {
-        timeResolution: 2,
-        updateInterval: 1,
       }],
     });
     config.setViewParameters({ live: true, timeResolution: 1 });
@@ -80,40 +119,16 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     config.registerStateChangeHandler(handler);
 
     this.fakeClock.tick(520);
-    expect(handler).to.be.calledOnce;
-    config.setViewParameters({ timeResolution: 2 });
-    expect(handler).to.be.calledTwice;
-    this.fakeClock.tick(520);
-    expect(handler).to.be.calledTwice;
-    this.fakeClock.tick(520);
-    expect(handler).to.be.calledThrice;
-
-    for (let i = 1; i <= 5; i++) {
-      this.fakeClock.tick(1020);
-      expect(handler).to.have.callCount(i + 3);
-    }
-  });
-
-  it('does not call state change handlers repeatedly when live mode is off', function () {
-    const config = new Configuration({
-      timeResolutionSpecs: [{
-        timeResolution: 1,
-        updateInterval: 0.5,
-      }],
-    });
-    config.setViewParameters({ live: true, timeResolution: 1 });
-    const handler = sinon.spy();
-    config.registerStateChangeHandler(handler);
-
-    this.fakeClock.tick(520);
+    await settled();
     expect(handler).to.be.calledOnce;
     config.setViewParameters({ live: false });
     expect(handler).to.be.calledTwice;
     this.fakeClock.tick(2000);
+    await settled();
     expect(handler).to.be.calledTwice;
   });
 
-  it('does not call state change handlers in live mode after destroy', function () {
+  it('does not call state change handlers in live mode after destroy', async function () {
     const config = new Configuration({
       timeResolutionSpecs: [{
         timeResolution: 1,
@@ -125,12 +140,14 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     config.registerStateChangeHandler(handler);
 
     this.fakeClock.tick(520);
+    await settled();
     expect(handler).to.be.calledOnce;
     // We need to use `run`, because Looper uses Ember runloop functions - in
     // this case it is `cancel`, which throws an error.
     run(() => config.destroy());
     expect(handler).to.be.calledOnce;
     this.fakeClock.tick(2000);
+    await settled();
     expect(handler).to.be.calledOnce;
   });
 

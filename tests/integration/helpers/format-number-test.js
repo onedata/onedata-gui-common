@@ -1,14 +1,13 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 const thousandSpaceHtml = '<span class="thousand-space"></span>';
 
 describe('Integration | Helper | format number', function () {
-  setupComponentTest('format-number', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   checkNumberFormat({
     number: 123456.78,
@@ -41,12 +40,12 @@ function checkNumberFormat({
 }) {
   it(
     `returns "${expectedStringDesc || expectedString}" for ${number} and ${format || 'default'} format`,
-    function () {
+    async function () {
       this.setProperties({ number, format });
 
-      this.render(hbs `{{format-number number format=format}}`);
+      await render(hbs `{{format-number number format=format}}`);
 
-      expect(this.$().html().trim()).to.equal(expectedString);
+      expect(this.element.innerHTML.trim()).to.equal(expectedString);
     }
   );
 }

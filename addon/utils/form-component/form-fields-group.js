@@ -9,7 +9,13 @@
  */
 
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
-import { computed, observer, set, get } from '@ember/object';
+import {
+  computed,
+  observer,
+  set,
+  get,
+  getProperties,
+} from '@ember/object';
 import { array, raw, isEmpty } from 'ember-awesome-macros';
 import _ from 'lodash';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
@@ -184,7 +190,14 @@ export default FormElement.extend({
       return cloneValue(defaultValue);
     } else {
       return fields.reduce((valuesContainer, field) => {
-        set(valuesContainer, get(field, 'valueName'), field.dumpDefaultValue());
+        const {
+          valueName,
+          isValueless,
+        } = getProperties(field, 'valueName', 'isValueless');
+        const fieldDefaultValue = field.dumpDefaultValue();
+        if (!isValueless && fieldDefaultValue !== undefined) {
+          set(valuesContainer, valueName, fieldDefaultValue);
+        }
         return valuesContainer;
       }, createValuesContainer());
     }
@@ -195,7 +208,9 @@ export default FormElement.extend({
    */
   dumpValue() {
     return this.get('fields').reduce((valuesContainer, field) => {
-      set(valuesContainer, get(field, 'valueName'), field.dumpValue());
+      if (!get(field, 'isValueless')) {
+        set(valuesContainer, get(field, 'valueName'), field.dumpValue());
+      }
       return valuesContainer;
     }, createValuesContainer());
   },

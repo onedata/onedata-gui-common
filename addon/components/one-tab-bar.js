@@ -1,7 +1,7 @@
 /**
  * Create scrollable and searchable tab bar using items array with tabs
  * specification.
- * 
+ *
  * @module components/one-tab-bar
  * @author Jakub Liput
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
@@ -12,15 +12,13 @@ import Component from '@ember/component';
 import layout from '../templates/components/one-tab-bar';
 import { sort } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
-import { inject as service } from '@ember/service';
+import $ from 'jquery';
 import { or, raw, conditional } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
   classNames: ['one-tab-bar'],
   classNameBindings: ['tabsOverflow:tabs-overflowing'],
-
-  media: service(),
 
   /**
    * Array of items representing each tab. Properties of each:
@@ -103,10 +101,11 @@ export default Component.extend({
   }),
 
   jumpToItem(itemId) {
-    const $item = this.$(`.item-${itemId}`);
-    if ($item.length) {
-      const $content = this.$('.container-inner-scroll-content');
-      $content.animate({ scrollLeft: $item[0].offsetLeft }, 200);
+    const element = this.get('element');
+    const item = element.querySelector(`.item-${itemId}`);
+    if (item) {
+      const $content = $(element.querySelector('.container-inner-scroll-content'));
+      $content.animate({ scrollLeft: item.offsetLeft }, 200);
     }
   },
 

@@ -2,15 +2,19 @@ import EmberObject from '@ember/object';
 import { A } from '@ember/array';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import {
+  render,
+  settled,
+  click,
+  findAll,
+  find,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
-import { click } from 'ember-native-dom-helpers';
+import $ from 'jquery';
 
 describe('Integration | Component | support size info', function () {
-  setupComponentTest('support-size-info', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('data', A([
@@ -29,42 +33,41 @@ describe('Integration | Component | support size info', function () {
     ]));
   });
 
-  it('renders total support size', function () {
-    this.render(hbs `
+  it('renders total support size', async function () {
+    await render(hbs `
       {{support-size-info data=data}}
     `);
 
-    expect(this.$('.support-size')).to.contain('2 MiB');
+    expect(find('.support-size').textContent).to.contain('2 MiB');
   });
 
-  it('renders support size chart', function (done) {
-    this.render(hbs `
+  it('renders support size chart', async function () {
+    await render(hbs `
       {{support-size-info data=data}}
     `);
-    wait().then(() => {
-      ['Provider1', 'Provider2'].forEach((name) =>
-        expect(this.$(`text:contains("${name}"), li:contains("${name}")`))
-        .to.exist
-      );
-      done();
-    });
+
+    await settled();
+    ['Provider1', 'Provider2'].forEach((name) =>
+      expect($(this.element).find(`text:contains("${name}"), li:contains("${name}")`))
+      .to.exist
+    );
   });
 
-  it('renders support size table', function (done) {
-    this.render(hbs `
+  it('renders support size table', async function () {
+    await render(hbs `
       {{support-size-info
         data=data
         supporterNameHeader="Provider"
-        supporterSizeHeader="Support size"}}
+        supporterSizeHeader="Support size"
+      }}
     `);
-    click('.btn.table-mode').then(() => {
-      const dataRows = this.$('tbody tr');
-      expect(dataRows).to.have.length(2);
-      const dataRow = dataRows.eq(0);
-      expect(dataRow.children()).to.have.length(2);
-      expect(dataRow.children().eq(0)).to.contain('Provider1');
-      expect(dataRow.children().eq(1)).to.contain('1 MiB');
-      done();
-    });
+    await click('.btn.table-mode');
+
+    const dataRows = findAll('tbody tr');
+    expect(dataRows).to.have.length(2);
+    const dataRow = dataRows[0];
+    expect(dataRow.children).to.have.length(2);
+    expect(dataRow.children[0].textContent).to.contain('Provider1');
+    expect(dataRow.children[1].textContent).to.contain('1 MiB');
   });
 });

@@ -1,26 +1,28 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, settled, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import CreateLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-lane-action';
 import { getProperties, get } from '@ember/object';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
-import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import { click, fillIn } from 'ember-native-dom-helpers';
-import { selectChoose } from '../../../../helpers/ember-power-select';
+import {
+  getModal,
+  getModalHeader,
+  getModalBody,
+  getModalFooter,
+} from '../../../../helpers/modal';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 describe('Integration | Utility | workflow visualiser/actions/create lane action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const createStub = sinon.stub();
     const action = CreateLaneAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       definedStores: [
         Store.create({
           id: 's1',
@@ -49,8 +51,10 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
     await executeAction(this);
 
     expect(getModal()).to.have.class('lane-modal');
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Create new lane');
-    expect(getModalBody().find('.name-field .form-control')).to.have.value('');
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Create new lane');
+    expect(getModalBody().querySelector('.name-field .form-control'))
+      .to.have.value('');
   });
 
   it(
@@ -60,8 +64,8 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
       createStub.resolves();
 
       const { resultPromise } = await executeAction(this);
-      await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane1');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await fillIn(getModalBody().querySelector('.name-field .form-control'), 'lane1');
+      await click(getModalFooter().querySelector('.btn-submit'));
       const actionResult = await resultPromise;
 
       expect(createStub).to.be.calledOnce.and.to.be.calledWith({
@@ -85,10 +89,10 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
       createStub.returns(new Promise((resolve, reject) => rejectCreate = reject));
 
       const { resultPromise } = await executeAction(this);
-      await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane1');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await fillIn(getModalBody().querySelector('.name-field .form-control'), 'lane1');
+      await click(getModalFooter().querySelector('.btn-submit'));
       rejectCreate();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(createStub).to.be.calledOnce;
@@ -103,15 +107,18 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
     await executeAction(this);
 
     expect(executeStub).to.not.be.called;
-    await selectChoose(getModalBody().find('.sourceStore-field')[0], 'Create store...');
+    await selectChoose(
+      getModalBody().querySelector('.sourceStore-field'),
+      'Create store...'
+    );
 
     expect(executeStub).to.be.calledOnce;
   });
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

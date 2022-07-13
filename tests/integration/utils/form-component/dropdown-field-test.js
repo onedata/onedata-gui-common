@@ -2,15 +2,13 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import { get } from '@ember/object';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
+import { settled } from '@ember/test-helpers';
 
 describe('Integration | Utility | form component/dropdown field', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupTest();
 
   it('defines fieldComponentName as "form-component/dropdown-field"', function () {
     const field = DropdownField.create();
@@ -28,13 +26,13 @@ describe('Integration | Utility | form component/dropdown field', function () {
     expect(get(field, 'showSearch')).to.be.true;
   });
 
-  it('translates options', function () {
+  it('translates options', async function () {
     sinon.stub(lookupService(this, 'i18n'), 't')
       .withArgs('somePrefix.field1.options.one.label')
       .returns('One');
 
     const field = DropdownField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
       options: [{
@@ -44,9 +42,7 @@ describe('Integration | Utility | form component/dropdown field', function () {
     });
     get(field, 'preparedOptions');
 
-    return wait()
-      .then(() =>
-        expect(get(field, 'preparedOptions.firstObject.label')).to.equal('One')
-      );
+    await settled();
+    expect(get(field, 'preparedOptions.firstObject.label')).to.equal('One');
   });
 });

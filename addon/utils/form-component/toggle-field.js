@@ -1,6 +1,6 @@
 /**
  * A toggle form field.
- * 
+ *
  * @module utils/form-component/toggle-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -19,4 +19,10 @@ export default FormField.extend({
    * @override
    */
   withValidationIcon: false,
+
+  /**
+   * @virtual optional
+   * @type {string}
+   */
+  disabledControlTip: undefined,
 });

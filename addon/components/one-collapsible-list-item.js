@@ -221,11 +221,12 @@ export default Component.extend({
     const {
       _searchQuery,
       _matchesSearchQuery,
-    } = this.getProperties('_searchQuery', '_matchesSearchQuery');
-    const headerTextElement = this.$('.one-collapsible-list-item-header');
-    const oneLabel = headerTextElement.find('.one-label');
-    const targetElement = oneLabel.length ? oneLabel : headerTextElement;
-    const matches = targetElement.text().toLowerCase()
+      element,
+    } = this.getProperties('_searchQuery', '_matchesSearchQuery', 'element');
+    const headerTextElement = element.querySelector('.one-collapsible-list-item-header');
+    const oneLabel = headerTextElement && headerTextElement.querySelector('.one-label');
+    const targetElement = oneLabel ? oneLabel : headerTextElement;
+    const matches = targetElement && targetElement.textContent.toLowerCase()
       .search(_searchQuery.trim().toLowerCase()) > -1;
     if (matches !== _matchesSearchQuery && !matches) {
       this.send('toggle', false);

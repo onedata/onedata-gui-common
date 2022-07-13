@@ -1,4 +1,4 @@
-{{#if media.isMobile}}
+{{#if (media "isMobile")}}
   <div class="tab-bar-ul-container-space"></div>
 {{else}}
   {{#one-tab-bar/tab-bar-ul-container
@@ -20,7 +20,7 @@
     {{/one-tab-bar/tab-bar-ul}}
   {{/one-tab-bar/tab-bar-ul-container}}
 {{/if}}
-{{#if (or tabsOverflow media.isMobile)}}
+{{#if (or tabsOverflow (media "isMobile"))}}
   <div class="tab-bar-selector">
     {{#power-select
       triggerClass="small"

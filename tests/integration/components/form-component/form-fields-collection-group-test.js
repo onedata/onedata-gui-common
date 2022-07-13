@@ -1,43 +1,46 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import {
+  render,
+  settled,
+  click,
+  findAll,
+  find,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
-import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
-import wait from 'ember-test-helpers/wait';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import { set } from '@ember/object';
 
 describe(
   'Integration | Component | form component/form fields collection group',
   function () {
-    setupComponentTest('form-component/form-fields-collection-group', {
-      integration: true,
-    });
+    setupRenderingTest();
 
-    it('renders "add field" button', function () {
+    it('renders "add field" button', async function () {
       sinon.stub(lookupService(this, 'i18n'), 't')
         .withArgs('abc.addButtonText')
         .returns('add');
       this.set('collectionGroup', FormFieldsCollectionGroup.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         name: 'abc',
       }));
 
-      this.render(hbs `
+      await render(hbs `
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
-      const $button = this.$('.add-field-button');
-      expect($button).to.exist;
-      expect($button.find('.one-icon')).to.have.class('oneicon-add-filled');
-      expect($button.text().trim()).to.equal('add');
+      const button = find('.add-field-button');
+      expect(button).to.exist;
+      expect(button.querySelector('.one-icon')).to.have.class('oneicon-add-filled');
+      expect(button.textContent.trim()).to.equal('add');
     });
 
-    it('allows to add new field', function () {
+    it('allows to add new field', async function () {
       const valuesSource = createValuesContainer({
         collection: createValuesContainer(),
       });
@@ -50,7 +53,7 @@ describe(
         },
       }).create({
         name: 'collection',
-        ownerSource: this,
+        ownerSource: this.owner,
         parent: {
           isEffectivelyEnabled: true,
           onValueChange(value) {
@@ -61,21 +64,20 @@ describe(
       });
       this.set('collectionGroup', collectionGroup);
 
-      this.render(hbs `
+      await render(hbs `
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
-      return click('.add-field-button')
-        .then(() => click('.add-field-button'))
-        .then(() => {
-          const $textFields = this.$('.text-like-field-renderer');
-          expect($textFields).to.have.length(2);
-          expect($textFields.eq(0)).to.have.class('textField-field');
-          expect($textFields.eq(1)).to.have.class('textField-field');
-        });
+      await click('.add-field-button');
+      await click('.add-field-button');
+
+      const textFields = findAll('.text-like-field-renderer');
+      expect(textFields).to.have.length(2);
+      expect(textFields[0]).to.have.class('textField-field');
+      expect(textFields[1]).to.have.class('textField-field');
     });
 
-    it('allows to remove field', function () {
+    it('allows to remove field', async function () {
       const valuesSource = createValuesContainer({
         collection: createValuesContainer(),
       });
@@ -88,7 +90,7 @@ describe(
         },
       }).create({
         name: 'collection',
-        ownerSource: this,
+        ownerSource: this.owner,
         parent: {
           isEffectivelyEnabled: true,
           onValueChange(value) {
@@ -99,23 +101,21 @@ describe(
       });
       this.set('collectionGroup', collectionGroup);
 
-      this.render(hbs `
+      await render(hbs `
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
-      let $textFields;
-      return click('.add-field-button')
-        .then(() => click('.add-field-button'))
-        .then(() => $textFields = this.$('.text-like-field-renderer'))
-        .then(() => click('.collection-item:first-child .remove-field-button'))
-        .then(() => {
-          const $newTextFields = this.$('.text-like-field-renderer');
-          expect($newTextFields).to.have.length(1);
-          expect($newTextFields[0]).to.equal($textFields[1]);
-        });
+      await click('.add-field-button');
+      await click('.add-field-button');
+      const textFields = findAll('.text-like-field-renderer');
+      await click('.collection-item:first-child .remove-field-button');
+
+      const newTextFields = findAll('.text-like-field-renderer');
+      expect(newTextFields).to.have.length(1);
+      expect(newTextFields[0]).to.equal(textFields[1]);
     });
 
-    it('blocks creating and removing fields in "view" mode', function () {
+    it('blocks creating and removing fields in "view" mode', async function () {
       const valuesSource = createValuesContainer({
         collection: createValuesContainer(),
       });
@@ -128,7 +128,7 @@ describe(
         },
       }).create({
         name: 'collection',
-        ownerSource: this,
+        ownerSource: this.owner,
         parent: {
           isEffectivelyEnabled: true,
           onValueChange(value) {
@@ -139,19 +139,16 @@ describe(
       });
       this.set('collectionGroup', collectionGroup);
 
-      this.render(hbs `
+      await render(hbs `
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
-      return click('.add-field-button')
-        .then(() => {
-          collectionGroup.changeMode('view');
-          return wait();
-        })
-        .then(() => {
-          expect(this.$('.remove-field-button')).to.not.exist;
-          expect(this.$('.add-field-button')).to.not.exist;
-        });
+      await click('.add-field-button');
+      collectionGroup.changeMode('view');
+      await settled();
+
+      expect(find('.remove-field-button')).to.not.exist;
+      expect(find('.add-field-button')).to.not.exist;
     });
 
     it('can be disabled', async function () {
@@ -167,7 +164,7 @@ describe(
         },
       }).create({
         name: 'collection',
-        ownerSource: this,
+        ownerSource: this.owner,
         parent: {
           isEffectivelyEnabled: true,
           onValueChange(value) {
@@ -177,16 +174,16 @@ describe(
         valuesSource,
       });
       this.set('collectionGroup', collectionGroup);
-      this.render(hbs `
+      await render(hbs `
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
       await click('.add-field-button');
       this.set('collectionGroup.isEnabled', false);
-      await wait();
+      await settled();
 
-      expect(this.$('.add-field-button')).to.have.attr('disabled');
-      expect(this.$('.remove-icon')).to.have.class('disabled');
+      expect(find('.add-field-button').disabled).to.be.true;
+      expect(find('.remove-icon')).to.have.class('disabled');
     });
 
     it('hides add and remove buttons when "isCollectionManipulationAllowed" is false',
@@ -203,7 +200,7 @@ describe(
           },
         }).create({
           name: 'collection',
-          ownerSource: this,
+          ownerSource: this.owner,
           parent: {
             isEffectivelyEnabled: true,
             onValueChange(value) {
@@ -214,16 +211,16 @@ describe(
         });
         this.set('collectionGroup', collectionGroup);
 
-        this.render(hbs `
+        await render(hbs `
           {{form-component/form-fields-collection-group field=collectionGroup}}
         `);
 
         await click('.add-field-button');
         set(collectionGroup, 'isCollectionManipulationAllowed', false);
-        await wait();
+        await settled();
 
-        expect(this.$('.remove-field-button')).to.not.exist;
-        expect(this.$('.add-field-button')).to.not.exist;
+        expect(find('.remove-field-button')).to.not.exist;
+        expect(find('.add-field-button')).to.not.exist;
       });
   }
 );

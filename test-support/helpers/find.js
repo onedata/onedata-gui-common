@@ -6,24 +6,24 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { findAll } from 'ember-native-dom-helpers';
+import { findAll } from '@ember/test-helpers';
 
 /**
- * @param {Array<HTMLElement>} elements
+ * @param {Array<HTMLElement>|NodeList} elements
  * @param {string} text
  * @returns {Array<HTMLElement>}
  */
 export function filterElementsByText(elements, text) {
-  return elements.filter(element => element.innerText.includes(text));
+  return Array.from(elements).filter(element => element.innerText.includes(text));
 }
 
 /**
- * @param {Array<HTMLElement>} elements
+ * @param {Array<HTMLElement|NodeList>} elements
  * @param {string} text
  * @returns {HTMLElement}
  */
 export function findInElementsByText(elements, text) {
-  return elements.find(element => element.innerText.includes(text));
+  return Array.from(elements).find(element => element.innerText.includes(text));
 }
 
 /**

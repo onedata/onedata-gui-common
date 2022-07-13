@@ -1,20 +1,22 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, settled, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
 import { get } from '@ember/object';
-import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import wait from 'ember-test-helpers/wait';
-import { click, fillIn } from 'ember-native-dom-helpers';
+import {
+  getModal,
+  getModalHeader,
+  getModalBody,
+  getModalFooter,
+} from '../../../../helpers/modal';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
 describe('Integration | Utility | workflow visualiser/actions/modify store action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const store = Store.create({
@@ -29,7 +31,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
       requiresInitialContent: false,
     });
     const action = ModifyStoreAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: { store },
     });
     this.setProperties({ store, action });
@@ -39,15 +41,17 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
     await executeAction(this);
 
     expect(getModal()).to.have.class('store-modal');
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Modify store');
-    expect(getModalBody().find('.name-field .form-control')).to.have.value('store1');
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Modify store');
+    expect(getModalBody().querySelector('.name-field .form-control'))
+      .to.have.value('store1');
   });
 
   it(
     'returns promise with cancelled ActionResult after execute() and modal close using "Cancel"',
     async function () {
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.btn-cancel')[0]);
+      await click(getModalFooter().querySelector('.btn-cancel'));
       const actionResult = await resultPromise;
 
       expect(get(actionResult, 'status')).to.equal('cancelled');
@@ -61,7 +65,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
 
       const { resultPromise } = await executeAction(this);
       await fillIn('.name-field .form-control', 'store2');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await click(getModalFooter().querySelector('.btn-submit'));
       const actionResult = await resultPromise;
 
       expect(modifyStoreStub).to.be.calledOnce.and.to.be.calledWith(sinon.match({
@@ -80,9 +84,9 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
 
       const { resultPromise } = await executeAction(this);
       await fillIn('.name-field .form-control', 'store2');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await click(getModalFooter().querySelector('.btn-submit'));
       rejectRemove();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(modifyStoreStub).to.be.calledOnce;
@@ -92,8 +96,8 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

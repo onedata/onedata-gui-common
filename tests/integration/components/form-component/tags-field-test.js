@@ -1,16 +1,22 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import {
+  render,
+  click,
+  focus,
+  blur,
+  fillIn,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
-import { click, focus, blur, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { setProperties, get } from '@ember/object';
 
 describe('Integration | Component | form component/tags field', function () {
-  setupComponentTest('form-component/tags-field', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', TagsField.create());
@@ -18,39 +24,39 @@ describe('Integration | Component | form component/tags field', function () {
 
   it(
     'has class "tags-field"',
-    function () {
-      this.render(hbs `{{form-component/tags-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/tags-field field=field}}`);
 
-      expect(this.$('.tags-field')).to.exist;
+      expect(find('.tags-field')).to.exist;
     }
   );
 
   it(
     'renders tags-input component',
-    function () {
-      this.render(hbs `{{form-component/tags-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/tags-field field=field}}`);
 
-      expect(this.$('.tags-input')).to.exist;
+      expect(find('.tags-input')).to.exist;
     }
   );
 
   it(
     'can be disabled',
-    function () {
+    async function () {
       this.set('field.isEnabled', false);
 
-      this.render(hbs `{{form-component/tags-field field=field}}`);
+      await render(hbs `{{form-component/tags-field field=field}}`);
 
-      expect(this.$('.tags-input')).to.have.attr('disabled');
+      expect(find('.tags-input')).to.have.attr('disabled');
     }
   );
 
   it(
     'notifies field object about lost focus',
-    function () {
+    async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      this.render(hbs `{{form-component/tags-field field=field}}`);
+      await render(hbs `{{form-component/tags-field field=field}}`);
 
       return focus('.tags-input')
         .then(() => blur('.tags-input'))
@@ -60,10 +66,10 @@ describe('Integration | Component | form component/tags field', function () {
 
   it(
     'notifies field object about changed value',
-    function () {
+    async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      this.render(hbs `{{form-component/tags-field field=field}}`);
+      await render(hbs `{{form-component/tags-field field=field}}`);
 
       return click('.tag-creator-trigger')
         .then(() => fillIn('.text-editor-input', 'test,aest,'))
@@ -74,48 +80,48 @@ describe('Integration | Component | form component/tags field', function () {
     }
   );
 
-  it('sets input value to tags specified in field object', function () {
+  it('sets input value to tags specified in field object', async function () {
     this.set('field.value', ['test', 'test2']);
 
-    this.render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `{{form-component/tags-field field=field}}`);
 
-    const $tags = this.$('.tag-item');
-    expect($tags).to.have.length(2);
-    expect($tags.eq(0).text().trim()).to.equal('test');
-    expect($tags.eq(1).text().trim()).to.equal('test2');
+    const tags = findAll('.tag-item');
+    expect(tags).to.have.length(2);
+    expect(tags[0].textContent.trim()).to.equal('test');
+    expect(tags[1].textContent.trim()).to.equal('test2');
   });
 
-  it('sets input id according to "fieldId"', function () {
-    this.render(hbs `
+  it('sets input id according to "fieldId"', async function () {
+    await render(hbs `
       {{form-component/tags-field field=field fieldId="abc"}}
     `);
 
-    expect(this.$('.tags-input#abc')).to.exist;
+    expect(find('.tags-input#abc')).to.exist;
   });
 
-  it('allows to specify custom tags editor with custom settings', function () {
+  it('allows to specify custom tags editor with custom settings', async function () {
     const settings = Object.freeze({ a: 1 });
     setProperties(this.get('field'), {
       tagEditorComponentName: 'test-component',
       tagEditorSettings: settings,
     });
 
-    this.render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `{{form-component/tags-field field=field}}`);
 
     return click('.tag-creator-trigger')
       .then(() => {
-        const testEditor = this.$('.tag-creator .test-component');
+        const testEditor = find('.tag-creator .test-component');
         expect(testEditor).to.exist;
-        expect(get(testEditor[0].componentInstance, 'settings'))
+        expect(get(testEditor.componentInstance, 'settings'))
           .to.equal(settings);
       });
   });
 
-  it('turns on tags sorting according to truthy "sort" property', function () {
+  it('turns on tags sorting according to truthy "sort" property', async function () {
     this.set('field.sort', true);
     const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-    this.render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `{{form-component/tags-field field=field}}`);
 
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', 'test,aest,'))
@@ -125,38 +131,38 @@ describe('Integration | Component | form component/tags field', function () {
       });
   });
 
-  it('renders readonly tags input when field is in "view" mode', function () {
+  it('renders readonly tags input when field is in "view" mode', async function () {
     this.get('field').changeMode('view');
 
-    this.render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `{{form-component/tags-field field=field}}`);
 
-    expect(this.$('.tags-input')).to.have.class('readonly');
+    expect(find('.tags-input')).to.have.class('readonly');
   });
 
-  it('limits tags number via "tagsLimit"', function () {
+  it('limits tags number via "tagsLimit"', async function () {
     this.set('field.value', ['test', 'test2']);
     this.set('field.tagsLimit', 1);
 
-    this.render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `{{form-component/tags-field field=field}}`);
 
-    expect(this.$('.tag-creator-trigger')).to.have.class('disabled');
+    expect(find('.tag-creator-trigger')).to.have.class('disabled');
   });
 
-  it('does not show clear button, when "isClearButtonVisible" is false', function () {
+  it('does not show clear button, when "isClearButtonVisible" is false', async function () {
     this.set('field.value', ['test']);
     this.set('field.isClearButtonVisible', false);
 
-    this.render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `{{form-component/tags-field field=field}}`);
 
-    expect(this.$('.input-clear-trigger')).to.not.exist;
+    expect(find('.input-clear-trigger')).to.not.exist;
   });
 
-  it('shows clear button, when "isClearButtonVisible" is true', function () {
+  it('shows clear button, when "isClearButtonVisible" is true', async function () {
     this.set('field.value', ['test']);
     this.set('field.isClearButtonVisible', true);
 
-    this.render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `{{form-component/tags-field field=field}}`);
 
-    expect(this.$('.input-clear-trigger')).to.exist;
+    expect(find('.input-clear-trigger')).to.exist;
   });
 });

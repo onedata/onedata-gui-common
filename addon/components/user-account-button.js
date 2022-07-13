@@ -1,5 +1,5 @@
 /**
- * A button that allows to invoke various actions for current user account 
+ * A button that allows to invoke various actions for current user account
  *
  * @module components/user-account-button
  * @author Jakub Liput, Michał Borzęcki
@@ -13,7 +13,7 @@ import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/user-account-button';
-import ClickOutside from 'ember-click-outside/mixins/click-outside';
+import ClickOutside from 'ember-click-outside/mixin';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';

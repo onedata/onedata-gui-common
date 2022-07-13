@@ -1,17 +1,16 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | hr label', function () {
-  setupComponentTest('hr-label', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('renders provided text', function () {
-    this.render(hbs `{{#hr-label}}some text{{/hr-label}}`);
+  it('renders provided text', async function () {
+    await render(hbs `{{#hr-label}}some text{{/hr-label}}`);
 
-    expect(this.$('.hr-label')).to.exist;
-    expect(this.$('.hr-label')).to.contain('some text');
+    expect(find('.hr-label')).to.exist;
+    expect(find('.hr-label').textContent).to.contain('some text');
   });
 });

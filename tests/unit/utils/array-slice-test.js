@@ -2,9 +2,8 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import ArraySlice from 'onedata-gui-common/utils/array-slice';
 import _ from 'lodash';
-import wait from 'ember-test-helpers/wait';
+import { settled } from '@ember/test-helpers';
 import sinon from 'sinon';
-
 import { A } from '@ember/array';
 import EmberObject, { computed } from '@ember/object';
 
@@ -18,6 +17,140 @@ const ArraySum = EmberObject.extend({
 });
 
 describe('Unit | Utility | array slice', function () {
+  it('adds an item using pushObject method', function () {
+    const sourceArrayTemplate = _.range(0, 10);
+
+    const startIndex = 0;
+    const endIndex = 20;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    as.pushObject('x');
+
+    expect(as.toArray()).to.deep.equal([...sourceArrayTemplate, 'x']);
+  });
+
+  it('adds multiple items using pushObjects method', function () {
+    const sourceArrayTemplate = _.range(0, 10);
+
+    const startIndex = 0;
+    const endIndex = 20;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    as.pushObjects(['x', 'y', 'z']);
+
+    expect(as.toArray()).to.deep.equal([...sourceArrayTemplate, 'x', 'y', 'z']);
+  });
+
+  it('returns a slice of current range using slice method', function () {
+    const sourceArrayTemplate = _.range(0, 20);
+
+    const startIndex = 5;
+    const endIndex = 15;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    expect(as.slice(5, 10)).to.deep.equal(_.range(10, 15));
+  });
+
+  it('returns a slice to the end of current range using slice method with only begin argument', function () {
+    const sourceArrayTemplate = _.range(0, 20);
+
+    const startIndex = 0;
+    const endIndex = 10;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    expect(as.slice(5)).to.deep.equal(_.range(5, endIndex));
+  });
+
+  it('returns a copy of sliced array using slice method without arguments', function () {
+    const sourceArrayTemplate = _.range(0, 20);
+
+    const startIndex = 5;
+    const endIndex = 15;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    expect(as.slice()).to.deep.equal(_.range(5, 15));
+  });
+
+  it('returns a slice of current range using slice method with negative arguments', function () {
+    const sourceArrayTemplate = _.range(0, 20);
+
+    const startIndex = 5;
+    const endIndex = 15;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    expect(as.slice(-3, -1)).to.deep.equal(_.range(12, 14));
+  });
+
+  [
+    'insertAt',
+    'removeAt',
+    'setObjects',
+    'unshiftObject',
+    'unshiftObjects',
+  ].forEach(methodName => {
+    it(`throws not implemented error for "${methodName}" method`, function () {
+      const startIndex = 0;
+      const endIndex = 20;
+      const indexMargin = 0;
+
+      const as = ArraySlice.create({
+        sourceArray: A([]),
+        startIndex,
+        endIndex,
+        indexMargin,
+      });
+
+      try {
+        as[methodName]();
+        throw new Error('method should throw');
+      } catch (error) {
+        expect(error.toString()).to.contain('not implemented in array-slice');
+      }
+    });
+  });
+
   it('exposes array containing slice of original array', function () {
     const sourceArray = A(_.range(0, 100));
 
@@ -38,7 +171,7 @@ describe('Unit | Utility | array slice', function () {
     ).to.deep.equal(_.range(40, 80));
   });
 
-  it('changes array contents when requested indices change', function () {
+  it('changes array contents when requested indices change', async function () {
     const sourceArray = A(_.range(0, 100));
     const startIndex = 50;
     const endIndex = 70;
@@ -56,12 +189,11 @@ describe('Unit | Utility | array slice', function () {
     });
 
     const native = as.toArray();
-    return wait().then(() => {
-      expect(
-        native,
-        `${JSON.stringify(native)} should be array from 20 to 45`
-      ).to.deep.equal(_.range(20, 45));
-    });
+    await settled();
+    expect(
+      native,
+      `${JSON.stringify(native)} should be array from 20 to 45`
+    ).to.deep.equal(_.range(20, 45));
   });
 
   it('allows to iterate on it with forEach', function () {
@@ -81,7 +213,7 @@ describe('Unit | Utility | array slice', function () {
     expect(j).to.equal(40);
   });
 
-  it('delegates pushObject to sourceArray', function () {
+  it('delegates pushObject to sourceArray', async function () {
     const sourceArray = A(_.range(0, 100));
     const startIndex = 50;
     const endIndex = 70;
@@ -106,17 +238,17 @@ describe('Unit | Utility | array slice', function () {
       endIndex: 101,
     });
 
-    return wait().then(() => {
-      const native = as.toArray();
-      expect(
-        native,
-        `${JSON.stringify(native)} should contain pushed object`
-      ).to.deep.equal([99, 'x']);
-    });
+    await settled();
+    const native = as.toArray();
+
+    expect(
+      native,
+      `${JSON.stringify(native)} should contain pushed object`
+    ).to.deep.equal([99, 'x']);
   });
 
   it('does not notify about changes in sourceArray if index is out of range',
-    function () {
+    async function () {
       const sourceArray = A(_.range(0, 100));
       const startIndex = 0;
       const endIndex = 5;
@@ -142,13 +274,12 @@ describe('Unit | Utility | array slice', function () {
 
       as.pushObject(10000);
 
-      return wait().then(() => {
-        expect(obj.get('sum')).to.equal(15);
-        expect(spy).to.be.calledOnce;
-      });
+      await settled();
+      expect(obj.get('sum')).to.equal(15);
+      expect(spy).to.be.calledOnce;
     });
 
-  it('notifies about changes in sourceArray if index is in range', function () {
+  it('notifies about changes in sourceArray if index is in range', async function () {
     const sourceArray = A(_.concat([99, 99, 99], _.range(0, 6)));
     const startIndex = 3;
     const endIndex = 10;
@@ -174,13 +305,12 @@ describe('Unit | Utility | array slice', function () {
 
     as.pushObject(10000);
 
-    return wait().then(() => {
-      expect(obj.get('sum')).to.equal(10015);
-      expect(spy).to.be.calledTwice;
-    });
+    await settled();
+    expect(obj.get('sum')).to.equal(10015);
+    expect(spy).to.be.calledTwice;
   });
 
-  it('notifies about changes in array if increasing the endIndex', function () {
+  it('notifies about changes in array if increasing the endIndex', async function () {
     const sourceArray = A(_.concat(_.range(0, 10)));
     const startIndex = 0;
     const endIndex = 3;
@@ -203,14 +333,13 @@ describe('Unit | Utility | array slice', function () {
 
     as.set('endIndex', 5);
 
-    return wait().then(() => {
-      const newSum = obj.get('sum');
-      expect(spy).to.be.calledTwice;
-      expect(newSum).to.equal(_.sum(_.range(0, 5)));
-    });
+    await settled();
+    const newSum = obj.get('sum');
+    expect(spy).to.be.calledTwice;
+    expect(newSum).to.equal(_.sum(_.range(0, 5)));
   });
 
-  it('notifies about changes in array if decreasing the endIndex', function () {
+  it('notifies about changes in array if decreasing the endIndex', async function () {
     const sourceArray = A(_.concat(_.range(0, 10)));
     const startIndex = 0;
     const endIndex = 5;
@@ -233,14 +362,13 @@ describe('Unit | Utility | array slice', function () {
 
     as.set('endIndex', 3);
 
-    return wait().then(() => {
-      const newSum = obj.get('sum');
-      expect(spy).to.be.calledTwice;
-      expect(newSum).to.equal(_.sum(_.range(0, 3)));
-    });
+    await settled();
+    const newSum = obj.get('sum');
+    expect(spy).to.be.calledTwice;
+    expect(newSum).to.equal(_.sum(_.range(0, 3)));
   });
 
-  it('notifies about changes in array if decreasing the startIndex', function () {
+  it('notifies about changes in array if decreasing the startIndex', async function () {
     const sourceArray = A(_.concat(_.range(0, 10)));
     const startIndex = 7;
     const endIndex = 9;
@@ -263,14 +391,13 @@ describe('Unit | Utility | array slice', function () {
 
     as.set('startIndex', 5);
 
-    return wait().then(() => {
-      const newSum = obj.get('sum');
-      expect(spy).to.be.calledTwice;
-      expect(newSum).to.equal(_.sum(_.range(5, 9)));
-    });
+    await settled();
+    const newSum = obj.get('sum');
+    expect(spy).to.be.calledTwice;
+    expect(newSum).to.equal(_.sum(_.range(5, 9)));
   });
 
-  it('notifies about changes in array if increasing the startIndex', function () {
+  it('notifies about changes in array if increasing the startIndex', async function () {
     const sourceArray = A(_.concat(_.range(0, 10)));
     const startIndex = 7;
     const endIndex = 10;
@@ -293,14 +420,13 @@ describe('Unit | Utility | array slice', function () {
 
     as.set('startIndex', 8);
 
-    return wait().then(() => {
-      const newSum = obj.get('sum');
-      expect(spy).to.be.calledTwice;
-      expect(newSum).to.equal(_.sum(_.range(8, 10)));
-    });
+    await settled();
+    const newSum = obj.get('sum');
+    expect(spy).to.be.calledTwice;
+    expect(newSum).to.equal(_.sum(_.range(8, 10)));
   });
 
-  it('notifies about changes in array if changing the indexMargin', function () {
+  it('notifies about changes in array if changing the indexMargin', async function () {
     const sourceArray = A(_.concat(_.range(0, 100)));
     const startIndex = 20;
     const endIndex = 25;
@@ -323,13 +449,11 @@ describe('Unit | Utility | array slice', function () {
 
     as.set('indexMargin', 5);
 
-    return wait().then(() => {
-      const newSum = obj.get('sum');
-      return wait().then(() => {
-        expect(spy).to.be.calledTwice;
-        expect(newSum, '15..30').to.equal(_.sum(_.range(15, 30)));
-      });
-    });
+    await settled();
+    const newSum = obj.get('sum');
+    await settled();
+    expect(spy).to.be.calledTwice;
+    expect(newSum, '15..30').to.equal(_.sum(_.range(15, 30)));
   });
 
   it('immediately returns new firstObject if changing startIndex and endIndex',

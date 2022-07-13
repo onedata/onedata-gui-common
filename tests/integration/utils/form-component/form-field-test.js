@@ -2,20 +2,18 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { get, set, getProperties } from '@ember/object';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { validator } from 'ember-cp-validations';
 import sinon from 'sinon';
 
 describe('Integration | Utility | form component/form field', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupTest();
 
   it(
     'has falsy "isValid", not empty "errors" and "invalidFields" with reference to itself, when specified validators does not match to the field value',
     function () {
       const formField = FormField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         customValidators: [
           validator('number', { gt: 2 }),
         ],
@@ -42,7 +40,7 @@ describe('Integration | Utility | form component/form field', function () {
     'has truthy "isValid", empty "errors" and empty "invalidFields", when specified validators match to the field value',
     function () {
       const formField = FormField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         customValidators: [
           validator('number', { gt: 2 }),
         ],
@@ -67,7 +65,7 @@ describe('Integration | Utility | form component/form field', function () {
     'has truthy "isValid", empty "errors" and empty "invalidFields", when specified validators does not match to the field value but isValuess is true',
     function () {
       const formField = FormField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         customValidators: [
           validator('number', { gt: 2 }),
         ],
@@ -93,7 +91,7 @@ describe('Integration | Utility | form component/form field', function () {
     'updates validator object when validators changes',
     function () {
       const formField = FormField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         customValidators: [
           validator('number', { gt: 2 }),
         ],
@@ -123,7 +121,7 @@ describe('Integration | Utility | form component/form field', function () {
     'has falsy "isOptional" field by default and notifies about validation error for empty content',
     function () {
       const formField = FormField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
       });
 
       const {
@@ -140,7 +138,7 @@ describe('Integration | Utility | form component/form field', function () {
     'does not notify about "field empty" validation error, when "isOptional" is true',
     function () {
       const formField = FormField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         isOptional: true,
       });
 
@@ -203,7 +201,7 @@ describe('Integration | Utility | form component/form field', function () {
     'is valid when value is invalid, but mode is "view"',
     function () {
       const formField = FormField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         customValidators: [
           validator('number', { gt: 2 }),
         ],

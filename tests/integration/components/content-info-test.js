@@ -1,19 +1,17 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 describe('Integration | Component | content info', function () {
-  setupComponentTest('content-info', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('renders yielded content with buttonAction available for invoking', function () {
+  it('renders yielded content with buttonAction available for invoking', async function () {
     const actionSpy = sinon.stub().resolves();
-    this.on('buttonAction', actionSpy);
-    this.render(hbs `{{#content-info buttonAction=(action "buttonAction") as |ci|}}
+    this.set('buttonAction', actionSpy);
+    await render(hbs `{{#content-info buttonAction=(action buttonAction) as |ci|}}
       <button class="btn-action" onclick={{action ci.buttonAction}}>
         click me
       </button>

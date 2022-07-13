@@ -23,6 +23,7 @@ import { isEmpty } from '@ember/utils';
 import StoreContentTableColumns from 'onedata-gui-common/utils/workflow-visualiser/store-content-table-columns';
 import StoreContentTableRowConfig from 'onedata-gui-common/utils/workflow-visualiser/store-content-table-row-config';
 import { inject as service } from '@ember/service';
+import $ from 'jquery';
 
 /**
  * @typedef {Object} StoreContentTableEntry
@@ -247,11 +248,12 @@ export default Component.extend(I18n, {
   // },
 
   createListWatcher() {
+    const element = this.get('element');
     return new ListWatcher(
-      this.$('.scrollable-table > .ps'),
+      $(element.querySelector('.scrollable-table > .ps')),
       '.data-row',
       items => {
-        if (this.$().parents('.store-modal').hasClass('in')) {
+        if ($(element).parents('.store-modal').hasClass('in')) {
           return safeExec(this, 'onTableScroll', items);
         }
       }
@@ -265,9 +267,11 @@ export default Component.extend(I18n, {
     const {
       storeEntries,
       listWatcher,
+      element,
     } = this.getProperties(
       'storeEntries',
       'listWatcher',
+      'element'
     );
     const sourceArray = get(storeEntries, 'sourceArray');
 
@@ -290,7 +294,7 @@ export default Component.extend(I18n, {
         _window,
         rowHeight,
       } = this.getProperties('_window', 'rowHeight');
-      const $firstRow = this.$('.first-row');
+      const $firstRow = $(element.querySelector('.first-row'));
       const firstRowTop = $firstRow.offset().top;
       const blankStart = firstRowTop * -1;
       const blankEnd = blankStart + _window.innerHeight;

@@ -4,10 +4,10 @@ import { setupTest } from 'ember-mocha';
 import EmberObject, { observer } from '@ember/object';
 
 describe('Unit | Service | app storage', function () {
-  setupTest('service:app-storage', {});
+  setupTest();
 
   it('sets data', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:app-storage');
     const key = 'exampleKey';
     const value = 'exampleValue';
     service.setData(key, value);
@@ -15,12 +15,12 @@ describe('Unit | Service | app storage', function () {
   });
 
   it('returns undefined for incorrect key', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:app-storage');
     expect(service.getData('weirdKey')).to.be.undefined;
   });
 
   it('allows to observe data', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:app-storage');
     const testObservator = EmberObject.extend({
       value: undefined,
 

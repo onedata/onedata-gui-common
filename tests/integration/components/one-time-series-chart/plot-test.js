@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach, afterEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { describe, it, beforeEach } from 'mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, settled, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import TestComponent from 'onedata-gui-common/components/test-component';
 import sinon from 'sinon';
 import {
@@ -14,16 +14,13 @@ import {
   createModel,
 } from '../../../helpers/one-time-series-chart';
 import { get } from '@ember/object';
-import { find } from 'ember-native-dom-helpers';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
 
 describe('Integration | Component | one time series chart/plot', function () {
-  setupComponentTest('one-time-series-chart/plot', {
-    integration: true,
-  });
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
-    this.register('component:one-echart', TestComponent);
+    this.owner.register('component:one-echart', TestComponent);
     const now = Date.now();
     this.set('fakeClock', sinon.useFakeTimers({
       now: now - (now % (60000 * 60)) - 35 * 60000 - 35000,
@@ -43,10 +40,10 @@ describe('Integration | Component | one time series chart/plot', function () {
   });
 
   it('has class "one-time-series-chart-plot"', async function () {
-    await render(this);
+    await renderComponent();
 
-    expect(this.$().children()).to.have.class('one-time-series-chart-plot')
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('one-time-series-chart-plot');
   });
 
   it('shows "no data to show" info, when there are no series to show', async function () {
@@ -62,7 +59,7 @@ describe('Integration | Component | one time series chart/plot', function () {
       }],
     });
 
-    await render(this);
+    await renderComponent();
 
     expectNoChartDataToShow();
   });
@@ -78,7 +75,7 @@ describe('Integration | Component | one time series chart/plot', function () {
       },
     });
 
-    await render(this);
+    await renderComponent();
 
     expectNoChartDataToShow();
   });
@@ -98,7 +95,7 @@ describe('Integration | Component | one time series chart/plot', function () {
       },
     });
 
-    await render(this);
+    await renderComponent();
 
     expectNoChartDataToShow();
   });
@@ -106,7 +103,7 @@ describe('Integration | Component | one time series chart/plot', function () {
   it('shows chart title and title tip', async function () {
     setupModel(this, createDummyConfiguration());
 
-    await render(this);
+    await renderComponent();
 
     expect(find('.title-content').textContent)
       .to.equal(this.get('model.state.title.content'));
@@ -124,7 +121,7 @@ describe('Integration | Component | one time series chart/plot', function () {
       },
     });
 
-    await render(this);
+    await renderComponent();
 
     expect(find('.title-area')).to.not.exist;
   });
@@ -147,14 +144,14 @@ describe('Integration | Component | one time series chart/plot', function () {
       },
     });
 
-    await render(this);
+    await renderComponent();
     model.setViewParameters({
       timeResolution: 3600,
     });
-    await wait();
+    await settled();
 
     expect(get(model, 'lastViewParameters.timeResolution')).to.equal(3600);
-    expectEchartDummyPoints(this, null, 3600, 11);
+    expectEchartDummyPoints(null, 3600, 11);
   });
 
   it('shows continuously reloading newest data in live mode', async function () {
@@ -164,12 +161,13 @@ describe('Integration | Component | one time series chart/plot', function () {
       live: true,
     });
 
-    await render(this);
-    expectEchartDummyPoints(this, null, 60, 60);
+    await renderComponent();
+    expectEchartDummyPoints(null, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
 
     fakeClock.tick(60 * 1000 + 500);
-    expectEchartDummyPoints(this, null, 60, 60);
+    await settled();
+    expectEchartDummyPoints(null, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
   });
 
@@ -181,19 +179,19 @@ describe('Integration | Component | one time series chart/plot', function () {
       lastPointTimestamp: 1000000,
     });
 
-    await render(this);
-    expectEchartDummyPoints(this, 1000000, 60, 60);
+    await renderComponent();
+    expectEchartDummyPoints(1000000, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.equal(1000000);
 
     fakeClock.tick(60 * 1000 + 500);
-    expectEchartDummyPoints(this, 1000000, 60, 60);
+    await settled();
+    expectEchartDummyPoints(1000000, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.equal(1000000);
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{one-time-series-chart/plot model=model}}`);
-  await wait();
+async function renderComponent() {
+  await render(hbs `{{one-time-series-chart/plot model=model}}`);
 }
 
 function setupModel(testCase, configInitOptions) {

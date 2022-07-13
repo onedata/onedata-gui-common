@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import DOMPurify from 'npm:dompurify';
+import DOMPurify from 'dompurify';
 
 const allowedTags = [
   'b',

@@ -9,8 +9,14 @@
 
 import FieldComponentBase from 'onedata-gui-common/components/form-component/field-component-base';
 import layout from '../../templates/components/form-component/toggle-field';
+import { reads } from '@ember/object/computed';
 
 export default FieldComponentBase.extend({
   layout,
   classNames: ['toggle-field'],
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  disabledControlTip: reads('field.disabledControlTip'),
 });

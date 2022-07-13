@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
-import { click, fillIn, blur } from 'ember-native-dom-helpers';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, click, fillIn, blur, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
@@ -12,9 +12,7 @@ import setDefaultQueryValuesBuilder from '../../helpers/set-default-query-values
 import $ from 'jquery';
 
 describe('Integration | Component | query builder main component', function () {
-  setupComponentTest('query-builder/block-adder', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
 
@@ -31,17 +29,17 @@ describe('Integration | Component | query builder main component', function () {
   });
 
   it('has class "query-builder', async function () {
-    this.render(hbs `{{query-builder valuesBuilder=valuesBuilder}}`);
+    await render(hbs `{{query-builder valuesBuilder=valuesBuilder}}`);
 
-    expect(this.$('.query-builder'));
+    expect(find('.query-builder')).to.exist;
   });
 
   it('calls refreshQueryProperties when add condition popover is opened', async function () {
     const refreshQueryProperties = sinon.spy();
-    this.on('refreshQueryProperties', refreshQueryProperties);
-    this.render(hbs `{{query-builder
+    this.set('refreshQueryProperties', refreshQueryProperties);
+    await render(hbs `{{query-builder
       valuesBuilder=valuesBuilder
-      refreshQueryProperties=(action "refreshQueryProperties")
+      refreshQueryProperties=(action refreshQueryProperties)
     }}`);
     await click('.query-builder-block-adder');
     expect(refreshQueryProperties).to.be.calledOnce;
@@ -87,17 +85,17 @@ describe('Integration | Component | query builder main component', function () {
         notifyUpdateSpy,
       });
 
-      this.render(hbs `{{query-builder
+      render(hbs `{{query-builder
         queryProperties=queryProperties
         rootQueryBlock=rootQueryBlock
         valuesBuilder=valuesBuilder
       }}`);
-      notifyUpdateSpy.reset();
+      notifyUpdateSpy.resetHistory();
     });
 
     it('value nested in operators is changed', async function () {
-      const firstValue = this.$('.comparator-value:contains("1")');
-      await click(firstValue[0]);
+      const firstValue = $(this.element).find('.comparator-value:contains("1")')[0];
+      await click(firstValue);
 
       await fillIn('input.comparator-value', 'test');
       await blur('input.comparator-value');
@@ -137,13 +135,13 @@ describe('Integration | Component | query builder main component', function () {
       rootQueryBlock,
     });
 
-    this.render(hbs `{{query-builder rootQueryBlock=rootQueryBlock}}`);
+    await render(hbs `{{query-builder rootQueryBlock=rootQueryBlock}}`);
 
     await click('.or-operator-block');
     await click('.change-to-section .operator-and');
     await click('.and-operator-block');
 
-    expect($('.change-to-section .operator-or'), '"or" operator button')
+    expect(find('.change-to-section .operator-or'), '"or" operator button')
       .to.exist.and.to.not.have.attr('disabled');
   });
 });

@@ -21,6 +21,7 @@ export default [
   'one-dynamic-tree',
   'one-echart',
   'one-icon-tagged',
+  'one-image',
   'one-inline-editor',
   'one-map',
   'one-modal',

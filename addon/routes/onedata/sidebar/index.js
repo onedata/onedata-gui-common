@@ -21,6 +21,7 @@ const {
 } = config;
 
 export default Route.extend({
+  router: service(),
   globalNotify: service(),
   media: service(),
   guiUtils: service(),
@@ -42,14 +43,17 @@ export default Route.extend({
     }
   },
 
-  refreshOnLeavingMobile: observer('media.isMobile', function () {
-    if (
-      this.get('router.currentRouteName') === 'onedata.sidebar.index' &&
-      !this.get('media.isMobile')
-    ) {
-      this.refresh();
+  refreshOnLeavingMobile: observer(
+    'media.isMobile',
+    function refreshOnLeavingMobile() {
+      if (
+        this.get('router.currentRouteName') === 'onedata.sidebar.index' &&
+        !this.get('media.isMobile')
+      ) {
+        this.refresh();
+      }
     }
-  }),
+  ),
 
   getDefaultResource(list, resourceType) {
     return sortByProperties(

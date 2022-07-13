@@ -62,8 +62,8 @@
           as |popover|
         }}
           {{#click-outside
-            action=(action (mut apiCommandTypeInfoOpened) false)
-            except-selector=".api-command-type-info-trigger, .webui-popover-api-command-type-info"
+            onClickOutside=(action (mut apiCommandTypeInfoOpened) false)
+            exceptSelector=".api-command-type-info-trigger, .webui-popover-api-command-type-info"
           }}
             <p class="api-command-tip-intro">
               {{tt this

@@ -1,11 +1,16 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
-import { find, findAll, click } from 'ember-native-dom-helpers';
+import {
+  find,
+  findAll,
+  click,
+  render,
+  settled,
+} from '@ember/test-helpers';
 import { get } from '@ember/object';
-import { clickTrigger, selectChoose } from '../../../../helpers/ember-power-select';
+import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import timeSeriesEditor from 'onedata-gui-common/utils/atm-workflow/store-content-update-options-editor/time-series';
 
@@ -33,9 +38,7 @@ const prefixCombinerOptions = [{
 }];
 
 describe('Integration | Utility | atm workflow/store content update options editor/time series', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const storeConfig = {
@@ -50,7 +53,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
     this.setProperties({
       storeConfig,
       rootGroup: FormFieldsRootGroup.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         fields: [
           timeSeriesEditor.FormElement.create({
             name: 'updateOptionsEditor',
@@ -73,13 +76,13 @@ describe('Integration | Utility | atm workflow/store content update options edit
   });
 
   it('shows no dispatch rules at the beginning', async function () {
-    await renderForm(this);
+    await renderForm();
 
     expect(find('.dispatchRule-field')).to.not.exist;
   });
 
   it('allows to add new dispatch rule', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
 
@@ -98,7 +101,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
   });
 
   it('does not show prefix combiner in dispatch exact->exact', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await selectChoose('.measurementNameMatcher-field', 'Exact "exactName"');
@@ -108,7 +111,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
   });
 
   it('does not show prefix combiner in dispatch hasPrefix->exact', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await selectChoose('.measurementNameMatcher-field', 'Has prefix "hasPrefixName"');
@@ -118,7 +121,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
   });
 
   it('does not show prefix combiner in dispatch exact->addPrefix', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await selectChoose('.measurementNameMatcher-field', 'Exact "exactName"');
@@ -128,7 +131,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
   });
 
   it('shows prefix combiner in dispatch hasPrefix->addPrefix', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await selectChoose('.measurementNameMatcher-field', 'Has prefix "hasPrefixName"');
@@ -142,7 +145,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
   });
 
   it('has correct list of available measurement time series', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await clickTrigger('.measurementNameMatcher-field');
@@ -155,7 +158,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
   });
 
   it('has correct list of available target time series', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await clickTrigger('.timeSeriesNameGenerator-field');
@@ -168,7 +171,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
   });
 
   it('has correct list of prefix combiners', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await selectChoose('.measurementNameMatcher-field', 'Has prefix "hasPrefixName"');
@@ -184,7 +187,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
 
   for (const { label, value } of prefixCombinerOptions) {
     it(`allows to choose "${label}" prefix`, async function () {
-      await renderForm(this);
+      await renderForm();
 
       await click('.add-field-button');
       await selectChoose('.measurementNameMatcher-field', 'Has prefix "hasPrefixName"');
@@ -197,7 +200,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
 
   it('allows to provide complete time series dispatch rules and convert them to store content update options',
     async function () {
-      await renderForm(this);
+      await renderForm();
 
       await click('.add-field-button');
       const firstRule = find('.dispatchRule-field');
@@ -278,9 +281,9 @@ describe('Integration | Utility | atm workflow/store content update options edit
       }],
     });
 
-    await renderForm(this);
+    await renderForm();
     this.set('rootGroup.valuesSource.updateOptionsEditor', formValues);
-    await wait();
+    await settled();
 
     const dispatchRules = findAll('.dispatchRule-field');
     expect(dispatchRules).to.have.length(3);
@@ -308,9 +311,8 @@ describe('Integration | Utility | atm workflow/store content update options edit
   });
 });
 
-async function renderForm(testCase) {
-  testCase.render(hbs `{{form-component/field-renderer field=rootGroup}}`);
-  await wait();
+async function renderForm() {
+  await render(hbs `{{form-component/field-renderer field=rootGroup}}`);
 }
 
 function getDispatchRuleFormValues(testCase) {

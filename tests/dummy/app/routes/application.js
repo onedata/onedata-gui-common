@@ -1,5 +1,5 @@
 import Route from '@ember/routing/route';
-import smoothscroll from 'npm:smoothscroll-polyfill';
+import smoothscroll from 'smoothscroll-polyfill';
 import { inject as service } from '@ember/service';
 
 export default Route.extend({
@@ -11,7 +11,7 @@ export default Route.extend({
   },
 
   smoothScrollPolyfill() {
-    if (this.get('browser.browser.browserCode') === 'firefox') {
+    if (this.get('browser.browserName') === 'firefox') {
       // Firefox does not handle smooth scroll for perfect scrollbar. Enforce smooth scroll
       // polyfill.
       window.__forceSmoothScrollPolyfill__ = true;

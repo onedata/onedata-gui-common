@@ -1,69 +1,67 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, focus, blur, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
-import { focus, blur, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form component/text like field', function () {
-  setupComponentTest('form-component/text-like-field', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('textField', TextField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
     }));
   });
 
   it(
     'has class "text-like-field"',
-    function () {
-      this.render(hbs `{{form-component/text-like-field field=textField}}`);
+    async function () {
+      await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-      expect(this.$('.text-like-field')).to.exist;
+      expect(find('.text-like-field')).to.exist;
     }
   );
 
   it(
     'renders text input',
-    function () {
-      this.render(hbs `{{form-component/text-like-field field=textField}}`);
+    async function () {
+      await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-      expect(this.$('input[type="text"]')).to.exist;
+      expect(find('input[type="text"]')).to.exist;
     }
   );
 
   it(
     'allows to render input with type different than "text"',
-    function () {
+    async function () {
       this.set('textField.inputType', 'number');
 
-      this.render(hbs `{{form-component/text-like-field field=textField}}`);
+      await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-      expect(this.$('input[type="number"]')).to.exist;
+      expect(find('input[type="number"]')).to.exist;
     }
   );
 
   it(
     'can be disabled',
-    function () {
+    async function () {
       this.set('textField.isEnabled', false);
 
-      this.render(hbs `{{form-component/text-like-field field=textField}}`);
+      await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-      expect(this.$('input[type="text"]')).to.have.attr('disabled');
+      expect(find('input[type="text"]').disabled).to.be.true;
     }
   );
 
   it(
     'notifies field object about lost focus',
-    function () {
+    async function () {
       const focusLostSpy = sinon.spy(this.get('textField'), 'focusLost');
 
-      this.render(hbs `{{form-component/text-like-field field=textField}}`);
+      await render(hbs `{{form-component/text-like-field field=textField}}`);
 
       return focus('input')
         .then(() => blur('input'))
@@ -73,10 +71,10 @@ describe('Integration | Component | form component/text like field', function ()
 
   it(
     'notifies field object about changed value',
-    function () {
+    async function () {
       const valueChangedSpy = sinon.spy(this.get('textField'), 'valueChanged');
 
-      this.render(hbs `{{form-component/text-like-field field=textField}}`);
+      await render(hbs `{{form-component/text-like-field field=textField}}`);
 
       return fillIn('input', 'test')
         .then(() => {
@@ -86,38 +84,38 @@ describe('Integration | Component | form component/text like field', function ()
     }
   );
 
-  it('sets input value to string specified in field object', function () {
+  it('sets input value to string specified in field object', async function () {
     this.set('textField.value', 'test');
 
-    this.render(hbs `{{form-component/text-like-field field=textField}}`);
+    await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-    expect(this.$('input').val()).to.equal('test');
+    expect(find('input').value).to.equal('test');
   });
 
-  it('sets input id according to "fieldId"', function () {
-    this.render(hbs `
+  it('sets input id according to "fieldId"', async function () {
+    await render(hbs `
       {{form-component/text-like-field field=textField fieldId="abc"}}
     `);
 
-    expect(this.$('input#abc')).to.exist;
+    expect(find('input#abc')).to.exist;
   });
 
-  it('sets placeholder according to "placeholder"', function () {
+  it('sets placeholder according to "placeholder"', async function () {
     this.set('textField.placeholder', 'test');
 
-    this.render(hbs `{{form-component/text-like-field field=textField}}`);
+    await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-    expect(this.$('input').attr('placeholder')).to.equal('test');
+    expect(find('input').placeholder).to.equal('test');
   });
 
-  it('renders raw text when field is in "view" mode', function () {
+  it('renders raw text when field is in "view" mode', async function () {
     const textField = this.get('textField');
     set(textField, 'value', 'test value');
     textField.changeMode('view');
 
-    this.render(hbs `{{form-component/text-like-field field=textField}}`);
+    await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-    expect(this.$().text().trim()).to.equal('test value');
-    expect(this.$('input')).to.not.exist;
+    expect(this.element.textContent.trim()).to.equal('test value');
+    expect(find('input')).to.not.exist;
   });
 });

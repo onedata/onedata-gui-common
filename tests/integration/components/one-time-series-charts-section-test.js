@@ -1,15 +1,14 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
-import { find, findAll } from 'ember-native-dom-helpers';
+import { render, find, findAll, settled } from '@ember/test-helpers';
 import OneTooltipHelper from '../../helpers/one-tooltip';
 import TestComponent from 'onedata-gui-common/components/test-component';
 import { expectResolutions } from '../../helpers/one-time-series-chart';
 import sinon from 'sinon';
 import _ from 'lodash';
-import { selectChoose } from '../../helpers/ember-power-select';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 function getEchartOption(chartIdx = 0) {
   return findAll('.test-component')[chartIdx].componentInstance.get('option');
@@ -52,12 +51,10 @@ hourOnlySimpleChartDefinition.seriesBuilders[0].builderRecipe.seriesTemplate
   .externalSourceParameters.metricIds = ['3600'];
 
 describe('Integration | Component | one time series charts section', function () {
-  setupComponentTest('one-time-series-charts-section', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    this.register('component:one-echart', TestComponent);
+    this.owner.register('component:one-echart', TestComponent);
 
     const metrics = {
       60: { resolution: 60 },
@@ -97,7 +94,7 @@ describe('Integration | Component | one time series charts section', function ()
       externalDataSources: null,
     });
 
-    await renderComponent(this);
+    await renderComponent();
 
     expect(find('.one-time-series-charts-section')).to.exist;
     expect(find('.section-header')).to.not.exist;
@@ -111,7 +108,7 @@ describe('Integration | Component | one time series charts section', function ()
     useSectionSpec(this, {
       title: { content: title },
     });
-    await renderComponent(this);
+    await renderComponent();
 
     expect(find('.section-title').textContent).to.equal(title);
   });
@@ -121,7 +118,7 @@ describe('Integration | Component | one time series charts section', function ()
     useSectionSpec(this, {
       title: { tip },
     });
-    await renderComponent(this);
+    await renderComponent();
 
     const tooltipHelper = new OneTooltipHelper('.section-title-tip .one-icon');
     expect(await tooltipHelper.getText()).to.equal(tip);
@@ -132,7 +129,7 @@ describe('Integration | Component | one time series charts section', function ()
     useSectionSpec(this, {
       description,
     });
-    await renderComponent(this);
+    await renderComponent();
 
     expect(find('.section-description').textContent).to.equal(description);
   });
@@ -143,7 +140,7 @@ describe('Integration | Component | one time series charts section', function ()
         useSectionSpec(this, {
           chartNavigation,
         });
-        await renderComponent(this);
+        await renderComponent();
 
         expect(find('.section-charts-shared-navigation')).to.not.exist;
       });
@@ -153,7 +150,7 @@ describe('Integration | Component | one time series charts section', function ()
     useSectionSpec(this, {
       charts: [simpleChartDefinition],
     });
-    await renderComponent(this);
+    await renderComponent();
 
     expect(findAll('.section-chart')).to.have.length(1);
     expect(getEchartOption().series[0].data.pop()[1]).to.equal(600);
@@ -163,7 +160,7 @@ describe('Integration | Component | one time series charts section', function ()
     useSectionSpec(this, {
       charts: [simpleChartDefinition],
     });
-    await renderComponent(this);
+    await renderComponent();
 
     await expectResolutions(['1 min', '1 hr']);
   });
@@ -172,7 +169,7 @@ describe('Integration | Component | one time series charts section', function ()
     useSectionSpec(this, {
       charts: [simpleChartDefinition, simpleChartDefinition],
     });
-    await renderComponent(this);
+    await renderComponent();
 
     expect(findAll('.section-chart')).to.have.length(2);
     expect(this.get('onQueryBatcherFetchDataCallback')).to.have.been.calledOnce
@@ -191,7 +188,7 @@ describe('Integration | Component | one time series charts section', function ()
       chartNavigation: 'independent',
       charts: [simpleChartDefinition, simpleChartDefinition],
     });
-    await renderComponent(this);
+    await renderComponent();
 
     expect(findAll('.one-time-series-chart-toolbar')).to.have.length(2);
   });
@@ -201,7 +198,7 @@ describe('Integration | Component | one time series charts section', function ()
       chartNavigation: 'independent',
       charts: [simpleChartDefinition, simpleChartDefinition],
     });
-    await renderComponent(this);
+    await renderComponent();
 
     await selectChoose('.one-time-series-chart-toolbar', '1 hr');
     const resolutionTriggers = findAll('.time-resolutions-trigger');
@@ -214,7 +211,7 @@ describe('Integration | Component | one time series charts section', function ()
       chartNavigation: 'sharedWithinSection',
       charts: [simpleChartDefinition, simpleChartDefinition],
     });
-    await renderComponent(this);
+    await renderComponent();
 
     expect(findAll('.one-time-series-chart-toolbar')).to.have.length(1);
   });
@@ -225,7 +222,7 @@ describe('Integration | Component | one time series charts section', function ()
         chartNavigation: 'sharedWithinSection',
         charts: [simpleChartDefinition, simpleChartDefinition],
       });
-      await renderComponent(this);
+      await renderComponent();
 
       await selectChoose('.one-time-series-chart-toolbar', '1 hr');
       expect(getEchartOption(0).series[0].data.pop()[1]).to.equal(36000);
@@ -238,7 +235,7 @@ describe('Integration | Component | one time series charts section', function ()
         chartNavigation: 'sharedWithinSection',
         charts: [simpleChartDefinition, hourOnlySimpleChartDefinition],
       });
-      await renderComponent(this);
+      await renderComponent();
 
       await expectResolutions(['1 hr']);
       expect(getEchartOption(0).series[0].data.pop()[1]).to.equal(36000);
@@ -246,14 +243,14 @@ describe('Integration | Component | one time series charts section', function ()
     });
 });
 
-async function renderComponent(testCase) {
-  testCase.render(hbs `{{one-time-series-charts-section
+async function renderComponent() {
+  await render(hbs `{{one-time-series-charts-section
     sectionSpec=sectionSpec
     timeSeriesSchemas=timeSeriesSchemas
     externalDataSources=externalDataSources
     onQueryBatcherFetchData=onQueryBatcherFetchDataCallback
   }}`);
-  await wait();
+  await settled();
 }
 
 function useSectionSpec(testCase, spec) {

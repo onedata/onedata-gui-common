@@ -1,13 +1,11 @@
 import { expect } from 'chai';
 import _ from 'lodash';
-import { selectChoose, clickTrigger } from './ember-power-select';
-import $ from 'jquery';
+import { selectChoose, clickTrigger } from 'ember-power-select/test-support/helpers';
 import Configuration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import Model from 'onedata-gui-common/utils/one-time-series-chart/model';
-import { find } from 'ember-native-dom-helpers';
+import { find } from '@ember/test-helpers';
 
 export function expectEchartDummyPoints(
-  testCase,
   lastPointTimestamp,
   timeResolution,
   pointsCount
@@ -17,11 +15,11 @@ export function expectEchartDummyPoints(
     timeResolution,
     pointsCount,
   }).map(({ timestamp, value }) => [String(timestamp), value]);
-  expect(getEchartOption(testCase).series[0].data).to.deep.equal(echartPoints);
+  expect(getEchartOption().series[0].data).to.deep.equal(echartPoints);
 }
 
-function getEchartOption(testCase) {
-  return testCase.$('.test-component')[0].componentInstance.get('option');
+function getEchartOption() {
+  return find('.test-component').componentInstance.get('option');
 }
 
 export function createDummyConfiguration(minTimestamp, maxTimestamp) {
@@ -105,7 +103,7 @@ export function expectNoChartDataToShow() {
   const plot = find('.one-time-series-chart-plot');
   const canvasArea = plot.querySelector('.canvas-area');
   expect(canvasArea.children).to.have.length(1);
-  expect([...plot.classList]).to.include('no-data');
+  expect(plot).to.have.class('no-data');
   expect(canvasArea.textContent.trim()).to.equal('There is no data to show.');
 }
 
@@ -118,16 +116,16 @@ export function createModel(config) {
 
 export async function expectResolutions(resolutionLabels) {
   await clickTrigger('.one-time-series-chart-toolbar');
-  const $options = $('.ember-power-select-option');
-  expect($options).to.have.length(resolutionLabels.length);
+  const options = document.querySelectorAll('.ember-power-select-option');
+  expect(options).to.have.length(resolutionLabels.length);
   resolutionLabels.forEach((label, idx) =>
-    expect($options.eq(idx).text().trim()).to.equal(label)
+    expect(options[idx].textContent.trim()).to.equal(label)
   );
 }
 
-export function expectActiveResolution(testCase, activeResolutionLabel) {
-  const $dropdownTrigger = testCase.$('.time-resolutions-trigger');
-  expect($dropdownTrigger.text().trim()).to.equal(activeResolutionLabel);
+export function expectActiveResolution(activeResolutionLabel) {
+  const dropdownTrigger = find('.time-resolutions-trigger');
+  expect(dropdownTrigger.textContent.trim()).to.equal(activeResolutionLabel);
 }
 
 export async function changeResolution(resolutionLabel) {

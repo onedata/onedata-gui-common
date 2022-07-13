@@ -11,7 +11,14 @@ import Component from '@ember/component';
 import layout from '../../templates/components/form-component/field-renderer';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { and, tag, writable, equal, raw, conditional } from 'ember-awesome-macros';
+import {
+  and,
+  tag,
+  writable,
+  equal,
+  raw,
+  conditional,
+} from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
