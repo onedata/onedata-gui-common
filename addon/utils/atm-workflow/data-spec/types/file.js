@@ -56,20 +56,15 @@ export function canValueConstraintsContain(
   toContainConstraints,
   ignoreEmpty = false,
 ) {
-  if (
-    !containerConstraints ||
-    !containerConstraints.fileType ||
-    !toContainConstraints ||
-    !toContainConstraints.fileType
-  ) {
+  if (!containerConstraints?.fileType || !toContainConstraints?.fileType) {
     return ignoreEmpty;
   }
 
   if (containerConstraints.fileType === toContainConstraints.fileType) {
     return true;
   } else {
-    return (fileSupertypes[toContainConstraints.fileType] || [])
-      .includes(containerConstraints.fileType);
+    return fileSupertypes[toContainConstraints.fileType]
+      ?.includes(containerConstraints.fileType) || false;
   }
 }
 

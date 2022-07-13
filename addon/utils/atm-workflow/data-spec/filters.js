@@ -43,7 +43,6 @@
  * } AtmDataSpecFilter
  */
 
-import { get } from '@ember/object';
 import { canDataSpecContain } from './types';
 
 /**
@@ -54,11 +53,11 @@ import { canDataSpecContain } from './types';
  * @returns {boolean}
  */
 export function dataSpecMatchesFilters(dataSpec, filters, placementContext = 'root') {
-  const dataSpecType = dataSpec && dataSpec.type;
+  const dataSpecType = dataSpec?.type;
   // Absence of `dataSpec.type` means, that data spec is not complete (probably under
   // edition). It's emptiness does not directly violate any filter as there is still
   // posibbility that at some point this empty slot will be filled with a proper type.
-  if (!dataSpecType || !filters || !filters.length) {
+  if (!dataSpecType || !filters?.length) {
     return true;
   }
 
@@ -89,7 +88,7 @@ export function dataSpecMatchesFilters(dataSpec, filters, placementContext = 'ro
         break;
       }
       case 'forbiddenType': {
-        if ((filter.ignoredContexts || []).includes(placementContext)) {
+        if (filter.ignoredContexts?.includes(placementContext)) {
           break;
         }
         for (const filteredType of filter.forbiddenTypes) {
@@ -103,7 +102,7 @@ export function dataSpecMatchesFilters(dataSpec, filters, placementContext = 'ro
   }
 
   if (dataSpecType === 'array') {
-    const itemDataSpec = get(dataSpec, 'valueConstraints.itemDataSpec');
+    const itemDataSpec = dataSpec?.valueConstraints?.itemDataSpec;
     const itemFilters = [];
 
     for (const filter of filters) {

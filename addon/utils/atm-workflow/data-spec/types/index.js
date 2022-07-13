@@ -6,7 +6,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { get } from '@ember/object';
 import { canValueConstraintsContain as canFileValueConstraintsContain } from './file';
 
 /**
@@ -93,12 +92,7 @@ export function canDataSpecContain(
   toContainDataSpec,
   ignoreEmpty = false,
 ) {
-  if (
-    !containerDataSpec ||
-    !containerDataSpec.type ||
-    !toContainDataSpec ||
-    !toContainDataSpec.type
-  ) {
+  if (!containerDataSpec?.type || !toContainDataSpec?.type) {
     return ignoreEmpty;
   }
 
@@ -107,8 +101,8 @@ export function canDataSpecContain(
     toContainDataSpec.type === 'array'
   ) {
     return canDataSpecContain(
-      get(containerDataSpec, 'valueConstraints.itemDataSpec'),
-      get(toContainDataSpec, 'valueConstraints.itemDataSpec'),
+      containerDataSpec.valueConstraints?.itemDataSpec,
+      toContainDataSpec.valueConstraints?.itemDataSpec,
       ignoreEmpty
     );
   } else if (containerDataSpec.type === toContainDataSpec.type) {
@@ -122,7 +116,7 @@ export function canDataSpecContain(
       return true;
     }
   } else {
-    return (dataSpecSupertypes[toContainDataSpec.type] || [])
-      .includes(containerDataSpec.type);
+    return dataSpecSupertypes[toContainDataSpec.type]
+      ?.includes(containerDataSpec.type) || false;
   }
 }
