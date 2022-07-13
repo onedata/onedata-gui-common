@@ -34,7 +34,7 @@ const FormElement = FormFieldsCollectionGroup.extend({
   translationPath: '',
   sizeForChildren: 'sm',
   fieldFactoryMethod(uniqueFieldValueName) {
-    return FormFieldsGroup.create({
+    const field = FormFieldsGroup.create({
       name: 'measurementSpec',
       valueName: uniqueFieldValueName,
       fields: [
@@ -72,6 +72,8 @@ const FormElement = FormFieldsCollectionGroup.extend({
         }),
       ],
     });
+    field.changeMode(this.get('mode'));
+    return field;
   },
 });
 

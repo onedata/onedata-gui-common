@@ -10,6 +10,28 @@
 
 /**
  * @param {{ type, config }} storeProperties
+ * @returns {AtmDataSpec|null} null when writing to store is not constrained by
+ * data specs mechanism
+ */
+export function getStoreWriteDataSpec({ type, config }) {
+  switch (type) {
+    case 'auditLog':
+      return config && config.logContentDataSpec || null;
+    case 'list':
+    case 'singleValue':
+    case 'treeForest':
+      return config && config.itemDataSpec || null;
+    case 'range':
+      return { type: 'range', valueConstraints: {} };
+    case 'timeSeries':
+      return { type: 'timeSeriesMeasurement', valueConstraints: {} };
+    default:
+      return null;
+  }
+}
+
+/**
+ * @param {{ type, config }} storeProperties
  * @returns {AtmDataSpec|null} null when reading from store is not constrained by
  * data specs mechanism
  */
