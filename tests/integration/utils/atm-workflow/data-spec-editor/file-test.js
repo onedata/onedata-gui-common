@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import { find, render, settled } from 'ember-native-dom-helpers';
+import { find, render, settled } from '@ember/test-helpers';
 import { selectChoose, clickTrigger } from 'ember-power-select/test-support/helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import fileEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/file';
@@ -27,7 +27,7 @@ describe('Integration | Utility | atm workflow/data spec editor/file', function 
 
   beforeEach(function () {
     this.set('rootGroup', FormFieldsRootGroup.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       fields: [
         fileEditor.FormElement.create({
           name: 'valueConstraintsEditor',

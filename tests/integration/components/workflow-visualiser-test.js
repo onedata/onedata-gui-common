@@ -97,6 +97,10 @@ describe('Integration | Component | workflow visualiser', function () {
           getModalBody('store-modal').querySelector('.name-field .form-control'),
           'new store'
         );
+        await selectChoose(
+          getModalBody('store-modal').querySelector('.data-spec-editor'),
+          'Integer'
+        );
         await click(getModalFooter('store-modal').querySelector('.btn-submit'));
         await click(getModalFooter().querySelector('.btn-submit'));
       },
@@ -194,6 +198,10 @@ describe('Integration | Component | workflow visualiser', function () {
           getModalBody('store-modal').querySelector('.name-field .form-control'),
           'new store'
         );
+        await selectChoose(
+          getModalBody('store-modal').querySelector('.data-spec-editor'),
+          'Integer'
+        );
         await click(getModalFooter('store-modal').querySelector('.btn-submit'));
         await click(getModalFooter().querySelector('.btn-submit'));
       },
@@ -281,6 +289,10 @@ describe('Integration | Component | workflow visualiser', function () {
         await fillIn(
           getModalBody().querySelector('.name-field .form-control'),
           'newstore'
+        );
+        await selectChoose(
+          getModalBody().querySelector('.data-spec-editor'),
+          'Integer'
         );
         await click(getModalFooter().querySelector('.btn-submit'));
       },

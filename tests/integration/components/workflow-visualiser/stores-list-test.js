@@ -13,6 +13,7 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import sinon from 'sinon';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 describe('Integration | Component | workflow visualiser/stores list', function () {
   setupRenderingTest();
@@ -63,6 +64,7 @@ describe('Integration | Component | workflow visualiser/stores list', function (
 
       await click('.create-store-action-trigger');
       await fillIn(getModalBody().querySelector('.name-field .form-control'), 'store1');
+      await selectChoose(getModalBody().querySelector('.data-spec-editor'), 'Integer');
       await click(getModalFooter().querySelector('.btn-submit'));
 
       expect(this.get('createStoreStub')).to.be.calledOnce.and.to.be.calledWith({
