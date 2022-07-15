@@ -42,6 +42,7 @@
   <div class="section-subsections">
     {{#each sectionSpec.sections as |subsection|}}
       {{one-time-series-charts-section
+        live=live
         sectionSpec=subsection
         timeSeriesSchemas=timeSeriesSchemas
         externalDataSources=externalDataSources

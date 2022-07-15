@@ -34,7 +34,7 @@
  *       data: 'useFallback',
  *     },
  *   },
- *   fallbackValueProvider: : {
+ *   fallbackValueProvider: {
  *     functionName: 'literal',
  *     functionArguments: {
  *       data: 0,

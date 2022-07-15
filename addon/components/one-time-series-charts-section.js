@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed, observer, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
@@ -36,7 +36,13 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {OneTimeSeriesChartsSectionSpec}
+   * @type {boolean}
+   */
+  live: true,
+
+  /**
+   * @virtual
+   * @type {OneTimeSeriesChartsSectionSpec|undefined}
    */
   sectionSpec: undefined,
 
@@ -161,9 +167,11 @@ export default Component.extend({
     function chartConfigurations() {
       const chartSpecs = this.get('sectionSpec.charts') || [];
       const {
+        live,
         globalTimeSecondsOffset,
         normalizedExternalDataSources,
       } = this.getProperties(
+        'live',
         'globalTimeSecondsOffset',
         'normalizedExternalDataSources',
       );
@@ -174,7 +182,7 @@ export default Component.extend({
           timeResolutionSpecs: this.getTimeResolutionSpecs(chartSpec),
           externalDataSources: normalizedExternalDataSources,
         });
-        configuration.setViewParameters({ live: true });
+        configuration.setViewParameters({ live });
         return configuration;
       });
     }
@@ -187,6 +195,19 @@ export default Component.extend({
     return this.get('chartConfigurations').map((configuration) =>
       OTSCModel.create({ configuration })
     );
+  }),
+
+  liveObserver: observer('live', function liveObserver() {
+    const {
+      live,
+      chartConfigurations,
+    } = this.getProperties('live', 'chartConfigurations');
+
+    chartConfigurations.forEach((config) => {
+      if (config.getViewParameters().live !== live) {
+        config.setViewParameters({ live });
+      }
+    });
   }),
 
   init() {
