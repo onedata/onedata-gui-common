@@ -47,7 +47,7 @@ export function createDummyChartDefinition() {
       name: 'Axis 1',
     }],
     seriesBuilders: [{
-      builderName: 'static',
+      builderType: 'static',
       builderRecipe: {
         seriesTemplate: {
           id: 's1',

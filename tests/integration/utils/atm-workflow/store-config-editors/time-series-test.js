@@ -287,7 +287,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
             },
           },
         }],
-        chartSpecs: [],
+        dashboardSpec: null,
       });
       expect(this.get('rootGroup.isValid')).to.be.true;
     });
@@ -322,7 +322,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
           },
         },
       }],
-      chartSpecs: undefined,
+      dashboardSpec: null,
     });
 
     await renderForm();

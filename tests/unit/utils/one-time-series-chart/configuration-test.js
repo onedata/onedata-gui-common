@@ -468,7 +468,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
-          builderName: 'dynamic',
+          builderType: 'dynamic',
           builderRecipe: {
             dynamicSeriesGroupConfigsSource: {
               sourceType: 'external',
@@ -515,7 +515,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
-          builderName: 'dynamic',
+          builderType: 'dynamic',
           builderRecipe: {
             dynamicSeriesGroupsConfigs: {
               sourceType: 'external',
@@ -556,7 +556,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
-          builderName: 'static',
+          builderType: 'static',
           builderRecipe: {
             seriesGroupTemplate: {
               id: 'g1',
@@ -597,7 +597,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
-          builderName: 'static',
+          builderType: 'static',
           builderRecipe: {
             seriesGroupTemplate: {
               id: 'g1',
@@ -622,7 +622,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
-          builderName: 'static',
+          builderType: 'static',
           builderRecipe: {
             seriesGroupTemplate: {
               id: 'g1',
@@ -659,7 +659,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
-          builderName: 'dynamic',
+          builderType: 'dynamic',
           builderRecipe: {
             dynamicSeriesGroupConfigsSource: {
               sourceType: 'external',
@@ -792,7 +792,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
-          builderName: 'dynamic',
+          builderType: 'dynamic',
           builderRecipe: {
             dynamicSeriesConfigsSource: {
               sourceType: 'external',
@@ -877,7 +877,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
-          builderName: 'dynamic',
+          builderType: 'dynamic',
           builderRecipe: {
             dynamicSeriesConfigsSource: {
               sourceType: 'external',
@@ -951,7 +951,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
-          builderName: 'static',
+          builderType: 'static',
           builderRecipe: {
             seriesTemplate: {
               id: 's1',
@@ -1009,7 +1009,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
-          builderName: 'static',
+          builderType: 'static',
           builderRecipe: {
             seriesTemplate: {
               id: 's1',
@@ -1065,7 +1065,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
-          builderName: 'dynamic',
+          builderType: 'dynamic',
           builderRecipe: {
             dynamicSeriesConfigsSource: {
               sourceType: 'external',
@@ -1171,7 +1171,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
-          builderName: 'static',
+          builderType: 'static',
           builderRecipe: {
             seriesTemplate: {
               id: 's1',
@@ -1615,7 +1615,7 @@ function dummyDataSource(points) {
 
 function dummyStaticSeriesGroupFactory(seriesGroupNo) {
   return {
-    builderName: 'static',
+    builderType: 'static',
     builderRecipe: {
       seriesGroupTemplate: {
         idProvider: `g${seriesGroupNo}`,
@@ -1637,7 +1637,7 @@ function dummyStaticSeriesGroupFactoryState(seriesGroupNo) {
 
 function dummyStaticSeriesFactory(seriesNo, externalSourceName) {
   return {
-    builderName: 'static',
+    builderType: 'static',
     builderRecipe: {
       seriesTemplate: {
         id: `s${seriesNo}`,

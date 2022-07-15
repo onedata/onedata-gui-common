@@ -11,7 +11,7 @@
  * `builderRecipe.dynamicSeriesGroupConfigsSource` - through external data source. Example:
  * ```
  * {
- *   builderName: 'dynamic',
+ *   builderType: 'dynamic',
  *   builderRecipe: {
  *     dynamicSeriesGroupConfigsSource: {
  *       sourceType: 'external',

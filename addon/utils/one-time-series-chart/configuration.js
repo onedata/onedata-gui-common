@@ -176,7 +176,7 @@
  *
  * ```
  * {
- *   builderName: 'static',
+ *   builderType: 'static',
  *   builderRecipe: {
  *     seriesTemplate: {
  *       id: 'bytesSent',
@@ -223,7 +223,7 @@
  * Example of a dynamic series builder:
  * ```
  * {
- *   builderName: 'dynamic',
+ *   builderType: 'dynamic',
  *   builderRecipe: {
  *     dynamicSeriesConfigsSource: {
  *       sourceType: 'external',
@@ -303,7 +303,7 @@
  * ```
  * // Static series group builder
  * {
- *   builderName: 'static',
+ *   builderType: 'static',
  *   builderRecipe: {
  *     seriesGroupTemplate: {
  *       id: 'g1,
@@ -316,7 +316,7 @@
  *
  * // Dynamic series group builder
  * {
- *   builderName: 'dynamic',
+ *   builderType: 'dynamic',
  *   builderRecipe: {
  *     dynamicSeriesGroupConfigsSource: {
  *       sourceType: 'external',
@@ -457,7 +457,7 @@
  *       },
  *     }],
  *     seriesBuilders: [{
- *       builderName: 'static',
+ *       builderType: 'static',
  *       builderRecipe: {
  *         seriesTemplate: {
  *           id: 'bytesSent',
@@ -590,7 +590,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 
 /**
  * @typedef {Object} OTSCRawSeriesGroupBuilder
- * @property {string} builderName
+ * @property {string} builderType
  * @property {Object} builderRecipe
  */
 
@@ -605,7 +605,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 
 /**
  * @typedef {Object} OTSCRawSeriesBuilder
- * @property {string} builderName
+ * @property {string} builderType
  * @property {Object} builderRecipe
  */
 
@@ -1078,12 +1078,12 @@ export default class Configuration {
     };
     const groupsPerBuilder = await allFulfilled(
       rawBuilders.map((seriesGroupBuilder) => {
-        const builderFunction = seriesGroupBuildersIndex[seriesGroupBuilder.builderName];
+        const builderFunction = seriesGroupBuildersIndex[seriesGroupBuilder.builderType];
         if (!builderFunction) {
           throw {
             id: 'unknownOTSCBuilder',
             details: {
-              builderName: seriesGroupBuilder.builderName,
+              builderType: seriesGroupBuilder.builderType,
             },
           };
         }
@@ -1148,12 +1148,12 @@ export default class Configuration {
       this.chartDefinition.seriesBuilders || [];
     const seriesPerBuilder = await allFulfilled(
       rawSeriesBuilders.map((seriesBuilder) => {
-        const builderFunction = seriesBuildersIndex[seriesBuilder.builderName];
+        const builderFunction = seriesBuildersIndex[seriesBuilder.builderType];
         if (!builderFunction) {
           throw {
             id: 'unknownOTSCBuilder',
             details: {
-              builderName: seriesBuilder.builderName,
+              builderType: seriesBuilder.builderType,
             },
           };
         }

@@ -17,7 +17,7 @@ function getEchartOption(chartIdx = 0) {
 const simpleChartDefinition = {
   yAxes: [{ id: 'axis' }],
   seriesBuilders: [{
-    builderName: 'static',
+    builderType: 'static',
     builderRecipe: {
       seriesTemplate: {
         id: 'valuesTotal',
@@ -34,7 +34,7 @@ const simpleChartDefinition = {
                   externalSourceParameters: {
                     timeSeriesNameGenerator: 'values-total',
                     timeSeriesName: 'values-total',
-                    metricIds: ['60', '3600'],
+                    metricNames: ['60', '3600'],
                   },
                 },
               },
@@ -48,7 +48,7 @@ const simpleChartDefinition = {
 const hourOnlySimpleChartDefinition = _.cloneDeep(simpleChartDefinition);
 hourOnlySimpleChartDefinition.seriesBuilders[0].builderRecipe.seriesTemplate
   .dataProvider.functionArguments.sourceSpecProvider.functionArguments.data
-  .externalSourceParameters.metricIds = ['3600'];
+  .externalSourceParameters.metricNames = ['3600'];
 
 describe('Integration | Component | one time series charts section', function () {
   setupRenderingTest();

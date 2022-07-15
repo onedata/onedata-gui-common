@@ -45,7 +45,7 @@ const FormElement = FormFieldsGroup.extend({
   translationPath: '',
   fields: computed(() => [
     timeSeriesSchemasField.create(),
-    chartSpecsField.create(),
+    dashboardSpecField.create(),
   ]),
 });
 
@@ -176,9 +176,9 @@ const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
   },
 });
 
-const chartSpecsField = JsonField.extend({
-  name: 'chartSpecs',
-  defaultValue: '[]',
+const dashboardSpecField = JsonField.extend({
+  name: 'dashboardSpec',
+  defaultValue: 'null',
 });
 
 /**
@@ -188,8 +188,8 @@ const chartSpecsField = JsonField.extend({
 function formValuesToStoreConfig(values) {
   const {
     timeSeriesSchemas: formTimeSeriesSchemas,
-    chartSpecs,
-  } = getProperties(values, 'timeSeriesSchemas', 'chartSpecs');
+    dashboardSpec,
+  } = getProperties(values, 'timeSeriesSchemas', 'dashboardSpec');
   const schemas = get(formTimeSeriesSchemas, '__fieldsValueNames')
     .map((valueName) => get(formTimeSeriesSchemas, valueName))
     .filter(Boolean)
@@ -231,16 +231,17 @@ function formValuesToStoreConfig(values) {
       return rawTimeSeriesSchema;
     });
 
-  let parsedChartSpecs;
+  let parsedDashboardSpec;
   try {
-    parsedChartSpecs = typeof chartSpecs === 'string' ? JSON.parse(chartSpecs) : [];
+    parsedDashboardSpec = (typeof dashboardSpec === 'string') && dashboardSpec ?
+      JSON.parse(dashboardSpec) : undefined;
   } catch (err) {
-    parsedChartSpecs = [];
+    parsedDashboardSpec = undefined;
   }
 
   return {
     schemas,
-    chartSpecs: parsedChartSpecs,
+    dashboardSpec: parsedDashboardSpec,
   };
 }
 
@@ -255,7 +256,11 @@ function storeConfigToFormValues(storeConfig) {
   });
   const values = createValuesContainer({
     timeSeriesSchemas,
-    chartSpecs: JSON.stringify(storeConfig && storeConfig.chartSpecs || [], null, 2),
+    dashboardSpec: JSON.stringify(
+      storeConfig && storeConfig.dashboardSpec || null,
+      null,
+      2
+    ),
   });
 
   if (!storeConfig || !Array.isArray(storeConfig.schemas)) {
@@ -267,7 +272,7 @@ function storeConfigToFormValues(storeConfig) {
       return;
     }
 
-    const schemaFormGroupName = `schema${idx}`;
+    const schemaFormGroupName = `sdchema${idx}`;
 
     const {
       nameGeneratorType,

@@ -320,8 +320,8 @@ function getTimeResolutionSpecs({
 
   // Extract series loaded via dynamic series
   seriesBuildersSpecs
-    .map(({ builderName, builderRecipe }) =>
-      builderName === 'dynamic' &&
+    .map(({ builderType, builderRecipe }) =>
+      builderType === 'dynamic' &&
       builderRecipe &&
       builderRecipe.dynamicSeriesConfigsSource &&
       extractExternalDataSourceRef(builderRecipe.dynamicSeriesConfigsSource) ||
@@ -337,10 +337,10 @@ function getTimeResolutionSpecs({
 
   // Map found series sources to resolutions
   const resolutionsPerSource = foundSeriesSources
-    .map(({ timeSeriesNameGenerator, metricIds }) => getResolutionsForMetricIds({
+    .map(({ timeSeriesNameGenerator, metricNames }) => getResolutionsForMetricNames({
       timeSeriesSchemas,
       timeSeriesNameGenerator,
-      metricIds,
+      metricNames,
     }));
   const sortedCommonResolutions = _.intersection(...resolutionsPerSource)
     .sort((res1, res2) => res1 - res2);
@@ -377,10 +377,10 @@ function extractExternalDataSourceRef(possibleSourceRef) {
   return null;
 }
 
-function getResolutionsForMetricIds({
+function getResolutionsForMetricNames({
   timeSeriesSchemas,
   timeSeriesNameGenerator,
-  metricIds,
+  metricNames,
 }) {
   const foundTimeSeriesSchema = (timeSeriesSchemas || []).find((schema) =>
     schema && schema.nameGenerator === timeSeriesNameGenerator
@@ -388,7 +388,7 @@ function getResolutionsForMetricIds({
   if (!foundTimeSeriesSchema || !foundTimeSeriesSchema.metrics) {
     return [];
   }
-  const resolutions = (metricIds || []).map((metricId) =>
+  const resolutions = (metricNames || []).map((metricId) =>
     foundTimeSeriesSchema.metrics[metricId] &&
     foundTimeSeriesSchema.metrics[metricId].resolution ||
     null

@@ -12,7 +12,7 @@ import _ from 'lodash';
 /**
  * @typedef {Object} AtmTimeSeriesStoreConfig
  * @property {Array<AtmTimeSeriesSchema>} schemas
- * @property {Array<OTSCChartDefinition>} chartSpecs
+ * @property {{ rootSection: OneTimeSeriesChartsSectionSpec }} [dashboardSpec]
  */
 
 /**
