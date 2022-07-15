@@ -1,4 +1,4 @@
-{{#each actionsArray key="id" as |act|}}
+{{#each actionsArray key=actionKey as |act|}}
   <li class={{concat-classes
     (if act.separator "separator")
     (if act.disabled "disabled")
