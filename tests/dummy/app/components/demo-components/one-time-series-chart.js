@@ -18,24 +18,19 @@ export default Component.extend({
         yAxes: [{
           id: 'axis1',
           name: 'Axis 1',
-          valueTransformer: {
-            functionName: 'formatWithUnit',
+          unitName: 'bytes',
+          valueProvider: {
+            functionName: 'abs',
             functionArguments: {
-              unitName: 'bytes',
-              data: {
-                functionName: 'abs',
-                functionArguments: {
-                  data: {
-                    functionName: 'supplyValue',
-                  },
-                },
+              inputDataProvider: {
+                functionName: 'currentValue',
               },
             },
           },
         }],
-        seriesGroups: [{
-          factoryName: 'static',
-          factoryArguments: {
+        seriesGroupBuilders: [{
+          builderType: 'static',
+          builderRecipe: {
             seriesGroupTemplate: {
               id: 'group1',
               name: 'Group 1',
@@ -44,11 +39,11 @@ export default Component.extend({
             },
           },
         }, {
-          factoryName: 'dynamic',
-          factoryArguments: {
+          builderType: 'dynamic',
+          builderRecipe: {
             dynamicSeriesGroupConfigsSource: {
               sourceType: 'external',
-              sourceParameters: {
+              sourceSpec: {
                 externalSourceName: 'myTimeSeriesSource',
                 externalSourceParameters: {
                   namePrefix: 'dynamic group #',
@@ -56,22 +51,32 @@ export default Component.extend({
               },
             },
             seriesGroupTemplate: {
-              id: {
-                functionName: 'getDynamicSeriesGroupConfigData',
+              idProvider: {
+                functionName: 'getDynamicSeriesGroupConfig',
                 functionArguments: {
                   propertyName: 'id',
                 },
               },
-              name: {
-                functionName: 'getDynamicSeriesGroupConfigData',
+              nameProvider: {
+                functionName: 'getDynamicSeriesGroupConfig',
                 functionArguments: {
                   propertyName: 'name',
                 },
               },
-              stack: true,
-              showSeriesSum: true,
-              subgroups: {
-                functionName: 'getDynamicSeriesGroupConfigData',
+              stackedProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: true,
+                },
+              },
+              showSumProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: true,
+                },
+              },
+              subgroupsProvider: {
+                functionName: 'getDynamicSeriesGroupConfig',
                 functionArguments: {
                   propertyName: 'subgroups',
                 },
@@ -79,34 +84,44 @@ export default Component.extend({
             },
           },
         }],
-        series: [{
-          factoryName: 'static',
-          factoryArguments: {
+        seriesBuilders: [{
+          builderType: 'static',
+          builderRecipe: {
             seriesTemplate: {
               id: 'series1id',
               name: 'Series 1',
               type: 'bar',
               yAxisId: 'axis1',
               groupId: 'group1',
-              data: {
+              dataProvider: {
                 functionName: 'abs',
                 functionArguments: {
-                  data: {
+                  inputDataProvider: {
                     functionName: 'multiply',
                     functionArguments: {
-                      operands: [{
+                      operandProviders: [{
                         functionName: 'loadSeries',
                         functionArguments: {
                           sourceType: 'external',
-                          sourceParameters: {
-                            externalSourceName: 'myTimeSeriesSource',
-                            externalSourceParameters: {
-                              storeId: 'asdfasdf',
-                              seriesId: 'bytes',
+                          sourceSpecProvider: {
+                            functionName: 'literal',
+                            functionArguments: {
+                              data: {
+                                externalSourceName: 'myTimeSeriesSource',
+                                externalSourceParameters: {
+                                  storeId: 'asdfasdf',
+                                  seriesId: 'bytes',
+                                },
+                              },
                             },
                           },
                         },
-                      }, 2],
+                      }, {
+                        functionName: 'literal',
+                        functionArguments: {
+                          data: 2,
+                        },
+                      }],
                     },
                   },
                 },
@@ -114,11 +129,11 @@ export default Component.extend({
             },
           },
         }, {
-          factoryName: 'dynamic',
-          factoryArguments: {
+          builderType: 'dynamic',
+          builderRecipe: {
             dynamicSeriesConfigsSource: {
               sourceType: 'external',
-              sourceParameters: {
+              sourceSpec: {
                 externalSourceName: 'myTimeSeriesSource',
                 externalSourceParameters: {
                   namePrefix: 'dynamic series #',
@@ -126,44 +141,59 @@ export default Component.extend({
               },
             },
             seriesTemplate: {
-              id: {
-                functionName: 'getDynamicSeriesConfigData',
+              idProvider: {
+                functionName: 'getDynamicSeriesConfig',
                 functionArguments: {
                   propertyName: 'id',
                 },
               },
-              name: {
-                functionName: 'getDynamicSeriesConfigData',
+              nameProvider: {
+                functionName: 'getDynamicSeriesConfig',
                 functionArguments: {
                   propertyName: 'name',
                 },
               },
-              type: 'bar',
-              yAxisId: 'axis1',
-              groupId: {
-                functionName: 'getDynamicSeriesConfigData',
+              typeProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: 'bar',
+                },
+              },
+              yAxisIdProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: 'axis1',
+                },
+              },
+              groupIdProvider: {
+                functionName: 'getDynamicSeriesConfig',
                 functionArguments: {
                   propertyName: 'groupId',
                 },
               },
-              data: {
+              dataProvider: {
                 functionName: 'abs',
                 functionArguments: {
-                  data: {
+                  inputDataProvider: {
                     functionName: 'multiply',
                     functionArguments: {
-                      operands: [{
+                      operandProviders: [{
                         functionName: 'loadSeries',
                         functionArguments: {
                           sourceType: 'external',
-                          sourceParameters: {
-                            functionName: 'getDynamicSeriesConfigData',
+                          sourceSpecProvider: {
+                            functionName: 'getDynamicSeriesConfig',
                             functionArguments: {
                               propertyName: 'loadSeriesSourceParameters',
                             },
                           },
                         },
-                      }, 2],
+                      }, {
+                        functionName: 'literal',
+                        functionArguments: {
+                          data: 2,
+                        },
+                      }],
                     },
                   },
                 },

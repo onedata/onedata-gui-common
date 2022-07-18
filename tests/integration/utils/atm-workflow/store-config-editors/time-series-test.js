@@ -240,7 +240,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
       await click('.tags-selector .selector-item:nth-child(2)');
       await selectChoose('.tags-selector .aggregator-dropdown', 'Last');
       await click('.tags-selector .btn-custom');
-      await fillIn('.tags-selector .id-field input', 'id2');
+      await fillIn('.tags-selector .name-field input', 'id2');
       await selectChoose('.tags-selector .resolution-field', 'Infinity');
       await fillIn('.tags-selector .retention-field input', '1');
       await click('.tags-selector .submit-custom-metric');
