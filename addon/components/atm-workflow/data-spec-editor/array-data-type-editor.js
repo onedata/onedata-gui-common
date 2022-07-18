@@ -51,6 +51,7 @@ export default Component.extend({
   editorElement: undefined,
 
   /**
+   * @virtual
    * @type {Map<string, DataSpecEditorElementContext>}
    */
   editorElementsContextMap: undefined,
@@ -87,7 +88,8 @@ export default Component.extend({
           case 'typeOrSupertype':
           case 'typeOrSubtype': {
             const itemTypes = dataSpecFilter.types.map((type) =>
-              extractItemTypeFromArrayDataSpec(type)).compact();
+              extractItemTypeFromArrayDataSpec(type)
+            ).compact();
             return itemTypes.length ? Object.assign({}, dataSpecFilter, {
               types: itemTypes,
             }) : null;
@@ -124,6 +126,10 @@ export default Component.extend({
   },
 });
 
+/**
+ * @param {unknown} arrayDataSpec
+ * @returns {AtmDataSpec|undefined}
+ */
 function extractItemTypeFromArrayDataSpec(arrayDataSpec) {
   if (
     !arrayDataSpec ||

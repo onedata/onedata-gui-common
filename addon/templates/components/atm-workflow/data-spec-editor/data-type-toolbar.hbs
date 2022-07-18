@@ -1,31 +1,34 @@
-{{#if canUnpackFromArray}}
-  {{#one-icon
-    click=(action "unpackFromArray")
-    icon="flatten"
-    class=(concat-classes "unpack-from-array custom-icon-btn" (if (not isEnabled) "disabled"))
-  }}
-    {{#if isEnabled}}
-      {{one-tooltip title=(tt this "actions.unpackFromArray")}}
-    {{/if}}
-  {{/one-icon}}
-{{/if}}
 {{#if canPackIntoArray}}
   {{#one-icon
     click=(action "packIntoArray")
-    icon="array"
-    class=(concat-classes "pack-into-array custom-icon-btn" (if (not isEnabled) "disabled"))
+    icon="collection"
+    class="pack-into-array"
   }}
     {{#if isEnabled}}
       {{one-tooltip title=(tt this "actions.packIntoArray")}}
     {{/if}}
   {{/one-icon}}
 {{/if}}
-{{remove-icon
+{{#if canUnpackFromArray}}
+  {{#one-icon
+    click=(action "unpackFromArray")
+    icon="flatten"
+    class="unpack-from-array"
+  }}
+    {{#if isEnabled}}
+      {{one-tooltip title=(tt this "actions.unpackFromArray")}}
+    {{/if}}
+  {{/one-icon}}
+{{/if}}
+{{#one-icon
+  click=(action (if shouldWarnOnRemove "toggleRemoveWarn" "remove"))
+  icon="close"
   class="remove-trigger"
-  isDisabled=(not isEnabled)
-  tooltipText=(tt this "actions.remove")
-  onClick=(action (if shouldWarnOnRemove "toggleRemoveWarn" "remove"))
 }}
+  {{#if isEnabled}}
+    {{one-tooltip title=(tt this "actions.remove")}}
+  {{/if}}
+{{/one-icon}}
 {{#render-later triggerRender=isRemoveWarnOpened}}
   {{#one-webui-popover
     triggerSelector=(local-selector elementId ".remove-trigger")
@@ -44,7 +47,8 @@
         }}
           {{tt this "removeWarn.no"}}
         {{/one-button}}
-        &nbsp;
+        {{!-- Using HTML "space" entity to preserve space between inline elements --}}
+        &#32;
         {{#one-button
           type="danger"
           size="sm"

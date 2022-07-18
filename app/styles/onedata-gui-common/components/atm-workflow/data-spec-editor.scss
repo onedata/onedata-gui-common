@@ -24,23 +24,22 @@
     .one-icon {
       // negative margin to reduce excessive icons padding
       margin: -1em -0.05em;
-    }
 
-    .custom-icon-btn {
       &:hover {
         color: $color-one-light-gray;
       }
     }
 
     .remove-trigger {
-      // negative margin to reduce excessive icons padding
-      margin: -1em 0;
-      line-height: 0;
-      font-size: inherit;
+      font-size: 90%;
+
+      &:hover {
+        color: $color-one-danger;
+      }
     }
 
     &.disabled {
-      .custom-icon-btn {
+      .one-icon {
         opacity: 0.3;
         cursor: not-allowed !important;
 
@@ -60,6 +59,7 @@
 
   .form-summary-icon {
     margin-left: -0.15em;
+    margin-right: 0.2em;
     font-size: 170%;
   }
 

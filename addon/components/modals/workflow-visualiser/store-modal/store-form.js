@@ -112,6 +112,18 @@ export default Component.extend(I18n, {
   isDisabled: false,
 
   /**
+   * @virtual optional
+   * @type {AtmDataSpec|undefined}
+   */
+  allowedStoreReadDataSpec: undefined,
+
+  /**
+   * @virtual optional
+   * @type {AtmDataSpec|undefined}
+   */
+  allowedStoreWriteDataSpec: undefined,
+
+  /**
    * @type {ComputedProperty<Array<string>>}
    */
   effAllowedStoreTypes: computed(
@@ -356,9 +368,12 @@ export default Component.extend(I18n, {
       adjustValueForSelectedStoreType() {
         safeExec(this, () => {
           const storeType = this.get('valuesSource.type');
-          const dataSpec = formValuesToDataSpec(this.get('value'));
-          const newDataSpecFilters = this.get('component')
-            .calculateEffDataSpecFilters(storeType);
+          const {
+            value,
+            component,
+          } = this.getProperties('value', 'component');
+          const dataSpec = formValuesToDataSpec(value);
+          const newDataSpecFilters = component.calculateEffDataSpecFilters(storeType);
           if (!dataSpecMatchesFilters(dataSpec, newDataSpecFilters)) {
             this.valueChanged(dataSpecToFormValues(null));
           }

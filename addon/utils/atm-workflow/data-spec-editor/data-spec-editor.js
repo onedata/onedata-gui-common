@@ -41,10 +41,7 @@ import { validator } from 'ember-cp-validations';
  */
 
 /**
- * @typedef {
- *   DataSpecEditorDataTypeSelector |
- *   DataSpecEditorDataType
- * } DataSpecEditorElement
+ * @typedef {DataSpecEditorDataTypeSelector|DataSpecEditorDataType} DataSpecEditorElement
  */
 
 /**
@@ -75,7 +72,7 @@ import { validator } from 'ember-cp-validations';
  * @typedef {
  *   DataSpecEditorDataTypeSimpleConfig |
  *   DataSpecEditorDataTypeArrayConfig |
- *   DataSpecEditorDataTypeCustomConfig |
+ *   DataSpecEditorDataTypeCustomConfig
  * } DataSpecEditorDataTypeConfig
  */
 

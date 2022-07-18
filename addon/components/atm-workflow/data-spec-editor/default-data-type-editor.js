@@ -53,6 +53,7 @@ export default Component.extend({
   editorElement: undefined,
 
   /**
+   * @virtual
    * @type {Map<string, DataSpecEditorElementContext>}
    */
   editorElementsContextMap: undefined,
