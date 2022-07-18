@@ -872,7 +872,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
               },
             },
           }],
-          dashboardSpec: undefined,
+          dashboardSpec: null,
         },
       }));
 

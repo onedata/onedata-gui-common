@@ -1,3 +1,12 @@
+/**
+ * Renders time series chart dashboard section according to settings passed via `sectionSpec`.
+ *
+ * @module components/one-time-series-charts-section
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed, observer, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -19,6 +28,9 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
  * @property {string} [description]
  * @property {boolean} [isExpandedByDefault]
  * @property {'independent'|'sharedWithinSection'} [chartNavigation]
+ * `independent` means, that each chart in this section will have
+ * it's own navigation toolbar. `sharedWithinSection` means that all charts
+ * (except charts nested inside subsections) will share a single navigation toolbar.
  * @property {Array<OTSCChartDefinition>} [charts]
  * @property {Array<OneTimeSeriesChartsSectionSpec>} [sections]
  */
@@ -28,6 +40,23 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
  * @property {string} content
  * @property {string} [tip]
  */
+
+const pointsCountPerResolution = {
+  // 24 * 5 seconds -> 2 minutes
+  [metricResolutionsMap.fiveSeconds]: 24,
+  // 30 * 1 minute -> 0.5 hour
+  [metricResolutionsMap.minute]: 30,
+  // 24 * 1 hour -> 1 day
+  [metricResolutionsMap.hour]: 24,
+  // 30 * 1 day -> 1 month
+  [metricResolutionsMap.day]: 30,
+  // 13 * 1 week -> ~3 months (91 days)
+  [metricResolutionsMap.week]: 13,
+  // 12 * 1 month -> ~1 year (360 days)
+  [metricResolutionsMap.month]: 12,
+  // 10 * 1 year -> 10 years
+  [metricResolutionsMap.year]: 10,
+};
 
 export default Component.extend(I18n, {
   layout,
@@ -54,11 +83,16 @@ export default Component.extend(I18n, {
   sectionSpec: undefined,
 
   /**
+   * @virtual
    * @type {Array<AtmTimeSeriesSchema>}
    */
   timeSeriesSchemas: undefined,
 
   /**
+   * Chart external data sources available for all charts in this section.
+   * Each of them does not have to provide `fetchSeries` callback - there is a
+   * default implementation available in this component, which uses passed
+   * `queryBatchers` or `onQueryBatcherFetchData`.
    * @virtual
    * @type {OTSCExternalDataSources}
    */
@@ -273,13 +307,17 @@ export default Component.extend(I18n, {
   },
 });
 
+// Contains default implementations of some of the callbacks needed by the component
+// and which are optional to provide through component API.
 class DefaultCallbacks {
   constructor({ timeSeriesSchemas, queryBatchers }) {
+    // Default `onGetTimeResolutionSpecs` when none was provided to the component
     this.onGetTimeResolutionSpecs = ({ chartDefinition }) =>
       getTimeResolutionSpecs({
         chartDefinition,
         timeSeriesSchemas,
       });
+    // Default `fetchSeries` when external source does not provide any
     this.fetchSeries = Object.keys(queryBatchers).reduce((acc, dataSourceName) => {
       acc[dataSourceName] = (seriesParameters, sourceParameters) => fetchSeries({
         seriesParameters,
@@ -289,6 +327,7 @@ class DefaultCallbacks {
       });
       return acc;
     }, {});
+    // Default `fetchDynamicSeriesConfigs` when external source does not provide any
     this.fetchDynamicSeriesConfigs = (sourceParameters) =>
       fetchDynamicSeriesConfigs({
         sourceParameters,
@@ -296,23 +335,10 @@ class DefaultCallbacks {
   }
 }
 
-const pointsCountPerResolution = {
-  // 24 * 5 seconds -> 2 minutes
-  [metricResolutionsMap.fiveSeconds]: 24,
-  // 30 * 1 minute -> 0.5 hour
-  [metricResolutionsMap.minute]: 30,
-  // 24 * 1 hour -> 1 day
-  [metricResolutionsMap.hour]: 24,
-  // 30 * 1 day -> 1 month
-  [metricResolutionsMap.day]: 30,
-  // 13 * 1 week -> ~3 months (91 days)
-  [metricResolutionsMap.week]: 13,
-  // 12 * 1 month -> ~1 year (360 days)
-  [metricResolutionsMap.month]: 12,
-  // 10 * 1 year -> 10 years
-  [metricResolutionsMap.year]: 10,
-};
-
+/**
+ * @param {{ chartDefinition: OTSCChartDefinition, timeSeriesSchemas: Array<AtmTimeSeriesSchema> }} params
+ * @returns {Array<OTSCTimeResolutionSpec>}
+ */
 function getTimeResolutionSpecs({
   chartDefinition,
   timeSeriesSchemas,
@@ -380,6 +406,10 @@ function getTimeResolutionSpecs({
   })).filter(({ pointsCount }) => Boolean(pointsCount));
 }
 
+/**
+ * @param {unknown} possibleSourceRef
+ * @returns {OTSCExternalDataSourceRefParameters|null}
+ */
 function extractExternalDataSourceRef(possibleSourceRef) {
   let refCandidate = null;
   if (possibleSourceRef && possibleSourceRef.sourceType === 'external') {
@@ -390,7 +420,6 @@ function extractExternalDataSourceRef(possibleSourceRef) {
       refCandidate = possibleSourceRef.sourceSpecProvider.functionArguments.data;
     } else if (possibleSourceRef.sourceSpec) {
       refCandidate = possibleSourceRef.sourceSpec;
-
     }
   }
 
@@ -405,6 +434,11 @@ function extractExternalDataSourceRef(possibleSourceRef) {
   return null;
 }
 
+/**
+ * Returns possible resolutions (in seconds) for specific TS name generator and metric names
+ * @param {{ timeSeriesSchemas: Array<AtmTimeSeriesSchema>, timeSeriesNameGenerator: string, metricNames: Array<string> }} params
+ * @returns {Array<number>}
+ */
 function getResolutionsForMetricNames({
   timeSeriesSchemas,
   timeSeriesNameGenerator,
@@ -416,14 +450,19 @@ function getResolutionsForMetricNames({
   if (!foundTimeSeriesSchema || !foundTimeSeriesSchema.metrics) {
     return [];
   }
-  const resolutions = (metricNames || []).map((metricId) =>
-    foundTimeSeriesSchema.metrics[metricId] &&
-    foundTimeSeriesSchema.metrics[metricId].resolution ||
+  const resolutions = (metricNames || []).map((metricName) =>
+    foundTimeSeriesSchema.metrics[metricName] &&
+    foundTimeSeriesSchema.metrics[metricName].resolution ||
     null
   ).filter(Boolean);
   return [...new Set(resolutions)];
 }
 
+/**
+ * Loads series points according to passed parameters. Uses a query batcher to batch requests.
+ * @param {{ seriesParameters: OTSCDataSourceFetchParams, sourceParameters: Object, timeSeriesSchemas: Array<AtmTimeSeriesSchema>, queryBatcher: Utils.OneTimeSeriesChart.QueryBatcher }} params
+ * @returns {Promise<Array<OTSCRawSeriesPoint>>}
+ */
 function fetchSeries({
   seriesParameters,
   sourceParameters,
@@ -438,18 +477,18 @@ function fetchSeries({
   ) {
     return resolve([]);
   }
-  const metricId = getMetricIdForResolution({
+  const metricName = getMetricNameForResolution({
     timeSeriesSchemas,
     timeSeriesNameGenerator: sourceParameters.timeSeriesNameGenerator,
     resolution: seriesParameters.timeResolution,
   });
-  if (!metricId) {
+  if (!metricName) {
     return resolve([]);
   }
 
   const queryParams = {
     seriesId: sourceParameters.timeSeriesName,
-    metricId,
+    metricId: metricName,
     startTimestamp: seriesParameters.lastPointTimestamp,
     limit: seriesParameters.pointsCount,
   };
@@ -457,7 +496,11 @@ function fetchSeries({
   return queryBatcher.query(queryParams);
 }
 
-function getMetricIdForResolution({
+/**
+ * @param {{ timeSeriesSchemas: Array<AtmTimeSeriesSchema>, timeSeriesNameGenerator: string, resolution: number }} params
+ * @returns {number|null}
+ */
+function getMetricNameForResolution({
   timeSeriesSchemas,
   timeSeriesNameGenerator,
   resolution,
@@ -468,9 +511,9 @@ function getMetricIdForResolution({
   if (!foundTimeSeriesSchema || !foundTimeSeriesSchema.metrics) {
     return [];
   }
-  for (const metricId in foundTimeSeriesSchema.metrics) {
-    if (foundTimeSeriesSchema.metrics[metricId].resolution === resolution) {
-      return metricId;
+  for (const metricName in foundTimeSeriesSchema.metrics) {
+    if (foundTimeSeriesSchema.metrics[metricName].resolution === resolution) {
+      return metricName;
     }
   }
   return null;

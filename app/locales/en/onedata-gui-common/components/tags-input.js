@@ -45,7 +45,7 @@ export default {
   },
   timeSeriesMetricEditor: {
     tag: {
-      unknownId: 'Unknown ID',
+      unknownName: 'Unknown name',
       retention: '{{retention}} samp.',
     },
     view: {
@@ -55,13 +55,13 @@ export default {
     allPresetsUsed: 'All presets are already used.',
     disabled: {
       equivalentExists: 'Metric with the same resolution already exists',
-      idExists: 'Metric with the same ID already exists',
+      nameExists: 'Metric with the same name already exists',
     },
     customMetricFields: {
-      id: {
-        label: 'ID',
+      name: {
+        label: 'Name',
         errors: {
-          notUnique: 'This ID is already used',
+          notUnique: 'This name is already used',
         },
       },
       resolution: {

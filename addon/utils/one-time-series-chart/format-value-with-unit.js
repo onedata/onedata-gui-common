@@ -83,7 +83,7 @@ const unitSuffixes = {
  * @param {OTSCFormatValueWithUnitFunctionArguments} args
  * @returns {string|null}
  */
-export default function formatWithUnit(args) {
+export default function formatValueWithUnit(args) {
   if (!args) {
     return null;
   }

@@ -112,6 +112,10 @@ export default Component.extend(I18n, {
     }
   },
 
+  /**
+   * @param {number} timeResolution
+   * @returns {void}
+   */
   changeTimeResolution(timeResolution) {
     this.getModels().forEach((model) => model.setViewParameters({
       timeResolution,

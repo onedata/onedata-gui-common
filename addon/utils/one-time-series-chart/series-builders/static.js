@@ -11,19 +11,19 @@
  */
 
 /**
- * @typedef {Object} OTSCStaticSeriesBuilderArguments
+ * @typedef {Object} OTSCStaticSeriesBuilderRecipe
  * @property {OTSCRawSeries} seriesTemplate
  */
 
 /**
  * @param {OTSCSeriesBuilderContext} context
- * @param {OTSCStaticSeriesBuilderArguments} args
+ * @param {OTSCStaticSeriesBuilderRecipe} recipe
  * @returns {Promise<OTSCSeries[]>}
  */
-export default async function staticBuilder(context, args) {
-  if (!args || !args.seriesTemplate) {
+export default async function staticBuilder(context, recipe) {
+  if (!recipe || !recipe.seriesTemplate) {
     return [];
   }
 
-  return [await context.evaluateSeries(context, args.seriesTemplate)];
+  return [await context.evaluateSeries(context, recipe.seriesTemplate)];
 }

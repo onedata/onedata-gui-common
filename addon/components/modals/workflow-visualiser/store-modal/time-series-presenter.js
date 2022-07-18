@@ -75,7 +75,7 @@ export default Component.extend(...mixins, {
         fetchDynamicSeriesConfigs: (...args) =>
           this.fetchDynamicSeriesConfigs(...args),
       },
-    }
+    };
   }),
 
   /**
@@ -107,7 +107,7 @@ export default Component.extend(...mixins, {
         );
       } else if (!contentMayChange && updaterIsActive) {
         tsNamesPerGeneratorUpdater.stop();
-        this.updateTsNamesPerGeneratorProxy()
+        this.updateTsNamesPerGeneratorProxy();
       }
     }
   ),

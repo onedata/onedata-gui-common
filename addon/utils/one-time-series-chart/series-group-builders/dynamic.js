@@ -55,7 +55,7 @@
  */
 
 /**
- * @typedef {Object} OTSCDynamicSeriesGroupBuilderArguments
+ * @typedef {Object} OTSCDynamicSeriesGroupBuilderRecipe
  * @property {OTSCRawDynamicSeriesGroupConfigsSource} dynamicSeriesGroupConfigsSource
  * @property {OTSCRawSeriesGroup} seriesGroupTemplate
  */
@@ -68,18 +68,18 @@ import { all as allFulfilled } from 'rsvp';
 
 /**
  * @param {OTSCSeriesGroupBuilderContext} context
- * @param {OTSCDynamicSeriesGroupBuilderArguments} args
+ * @param {OTSCDynamicSeriesGroupBuilderRecipe} recipe
  * @returns {Promise<OTSCSeriesGroup[]>}
  */
-export default async function dynamic(context, args) {
-  if (!args || !args.dynamicSeriesGroupConfigsSource || !args.seriesGroupTemplate) {
+export default async function dynamic(context, recipe) {
+  if (!recipe || !recipe.dynamicSeriesGroupConfigsSource || !recipe.seriesGroupTemplate) {
     return [];
   }
 
   const {
     sourceType,
     sourceSpec,
-  } = args.dynamicSeriesGroupConfigsSource;
+  } = recipe.dynamicSeriesGroupConfigsSource;
 
   let dynamicSeriesGroupConfigs;
   switch (sourceType) {
@@ -107,7 +107,7 @@ export default async function dynamic(context, args) {
   return allFulfilled(dynamicSeriesGroupConfigs.map((dynamicSeriesGroupConfig) =>
     context.evaluateSeriesGroup(
       Object.assign({}, context, { dynamicSeriesGroupConfig }),
-      args.seriesGroupTemplate
+      recipe.seriesGroupTemplate
     )
   ));
 }

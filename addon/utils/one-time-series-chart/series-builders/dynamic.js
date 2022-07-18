@@ -86,7 +86,7 @@
 import { all as allFulfilled } from 'rsvp';
 
 /**
- * @typedef {Object} OTSCDynamicSeriesBuilderArguments
+ * @typedef {Object} OTSCDynamicSeriesBuilderRecipe
  * @property {OTSCRawDynamicSeriesConfigsSource} dynamicSeriesConfigsSource
  * @property {OTSCRawSeries} seriesTemplate
  */
@@ -97,18 +97,18 @@ import { all as allFulfilled } from 'rsvp';
 
 /**
  * @param {OTSCSeriesBuilderContext} context
- * @param {OTSCDynamicSeriesBuilderArguments} args
+ * @param {OTSCDynamicSeriesBuilderRecipe} recipe
  * @returns {Promise<OTSCSeries[]>}
  */
-export default async function dynamic(context, args) {
-  if (!args || !args.dynamicSeriesConfigsSource || !args.seriesTemplate) {
+export default async function dynamic(context, recipe) {
+  if (!recipe || !recipe.dynamicSeriesConfigsSource || !recipe.seriesTemplate) {
     return [];
   }
 
   const {
     sourceType,
     sourceSpec,
-  } = args.dynamicSeriesConfigsSource;
+  } = recipe.dynamicSeriesConfigsSource;
 
   let dynamicSeriesConfigs;
   switch (sourceType) {
@@ -135,7 +135,7 @@ export default async function dynamic(context, args) {
   return allFulfilled(dynamicSeriesConfigs.map((dynamicSeriesConfig) =>
     context.evaluateSeries(
       Object.assign({}, context, { dynamicSeriesConfig }),
-      args.seriesTemplate
+      recipe.seriesTemplate
     )
   ));
 }

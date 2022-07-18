@@ -73,11 +73,11 @@ describe('Integration | Component | one time series charts section', function ()
       }],
       onQueryBatcherFetchDataCallback: sinon.spy(({ batchedQuery }) =>
         Object.keys(batchedQuery.metrics).reduce((acc, seriesId) => {
-          acc[seriesId] = batchedQuery.metrics[seriesId].reduce((acc2, metricId) => {
-            const resolution = Number(metricId);
+          acc[seriesId] = batchedQuery.metrics[seriesId].reduce((acc2, metricName) => {
+            const resolution = Number(metricName);
             const timestamp = batchedQuery.startTimestamp -
               (batchedQuery.startTimestamp % resolution);
-            acc2[metricId] = [{ timestamp, value: resolution * 10 }];
+            acc2[metricName] = [{ timestamp, value: resolution * 10 }];
             return acc2;
           }, {});
           return acc;

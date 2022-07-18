@@ -220,7 +220,7 @@ function formValuesToStoreConfig(values) {
       }
 
       rawTimeSeriesSchema.metrics = (formMetrics || []).reduce((acc, metric) => {
-        acc[metric.id] = {
+        acc[metric.name] = {
           aggregator: metric.aggregator,
           resolution: metric.resolution,
           retention: metric.retention,
@@ -234,9 +234,9 @@ function formValuesToStoreConfig(values) {
   let parsedDashboardSpec;
   try {
     parsedDashboardSpec = (typeof dashboardSpec === 'string') && dashboardSpec ?
-      JSON.parse(dashboardSpec) : undefined;
+      JSON.parse(dashboardSpec) : null;
   } catch (err) {
-    parsedDashboardSpec = undefined;
+    parsedDashboardSpec = null;
   }
 
   return {
@@ -272,7 +272,7 @@ function storeConfigToFormValues(storeConfig) {
       return;
     }
 
-    const schemaFormGroupName = `sdchema${idx}`;
+    const schemaFormGroupName = `schema${idx}`;
 
     const {
       nameGeneratorType,
@@ -293,11 +293,11 @@ function storeConfigToFormValues(storeConfig) {
       timeSeriesSchemaValue.unit = unit;
     }
 
-    timeSeriesSchemaValue.metrics = Object.keys(metrics || {}).map((metricId) => ({
-      id: metricId,
-      aggregator: metrics[metricId].aggregator,
-      resolution: metrics[metricId].resolution,
-      retention: metrics[metricId].retention,
+    timeSeriesSchemaValue.metrics = Object.keys(metrics || {}).map((metricName) => ({
+      name: metricName,
+      aggregator: metrics[metricName].aggregator,
+      resolution: metrics[metricName].resolution,
+      retention: metrics[metricName].retention,
     }));
 
     set(

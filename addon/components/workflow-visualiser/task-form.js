@@ -183,7 +183,7 @@ export default Component.extend(I18n, {
       type: 'timeSeries',
       config: {
         schemas: [],
-        dashboardSpec: undefined,
+        dashboardSpec: null,
       },
     });
   }),
@@ -745,7 +745,7 @@ export default Component.extend(I18n, {
     const taskData = this.dumpToTask();
     const newConfig = get(taskData, 'timeSeriesStoreConfig') || {
       schemas: [],
-      dashboardSpec: undefined,
+      dashboardSpec: null,
     };
     this.set('timeSeriesStore.config', newConfig);
   },

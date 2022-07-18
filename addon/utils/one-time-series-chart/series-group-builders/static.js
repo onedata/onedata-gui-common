@@ -11,7 +11,7 @@
  */
 
 /**
- * @typedef {Object} OTSCStaticSeriesGroupBuilderArguments
+ * @typedef {Object} OTSCStaticSeriesGroupBuilderRecipe
  * @property {OTSCRawSeries} seriesGroupTemplate
  */
 
@@ -19,13 +19,13 @@ import { all as allFulfilled } from 'rsvp';
 
 /**
  * @param {OTSCSeriesGroupBuilderContext} context
- * @param {OTSCStaticSeriesGroupBuilderArguments} args
+ * @param {OTSCStaticSeriesGroupBuilderRecipe} recipe
  * @returns {Promise<OTSCSeriesGroup[]>}
  */
-export default async function staticBuilder(context, args) {
-  if (!args || !args.seriesGroupTemplate) {
+export default async function staticBuilder(context, recipe) {
+  if (!recipe || !recipe.seriesGroupTemplate) {
     return [];
   }
 
-  return allFulfilled([context.evaluateSeriesGroup(context, args.seriesGroupTemplate)]);
+  return allFulfilled([context.evaluateSeriesGroup(context, recipe.seriesGroupTemplate)]);
 }
