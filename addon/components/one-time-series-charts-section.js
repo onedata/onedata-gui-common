@@ -11,6 +11,7 @@ import OTSCModel from 'onedata-gui-common/utils/one-time-series-chart/model';
 import QueryBatcher from 'onedata-gui-common/utils/one-time-series-chart/query-batcher';
 import escapeHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-html';
 import { metricResolutionsMap } from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 /**
  * @typedef {Object} OneTimeSeriesChartsSectionSpec
@@ -28,11 +29,17 @@ import { metricResolutionsMap } from 'onedata-gui-common/utils/atm-workflow/stor
  * @property {string} [tip]
  */
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['one-time-series-charts-section'],
 
   guiUtils: service(),
+  i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.oneTimeSeriesChartsSection',
 
   /**
    * @virtual

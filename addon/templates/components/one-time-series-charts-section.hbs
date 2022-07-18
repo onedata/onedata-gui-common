@@ -52,4 +52,7 @@
   </div>
 {{/if}}
 
+{{#if (and (not chartConfigurations.length) (not sectionSpec.sections.length))}}
+  <p class="no-charts-info">{{tt this "noChartsDefined"}}</p>
+{{/if}}
 {{yield}}
