@@ -9,5 +9,6 @@
     flex-direction: column;
   }
 
+  @import './store-modal/store-form';
   @import './store-modal/store-content-table';
 }

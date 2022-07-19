@@ -1,0 +1,14 @@
+{{#if (eq mode "edit")}}
+  {{#one-dropdown
+    options=selectorOptions
+    onchange=(action "dataTypeSelected")
+    placeholder=selectorPlaceholder
+    searchEnabled=false
+    disabled=(not isEnabled)
+    onclose=onFocusLost
+    as |option|
+  }}
+    {{option.label}}
+  {{/one-dropdown}}
+{{/if}}
+{{yield}}

@@ -1,0 +1,23 @@
+<div class="data-type-header">
+  <span class="data-type-name">{{dataTypeTranslation}}</span>
+  {{#if (eq mode "edit")}}
+    {{atm-workflow/data-spec-editor/data-type-toolbar
+      placementContext=placementContext
+      dataSpecFilters=dataSpecFilters
+      editorElement=editorElement
+      isEnabled=isEnabled
+      onElementChange=onElementChange
+    }}
+  {{/if}}
+</div>
+{{atm-workflow/data-spec-editor/editor-element-renderer
+  mode=mode
+  isEnabled=isEnabled
+  dataSpecFilters=dataSpecFiltersForItems
+  editorElement=editorElement.config.item
+  parentEditorElement=editorElement
+  editorElementsContextMap=editorElementsContextMap
+  onElementChange=(action "itemElementChanged")
+  onFocusLost=onFocusLost
+}}
+{{yield}}

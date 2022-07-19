@@ -10,148 +10,337 @@
 
 import {
   get,
-  getProperties,
+  set,
   computed,
-  observer,
 } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
+import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
+import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import {
-  dataSpecToType,
-  typeToDataSpec,
-} from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
+  createDataTypeSelectorElement,
+  createDataTypeElement,
+} from './editor-element-creators';
 import valueConstraintsEditors from './value-constraints-editors';
+import { validator } from 'ember-cp-validations';
 
-export const dataSpecTypes = Object.freeze([
-  'integer',
-  'string',
-  'object',
-  'anyFile',
-  'regularFile',
-  'directory',
-  'symlink',
-  'dataset',
-  'range',
-  'timeSeriesMeasurement',
-  'onedatafsCredentials',
-]);
+/**
+ * @typedef {Object} DataSpecEditorElementBase
+ * @property {string} id
+ */
 
-export const FormElement = FormFieldsGroup.extend({
+/**
+ * @typedef {DataSpecEditorElementBase} DataSpecEditorDataTypeSelector
+ * @property {'dataTypeSelector'} type
+ */
+
+/**
+ * @typedef {DataSpecEditorElementBase} DataSpecEditorDataType
+ * @property {'dataType'} type
+ * @property {DataSpecEditorDataTypeConfig} config
+ */
+
+/**
+ * @typedef {DataSpecEditorDataTypeSelector|DataSpecEditorDataType} DataSpecEditorElement
+ */
+
+/**
+ * @typedef {Object} DataSpecEditorDataTypeSimpleConfig
+ * @property {
+ *   'integer' |
+ *   'string' |
+ *   'object' |
+ *   'dataset' |
+ *   'range' |
+ *   'onedatafsCredentials'
+ * } dataType
+ */
+
+/**
+ * @typedef {Object} DataSpecEditorDataTypeArrayConfig
+ * @property {'array'} dataType
+ * @property {DataSpecEditorDataTypeConfig} item
+ */
+
+/**
+ * @typedef {Object} DataSpecEditorDataTypeCustomConfig
+ * @property {'file'|'timeSeriesMeasurement'} dataType
+ * @property {Utils.FormComponent.ValuesContainer} formValues
+ */
+
+/**
+ * @typedef {
+ *   DataSpecEditorDataTypeSimpleConfig |
+ *   DataSpecEditorDataTypeArrayConfig |
+ *   DataSpecEditorDataTypeCustomConfig
+ * } DataSpecEditorDataTypeConfig
+ */
+
+/**
+ * @typedef {Object} DataSpecEditorElementContext
+ * @property {DataSpecEditorElement} editorElement
+ * @property {Utils.FormComponent.FormFieldsRootGroup} [formRootGroup]
+ */
+
+export const FormElement = FormField.extend({
   /**
-   * @virtual optional
-   * @type {Array<string>}
+   * Array of filters used to narrow available data types.
+   * @virtual
+   * @type {Array<AtmDataSpecFilter>}
    */
-  allowedTypes: dataSpecTypes,
+  dataSpecFilters: undefined,
 
-  classes: 'data-spec-editor',
-  i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.fields',
-  // Does not take parent fields group translation path into account
+  /**
+   * @override
+   */
+  i18nPrefix: 'utils.atmWorkflow.dataSpecEditor',
+
+  /**
+   * Do not take parent fields group translation path into account
+   * @override
+   */
   translationPath: '',
-  fields: computed(() => [
-    TypeField.create(),
-    ValueConstraintsField.create(),
-  ]),
-});
 
-const TypeField = DropdownField.extend({
-  name: 'type',
-  options: computed('parent.allowedTypes.[]', function options() {
-    const allowedTypes = this.get('parent.allowedTypes') || dataSpecTypes;
-    return dataSpecTypes
-      .filter((type) => allowedTypes.includes(type))
-      .map((type) => ({ value: type }));
-  }),
-  defaultValue: reads('options.firstObject.value'),
-  optionsObserver: observer('options', function optionsObserver() {
+  /**
+   * @override
+   */
+  fieldComponentName: 'atm-workflow/data-spec-editor',
+
+  /**
+   * @override
+   */
+  internalClasses: 'nowrap-on-desktop',
+
+  /**
+   * @override
+   */
+  withValidationIcon: false,
+
+  /**
+   * @override
+   */
+  areValidationClassesEnabled: false,
+
+  /**
+   * @type {Map<string, DataSpecEditorElementContext>}
+   */
+  editorElementsContextMapCache: null,
+
+  /**
+   * Contains contextual data for editor elements. For now it preserves only `formRootGroup`
+   * for each editor element with dedicated value constraints form. It allows
+   * to have the same form state regardless element nesting manipulation and component
+   * rerenders.
+   * @type {ComputedProperty<Map<string, DataSpecEditorElementContext>>}
+   */
+  editorElementsContextMap: computed('value', function editorElementsContextMap() {
     const {
-      options,
+      editorElementsContextMapCache: elementsMap,
       value,
-    } = this.getProperties('options', 'value');
-    if (value && options.length && !options.findBy('value', value)) {
-      this.valueChanged(options[0].value);
+      mode,
+    } = this.getProperties('editorElementsContextMapCache', 'value', 'mode');
+
+    const proviousElementIds = new Set(elementsMap.keys());
+
+    const currentElementIds = new Set();
+    const elementsToProcess = [value];
+    while (elementsToProcess.length) {
+      const newElement = elementsToProcess.pop();
+      if (!newElement) {
+        continue;
+      }
+      currentElementIds.add(newElement.id);
+
+      const mapValue =
+        Object.assign({}, elementsMap.get(newElement.id) || {}, {
+          element: newElement,
+        });
+      elementsMap.set(newElement.id, mapValue);
+
+      if (newElement.type === 'dataType') {
+        const dataType = get(newElement, 'config.dataType');
+        switch (dataType) {
+          case 'array':
+            elementsToProcess.push(get(newElement, 'config.item'));
+            break;
+          default: {
+            const dataTypeEditorClass = dataType in valueConstraintsEditors &&
+              valueConstraintsEditors[dataType].FormElement;
+            if (!mapValue.formRootGroup && dataTypeEditorClass) {
+              mapValue.formRootGroup = EditorElementFormRootGroup.create({
+                ownerSource: this,
+                dataSpecEditorInstance: this,
+                dataTypeEditorClass,
+              });
+              mapValue.formRootGroup.changeMode(mode);
+            }
+            break;
+          }
+        }
+      }
     }
+
+    for (const elementId of proviousElementIds) {
+      if (!currentElementIds.has(elementId)) {
+        const elementToRemove = elementsMap.get(elementId);
+        if (elementToRemove.formRootGroup) {
+          elementToRemove.formRootGroup.destroy();
+        }
+        elementsMap.delete(elementId);
+      }
+    }
+
+    return elementsMap;
   }),
-});
 
-const adjustedValueConstraintsEditorFields = Object.keys(valueConstraintsEditors)
-  .map((type) => valueConstraintsEditors[type].FormElement.extend({
-    name: getValueConstraintsFieldName(type),
-    isVisible: computed('parent.parent.value.type', function isVisible() {
-      return this.get('parent.parent.value.type') === type;
-    }),
-  }));
+  /**
+   * @type {ComputedProperty<Object>}
+   */
+  nestedFormsValidator: computed(() => validator(function (value, options, model) {
+    const field = get(model, 'field');
+    return !field.getNestedForms().findBy('isValid', false);
+  })),
 
-const ValueConstraintsField = FormFieldsGroup.extend({
-  name: 'valueConstraints',
-  fields: computed(() =>
-    adjustedValueConstraintsEditorFields.map((field) => field.create())
+  /**
+   * @type {ComputedProperty<Object>}
+   */
+  leftDataTypeSelectorsValidator: computed(() =>
+    validator(function (value, options, model) {
+      const editorElementsContextMap = get(model, 'field.editorElementsContextMap');
+      for (const { element } of editorElementsContextMap.values()) {
+        if (get(element, 'type') === 'dataTypeSelector') {
+          return false;
+        }
+      }
+      return true;
+    })
   ),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+
+    this.set('editorElementsContextMapCache', new Map());
+    this.registerInternalValidator('nestedFormsValidator');
+    this.registerInternalValidator('leftDataTypeSelectorsValidator');
+  },
+
+  /**
+   * @override
+   */
+  updateOwner() {
+    this._super(...arguments);
+
+    const ownerSource = this.get('ownerSource');
+    if (ownerSource) {
+      for (const form of this.getNestedForms()) {
+        if (!get(form, 'ownerSource')) {
+          set(form, 'ownerSource', ownerSource);
+        }
+      }
+    }
+  },
+
+  /**
+   * @overide
+   */
+  changeMode(mode) {
+    this._super(...arguments);
+    this.getNestedForms().forEach((form) => form.changeMode(mode));
+  },
+
+  /**
+   * @returns {Array<Utils.FormComponent.FormFieldsRootGroup>}
+   */
+  getNestedForms() {
+    const forms = [];
+    for (const elementCtx of this.get('editorElementsContextMap').values()) {
+      if (elementCtx.formRootGroup) {
+        forms.push(elementCtx.formRootGroup);
+      }
+    }
+    return forms;
+  },
 });
 
-/**
- * @param {AtmDataSpec} dataSpec
- * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in a form
- */
-export function dataSpecToFormValues(dataSpec, { allowedTypes = dataSpecTypes } = {}) {
-  const normalizedDataSpec = dataSpec || {};
-  const {
-    type,
-    isArray,
-  } = dataSpecToType(normalizedDataSpec);
-  const valueConstraints = isArray ?
-    get(normalizedDataSpec, 'valueConstraints.itemDataSpec.valueConstraints') :
-    normalizedDataSpec.valueConstraints;
+const EditorElementFormRootGroup = FormFieldsRootGroup.extend({
+  dataSpecEditorInstance: undefined,
+  dataTypeEditorClass: undefined,
+  onNotifyAboutChange: undefined,
+  fields: computed(function fields() {
+    return [this.get('dataTypeEditorClass').create({ name: 'dataTypeEditor' })];
+  }),
+  isEnabled: reads('dataSpecEditorInstance.isEffectivelyEnabled'),
+  onValueChange() {
+    this._super(...arguments);
+    const onNotifyAboutChange = this.get('onNotifyAboutChange');
+    if (onNotifyAboutChange) {
+      onNotifyAboutChange();
+    }
+  },
+  onFocusLost() {
+    this._super(...arguments);
+    this.get('dataSpecEditorInstance').focusLost();
+  },
+});
 
-  const valueConstraintsFormValue = {};
-  for (const valueConstraintsType in valueConstraintsEditors) {
-    const valueConstraintsForType = valueConstraintsType === type ?
-      valueConstraints : undefined;
-    const fieldName = getValueConstraintsFieldName(valueConstraintsType);
-    valueConstraintsFormValue[fieldName] = valueConstraintsEditors[valueConstraintsType]
-      .valueConstraintsToFormValues(valueConstraintsForType);
+export function dataSpecToFormValues(dataSpec) {
+  if (!dataSpec || !dataSpec.type) {
+    return createDataTypeSelectorElement();
   }
 
-  return createValuesContainer({
-    type: type || allowedTypes[0],
-    valueConstraints: createValuesContainer(valueConstraintsFormValue),
-  });
+  const dataType = dataSpec.type;
+  const valueConstraints = dataSpec.valueConstraints || {};
+
+  if (dataType in valueConstraintsEditors) {
+    return createDataTypeElement(dataType, {
+      formValues: createValuesContainer({
+        dataTypeEditor: valueConstraintsEditors[dataType]
+          .valueConstraintsToFormValues(valueConstraints),
+      }),
+    });
+  } else if (dataType === 'array') {
+    return createDataTypeElement(dataType, {
+      item: dataSpecToFormValues(valueConstraints.itemDataSpec),
+    });
+  } else {
+    return createDataTypeElement(dataType);
+  }
 }
 
-/**
- * @param {Utils.FormComponent.ValuesContainer} values Values from data spec editor
- * @param {boolean} [surroundWithArray=false] if true, calculated data spec will
- * be wrapped into array data spec
- * @returns {AtmDataSpec} data spec
- */
-export function formValuesToDataSpec(values, surroundWithArray = false) {
-  const {
-    type,
-    valueConstraints,
-  } = getProperties(values || {}, 'type', 'valueConstraints');
-
-  let customValueConstraints = undefined;
-  if (type in valueConstraintsEditors) {
-    customValueConstraints = valueConstraintsEditors[type].formValuesToValueConstraints(
-      get(valueConstraints, getValueConstraintsFieldName(type))
-    );
+export function formValuesToDataSpec(values) {
+  if (
+    !values ||
+    values.type !== 'dataType' ||
+    !values.config ||
+    !values.config.dataType
+  ) {
+    return null;
   }
 
-  const dataSpec = typeToDataSpec({
-    type,
-    isArray: false,
-    customValueConstraints,
-  });
+  const dataType = values.config.dataType;
 
-  return surroundWithArray ? {
-    type: 'array',
-    valueConstraints: {
-      itemDataSpec: dataSpec,
-    },
-  } : dataSpec;
-}
-
-function getValueConstraintsFieldName(type) {
-  return `${type}ValueConstraints`;
+  if (dataType in valueConstraintsEditors) {
+    const dataTypeEditorValues =
+      get(values.config, 'formValues.dataTypeEditor');
+    return {
+      type: dataType,
+      valueConstraints: valueConstraintsEditors[dataType]
+        .formValuesToValueConstraints(dataTypeEditorValues),
+    };
+  } else if (dataType === 'array') {
+    return {
+      type: dataType,
+      valueConstraints: {
+        itemDataSpec: formValuesToDataSpec(values.config.item),
+      },
+    };
+  } else {
+    return {
+      type: dataType,
+      valueConstraints: {},
+    };
+  }
 }

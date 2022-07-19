@@ -1,7 +1,21 @@
 .time-series-measurement-value-constraints-editor {
+  flex-wrap: wrap;
+  margin-bottom: 0;
+
+  > .control-label {
+    flex-basis: 100%;
+    margin-bottom: 5px;
+    padding-top: 0;
+    text-align: left;
+  }
+
+  > .field-component {
+    margin-bottom: -$padding-base-vertical;
+  }
+
   .collection-item {
     min-width: 0;
-    width: 20em;
+    width: 15em;
   }
 
   .measurementSpec-children > * {
