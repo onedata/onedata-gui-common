@@ -85,6 +85,11 @@ export default Component.extend(I18n, {
     }
   ),
 
+  init() {
+    this._super(...arguments);
+    this.setPreselectedTimeResolution();
+  },
+
   /**
    * @returns {Array<Utils.OneTimeSeriesChart.Model>}
    */
@@ -92,11 +97,34 @@ export default Component.extend(I18n, {
     return this.get('models') || [];
   },
 
+  setPreselectedTimeResolution() {
+    const usedTimeResolutions = this.getModels().map((model) =>
+      get(model, 'lastViewParameters.timeResolution')
+    ).uniq();
+    const validTimeResolutions = this.get('timeResolutionOptions').mapBy('value');
+    if (
+      validTimeResolutions.length > 0 && (
+        usedTimeResolutions.length > 1 ||
+        usedTimeResolutions.some((res) => !validTimeResolutions.includes(res))
+      )
+    ) {
+      this.changeTimeResolution(validTimeResolutions[0]);
+    }
+  },
+
+  /**
+   * @param {number} timeResolution
+   * @returns {void}
+   */
+  changeTimeResolution(timeResolution) {
+    this.getModels().forEach((model) => model.setViewParameters({
+      timeResolution,
+    }));
+  },
+
   actions: {
     changeTimeResolution({ value }) {
-      this.getModels().forEach((model) => model.setViewParameters({
-        timeResolution: value,
-      }));
+      this.changeTimeResolution(value);
     },
     showOlder() {
       const moveableModels = this.getModels()

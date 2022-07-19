@@ -428,7 +428,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
                 },
               },
             }],
-            chartSpecs: [],
+            dashboardSpec: null,
           },
           requiresInitialContent: false,
         },
@@ -550,7 +550,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
               },
             },
           }],
-          chartSpecs: undefined,
+          dashboardSpec: null,
         },
       }));
 
@@ -702,7 +702,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
               },
             },
           }],
-          chartSpecs: [],
+          dashboardSpec: null,
         },
       }));
 

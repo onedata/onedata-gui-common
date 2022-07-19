@@ -40,44 +40,44 @@ import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-fiel
 
 /**
  * @typedef {TimeSeriesMetric} TimeSeriesMetricTagsInputValue
- * @property {string} id
+ * @property {string} name
  */
 
 const presetDataPerResolution = {
   [metricResolutionsMap.fiveSeconds]: {
     // 2 hours
     retention: 2 * 60 * 12,
-    metricIdResolutionPart: '5s',
+    metricNameResolutionPart: '5s',
   },
   [metricResolutionsMap.minute]: {
     // 1 day
     retention: 24 * 60,
-    metricIdResolutionPart: '1m',
+    metricNameResolutionPart: '1m',
   },
   [metricResolutionsMap.hour]: {
     // ~2 months
     retention: 2 * 30 * 24,
-    metricIdResolutionPart: '1h',
+    metricNameResolutionPart: '1h',
   },
   [metricResolutionsMap.day]: {
     // ~2 years
     retention: 2 * 12 * 30,
-    metricIdResolutionPart: '1d',
+    metricNameResolutionPart: '1d',
   },
   [metricResolutionsMap.week]: {
     // ~5 years
     retention: 10 * 52,
-    metricIdResolutionPart: '1w',
+    metricNameResolutionPart: '1w',
   },
   [metricResolutionsMap.month]: {
     // ~10 years
     retention: 10 * 12,
-    metricIdResolutionPart: '1mo',
+    metricNameResolutionPart: '1mo',
   },
   [metricResolutionsMap.year]: {
     // 10 years
     retention: 10,
-    metricIdResolutionPart: '1y',
+    metricNameResolutionPart: '1y',
   },
 };
 
@@ -98,7 +98,7 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
 
   /**
    * @virtual optional
-   * @type {'equivalentExists'|'idExists'|null}
+   * @type {'equivalentExists'|'nameExists'|null}
    */
   disabledReason: null,
 
@@ -111,19 +111,19 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
       value,
     } = this.getProperties('i18n', 'value');
     const {
-      id,
+      name,
       aggregator,
       resolution,
       retention,
     } = getProperties(
       value || {},
-      'id',
+      'name',
       'aggregator',
       'resolution',
       'retention'
     );
 
-    const readableId = id ? `"${id}"` : this.t('unknownId');
+    const readableName = name ? `"${name}"` : this.t('unknownName');
     const readableAggregator = metricAggregators.includes(aggregator) ?
       String(translateMetricAggregator(i18n, aggregator, { short: true }))
       .toLocaleLowerCase() : '?';
@@ -133,7 +133,7 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
     const readableRetention = Number.isInteger(retention) ?
       this.t('retention', { retention }) : '?';
 
-    return `${readableId} (${readableAggregator}; ${readableResolution}; ${readableRetention})`;
+    return `${readableName} (${readableAggregator}; ${readableResolution}; ${readableRetention})`;
   }),
 });
 
@@ -220,7 +220,7 @@ export default Component.extend(I18n, {
         .filter((resolution) => resolution in presetDataPerResolution)
         .map((resolution) => {
           return {
-            id: generateMetricId(aggregator, resolution),
+            name: generateMetricName(aggregator, resolution),
             aggregator,
             resolution,
             retention: presetDataPerResolution[resolution].retention,
@@ -235,13 +235,13 @@ export default Component.extend(I18n, {
   tagsToRender: computed(
     'allAvailableTagValues',
     'selectedTags.[]',
-    'usedIds',
+    'usedNames',
     function tagsToRender() {
       const {
         allAvailableTagValues,
         selectedTags,
-        usedIds,
-      } = this.getProperties('allAvailableTagValues', 'selectedTags', 'usedIds');
+        usedNames,
+      } = this.getProperties('allAvailableTagValues', 'selectedTags', 'usedNames');
 
       const selectedTagHashes = new Set();
       const selectedTagCompatHashes = new Set();
@@ -260,7 +260,7 @@ export default Component.extend(I18n, {
           ownerSource: this,
           value: tagValue,
           disabledReason: selectedTagCompatHashes.has(getTagValueHash(tagValue, true)) ?
-            'equivalentExists' : (usedIds.has(get(tagValue, 'id')) ? 'idExists' : null),
+            'equivalentExists' : (usedNames.has(get(tagValue, 'name')) ? 'nameExists' : null),
         }));
     }
   ),
@@ -268,9 +268,9 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Set<string>>}
    */
-  usedIds: computed('selectedTags.[]', function usedIds() {
+  usedNames: computed('selectedTags.[]', function usedNames() {
     return new Set(
-      (this.get('selectedTags') || []).map((tag) => get(tag, 'value.id'))
+      (this.get('selectedTags') || []).map((tag) => get(tag, 'value.name'))
     );
   }),
 
@@ -297,19 +297,19 @@ export default Component.extend(I18n, {
       fields: [
         TextField.create({
           component: this,
-          name: 'id',
+          name: 'name',
           customValidators: [
             validator(function (value, options, model) {
               if (!value) {
                 return true;
               }
               const field = get(model, 'field');
-              const usedIds = get(field, 'component.usedIds');
+              const usedNames = get(field, 'component.usedNames');
               const errorMsg =
                 String(field.t(`${get(field, 'path')}.errors.notUnique`));
-              return usedIds.has(value) ? errorMsg : true;
+              return usedNames.has(value) ? errorMsg : true;
             }, {
-              dependentKeys: ['model.field.component.usedIds'],
+              dependentKeys: ['model.field.component.usedNames'],
             }),
           ],
         }),
@@ -412,28 +412,28 @@ export default Component.extend(I18n, {
 
       const customMetricFieldsValues = customMetricFields.dumpValue();
       const {
-        id,
+        name,
         resolution,
         retention,
-      } = getProperties(customMetricFieldsValues, 'id', 'resolution', 'retention');
+      } = getProperties(customMetricFieldsValues, 'name', 'resolution', 'retention');
 
       const newTag = Tag.create({
         ownerSource: this,
         value: {
-          id,
+          name,
           aggregator,
           resolution,
           retention: Number.parseInt(retention),
         },
       });
       onTagsAdded([newTag]);
-      customMetricFields.getFieldByPath('id').reset();
+      customMetricFields.getFieldByPath('name').reset();
     },
   },
 });
 
-function generateMetricId(aggregator, resolution) {
-  return `${aggregator}${presetDataPerResolution[resolution].metricIdResolutionPart}`;
+function generateMetricName(aggregator, resolution) {
+  return `${aggregator}${presetDataPerResolution[resolution].metricNameResolutionPart}`;
 }
 
 function stringifyUsedResolution(aggregator, resolution) {
@@ -453,7 +453,7 @@ function getTagValueHash(tagValue, includeOnlyCompatProps = false) {
     'aggregator',
     'resolution',
   ] : [
-    'id',
+    'name',
     'aggregator',
     'resolution',
     'retention',

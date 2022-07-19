@@ -369,7 +369,7 @@ const taskTimeSeriesStore = {
   type: 'time series',
   config: {
     schemas: [],
-    chartSpecs: [],
+    dashboardSpec: null,
   },
   requiresInitialContent: false,
 };

@@ -53,9 +53,9 @@ function testAbs(input, output) {
 
   it(`returns ${stringifiedOutput} for ${stringifiedInput}`, function () {
     const context = createContext();
-    const data = createConstArgument(input);
+    const inputDataProvider = createConstArgument(input);
 
-    expect(abs(context, { data })).to.deep.equal(output);
-    expectFunctionsEvaluation(context, [data]);
+    expect(abs(context, { inputDataProvider })).to.deep.equal(output);
+    expectFunctionsEvaluation(context, [inputDataProvider]);
   });
 }

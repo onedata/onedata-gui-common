@@ -45,6 +45,7 @@ import publicFooter from './onedata-gui-common/components/public-footer';
 import revisionsTable from './onedata-gui-common/components/revisions-table';
 import wysiwygEditor from './onedata-gui-common/components/wysiwyg-editor';
 import oneTimeSeriesChart from './onedata-gui-common/components/one-time-series-chart';
+import oneTimeSeriesChartsSection from './onedata-gui-common/components/one-time-series-charts-section';
 import apiSamples from './onedata-gui-common/components/api-samples';
 import atmWorkflow from './onedata-gui-common/components/atm-workflow';
 
@@ -128,6 +129,7 @@ const translations = {
     revisionsTable,
     wysiwygEditor,
     oneTimeSeriesChart,
+    oneTimeSeriesChartsSection,
     apiSamples,
     atmWorkflow,
     alerts: {

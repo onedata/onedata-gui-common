@@ -24,8 +24,8 @@ export default {
         },
       },
     },
-    chartSpecs: {
-      label: 'Charts',
+    dashboardSpec: {
+      label: 'Charts dashboard',
     },
   },
 };

@@ -1,0 +1,58 @@
+{{#if (or titleContent titleTip isSharedNavVisible)}}
+  <div class="section-header">
+    {{#if titleContent}}
+      <h3 class="section-title">{{titleContent}}</h3>
+    {{/if}}
+    {{#if titleTip}}
+      {{#one-label-tip class="section-title-tip" tooltipClass="tooltip-lg"}}
+        {{titleTip}}
+      {{/one-label-tip}}
+    {{/if}}
+    {{#if isSharedNavVisible}}
+      {{one-time-series-chart/toolbar
+        class="section-charts-shared-navigation"
+        models=chartModels
+      }}
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if descriptionContent}}
+  <p class="section-description">{{descriptionContent}}</p>
+{{/if}}
+
+{{#if chartConfigurations.length}}
+  <div class="section-charts">
+    {{#if isSharedNavVisible}}
+      {{#each chartModels as |model|}}
+        {{one-time-series-chart/plot model=model class="section-chart"}}
+      {{/each}}
+    {{else}}
+      {{#each chartConfigurations as |configuration|}}
+        {{one-time-series-chart
+          configuration=configuration
+          class="section-chart"
+        }}
+      {{/each}}
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if sectionSpec.sections.length}}
+  <div class="section-subsections">
+    {{#each sectionSpec.sections as |subsection|}}
+      {{one-time-series-charts-section
+        live=live
+        sectionSpec=subsection
+        timeSeriesSchemas=timeSeriesSchemas
+        externalDataSources=externalDataSources
+        queryBatchers=queryBatchers
+      }}
+    {{/each}}
+  </div>
+{{/if}}
+
+{{#if (and (not chartConfigurations.length) (not sectionSpec.sections.length))}}
+  <p class="no-charts-info">{{tt this "noChartsDefined"}}</p>
+{{/if}}
+{{yield}}

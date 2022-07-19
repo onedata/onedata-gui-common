@@ -46,20 +46,25 @@ export function createDummyChartDefinition() {
       id: 'a1',
       name: 'Axis 1',
     }],
-    series: [{
-      factoryName: 'static',
-      factoryArguments: {
+    seriesBuilders: [{
+      builderType: 'static',
+      builderRecipe: {
         seriesTemplate: {
           id: 's1',
           name: 'Series 1',
           type: 'bar',
           yAxisId: 'a1',
-          data: {
+          dataProvider: {
             functionName: 'loadSeries',
             functionArguments: {
               sourceType: 'external',
-              sourceParameters: {
-                externalSourceName: 'dummy',
+              sourceSpecProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: {
+                    externalSourceName: 'dummy',
+                  },
+                },
               },
             },
           },

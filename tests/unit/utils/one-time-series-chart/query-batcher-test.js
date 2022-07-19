@@ -52,6 +52,7 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
       shouldAdvanceTime: true,
     });
     this.batcher = new QueryBatcher({ fetchData: this.fetchData });
+    this.batcher.batchAccumulationTime = defaultBatchAccumulationTime;
   });
 
   afterEach(function () {

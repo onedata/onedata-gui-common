@@ -14,8 +14,10 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed, getProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { htmlSafe } from '@ember/string';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from '../../templates/components/one-time-series-chart/plot';
+import escapeHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-html';
 
 export default Component.extend(I18n, {
   layout,
@@ -63,7 +65,10 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<string>}
    */
-  titleTip: reads('state.title.tip'),
+  titleTip: computed('state.title.tip', function titleTip() {
+    const escapedTip = escapeHtml(this.get('state.title.tip'));
+    return escapedTip ? htmlSafe(escapedTip) : null;
+  }),
 
   /**
    * @type {ComputedProperty<boolean>}

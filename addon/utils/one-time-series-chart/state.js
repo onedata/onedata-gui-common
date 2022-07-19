@@ -16,6 +16,7 @@ import stateToEchart from './state-converters/to-echart';
  * @property {OTSCTitle} title
  * @property {OTSCYAxis[]} yAxes
  * @property {OTSCXAxis} xAxis
+ * @property {OTSCSeriesGroup[]} seriesGroups
  * @property {OTSCSeries[]} series
  * @property {number} timeResolution
  * @property {number} pointsCount
@@ -48,8 +49,8 @@ import stateToEchart from './state-converters/to-echart';
  * and special formatting of series entries in tooltip.
  * @property {string} id
  * @property {string} name series group name (visible in tooltip)
- * @property {boolean} stack if true, all series in group will be stacked
- * @property {boolean} showSeriesSum if true, tooltip will show sum of all series in group
+ * @property {boolean} stacked if true, all series in group will be stacked
+ * @property {boolean} showSum if true, tooltip will show sum of all series in group
  * @property {Array<OTSCSeriesGroup>} subgroups
  */
 

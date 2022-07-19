@@ -47,37 +47,37 @@ const resolutionOptions = [{
 const perAggregatorPresets = [{
   resolution: metricResolutionsMap.fiveSeconds,
   retention: 2 * 60 * 12,
-  idSuffix: '5s',
+  nameSuffix: '5s',
   tagLabelSuffix: '5s; 1440 samp.',
 }, {
   resolution: metricResolutionsMap.minute,
   retention: 24 * 60,
-  idSuffix: '1m',
+  nameSuffix: '1m',
   tagLabelSuffix: '1m; 1440 samp.',
 }, {
   resolution: metricResolutionsMap.hour,
   retention: 2 * 30 * 24,
-  idSuffix: '1h',
+  nameSuffix: '1h',
   tagLabelSuffix: '1h; 1440 samp.',
 }, {
   resolution: metricResolutionsMap.day,
   retention: 2 * 12 * 30,
-  idSuffix: '1d',
+  nameSuffix: '1d',
   tagLabelSuffix: '1d; 720 samp.',
 }, {
   resolution: metricResolutionsMap.week,
   retention: 10 * 52,
-  idSuffix: '1w',
+  nameSuffix: '1w',
   tagLabelSuffix: '1w; 520 samp.',
 }, {
   resolution: metricResolutionsMap.month,
   retention: 10 * 12,
-  idSuffix: '1mo',
+  nameSuffix: '1mo',
   tagLabelSuffix: '1mo; 120 samp.',
 }, {
   resolution: metricResolutionsMap.year,
   retention: 10,
-  idSuffix: '1y',
+  nameSuffix: '1y',
   tagLabelSuffix: '1y; 10 samp.',
 }];
 
@@ -178,7 +178,7 @@ describe('Integration | Component | tags input/time series metric selector edito
         expect(lastChange).to.have.length(i + 1);
         const newTagValue = get(lastChange[i], 'value');
         expect(newTagValue).to.deep.equal({
-          id: `${aggregator}${perAggregatorPresets[i].idSuffix}`,
+          name: `${aggregator}${perAggregatorPresets[i].nameSuffix}`,
           aggregator,
           resolution: perAggregatorPresets[i].resolution,
           retention: perAggregatorPresets[i].retention,
@@ -198,13 +198,13 @@ describe('Integration | Component | tags input/time series metric selector edito
       await click('.tag-creator-trigger');
       await selectChoose('.aggregator-dropdown', aggregatorName);
       await click('.btn-custom');
-      await fillIn('.id-field input', String(aggregatorIdx));
+      await fillIn('.name-field input', String(aggregatorIdx));
       await selectChoose('.resolution-field', '1 minute');
       await fillIn('.retention-field input', 123);
       await click('.submit-custom-metric');
 
       expect(this.get('changeSpy.lastCall.args.0.0.value')).to.deep.equal({
-        id: String(aggregatorIdx),
+        name: String(aggregatorIdx),
         aggregator,
         resolution: perAggregatorPresets[1].resolution,
         retention: 123,
@@ -225,13 +225,13 @@ describe('Integration | Component | tags input/time series metric selector edito
       await click('.tag-creator-trigger');
       await selectChoose('.aggregator-dropdown', 'Sum');
       await click('.btn-custom');
-      await fillIn('.id-field input', String(resolutionIdx));
+      await fillIn('.name-field input', String(resolutionIdx));
       await selectChoose('.resolution-field', resolutionOption.label);
       await fillIn('.retention-field input', 123);
       await click('.submit-custom-metric');
 
       expect(this.get('changeSpy.lastCall.args.0.0.value')).to.deep.equal({
-        id: String(resolutionIdx),
+        name: String(resolutionIdx),
         aggregator: aggregators[0].aggregator,
         resolution: resolutionOption.resolution,
         retention: 123,
@@ -241,7 +241,7 @@ describe('Integration | Component | tags input/time series metric selector edito
     });
   });
 
-  it('marks custom metric ID as invalid when it is already used by existing tag', async function () {
+  it('marks custom metric name as invalid when it is already used by existing tag', async function () {
     await render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/time-series-metric-selector-editor"
@@ -252,12 +252,12 @@ describe('Integration | Component | tags input/time series metric selector edito
     await click(getSelector().querySelector('.selector-item'));
     await click('.btn-custom');
     await fillIn(
-      '.id-field input',
-      `${aggregators[0].aggregator}${perAggregatorPresets[0].idSuffix}`
+      '.name-field input',
+      `${aggregators[0].aggregator}${perAggregatorPresets[0].nameSuffix}`
     );
 
-    expect(find('.id-field .field-message').textContent.trim()).to.equal(
-      'This ID is already used'
+    expect(find('.name-field .field-message').textContent.trim()).to.equal(
+      'This name is already used'
     );
   });
 
@@ -301,10 +301,10 @@ describe('Integration | Component | tags input/time series metric selector edito
 
     await click('.tag-creator-trigger');
     await click('.btn-custom');
-    await fillIn('.id-field .form-control', '');
+    await fillIn('.name-field .form-control', '');
     await fillIn('.retention-field .form-control', '');
 
-    expect(find('.id-field.has-error')).to.exist;
+    expect(find('.name-field.has-error')).to.exist;
     expect(find('.retention-field.has-error')).to.exist;
   });
 
@@ -335,7 +335,7 @@ describe('Integration | Component | tags input/time series metric selector edito
 
     await click('.tag-creator-trigger');
     await click('.btn-custom');
-    await fillIn('.id-field input', 'someId');
+    await fillIn('.name-field input', 'someName');
     await click('.submit-custom-metric');
     await click('.btn-presets');
 
@@ -354,5 +354,5 @@ function getSelector() {
 function getFullPresetLabel(aggregatorIdx, presetIdx) {
   const aggregator = aggregators[aggregatorIdx];
   const preset = perAggregatorPresets[presetIdx];
-  return `"${aggregator.aggregator}${preset.idSuffix}" (${aggregator.tagLabelName}; ${preset.tagLabelSuffix})`;
+  return `"${aggregator.aggregator}${preset.nameSuffix}" (${aggregator.tagLabelName}; ${preset.tagLabelSuffix})`;
 }
