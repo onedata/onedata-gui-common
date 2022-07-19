@@ -11,6 +11,5 @@ export {
   FormElement,
   formValuesToDataSpec,
   dataSpecToFormValues,
-  dataSpecTypes,
 }
 from './data-spec-editor';

@@ -13,6 +13,7 @@ import {
   getModalBody,
   getModalFooter,
 } from '../../../../helpers/modal';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 describe('Integration | Utility | workflow visualiser/actions/create store action', function () {
   setupRenderingTest();
@@ -58,6 +59,10 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
         getModalBody().querySelector('.name-field .form-control'),
         'store1'
       );
+      await selectChoose(
+        getModalBody().querySelector('.data-spec-editor'),
+        'Integer'
+      );
       await click(getModalFooter().querySelector('.btn-submit'));
       const actionResult = await resultPromise;
 
@@ -89,6 +94,10 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
       await fillIn(
         getModalBody().querySelector('.name-field .form-control'),
         'store1'
+      );
+      await selectChoose(
+        getModalBody().querySelector('.data-spec-editor'),
+        'Integer'
       );
       await click(getModalFooter().querySelector('.btn-submit'));
       rejectCreate();

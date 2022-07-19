@@ -1,0 +1,87 @@
+.data-spec-editor {
+  .data-type-editor {
+    padding: 0.7em;
+    border: 1px solid $input-border;
+    border-radius: $input-border-radius;
+  }
+
+  .data-type-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & ~ * {
+      margin-top: 0.7em;
+      margin-bottom: 0;
+    }
+  }
+
+  .data-type-toolbar {
+    display: flex;
+    align-items: center;
+    font-size: 1.7em;
+
+    .one-icon {
+      // negative margin to reduce excessive icons padding
+      margin: -1em -0.05em;
+
+      &:hover {
+        color: $color-one-light-gray;
+      }
+    }
+
+    .remove-trigger {
+      font-size: 90%;
+
+      &:hover {
+        color: $color-one-danger;
+      }
+    }
+
+    &.disabled {
+      .one-icon {
+        opacity: 0.3;
+        cursor: not-allowed !important;
+
+        &:hover {
+          color: $main-text-color;
+        }
+      }
+    }
+  }
+
+  .form-summary-toggle {
+    font-size: 80%;
+    * {
+      vertical-align: middle;
+    }
+  }
+
+  .form-summary-icon {
+    margin-left: -0.15em;
+    margin-right: 0.2em;
+    font-size: 170%;
+  }
+
+  .dataTypeEditor-children > :last-child {
+    margin-bottom: 0;
+  }
+
+  .array-data-type-editor > .data-type-header {
+    margin-top: -0.5em;
+    margin-bottom: -0.5em;
+    font-size: 80%;
+
+    .data-type-name {
+      text-transform: uppercase;
+    }
+  }
+
+  .default-data-type-editor {
+    padding: $padding-base-vertical $padding-large-horizontal;
+
+    .data-type-toolbar {
+      margin-right: -0.2em;
+    }
+  }
+}

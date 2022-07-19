@@ -1,0 +1,63 @@
+{{#if canPackIntoArray}}
+  {{#one-icon
+    click=(action "packIntoArray")
+    icon="collection"
+    class="pack-into-array"
+  }}
+    {{#if isEnabled}}
+      {{one-tooltip title=(tt this "actions.packIntoArray")}}
+    {{/if}}
+  {{/one-icon}}
+{{/if}}
+{{#if canUnpackFromArray}}
+  {{#one-icon
+    click=(action "unpackFromArray")
+    icon="flatten"
+    class="unpack-from-array"
+  }}
+    {{#if isEnabled}}
+      {{one-tooltip title=(tt this "actions.unpackFromArray")}}
+    {{/if}}
+  {{/one-icon}}
+{{/if}}
+{{#one-icon
+  click=(action (if shouldWarnOnRemove "toggleRemoveWarn" "remove"))
+  icon="close"
+  class="remove-trigger"
+}}
+  {{#if isEnabled}}
+    {{one-tooltip title=(tt this "actions.remove")}}
+  {{/if}}
+{{/one-icon}}
+{{#render-later triggerRender=isRemoveWarnOpened}}
+  {{#one-webui-popover
+    triggerSelector=(local-selector elementId ".remove-trigger")
+    open=isRemoveWarnOpened
+  }}
+    {{#click-outside
+      onClickOutside=(action "toggleRemoveWarn" false)
+      exceptSelector=(local-selector elementId ".remove-trigger")
+    }}
+      <p>{{tt this "removeWarn.content"}}</p>
+      <div class="text-right">
+        {{#one-button
+          type="default"
+          size="sm"
+          onClick=(action "toggleRemoveWarn" false)
+        }}
+          {{tt this "removeWarn.no"}}
+        {{/one-button}}
+        {{!-- Using HTML "space" entity to preserve space between inline elements --}}
+        &#32;
+        {{#one-button
+          type="danger"
+          size="sm"
+          onClick=(action "remove")
+        }}
+          {{tt this "removeWarn.yes"}}
+        {{/one-button}}
+      </div>
+    {{/click-outside}}
+  {{/one-webui-popover}}
+{{/render-later}}
+{{yield}}
