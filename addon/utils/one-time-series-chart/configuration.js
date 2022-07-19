@@ -1074,7 +1074,6 @@ export default class Configuration {
     const context = {
       externalDataSources: this.externalDataSources,
       evaluateSeriesGroup: (...args) => this.getSeriesGroupState(...args),
-      // evaluateSeriesFunction: (...args) => this.evaluateSeriesFunction(...args),
     };
     const groupsPerBuilder = await allFulfilled(
       rawBuilders.map((seriesGroupBuilder) => {

@@ -498,7 +498,7 @@ function fetchSeries({
 
 /**
  * @param {{ timeSeriesSchemas: Array<AtmTimeSeriesSchema>, timeSeriesNameGenerator: string, resolution: number }} params
- * @returns {number|null}
+ * @returns {string|null}
  */
 function getMetricNameForResolution({
   timeSeriesSchemas,
@@ -509,7 +509,7 @@ function getMetricNameForResolution({
     schema && schema.nameGenerator === timeSeriesNameGenerator
   );
   if (!foundTimeSeriesSchema || !foundTimeSeriesSchema.metrics) {
-    return [];
+    return null;
   }
   for (const metricName in foundTimeSeriesSchema.metrics) {
     if (foundTimeSeriesSchema.metrics[metricName].resolution === resolution) {

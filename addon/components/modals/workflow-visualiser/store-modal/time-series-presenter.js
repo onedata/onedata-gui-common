@@ -139,7 +139,7 @@ export default Component.extend(...mixins, {
   },
 
   /**
-   * @param {{ dataSourceName: string, batchedQuery: BatchedTimeSeriesQuery }} params
+   * @param {{ batchedQuery: BatchedTimeSeriesQuery }} params
    * @returns {Promise<BatchedTimeSeriesQueryResult>}
    */
   async onQueryBatcherFetchData({ batchedQuery }) {

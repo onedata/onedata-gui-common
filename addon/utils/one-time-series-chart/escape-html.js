@@ -19,7 +19,7 @@ const allowedTags = [
 const allowedAttributes = [];
 
 /**
- * @param {string} tip
+ * @param {string} content
  * @returns {string}
  */
 export default function escapeHtml(content) {
