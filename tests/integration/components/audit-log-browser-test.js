@@ -62,4 +62,18 @@ describe('Integration | Component | audit log browser', function () {
       expect(columnHeader).to.have.trimmed.text(customColumnHeaders[idx].content);
     });
   });
+
+  it('shows information about no entries when no "onFetchEntries" was passed', async function () {
+    await render(hbs`{{audit-log-browser}}`);
+
+    const emptyRow = find('.table-is-empty-row');
+    expect(emptyRow).to.exist;
+    expect(emptyRow).to.have.trimmed.text('No log entries.');
+  });
+
+  it('shows custom information about no entries when "noLogEntriesText" is set', async function () {
+    await render(hbs`{{audit-log-browser noLogEntriesText="some text"}}`);
+
+    expect(find('.table-is-empty-row')).to.have.trimmed.text('some text');
+  });
 });

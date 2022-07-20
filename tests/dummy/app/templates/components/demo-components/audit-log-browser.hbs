@@ -1,0 +1,23 @@
+<h2>Audit log browser</h2>
+
+<p>
+  <button {{action (mut isTimestampRoundedToSeconds) (not isTimestampRoundedToSeconds)}}>
+    Toggle milliseconds
+  </button>
+  <button {{action (mut isSeverityColumnVisible) (not isSeverityColumnVisible)}}>
+    Toggle severity
+  </button>
+</p>
+
+<div style="display: flex; height: 30em; width: 50em;">
+  {{#audit-log-browser
+    onFetchEntries=onFetchEntries
+    customColumnHeaders=customColumnHeaders
+    isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
+    isSeverityColumnVisible=isSeverityColumnVisible
+    as |entry|
+  }}
+    <td class="description-cell">{{entry.content.description}}</td>
+    <td class="state-cell">{{entry.content.state}}</td>
+  {{/audit-log-browser}}
+</div>

@@ -1,0 +1,30 @@
+.audit-log-browser {
+  $cell-padding: 0.5em;
+
+  border: 1px solid $main-border-color;
+  border-radius: $border-radius-base;
+
+  .audit-log-scrollable-container {
+    height: 100%;
+  }
+
+  .audit-log-table {
+    table-layout: fixed;
+    margin: 0;
+  }
+
+  .audit-log-table-column-header,
+  .audit-log-table-entry > td {
+    padding: $cell-padding;
+
+    &:first-child {
+      padding-left: $cell-padding * 2;
+    }
+  }
+
+  .audit-log-table-column-header {
+    padding-top: $cell-padding * 2;
+    padding-bottom: $cell-padding * 2;
+    text-align: left;
+  }
+}

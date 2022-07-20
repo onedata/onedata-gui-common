@@ -1,23 +1,73 @@
-<table>
-  <thead>
-    <tr>
-      <th class="audit-log-table-column-header timestamp-column-header">
-        {{tt this "columnHeaders.timestamp"}}
-      </th>
-      {{#if isSeverityColumnVisible}}
-        <th class="audit-log-table-column-header severity-column-header">
-          {{tt this "columnHeaders.severity"}}
+{{#perfect-scrollbar-element class="audit-log-scrollable-container"}}
+  <table class="audit-log-table table one-infinite-list">
+    <thead>
+      <tr>
+        <th class="audit-log-table-column-header timestamp-column-header">
+          {{tt this "columnHeaders.timestamp"}}
         </th>
-      {{/if}}
-      {{#each customColumnHeaders as |customColumnHeader|}}
-        <th class="audit-log-table-column-header {{customColumnHeader.classNames}}">
-          {{customColumnHeader.content}}
-        </th>
-      {{/each}}
-    </tr>
-  </thead>
-  <tbody>
+        {{#if isSeverityColumnVisible}}
+          <th class="audit-log-table-column-header severity-column-header">
+            {{tt this "columnHeaders.severity"}}
+          </th>
+        {{/if}}
+        {{#each customColumnHeaders as |customColumnHeader|}}
+          <th class="audit-log-table-column-header {{customColumnHeader.classNames}}">
+            {{customColumnHeader.content}}
+          </th>
+        {{/each}}
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="table-start-row"></tr>
+      <tr class="first-row">
+        <td colspan={{columnsCount}} style={{infiniteScroll.firstRowModel.style}}></td>
+      </tr>
+      {{#if hasNoLogEntries}}
+        <tr class="table-is-empty-row">
+          <td class="table-is-empty-cell" colspan={{columnsCount}}>
+            {{or noLogEntriesText (tt this "noLogEntries")}}
+          </td>
+        </tr>
+      {{else}}
+        {{#if (and
+          logEntries.initialLoad.isSettled
+          fetchingStatus.prev
+          isTableTopVisible
+        )}}
+          <tr class="loading-row">
+            <td colspan={{columnsCount}} class="loading-row-cell">
+              {{spin-spinner-block
+                sizeClass="xs"
+                class="absolute-middle-centered"
+              }}
+            </td>
+          </tr>
+        {{/if}}
 
-  </tbody>
-</table>
-{{yield}}
+        {{#each logEntries key="index" as |logEntry|}}
+          <tr class="audit-log-table-entry data-row" data-row-id={{entry.id}}>
+            {{audit-log-browser/timestamp-cell
+              logEntry=logEntry
+              isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
+            }}
+            {{#if isSeverityColumnVisible}}
+              {{audit-log-browser/severity-cell logEntry=logEntry}}
+            {{/if}}
+            {{yield logEntry}}
+          </tr>
+        {{/each}}
+
+        {{#if (and logEntries.initialLoad.isSettled fetchingStatus.next)}}
+          <tr class="loading-row">
+            <td colspan={{columnsCount}} class="loading-row-cell">
+              {{spin-spinner-block
+                sizeClass="xs"
+                class="absolute-middle-centered"
+              }}
+            </td>
+          </tr>
+        {{/if}}
+      {{/if}}
+    </tbody>
+  </table>
+{{/perfect-scrollbar-element}}

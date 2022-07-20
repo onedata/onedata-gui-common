@@ -3,4 +3,5 @@ export default {
     timestamp: 'Time',
     severity: 'Severity',
   },
+  noLogEntries: 'No log entries.',
 };
