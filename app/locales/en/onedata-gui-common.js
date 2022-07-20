@@ -73,6 +73,7 @@ import joinStrings from './onedata-gui-common/utils/i18n/join-strings';
 import utilsWorkflowVisualiser from './onedata-gui-common/utils/workflow-visualiser';
 import clipboardActions from './onedata-gui-common/utils/clipboard-actions';
 import utilsAtmWorkflow from './onedata-gui-common/utils/atm-workflow';
+import auditLog from './onedata-gui-common/utils/audit-log';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
 
@@ -170,6 +171,7 @@ const translations = {
     workflowVisualiser: utilsWorkflowVisualiser,
     clipboardActions,
     atmWorkflow: utilsAtmWorkflow,
+    auditLog,
   },
   errors: {
     backendErrors,
