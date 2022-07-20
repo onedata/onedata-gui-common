@@ -1,0 +1,23 @@
+<table>
+  <thead>
+    <tr>
+      <th class="audit-log-table-column-header timestamp-column-header">
+        {{tt this "columnHeaders.timestamp"}}
+      </th>
+      {{#if isSeverityColumnVisible}}
+        <th class="audit-log-table-column-header severity-column-header">
+          {{tt this "columnHeaders.severity"}}
+        </th>
+      {{/if}}
+      {{#each customColumnHeaders as |customColumnHeader|}}
+        <th class="audit-log-table-column-header {{customColumnHeader.classNames}}">
+          {{customColumnHeader.content}}
+        </th>
+      {{/each}}
+    </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+{{yield}}

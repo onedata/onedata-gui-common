@@ -48,6 +48,7 @@ import oneTimeSeriesChart from './onedata-gui-common/components/one-time-series-
 import oneTimeSeriesChartsSection from './onedata-gui-common/components/one-time-series-charts-section';
 import apiSamples from './onedata-gui-common/components/api-samples';
 import atmWorkflow from './onedata-gui-common/components/atm-workflow';
+import auditLogBrowser from './onedata-gui-common/components/audit-log-browser';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -133,6 +134,7 @@ const translations = {
     oneTimeSeriesChartsSection,
     apiSamples,
     atmWorkflow,
+    auditLogBrowser,
     alerts: {
       endpointError,
     },
