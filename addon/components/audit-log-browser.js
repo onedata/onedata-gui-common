@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { not } from 'ember-awesome-macros';
+import { not, and } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import ReplacingChunksArray from 'onedata-gui-common/utils/replacing-chunks-array';
 import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
@@ -29,7 +29,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {(listingParams: AuditLogListingParams) => Promise<AuditLogEntriesPage>}
    */
-  onFetchEntries: undefined,
+  onFetchLogEntries: undefined,
 
   /**
    * Returns class names for each log entry. These classes are the applied to
@@ -108,7 +108,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<boolean>}
    */
-  hasNoLogEntries: not('logEntries.length'),
+  hasNoLogEntries: and('logEntries.initialLoad.isSettled', not('logEntries.length')),
 
   init() {
     this._super(...arguments);
@@ -189,9 +189,9 @@ export default Component.extend(I18n, {
    * @returns {Promise<{ array: Array<AuditLogEntry & { id: string }>, isLast: boolean }>}
    */
   async fetchEntries(index, limit, offset) {
-    const onFetchEntries = this.get('onFetchEntries');
+    const onFetchLogEntries = this.get('onFetchLogEntries');
 
-    const result = onFetchEntries ? await onFetchEntries({
+    const result = onFetchLogEntries ? await onFetchLogEntries({
       index,
       limit,
       offset,

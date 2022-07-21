@@ -29,11 +29,10 @@
           </td>
         </tr>
       {{else}}
-        {{#if (and
-          logEntries.initialLoad.isSettled
-          fetchingStatus.prev
-          isTableTopVisible
-        )}}
+        {{#if (and isTableTopVisible (or
+          logEntries.initialLoad.isPending
+          infiniteScroll.fetchingStatus.isFetchingPrev
+        ))}}
           <tr class="loading-row">
             <td colspan={{columnsCount}} class="loading-row-cell">
               {{spin-spinner-block
@@ -45,7 +44,7 @@
         {{/if}}
 
         {{#each logEntries key="index" as |logEntry|}}
-          <tr class="audit-log-table-entry data-row" data-row-id={{entry.id}}>
+          <tr class="audit-log-table-entry data-row" data-row-id={{logEntry.id}}>
             {{audit-log-browser/timestamp-cell
               logEntry=logEntry
               isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
@@ -57,7 +56,10 @@
           </tr>
         {{/each}}
 
-        {{#if (and logEntries.initialLoad.isSettled fetchingStatus.next)}}
+        {{#if (and
+          logEntries.initialLoad.isSettled
+          infiniteScroll.fetchingStatus.isFetchingNext
+        )}}
           <tr class="loading-row">
             <td colspan={{columnsCount}} class="loading-row-cell">
               {{spin-spinner-block
