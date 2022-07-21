@@ -9,8 +9,22 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { translateEntrySeverity } from 'onedata-gui-common/utils/audit-log';
+import {
+  EntrySeverity,
+  translateEntrySeverity,
+} from 'onedata-gui-common/utils/audit-log';
 import layout from '../../templates/components/audit-log-browser/severity-cell';
+
+const defaultSeverityIcons = Object.freeze({
+  [EntrySeverity.Debug]: 'browser-info',
+  [EntrySeverity.Info]: 'browser-info',
+  [EntrySeverity.Notice]: 'browser-info',
+  [EntrySeverity.Warning]: 'checkbox-filled-warning',
+  [EntrySeverity.Alert]: 'checkbox-filled-warning',
+  [EntrySeverity.Error]: 'checkbox-filled-x',
+  [EntrySeverity.Critical]: 'checkbox-filled-x',
+  [EntrySeverity.Emergency]: 'checkbox-filled-x',
+});
 
 export default Component.extend({
   layout,
@@ -26,6 +40,12 @@ export default Component.extend({
   logEntry: undefined,
 
   /**
+   * @virtual optional
+   * @type {Object<AuditLogEntrySeverity, string>}
+   */
+  severityIcons: defaultSeverityIcons,
+
+  /**
    * @type {ComputedProperty<SafeString>}
    */
   severityTranslation: computed(
@@ -35,6 +55,17 @@ export default Component.extend({
         this.get('i18n'),
         this.get('logEntry.severity')
       );
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<String|undefined>}
+   */
+  severityIcon: computed(
+    'severityIcons',
+    'logEntry.severity',
+    function severityIcon() {
+      return this.get('severityIcons')[this.get('logEntry.severity')];
     }
   ),
 });

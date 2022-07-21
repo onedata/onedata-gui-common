@@ -11,6 +11,16 @@ import { lookupService } from '../../helpers/stub-service';
 import sinon from 'sinon';
 
 const allSeverities = Object.values(EntrySeverity);
+const severityIcons = {
+  debug: 'browser-info',
+  info: 'browser-info',
+  notice: 'browser-info',
+  warning: 'checkbox-filled-warning',
+  alert: 'checkbox-filled-warning',
+  error: 'checkbox-filled-x',
+  critical: 'checkbox-filled-x',
+  emergency: 'checkbox-filled-x',
+};
 const latestLogEntryTimestamp = 1658324755;
 const waitTimeForReload = 10;
 
@@ -153,6 +163,31 @@ describe('Integration | Component | audit log browser', function () {
     expect(find('.audit-log-table-entry .severity-cell')).to.have.trimmed.text(
       String(translateEntrySeverity(lookupService(this, 'i18n'), correctSeverity))
     );
+  });
+
+  it('adds class to each rendered log entry based on severity', async function () {
+    await render(hbs`{{audit-log-browser onFetchLogEntries=onFetchLogEntries}}`);
+
+    const logRows = findAll('.audit-log-table-entry');
+
+    expect(logRows[0]).to.have.class(
+      `audit-log-severity-${generateSeverityForTimestamp(latestLogEntryTimestamp)}`
+    );
+    expect(logRows[1]).to.have.class(
+      `audit-log-severity-${generateSeverityForTimestamp(latestLogEntryTimestamp - 1)}`
+    );
+  });
+
+  it('shows icons for each possible entry severity', async function () {
+    await render(hbs`{{audit-log-browser
+      onFetchLogEntries=onFetchLogEntries
+      isSeverityColumnVisible=true
+    }}`);
+
+    allSeverities.forEach((severity) => {
+      expect(find(`.audit-log-severity-${severity}`))
+        .to.contain(`.one-icon.oneicon-${severityIcons[severity]}`);
+    });
   });
 
   it('shows only timestamp for fetched log entries when there are no custom columns', async function () {

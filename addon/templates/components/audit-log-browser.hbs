@@ -44,7 +44,13 @@
         {{/if}}
 
         {{#each logEntries key="index" as |logEntry|}}
-          <tr class="audit-log-table-entry data-row" data-row-id={{logEntry.id}}>
+          <tr
+            class={{concat-classes
+              "audit-log-table-entry data-row"
+              (concat "audit-log-severity-" logEntry.severity)
+            }}
+            data-row-id={{logEntry.id}}
+          >
             {{audit-log-browser/timestamp-cell
               logEntry=logEntry
               isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
