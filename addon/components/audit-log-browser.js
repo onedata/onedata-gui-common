@@ -32,12 +32,12 @@ export default Component.extend(I18n, {
   onFetchLogEntries: undefined,
 
   /**
-   * Returns class names for each log entry. These classes are the applied to
+   * Returns class names for each log entry. These classes are then applied to
    * the corresponding table row.
    * @virtual optional
    * @type {(entry: AuditLogEntry) => string}
    */
-  onGetClassNamesForEntry: () => '',
+  onGetClassNamesForLogEntry: () => '',
 
   /**
    * When false, renders the timestamp including milliseconds. When true,

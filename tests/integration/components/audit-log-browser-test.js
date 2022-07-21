@@ -293,6 +293,23 @@ describe('Integration | Component | audit log browser', function () {
     expect(find('.audit-log-table-entry .timestamp-cell'))
       .to.have.trimmed.text('20 Jul 2022 15:45:56.500');
   });
+
+  it('allows to add custom class names to entries via "onGetClassNamesForLogEntry"', async function () {
+    this.set('onGetClassNamesForLogEntry', (logEntry) => `custom-${logEntry.severity}`);
+    await render(hbs`{{audit-log-browser
+      onFetchLogEntries=onFetchLogEntries
+      onGetClassNamesForLogEntry=onGetClassNamesForLogEntry
+    }}`);
+
+    const logRows = findAll('.audit-log-table-entry');
+
+    expect(logRows[0]).to.have.class(
+      `custom-${generateSeverityForTimestamp(latestLogEntryTimestamp)}`
+    );
+    expect(logRows[1]).to.have.class(
+      `custom-${generateSeverityForTimestamp(latestLogEntryTimestamp - 1)}`
+    );
+  });
 });
 
 function createFetchEntriesMock({ getHangLoadingNext, getLatestLogEntryTimestamp }) {

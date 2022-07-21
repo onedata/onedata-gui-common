@@ -48,6 +48,7 @@
             class={{concat-classes
               "audit-log-table-entry data-row"
               (concat "audit-log-severity-" logEntry.severity)
+              (evaluate-function onGetClassNamesForLogEntry logEntry)
             }}
             data-row-id={{logEntry.id}}
           >
