@@ -8,6 +8,7 @@ import { scrollTo } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
 import { EntrySeverity, translateEntrySeverity } from 'onedata-gui-common/utils/audit-log';
 import { lookupService } from '../../helpers/stub-service';
+import OneTooltipHelper from '../../helpers/one-tooltip';
 import sinon from 'sinon';
 
 const allSeverities = Object.values(EntrySeverity);
@@ -309,6 +310,47 @@ describe('Integration | Component | audit log browser', function () {
     expect(logRows[1]).to.have.class(
       `custom-${generateSeverityForTimestamp(latestLogEntryTimestamp - 1)}`
     );
+  });
+
+  it('does not render table title when "title" is not set', async function () {
+    await render(hbs`{{audit-log-browser}}`);
+
+    expect(find('.audit-log-browser-title')).to.not.exist;
+  });
+
+  it('renders table title when "title" is set', async function () {
+    await render(hbs`{{audit-log-browser title="some title"}}`);
+
+    expect(find('.audit-log-browser-title')).to.have.trimmed.text('some title');
+  });
+
+  it('does not render table title tip when "titleTip" is not set', async function () {
+    await render(hbs`{{audit-log-browser title="test"}}`);
+
+    expect(find('.audit-log-browser-title .title-tip')).to.not.exist;
+  });
+
+  it('renders table title tip when "titleTip" is set', async function () {
+    await render(hbs`{{audit-log-browser title="test" titleTip="some tip"}}`);
+
+    const tipContent = await new OneTooltipHelper(
+      '.audit-log-browser-title .title-tip .one-icon'
+    ).getText();
+    expect(tipContent).to.equal('some tip');
+  });
+
+  it('adds custom classes to the table title tip when "titleTipClassNames" is set', async function () {
+    await render(hbs`{{audit-log-browser
+      title="test"
+      titleTip="some tip"
+      titleTipClassNames="abc"
+    }}`);
+
+    const tooltipHelper = await new OneTooltipHelper(
+      '.audit-log-browser-title .title-tip .one-icon'
+    );
+    await tooltipHelper.open();
+    expect(tooltipHelper.getTooltip()).to.have.class('abc');
   });
 });
 

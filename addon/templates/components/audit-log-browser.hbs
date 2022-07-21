@@ -1,4 +1,16 @@
 {{#perfect-scrollbar-element class="audit-log-scrollable-container"}}
+  {{#if title}}
+    <div class="audit-log-browser-title">
+      <span class="title-text">{{title}}</span>
+      {{#if titleTip}}
+        {{one-label-tip
+          class="title-tip"
+          title=titleTip
+          tooltipClass=titleTipClassNames
+        }}
+      {{/if}}
+    </div>
+  {{/if}}
   <table class="audit-log-table table one-infinite-list">
     <thead class="audit-log-table-head">
       <tr>

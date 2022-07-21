@@ -71,6 +71,27 @@ export default Component.extend(I18n, {
   noLogEntriesText: undefined,
 
   /**
+   * A text shown above the table and working as a title.
+   * @virtual optional
+   * @type {SafeString}
+   */
+  title: undefined,
+
+  /**
+   * A text shown inside table title's tooltip.
+   * @virtual optional
+   * @type {SafeString}
+   */
+  titleTip: undefined,
+
+  /**
+   * Additional classes that should be added to the rendered tooltip.
+   * @virtual optional
+   * @type {string}
+   */
+  titleTipClassNames: undefined,
+
+  /**
    * True when the top of the audit log table is visible on screen.
    * @type {boolean}
    */
