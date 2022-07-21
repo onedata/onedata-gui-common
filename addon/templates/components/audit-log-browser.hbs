@@ -1,6 +1,6 @@
 {{#perfect-scrollbar-element class="audit-log-scrollable-container"}}
   <table class="audit-log-table table one-infinite-list">
-    <thead>
+    <thead class="audit-log-table-head">
       <tr>
         <th class="audit-log-table-column-header timestamp-column-header">
           {{tt this "columnHeaders.timestamp"}}
@@ -17,7 +17,7 @@
         {{/each}}
       </tr>
     </thead>
-    <tbody>
+    <tbody class="audit-log-table-body">
       <tr class="table-start-row"></tr>
       <tr class="first-row">
         <td colspan={{columnsCount}} style={{infiniteScroll.firstRowModel.style}}></td>
@@ -73,3 +73,4 @@
     </tbody>
   </table>
 {{/perfect-scrollbar-element}}
+<div class="bottom-shadow-keeper"></div>
