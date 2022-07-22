@@ -102,6 +102,16 @@ $audit-log-cell-padding: 0.5em;
     }
   }
 
+  .audit-log-severity-info,
+  .audit-log-severity-notice,
+  .audit-log-theme-none {
+    background-color: $color-one-white;
+
+    .severity-icon {
+      color: $main-text-color;
+    }
+  }
+
   .audit-log-severity-debug,
   .audit-log-theme-default {
     background-color: $color-one-light-blue;
