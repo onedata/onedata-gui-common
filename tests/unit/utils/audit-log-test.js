@@ -76,7 +76,7 @@ describe('Unit | Utility | audit log', function () {
       });
     });
 
-    it('returns normalized last page when page is partially invalid and non-last', function () {
+    it('returns normalized page when page is partially invalid', function () {
       expect(normalizeEntriesPage({
         logEntries: [{
           index: 'abc',
@@ -100,6 +100,28 @@ describe('Unit | Utility | audit log', function () {
           severity: 'warning',
           content: 123,
         }],
+        isLast: false,
+      });
+    });
+
+    it('returns empty page when page is completely invalid', function () {
+      expect(normalizeEntriesPage({
+        logEntries: [{
+          // no index - error
+          timestamp: 123,
+          source: 'system',
+          severity: 'warning',
+          content: '123',
+        }, {
+          index: 'def',
+          // no timestamp - error
+          source: 'user',
+          severity: 'error',
+          content: '456',
+        }],
+        isLast: false,
+      }, sampleNormalizeContent)).to.deep.equal({
+        logEntries: [],
         isLast: true,
       });
     });

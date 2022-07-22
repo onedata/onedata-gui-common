@@ -35,7 +35,7 @@ export default Component.extend(I18n, {
    * Returns class names for each log entry. These classes are then applied to
    * the corresponding table row.
    * @virtual optional
-   * @type {(entry: AuditLogEntry) => string}
+   * @type {(logEntry: AuditLogEntry) => string}
    */
   onGetClassNamesForLogEntry: () => '',
 

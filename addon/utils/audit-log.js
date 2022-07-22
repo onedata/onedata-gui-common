@@ -96,7 +96,7 @@ export const ListingDirection = Object.freeze({
 
 /**
  * @param {unknown} page
- * @param {(content: unknown) => T|null} normalizeEntryContent
+ * @param {((content: unknown) => T|null)|undefined} [normalizeEntryContent]
  * @returns {AuditLogEntriesPage<T>}
  */
 export function normalizeEntriesPage(page, normalizeEntryContent) {
@@ -111,9 +111,13 @@ export function normalizeEntriesPage(page, normalizeEntryContent) {
     isLast,
   };
 
-  if (logEntries.length !== normalizedPage.logEntries.length) {
-    // There were some incorrect log entries so simulate the end of audit log to
-    // stop further listing.
+  if (
+    logEntries.length !== normalizedPage.logEntries.length &&
+    normalizedPage.logEntries.length === 0
+  ) {
+    // All logs were invalid and we don't know how to perform additional query
+    // to fetch another (possibly valid) entries. Hence we have to simulate
+    // that this was the last page to stop listing at this point.
     normalizedPage.isLast = true;
   }
 
@@ -134,19 +138,19 @@ export function normalizeEntriesPage(page, normalizeEntryContent) {
 
 /**
  * @param {unknown} entry
- * @param {(content: unknown) => T|null} [normalizeContent]
+ * @param {((content: unknown) => T|null)|undefined} [normalizeContent]
  * @returns {AuditLogEntry<T>}
  */
-export function normalizeEntry(entry, normalizeContent = (content) => content) {
+export function normalizeEntry(entry, normalizeContent) {
   if (
     typeof entry?.index !== 'string' ||
-    typeof entry?.timestamp !== 'number' ||
-    !normalizeContent
+    typeof entry?.timestamp !== 'number'
   ) {
     return null;
   }
 
-  const normalizedContent = normalizeContent(entry?.content);
+  const normalizedContent = normalizeContent ?
+    normalizeContent(entry?.content) : entry?.content;
   if (!normalizedContent) {
     return null;
   }
