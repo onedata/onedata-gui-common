@@ -1,0 +1,27 @@
+<div class="close-details clickable" onClick={{action onClose}}>
+  {{one-icon icon="arrow-right"}}
+</div>
+<div class="details">
+  <div class="timestamp">
+    {{date-format timestampInSeconds
+      format=(if isTimestampRoundedToSeconds "report" "detailedReport")
+      blank="—"
+    }}
+  </div>
+  <div class="content">
+    {{ember-ace
+      editorClass="full-height"
+      value=stringifiedLogEntry
+      worker="ace/mode/json_worker"
+      mode="ace/mode/json"
+      theme="ace/theme/textmate"
+      tabSize=2
+      useWrapMode=true
+      highlightActiveLine=true
+      showLineNumbers=true
+      showPrintMargin=false
+      readOnly=true
+    }}
+  </div>
+</div>
+{{yield}}

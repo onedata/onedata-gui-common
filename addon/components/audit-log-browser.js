@@ -19,6 +19,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 export default Component.extend(I18n, {
   layout,
   classNames: ['audit-log-browser'],
+  classNameBindings: ['selectedLogEntry:shows-details'],
 
   i18n: service(),
 
@@ -94,6 +95,18 @@ export default Component.extend(I18n, {
   titleTipClassNames: undefined,
 
   /**
+   * When true, opens details view on log entry click.
+   * @virtual optional
+   * @type {boolean}
+   */
+  doesOpenDetailsOnClick: false,
+
+  /**
+   * @type {AuditLogEntry|undefined}
+   */
+  selectedLogEntry: undefined,
+
+  /**
    * True when the top of the audit log table is visible on screen.
    * @type {boolean}
    */
@@ -141,6 +154,7 @@ export default Component.extend(I18n, {
   onFetchLogEntriesObserver: observer(
     'onFetchLogEntries',
     async function onFetchLogEntriesObserver() {
+      this.set('selectedLogItem', undefined);
       await this.get('logEntries').scheduleJump(null);
       schedule('afterRender', this, () => {
         window.requestAnimationFrame(() => {
@@ -294,5 +308,36 @@ export default Component.extend(I18n, {
   getScrollableContainer() {
     return this.get('element')
       ?.querySelector('.audit-log-scrollable-container') || null;
+  },
+
+  actions: {
+    /**
+     * @param {MouseEvent} event
+     * @returns {void}
+     */
+    mainContentClick(event) {
+      if (!event.target.closest('.audit-log-table-entry')) {
+        this.set('selectedLogEntry', undefined);
+      }
+    },
+
+    /**
+     * @param {AuditLogEntry} logEntry
+     * @returns {void}
+     */
+    logEntryClick(logEntry) {
+      const selectedLogEntry = this.get('selectedLogEntry');
+      this.set(
+        'selectedLogEntry',
+        selectedLogEntry?.index === logEntry?.index ? undefined : logEntry
+      );
+    },
+
+    /**
+     * @returns {void}
+     */
+    closeDetails() {
+      this.set('selectedLogEntry', undefined);
+    },
   },
 });

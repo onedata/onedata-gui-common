@@ -1,4 +1,7 @@
-{{#perfect-scrollbar-element class="audit-log-scrollable-container"}}
+{{#perfect-scrollbar-element
+  class="audit-log-scrollable-container"
+  click=(action "mainContentClick")
+}}
   {{#if title}}
     <div class="audit-log-browser-title">
       <span class="title-text">{{title}}</span>
@@ -60,9 +63,12 @@
             class={{concat-classes
               "audit-log-table-entry data-row"
               (concat "audit-log-severity-" logEntry.severity)
+              (if doesOpenDetailsOnClick "clickable")
+              (if (eq selectedLogEntry.index logEntry.index) "selected")
               (evaluate-function onGetClassNamesForLogEntry logEntry)
             }}
             data-row-id={{logEntry.id}}
+            onclick={{action "logEntryClick" logEntry}}
           >
             {{audit-log-browser/timestamp-cell
               logEntry=logEntry
@@ -93,3 +99,10 @@
   </table>
 {{/perfect-scrollbar-element}}
 <div class="bottom-shadow-keeper"></div>
+{{#if doesOpenDetailsOnClick}}
+  {{audit-log-browser/details-container
+    logEntry=selectedLogEntry
+    isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
+    onClose=(action "closeDetails")
+  }}
+{{/if}}

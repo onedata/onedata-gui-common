@@ -1,14 +1,17 @@
 $audit-log-header-bg-color: #FAFAFA;
 $audit-log-cell-padding: 0.5em;
+$audit-log-container-padding: 2 * $audit-log-cell-padding;
+$audit-log-timestamp-cell-width: 7em;
 
 .audit-log-browser {
+  position: relative;
   border: 1px solid $main-border-color;
   border-radius: $border-radius-base;
   overflow: hidden;
 
   .audit-log-browser-title {
     background-color: $audit-log-header-bg-color;
-    padding: $audit-log-cell-padding * 2;
+    padding: $audit-log-container-padding;
     padding-bottom: 0;
 
     .title-text {
@@ -23,6 +26,7 @@ $audit-log-cell-padding: 0.5em;
 
   .audit-log-scrollable-container {
     height: 100%;
+    cursor: initial !important;
 
     &.on-top .audit-log-table-column-header {
       @include hide-before-shadow;
@@ -51,25 +55,47 @@ $audit-log-cell-padding: 0.5em;
     vertical-align: middle;
 
     &:first-child {
-      padding-left: $audit-log-cell-padding * 2;
+      padding-left: $audit-log-container-padding;
     }
   }
 
   .audit-log-table-column-header {
     position: relative;
-    padding-top: $audit-log-cell-padding * 2;
-    padding-bottom: $audit-log-cell-padding * 2;
+    padding-top: $audit-log-container-padding;
+    padding-bottom: $audit-log-container-padding;
     text-align: left;
     @include before-bottom-shadow;
   }
 
-  .audit-log-table-entry > td {
-    overflow: hidden;
+  .audit-log-table-entry {
+    transition: transition-ease(filter, 'short'), transition-ease(opacity);
+
+    &.clickable:hover {
+      filter: brightness(95%);
+    }
+
+    &.selected .timestamp-cell {
+      @include font-bold();
+    }
+
+    > td {
+      overflow: hidden;
+    }
+  }
+
+  &.shows-details {
+    .audit-log-table-entry:not(.selected) {
+      opacity: 50%;
+    }
   }
 
   .bottom-shadow-keeper {
     position: relative;
     @include before-top-shadow;
+
+    &::before {
+      z-index: 2;
+    }
   }
 
   .ps__rail-y {
@@ -77,7 +103,7 @@ $audit-log-cell-padding: 0.5em;
   }
 
   .timestamp-column-header {
-    width: 7em;
+    width: $audit-log-timestamp-cell-width;
   }
 
   .timestamp-cell {
@@ -147,6 +173,63 @@ $audit-log-cell-padding: 0.5em;
 
     .severity-icon {
       color: $color-one-success;
+    }
+  }
+
+  .details-container {
+    @include after-left-shadow();
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: $audit-log-timestamp-cell-width;
+    z-index: 3;
+    border-left: 1px solid $main-border-color;
+    background-color: $color-one-white;
+    // Additional 1em move to hide shadow which is outside of the container
+    transform: translateX(100%) translateX(1em);
+    transition: transition-ease(transform);
+    display: grid;
+    grid-template-columns: min-content auto;
+
+    &.visible {
+      transform: none;
+    }
+
+    .details {
+      display: grid;
+      grid-template-rows: min-content auto;
+      gap: $audit-log-container-padding;
+      padding: $audit-log-container-padding;
+    }
+
+    .timestamp {
+      @include font-semibold();
+    }
+
+    .content {
+      display: grid;
+      place-items: stretch;
+    }
+
+    .close-details {
+      display: grid;
+      place-items: center;
+      background-color: lighten($color-one-semiwhite, 3%);
+      overflow: hidden;
+
+      &:hover {
+        font-weight: bold;
+        filter: brightness(95%);
+      }
+
+      .one-icon {
+        display: grid;
+        place-items: center;
+        height: 3em;
+        background-color: $color-one-gray-sand;
+        margin: 0 -0.2em;
+      }
     }
   }
 }
