@@ -118,7 +118,9 @@ describe('Integration | Component | audit log browser', function () {
   });
 
   it('shows fetched log entries from newest to oldest', async function () {
-    await render(hbs`{{audit-log-browser onFetchLogEntries=onFetchLogEntries}}`);
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+    </div>`);
 
     const logRows = findAll('.audit-log-table-entry');
     expect(logRows).to.have.lengthOf.above(1);
@@ -130,7 +132,9 @@ describe('Integration | Component | audit log browser', function () {
   });
 
   it('shows fetched log entries timestamps', async function () {
-    await render(hbs`{{audit-log-browser onFetchLogEntries=onFetchLogEntries}}`);
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+    </div>`);
 
     expect(find('.audit-log-table-entry .timestamp-cell'))
       .to.have.trimmed.text('20 Jul 2022 15:45:55.500');
@@ -138,10 +142,12 @@ describe('Integration | Component | audit log browser', function () {
 
   it('shows fetched log entries timestamps without milliseconds when "isTimestampRoundedToSeconds" is true',
     async function () {
-      await render(hbs`{{audit-log-browser
-        onFetchLogEntries=onFetchLogEntries
-        isTimestampRoundedToSeconds=true
-      }}`);
+      await render(hbs`<div style="display: flex; height: 10em;">
+        {{audit-log-browser
+          onFetchLogEntries=onFetchLogEntries
+          isTimestampRoundedToSeconds=true
+        }}
+      </div>`);
 
       expect(find('.audit-log-table-entry .timestamp-cell'))
         .to.have.trimmed.text('20 Jul 2022 15:45:55');
@@ -149,16 +155,20 @@ describe('Integration | Component | audit log browser', function () {
   );
 
   it('does not show severity for fetched log entries by default', async function () {
-    await render(hbs`{{audit-log-browser onFetchLogEntries=onFetchLogEntries}}`);
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+    </div>`);
 
     expect(find('.audit-log-table-entry .severity-cell')).to.not.exist;
   });
 
   it('shows severity for fetched log entries when "isSeverityColumnVisible" is true', async function () {
-    await render(hbs`{{audit-log-browser
-      onFetchLogEntries=onFetchLogEntries
-      isSeverityColumnVisible=true
-    }}`);
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser
+        onFetchLogEntries=onFetchLogEntries
+        isSeverityColumnVisible=true
+      }}
+    </div>`);
 
     const correctSeverity = generateSeverityForTimestamp(latestLogEntryTimestamp);
     expect(find('.audit-log-table-entry .severity-cell')).to.have.trimmed.text(
@@ -167,7 +177,9 @@ describe('Integration | Component | audit log browser', function () {
   });
 
   it('adds class to each rendered log entry based on severity', async function () {
-    await render(hbs`{{audit-log-browser onFetchLogEntries=onFetchLogEntries}}`);
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+    </div>`);
 
     const logRows = findAll('.audit-log-table-entry');
 
@@ -180,10 +192,12 @@ describe('Integration | Component | audit log browser', function () {
   });
 
   it('shows icons for each possible entry severity', async function () {
-    await render(hbs`{{audit-log-browser
-      onFetchLogEntries=onFetchLogEntries
-      isSeverityColumnVisible=true
-    }}`);
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser
+        onFetchLogEntries=onFetchLogEntries
+        isSeverityColumnVisible=true
+      }}
+    </div>`);
 
     allSeverities.forEach((severity) => {
       expect(find(`.audit-log-severity-${severity}`))
@@ -192,7 +206,9 @@ describe('Integration | Component | audit log browser', function () {
   });
 
   it('shows only timestamp for fetched log entries when there are no custom columns', async function () {
-    await render(hbs`{{audit-log-browser onFetchLogEntries=onFetchLogEntries}}`);
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+    </div>`);
 
     expect(find('.audit-log-table-entry').querySelectorAll('td')).to.have.length(1);
   });
@@ -201,13 +217,15 @@ describe('Integration | Component | audit log browser', function () {
     this.set('customColumnHeaders', [{
       content: 'Description',
     }]);
-    await render(hbs`{{#audit-log-browser
-      onFetchLogEntries=onFetchLogEntries
-      customColumnHeaders=customColumnHeaders
-      as |logEntry|
-    }}
-      <td class="description-cell">{{logEntry.content.description}}</td>
-    {{/audit-log-browser}}`);
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{#audit-log-browser
+        onFetchLogEntries=onFetchLogEntries
+        customColumnHeaders=customColumnHeaders
+        as |logEntry|
+      }}
+        <td class="description-cell">{{logEntry.content.description}}</td>
+      {{/audit-log-browser}}
+    </div>`);
 
     expect(find('.audit-log-table-entry').querySelectorAll('td')).to.have.length(2);
     expect(find('.audit-log-table-entry .description-cell'))
@@ -216,14 +234,18 @@ describe('Integration | Component | audit log browser', function () {
 
   it('shows spinner during initial load', async function () {
     this.set('onFetchLogEntries', () => new Promise(() => {}));
-    await render(hbs`{{audit-log-browser onFetchLogEntries=onFetchLogEntries}}`);
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+    </div>`);
 
     expect(findAll('.loading-row .spinner')).to.have.length(1);
     expect(find('.audit-log-table-entry')).to.not.exist;
   });
 
   it('does not show any spinner when log entries are loaded', async function () {
-    await render(hbs`{{audit-log-browser onFetchLogEntries=onFetchLogEntries}}`);
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+    </div>`);
 
     expect(find('.loading-row .spinner')).to.not.exist;
   });
@@ -297,10 +319,12 @@ describe('Integration | Component | audit log browser', function () {
 
   it('allows to add custom class names to entries via "onGetClassNamesForLogEntry"', async function () {
     this.set('onGetClassNamesForLogEntry', (logEntry) => `custom-${logEntry.severity}`);
-    await render(hbs`{{audit-log-browser
-      onFetchLogEntries=onFetchLogEntries
-      onGetClassNamesForLogEntry=onGetClassNamesForLogEntry
-    }}`);
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser
+        onFetchLogEntries=onFetchLogEntries
+        onGetClassNamesForLogEntry=onGetClassNamesForLogEntry
+      }}
+    </div>`);
 
     const logRows = findAll('.audit-log-table-entry');
 
