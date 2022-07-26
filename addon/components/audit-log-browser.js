@@ -1,12 +1,14 @@
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed, observer, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { not, and } from 'ember-awesome-macros';
+import { schedule } from '@ember/runloop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import ReplacingChunksArray from 'onedata-gui-common/utils/replacing-chunks-array';
 import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
 import { ListingDirection } from 'onedata-gui-common/utils/audit-log';
 import layout from '../templates/components/audit-log-browser';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 /**
  * @typedef {Object} AuditLogBrowserCustomColumnHeader
@@ -108,6 +110,11 @@ export default Component.extend(I18n, {
   logEntries: undefined,
 
   /**
+   * @type {ResizeObserver|undefined}
+   */
+  resizeObserver: undefined,
+
+  /**
    * @type {ComputedProperty<number>}
    */
   columnsCount: computed(
@@ -130,6 +137,23 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<boolean>}
    */
   hasNoLogEntries: and('logEntries.initialLoad.isSettled', not('logEntries.length')),
+
+  onFetchLogEntriesObserver: observer(
+    'onFetchLogEntries',
+    async function onFetchLogEntriesObserver() {
+      await this.get('logEntries').scheduleJump(null);
+      schedule('afterRender', this, () => {
+        window.requestAnimationFrame(() => {
+          safeExec(this, () => {
+            const scrollableContainer = this.getScrollableContainer();
+            if (scrollableContainer) {
+              scrollableContainer.scroll(0, 0);
+            }
+          });
+        });
+      });
+    }
+  ),
 
   init() {
     this._super(...arguments);
@@ -167,6 +191,7 @@ export default Component.extend(I18n, {
       'element',
     );
     infiniteScroll.mount(element.querySelector('.audit-log-table'));
+    this.setupResizeObserver();
   },
 
   /**
@@ -174,6 +199,7 @@ export default Component.extend(I18n, {
    */
   willDestroyElement() {
     try {
+      this.teardownResizeObserver();
       this.get('infiniteScroll').destroy();
     } finally {
       this._super(...arguments);
@@ -232,5 +258,41 @@ export default Component.extend(I18n, {
       array,
       isLast: result.isLast,
     };
+  },
+
+  /**
+   * @returns {void}
+   */
+  setupResizeObserver() {
+    const scrollableContainer = this.getScrollableContainer();
+    // Check whether ResizeObserver API is available
+    if (!ResizeObserver || !scrollableContainer) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      scrollableContainer.dispatchEvent(new Event('scroll'));
+    });
+    resizeObserver.observe(scrollableContainer);
+
+    this.set('resizeObserver', resizeObserver);
+  },
+
+  /**
+   * @returns {void}
+   */
+  teardownResizeObserver() {
+    const resizeObserver = this.get('resizeObserver');
+    if (resizeObserver) {
+      resizeObserver.disconnect();
+    }
+  },
+
+  /**
+   * @returns {HTMLDivElement|null}
+   */
+  getScrollableContainer() {
+    return this.get('element')
+      ?.querySelector('.audit-log-scrollable-container') || null;
   },
 });
