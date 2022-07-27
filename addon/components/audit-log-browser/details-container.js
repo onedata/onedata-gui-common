@@ -1,11 +1,21 @@
 import Component from '@ember/component';
 import { observer, computed } from '@ember/object';
+import { inject as service } from '@ember/service';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from '../../templates/components/audit-log-browser/details-container';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['details-container'],
   classNameBindings: ['logEntry:visible'],
+
+  i18n: service(),
+  globalClipboard: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.auditLogBrowser.detailsContainer',
 
   /**
    * @virtual
@@ -64,4 +74,15 @@ export default Component.extend({
       this.set('latestLogEntry', logEntry);
     }
   }),
+
+  actions: {
+    copyJson() {
+      const {
+        globalClipboard,
+        stringifiedLogEntry,
+      } = this.getProperties('globalClipboard', 'stringifiedLogEntry');
+
+      globalClipboard.copy(stringifiedLogEntry, this.t('copyJsonAckType'));
+    },
+  },
 });

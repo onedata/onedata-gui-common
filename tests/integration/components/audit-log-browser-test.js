@@ -462,6 +462,30 @@ describe('Integration | Component | audit log browser', function () {
       JSON.stringify(generateEntryForTimestamp(latestLogEntryTimestamp - 1), null, 2)
     );
   });
+
+  it('shows working copy link in details', async function () {
+    const copyStub = sinon.stub(lookupService(this, 'global-clipboard'), 'copy');
+
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser
+        onFetchLogEntries=onFetchLogEntries
+        doesOpenDetailsOnClick=true
+      }}
+    </div>`);
+
+    await click('.audit-log-table-entry');
+    const copyLink = find('.details-container .copy-link');
+
+    expect(copyLink).to.exist;
+    expect(copyLink).to.have.trimmed.text('Copy JSON');
+
+    expect(copyStub).to.be.not.called;
+    await click(copyLink);
+    expect(copyStub).to.be.calledOnce.and.to.be.calledWith(
+      JSON.stringify(generateEntryForTimestamp(latestLogEntryTimestamp), null, 2),
+      sinon.match({ string: 'Entry JSON' })
+    );
+  });
 });
 
 function createFetchEntriesMock({ getHangLoadingNext, getLatestLogEntryTimestamp }) {

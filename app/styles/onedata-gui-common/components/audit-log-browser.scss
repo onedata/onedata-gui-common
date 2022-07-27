@@ -210,6 +210,24 @@ $audit-log-timestamp-cell-width: 7em;
       place-items: stretch;
     }
 
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .copy-link {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      font-size: 85%;
+
+      .one-icon {
+        font-size: 170%;
+        line-height: 0;
+      }
+    }
+
     .close-details {
       display: grid;
       place-items: center;

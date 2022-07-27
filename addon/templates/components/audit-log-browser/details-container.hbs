@@ -2,11 +2,17 @@
   {{one-icon icon="arrow-right"}}
 </div>
 <div class="details">
-  <div class="timestamp">
-    {{date-format timestampInSeconds
-      format=(if isTimestampRoundedToSeconds "report" "detailedReport")
-      blank="—"
-    }}
+  <div class="header">
+    <div class="timestamp">
+      {{date-format timestampInSeconds
+        format=(if isTimestampRoundedToSeconds "report" "detailedReport")
+        blank="—"
+      }}
+    </div>
+    <a class="copy-link clickable" onclick={{action "copyJson"}}>
+      {{one-icon icon="copy"}}
+      {{tt this "copyJson"}}
+    </a>
   </div>
   <div class="content">
     {{#if latestLogEntry}}
