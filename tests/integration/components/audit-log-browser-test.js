@@ -2,13 +2,14 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import { render, find, findAll, settled } from '@ember/test-helpers';
+import { render, find, findAll, settled, click } from '@ember/test-helpers';
 // TODO: VFS-9129 use scrollTo helper from @ember/test-helpers after upgrading it to 2.0
 import { scrollTo } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
 import { EntrySeverity, translateEntrySeverity } from 'onedata-gui-common/utils/audit-log';
 import { lookupService } from '../../helpers/stub-service';
 import OneTooltipHelper from '../../helpers/one-tooltip';
+import TestComponent from 'onedata-gui-common/components/test-component';
 import sinon from 'sinon';
 
 const allSeverities = Object.values(EntrySeverity);
@@ -29,6 +30,9 @@ describe('Integration | Component | audit log browser', function () {
   const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
+    this.owner.register('component:ember-ace', TestComponent.extend({
+      layout: hbs`<textarea value={{value}}></textarea>`,
+    }));
     this.setProperties({
       onFetchLogEntries: sinon.spy(createFetchEntriesMock({
         getHangLoadingNext: () => this.get('hangLoadingNext'),
@@ -376,6 +380,88 @@ describe('Integration | Component | audit log browser', function () {
     await tooltipHelper.open();
     expect(tooltipHelper.getTooltip()).to.have.class('abc');
   });
+
+  it('does not add "clickable" class to entries and does not react to user click when "doesOpenDetailsOnClick" is not set',
+    async function () {
+      await render(hbs`<div style="display: flex; height: 10em;">
+        {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+      </div>`);
+
+      expect(find('.audit-log-table-entry.clickable')).to.not.exist;
+      await click('.audit-log-table-entry');
+      expectDetailsToBeHidden();
+    }
+  );
+
+  it('adds "clickable" class to entries and shows details on entry click when "doesOpenDetailsOnClick" is true',
+    async function () {
+      await render(hbs`<div style="display: flex; height: 10em;">
+        {{audit-log-browser
+          onFetchLogEntries=onFetchLogEntries
+          doesOpenDetailsOnClick=true
+        }}
+      </div>`);
+
+      const firstEntry = find('.audit-log-table-entry');
+      expect(find('.audit-log-table-entry.clickable')).to.exist;
+      await click(firstEntry);
+      expectDetailsToBeVisible();
+      expect(firstEntry).to.have.class('selected');
+      expect(find('.details-container .timestamp')).to.have.trimmed.text(
+        firstEntry.querySelector('.timestamp-cell').textContent.trim()
+      );
+      expect(find('.details-container .content textarea')).to.have.value(
+        JSON.stringify(generateEntryForTimestamp(latestLogEntryTimestamp), null, 2)
+      );
+    }
+  );
+
+  [{
+    triggerDescription: '"hide" bar',
+    trigger: '.close-details',
+  }, {
+    triggerDescription: 'table column header',
+    trigger: '.timestamp-column-header',
+  }, {
+    triggerDescription: 'table title',
+    trigger: '.audit-log-browser-title',
+  }].forEach(({ triggerDescription, trigger }) => {
+    it(`hides details on ${triggerDescription} click`, async function () {
+      await render(hbs`<div style="display: flex; height: 10em;">
+        {{audit-log-browser
+          onFetchLogEntries=onFetchLogEntries
+          doesOpenDetailsOnClick=true
+          title="some title"
+        }}
+      </div>`);
+
+      await click('.audit-log-table-entry');
+      await click(trigger);
+
+      expectDetailsToBeHidden();
+    });
+  });
+
+  it('changes visible details when user clicks on another entry', async function () {
+    await render(hbs`<div style="display: flex; height: 10em;">
+      {{audit-log-browser
+        onFetchLogEntries=onFetchLogEntries
+        doesOpenDetailsOnClick=true
+      }}
+    </div>`);
+
+    const entries = findAll('.audit-log-table-entry');
+    await click(entries[0]);
+    await click(entries[1]);
+
+    expectDetailsToBeVisible();
+    expect(find('.details-container .timestamp')).to.have.trimmed.text(
+      entries[1].querySelector('.timestamp-cell').textContent.trim()
+    );
+    expect(find('.details-container .content textarea')).to.have.value(
+      JSON.stringify(generateEntryForTimestamp(latestLogEntryTimestamp - 1), null, 2)
+    );
+  });
 });
 
 function createFetchEntriesMock({ getHangLoadingNext, getLatestLogEntryTimestamp }) {
@@ -396,21 +482,25 @@ function createFetchEntriesMock({ getHangLoadingNext, getLatestLogEntryTimestamp
       if (entryTimestamp > getLatestLogEntryTimestamp()) {
         continue;
       }
-      entries.push({
-        index: String(entryTimestamp),
-        timestamp: entryTimestamp * 1000 + 500,
-        source: 'system',
-        severity: generateSeverityForTimestamp(entryTimestamp),
-        content: {
-          description: `Description for ${entryTimestamp}`,
-        },
-      });
+      entries.push(generateEntryForTimestamp(entryTimestamp));
     }
 
     return {
       logEntries: entries,
       isLast: false,
     };
+  };
+}
+
+function generateEntryForTimestamp(timestamp) {
+  return {
+    index: String(timestamp),
+    timestamp: timestamp * 1000 + 500,
+    source: 'system',
+    severity: generateSeverityForTimestamp(timestamp),
+    content: {
+      description: `Description for ${timestamp}`,
+    },
   };
 }
 
@@ -430,4 +520,19 @@ async function waitForPossibleReload(testCase) {
   );
   fakeClock.tick(waitTimeForReload * 1000);
   await settled();
+}
+
+function expectDetailsToBeHidden() {
+  const detailsContainer = find('.details-container');
+  if (detailsContainer) {
+    expect(detailsContainer).to.not.have.class('visible');
+  }
+  expect(find('.audit-log-browser')).to.not.have.class('shows-details');
+  expect(find('.audit-log-table-entry.selected')).to.not.exist;
+}
+
+function expectDetailsToBeVisible() {
+  expect(find('.details-container')).to.have.class('visible');
+  expect(find('.audit-log-browser')).to.have.class('shows-details');
+  expect(findAll('.audit-log-table-entry.selected')).to.have.length(1);
 }

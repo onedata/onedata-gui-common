@@ -154,7 +154,7 @@ export default Component.extend(I18n, {
   onFetchLogEntriesObserver: observer(
     'onFetchLogEntries',
     async function onFetchLogEntriesObserver() {
-      this.set('selectedLogItem', undefined);
+      this.selectLogEntry(undefined);
       await this.get('logEntries').scheduleJump(null);
       schedule('afterRender', this, () => {
         window.requestAnimationFrame(() => {
@@ -310,6 +310,26 @@ export default Component.extend(I18n, {
       ?.querySelector('.audit-log-scrollable-container') || null;
   },
 
+  /**
+   * @param {AuditLogEntry|undefined} logEntry
+   * @returns {void}
+   */
+  selectLogEntry(logEntry) {
+    const {
+      selectedLogEntry,
+      doesOpenDetailsOnClick,
+    } = this.getProperties('selectedLogEntry', 'doesOpenDetailsOnClick');
+
+    if (!doesOpenDetailsOnClick) {
+      return;
+    }
+
+    this.set(
+      'selectedLogEntry',
+      selectedLogEntry?.index === logEntry?.index ? undefined : logEntry
+    );
+  },
+
   actions: {
     /**
      * @param {MouseEvent} event
@@ -317,7 +337,7 @@ export default Component.extend(I18n, {
      */
     mainContentClick(event) {
       if (!event.target.closest('.audit-log-table-entry')) {
-        this.set('selectedLogEntry', undefined);
+        this.selectLogEntry(undefined);
       }
     },
 
@@ -326,18 +346,14 @@ export default Component.extend(I18n, {
      * @returns {void}
      */
     logEntryClick(logEntry) {
-      const selectedLogEntry = this.get('selectedLogEntry');
-      this.set(
-        'selectedLogEntry',
-        selectedLogEntry?.index === logEntry?.index ? undefined : logEntry
-      );
+      this.selectLogEntry(logEntry);
     },
 
     /**
      * @returns {void}
      */
     closeDetails() {
-      this.set('selectedLogEntry', undefined);
+      this.selectLogEntry(undefined);
     },
   },
 });
