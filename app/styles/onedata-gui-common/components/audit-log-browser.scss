@@ -68,8 +68,6 @@ $audit-log-timestamp-cell-width: 7em;
   }
 
   .audit-log-table-entry {
-    transition: transition-ease(filter, 'short'), transition-ease(opacity);
-
     &.clickable:hover {
       filter: brightness(95%);
     }

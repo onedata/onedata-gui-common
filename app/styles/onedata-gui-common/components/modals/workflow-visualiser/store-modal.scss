@@ -4,9 +4,36 @@
     flex-direction: column;
   }
 
+  .nav-tabs {
+    padding-bottom: $padding-large-vertical;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
   .store-content-table {
     display: flex;
     flex-direction: column;
+  }
+
+  .audit-log-presenter {
+    min-height: 0;
+    display: grid;
+    place-items: stretch;
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .audit-log-presenter {
+      .severity-column-header,
+      .severity-cell {
+        // We can't use `display: none` because of `colspan` value for some rows
+        // - a number of rendered (visible) cells can't change.
+        width: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    }
   }
 
   @import './store-modal/store-form';

@@ -8,18 +8,5 @@
  */
 
 /**
- * @typedef {Object} AtmAuditLogStoreContentBrowseResult
- * @property {Array<AtmInfiniteLogStoreContainerEntry<AtmAuditLogStoreResultEntryValue>>} logs
- * @property {boolean} isLast
- */
-
-/**
- * @typedef {AtmAuditLogStoreResultEntryBase} AtmAuditLogStoreResultEntryValue
- * @property {number} timestamp
- * @property {unknown} content
- * @property {AtmAuditLogStoreResultEntrySeverity} severity
- */
-
-/**
- * @typedef {'debug'|'info'|'notice'|'warning'|'alert'|'error'|'critical'|'emergency'} AtmAuditLogStoreResultEntrySeverity
+ * @typedef {AuditLogEntriesPage<unknown>} AtmAuditLogStoreContentBrowseResult
  */

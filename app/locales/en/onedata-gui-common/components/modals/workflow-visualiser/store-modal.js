@@ -1,11 +1,13 @@
 import storeForm from './store-modal/store-form';
 import storeContentTable from './store-modal/store-content-table';
 import timeSeriesPresenter from './store-modal/time-series-presenter';
+import auditLogPresenter from './store-modal/audit-log-presenter';
 
 export default {
   storeForm,
   storeContentTable,
   timeSeriesPresenter,
+  auditLogPresenter,
   header: {
     create: 'Create new store',
     edit: 'Modify store',

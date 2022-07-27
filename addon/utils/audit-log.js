@@ -125,15 +125,29 @@ export function normalizeEntriesPage(page, normalizeEntryContent) {
 }
 
 /**
- * @typedef {Object} AuditLogEntry<T> Single audit log entry. It contains `content`
- * which format varies depending on specific audit log use case.
+ * @typedef {Object} AuditLogEntryBase Base type for a single audit log entry
  * @property {string} index Some unique string index used to reference entries.
  * during the listing
  * @property {number} timestamp Log creation timestamp in milliseconds.
- * @property {AuditLogEntrySource} source Describes what entity has created
- * the log entry.
  * @property {AuditLogEntrySeverity} severity Describes log severity level.
+ */
+
+/**
+ * @typedef {AuditLogEntryBase} AuditLogSystemEntry<T> Single system audit log entry.
+ * It contains `content` which format varies depending on specific audit log use case.
+ * @property {'system'} source
  * @property {T} content Custom payload, specific for each use case.
+ */
+
+/**
+ * @typedef {AuditLogEntryBase} AuditLogUserEntry Single system audit log entry.
+ * It contains `content` which format unknown (as it is provided by a user).
+ * @property {'user'} source
+ * @property {unknown} content Custom payload, specific for each use case.
+ */
+
+/**
+ * @typedef {AuditLogSystemEntry<T> | AuditLogUserEntry} AuditLogEntry<T>
  */
 
 /**
@@ -149,16 +163,20 @@ export function normalizeEntry(entry, normalizeContent) {
     return null;
   }
 
-  const normalizedContent = normalizeContent ?
-    normalizeContent(entry?.content) : entry?.content;
-  if (!normalizedContent) {
+  const normalizedSource = normalizeEntrySource(entry.source);
+
+  let normalizedContent = entry.content;
+  if (normalizedSource === EntrySource.System && normalizeContent) {
+    normalizedContent = normalizeContent(entry?.content);
+  }
+  if (normalizedContent === undefined || normalizedContent === null) {
     return null;
   }
 
   return {
     index: entry.index,
     timestamp: entry.timestamp,
-    source: normalizeEntrySource(entry.source),
+    source: normalizedSource,
     severity: normalizeEntrySeverity(entry.severity),
     content: normalizedContent,
   };

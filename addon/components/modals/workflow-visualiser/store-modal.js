@@ -24,7 +24,13 @@ import { reads } from '@ember/object/computed';
 import { computed, trySet } from '@ember/object';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { next } from '@ember/runloop';
-import { raw, or, eq, conditional } from 'ember-awesome-macros';
+import { raw, or, eq, getBy } from 'ember-awesome-macros';
+
+const possibleContentTabRenderers = {
+  default: 'generic',
+  timeSeries: 'timeSeries',
+  auditLog: 'auditLog',
+};
 
 export default Component.extend(I18n, {
   layout,
@@ -60,6 +66,11 @@ export default Component.extend(I18n, {
    * @type {Boolean}
    */
   isContentTabRendered: true,
+
+  /**
+   * @type {Object<string, string>}
+   */
+  possibleContentTabRenderers,
 
   /**
    * @type {Boolean}
@@ -119,10 +130,9 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<'timeSeries'|'generic'>}
    */
-  contentTabRenderer: conditional(
-    eq('store.type', raw('timeSeries')),
-    raw('timeSeries'),
-    raw('generic')
+  contentTabRenderer: or(
+    getBy('possibleContentTabRenderers', 'store.type'),
+    getBy('possibleContentTabRenderers', raw('default'))
   ),
 
   /**

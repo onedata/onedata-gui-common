@@ -48,7 +48,8 @@ describe('Unit | Utility | audit log', function () {
           timestamp: 456,
           source: 'user',
           severity: 'error',
-          content: 456,
+          // normalization is not performed for user logs
+          content: '456',
         }],
         isLast: false,
       });
@@ -195,7 +196,8 @@ describe('Unit | Utility | audit log', function () {
         timestamp: 123,
         source: defaultEntrySource,
         severity: defaultEntrySeverity,
-        content: 123,
+        // fallback source is `user` for which content is never normalized
+        content: '123',
       });
     });
 

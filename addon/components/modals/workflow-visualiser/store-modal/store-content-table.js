@@ -333,7 +333,7 @@ export default Component.extend(I18n, {
       type: `${atmStoreType}StoreContentBrowseOptions`,
     };
 
-    if (['list', 'treeForest', 'auditLog'].includes(atmStoreType)) {
+    if (['list', 'treeForest'].includes(atmStoreType)) {
       browseOptions.index = index;
       browseOptions.offset = offset;
       browseOptions.limit = limit;
@@ -355,11 +355,6 @@ export default Component.extend(I18n, {
 
     let normalizedResult = emptyAtmStoreContent;
     switch (this.get('store.type')) {
-      case 'auditLog': {
-        const { logs = [], isLast = true } = content;
-        normalizedResult = { array: logs, isLast };
-        break;
-      }
       case 'list': {
         const { items = [], isLast = true } = content;
         normalizedResult = { array: items, isLast };
