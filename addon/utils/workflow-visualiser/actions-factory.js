@@ -369,12 +369,15 @@ export default EmberObject.extend(OwnerInjector, {
     return ViewWorkflowAuditLogAction.create({
       ownerSource: this,
       context: Object.assign({
+        actionsFactory: this,
         workflow: this.get('workflowDataProvider.workflow'),
         getAuditLogContentCallback: (...args) =>
           this.get('workflowDataProvider').getStoreContent(
             get(workflow, 'systemAuditLogStore'),
             ...args
           ),
+        getTaskRunForInstanceIdCallback: (...args) =>
+          this.get('workflowDataProvider').getTaskRunForInstanceId(...args),
       }, context),
     });
   },

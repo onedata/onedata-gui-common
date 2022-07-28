@@ -199,9 +199,9 @@ export const EntrySource = Object.freeze({
 /**
  * The default entry source, which can be used as a fallback when the source
  * is unknown.
- * @type {string}
+ * @type {AuditLogEntrySource}
  */
-export const defaultEntrySource = EntrySource.User;
+export const defaultEntrySource = EntrySource.System;
 
 /**
  * Returns passed entry source if it is a valid one, `defaultEntrySeverity` otherwise.

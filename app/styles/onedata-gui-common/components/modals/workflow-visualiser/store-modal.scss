@@ -18,15 +18,21 @@
   }
 
   .audit-log-presenter {
-    min-height: 0;
+    min-height: min(20em, 100vh - 300px);
     display: grid;
     place-items: stretch;
+  }
+
+  .related-logs-column-header {
+    width: 12em;
   }
 
   @media (max-width: $screen-xs-max) {
     .audit-log-presenter {
       .severity-column-header,
-      .severity-cell {
+      .severity-cell,
+      .related-logs-column-header,
+      .related-logs-cell {
         // We can't use `display: none` because of `colspan` value for some rows
         // - a number of rendered (visible) cells can't change.
         width: 0;

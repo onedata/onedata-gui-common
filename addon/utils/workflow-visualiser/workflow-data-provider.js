@@ -56,4 +56,20 @@ export default EmberObject.extend({
     }
     return executionDataFetcher.fetchStoreContent(storeInstanceId, browseOptions);
   },
+
+  /**
+   * @param {string} taskInstanceId
+   * @returns {{ task: Utils.WorkflowVisualiser.Lane.Task, runNumber: number } | null}
+   */
+  getTaskRunForInstanceId(taskInstanceId) {
+    const allTasks = this.get('visualiserComponent.elementsCache')?.task || [];
+    for (const task of allTasks) {
+      for (const run of Object.values(get(task, 'runsRegistry') || {})) {
+        if (run?.instanceId === taskInstanceId) {
+          return { task, runNumber: run.runNumber };
+        }
+      }
+    }
+    return null;
+  },
 });

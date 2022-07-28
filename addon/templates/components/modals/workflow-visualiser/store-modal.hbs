@@ -15,11 +15,23 @@
       {{#bs-tab
         class="bs-tab-onedata bs-tab-modern"
         activeId=activeTab
+        customTabs=true
         onChange=(action "changeTab")
         as |tab|
       }}
-        {{tab.pane id="details" title=(tt this "tabs.details.title")}}
-        {{tab.pane id="content" title=(tt this "tabs.content.title")}}
+        {{#bs-nav type="tabs" as |nav|}}
+          {{#each (array "details" "content") as |tabId|}}
+            {{#nav.item active=(eq tab.activeId tabId)}}
+              <a
+                class={{concat "nav-link nav-link-" tabId}}
+                role="tab"
+                {{action (mut activeTab) tabId}}
+              >
+                {{tt this (concat "tabs." tabId ".title")}}
+              </a>
+            {{/nav.item}}
+          {{/each}}
+        {{/bs-nav}}
       {{/bs-tab}}
     {{/if}}
     {{#if (eq activeTab "details")}}
@@ -43,6 +55,8 @@
         {{modals/workflow-visualiser/store-modal/audit-log-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
+          getTaskRunForInstanceIdCallback=getTaskRunForInstanceIdCallback
+          actionsFactory=actionsFactory
         }}
       {{else if (eq contentTabRenderer "timeSeries")}}
         {{modals/workflow-visualiser/store-modal/time-series-presenter

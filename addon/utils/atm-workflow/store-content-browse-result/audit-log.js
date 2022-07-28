@@ -8,5 +8,18 @@
  */
 
 /**
- * @typedef {AuditLogEntriesPage<unknown>} AtmAuditLogStoreContentBrowseResult
+ * @typedef {AuditLogEntriesPage<AtmAuditLogEntryContent>} AtmAuditLogStoreContentBrowseResult
+ */
+
+/**
+ * @typedef {Object} AtmAuditLogEntryContent
+ * @property {string} description
+ * @property {AtmAuditLogEntryReferencedComponents} [referencedComponents] references to
+ * subjects related to this specific log entry
+ * @property {Object} [reason] error in the standard backend format
+ */
+
+/**
+ * @typedef {Object} AtmAuditLogEntryReferencedComponents
+ * @property {Array<string>} tasks array of task execution IDs
  */

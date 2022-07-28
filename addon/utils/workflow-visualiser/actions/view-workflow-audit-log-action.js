@@ -32,9 +32,19 @@ export default Action.extend({
   workflow: reads('context.workflow'),
 
   /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.ActionsFactory>}
+   */
+  actionsFactory: reads('context.actionsFactory'),
+
+  /**
    * @type {ComputedProperty<Function>}
    */
   getAuditLogContentCallback: reads('context.getAuditLogContentCallback'),
+
+  /**
+   * @type {ComputedProperty<(taskInstanceId: string) => { task: Utils.WorkflowVisualiser.Lane.Task, runNumber: number } | null>}
+   */
+  getTaskRunForInstanceIdCallback: reads('context.getTaskRunForInstanceIdCallback'),
 
   /**
    * @override
@@ -43,10 +53,14 @@ export default Action.extend({
     const {
       workflow,
       getAuditLogContentCallback,
+      getTaskRunForInstanceIdCallback,
+      actionsFactory,
       modalManager,
     } = this.getProperties(
       'workflow',
       'getAuditLogContentCallback',
+      'getTaskRunForInstanceIdCallback',
+      'actionsFactory',
       'modalManager'
     );
     const systemAuditLogStore = get(workflow, 'systemAuditLogStore');
@@ -59,6 +73,8 @@ export default Action.extend({
         subjectName: this.t('subjectName'),
         store: systemAuditLogStore,
         getStoreContentCallback: (...args) => getAuditLogContentCallback(...args),
+        getTaskRunForInstanceIdCallback,
+        actionsFactory,
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');

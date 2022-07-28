@@ -9,6 +9,7 @@ import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
 import { ListingDirection } from 'onedata-gui-common/utils/audit-log';
 import layout from '../templates/components/audit-log-browser';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 
 /**
  * @typedef {Object} AuditLogBrowserCustomColumnHeader
@@ -345,8 +346,10 @@ export default Component.extend(I18n, {
      * @param {AuditLogEntry} logEntry
      * @returns {void}
      */
-    logEntryClick(logEntry) {
-      this.selectLogEntry(logEntry);
+    logEntryClick(logEntry, event) {
+      if (isDirectlyClicked(event, event.currentTarget)) {
+        this.selectLogEntry(logEntry);
+      }
     },
 
     /**

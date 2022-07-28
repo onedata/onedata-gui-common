@@ -196,8 +196,7 @@ describe('Unit | Utility | audit log', function () {
         timestamp: 123,
         source: defaultEntrySource,
         severity: defaultEntrySeverity,
-        // fallback source is `user` for which content is never normalized
-        content: '123',
+        content: 123,
       });
     });
 

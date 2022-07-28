@@ -9,6 +9,9 @@
  * - `allowedStoreTypes` - is taken into account when `mode` is `'create'`,
  * - `allowedDataTypes` - is taken into account when `mode` is `'create'`,
  * - `getStoreContentCallback` - is needed when `mode` is `'view'`
+ * - `getTaskRunForInstanceIdCallback` - is needed (but optional) when `mode` is `'view'`
+ *   for audit log stores
+ * - `actionsFactory` - the same as above
  *
  * @module components/modals/workflow-visualiser/store-modal
  * @author Michał Borzęcki
@@ -126,6 +129,16 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Function>}
    */
   getStoreContentCallback: reads('modalOptions.getStoreContentCallback'),
+
+  /**
+   * @type {ComputedProperty<(taskInstanceId: string) => { task: Utils.WorkflowVisualiser.Lane.Task, runNumber: number } | null> | undefined}
+   */
+  getTaskRunForInstanceIdCallback: reads('modalOptions.getTaskRunForInstanceIdCallback'),
+
+  /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.ActionsFactory | undefined>}
+   */
+  actionsFactory: reads('modalOptions.actionsFactory'),
 
   /**
    * @type {ComputedProperty<'timeSeries'|'generic'>}

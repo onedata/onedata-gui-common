@@ -1,5 +1,6 @@
 /**
  * Shows task audit log. Needs `task` and `getAuditLogContentCallback` passed via context.
+ * Optionally `runNumber` can be passed to point to another (non-default) run.
  *
  * @module utils/workflow-visualiser/actions/view-task-audit-log-action
  * @author Michał Borzęcki
@@ -38,6 +39,11 @@ export default Action.extend({
   task: reads('context.task'),
 
   /**
+   * @type {ComputedProperty<number>}
+   */
+  runNumber: reads('context.runNumber'),
+
+  /**
    * @param {Utils.WorkflowVisualiser.Store} store
    * @type {ComputedProperty<Function>}
    */
@@ -49,14 +55,23 @@ export default Action.extend({
   onExecute() {
     const {
       task,
+      runNumber,
       getAuditLogContentCallback,
       modalManager,
     } = this.getProperties(
       'task',
+      'runNumber',
       'getAuditLogContentCallback',
       'modalManager'
     );
-    const systemAuditLogStore = get(task, 'systemAuditLogStore');
+
+    let systemAuditLogStore = get(task, 'systemAuditLogStore');
+    if (runNumber !== undefined) {
+      const run = get(task, 'runsRegistry')?.[runNumber];
+      if (run?.systemAuditLogStore) {
+        systemAuditLogStore = run.systemAuditLogStore;
+      }
+    }
 
     const result = ActionResult.create();
     return modalManager

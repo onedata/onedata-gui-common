@@ -31,17 +31,34 @@ export default Component.extend(I18n, {
   getStoreContentCallback: undefined,
 
   /**
+   * @type {((taskInstanceId: string) => { task: Utils.WorkflowVisualiser.Lane.Task, runNumber: number } | null) | undefined}
+   */
+  getTaskRunForInstanceIdCallback: undefined,
+
+  /**
+   * @type {Utils.WorkflowVisualiser.ActionsFactory | undefined}
+   */
+  actionsFactory: undefined,
+
+  /**
    * @type {ComputedProperty<Array<AuditLogBrowserCustomColumnHeader>>}
    */
-  customColumnHeaders: computed(function customColumnHeaders() {
-    return [{
+  customColumnHeaders: computed('getTaskRunForInstanceIdCallback', function customColumnHeaders() {
+    const columnHeaders = [{
       classNames: 'description-column-header',
       content: this.t('customColumns.description'),
     }];
+    if (this.get('getTaskRunForInstanceIdCallback')) {
+      columnHeaders.push({
+        classNames: 'related-logs-column-header',
+        content: this.t('customColumns.relatedLogs'),
+      });
+    }
+    return columnHeaders;
   }),
 
   /**
-   * @type {ComputedProperty<(listingParams: AuditLogListingParams) => Promise<AuditLogEntriesPage<unknown>>>}
+   * @type {ComputedProperty<(listingParams: AuditLogListingParams) => Promise<AuditLogEntriesPage<AtmAuditLogEntryContent>>>}
    */
   fetchLogEntriesCallback: computed(
     'getStoreContentCallback',
