@@ -11,6 +11,7 @@ import { lookupService } from '../../helpers/stub-service';
 import OneTooltipHelper from '../../helpers/one-tooltip';
 import TestComponent from 'onedata-gui-common/components/test-component';
 import sinon from 'sinon';
+import { dateFormat } from 'onedata-gui-common/helpers/date-format';
 
 const allSeverities = Object.values(EntrySeverity);
 const severityIcons = {
@@ -141,7 +142,7 @@ describe('Integration | Component | audit log browser', function () {
     </div>`);
 
     expect(find('.audit-log-table-entry .timestamp-cell'))
-      .to.have.trimmed.text('20 Jul 2022 15:45:55.500');
+      .to.have.trimmed.text(getEntryFormattedTimestamp(latestLogEntryTimestamp));
   });
 
   it('shows fetched log entries timestamps without milliseconds when "isTimestampRoundedToSeconds" is true',
@@ -154,7 +155,7 @@ describe('Integration | Component | audit log browser', function () {
       </div>`);
 
       expect(find('.audit-log-table-entry .timestamp-cell'))
-        .to.have.trimmed.text('20 Jul 2022 15:45:55');
+        .to.have.trimmed.text(getEntryFormattedTimestamp(latestLogEntryTimestamp, false));
     }
   );
 
@@ -286,7 +287,7 @@ describe('Integration | Component | audit log browser', function () {
     await waitForPossibleReload(this);
     expect(onFetchLogEntries).to.be.called;
     expect(find('.audit-log-table-entry .timestamp-cell'))
-      .to.have.trimmed.text('20 Jul 2022 15:45:56.500');
+      .to.have.trimmed.text(getEntryFormattedTimestamp(latestLogEntryTimestamp + 1));
   });
 
   it('does not update entries when table is not at the top', async function () {
@@ -318,7 +319,7 @@ describe('Integration | Component | audit log browser', function () {
     await waitForPossibleReload(this);
     expect(onFetchLogEntries).to.be.called;
     expect(find('.audit-log-table-entry .timestamp-cell'))
-      .to.have.trimmed.text('20 Jul 2022 15:45:56.500');
+      .to.have.trimmed.text(getEntryFormattedTimestamp(latestLogEntryTimestamp + 1));
   });
 
   it('allows to add custom class names to entries via "onGetClassNamesForLogEntry"', async function () {
@@ -530,6 +531,12 @@ function generateEntryForTimestamp(timestamp) {
 
 function generateSeverityForTimestamp(timestamp) {
   return allSeverities[timestamp % allSeverities.length];
+}
+
+function getEntryFormattedTimestamp(timestamp, showMillis = true) {
+  return dateFormat([timestamp + 0.5], {
+    format: showMillis ? 'detailedReport' : 'report',
+  });
 }
 
 async function waitForPossibleReload(testCase) {
