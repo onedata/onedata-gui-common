@@ -51,7 +51,7 @@ hourOnlySimpleChartDefinition.seriesBuilders[0].builderRecipe.seriesTemplate
   .externalSourceParameters.metricNames = ['3600'];
 
 describe('Integration | Component | one time series charts section', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.owner.register('component:one-echart', TestComponent);
@@ -85,6 +85,10 @@ describe('Integration | Component | one time series charts section', function ()
       ),
       externalDataSources: { chartData: {}, chartData2: {} },
     });
+  });
+
+  afterEach(function () {
+    this.get('fakeClock')?.restore();
   });
 
   it('renders empty section when no arguments were passed', async function () {
@@ -166,6 +170,10 @@ describe('Integration | Component | one time series charts section', function ()
   });
 
   it('batches requests across multiple charts using the same data source', async function () {
+    this.set('fakeClock', sinon.useFakeTimers({
+      now: Math.floor(Date.now() / 1000) * 1000,
+      shouldAdvanceTime: true,
+    }));
     useSectionSpec(this, {
       charts: [simpleChartDefinition, simpleChartDefinition],
     });
