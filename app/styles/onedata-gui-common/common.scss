@@ -55,6 +55,11 @@ strong {
   @include fill-flex-using-column;
 }
 
+.flex-vertical-center {
+  display: flex;
+  align-items: center;
+}
+
 .no-padding {
   padding: 0 !important;
 }

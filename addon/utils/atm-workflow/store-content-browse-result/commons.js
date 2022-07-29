@@ -19,7 +19,7 @@
  */
 
 /**
- * @typedef {AtmAuditLogStoreResultEntryBase} AtmInfiniteLogStoreContainerFailedEntry
+ * @typedef {AtmInfiniteLogStoreContainerEntryBase} AtmInfiniteLogStoreContainerFailedEntry
  * @property {false} success
  * @property {Object} error
  */
