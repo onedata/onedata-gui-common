@@ -1,6 +1,6 @@
 /**
  * Shows user log entry content. If it has `description` field, then it is shown
- * directly. Othwerwise the whole content is json-stringified and rendered.
+ * directly. Otherwise the whole content is json-stringified and rendered.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH

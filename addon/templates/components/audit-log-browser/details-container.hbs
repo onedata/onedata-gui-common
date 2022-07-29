@@ -4,9 +4,9 @@
 <div class="details">
   <div class="header">
     <div class="timestamp">
-      {{date-format timestampInSeconds
-        format=(if isTimestampRoundedToSeconds "report" "detailedReport")
-        blank="—"
+      {{audit-log-browser/timestamp
+        timestamp=latestLogEntry.timestamp
+        isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
       }}
     </div>
     <a class="copy-link clickable" onclick={{action "copyJson"}}>

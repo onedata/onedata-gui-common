@@ -1,7 +1,7 @@
-$audit-log-header-bg-color: #FAFAFA;
-$audit-log-cell-padding: 0.5em;
-$audit-log-container-padding: 2 * $audit-log-cell-padding;
-$audit-log-timestamp-cell-width: 7em;
+$audit-log-browser-header-bg-color: #FAFAFA;
+$audit-log-browser-cell-padding: 0.5em;
+$audit-log-browser-container-padding: 2 * $audit-log-browser-cell-padding;
+$audit-log-browser-timestamp-cell-width: 7em;
 
 .audit-log-browser {
   position: relative;
@@ -10,8 +10,8 @@ $audit-log-timestamp-cell-width: 7em;
   overflow: hidden;
 
   .audit-log-browser-title {
-    background-color: $audit-log-header-bg-color;
-    padding: $audit-log-container-padding;
+    background-color: $audit-log-browser-header-bg-color;
+    padding: $audit-log-browser-container-padding;
     padding-bottom: 0;
 
     .title-text {
@@ -46,23 +46,23 @@ $audit-log-timestamp-cell-width: 7em;
     position: sticky;
     top: 0;
     z-index: 1;
-    background-color: $audit-log-header-bg-color;
+    background-color: $audit-log-browser-header-bg-color;
   }
 
   .audit-log-table-column-header,
   .audit-log-table-entry > td {
-    padding: $audit-log-cell-padding;
+    padding: $audit-log-browser-cell-padding;
     vertical-align: middle;
 
     &:first-child {
-      padding-left: $audit-log-container-padding;
+      padding-left: $audit-log-browser-container-padding;
     }
   }
 
   .audit-log-table-column-header {
     position: relative;
-    padding-top: $audit-log-container-padding;
-    padding-bottom: $audit-log-container-padding;
+    padding-top: $audit-log-browser-container-padding;
+    padding-bottom: $audit-log-browser-container-padding;
     text-align: left;
     @include before-bottom-shadow;
   }
@@ -101,7 +101,7 @@ $audit-log-timestamp-cell-width: 7em;
   }
 
   .timestamp-column-header {
-    width: $audit-log-timestamp-cell-width;
+    width: $audit-log-browser-timestamp-cell-width;
   }
 
   .timestamp-cell {
@@ -180,7 +180,7 @@ $audit-log-timestamp-cell-width: 7em;
     top: 0;
     bottom: 0;
     right: 0;
-    left: $audit-log-timestamp-cell-width;
+    left: $audit-log-browser-timestamp-cell-width;
     z-index: 3;
     border-left: 1px solid $main-border-color;
     background-color: $color-one-white;
@@ -197,8 +197,8 @@ $audit-log-timestamp-cell-width: 7em;
     .details {
       display: grid;
       grid-template-rows: min-content auto;
-      gap: $audit-log-container-padding;
-      padding: $audit-log-container-padding;
+      gap: $audit-log-browser-container-padding;
+      padding: $audit-log-browser-container-padding;
     }
 
     .timestamp {
@@ -235,7 +235,6 @@ $audit-log-timestamp-cell-width: 7em;
       overflow: hidden;
 
       &:hover {
-        font-weight: bold;
         filter: brightness(95%);
       }
 

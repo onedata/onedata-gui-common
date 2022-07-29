@@ -1,3 +1,20 @@
+/**
+ * Renders details preview of selected log entry `logEntry`. Is visible on screen
+ * when `logEntry` is non-empty.
+ *
+ * Rendered informations and functionalities are:
+ * - formatted timestamp,
+ * - JSON overview (rendered via ember-ace),
+ * - ability to copy JSON to the clipboard.
+ *
+ * This component does not close by itself. It calls `onClose` when user tries
+ * to close it and then (if you want to close it) you should clear `logEntry` value.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { observer, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
@@ -18,17 +35,16 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.auditLogBrowser.detailsContainer',
 
   /**
+   * Log entry to show details. This component is visible only if `logEntry` is
+   * not empty.
    * @virtual
    * @type {AuditLogEntry|undefined}
    */
   logEntry: undefined,
 
   /**
-   * @type {AuditLogEntry}
-   */
-  latestLogEntry: undefined,
-
-  /**
+   * Called when a user tries to close the details. This component does not close
+   * itself autonomously - you have to clear `logEntry` property to close it.
    * @virtual
    * @type {() => void}
    */
@@ -43,16 +59,12 @@ export default Component.extend(I18n, {
   isTimestampRoundedToSeconds: false,
 
   /**
-   * Timestamp in log entry is in milliseconds and we need to convert it to
-   * seconds, because that is how `date-format` helper interprets passed timestamp.
-   * @type {ComputedProperty<number>}
+   * Latest non-empty value of `logEntry`. It is the main source of data to display.
+   * Becacuse of that view will always be non-empty even when `logEntry` becomes
+   * empty and details view starts to hide.
+   * @type {AuditLogEntry|undefined}
    */
-  timestampInSeconds: computed(
-    'latestLogEntry.timestamp',
-    function timestampInSeconds() {
-      return this.get('latestLogEntry.timestamp') / 1000;
-    }
-  ),
+  latestLogEntry: undefined,
 
   /**
    * @type {ComputedProperty<string>}
@@ -69,6 +81,7 @@ export default Component.extend(I18n, {
   }),
 
   logEntryObserver: observer('logEntry', function logEntryObserver() {
+    // Persist `logEntry` in `latestLogEntry`
     const logEntry = this.get('logEntry');
     if (logEntry) {
       this.set('latestLogEntry', logEntry);

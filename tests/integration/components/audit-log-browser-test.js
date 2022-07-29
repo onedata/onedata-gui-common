@@ -304,7 +304,7 @@ describe('Integration | Component | audit log browser', function () {
     expect(onFetchLogEntries).to.not.be.called;
   });
 
-  it('updates entries when table is scrolled down and the scrolled back to the top', async function () {
+  it('updates entries when table is scrolled down and then scrolled back to the top', async function () {
     const onFetchLogEntries = this.get('onFetchLogEntries');
 
     await render(hbs`<div style="display: flex; height: 10em;">

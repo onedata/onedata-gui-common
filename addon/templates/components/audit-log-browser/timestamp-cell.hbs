@@ -1,4 +1,4 @@
-{{date-format timestampInSeconds
-  format=(if isTimestampRoundedToSeconds "report" "detailedReport")
-  blank="—"
+{{audit-log-browser/timestamp
+  timestamp=logEntry.timestamp
+  isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
 }}
