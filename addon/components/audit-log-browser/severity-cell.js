@@ -9,11 +9,12 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { getBy } from 'ember-awesome-macros';
 import {
   EntrySeverity,
   translateEntrySeverity,
 } from 'onedata-gui-common/utils/audit-log';
-import layout from '../../templates/components/audit-log-browser/severity-cell';
+import layout from 'onedata-gui-common/templates/components/audit-log-browser/severity-cell';
 
 const defaultSeverityIcons = Object.freeze({
   [EntrySeverity.Debug]: 'browser-info',
@@ -61,11 +62,5 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String|undefined>}
    */
-  severityIcon: computed(
-    'severityIcons',
-    'logEntry.severity',
-    function severityIcon() {
-      return this.get('severityIcons')[this.get('logEntry.severity')];
-    }
-  ),
+  severityIcon: getBy('severityIcons', 'logEntry.severity'),
 });

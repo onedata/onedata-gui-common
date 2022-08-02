@@ -2,6 +2,7 @@ $audit-log-browser-header-bg-color: #FAFAFA;
 $audit-log-browser-cell-padding: 0.5em;
 $audit-log-browser-container-padding: 2 * $audit-log-browser-cell-padding;
 $audit-log-browser-timestamp-cell-width: 7em;
+$audit-log-row-height: 50px;
 
 .audit-log-browser {
   position: relative;
@@ -77,6 +78,7 @@ $audit-log-browser-timestamp-cell-width: 7em;
     }
 
     > td {
+      height: $audit-log-row-height;
       overflow: hidden;
     }
   }

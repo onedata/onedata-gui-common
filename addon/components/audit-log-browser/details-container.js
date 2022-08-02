@@ -19,7 +19,7 @@ import Component from '@ember/component';
 import { observer, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import layout from '../../templates/components/audit-log-browser/details-container';
+import layout from 'onedata-gui-common/templates/components/audit-log-browser/details-container';
 
 export default Component.extend(I18n, {
   layout,

@@ -16,11 +16,11 @@
  * - allows to customize texts (see `noLogEntriesText`, `title`, `titleTip`,
  *   `titleTipClassNames`).
  *
- * WHAT EXACTLY IS AUDIT LOG?
+ * # WHAT EXACTLY IS AUDIT LOG?
  *
  * See documentation in utils/audit-log.js
  *
- * HOW TO USE
+ * # HOW TO USE
  *
  * Typical usage of this component starts with defining it's hbs invocation:
  * ```
@@ -58,7 +58,7 @@
  * styles so that the browser fills up all available space of the parent in a way
  * suitable for infinite scroll. It can be achived e.g. using flexbox or grid layout.
  *
- * HOW TO APPLY CUSTOM STYLES TO EACH ENTRY
+ * ## HOW TO APPLY CUSTOM STYLES TO EACH ENTRY
  *
  * If you want to apply custom CSS classes to each entry row, you can pass
  * your custom implementation of `onGetClassNamesForLogEntry`. It gets a log entry
@@ -87,7 +87,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 import ReplacingChunksArray from 'onedata-gui-common/utils/replacing-chunks-array';
 import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
 import { ListingDirection } from 'onedata-gui-common/utils/audit-log';
-import layout from '../templates/components/audit-log-browser';
+import layout from 'onedata-gui-common/templates/components/audit-log-browser';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 
@@ -242,7 +242,7 @@ export default Component.extend(I18n, {
       // and possible replace of all entries.
 
       // Deselect currently selected entry (it probably wont be present anymore)
-      this.selectLogEntry(undefined);
+      this.toggleLogEntry(undefined);
 
       // Jump to the beginning of the list (which forces reload)
       await this.get('logEntries').scheduleJump(null);
@@ -253,9 +253,7 @@ export default Component.extend(I18n, {
         window.requestAnimationFrame(() => {
           safeExec(this, () => {
             const scrollableContainer = this.getScrollableContainer();
-            if (scrollableContainer) {
-              scrollableContainer.scroll(0, 0);
-            }
+            scrollableContainer?.scroll(0, 0);
           });
         });
       });
@@ -374,6 +372,10 @@ export default Component.extend(I18n, {
    * @returns {void}
    */
   setupResizeObserver() {
+    if (this.get('resizeObserver')) {
+      return;
+    }
+
     const scrollableContainer = this.getScrollableContainer();
     // Check whether ResizeObserver API is available
     if (!ResizeObserver || !scrollableContainer) {
@@ -392,10 +394,7 @@ export default Component.extend(I18n, {
    * @returns {void}
    */
   teardownResizeObserver() {
-    const resizeObserver = this.get('resizeObserver');
-    if (resizeObserver) {
-      resizeObserver.disconnect();
-    }
+    this.get('resizeObserver')?.disconnect();
   },
 
   /**
@@ -410,7 +409,7 @@ export default Component.extend(I18n, {
    * @param {AuditLogEntry|undefined} logEntry
    * @returns {void}
    */
-  selectLogEntry(logEntry) {
+  toggleLogEntry(logEntry) {
     const {
       selectedLogEntry,
       doesOpenDetailsOnClick,
@@ -434,7 +433,7 @@ export default Component.extend(I18n, {
     mainContentClick(event) {
       // Deselect log entry when click occurred outside of any log entry row.
       if (!event.target.closest('.audit-log-table-entry')) {
-        this.selectLogEntry(undefined);
+        this.toggleLogEntry(undefined);
       }
     },
 
@@ -446,7 +445,7 @@ export default Component.extend(I18n, {
       // Select log entry only when it was the main target for the click action
       // (e.g. was clicked directly, not as a result of nested link/button click).
       if (isDirectlyClicked(event, event.currentTarget)) {
-        this.selectLogEntry(logEntry);
+        this.toggleLogEntry(logEntry);
       }
     },
 
@@ -454,7 +453,7 @@ export default Component.extend(I18n, {
      * @returns {void}
      */
     closeDetails() {
-      this.selectLogEntry(undefined);
+      this.toggleLogEntry(undefined);
     },
   },
 });

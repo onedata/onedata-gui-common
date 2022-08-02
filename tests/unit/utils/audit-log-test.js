@@ -222,18 +222,6 @@ describe('Unit | Utility | audit log', function () {
       expect(normalizeEntry(entry, sampleNormalizeContent)).to.be.null;
     });
 
-    it('returns null when entry content is normalized to null', function () {
-      const entry = {
-        index: 'abc',
-        timestamp: 123,
-        source: 'system',
-        severity: 'warning',
-        content: '123',
-      };
-
-      expect(normalizeEntry(entry, () => null)).to.be.null;
-    });
-
     it('returns null when entry is empty', function () {
       expect(normalizeEntry(null, sampleNormalizeContent)).to.be.null;
     });

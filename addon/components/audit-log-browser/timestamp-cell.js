@@ -7,7 +7,7 @@
  */
 
 import Component from '@ember/component';
-import layout from '../../templates/components/audit-log-browser/timestamp-cell';
+import layout from 'onedata-gui-common/templates/components/audit-log-browser/timestamp-cell';
 
 export default Component.extend({
   layout,

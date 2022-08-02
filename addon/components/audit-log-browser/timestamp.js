@@ -10,7 +10,7 @@
 
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import layout from '../../templates/components/audit-log-browser/timestamp';
+import layout from 'onedata-gui-common/templates/components/audit-log-browser/timestamp';
 
 export default Component.extend({
   layout,

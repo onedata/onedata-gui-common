@@ -9,7 +9,7 @@
 
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import layout from '../../../../../templates/components/modals/workflow-visualiser/store-modal/audit-log-presenter/user-log-content-cell';
+import layout from 'onedata-gui-common/templates/components/modals/workflow-visualiser/store-modal/audit-log-presenter/user-log-content-cell';
 
 export default Component.extend({
   layout,

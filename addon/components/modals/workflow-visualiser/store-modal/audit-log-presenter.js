@@ -9,7 +9,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import layout from '../../../../templates/components/modals/workflow-visualiser/store-modal/audit-log-presenter';
+import layout from 'onedata-gui-common/templates/components/modals/workflow-visualiser/store-modal/audit-log-presenter';
 import { normalizeEntriesPage } from 'onedata-gui-common/utils/audit-log';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
@@ -43,19 +43,22 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Array<AuditLogBrowserCustomColumnHeader>>}
    */
-  customColumnHeaders: computed('getTaskRunForInstanceIdCallback', function customColumnHeaders() {
-    const columnHeaders = [{
-      classNames: 'description-column-header',
-      content: this.t('customColumns.description'),
-    }];
-    if (this.get('getTaskRunForInstanceIdCallback')) {
-      columnHeaders.push({
-        classNames: 'related-logs-column-header',
-        content: this.t('customColumns.relatedLogs'),
-      });
+  customColumnHeaders: computed(
+    'getTaskRunForInstanceIdCallback',
+    function customColumnHeaders() {
+      const columnHeaders = [{
+        classNames: 'description-column-header',
+        content: this.t('customColumns.description'),
+      }];
+      if (this.get('getTaskRunForInstanceIdCallback')) {
+        columnHeaders.push({
+          classNames: 'related-logs-column-header',
+          content: this.t('customColumns.relatedLogs'),
+        });
+      }
+      return columnHeaders;
     }
-    return columnHeaders;
-  }),
+  ),
 
   /**
    * @type {ComputedProperty<(listingParams: AuditLogListingParams) => Promise<AuditLogEntriesPage<AtmAuditLogEntryContent>>>}
