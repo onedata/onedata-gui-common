@@ -90,6 +90,7 @@ import { ListingDirection } from 'onedata-gui-common/utils/audit-log';
 import layout from 'onedata-gui-common/templates/components/audit-log-browser';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
+import { next } from '@ember/runloop';
 
 /**
  * @typedef {Object} AuditLogBrowserCustomColumnHeader
@@ -212,6 +213,15 @@ export default Component.extend(I18n, {
   resizeObserver: undefined,
 
   /**
+   * Current limit of rendered items. If is null, then there is no limit
+   * and all items are rendered. This property is used to optimize rendering
+   * and to spread out heavy calculations over time. See more in
+   * `increaseRenderedItemsLimit()` method.
+   * @type {number|null}
+   */
+  renderedItemsLimit: 1,
+
+  /**
    * @type {ComputedProperty<number>}
    */
   columnsCount: computed(
@@ -297,6 +307,10 @@ export default Component.extend(I18n, {
     );
     infiniteScroll.mount(element.querySelector('.audit-log-table'));
     this.setupResizeObserver();
+
+    this.logEntries.initialLoad.then(() =>
+      next(() => this.increaseRenderedItemsLimit())
+    );
   },
 
   /**
@@ -309,6 +323,34 @@ export default Component.extend(I18n, {
     } finally {
       this._super(...arguments);
     }
+  },
+
+  /**
+   * First rendering is very heavy due to dozens of components ready to render
+   * at the same time. To mitigate freezeing GUI, first rendering is
+   * divided and spread out in time. Instead of rendering all log entries at once,
+   * each entry is rendered one after another in consecutive `next()` calls
+   * so the rendered list "grows" item by item.
+   * This method is responsible for handling that mechanism.
+   * @returns {void}
+   */
+  increaseRenderedItemsLimit() {
+    safeExec(this, () => {
+      if (this.renderedItemsLimit === null) {
+        return;
+      }
+
+      let newRenderedItemsLimit = this.renderedItemsLimit + 1;
+
+      if (newRenderedItemsLimit < this.logEntries.length) {
+        next(() => this.increaseRenderedItemsLimit());
+      } else if (newRenderedItemsLimit === this.logEntries.length) {
+        newRenderedItemsLimit = null;
+      }
+
+      this.getScrollableContainer().dispatchEvent(new Event('scroll'));
+      this.set('renderedItemsLimit', newRenderedItemsLimit);
+    });
   },
 
   /**
@@ -358,7 +400,6 @@ export default Component.extend(I18n, {
     const array = result.logEntries.map((entry) =>
       Object.assign({}, entry, { id: entry.index })
     );
-
     return {
       array,
       isLast: result.isLast,

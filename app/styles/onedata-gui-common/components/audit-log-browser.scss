@@ -250,3 +250,15 @@ $audit-log-row-height: 50px;
     }
   }
 }
+
+// Bugfix
+// When: component is placed inside bs-collapse in transitioning state
+//   (`.collapsing` class)
+// Bug: animation of showing/hiding scroll shadows causes height animation
+//   of bs-collapse to stop
+// Solution: turn off animation of shadows when bs-collapse is transitioning
+.collapsing .audit-log-browser {
+  .bottom-shadow-keeper::before, .audit-log-table-column-header::before {
+    transition: none;
+  }
+}

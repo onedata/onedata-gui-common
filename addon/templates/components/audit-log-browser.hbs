@@ -58,32 +58,34 @@
           </tr>
         {{/if}}
 
-        {{#each logEntries key="index" as |logEntry|}}
-          <tr
-            class={{concat-classes
-              "audit-log-table-entry data-row"
-              (concat "audit-log-severity-" logEntry.severity)
-              (if doesOpenDetailsOnClick "clickable")
-              (if (eq selectedLogEntry.index logEntry.index) "selected")
-              (evaluate-function onGetClassNamesForLogEntry logEntry)
-            }}
-            data-row-id={{logEntry.id}}
-            onclick={{action "logEntryClick" logEntry}}
-          >
-            {{audit-log-browser/timestamp-cell
-              logEntry=logEntry
-              isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
-            }}
-            {{#if isSeverityColumnVisible}}
-              {{audit-log-browser/severity-cell logEntry=logEntry}}
-            {{/if}}
-            {{yield logEntry}}
-          </tr>
+        {{#each logEntries key="index" as |logEntry index|}}
+          {{#if (or (not renderedItemsLimit) (lt index renderedItemsLimit))}}
+            <tr
+              class={{concat-classes
+                "audit-log-table-entry data-row"
+                (concat "audit-log-severity-" logEntry.severity)
+                (if doesOpenDetailsOnClick "clickable")
+                (if (eq selectedLogEntry.index logEntry.index) "selected")
+                (evaluate-function onGetClassNamesForLogEntry logEntry)
+              }}
+              data-row-id={{logEntry.id}}
+              onclick={{action "logEntryClick" logEntry}}
+            >
+              {{audit-log-browser/timestamp-cell
+                logEntry=logEntry
+                isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
+              }}
+              {{#if isSeverityColumnVisible}}
+                {{audit-log-browser/severity-cell logEntry=logEntry}}
+              {{/if}}
+              {{yield logEntry}}
+            </tr>
+          {{/if}}
         {{/each}}
 
         {{#if (and
           logEntries.initialLoad.isSettled
-          infiniteScroll.fetchingStatus.isFetchingNext
+          (or renderedItemsLimit infiniteScroll.fetchingStatus.isFetchingNext)
         )}}
           <tr class="loading-row">
             <td colspan={{columnsCount}} class="loading-row-cell">
