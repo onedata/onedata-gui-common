@@ -170,7 +170,6 @@ export default Component.extend(I18n, {
     this.addEmptyEditRecord(editRecords, true);
     this.set('paramEditRecords', editRecords);
     this.markDuplicates();
-    schedule('afterRender', this, 'notifyChange');
   },
 
   /**
