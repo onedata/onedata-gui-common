@@ -23,7 +23,7 @@ import {
 } from '@ember/object';
 import { A } from '@ember/array';
 import { array, raw, not } from 'ember-awesome-macros';
-import { later, schedule } from '@ember/runloop';
+import { later } from '@ember/runloop';
 import _ from 'lodash';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { resolve } from 'rsvp';
@@ -77,7 +77,7 @@ export default Component.extend(I18n, {
    * TODO: VFS-9695 A hack to force re-generate editor values when this property changes.
    * @virtual optional
    */
-  lastResetTime: 0,
+  lastResetTime: undefined,
 
   /**
    * @type {boolean}
