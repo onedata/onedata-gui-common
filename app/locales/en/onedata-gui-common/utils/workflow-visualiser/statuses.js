@@ -16,6 +16,7 @@ export default {
     pending,
     active,
     aborting,
+    interrupted,
     cancelled,
     skipped,
     finished,
