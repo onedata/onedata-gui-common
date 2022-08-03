@@ -8,6 +8,7 @@
  */
 
 export const taskEndedStatuses = [
+  'interrupted',
   'cancelled',
   'skipped',
   'finished',

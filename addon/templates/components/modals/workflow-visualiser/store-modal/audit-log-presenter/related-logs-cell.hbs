@@ -1,0 +1,10 @@
+{{#if openRelatedTaskAuditLogAction}}
+  <a
+    class="clickable {{openRelatedTaskAuditLogAction.className}}"
+    onclick={{action openRelatedTaskAuditLogAction.executeCallback}}
+  >
+    {{openRelatedTaskAuditLogAction.title}}
+  </a>
+{{else}}
+  –
+{{/if}}
