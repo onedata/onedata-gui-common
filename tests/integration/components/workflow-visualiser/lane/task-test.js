@@ -139,6 +139,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     itShowsStatus('pending', 'Pending');
     itShowsStatus('active', 'Active');
     itShowsStatus('aborting', 'Aborting');
+    itShowsStatus('interrupted', 'Interrupted');
     itShowsStatus('cancelled', 'Cancelled');
     itShowsStatus('skipped', 'Skipped');
     itShowsStatus('finished', 'Finished');

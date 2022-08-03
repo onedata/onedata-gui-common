@@ -9,6 +9,9 @@
  * - `allowedStoreTypes` - is taken into account when `mode` is `'create'`,
  * - `allowedDataTypes` - is taken into account when `mode` is `'create'`,
  * - `getStoreContentCallback` - is needed when `mode` is `'view'`
+ * - `getTaskRunForInstanceIdCallback` - is needed (but optional) when `mode` is `'view'`
+ *   for audit log stores
+ * - `actionsFactory` - the same as above
  *
  * @module components/modals/workflow-visualiser/store-modal
  * @author Michał Borzęcki
@@ -24,7 +27,13 @@ import { reads } from '@ember/object/computed';
 import { computed, trySet } from '@ember/object';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { next } from '@ember/runloop';
-import { raw, or, eq, conditional } from 'ember-awesome-macros';
+import { raw, or, eq, getBy } from 'ember-awesome-macros';
+
+const possibleContentTabRenderers = {
+  default: 'generic',
+  timeSeries: 'timeSeries',
+  auditLog: 'auditLog',
+};
 
 export default Component.extend(I18n, {
   layout,
@@ -60,6 +69,11 @@ export default Component.extend(I18n, {
    * @type {Boolean}
    */
   isContentTabRendered: true,
+
+  /**
+   * @type {Object<string, string>}
+   */
+  possibleContentTabRenderers,
 
   /**
    * @type {Boolean}
@@ -117,12 +131,21 @@ export default Component.extend(I18n, {
   getStoreContentCallback: reads('modalOptions.getStoreContentCallback'),
 
   /**
+   * @type {ComputedProperty<(taskInstanceId: string) => { task: Utils.WorkflowVisualiser.Lane.Task, runNumber: number } | null> | undefined}
+   */
+  getTaskRunForInstanceIdCallback: reads('modalOptions.getTaskRunForInstanceIdCallback'),
+
+  /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.ActionsFactory | undefined>}
+   */
+  actionsFactory: reads('modalOptions.actionsFactory'),
+
+  /**
    * @type {ComputedProperty<'timeSeries'|'generic'>}
    */
-  contentTabRenderer: conditional(
-    eq('store.type', raw('timeSeries')),
-    raw('timeSeries'),
-    raw('generic')
+  contentTabRenderer: or(
+    getBy('possibleContentTabRenderers', 'store.type'),
+    getBy('possibleContentTabRenderers', raw('default'))
   ),
 
   /**

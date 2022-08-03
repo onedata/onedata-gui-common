@@ -48,6 +48,7 @@ import oneTimeSeriesChart from './onedata-gui-common/components/one-time-series-
 import oneTimeSeriesChartsSection from './onedata-gui-common/components/one-time-series-charts-section';
 import apiSamples from './onedata-gui-common/components/api-samples';
 import atmWorkflow from './onedata-gui-common/components/atm-workflow';
+import auditLogBrowser from './onedata-gui-common/components/audit-log-browser';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -73,6 +74,7 @@ import joinStrings from './onedata-gui-common/utils/i18n/join-strings';
 import utilsWorkflowVisualiser from './onedata-gui-common/utils/workflow-visualiser';
 import clipboardActions from './onedata-gui-common/utils/clipboard-actions';
 import utilsAtmWorkflow from './onedata-gui-common/utils/atm-workflow';
+import auditLog from './onedata-gui-common/utils/audit-log';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
 
@@ -132,6 +134,7 @@ const translations = {
     oneTimeSeriesChartsSection,
     apiSamples,
     atmWorkflow,
+    auditLogBrowser,
     alerts: {
       endpointError,
     },
@@ -170,6 +173,7 @@ const translations = {
     workflowVisualiser: utilsWorkflowVisualiser,
     clipboardActions,
     atmWorkflow: utilsAtmWorkflow,
+    auditLog,
   },
   errors: {
     backendErrors,

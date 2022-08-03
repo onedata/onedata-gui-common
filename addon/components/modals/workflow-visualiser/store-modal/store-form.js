@@ -65,10 +65,14 @@ const storeTypes = Object.freeze([
   'timeSeries',
 ]);
 
-const storeSpecificDataSpecTypes = Object.freeze({
+const storeSpecificAllowedDataSpecTypes = Object.freeze({
   treeForest: ['file', 'dataset'],
   range: ['range'],
   timeSeries: ['timeSeriesMeasurement'],
+});
+
+const storeSpecificForbiddenDataSpecTypes = Object.freeze({
+  auditLog: ['file', 'dataset'],
 });
 
 const storeTypesExpandingArrays = ['list', 'treeForest', 'auditLog', 'timeSeries'];
@@ -646,14 +650,19 @@ export default Component.extend(I18n, {
       filters.push(typeOrSupertypeFilter);
     }
 
-    if (storeType in storeSpecificDataSpecTypes) {
-      const specificDataSpecFilter = {
+    if (storeType in storeSpecificAllowedDataSpecTypes) {
+      filters.push({
         filterType: 'typeOrSubtype',
-        types: storeSpecificDataSpecTypes[storeType].map((type) => ({
-          type,
-        })),
-      };
-      filters.push(specificDataSpecFilter);
+        types: storeSpecificAllowedDataSpecTypes[storeType]
+          .map((type) => ({ type })),
+      });
+    }
+    if (storeType in storeSpecificForbiddenDataSpecTypes) {
+      filters.push({
+        filterType: 'forbiddenType',
+        forbiddenTypes: storeSpecificForbiddenDataSpecTypes[storeType]
+          .map((type) => ({ type })),
+      });
     }
 
     return filters;
@@ -854,8 +863,8 @@ function isDataSpecValidForStoreConfig(dataSpec, storeType) {
     return true;
   }
 
-  if (storeType in storeSpecificDataSpecTypes) {
-    return storeSpecificDataSpecTypes[storeType].includes(dataSpec.type);
+  if (storeType in storeSpecificAllowedDataSpecTypes) {
+    return storeSpecificAllowedDataSpecTypes[storeType].includes(dataSpec.type);
   }
 
   return true;

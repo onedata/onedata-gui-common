@@ -15,6 +15,7 @@ import {
   find,
   findAll,
 } from '@ember/test-helpers';
+import _ from 'lodash';
 
 const componentClass = 'store-form';
 
@@ -37,6 +38,7 @@ const storeTypes = [{
   label: 'Audit log',
   type: 'auditLog',
   dataSpecConfigKey: 'logContentDataSpec',
+  defaultDataType: 'object',
 }, {
   label: 'Time series',
   type: 'timeSeries',
@@ -190,6 +192,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       label,
       type,
       dataSpecConfigKey,
+      defaultDataType,
     }) => {
       it(`shows generic configuration fields for store "${label}"`, async function (done) {
         await renderComponent();
@@ -213,7 +216,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.name-field .form-control', 'someName');
         await fillIn('.description-field .form-control', 'someDescription');
         await selectChoose('.type-field', label);
-        await selectChoose('.data-spec-editor', 'Dataset');
+        await selectChoose(
+          '.data-spec-editor',
+          _.upperFirst(defaultDataType) || 'Dataset'
+        );
         await fillIn('.defaultValue-field .form-control', '"someDefault"');
         await click('.needsUserInput-field .one-way-toggle');
 
@@ -225,7 +231,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             type,
             config: {
               [dataSpecConfigKey]: {
-                type: 'dataset',
+                type: defaultDataType || 'dataset',
                 valueConstraints: {},
               },
             },
@@ -467,6 +473,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       label,
       type,
       dataSpecConfigKey,
+      defaultDataType,
     }) => {
       it(`fills fields with data of passed "${label}" store on init`, async function (done) {
         this.set('store', Store.create({
@@ -477,7 +484,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           type: type,
           config: {
             [dataSpecConfigKey]: {
-              type: 'dataset',
+              type: defaultDataType || 'dataset',
               valueConstraints: {},
             },
           },
@@ -494,7 +501,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         expect(find('.description-field .form-control').value).to.equal('desc');
         expect(find('.type-field .dropdown-field-trigger').textContent.trim())
           .to.equal(label);
-        expect(find('.data-spec-editor').textContent.trim()).to.equal('Dataset');
+        expect(find('.data-spec-editor').textContent.trim())
+          .to.equal(_.upperFirst(defaultDataType) || 'Dataset');
         expect(find('.defaultValue-field .form-control').value).to.equal('"someDefault"');
         expect(find('.needsUserInput-field .one-way-toggle')).to.have.class('checked');
         done();
@@ -609,6 +617,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       label,
       type,
       dataSpecConfigKey,
+      defaultDataType,
     }) => {
       it(`fills fields with data of passed "${label}" store`, async function (done) {
         this.set('store', Store.create({
@@ -619,7 +628,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           type: type,
           config: {
             [dataSpecConfigKey]: {
-              type: 'dataset',
+              type: defaultDataType || 'dataset',
               valueConstraints: {},
             },
           },
@@ -640,7 +649,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           .to.equal('desc');
         expect(find('.type-field .field-component').textContent.trim())
           .to.equal(label);
-        expect(find('.data-spec-editor').textContent.trim()).to.equal('Dataset');
+        expect(find('.data-spec-editor').textContent.trim()).to.equal(
+          _.upperFirst(defaultDataType) || 'Dataset'
+        );
         expect(find('.defaultValue-field .form-control').value)
           .to.equal('"someDefault"');
         expect(find('.needsUserInput-field .one-way-toggle'))

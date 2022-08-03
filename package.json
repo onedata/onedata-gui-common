@@ -52,6 +52,7 @@
     "chai-dom": "1.11.0",
     "chartist-plugin-legend": "0.6.1",
     "echarts": "5.2.2",
+    "ember-ace": "2.0.1",
     "ember-awesome-macros": "5.0.1",
     "ember-bootstrap": "2.4.0",
     "ember-cli": "3.4.4",
