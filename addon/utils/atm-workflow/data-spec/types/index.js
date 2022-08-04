@@ -32,6 +32,13 @@ import { canValueConstraintsContain as canFileValueConstraintsContain } from './
  * } AtmDataSpec
  */
 
+/**
+ * @typedef {'integer'|'string'|'object'|'file'|'dataset'|'range'|'array'|'timeSeriesMeasurement'|'onedatafsCredentials'} AtmDataSpecType
+ */
+
+/**
+ * @type {Array<AtmDataSpecType>}
+ */
 export const dataSpecTypes = Object.freeze([
   'integer',
   'string',
@@ -44,6 +51,9 @@ export const dataSpecTypes = Object.freeze([
   'onedatafsCredentials',
 ]);
 
+/**
+ * @type {Object<AtmDataSpecType, Array<AtmDataSpecType>>}
+ */
 export const dataSpecSupertypes = Object.freeze({
   integer: [],
   string: [],
@@ -56,6 +66,9 @@ export const dataSpecSupertypes = Object.freeze({
   onedatafsCredentials: ['object'],
 });
 
+/**
+ * @type {Object<AtmDataSpecType, Array<AtmDataSpecType>>}
+ */
 export const dataSpecSubtypes = Object.freeze(
   dataSpecTypes.reduce((acc, dataSpecType) => {
     acc[dataSpecType] = acc[dataSpecType] || [];
@@ -69,7 +82,7 @@ export const dataSpecSubtypes = Object.freeze(
 
 /**
  * @param {Ember.Service} i18n
- * @param {string} dataSpecType
+ * @param {AtmDataSpecType} dataSpecType
  * @returns {SafeString}
  */
 export function translateDataSpecType(i18n, dataSpecType) {
