@@ -63,3 +63,28 @@ export const fallbackRawValuePresenter =
 export function getRawValuePresenter(dataSpec) {
   return rawValuePresenters[dataSpec?.type] ?? fallbackRawValuePresenter;
 }
+
+/**
+ * @type {Object<AtmDataSpecType, string>}
+ */
+export const visualValuePresenters = [
+  'file',
+  'dataset',
+  'range',
+  'array',
+  'timeSeriesMeasurement',
+].reduce((acc, type) => {
+  acc[type] = `atm-workflow/value-presenters/${dasherize(type)}/visual-presenter`;
+  return acc;
+}, {});
+
+/**
+ * Returns a name of a visual presenter component suitable for passed data spec.
+ * If none was found (not all types have corresponding visual presenter), null is
+ * returned.
+ * @param {AtmDataSpec} dataSpec
+ * @returns {string|null}
+ */
+export function getVisualValuePresenter(dataSpec) {
+  return rawValuePresenters[dataSpec?.type] ?? null;
+}
