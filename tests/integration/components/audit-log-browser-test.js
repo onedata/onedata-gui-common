@@ -9,7 +9,7 @@ import { Promise } from 'rsvp';
 import { EntrySeverity, translateEntrySeverity } from 'onedata-gui-common/utils/audit-log';
 import { lookupService } from '../../helpers/stub-service';
 import OneTooltipHelper from '../../helpers/one-tooltip';
-import TestComponent from 'onedata-gui-common/components/test-component';
+import { replaceEmberAceWithTextarea } from '../../helpers/ember-ace';
 import sinon from 'sinon';
 import { dateFormat } from 'onedata-gui-common/helpers/date-format';
 
@@ -31,9 +31,7 @@ describe('Integration | Component | audit log browser', function () {
   const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
-    this.owner.register('component:ember-ace', TestComponent.extend({
-      layout: hbs`<textarea value={{value}}></textarea>`,
-    }));
+    replaceEmberAceWithTextarea(this);
     this.setProperties({
       onFetchLogEntries: sinon.spy(createFetchEntriesMock({
         getHangLoadingNext: () => this.get('hangLoadingNext'),
