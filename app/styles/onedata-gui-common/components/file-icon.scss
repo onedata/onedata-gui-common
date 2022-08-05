@@ -1,0 +1,27 @@
+.file-icon {
+  --file-icon-main-color: $color-file;
+
+  line-height: 0;
+  font-size: 170%;
+
+  .one-icon-tagged-main {
+    line-height: 0;
+    vertical-align: middle;
+
+    &::before {
+      color: var(--file-icon-main-color);
+    }
+  }
+
+  &.type-regular {
+    --file-icon-main-color: #{$color-file};
+  }
+
+  &.type-directory {
+    --file-icon-main-color: #{$color-directory};
+  }
+
+  &.type-symbolic-link {
+    --file-icon-main-color: #{$color-symlink};
+  }
+}

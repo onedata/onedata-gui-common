@@ -6,6 +6,7 @@ export default [
   'bezier-curve',
   'checkbox-list',
   'fast-double-click',
+  'file-icon',
   'form-component',
   'global-alert',
   'global-modal',
