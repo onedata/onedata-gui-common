@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import { FileType } from 'onedata-gui-common/utils/file';
 
 export default Component.extend({
   obj1: Object.freeze({
@@ -10,10 +11,14 @@ export default Component.extend({
     file_id: 'file1Id',
     name: 'file1.txt',
     size: 1024,
+    type: FileType.Regular,
   }),
 
   dataset1: Object.freeze({
+    datasetId: 'dataset id',
+    rootFileId: 'file1Id',
     rootFilePath: '/space1/a/b/c/data',
+    rootFileType: FileType.Directory,
   }),
 
   range1: Object.freeze({
@@ -65,6 +70,9 @@ export default Component.extend({
       return '/space1/dir1/file1.txt';
     },
     async getFileUrlById() {
+      return '#';
+    },
+    async getDatasetUrlById() {
       return '#';
     },
   }),

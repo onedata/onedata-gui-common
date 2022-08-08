@@ -4,13 +4,8 @@
   line-height: 0;
   font-size: 170%;
 
-  .one-icon-tagged-main {
-    line-height: 0;
-    vertical-align: middle;
-
-    &::before {
-      color: var(--file-icon-main-color);
-    }
+  .one-icon-tagged-main::before {
+    color: var(--file-icon-main-color);
   }
 
   &.main-type-regular {

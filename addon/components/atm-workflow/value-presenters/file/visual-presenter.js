@@ -2,13 +2,13 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { promise } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/file/visual-presenter';
-import { FileType } from 'onedata-gui-common/utils/file';
+import { FileType, SymbolicLinkTargetType } from 'onedata-gui-common/utils/file';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 export default Component.extend(I18n, {
   layout,
-  classNames: ['visual-presenter', 'file-visual-presenter'],
+  classNames: ['visual-presenter', 'file-visual-presenter', 'details-with-icon'],
 
   /**
    * @override
@@ -44,6 +44,25 @@ export default Component.extend(I18n, {
   ),
 
   /**
+   * @type {ComputedProperty<PromiseObject<SymbolicLinkTargetType>>}
+   */
+  symbolicLinkTargetType: computed(
+    'symbolicLinkTargetProxy.isSettled',
+    'context',
+    function sizeProxy() {
+      if (
+        !this.context?.getSymbolicLinkTargetById ||
+        !this.symbolicLinkTargetProxy.isSettled
+      ) {
+        return SymbolicLinkTargetType.Regular;
+      } else {
+        return this.symbolicLinkTargetProxy.content?.type ??
+          SymbolicLinkTargetType.Broken;
+      }
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<PromiseObject<string|null>>}
    */
   pathProxy: promise.object(
@@ -60,7 +79,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<PromiseObject<string|null>>}
    */
   urlProxy: promise.object(
-    computed('value', 'context', async function pathProxy() {
+    computed('value', 'context', async function urlProxy() {
       if (!this.value?.file_id) {
         return null;
       }
@@ -78,7 +97,7 @@ export default Component.extend(I18n, {
       if (this.value?.type !== FileType.SymbolicLink) {
         size = this.value?.size;
       } else {
-        const target = (await this.symbolicLinkTargetProxy);
+        const target = await this.symbolicLinkTargetProxy;
         size = target?.size;
       }
 

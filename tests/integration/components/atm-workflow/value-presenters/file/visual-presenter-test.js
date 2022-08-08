@@ -56,6 +56,42 @@ describe('Integration | Component | atm workflow/value presenters/file/visual pr
       .to.have.trimmed.text('1 KiB');
   });
 
+  it('handles case when all file properties are missing', async function () {
+    this.set('file', null);
+    await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter
+      context=context
+      value=file
+    }}`);
+
+    expect(find('.file-icon')).to.have.class('main-type-regular');
+    expect(find('.file-name')).to.have.trimmed.text('Unknown')
+      .and.to.match('span')
+      .and.to.not.have.attr('href');
+    expect(find('.path-property .property-value'))
+      .to.have.trimmed.text('Unknown');
+    expect(find('.size-property .property-value'))
+      .to.have.trimmed.text('Unknown');
+  });
+
+  it('handles case when all file properties are missing except ID', async function () {
+    this.set('file', {
+      file_id: 'some_id',
+    });
+    await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter
+      context=context
+      value=file
+    }}`);
+
+    expect(find('.file-icon')).to.have.class('main-type-regular');
+    expect(find('.file-name')).to.have.trimmed.text('Unknown')
+      .and.to.match('a')
+      .and.to.have.attr('href', this.get('fileUrl')(this.get('file.file_id')));
+    expect(find('.path-property .property-value'))
+      .to.have.trimmed.text(this.get('filePath')(this.get('file.file_id')));
+    expect(find('.size-property .property-value'))
+      .to.have.trimmed.text('Unknown');
+  });
+
   it('shows complete information about a symbolic link file', async function () {
     const file = this.set('file', {
       file_id: 'some_id',
@@ -119,7 +155,7 @@ describe('Integration | Component | atm workflow/value presenters/file/visual pr
           type: FileType.SymbolicLink,
           size: 1024,
         },
-        symbolicLinkTarget: () => reject('someError'),
+        symbolicLinkTarget: () => reject('someError1'),
         filePath: () => reject('someError2'),
         fileUrl: () => reject('someError3'),
       });
@@ -169,6 +205,33 @@ describe('Integration | Component | atm workflow/value presenters/file/visual pr
         .to.have.trimmed.text('Loading...');
       expect(find('.size-property .property-value'))
         .to.have.trimmed.text('Loading...');
+    }
+  );
+
+  it('shows available information about a symbolic link file when context is not present',
+    async function () {
+      const { file } = this.setProperties({
+        file: {
+          file_id: 'some_id',
+          name: 'file1',
+          type: FileType.SymbolicLink,
+          size: 1024,
+        },
+      });
+      await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter
+        value=file
+      }}`);
+
+      expect(find('.file-icon')).to.have.class('main-type-symbolic-link')
+        .and.to.have.class('effective-type-regular')
+        .and.to.not.have.class('symbolic-link-broken');
+      expect(find('.file-name')).to.have.trimmed.text(file.name)
+        .and.to.match('span')
+        .and.to.not.have.attr('href');
+      expect(find('.path-property .property-value'))
+        .to.have.trimmed.text('Unknown');
+      expect(find('.size-property .property-value'))
+        .to.have.trimmed.text('Unknown');
     }
   );
 });

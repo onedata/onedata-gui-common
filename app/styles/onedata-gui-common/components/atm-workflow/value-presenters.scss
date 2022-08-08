@@ -20,27 +20,31 @@
     white-space: initial;
     word-break: break-word;
   }
+
+  &.details-with-icon {
+    display: grid;
+    grid-template-columns: min-content auto;
+
+    .details-icon {
+      margin-left: -0.1em;
+      font-size: 400%;
+    }
+
+    .details-title {
+      @include font-semibold();
+      margin-bottom: 0.2em;
+      font-size: 125%;
+      word-break: break-word;
+    }
+  }
 }
 
-.file-visual-presenter {
-  display: grid;
-  grid-template-columns: min-content auto;
-
-  .file-icon {
-    margin-top: -0.1em;
-    margin-left: -0.1em;
-    font-size: 400%;
-    line-height: 1;
+.dataset-visual-presenter .dataset-icon {
+  &.main-type-directory {
+    color: $color-directory;
   }
 
-  .file-name {
-    @include font-semibold();
-    display: block;
-    margin-bottom: 0.2em;
-    font-size: 125%;
-  }
-
-  .file-name{
-    word-break: break-word;
+  &.main-type-regular {
+    color: $color-file;
   }
 }
