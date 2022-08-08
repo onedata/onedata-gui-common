@@ -7,4 +7,40 @@
   .property-row + .property-row {
     margin-top: 0.3em;
   }
+
+  .property-row {
+    white-space: nowrap;
+  }
+
+  .property-label {
+    padding-right: 0.3em;
+  }
+
+  .property-value {
+    white-space: initial;
+    word-break: break-word;
+  }
+}
+
+.file-visual-presenter {
+  display: grid;
+  grid-template-columns: min-content auto;
+
+  .file-icon {
+    margin-top: -0.1em;
+    margin-left: -0.1em;
+    font-size: 400%;
+    line-height: 1;
+  }
+
+  .file-name {
+    @include font-semibold();
+    display: block;
+    margin-bottom: 0.2em;
+    font-size: 125%;
+  }
+
+  .file-name{
+    word-break: break-word;
+  }
 }

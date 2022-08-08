@@ -7,7 +7,9 @@ export default Component.extend({
   }),
 
   file1: Object.freeze({
+    file_id: 'file1Id',
     name: 'file1.txt',
+    size: 1024,
   }),
 
   dataset1: Object.freeze({
@@ -55,6 +57,15 @@ export default Component.extend({
       itemDataSpec: {
         type: 'string',
       },
+    },
+  }),
+
+  context: Object.freeze({
+    async getFilePathById() {
+      return '/space1/dir1/file1.txt';
+    },
+    async getFileUrlById() {
+      return '#';
     },
   }),
 });

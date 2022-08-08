@@ -1,0 +1,48 @@
+{{file-icon
+  fileType=value.type
+  symbolicLinkTargetType=(if symbolicLinkTargetProxy.isSettled
+    (or symbolicLinkTargetProxy.type null)
+    "REG"
+  )
+}}
+
+<div class="content">
+  {{#if urlProxy.content}}
+    <a
+      class="file-name"
+      href={{urlProxy.content}}
+      target={{or context.linkTarget "_top"}}
+    >
+      {{#if value.name}}{{value.name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+    </a>
+  {{else}}
+    <span class="file-name">
+      {{#if value.name}}{{value.name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+    </span>
+  {{/if}}
+
+  <div class="property-row path-property">
+    <strong class="property-label">{{tt this "path"}}:</strong>
+    <span class="property-value">
+      {{#if pathProxy.isPending}}
+        <em>{{tt this "loading"}}</em>
+      {{else if (eq pathProxy.content null)}}
+        <em>{{tt this "unknown"}}</em>
+      {{else}}
+        {{pathProxy.content}}
+      {{/if}}
+    </span>
+  </div>
+  <div class="property-row size-property">
+    <strong class="property-label">{{tt this "size"}}:</strong>
+    <span class="property-value">
+      {{#if sizeProxy.isPending}}
+        <em>{{tt this "loading"}}</em>
+      {{else if (eq sizeProxy.content null)}}
+        <em>{{tt this "unknown"}}</em>
+      {{else}}
+        {{sizeProxy.content}}
+      {{/if}}
+    </span>
+  </div>
+</div>

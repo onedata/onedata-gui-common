@@ -13,15 +13,15 @@
     }
   }
 
-  &.type-regular {
+  &.main-type-regular {
     --file-icon-main-color: #{$color-file};
   }
 
-  &.type-directory {
+  &.main-type-directory {
     --file-icon-main-color: #{$color-directory};
   }
 
-  &.type-symbolic-link {
+  &.main-type-symbolic-link {
     --file-icon-main-color: #{$color-symlink};
   }
 }

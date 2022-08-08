@@ -1,6 +1,14 @@
 import { dasherize } from '@ember/string';
 
 /**
+ * @typedef {Object} AtmValuePresenterContext
+ * @property {(fileId: string) => Promise<AtmFile>} [getSymbolicLinkTargetById]
+ * @property {(fileId: string) => Promise<Array<AtmFile>>} [getFilePathById]
+ * @property {(fileId: string) => Promise<string>} [getFileUrlById]
+ * @property {string} [linkTarget]
+ */
+
+/**
  * @type {Object<AtmDataSpecType, string>}
  */
 export const singleLineValuePresenters = [

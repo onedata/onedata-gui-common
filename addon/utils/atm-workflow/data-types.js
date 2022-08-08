@@ -13,7 +13,7 @@
 /**
  * @typedef {Object} AtmFile
  * @property {string} file_id CDMI object ID
- * @property {AtmFileType} [type]
+ * @property {FileType} [type]
  * @property {string} [name]
  * @property {number|null} [size]
  */
@@ -23,7 +23,7 @@
  * @property {string} datasetId
  * @property {string} [rootFileId]
  * @property {string} [rootFilePath]
- * @property {AtmFileType} [rootFileType]
+ * @property {FileType} [rootFileType]
  */
 
 /**

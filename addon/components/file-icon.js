@@ -1,11 +1,11 @@
 import { computed } from '@ember/object';
-import { conditional, raw } from 'ember-awesome-macros';
+import { and, eq, conditional, raw } from 'ember-awesome-macros';
 import OneIconTagged from 'onedata-gui-common/components/one-icon-tagged';
 import { FileType, SymbolicLinkTargetType } from 'onedata-gui-common/utils/file';
 
 export default OneIconTagged.extend({
   classNames: ['file-icon', 'tag-right'],
-  classNameBindings: ['fileTypeClass', 'tagStatusClass'],
+  classNameBindings: ['fileTypeClasses', 'isSymbolicLinkBroken:danger'],
 
   /**
    * @virtual
@@ -50,6 +50,14 @@ export default OneIconTagged.extend({
   shadowType: conditional('tagIcon', raw('circle'), raw('none')),
 
   /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isSymbolicLinkBroken: and(
+    eq('fileType', raw(FileType.SymbolicLink)),
+    eq('symbolicLinkTargetType', raw(SymbolicLinkTargetType.Broken))
+  ),
+
+  /**
    * @type {ComputedProperty<FileType>}
    */
   effectiveFileType: computed(
@@ -64,22 +72,38 @@ export default OneIconTagged.extend({
   /**
    * @type {ComputedProperty<string>}
    */
-  fileTypeClass: computed('fileType', function fileTypeClass() {
-    switch (this.fileType) {
-      case FileType.Regular:
-        return 'type-regular';
-      case FileType.Directory:
-        return 'type-directory';
-      case FileType.SymbolicLink:
-        return 'type-symbolic-link';
-    }
-  }),
+  fileTypeClasses: computed(
+    'fileType',
+    'symbolicLinkTargetType',
+    'isSymbolicLinkBroken',
+    function fileTypeClass() {
+      let mainType;
+      let effType;
+      switch (this.fileType) {
+        case FileType.Directory:
+          mainType = effType = 'directory';
+          break;
+        case FileType.SymbolicLink:
+          mainType = 'symbolic-link';
+          switch (this.symbolicLinkTargetType) {
+            case SymbolicLinkTargetType.Directory:
+              effType = 'directory';
+              break;
+            case SymbolicLinkTargetType.Regular:
+            case SymbolicLinkTargetType.Broken:
+            default:
+              effType = 'regular';
+              break;
+          }
+          break;
+        case FileType.Regular:
+        default:
+          mainType = effType = 'regular';
+      }
 
-  /**
-   * @type {ComputedProperty<string>}
-   */
-  tagStatusClass: computed('symbolicLinkTargetType', function tagStatusClass() {
-    return this.symbolicLinkTargetType === SymbolicLinkTargetType.Broken ?
-      'danger' : '';
-  }),
+      const extraClasses = this.isSymbolicLinkBroken ? 'symbolic-link-broken' : '';
+
+      return `main-type-${mainType} effective-type-${effType} ${extraClasses}`;
+    }
+  ),
 });
