@@ -110,7 +110,7 @@ $top-shadow-zindex: 1002;
 }
 
 @mixin shadow-transition($property: height) {
-  transition: $property 0.2s linear;
+  transition: transition-linear($property);
 }
 
 @mixin shadow-base($shadow-height: $top-shadow-height, $shadow-alpha: 0.05, $direction) {
