@@ -95,5 +95,5 @@ export const visualValuePresenters = [
  * @returns {string|null}
  */
 export function getVisualValuePresenter(dataSpec) {
-  return rawValuePresenters[dataSpec?.type] ?? null;
+  return visualValuePresenters[dataSpec?.type] ?? null;
 }

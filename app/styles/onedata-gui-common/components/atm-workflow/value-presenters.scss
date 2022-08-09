@@ -1,3 +1,9 @@
+.single-line-presenter {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .raw-presenter {
   height: 100%;
   display: grid;
@@ -46,5 +52,29 @@
 
   &.main-type-regular {
     color: $color-file;
+  }
+}
+
+.array-visual-presenter {
+  .root-presenter-header .items {
+    display: none;
+  }
+
+  .raw-presenter {
+    min-height: 15em;
+  }
+
+  .integer-raw-presenter {
+    min-height: 3em;
+  }
+
+  .string-raw-presenter {
+    min-height: 7em;
+  }
+
+  .array-item-header {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: flex-start;
   }
 }
