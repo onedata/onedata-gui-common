@@ -9,6 +9,6 @@
 
 /**
  * @typedef {Object} AtmTreeForestStoreContentBrowseResult
- * @property {Array<AtmInfiniteLogStoreContainerEntry<unknown>>} treeRoots
+ * @property {Array<AtmIndexedValueContainer<unknown>>} treeRoots
  * @property {boolean} isLast
  */

@@ -9,6 +9,6 @@
 
 /**
  * @typedef {Object} AtmListStoreContentBrowseResult
- * @property {Array<AtmInfiniteLogStoreContainerEntry<unknown>>} items
+ * @property {Array<AtmIndexedValueContainer<unknown>>} items
  * @property {boolean} isLast
  */
