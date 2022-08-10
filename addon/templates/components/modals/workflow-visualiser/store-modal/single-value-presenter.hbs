@@ -1,0 +1,11 @@
+{{#promise-proxy-container proxy=valueContainerProxy}}
+  {{#if valueContainerProxy.content}}
+    {{modals/workflow-visualiser/store-modal/value-container-presenter
+      dataSpec=store.config.itemDataSpec
+      valueContainer=valueContainerProxy.content
+      context=context
+    }}
+  {{else}}
+    {{emptyStoreText}}
+  {{/if}}
+{{/promise-proxy-container}}

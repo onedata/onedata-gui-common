@@ -20,6 +20,7 @@ export default Component.extend({
   getStoreContentCallback: undefined,
 
   /**
+   * @virtual
    * @type {string}
    */
   emptyStoreText: undefined,
@@ -36,7 +37,9 @@ export default Component.extend({
    */
   valueProxy: promise.object(
     computed('getStoreContentCallback', async function valueProxy() {
-      return this.getStoreContentCallback?.() ?? null;
+      return this.getStoreContentCallback?.({
+        type: 'rangeStoreContentBrowseOptions',
+      }) ?? null;
     })
   ),
 });
