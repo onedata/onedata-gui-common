@@ -45,7 +45,13 @@
         isDisabled=isSubmitting
       }}
     {{else if isContentTabRendered}}
-      {{#if (eq contentTabRenderer "generic")}}
+      {{#if (eq store.type "range")}}
+        {{modals/workflow-visualiser/store-modal/range-presenter
+          store=store
+          getStoreContentCallback=getStoreContentCallback
+          emptyStoreText=emptyStoreText
+        }}
+      {{else if (eq contentTabRenderer "generic")}}
         {{modals/workflow-visualiser/store-modal/store-content-table
           store=store
           getStoreContentCallback=getStoreContentCallback

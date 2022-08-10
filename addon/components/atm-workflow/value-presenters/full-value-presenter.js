@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { bool, conditional, eq, raw } from 'ember-awesome-macros';
-import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/single-value-presenter';
+import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/full-value-presenter';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import {
   getRawValuePresenter,
@@ -9,13 +9,13 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/value-presenters';
 
 export default Component.extend(I18n, {
-  classNames: ['single-value-presenter'],
+  classNames: ['full-value-presenter'],
   layout,
 
   /**
    * @override
    */
-  i18nPrefix: 'components.atmWorkflow.valuePresenters.singleValuePresenter',
+  i18nPrefix: 'components.atmWorkflow.valuePresenters.fullValuePresenter',
 
   /**
    * @virtual

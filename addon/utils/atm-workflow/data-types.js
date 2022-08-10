@@ -1,24 +1,4 @@
 /**
- * @typedef {Object} AtmAvailableValueContainer<T>
- * @property {true} success
- * @property {T} value
- */
-
-/**
- * @typedef {Object} AtmUnavailableValueContainer
- * @property {false} success
- * @property {unknown} error
- */
-
-/**
- * @typedef {AtmAvailableValueContainer<T> | AtmUnavailableValueContainer} AtmValueContainer<T>
- */
-
-/**
- * @typedef {AtmValueContainer<T> & { index: string }} AtmIndexedValueContainer<T>
- */
-
-/**
  * @typedef {number} AtmInteger
  */
 

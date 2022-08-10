@@ -11,7 +11,7 @@ import {
 import { replaceEmberAceWithTextarea } from '../../../../helpers/ember-ace';
 import TestComponent from 'onedata-gui-common/components/test-component';
 
-describe('Integration | Component | atm workflow/value presenters/single value presenter',
+describe('Integration | Component | atm workflow/value presenters/full value presenter',
   function () {
     setupRenderingTest();
 
@@ -19,11 +19,11 @@ describe('Integration | Component | atm workflow/value presenters/single value p
       replaceEmberAceWithTextarea(this);
     });
 
-    it('has class "single-value-presenter"', async function () {
-      await render(hbs`{{atm-workflow/value-presenters/single-value-presenter}}`);
+    it('has class "full-value-presenter"', async function () {
+      await render(hbs`{{atm-workflow/value-presenters/full-value-presenter}}`);
 
       expect(this.element.children).to.have.length(1);
-      expect(this.element.children[0]).to.have.class('single-value-presenter');
+      expect(this.element.children[0]).to.have.class('full-value-presenter');
     });
 
     it('shows presenter type toggle with "visual" and "raw"', async function () {
@@ -114,7 +114,7 @@ describe('Integration | Component | atm workflow/value presenters/single value p
 );
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-presenters/single-value-presenter
+  await render(hbs`{{atm-workflow/value-presenters/full-value-presenter
     value=value
     dataSpec=dataSpec
     context=context

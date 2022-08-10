@@ -1,0 +1,10 @@
+{{#promise-proxy-container proxy=valueProxy}}
+  {{#if value.proxy}}
+    {{atm-workflow/value-presenters/full-value-presenter
+      dataSpec=dataSpec
+      value=value.proxy
+    }}
+  {{else}}
+    {{emptyStoreText}}
+  {{/if}}
+{{/promise-proxy-container}}
