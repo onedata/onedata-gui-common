@@ -1,0 +1,26 @@
+{{#if isPresenterTypeToggleVisible}}
+  {{#bs-button-group
+    class="presenter-type-selector"
+    value=presenterType
+    type="radio"
+    onChange=(action "presenterTypeChange")
+    as |bg|
+  }}
+    {{#each (array "visual" "raw") as |type|}}
+      {{#bg.button
+        type="default"
+        size="sm"
+        class=(concat "presenter-type-" type)
+        value=type
+      }}
+        {{tt this (concat "presenterTypes." type)}}
+      {{/bg.button}}
+    {{/each}}
+  {{/bs-button-group}}
+{{/if}}
+
+{{component currentPresenterComponent
+  value=value
+  dataSpec=dataSpec
+  context=context
+}}

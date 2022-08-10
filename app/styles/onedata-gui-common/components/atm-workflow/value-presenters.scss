@@ -5,7 +5,6 @@
 }
 
 .raw-presenter {
-  height: 100%;
   display: grid;
 }
 
@@ -77,4 +76,10 @@
     grid-template-columns: auto auto;
     justify-content: flex-start;
   }
+}
+
+.single-value-presenter {
+  display: grid;
+  grid-template-rows: min-content auto;
+  gap: 0.5em;
 }
