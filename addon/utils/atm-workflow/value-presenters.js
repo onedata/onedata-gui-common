@@ -97,3 +97,101 @@ export const visualValuePresenters = [
 export function getVisualValuePresenter(dataSpec) {
   return visualValuePresenters[dataSpec?.type] ?? null;
 }
+
+/**
+ * @type {Object<AtmDataSpecType, string>}
+ */
+export const tableHeaderRowValuePresenters = [
+  'integer',
+  'string',
+  'object',
+  'file',
+  'dataset',
+  'range',
+  'array',
+  'timeSeriesMeasurement',
+].reduce((acc, type) => {
+  acc[type] = `atm-workflow/value-presenters/${dasherize(type)}/table-header-row-presenter`;
+  return acc;
+}, {});
+
+/**
+ * @type {string}
+ */
+export const fallbackTableHeaderRowValuePresenter =
+  'atm-workflow/value-presenters/fallback/table-header-row-presenter';
+
+/**
+ * Returns a name of a table header row presenter component suitable for
+ * passed data spec.
+ * @param {AtmDataSpec} dataSpec
+ * @returns {string}
+ */
+export function getTableHeaderRowPresenter(dataSpec) {
+  return tableHeaderRowValuePresenters[dataSpec?.type] ??
+    fallbackTableHeaderRowValuePresenter;
+}
+
+/**
+ * @type {Object<AtmDataSpecType, string>}
+ */
+export const tableBodyRowValuePresenters = [
+  'integer',
+  'string',
+  'object',
+  'file',
+  'dataset',
+  'range',
+  'array',
+  'timeSeriesMeasurement',
+].reduce((acc, type) => {
+  acc[type] = `atm-workflow/value-presenters/${dasherize(type)}/table-body-row-presenter`;
+  return acc;
+}, {});
+
+/**
+ * @type {string}
+ */
+export const fallbackTableBodyRowValuePresenter =
+  'atm-workflow/value-presenters/fallback/table-body-row-presenter';
+
+/**
+ * Returns a name of a table body row presenter component suitable for
+ * passed data spec.
+ * @param {AtmDataSpec} dataSpec
+ * @returns {string}
+ */
+export function getTableBodyRowPresenter(dataSpec) {
+  return tableBodyRowValuePresenters[dataSpec?.type] ??
+    fallbackTableBodyRowValuePresenter;
+}
+
+/**
+ * @type {Object<AtmDataSpecType, (columns: Array<string>|undefined) => number>}
+ */
+export const tableValuePresenterColumnsCounts = {
+  integer: () => 1,
+  string: () => 1,
+  object: (columns) => Array.isArray(columns) && columns.length ? columns.length : 1,
+  file: () => 3,
+  dataset: () => 2,
+  range: () => 3,
+  array: () => 1,
+  timeSeriesMeasurement: () => 3,
+};
+
+/**
+ * @type {(columns: Array<string>|undefined) => number}
+ */
+export const fallbackTableValuePresenterColumnsCount = () => 1;
+
+/**
+ * Returns a number of table presenter columns.
+ * @param {AtmDataSpec} dataSpec
+ * @param {Array<string>} [columns]
+ * @returns {number}
+ */
+export function getTableValuePresenterColumnsCount(dataSpec, columns) {
+  return tableValuePresenterColumnsCounts[dataSpec?.type]?.(columns) ??
+    fallbackTableBodyRowValuePresenter(columns);
+}
