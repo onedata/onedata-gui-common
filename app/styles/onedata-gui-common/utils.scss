@@ -109,6 +109,10 @@ $top-shadow-zindex: 1002;
   }
 }
 
+@mixin shadow-transition($property: height) {
+  transition: transition-linear($property);
+}
+
 @mixin shadow-base($shadow-height: $top-shadow-height, $shadow-alpha: 0.05, $direction) {
   @if #{$direction} == #{to bottom} or #{$direction} == #{to top} {
     &::before {
@@ -121,7 +125,7 @@ $top-shadow-zindex: 1002;
       }
       height: $shadow-height;
       background: linear-gradient($direction, transparent, rgba(0, 0, 0, $shadow-alpha));
-      transition: height 0.2s linear;
+      @include shadow-transition(height);
       content: ' ';
       width: 100%;
       z-index: $top-shadow-zindex;
@@ -140,7 +144,7 @@ $top-shadow-zindex: 1002;
       }
       width: $shadow-height;
       background: linear-gradient($direction, transparent, rgba(0, 0, 0, $shadow-alpha));
-      transition: width 0.2s linear;
+      @include shadow-transition(width);
       content: ' ';
       height: 100%;
       z-index: $top-shadow-zindex;

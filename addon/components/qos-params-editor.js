@@ -35,6 +35,11 @@ import QosParamRecord, {
 
 const nodeClearDelay = 500;
 
+// TODO: VFS-9695 This components needs a refactor to be more generic, because it is used
+// not only for QoS but also for eg. metadata key-value editor.
+// It also needs refactor to be more DDAU (edited data is not taken from external source),
+// because sometimes we need to reset/change its values from outside.
+
 export default Component.extend(I18n, {
   layout,
 
@@ -67,6 +72,12 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   mode: 'show',
+
+  /**
+   * TODO: VFS-9695 A hack to force re-generate editor values when this property changes.
+   * @virtual optional
+   */
+  lastResetTime: undefined,
 
   /**
    * @type {boolean}
@@ -128,33 +139,37 @@ export default Component.extend(I18n, {
    */
   isValid: not(array.isAny('activeParamEditRecords', raw('hasKeyError'))),
 
-  modeObserver: observer('mode', 'isFormOpened', function modeObserver() {
-    const {
-      mode,
-      paramRecords,
-      validateKey,
-    } = this.getProperties('mode', 'paramRecords', 'validateKey');
-    if (mode !== 'show') {
-      // Depending on `mode`, clone existing params or use clear array as a state
-      // of editor.
-      let editRecords;
-      if (mode === 'edit') {
-        editRecords = A(paramRecords.map(obj => QosParamRecord.create(
-          obj, { validateKey }
-        )));
-      } else {
-        editRecords = A();
+  modeObserver: observer(
+    'mode',
+    'lastResetTime',
+    'isFormOpened',
+    function modeObserver() {
+      if (this.mode !== 'show') {
+        this.initEditRecords();
       }
-      this.addEmptyEditRecord(editRecords, true);
-      this.set('paramEditRecords', editRecords);
-      this.markDuplicates();
     }
-  }),
+  ),
 
   init() {
     this._super(...arguments);
 
     this.modeObserver();
+  },
+
+  initEditRecords() {
+    // Depending on `mode`, clone existing params or use clear array as a state
+    // of editor.
+    let editRecords;
+    if (this.mode === 'edit') {
+      editRecords = A(this.paramRecords.map(obj => QosParamRecord.create(
+        obj, { validateKey: this.validateKey }
+      )));
+    } else {
+      editRecords = A();
+    }
+    this.addEmptyEditRecord(editRecords, true);
+    this.set('paramEditRecords', editRecords);
+    this.markDuplicates();
   },
 
   /**

@@ -431,39 +431,6 @@ $first-table-column-padding-left: 16px;
           &.truncate {
             max-width: 200px;
           }
-          &.tab-state {
-            $size: 10px;
-            $states: empty inactive disabled danger warning success;
-            $stateColors: (
-              empty: transparent,
-              inactive: $color-one-semiwhite,
-              disabled: $color-one-light-gray,
-              danger: $color-one-danger,
-              warning: $color-one-warning,
-              success: $color-one-success,
-            );
-            @mixin stateAfter($type) {
-              &.tab-state-#{$type}::after {
-                background-color: map-get($stateColors, $type);
-              }
-            }
-            display: inline-block;
-            position: relative;
-            margin-right: $size * 0.5;
-            &::after {
-              position: absolute;
-              background-color: map-get($stateColors, inactive);
-              top: 0;
-              right: -$size * 1.5;
-              content: ' ';
-              width: $size;
-              height: $size;
-              border-radius: 100%;
-            }
-            @each $state in $states {
-              @include stateAfter($state)
-            }
-          }
         }
         .tab-icon + .tab-name {
           padding-left: 24px;

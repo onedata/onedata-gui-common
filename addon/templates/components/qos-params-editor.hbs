@@ -52,7 +52,7 @@
                 class="show-edit-icon"}}
               {{#unless (eq editRecord activeParamEditRecords.lastObject)}}
                 {{one-icon icon="close" class="form-field-right-addon remove-param" click=(action "removeRecord" editRecord)}}
-              {{/unless}}  
+              {{/unless}}
             {{/if}}
             {{#if editRecord.hasKeyError}}
               <div class="form-message">
