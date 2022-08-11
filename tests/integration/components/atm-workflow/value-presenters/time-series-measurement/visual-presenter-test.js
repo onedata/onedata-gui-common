@@ -24,8 +24,8 @@ describe('Integration | Component | atm workflow/value presenters/time series me
         value: 30,
       });
       await render(hbs`{{atm-workflow/value-presenters/time-series-measurement/visual-presenter
-      value=value
-    }}`);
+        value=value
+      }}`);
 
       const formattedTime = dateFormat([timestamp], { format: 'report' });
 
