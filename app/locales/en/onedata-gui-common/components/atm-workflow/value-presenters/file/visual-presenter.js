@@ -1,6 +1,1 @@
-export default {
-  loading: 'Loading...',
-  unknown: 'Unknown',
-  path: 'Path',
-  size: 'Size',
-};
+export { default } from './commons';

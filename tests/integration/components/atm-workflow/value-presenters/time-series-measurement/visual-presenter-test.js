@@ -31,8 +31,8 @@ describe('Integration | Component | atm workflow/value presenters/time series me
 
       expect(find('.timestamp-property .property-label')).to.have.trimmed.text('Time:');
       expect(find('.timestamp-property .property-value')).to.have.trimmed.text(formattedTime);
-      expect(find('.tsName-property .property-label')).to.have.trimmed.text('Time series name:');
-      expect(find('.tsName-property .property-value')).to.have.trimmed.text('series1');
+      expect(find('.ts-name-property .property-label')).to.have.trimmed.text('Time series name:');
+      expect(find('.ts-name-property .property-value')).to.have.trimmed.text('series1');
       expect(find('.value-property .property-label')).to.have.trimmed.text('Value:');
       expect(find('.value-property .property-value')).to.have.trimmed.text('30');
     });

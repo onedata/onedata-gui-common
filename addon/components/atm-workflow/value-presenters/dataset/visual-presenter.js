@@ -1,5 +1,6 @@
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { promise, conditional, eq, raw } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/dataset/visual-presenter';
 import { FileType } from 'onedata-gui-common/utils/file';
@@ -27,21 +28,70 @@ export default Component.extend(I18n, {
   context: undefined,
 
   /**
+   * @type {ComputedProperty<DatasetDetails>}
+   */
+  datasetDetails: computed('value', 'context', function datasetDetails() {
+    return DatasetDetails.create({
+      dataset: this.value,
+      context: this.context,
+    });
+  }),
+
+  /**
    * @type {ComputedProperty<string|null>}
    */
-  name: computed('value', function name() {
-    const pathElements = (this.value?.rootFilePath || '').split('/');
+  name: reads('datasetDetails.name'),
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  icon: reads('datasetDetails.icon'),
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  iconClass: reads('datasetDetails.iconClass'),
+
+  /**
+   * @type {ComputedProperty<PromiseObject<string|null>>}
+   */
+  urlProxy: reads('datasetDetails.urlProxy'),
+
+  /**
+   * @type {ComputedProperty<PromiseObject<string|null>>}
+   */
+  rootFileUrlProxy: reads('datasetDetails.rootFileUrlProxy'),
+});
+
+export const DatasetDetails = EmberObject.extend({
+  /**
+   * @virtual
+   * @type {AtmDataset}
+   */
+  dataset: undefined,
+
+  /**
+   * @virtual optional
+   * @type {AtmValuePresenterContext}
+   */
+  context: undefined,
+
+  /**
+   * @type {ComputedProperty<string|null>}
+   */
+  name: computed('dataset', function name() {
+    const pathElements = (this.dataset?.rootFilePath || '').split('/');
     return pathElements[pathElements.length - 1] ?? null;
   }),
 
   /**
    * @type {ComputedProperty<FileType.Regular|FileType.Directory>}
    */
-  rootFileType: computed('value', function rootFileType() {
-    switch (this.value?.rootFileType) {
+  rootFileType: computed('dataset', function rootFileType() {
+    switch (this.dataset?.rootFileType) {
       case FileType.Directory:
       case FileType.Regular:
-        return this.value.rootFileType;
+        return this.dataset.rootFileType;
       default:
         return FileType.Regular;
     }
@@ -69,12 +119,12 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<PromiseObject<string|null>>}
    */
   urlProxy: promise.object(
-    computed('value', 'context', async function urlProxy() {
-      if (!this.value?.datasetId) {
+    computed('dataset', 'context', async function urlProxy() {
+      if (!this.dataset?.datasetId) {
         return null;
       }
 
-      return this.context?.getDatasetUrlById?.(this.value.datasetId) ?? null;
+      return this.context?.getDatasetUrlById?.(this.dataset.datasetId) ?? null;
     })
   ),
 
@@ -82,12 +132,12 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<PromiseObject<string|null>>}
    */
   rootFileUrlProxy: promise.object(
-    computed('value', 'context', async function rootFileUrlProxy() {
-      if (!this.value?.rootFileId) {
+    computed('dataset', 'context', async function rootFileUrlProxy() {
+      if (!this.dataset?.rootFileId) {
         return null;
       }
 
-      return this.context?.getFileUrlById?.(this.value.rootFileId) ?? null;
+      return this.context?.getFileUrlById?.(this.dataset.rootFileId) ?? null;
     })
   ),
 });

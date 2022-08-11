@@ -1,0 +1,38 @@
+<td class="column-name">
+  {{file-icon
+    class="details-icon"
+    fileType=value.type
+    symbolicLinkTargetType=symbolicLinkTargetType
+  }}
+  {{#if urlProxy.content}}
+    <a
+      class="file-name details-title"
+      href={{urlProxy.content}}
+      target={{or context.linkTarget "_top"}}
+    >
+      {{#if value.name}}{{value.name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+    </a>
+  {{else}}
+    <span class="file-name details-title">
+      {{#if value.name}}{{value.name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+    </span>
+  {{/if}}
+</td>
+<td class="column-path">
+  {{#if pathProxy.isPending}}
+    <em>{{tt this "loading"}}</em>
+  {{else if (eq pathProxy.content null)}}
+    <em>{{tt this "unknown"}}</em>
+  {{else}}
+    {{pathProxy.content}}
+  {{/if}}
+</td>
+<td class="column-size">
+  {{#if sizeProxy.isPending}}
+    <em>{{tt this "loading"}}</em>
+  {{else if (eq sizeProxy.content null)}}
+    <em>{{tt this "unknown"}}</em>
+  {{else}}
+    {{sizeProxy.content}}
+  {{/if}}
+</td>
