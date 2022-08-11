@@ -1,0 +1,13 @@
+{{#if columns.length}}
+  {{#each columns as |column|}}
+    <td class="column-object-property">
+      {{evaluate-function stringifyObjectProperty column}}
+    </td>
+  {{/each}}
+{{else}}
+  <td class="column-value">
+    {{atm-workflow/value-presenters/object/single-line-presenter
+      value=value
+    }}
+  </td>
+{{/if}}
