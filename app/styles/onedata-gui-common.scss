@@ -187,6 +187,7 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 @import 'onedata-gui-common/components/workflow-visualiser';
 @import 'onedata-gui-common/components/one-pseudo-modal';
 @import 'onedata-gui-common/components/iconified-block';
+@import 'onedata-gui-common/components/infinite-scroll-table';
 @import 'onedata-gui-common/components/modals';
 @import 'onedata-gui-common/components/scrollable-table';
 @import 'onedata-gui-common/components/public-footer';
@@ -197,6 +198,5 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 @import 'onedata-gui-common/components/one-time-series-charts-section';
 @import 'onedata-gui-common/components/api-samples';
 @import 'onedata-gui-common/components/atm-workflow';
-@import 'onedata-gui-common/components/infinite-scroll-table';
 @import 'onedata-gui-common/components/audit-log-browser';
 @import 'onedata-gui-common/components/file-icon';

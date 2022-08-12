@@ -4,6 +4,7 @@ import layout from 'onedata-gui-common/templates/components/modals/workflow-visu
 export default Component.extend({
   layout,
   classNames: ['value-container-presenter'],
+  classNameBindings: ['valueContainer.success:success:error'],
 
   /**
    * @virtual

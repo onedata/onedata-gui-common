@@ -1,11 +1,10 @@
-import Component from '@ember/component';
+import TableHeaderRowPresenterBase from '../commons/table-header-row-presenter-base';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/string/table-header-row-presenter';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend(I18n, {
+export default TableHeaderRowPresenterBase.extend(I18n, {
   layout,
-  tagName: 'tr',
-  classNames: ['table-header-row-presenter', 'string-table-header-row-presenter'],
+  classNames: ['string-table-header-row-presenter'],
 
   /**
    * @override

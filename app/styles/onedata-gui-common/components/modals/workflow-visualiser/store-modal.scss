@@ -13,10 +13,35 @@
     flex-direction: column;
   }
 
+  .value-container-presenter {
+    display: grid;
+
+    &.error {
+      align-items: flex-start;
+    }
+
+    .resource-load-error {
+      margin: 0;
+    }
+  }
+
+  .list-presenter {
+    display: grid;
+    min-height: 0;
+
+    .details-container .details {
+      padding: $infinite-scroll-table-container-padding;
+    }
+  }
+
   .audit-log-presenter {
     min-height: min(20em, 100vh - 300px);
     display: grid;
     place-items: stretch;
+  }
+
+  .audit-log-browser {
+    min-height: 0;
   }
 
   .related-logs-column-header {

@@ -1,14 +1,7 @@
-import Component from '@ember/component';
+import TableBodyRowPresenterBase from '../commons/table-body-row-presenter-base';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/fallback/table-body-row-presenter';
 
-export default Component.extend({
+export default TableBodyRowPresenterBase.extend({
   layout,
-  tagName: 'tr',
-  classNames: ['table-body-row-presenter', 'fallback-table-body-row-presenter'],
-
-  /**
-   * @virtual
-   * @type {unknown}
-   */
-  value: undefined,
+  classNames: ['fallback-table-body-row-presenter'],
 });

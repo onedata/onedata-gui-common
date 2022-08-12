@@ -81,5 +81,15 @@
 .full-value-presenter {
   display: grid;
   grid-template-rows: min-content auto;
-  gap: 0.5em;
+  grid-template-areas:
+    'type-toggle'
+    'type-presenter';
+
+  > *:first-child ~ * {
+    margin-top: 0.5em;
+  }
+
+  > *:last-child {
+    grid-area: type-presenter;
+  }
 }

@@ -84,7 +84,7 @@
  */
 
 /**
- * @typedef {Object} FetchInfiniteScrollEntriesParams
+ * @typedef {Object} InfiniteScrollListingParams
  * @property {string|null} [index] an anchor where the listing should start.
  *   Every entry received from the backend has that field so it is ease to start
  *   from the specific entry.
@@ -137,7 +137,7 @@ export default Component.extend(I18n, {
   /**
    * Should fetch entries page according to the passed parameters.
    * @virtual
-   * @type {(listingParams: FetchInfiniteScrollEntriesParams) => Promise<InfiniteScrollEntriesPage>}
+   * @type {(listingParams: InfiniteScrollListingParams) => Promise<InfiniteScrollEntriesPage>}
    */
   onFetchEntries: undefined,
 

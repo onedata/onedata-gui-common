@@ -193,5 +193,5 @@ export const fallbackTableValuePresenterColumnsCount = () => 1;
  */
 export function getTableValuePresenterColumnsCount(dataSpec, columns) {
   return tableValuePresenterColumnsCounts[dataSpec?.type]?.(columns) ??
-    fallbackTableBodyRowValuePresenter(columns);
+    fallbackTableValuePresenterColumnsCount(columns);
 }

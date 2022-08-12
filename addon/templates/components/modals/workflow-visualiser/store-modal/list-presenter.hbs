@@ -1,0 +1,44 @@
+{{#infinite-scroll-table
+  onFetchEntries=fetchEntriesCallback
+  columnsCount=tableColumnsCount
+  rowHeight=45
+  doesOpenDetailsOnClick=true
+  as |section|
+}}
+  {{#if (eq section.sectionName "tableHead")}}
+
+    {{component tableHeaderRowPresenterComponent}}
+
+  {{else if (eq section.sectionName "entryRow")}}
+
+    {{#if section.entry.success}}
+      {{component tableBodyRowPresenterComponent
+        value=section.entry.value
+        dataSpec=itemDataSpec
+        context=context
+        click=section.onRowClick
+        class=section.rowClasses
+        dataRowId=section.dataRowId
+      }}
+    {{else}}
+      <tr
+        class={{concat-classes section.rowClasses "text-danger"}}
+        data-row-id={{section.dataRowId}}
+        onclick={{section.onRowClick}}
+      >
+        <td colspan={{tableColumnsCount}} class="truncate">
+          {{evaluate-function createErrorMessage section.entry}}
+        </td>
+      </tr>
+    {{/if}}
+
+  {{else if (eq section.sectionName "entryDetails")}}
+
+    {{modals/workflow-visualiser/store-modal/value-container-presenter
+      dataSpec=store.config.itemDataSpec
+      valueContainer=section.entry
+      context=context
+    }}
+
+  {{/if}}
+{{/infinite-scroll-table}}

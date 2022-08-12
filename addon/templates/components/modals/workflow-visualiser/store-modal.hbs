@@ -57,6 +57,12 @@
           getStoreContentCallback=getStoreContentCallback
           emptyStoreText=emptyStoreText
         }}
+      {{else if (eq store.type "list")}}
+        {{modals/workflow-visualiser/store-modal/list-presenter
+          store=store
+          getStoreContentCallback=getStoreContentCallback
+          emptyStoreText=emptyStoreText
+        }}
       {{else if (eq contentTabRenderer "generic")}}
         {{modals/workflow-visualiser/store-modal/store-content-table
           store=store

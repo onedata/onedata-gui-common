@@ -1,14 +1,7 @@
-import Component from '@ember/component';
+import TableBodyRowPresenterBase from '../commons/table-body-row-presenter-base';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/time-series-measurement/table-body-row-presenter';
 
-export default Component.extend({
+export default TableBodyRowPresenterBase.extend({
   layout,
-  tagName: 'tr',
-  classNames: ['table-body-row-presenter', 'time-series-measurement-table-body-row-presenter'],
-
-  /**
-   * @virtual
-   * @type {AtmTimeSeriesMeasurement}
-   */
-  value: undefined,
+  classNames: ['time-series-measurement-table-body-row-presenter'],
 });

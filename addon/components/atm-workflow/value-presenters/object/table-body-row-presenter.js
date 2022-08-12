@@ -1,23 +1,10 @@
-import Component from '@ember/component';
+import TableBodyRowPresenterBase from '../commons/table-body-row-presenter-base';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/object/table-body-row-presenter';
 
-export default Component.extend({
+export default TableBodyRowPresenterBase.extend({
   layout,
-  tagName: 'tr',
-  classNames: ['table-body-row-presenter', 'object-table-body-row-presenter'],
-
-  /**
-   * @virtual
-   * @type {AtmObject}
-   */
-  value: undefined,
-
-  /**
-   * @virtual optional
-   * @type {Array<string>}
-   */
-  columns: undefined,
+  classNames: ['object-table-body-row-presenter'],
 
   /**
    * @type {ComputedProperty<(propertyName: string) => string>}

@@ -180,7 +180,7 @@ export default Component.extend(I18n, {
   /**
    * `onFetchLogEntries` adjusted to be compatible with infinite-scroll-table
    * component's `onFetchEntries` parameter format.
-   * @type {ComputedProperty<(listingParams: FetchInfiniteScrollEntriesParams) => Promise<InfiniteScrollEntriesPage>>}
+   * @type {ComputedProperty<(listingParams: InfiniteScrollListingParams) => Promise<InfiniteScrollEntriesPage>>}
    */
   onFetchEntries: computed('onFetchLogEntries', function onFetchEntries() {
     return async (listingParams) => {
