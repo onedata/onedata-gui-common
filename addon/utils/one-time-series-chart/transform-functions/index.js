@@ -8,19 +8,17 @@
  */
 
 import abs from './abs';
-import formatWithUnit from './format-with-unit';
-import getDynamicSeriesGroupConfigData from './get-dynamic-series-group-config-data';
+import currentValue from './current-value';
+import literal from './literal';
 import multiply from './multiply';
 import replaceEmpty from './replace-empty';
-import supplyValue from './supply-value';
 
 const transformsFunctionsIndex = {
   abs,
-  formatWithUnit,
-  getDynamicSeriesGroupConfigData,
+  currentValue,
+  literal,
   multiply,
   replaceEmpty,
-  supplyValue,
 };
 
 export default transformsFunctionsIndex;

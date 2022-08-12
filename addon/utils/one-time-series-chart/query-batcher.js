@@ -20,6 +20,7 @@
 
 import { defer, all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
+import config from 'ember-get-config';
 
 /**
  * @typedef {Object} TimeSeriesQuery
@@ -85,7 +86,7 @@ export default class QueryBatcher {
      * @public
      * @type {number}
      */
-    this.batchAccumulationTime = 5;
+    this.batchAccumulationTime = config.environment === 'test' ? 1 : 5;
 
     /**
      * @private

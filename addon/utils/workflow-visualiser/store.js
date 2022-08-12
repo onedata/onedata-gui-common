@@ -9,10 +9,7 @@
 
 import EmberObject, { computed } from '@ember/object';
 import { resolve } from 'rsvp';
-import {
-  getStoreWriteDataSpec,
-  getStoreReadDataSpec,
-} from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
+import { getStoreReadDataSpec } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 
 export default EmberObject.extend({
   /**
@@ -98,13 +95,6 @@ export default EmberObject.extend({
    * @returns {Promise}
    */
   onRemove: undefined,
-
-  /**
-   * @type {ComputedProperty<AtmDataSpec>}
-   */
-  writeDataSpec: computed('type', 'config', function writeDataSpec() {
-    return getStoreWriteDataSpec(this.getProperties('type', 'config'));
-  }),
 
   /**
    * @type {ComputedProperty<AtmDataSpec>}

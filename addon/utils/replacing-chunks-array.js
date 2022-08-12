@@ -479,9 +479,10 @@ export default ArraySlice.extend(Evented, {
         // clear array without notify
         sourceArray.splice(0, get(sourceArray, 'length'));
         sourceArray.push(...arrayUpdate);
-        const startIndex = arrayUpdate.findIndex(item =>
+        // Empty index means a jump to the beginning
+        const startIndex = index ? arrayUpdate.findIndex(item =>
           get(item, 'index') === index
-        );
+        ) : 0;
         if (startIndex === -1) {
           return false;
         } else {

@@ -1,0 +1,68 @@
+.one-time-series-charts-section {
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: $border-radius-base;
+  padding: 1em;
+
+  .section-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .one-time-series-chart-toolbar {
+      margin-left: auto;
+    }
+  }
+
+  .section-title {
+    @include font-semibold();
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 100%;
+  }
+
+  .section-title-tip {
+    line-height: 0;
+  }
+
+  .section-title,
+  .section-title-tip {
+    margin-right: 0.4em;
+  }
+
+  .section-description {
+    margin-bottom: 0;
+  }
+
+  > :first-child ~ * {
+    margin-top: 1em;
+  }
+
+  .section-charts,
+  .section-subsections {
+    display: grid;
+    place-items: stretch;
+    gap: 1em;
+  }
+
+  .section-charts {
+    grid-template-columns: repeat(auto-fit, minmax(25em, 1fr));
+    grid-auto-rows: 20em;
+  }
+
+  .section-subsections {
+    grid-template-columns: 1fr;
+  }
+
+  .section-chart {
+    background-color: $color-one-white;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 3px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: $border-radius-base;
+  }
+
+  .no-charts-info {
+    font-style: italic;
+    margin: 0;
+  }
+}

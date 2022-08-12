@@ -60,7 +60,8 @@
   }
 
   &.status-failed,
-  &.status-cancelled {
+  &.status-cancelled,
+  &.status-interrupted {
     .draggable-task {
       border: $workflow-visualiser-block-border-width solid $color-one-danger;
       background-color: lighten($color-one-danger, 30%);

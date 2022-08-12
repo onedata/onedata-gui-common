@@ -4,11 +4,40 @@
     flex-direction: column;
   }
 
+  .nav-tabs {
+    padding-bottom: $padding-large-vertical;
+  }
+
   .store-content-table {
     display: flex;
     flex-direction: column;
   }
 
+  .audit-log-presenter {
+    min-height: min(20em, 100vh - 300px);
+    display: grid;
+    place-items: stretch;
+  }
+
+  .related-logs-column-header {
+    width: 12em;
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .audit-log-presenter {
+      .severity-column-header,
+      .severity-cell,
+      .related-logs-column-header,
+      .related-logs-cell {
+        // We can't use `display: none` because of `colspan` value for some rows
+        // - a number of rendered (visible) cells can't change.
+        width: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    }
+  }
+
+  @import './store-modal/store-form';
   @import './store-modal/store-content-table';
-  @import './store-modal/time-series-presenter';
 }

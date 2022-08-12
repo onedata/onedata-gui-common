@@ -88,15 +88,35 @@ $one-font-family-monospace: "Source Code Pro";
 }
 
 @mixin font-bold() {
-  font-family: 'Open Sans';
+  font-family: $one-font-family-regular;
   font-weight: bold;
 }
 
 @mixin font-monospace() {
-  font-family: 'Source Code Pro';
+  font-family: $one-font-family-monospace;
 }
 
 @mixin font-monospace-bold() {
-  font-family: 'Source Code Pro';
+  font-family: $one-font-family-monospace;
   font-weight: bold;
+}
+
+.font-regular {
+  @include font-regular();
+}
+
+.font-semibold {
+  @include font-semibold();
+}
+
+.font-bold {
+  @include font-bold();
+}
+
+.font-monospace {
+  @include font-monospace();
+}
+
+.font-monospace-bold {
+  @include font-monospace-bold();
 }

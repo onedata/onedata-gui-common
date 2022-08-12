@@ -8,9 +8,6 @@
  */
 
 /**
- * @typedef {Object} AtmAuditLogStoreContentBrowseOptions
+ * @typedef {AuditLogListingParams} AtmAuditLogStoreContentBrowseOptions
  * @property {'auditLogStoreContentBrowseOptions'} type
- * @property {string} [index]
- * @property {number} [offset]
- * @property {number} [limit]
  */

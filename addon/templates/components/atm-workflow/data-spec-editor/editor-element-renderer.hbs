@@ -1,0 +1,14 @@
+{{#if editorElementComponentName}}
+  {{component editorElementComponentName
+    mode=mode
+    isEnabled=isEnabled
+    placementContext=placementContext
+    dataSpecFilters=dataSpecFilters
+    editorElement=editorElement
+    parentEditorElement=parentEditorElement
+    editorElementsContextMap=editorElementsContextMap
+    onElementChange=onElementChange
+    onFocusLost=onFocusLost
+  }}
+{{/if}}
+{{yield}}

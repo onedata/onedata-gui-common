@@ -3,7 +3,7 @@ import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import {
   render,
@@ -15,6 +15,7 @@ import {
   find,
   findAll,
 } from '@ember/test-helpers';
+import _ from 'lodash';
 
 const componentClass = 'store-form';
 
@@ -26,13 +27,6 @@ const storeTypes = [{
   label: 'Tree forest',
   type: 'treeForest',
   dataSpecConfigKey: 'itemDataSpec',
-  availableDataTypeLabels: [
-    'Any file',
-    'Regular file',
-    'Directory',
-    'Symbolic link',
-    'Dataset',
-  ],
 }, {
   label: 'Single value',
   type: 'singleValue',
@@ -44,81 +38,10 @@ const storeTypes = [{
   label: 'Audit log',
   type: 'auditLog',
   dataSpecConfigKey: 'logContentDataSpec',
+  defaultDataType: 'object',
 }, {
   label: 'Time series',
   type: 'timeSeries',
-}];
-
-const dataTypes = [{
-  label: 'Integer',
-  dataSpec: {
-    type: 'integer',
-    valueConstraints: {},
-  },
-}, {
-  label: 'String',
-  dataSpec: {
-    type: 'string',
-    valueConstraints: {},
-  },
-}, {
-  label: 'Object',
-  dataSpec: {
-    type: 'object',
-    valueConstraints: {},
-  },
-}, {
-  label: 'Any file',
-  dataSpec: {
-    type: 'file',
-    valueConstraints: {
-      fileType: 'ANY',
-    },
-  },
-}, {
-  label: 'Regular file',
-  dataSpec: {
-    type: 'file',
-    valueConstraints: {
-      fileType: 'REG',
-    },
-  },
-}, {
-  label: 'Directory',
-  dataSpec: {
-    type: 'file',
-    valueConstraints: {
-      fileType: 'DIR',
-    },
-  },
-}, {
-  label: 'Symbolic link',
-  dataSpec: {
-    type: 'file',
-    valueConstraints: {
-      fileType: 'SYMLNK',
-    },
-  },
-}, {
-  label: 'Dataset',
-  dataSpec: {
-    type: 'dataset',
-    valueConstraints: {},
-  },
-}, {
-  label: 'Range',
-  dataSpec: {
-    type: 'range',
-    valueConstraints: {},
-  },
-}, {
-  label: 'Time series measurement',
-  dataSpec: {
-    type: 'timeSeriesMeasurement',
-    valueConstraints: {
-      specs: [],
-    },
-  },
 }];
 
 const storeTypesWithGenericConfig = storeTypes
@@ -222,19 +145,6 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       done();
     });
 
-    it('provides all needed options to choose in "type" field', async function (done) {
-      await renderComponent();
-
-      await clickTrigger('.type-field');
-
-      const options = document.querySelectorAll('.ember-power-select-option');
-      expect(options).to.have.length(storeTypes.length);
-      storeTypes.forEach(({ label }, idx) =>
-        expect(options[idx].textContent.trim()).to.equal(label)
-      );
-      done();
-    });
-
     it('notifies about changes of values and validation state', async function (done) {
       const changeSpy = this.get('changeSpy');
 
@@ -247,7 +157,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           description: '',
           type: 'list',
           config: {
-            itemDataSpec: dataTypes[0].dataSpec,
+            itemDataSpec: null,
           },
           defaultInitialContent: null,
           requiresInitialContent: false,
@@ -257,6 +167,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       changeSpy.resetHistory();
 
       await fillIn('.name-field .form-control', 'someName');
+      await selectChoose('.data-spec-editor', 'Integer');
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
@@ -264,7 +175,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           description: '',
           type: 'list',
           config: {
-            itemDataSpec: dataTypes[0].dataSpec,
+            itemDataSpec: {
+              type: 'integer',
+              valueConstraints: {},
+            },
           },
           defaultInitialContent: null,
           requiresInitialContent: false,
@@ -277,10 +191,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     storeTypesWithGenericConfig.forEach(({
       label,
       type,
-      availableDataTypeLabels = dataTypes.mapBy('label'),
-      disabledDataTypeSelection = false,
       dataSpecConfigKey,
-      defaultDataTypeLabel,
+      defaultDataType,
     }) => {
       it(`shows generic configuration fields for store "${label}"`, async function (done) {
         await renderComponent();
@@ -288,25 +200,6 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await selectChoose('.type-field', label);
 
         expectExpandedConfig('generic');
-
-        const dataTypeField = find('.dataSpec-field .type-field');
-        expect(dataTypeField.querySelector('.control-label').textContent.trim())
-          .to.equal('Data type:');
-        expect(dataTypeField.querySelector('.dropdown-field-trigger').textContent.trim())
-          .to.equal(defaultDataTypeLabel || availableDataTypeLabels[0]);
-        if (disabledDataTypeSelection) {
-          expect(dataTypeField).to.have.class('field-disabled');
-        } else {
-          expect(dataTypeField).to.have.class('field-enabled');
-
-          await clickTrigger('.dataSpec-field .type-field');
-
-          const options = document.querySelectorAll('.ember-power-select-option');
-          expect(options).to.have.length(availableDataTypeLabels.length);
-          availableDataTypeLabels.forEach((label, idx) =>
-            expect(options[idx].textContent.trim()).to.equal(label)
-          );
-        }
 
         const defaultValueField = find('.defaultValue-field');
         expect(defaultValueField.querySelector('.control-label').textContent.trim())
@@ -323,10 +216,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.name-field .form-control', 'someName');
         await fillIn('.description-field .form-control', 'someDescription');
         await selectChoose('.type-field', label);
-        const selectedDataTypeLabel = availableDataTypeLabels[0];
-        if (!disabledDataTypeSelection) {
-          await selectChoose('.dataSpec-field .type-field', selectedDataTypeLabel);
-        }
+        await selectChoose(
+          '.data-spec-editor',
+          _.upperFirst(defaultDataType) || 'Dataset'
+        );
         await fillIn('.defaultValue-field .form-control', '"someDefault"');
         await click('.needsUserInput-field .one-way-toggle');
 
@@ -337,7 +230,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             description: 'someDescription',
             type,
             config: {
-              [dataSpecConfigKey]: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
+              [dataSpecConfigKey]: {
+                type: defaultDataType || 'dataset',
+                valueConstraints: {},
+              },
             },
             defaultInitialContent: 'someDefault',
             requiresInitialContent: true,
@@ -430,7 +326,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         done();
       });
 
-    it('has invalid start and end fields in "Range" store, when are equal',
+    it('has valid start and end fields in "Range" store, when are equal',
       async function (done) {
         await renderComponent();
 
@@ -438,10 +334,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeStart-field .form-control', '2');
         await fillIn('.rangeEnd-field .form-control', '2');
 
-        ['rangeStart', 'rangeEnd'].forEach(fieldName =>
-          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
+        ['rangeStart', 'rangeEnd', 'rangeStep'].forEach(fieldName =>
+          expect(find(`.${fieldName}-field`)).to.not.have.class('has-error')
         );
-        expect(find('.rangeStep-field')).to.not.have.class('has-error');
         done();
       });
 
@@ -455,10 +350,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeStep-field .form-control', '1');
 
         expect(find('.rangeStart-field .field-message').textContent.trim()).to.equal(
-          'This field must be less than the range end when the range step is positive'
+          'This field must be less than or equal to the range end when the range step is positive'
         );
         expect(find('.rangeEnd-field .field-message').textContent.trim()).to.equal(
-          'This field must be greater than the range start when the range step is positive'
+          'This field must be greater than or equal to the range start when the range step is positive'
         );
         expect(find('.rangeStep-field')).to.not.have.class('has-error');
         done();
@@ -474,10 +369,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeStep-field .form-control', '-1');
 
         expect(find('.rangeStart-field .field-message').textContent.trim()).to.equal(
-          'This field must be greater than the range end when the range step is negative'
+          'This field must be greater than or equal to the range end when the range step is negative'
         );
         expect(find('.rangeEnd-field .field-message').textContent.trim()).to.equal(
-          'This field must be less than the range start when the range step is negative'
+          'This field must be less than or equal to the range start when the range step is negative'
         );
         expect(find('.rangeStep-field')).to.not.have.class('has-error');
         done();
@@ -539,39 +434,13 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
                 },
               },
             }],
-            chartSpecs: [],
+            dashboardSpec: null,
           },
           requiresInitialContent: false,
         },
         isValid: true,
       });
       done();
-    });
-
-    dataTypes.forEach(({ label, dataSpec }) => {
-      it(`allows to configure store with "${label}" data type`, async function (done) {
-        const changeSpy = this.get('changeSpy');
-
-        await renderComponent();
-
-        await selectChoose('.type-field', 'List');
-        await selectChoose('.dataSpec-field .type-field', label);
-
-        expect(changeSpy).to.be.calledWith({
-          data: {
-            name: '',
-            description: '',
-            type: 'list',
-            config: {
-              itemDataSpec: dataSpec,
-            },
-            defaultInitialContent: null,
-            requiresInitialContent: false,
-          },
-          isValid: false,
-        });
-        done();
-      });
     });
 
     it('renders unchecked "needs user input" toggle', async function (done) {
@@ -603,12 +472,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     storeTypesWithGenericConfig.forEach(({
       label,
       type,
-      availableDataTypeLabels = dataTypes.mapBy('label'),
       dataSpecConfigKey,
-      disabledDataTypeSelection = false,
+      defaultDataType,
     }) => {
       it(`fills fields with data of passed "${label}" store on init`, async function (done) {
-        const selectedDataTypeLabel = availableDataTypeLabels[0];
         this.set('store', Store.create({
           schemaId: 'store1id',
           instanceId: 'incorrect value that should not exist',
@@ -616,7 +483,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           description: 'desc',
           type: type,
           config: {
-            [dataSpecConfigKey]: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
+            [dataSpecConfigKey]: {
+              type: defaultDataType || 'dataset',
+              valueConstraints: {},
+            },
           },
           defaultInitialContent: 'someDefault',
           requiresInitialContent: true,
@@ -631,14 +501,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         expect(find('.description-field .form-control').value).to.equal('desc');
         expect(find('.type-field .dropdown-field-trigger').textContent.trim())
           .to.equal(label);
-        const dataTypeField = find('.dataSpec-field .type-field');
-        expect(dataTypeField.querySelector('.dropdown-field-trigger').textContent.trim())
-          .to.equal(selectedDataTypeLabel);
-        if (disabledDataTypeSelection) {
-          expect(dataTypeField).to.have.class('field-disabled');
-        } else {
-          expect(dataTypeField).to.have.class('field-enabled');
-        }
+        expect(find('.data-spec-editor').textContent.trim())
+          .to.equal(_.upperFirst(defaultDataType) || 'Dataset');
         expect(find('.defaultValue-field .form-control').value).to.equal('"someDefault"');
         expect(find('.needsUserInput-field .one-way-toggle')).to.have.class('checked');
         done();
@@ -694,7 +558,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
               },
             },
           }],
-          chartSpecs: undefined,
+          dashboardSpec: null,
         },
       }));
 
@@ -716,25 +580,6 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect(findAll('.metrics-field .tag-item')).to.have.length(1);
       expect(find('.metrics-field .tag-item').textContent).to.contain('"sum5s" (sum; 5s; 1440 samp.)');
       done();
-    });
-
-    dataTypes.forEach(({ label, dataSpec }) => {
-      it(`fills fields with data of passed store with "${label}" data type`,
-        async function (done) {
-          this.set('store', Store.create({
-            type: 'list',
-            config: {
-              itemDataSpec: dataSpec,
-            },
-          }));
-
-          await renderComponent();
-
-          expect(find(
-            '.dataSpec-field .type-field .dropdown-field-trigger'
-          ).textContent.trim()).to.equal(label);
-          done();
-        });
     });
 
     it('does not update form values on passed store change', async function (done) {
@@ -771,12 +616,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     storeTypesWithGenericConfig.forEach(({
       label,
       type,
-      availableDataTypeLabels = dataTypes.mapBy('label'),
       dataSpecConfigKey,
-      disabledDataTypeSelection = false,
+      defaultDataType,
     }) => {
       it(`fills fields with data of passed "${label}" store`, async function (done) {
-        const selectedDataTypeLabel = availableDataTypeLabels[0];
         this.set('store', Store.create({
           schemaId: 'store1id',
           instanceId: 'store1instanceId',
@@ -784,7 +627,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           description: 'desc',
           type: type,
           config: {
-            [dataSpecConfigKey]: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
+            [dataSpecConfigKey]: {
+              type: defaultDataType || 'dataset',
+              valueConstraints: {},
+            },
           },
           defaultInitialContent: 'someDefault',
           requiresInitialContent: true,
@@ -803,14 +649,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           .to.equal('desc');
         expect(find('.type-field .field-component').textContent.trim())
           .to.equal(label);
-        const dataTypeField = find('.dataSpec-field .type-field');
-        expect(dataTypeField.querySelector('.field-component').textContent.trim())
-          .to.equal(selectedDataTypeLabel);
-        if (disabledDataTypeSelection) {
-          expect(dataTypeField).to.have.class('field-disabled');
-        } else {
-          expect(dataTypeField).to.have.class('field-enabled');
-        }
+        expect(find('.data-spec-editor').textContent.trim()).to.equal(
+          _.upperFirst(defaultDataType) || 'Dataset'
+        );
         expect(find('.defaultValue-field .form-control').value)
           .to.equal('"someDefault"');
         expect(find('.needsUserInput-field .one-way-toggle'))
@@ -872,7 +713,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
               },
             },
           }],
-          chartSpecs: [],
+          dashboardSpec: null,
         },
       }));
 
@@ -895,24 +736,6 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect(findAll('.metrics-field .tag-item')).to.have.length(1);
       expect(find('.metrics-field .tag-item').textContent).to.contain('"sum5s" (sum; 5s; 1440 samp.)');
       done();
-    });
-
-    dataTypes.forEach(({ label, dataSpec }) => {
-      it(`fills fields with data of passed store with "${label}" data type`,
-        async function (done) {
-          this.set('store', Store.create({
-            type: 'list',
-            config: {
-              itemDataSpec: dataSpec,
-            },
-          }));
-
-          await renderComponent();
-
-          expect(find('.dataSpec-field .type-field .field-component').textContent.trim())
-            .to.equal(label);
-          done();
-        });
     });
 
     it('updates form values on passed store change', async function (done) {

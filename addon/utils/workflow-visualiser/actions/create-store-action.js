@@ -44,9 +44,14 @@ export default Action.extend({
   allowedStoreTypes: reads('context.allowedStoreTypes'),
 
   /**
-   * @type {ComputedProperty<Array<String>|undefined>}
+   * @type {ComputedProperty<AtmDataSpec>|undefined>}
    */
-  allowedDataTypes: reads('context.allowedDataTypes'),
+  allowedStoreReadDataSpec: reads('context.allowedStoreReadDataSpec'),
+
+  /**
+   * @type {ComputedProperty<AtmDataSpec>|undefined>}
+   */
+  allowedStoreWriteDataSpec: reads('context.allowedStoreWriteDataSpec'),
 
   /**
    * @override
@@ -54,16 +59,23 @@ export default Action.extend({
   onExecute() {
     const {
       allowedStoreTypes,
-      allowedDataTypes,
+      allowedStoreReadDataSpec,
+      allowedStoreWriteDataSpec,
       modalManager,
-    } = this.getProperties('allowedStoreTypes', 'allowedDataTypes', 'modalManager');
+    } = this.getProperties(
+      'allowedStoreTypes',
+      'allowedStoreReadDataSpec',
+      'allowedStoreWriteDataSpec',
+      'modalManager'
+    );
 
     const result = ActionResult.create();
     return modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'create',
         allowedStoreTypes,
-        allowedDataTypes,
+        allowedStoreReadDataSpec,
+        allowedStoreWriteDataSpec,
         onSubmit: storeProvidedByForm =>
           result.interceptPromise(this.createStore(storeProvidedByForm)),
       }).hiddenPromise

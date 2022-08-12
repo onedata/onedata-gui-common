@@ -147,15 +147,19 @@ function testReplaceEmpty(data, strategy, fallbackValue, output) {
   it(`returns ${stringifiedOutput} for data ${stringifiedData}, strategy "${stringifiedStrategy}" and fallback value ${stringifiedFallbackValue}`,
     function () {
       const context = createContext();
-      const dataArg = createConstArgument(data);
-      const strategyArg = createConstArgument(strategy);
-      const fallbackValueArg = createConstArgument(fallbackValue);
+      const inputDataProvider = createConstArgument(data);
+      const strategyProvider = createConstArgument(strategy);
+      const fallbackValueProvider = createConstArgument(fallbackValue);
 
       expect(replaceEmpty(context, {
-        data: dataArg,
-        strategy: strategyArg,
-        fallbackValue: fallbackValueArg,
+        inputDataProvider,
+        strategyProvider,
+        fallbackValueProvider,
       })).to.deep.equal(output);
-      expectFunctionsEvaluation(context, [dataArg, strategyArg, fallbackValueArg]);
+      expectFunctionsEvaluation(context, [
+        inputDataProvider,
+        strategyProvider,
+        fallbackValueProvider,
+      ]);
     });
 }

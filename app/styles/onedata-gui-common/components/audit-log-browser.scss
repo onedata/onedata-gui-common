@@ -1,0 +1,264 @@
+$audit-log-browser-header-bg-color: #FAFAFA;
+$audit-log-browser-cell-padding: 0.5em;
+$audit-log-browser-container-padding: 2 * $audit-log-browser-cell-padding;
+$audit-log-browser-timestamp-cell-width: 7em;
+$audit-log-row-height: 50px;
+
+.audit-log-browser {
+  position: relative;
+  border: 1px solid $main-border-color;
+  border-radius: $border-radius-base;
+  overflow: hidden;
+
+  .audit-log-browser-title {
+    background-color: $audit-log-browser-header-bg-color;
+    padding: $audit-log-browser-container-padding;
+    padding-bottom: 0;
+
+    .title-text {
+      @include font-semibold();
+      text-transform: uppercase;
+    }
+
+    .title-tip {
+      margin-left: 0.3em;
+    }
+  }
+
+  .audit-log-scrollable-container {
+    height: 100%;
+    cursor: initial !important;
+
+    &.on-top .audit-log-table-column-header {
+      @include hide-before-shadow;
+    }
+
+    &.on-bottom + .bottom-shadow-keeper {
+      @include hide-before-shadow;
+    }
+  }
+
+  .audit-log-table {
+    table-layout: fixed;
+    margin: 0;
+  }
+
+  .audit-log-table-head {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: $audit-log-browser-header-bg-color;
+  }
+
+  .audit-log-table-column-header,
+  .audit-log-table-entry > td {
+    padding: $audit-log-browser-cell-padding;
+    vertical-align: middle;
+
+    &:first-child {
+      padding-left: $audit-log-browser-container-padding;
+    }
+  }
+
+  .audit-log-table-column-header {
+    position: relative;
+    padding-top: $audit-log-browser-container-padding;
+    padding-bottom: $audit-log-browser-container-padding;
+    text-align: left;
+    @include before-bottom-shadow;
+  }
+
+  .audit-log-table-entry {
+    &.clickable:hover {
+      filter: brightness(95%);
+    }
+
+    &.selected .timestamp-cell {
+      @include font-bold();
+    }
+
+    > td {
+      height: $audit-log-row-height;
+      overflow: hidden;
+    }
+  }
+
+  &.shows-details {
+    .audit-log-table-entry:not(.selected) {
+      opacity: 50%;
+    }
+  }
+
+  .bottom-shadow-keeper {
+    position: relative;
+    @include before-top-shadow;
+
+    &::before {
+      z-index: 2;
+    }
+  }
+
+  .ps__rail-y {
+    z-index: 2;
+  }
+
+  .timestamp-column-header {
+    width: $audit-log-browser-timestamp-cell-width;
+  }
+
+  .timestamp-cell {
+    font-size: 90%;
+  }
+
+  .severity-column-header {
+    width: 9em;
+  }
+
+  .severity-cell {
+    * {
+      vertical-align: middle;
+    }
+
+    .severity-icon {
+      font-size: 160%;
+      // remove icon internal padding
+      margin-left: -0.1em;
+      // space between icon and text
+      margin-right: 0.1em;
+    }
+  }
+
+  .audit-log-severity-info,
+  .audit-log-severity-notice,
+  .audit-log-theme-none {
+    background-color: $color-one-white;
+
+    .severity-icon {
+      color: $main-text-color;
+    }
+  }
+
+  .audit-log-severity-debug,
+  .audit-log-theme-default {
+    background-color: $color-one-light-blue;
+
+    .severity-icon {
+      color: $color-one-azure;
+    }
+  }
+
+  .audit-log-severity-warning,
+  .audit-log-severity-alert,
+  .audit-log-theme-warning {
+    background-color: lighten($color-one-warning, 35%);
+
+    .severity-icon {
+      color: $color-one-warning;
+    }
+  }
+
+  .audit-log-severity-error,
+  .audit-log-severity-critical,
+  .audit-log-severity-emergency,
+  .audit-log-theme-danger {
+    background-color: lighten($color-one-danger, 35%);
+
+    .severity-icon {
+      color: $color-one-danger;
+    }
+  }
+
+  .audit-log-theme-success {
+    background-color: lighten($color-one-success, 35%);
+
+    .severity-icon {
+      color: $color-one-success;
+    }
+  }
+
+  .details-container {
+    @include after-left-shadow();
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: $audit-log-browser-timestamp-cell-width;
+    z-index: 3;
+    border-left: 1px solid $main-border-color;
+    background-color: $color-one-white;
+    // Additional 1em move to hide shadow which is outside of the container
+    transform: translateX(100%) translateX(1em);
+    transition: transition-ease(transform);
+    display: grid;
+    grid-template-columns: min-content auto;
+
+    &.visible {
+      transform: none;
+    }
+
+    .details {
+      display: grid;
+      grid-template-rows: min-content auto;
+      gap: $audit-log-browser-container-padding;
+      padding: $audit-log-browser-container-padding;
+    }
+
+    .timestamp {
+      @include font-semibold();
+    }
+
+    .content {
+      display: grid;
+      place-items: stretch;
+    }
+
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .copy-link {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      font-size: 85%;
+
+      .one-icon {
+        font-size: 170%;
+        line-height: 0;
+      }
+    }
+
+    .close-details {
+      display: grid;
+      place-items: center;
+      background-color: lighten($color-one-semiwhite, 3%);
+      overflow: hidden;
+
+      &:hover {
+        filter: brightness(95%);
+      }
+
+      .one-icon {
+        display: grid;
+        place-items: center;
+        height: 3em;
+        background-color: $color-one-gray-sand;
+        margin: 0 -0.2em;
+      }
+    }
+  }
+}
+
+// Bugfix
+// When: component is placed inside bs-collapse in transitioning state
+//   (`.collapsing` class)
+// Bug: animation of showing/hiding scroll shadows causes height animation
+//   of bs-collapse to stop
+// Solution: turn off animation of shadows when bs-collapse is transitioning
+.collapsing .audit-log-browser {
+  .bottom-shadow-keeper::before, .audit-log-table-column-header::before {
+    transition: none;
+  }
+}

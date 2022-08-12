@@ -21,7 +21,6 @@ import {
   raw,
   notEmpty,
   or,
-  gt,
 } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 import {
@@ -41,11 +40,6 @@ import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import {
-  getTargetStoreTypesForType,
-  getTargetDataTypesForType,
-  dataSpecToType,
-} from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import cloneAsEmberObject from 'onedata-gui-common/utils/clone-as-ember-object';
 import _ from 'lodash';
@@ -59,6 +53,11 @@ import storeContentUpdateOptionsEditors from 'onedata-gui-common/utils/atm-workf
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editors';
 import { validator } from 'ember-cp-validations';
+import { canDataSpecContain } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+import {
+  doesDataSpecFitToStoreRead,
+  doesDataSpecFitToStoreWrite,
+} from 'onedata-gui-common/utils/atm-workflow/store-config';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -183,7 +182,7 @@ export default Component.extend(I18n, {
       type: 'timeSeries',
       config: {
         schemas: [],
-        chartSpecs: [],
+        dashboardSpec: null,
       },
     });
   }),
@@ -211,11 +210,6 @@ export default Component.extend(I18n, {
       );
     }
   ),
-
-  /**
-   * @type {ComputedProperty<Boolean>}
-   */
-  atmLambdaHasBatchMode: gt('atmLambdaRevision.preferredBatchSize', raw(1)),
 
   /**
    * @type {ComputedProperty<Array<Object>>}
@@ -352,16 +346,14 @@ export default Component.extend(I18n, {
               HiddenField.create({ name: 'context' }),
               DropdownField.extend({
                 options: computed(
-                  'parent.value.context.{type,isOptional}',
+                  'parent.value.context.{dataSpec,isOptional}',
                   function options() {
-                    const argumentType = this.get('parent.value.context.type');
-                    const argumentIsArray = this.get('parent.value.context.isArray');
-                    const argumentIsOptional =
+                    const dataSpec = this.get('parent.value.context.dataSpec');
+                    const isOptional =
                       this.get('parent.value.context.isOptional');
-                    const opts =
-                      getValueBuilderTypesForArgType(argumentType, argumentIsArray)
+                    const opts = getValueBuilderTypesForDataSpec(dataSpec)
                       .map(vbType => ({ value: vbType }));
-                    if (argumentIsOptional) {
+                    if (isOptional) {
                       opts.unshift({ value: leaveUnassignedDropdownOptionValue });
                     }
                     return opts;
@@ -383,13 +375,13 @@ export default Component.extend(I18n, {
                   raw('singleValueStoreContent')
                 ),
                 options: computed(
-                  'component.argumentStores.@each.{type,name}',
-                  'parent.value.context.type',
+                  'component.argumentStores.@each.{type,config,name}',
+                  'parent.value.context.dataSpec',
                   function options() {
-                    const argumentType = this.get('parent.value.context.type');
+                    const dataSpec = this.get('parent.value.context.dataSpec');
                     const argumentStores = this.get('component.argumentStores') || [];
                     const possibleStores =
-                      getSourceStoreForType(argumentStores, argumentType);
+                      getSourceStoreForDataSpec(argumentStores, dataSpec);
                     const opts = possibleStores
                       .sortBy('name')
                       .map(({ id, name }) => ({
@@ -404,8 +396,8 @@ export default Component.extend(I18n, {
                 ),
                 valueChanged(value) {
                   if (value === createStoreDropdownOptionValue) {
-                    const argumentType = this.get('parent.value.context.type');
-                    component.createSourceStore(this, argumentType);
+                    const dataSpec = this.get('parent.value.context.dataSpec');
+                    component.createSourceStore(this, dataSpec);
                   } else {
                     return this._super(...arguments);
                   }
@@ -461,14 +453,13 @@ export default Component.extend(I18n, {
               HiddenField.create({ name: 'context' }),
               DropdownField.extend({
                 options: computed(
-                  'parent.value.context.{type,isBatch}',
-                  'component.resultStores.@each.{type,name}',
+                  'parent.value.context.dataSpec',
+                  'component.resultStores.@each.{name,config}',
                   function options() {
                     const resultStores = this.get('component.resultStores') || [];
-                    const resultType = this.get('parent.value.context.type');
-                    const resultIsBatch = this.get('parent.value.context.isBatch');
+                    const dataSpec = this.get('parent.value.context.dataSpec');
                     const opts =
-                      getTargetStoresForType(resultStores, resultType, resultIsBatch)
+                      getTargetStoresForDataSpec(resultStores, dataSpec)
                       .map(store => ({
                         value: get(store, 'id'),
                         label: get(store, 'name'),
@@ -494,8 +485,8 @@ export default Component.extend(I18n, {
                 }),
                 valueChanged(value) {
                   if (value === createStoreDropdownOptionValue) {
-                    const resultType = this.get('parent.value.context.type');
-                    component.createTargetStore(this, resultType);
+                    const dataSpec = this.get('parent.value.context.dataSpec');
+                    component.createTargetStore(this, dataSpec);
                   } else {
                     return this._super(...arguments);
                   }
@@ -745,50 +736,46 @@ export default Component.extend(I18n, {
     const taskData = this.dumpToTask();
     const newConfig = get(taskData, 'timeSeriesStoreConfig') || {
       schemas: [],
-      chartSpecs: [],
+      dashboardSpec: null,
     };
     this.set('timeSeriesStore.config', newConfig);
   },
 
-  async createSourceStore(sourceStoreField, dataType) {
+  async createSourceStore(sourceStoreField, dataSpec) {
     const actionsFactory = this.get('actionsFactory');
     if (!actionsFactory || !sourceStoreField) {
       return;
     }
 
-    const allowedStoreTypes = ['singleValue'];
-    const allowedDataTypes = getSourceDataTypesForType(dataType);
-
-    await this.createStoreForDropdown(
-      sourceStoreField,
-      allowedStoreTypes,
-      allowedDataTypes
-    );
+    await this.createStoreForDropdown({
+      dropdownField: sourceStoreField,
+      allowedStoreTypes: ['singleValue'],
+      allowedStoreReadDataSpec: dataSpec,
+    });
   },
 
-  async createTargetStore(targetStoreField, dataType) {
-    const {
-      actionsFactory,
-      atmLambdaHasBatchMode,
-    } = this.getProperties('actionsFactory', 'atmLambdaHasBatchMode');
+  async createTargetStore(targetStoreField, dataSpec) {
+    const actionsFactory = this.get('actionsFactory');
     if (!actionsFactory || !targetStoreField) {
       return;
     }
 
-    const allowedStoreTypes = getTargetStoreTypesForType(dataType, atmLambdaHasBatchMode);
-    const allowedDataTypes = getTargetDataTypesForType(dataType);
-
-    await this.createStoreForDropdown(
-      targetStoreField,
-      allowedStoreTypes,
-      allowedDataTypes
-    );
+    await this.createStoreForDropdown({
+      dropdownField: targetStoreField,
+      allowedStoreWriteDataSpec: dataSpec,
+    });
   },
 
-  async createStoreForDropdown(dropdownField, allowedStoreTypes, allowedDataTypes) {
+  async createStoreForDropdown({
+    dropdownField,
+    allowedStoreTypes,
+    allowedStoreReadDataSpec,
+    allowedStoreWriteDataSpec,
+  }) {
     const actionResult = await this.get('actionsFactory').createCreateStoreAction({
       allowedStoreTypes,
-      allowedDataTypes,
+      allowedStoreReadDataSpec,
+      allowedStoreWriteDataSpec,
     }).execute();
     const {
       status,
@@ -830,14 +817,12 @@ function taskToFormData(task, atmLambdaRevision) {
 
   const {
     name: lambdaName,
-    preferredBatchSize,
     argumentSpecs,
     resultSpecs,
     resourceSpec,
   } = getProperties(
     atmLambdaRevision || {},
     'name',
-    'preferredBatchSize',
     'argumentSpecs',
     'resultSpecs',
     'resourceSpec'
@@ -866,16 +851,12 @@ function taskToFormData(task, atmLambdaRevision) {
 
     const valueName = `argument${idx}`;
     formArgumentMappings.__fieldsValueNames.push(valueName);
-    const {
-      type,
-      isArray,
-    } = dataSpecToType(dataSpec);
     let valueBuilderType = get(existingMapping || {}, 'valueBuilder.valueBuilderType');
     if (!valueBuilderType) {
       const hasDefaultValue = defaultValue !== undefined && defaultValue !== null;
       valueBuilderType = (isOptional || hasDefaultValue || existingMapping) ?
         leaveUnassignedDropdownOptionValue :
-        getValueBuilderTypesForArgType(type, preferredBatchSize > 1)[0];
+        getValueBuilderTypesForDataSpec(dataSpec)[0];
     }
     const valueBuilderRecipe =
       get(existingMapping || {}, 'valueBuilder.valueBuilderRecipe');
@@ -886,8 +867,7 @@ function taskToFormData(task, atmLambdaRevision) {
     formArgumentMappings[valueName] = createValuesContainer({
       context: {
         name,
-        type,
-        isArray,
+        dataSpec,
         isOptional,
       },
       valueBuilderType,
@@ -924,18 +904,13 @@ function taskToFormData(task, atmLambdaRevision) {
 
     const valueName = `result${idx}`;
     formResultMappings.__fieldsValueNames.push(valueName);
-    const resultType = dataSpecToType(dataSpec).type;
-    const timeSeriesEditor = resultType === 'timeSeriesMeasurement' ?
-      storeContentUpdateOptionsEditors
-      .timeSeries
-      .storeContentUpdateOptionsToFormValues(storeContentUpdateOptions) : {};
+    const timeSeriesEditor = storeContentUpdateOptionsEditors.timeSeries
+      .storeContentUpdateOptionsToFormValues(storeContentUpdateOptions);
 
     formResultMappings[valueName] = createValuesContainer({
       context: {
         name,
         dataSpec,
-        type: resultType,
-        isBatch: Boolean(preferredBatchSize > 1),
       },
       targetStore: frontendStoreIdsMappings[storeSchemaId] ||
         storeSchemaId ||
@@ -1153,110 +1128,34 @@ function getAtmLambdaResourceValue(resourceSpecOverride, resourceSpec, propName)
   return typeof value === 'number' ? String(value) : '';
 }
 
-function getValueBuilderTypesForArgType(argType, isArray) {
-  if (!argType) {
+function getValueBuilderTypesForDataSpec(dataSpec) {
+  if (!dataSpec || !dataSpec.type) {
     return [];
-  }
-  let builders;
-  // TODO: VFS-7816 uncomment or remove future code
-  // if (argType.endsWith('Store')) {
-  //   return ['storeCredentials'];
-  if (argType === 'onedatafsCredentials') {
-    builders = ['onedatafsCredentials'];
-  } else if (argType === 'object') {
-    builders = [
-      'iteratedItem',
-      'singleValueStoreContent',
-      'const',
-      // TODO: VFS-7816 uncomment or remove future code
-      // 'storeCredentials',
-      'onedatafsCredentials',
-    ];
+  } else if (dataSpec.type === 'onedatafsCredentials') {
+    return ['onedatafsCredentials'];
   } else {
-    builders = [
+    const builders = [
       'iteratedItem',
       'singleValueStoreContent',
       'const',
     ];
-  }
-
-  if (isArray) {
-    builders = builders.filter(builder =>
-      builder !== 'singleValueStoreContent' && builder !== 'onedatafsCredentials'
-    );
-  }
-  return builders;
-}
-
-// TODO: VFS-7816 uncomment or remove future code
-// function getStoreTypesForArgType(argType) {
-//   if (!argType) {
-//     return [];
-//   } else if (argType.endsWith('Store')) {
-//     return argType.slice(0, -('Store'.length));
-//   } else if (argType === 'object') {
-//     return [
-//       'singleValue',
-//       'list',
-//       'map',
-//       'treeForest',
-//       'range',
-//       'histogram',
-//       'auditLog',
-//     ];
-//   }
-//   return [];
-// }
-
-function getSourceDataTypesForType(type) {
-  const sourceTypes = [type];
-  switch (type) {
-    case 'object':
-      sourceTypes.push(
-        'anyFile',
-        'regularFile',
-        'directory',
-        'symlink',
-        'dataset',
-        'range',
-        'timeSeriesMeasurement'
-      );
-      break;
-    case 'anyFile':
-      sourceTypes.push('regularFile', 'directory', 'symlink');
-      break;
-  }
-  return sourceTypes;
-}
-
-function getSourceStoreForType(availableStores, type) {
-  const allowedDataTypes = getSourceDataTypesForType(type);
-  return availableStores.filter(store => {
-    const {
-      type: storeType,
-      readDataSpec,
-    } = getProperties(store || {}, 'type', 'readDataSpec');
-    if (!readDataSpec || storeType !== 'singleValue') {
-      return false;
+    if (canDataSpecContain(dataSpec, { type: 'onedatafsCredentials' })) {
+      builders.push('onedatafsCredentials');
     }
-    const dataType = dataSpecToType(readDataSpec).type;
-    return allowedDataTypes.includes(dataType);
+    return builders;
+  }
+}
+
+function getSourceStoreForDataSpec(availableStores, dataSpec) {
+  return availableStores.filter((store) => {
+    const storeType = store && get(store, 'type');
+    return storeType === 'singleValue' && doesDataSpecFitToStoreRead(dataSpec, store);
   });
 }
 
-function getTargetStoresForType(availableStores, type, hasBatchMode) {
-  const allowedStoreTypes = getTargetStoreTypesForType(type, hasBatchMode);
-  const allowedDataTypes = getTargetDataTypesForType(type);
-  return availableStores.filter(store => {
-    const {
-      type: storeType,
-      writeDataSpec,
-    } = getProperties(store || {}, 'type', 'writeDataSpec');
-    if (!writeDataSpec) {
-      return false;
-    }
-    const dataType = dataSpecToType(writeDataSpec).type;
-    return allowedStoreTypes.includes(storeType) && allowedDataTypes.includes(dataType);
+function getTargetStoresForDataSpec(availableStores, dataSpec) {
+  return availableStores.filter((store) => {
+    return doesDataSpecFitToStoreWrite(dataSpec, store);
   });
 }
 

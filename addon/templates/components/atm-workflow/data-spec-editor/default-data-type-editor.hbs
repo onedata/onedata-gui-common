@@ -1,0 +1,23 @@
+<div class="data-type-header">
+  <span class="data-type-name">{{dataTypeTranslation}}</span>
+  {{#if (eq mode "edit")}}
+    {{atm-workflow/data-spec-editor/data-type-toolbar
+      placementContext=placementContext
+      dataSpecFilters=dataSpecFilters
+      isEnabled=isEnabled
+      editorElement=editorElement
+      onElementChange=onElementChange
+    }}
+  {{/if}}
+</div>
+{{#if formRootGroup}}
+  <a class="azure clickable form-summary-toggle" {{action "toggleFormVisibility"}}>
+    {{one-icon class="form-summary-icon" icon="settings"}}
+    <span class="form-summary">{{formSummary}}</span>
+  </a>
+  {{#if isFormVisible}}
+    <hr />
+    {{form-component/field-renderer field=formRootGroup}}
+  {{/if}}
+{{/if}}
+{{yield}}

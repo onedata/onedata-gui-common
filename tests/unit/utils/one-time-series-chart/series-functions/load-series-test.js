@@ -41,10 +41,15 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
       };
       this.functionArguments = {
         sourceType: 'external',
-        sourceParameters: {
-          externalSourceName: 'customSource',
-          externalSourceParameters: {
-            someParameter: 1,
+        sourceSpecProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: {
+              externalSourceName: 'customSource',
+              externalSourceParameters: {
+                someParameter: 1,
+              },
+            },
           },
         },
       };
@@ -364,9 +369,19 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
 
     testFetchSeriesScenario({
       title: 'allows to replace empty series points with specified fallback value',
-      replaceEmptyOptions: {
-        strategy: 'useFallback',
-        fallbackValue: 100,
+      replaceEmptyParametersProvider: {
+        strategyProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: 'useFallback',
+          },
+        },
+        fallbackValueProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: 100,
+          },
+        },
       },
       sourceData: [
         rawPoint(10, -2),
@@ -385,9 +400,19 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
 
     testFetchSeriesScenario({
       title: 'allows to replace empty series points with previous point value',
-      replaceEmptyOptions: {
-        strategy: 'usePrevious',
-        fallbackValue: 100,
+      replaceEmptyParametersProvider: {
+        strategyProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: 'usePrevious',
+          },
+        },
+        fallbackValueProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: 100,
+          },
+        },
       },
       sourceData: [
         rawPoint(10, -2),
@@ -406,9 +431,19 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
 
     testFetchSeriesScenario({
       title: 'allows to replace empty series points with previous point value when previous point is outside context',
-      replaceEmptyOptions: {
-        strategy: 'usePrevious',
-        fallbackValue: 100,
+      replaceEmptyParametersProvider: {
+        strategyProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: 'usePrevious',
+          },
+        },
+        fallbackValueProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: 100,
+          },
+        },
       },
       sourceData: [
         rawPoint(2, -2),
@@ -427,9 +462,19 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
 
     testFetchSeriesScenario({
       title: 'allows to replace empty series points with previous point value when previous point does not exist',
-      replaceEmptyOptions: {
-        strategy: 'usePrevious',
-        fallbackValue: 100,
+      replaceEmptyParametersProvider: {
+        strategyProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: 'usePrevious',
+          },
+        },
+        fallbackValueProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: 100,
+          },
+        },
       },
       sourceData: [
         rawPoint(16, 1),
@@ -447,14 +492,21 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
   });
 });
 
-function testFetchSeriesScenario({ title, lastPointTimestamp, replaceEmptyOptions, sourceData, expectedPoints }) {
+function testFetchSeriesScenario({
+  title,
+  lastPointTimestamp,
+  replaceEmptyParametersProvider,
+  sourceData,
+  expectedPoints,
+}) {
   it(title, async function (done) {
     this.customSourceData = sourceData;
     if (lastPointTimestamp !== undefined) {
       this.context.lastPointTimestamp = lastPointTimestamp;
     }
-    if (replaceEmptyOptions) {
-      this.functionArguments.replaceEmptyOptions = replaceEmptyOptions;
+    if (replaceEmptyParametersProvider) {
+      this.functionArguments.replaceEmptyParametersProvider =
+        replaceEmptyParametersProvider;
     }
 
     expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
@@ -472,7 +524,7 @@ function expectFetchSeriesToBeCalled(testCase) {
       lastPointTimestamp: testCase.context.lastPointTimestamp,
       timeResolution: testCase.context.timeResolution,
       pointsCount: testCase.context.pointsCount + 1,
-    }), testCase.functionArguments.sourceParameters.externalSourceParameters);
+    }, testCase.functionArguments.sourceSpecProvider.functionArguments.data.externalSourceParameters));
 }
 
 function rawPoint(timestamp, value) {

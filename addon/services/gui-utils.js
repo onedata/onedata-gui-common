@@ -65,6 +65,13 @@ export default Service.extend(I18n, {
   manageAccountExternalLink: undefined,
 
   /**
+   * Difference between global (backend) time and local browser time.
+   * If > 0 then backend has "bigger" time.
+   * @type {number}
+   */
+  globalTimeSecondsOffset: 0,
+
+  /**
    * Text used as a label for 'manage account' item in menu. If empty, this item will be hidden.
    * @type {Ember.ComputedProperty<string>}
    */

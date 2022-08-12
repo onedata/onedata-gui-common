@@ -1,0 +1,23 @@
+{{#audit-log-browser
+  onFetchLogEntries=fetchLogEntriesCallback
+  customColumnHeaders=customColumnHeaders
+  isSeverityColumnVisible=true
+  doesOpenDetailsOnClick=true
+  as |logEntry|
+}}
+  {{#if (eq logEntry.source "system")}}
+    <td class="description-cell truncate">{{logEntry.content.description}}</td>
+    {{#if getTaskRunForInstanceIdCallback}}
+      {{modals/workflow-visualiser/store-modal/audit-log-presenter/related-logs-cell
+        referencedComponents=logEntry.content.referencedComponents
+        getTaskRunForInstanceIdCallback=getTaskRunForInstanceIdCallback
+        actionsFactory=actionsFactory
+      }}
+    {{/if}}
+  {{else}}
+    {{modals/workflow-visualiser/store-modal/audit-log-presenter/user-log-content-cell
+      content=logEntry.content
+      colspan=customColumnHeaders.length
+    }}
+  {{/if}}
+{{/audit-log-browser}}

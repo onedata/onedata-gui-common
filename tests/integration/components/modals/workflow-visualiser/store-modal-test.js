@@ -10,6 +10,7 @@ import {
   getModalBody,
   getModalFooter,
 } from '../../../../helpers/modal';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 import { setProperties } from '@ember/object';
 import sinon from 'sinon';
 import { Promise, resolve } from 'rsvp';
@@ -75,6 +76,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
         expect(submitBtn.disabled).to.be.true;
 
         await fillIn('.name-field .form-control', 'store1');
+        await selectChoose('.data-spec-editor', 'Integer');
         expect(submitBtn.disabled).to.be.false;
 
         await fillIn('.name-field .form-control', '');
@@ -86,8 +88,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
     itClosesModalOnCancelClick();
     itClosesModalOnBackdropClick();
 
-    const fillForm = async () =>
+    const fillForm = async () => {
       await fillIn('.name-field .form-control', 'store1');
+      await selectChoose('.data-spec-editor', 'Integer');
+    };
     itPassesStoreProvidedByFormOnSubmit(fillForm, simplestStore);
     itDisablesAllControlsWhileSubmitting(fillForm);
     itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm);

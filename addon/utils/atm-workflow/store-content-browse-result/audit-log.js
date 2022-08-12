@@ -8,18 +8,18 @@
  */
 
 /**
- * @typedef {Object} AtmAuditLogStoreContentBrowseResult
- * @property {Array<AtmInfiniteLogStoreContainerEntry<AtmAuditLogStoreResultEntryValue>>} logs
- * @property {boolean} isLast
+ * @typedef {AuditLogEntriesPage<AtmAuditLogEntryContent>} AtmAuditLogStoreContentBrowseResult
  */
 
 /**
- * @typedef {AtmAuditLogStoreResultEntryBase} AtmAuditLogStoreResultEntryValue
- * @property {number} timestamp
- * @property {unknown} content
- * @property {AtmAuditLogStoreResultEntrySeverity} severity
+ * @typedef {Object} AtmAuditLogEntryContent
+ * @property {string} description
+ * @property {AtmAuditLogEntryReferencedComponents} [referencedComponents] references to
+ * subjects related to this specific log entry
+ * @property {Object} [reason] error in the standard backend format
  */
 
 /**
- * @typedef {'debug'|'info'|'notice'|'warning'|'alert'|'error'|'critical'|'emergency'} AtmAuditLogStoreResultEntrySeverity
+ * @typedef {Object} AtmAuditLogEntryReferencedComponents
+ * @property {Array<string>} tasks array of task execution IDs
  */

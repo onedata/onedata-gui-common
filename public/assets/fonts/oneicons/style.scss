@@ -327,6 +327,11 @@
     content: $oneicon-collection-create;
   }
 }
+.oneicon-collection {
+  &:before {
+    content: $oneicon-collection;
+  }
+}
 .oneicon-consume-token {
   &:before {
     content: $oneicon-consume-token;
@@ -355,6 +360,11 @@
 .oneicon-file {
   &:before {
     content: $oneicon-file;
+  }
+}
+.oneicon-flatten {
+  &:before {
+    content: $oneicon-flatten;
   }
 }
 .oneicon-folder-new {
