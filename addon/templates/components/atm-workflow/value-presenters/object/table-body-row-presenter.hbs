@@ -1,11 +1,11 @@
 {{#if columns.length}}
   {{#each columns as |column|}}
-    <td class="column-object-property">
+    <td class="column-object-property truncate">
       {{evaluate-function stringifyObjectProperty column}}
     </td>
   {{/each}}
 {{else}}
-  <td class="column-value">
+  <td class="column-value truncate">
     {{atm-workflow/value-presenters/object/single-line-presenter
       value=value
     }}

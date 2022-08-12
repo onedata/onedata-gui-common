@@ -1,4 +1,4 @@
-<td class="column-name">
+<td class="column-name truncate">
   {{file-icon
     class="details-icon"
     fileType=value.type
@@ -18,7 +18,7 @@
     </span>
   {{/if}}
 </td>
-<td class="column-path">
+<td class="column-path truncate">
   {{#if pathProxy.isPending}}
     <em>{{tt this "loading"}}</em>
   {{else if (eq pathProxy.content null)}}
@@ -27,7 +27,7 @@
     {{pathProxy.content}}
   {{/if}}
 </td>
-<td class="column-size">
+<td class="column-size truncate">
   {{#if sizeProxy.isPending}}
     <em>{{tt this "loading"}}</em>
   {{else if (eq sizeProxy.content null)}}

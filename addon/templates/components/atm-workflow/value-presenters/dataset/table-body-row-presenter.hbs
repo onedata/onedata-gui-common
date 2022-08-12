@@ -1,4 +1,4 @@
-<td class="column-name">
+<td class="column-name truncate">
   {{one-icon class=(concat-classes "dataset-icon details-icon" iconClass) icon=icon}}
   {{#if urlProxy.content}}
     <a
@@ -14,7 +14,7 @@
     </span>
   {{/if}}
 </td>
-<td class="column-root-file-path">
+<td class="column-root-file-path truncate">
   {{#if value.rootFilePath}}
     {{#if rootFileUrlProxy.content}}
       <a
