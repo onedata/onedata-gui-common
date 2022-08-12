@@ -49,6 +49,7 @@ import oneTimeSeriesChartsSection from './onedata-gui-common/components/one-time
 import apiSamples from './onedata-gui-common/components/api-samples';
 import atmWorkflow from './onedata-gui-common/components/atm-workflow';
 import auditLogBrowser from './onedata-gui-common/components/audit-log-browser';
+import infiniteScrollTable from './onedata-gui-common/components/infinite-scroll-table';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -135,6 +136,7 @@ const translations = {
     apiSamples,
     atmWorkflow,
     auditLogBrowser,
+    infiniteScrollTable,
     alerts: {
       endpointError,
     },

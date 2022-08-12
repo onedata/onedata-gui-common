@@ -2,15 +2,21 @@ import Component from '@ember/component';
 
 export default Component.extend({
   onFetchEntries: async (listingParams) => {
-    let startIndex = Number(listingParams.index || '0');
+    const nowTimestamp = Math.floor(Date.now() / 1000);
+    let startTimestamp = typeof listingParams.index === 'string' ?
+      Number(listingParams.index) : nowTimestamp;
     if (typeof listingParams.offset === 'number') {
-      startIndex += listingParams.offset;
+      // We subtract offset instead of adding it because listing is timestamp-reversed
+      // (newest are at the top = first entry has the biggest timestamp)
+      startTimestamp -= listingParams.offset;
     }
 
-    startIndex = Math.max(startIndex, 0);
     const entries = [];
     for (let i = 0; i < listingParams.limit; i++) {
-      entries.push(generateEntry(startIndex + i));
+      if (startTimestamp - i > nowTimestamp) {
+        continue;
+      }
+      entries.push(generateEntry(startTimestamp - i));
     }
 
     return {
