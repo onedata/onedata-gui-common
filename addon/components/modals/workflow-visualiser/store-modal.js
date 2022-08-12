@@ -25,8 +25,6 @@ import { inject as service } from '@ember/service';
 import layout from '../../../templates/components/modals/workflow-visualiser/store-modal';
 import { reads } from '@ember/object/computed';
 import { computed, trySet } from '@ember/object';
-import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import { next } from '@ember/runloop';
 import { raw, or, eq, getBy } from 'ember-awesome-macros';
 
 const possibleContentTabRenderers = {
@@ -64,11 +62,6 @@ export default Component.extend(I18n, {
    * @type {String}
    */
   activeTab: undefined,
-
-  /**
-   * @type {Boolean}
-   */
-  isContentTabRendered: true,
 
   /**
    * @type {Object<string, string>}
@@ -205,12 +198,6 @@ export default Component.extend(I18n, {
   actions: {
     changeTab(selectedTab) {
       this.set('activeTab', selectedTab);
-    },
-    reloadContentTab() {
-      this.set('isContentTabRendered', false);
-      next(() => {
-        safeExec(this, 'set', 'isContentTabRendered', true);
-      });
     },
     formChange({ data, isValid }) {
       this.setProperties({

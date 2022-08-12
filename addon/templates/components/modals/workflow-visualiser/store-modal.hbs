@@ -44,7 +44,7 @@
         onChange=(action "formChange")
         isDisabled=isSubmitting
       }}
-    {{else if isContentTabRendered}}
+    {{else}}
       {{#if (eq store.type "range")}}
         {{modals/workflow-visualiser/store-modal/range-presenter
           store=store
@@ -61,7 +61,6 @@
         {{modals/workflow-visualiser/store-modal/list-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
-          emptyStoreText=emptyStoreText
         }}
       {{else if (eq contentTabRenderer "generic")}}
         {{modals/workflow-visualiser/store-modal/store-content-table
@@ -86,15 +85,6 @@
   {{/modal.body}}
 
   {{#modal.footer class="btn-toolbar"}}
-    {{#if (eq activeTab "content")}}
-      {{#bs-button
-        type="primary"
-        class="btn-refresh pull-left"
-        onClick=(action "reloadContentTab")
-      }}
-        {{tt this "button.refresh"}}
-      {{/bs-button}}
-    {{/if}}
     {{#bs-button
       type="default"
       class="btn-cancel"

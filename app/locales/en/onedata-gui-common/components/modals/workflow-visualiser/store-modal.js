@@ -32,7 +32,6 @@ export default {
     auditLog: 'Audit log is empty.',
   },
   button: {
-    refresh: 'Refresh',
     cancel: {
       create: 'Cancel',
       edit: 'Cancel',
