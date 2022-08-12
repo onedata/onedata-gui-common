@@ -11,6 +11,7 @@ export default [
   'global-alert',
   'global-modal',
   'hr-label',
+  'infinite-scroll-table',
   'input-group',
   'json-editor',
   'modals/unsaved-changes-question-modal',

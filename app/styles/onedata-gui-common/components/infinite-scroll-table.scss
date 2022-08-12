@@ -72,6 +72,8 @@ $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-paddin
   }
 
   .table-entry {
+    background-color: $color-one-white;
+
     &.clickable:hover {
       filter: brightness(95%);
     }

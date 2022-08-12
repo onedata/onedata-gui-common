@@ -51,7 +51,6 @@
  *       content: this.t('columnLabels.description'),
  *     }];
  *   }),
- *
  *   ```
  *
  * The last step is to adjust both the parent component and the audit log browser
