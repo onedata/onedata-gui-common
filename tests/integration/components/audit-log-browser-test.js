@@ -261,7 +261,7 @@ describe('Integration | Component | audit log browser', function () {
     this.set('hangLoadingNext', true);
     let loadingRow;
     for (let i = 0; i < 10; i++) {
-      await scrollTo('.audit-log-scrollable-container', 0, 10000);
+      await scrollTo('.table-scrollable-container', 0, 10000);
       await settled();
       loadingRow = find('.loading-row');
       if (loadingRow) {
@@ -295,7 +295,7 @@ describe('Integration | Component | audit log browser', function () {
       {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
     </div>`);
 
-    await scrollTo('.audit-log-scrollable-container', 0, 10000);
+    await scrollTo('.table-scrollable-container', 0, 10000);
     await settled();
     onFetchLogEntries.resetHistory();
     await waitForPossibleReload(this);
@@ -309,9 +309,9 @@ describe('Integration | Component | audit log browser', function () {
       {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
     </div>`);
 
-    await scrollTo('.audit-log-scrollable-container', 0, 10000);
+    await scrollTo('.table-scrollable-container', 0, 10000);
     await settled();
-    await scrollTo('.audit-log-scrollable-container', 0, 0);
+    await scrollTo('.table-scrollable-container', 0, 0);
     await settled();
     onFetchLogEntries.resetHistory();
     await waitForPossibleReload(this);
@@ -342,26 +342,26 @@ describe('Integration | Component | audit log browser', function () {
   it('does not render table title when "title" is not set', async function () {
     await render(hbs`{{audit-log-browser}}`);
 
-    expect(find('.audit-log-browser-title')).to.not.exist;
+    expect(find('.table-title')).to.not.exist;
   });
 
   it('renders table title when "title" is set', async function () {
     await render(hbs`{{audit-log-browser title="some title"}}`);
 
-    expect(find('.audit-log-browser-title')).to.have.trimmed.text('some title');
+    expect(find('.table-title')).to.have.trimmed.text('some title');
   });
 
   it('does not render table title tip when "titleTip" is not set', async function () {
     await render(hbs`{{audit-log-browser title="test"}}`);
 
-    expect(find('.audit-log-browser-title .title-tip')).to.not.exist;
+    expect(find('.table-title .title-tip')).to.not.exist;
   });
 
   it('renders table title tip when "titleTip" is set', async function () {
     await render(hbs`{{audit-log-browser title="test" titleTip="some tip"}}`);
 
     const tipContent = await new OneTooltipHelper(
-      '.audit-log-browser-title .title-tip .one-icon'
+      '.table-title .title-tip .one-icon'
     ).getText();
     expect(tipContent).to.equal('some tip');
   });
@@ -374,7 +374,7 @@ describe('Integration | Component | audit log browser', function () {
     }}`);
 
     const tooltipHelper = await new OneTooltipHelper(
-      '.audit-log-browser-title .title-tip .one-icon'
+      '.table-title .title-tip .one-icon'
     );
     await tooltipHelper.open();
     expect(tooltipHelper.getTooltip()).to.have.class('abc');
@@ -423,7 +423,7 @@ describe('Integration | Component | audit log browser', function () {
     trigger: '.timestamp-column-header',
   }, {
     triggerDescription: 'table title',
-    trigger: '.audit-log-browser-title',
+    trigger: '.table-title',
   }].forEach(({ triggerDescription, trigger }) => {
     it(`hides details on ${triggerDescription} click`, async function () {
       await render(hbs`<div style="display: flex; height: 10em;">
@@ -556,12 +556,12 @@ function expectDetailsToBeHidden() {
   if (detailsContainer) {
     expect(detailsContainer).to.not.have.class('visible');
   }
-  expect(find('.audit-log-browser')).to.not.have.class('shows-details');
+  expect(find('.infinite-scroll-table')).to.not.have.class('shows-details');
   expect(find('.audit-log-table-entry.selected')).to.not.exist;
 }
 
 function expectDetailsToBeVisible() {
   expect(find('.details-container')).to.have.class('visible');
-  expect(find('.audit-log-browser')).to.have.class('shows-details');
+  expect(find('.infinite-scroll-table')).to.have.class('shows-details');
   expect(findAll('.audit-log-table-entry.selected')).to.have.length(1);
 }

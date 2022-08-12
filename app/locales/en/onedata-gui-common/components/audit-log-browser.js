@@ -1,7 +1,7 @@
-import detailsContainer from './audit-log-browser/details-container';
+import logEntryDetails from './audit-log-browser/log-entry-details';
 
 export default {
-  detailsContainer,
+  logEntryDetails,
   columnHeaders: {
     timestamp: 'Time',
     severity: 'Severity',

@@ -1,110 +1,61 @@
-{{#perfect-scrollbar-element
-  class="audit-log-scrollable-container"
-  click=(action "mainContentClick")
+{{#infinite-scroll-table
+  onFetchEntries=onFetchEntries
+  columnsCount=columnsCount
+  rowHeight=50
+  noEntriesText=(or noLogEntriesText (tt this "noLogEntries"))
+  title=title
+  titleTip=titleTip
+  titleTipClassNames=titleTipClassNames
+  doesOpenDetailsOnClick=doesOpenDetailsOnClick
+  as |section|
 }}
-  {{#if title}}
-    <div class="audit-log-browser-title">
-      <span class="title-text">{{title}}</span>
-      {{#if titleTip}}
-        {{one-label-tip
-          class="title-tip"
-          title=titleTip
-          tooltipClass=titleTipClassNames
-        }}
-      {{/if}}
-    </div>
-  {{/if}}
-  <table class="audit-log-table table one-infinite-list">
-    <thead class="audit-log-table-head">
-      <tr>
-        <th class="audit-log-table-column-header timestamp-column-header">
-          {{tt this "columnHeaders.timestamp"}}
+  {{#if (eq section.sectionName "tableHead")}}
+
+    <tr>
+      <th class="audit-log-table-column-header timestamp-column-header">
+        {{tt this "columnHeaders.timestamp"}}
+      </th>
+      {{#if isSeverityColumnVisible}}
+        <th class="audit-log-table-column-header severity-column-header">
+          {{tt this "columnHeaders.severity"}}
         </th>
-        {{#if isSeverityColumnVisible}}
-          <th class="audit-log-table-column-header severity-column-header">
-            {{tt this "columnHeaders.severity"}}
-          </th>
-        {{/if}}
-        {{#each customColumnHeaders as |customColumnHeader|}}
-          <th class="audit-log-table-column-header {{customColumnHeader.classNames}}">
-            {{customColumnHeader.content}}
-          </th>
-        {{/each}}
-      </tr>
-    </thead>
-    <tbody class="audit-log-table-body">
-      <tr class="table-start-row"></tr>
-      <tr class="first-row">
-        <td colspan={{columnsCount}} style={{infiniteScroll.firstRowModel.style}}></td>
-      </tr>
-      {{#if hasNoLogEntries}}
-        <tr class="table-is-empty-row">
-          <td class="table-is-empty-cell" colspan={{columnsCount}}>
-            {{or noLogEntriesText (tt this "noLogEntries")}}
-          </td>
-        </tr>
-      {{else}}
-        {{#if (and isTableTopVisible (or
-          logEntries.initialLoad.isPending
-          infiniteScroll.fetchingStatus.isFetchingPrev
-        ))}}
-          <tr class="loading-row">
-            <td colspan={{columnsCount}} class="loading-row-cell">
-              {{spin-spinner-block
-                sizeClass="xs"
-                class="absolute-middle-centered"
-              }}
-            </td>
-          </tr>
-        {{/if}}
-
-        {{#each logEntries key="index" as |logEntry index|}}
-          {{#if (or (not renderedItemsLimit) (lt index renderedItemsLimit))}}
-            <tr
-              class={{concat-classes
-                "audit-log-table-entry data-row"
-                (concat "audit-log-severity-" logEntry.severity)
-                (if doesOpenDetailsOnClick "clickable")
-                (if (eq selectedLogEntry.index logEntry.index) "selected")
-                (evaluate-function onGetClassNamesForLogEntry logEntry)
-              }}
-              data-row-id={{logEntry.id}}
-              onclick={{action "logEntryClick" logEntry}}
-            >
-              {{audit-log-browser/timestamp-cell
-                logEntry=logEntry
-                isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
-              }}
-              {{#if isSeverityColumnVisible}}
-                {{audit-log-browser/severity-cell logEntry=logEntry}}
-              {{/if}}
-              {{yield logEntry}}
-            </tr>
-          {{/if}}
-        {{/each}}
-
-        {{#if (and
-          logEntries.initialLoad.isSettled
-          (or renderedItemsLimit infiniteScroll.fetchingStatus.isFetchingNext)
-        )}}
-          <tr class="loading-row">
-            <td colspan={{columnsCount}} class="loading-row-cell">
-              {{spin-spinner-block
-                sizeClass="xs"
-                class="absolute-middle-centered"
-              }}
-            </td>
-          </tr>
-        {{/if}}
       {{/if}}
-    </tbody>
-  </table>
-{{/perfect-scrollbar-element}}
-<div class="bottom-shadow-keeper"></div>
-{{#if doesOpenDetailsOnClick}}
-  {{audit-log-browser/details-container
-    logEntry=selectedLogEntry
-    isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
-    onClose=(action "closeDetails")
-  }}
-{{/if}}
+      {{#each customColumnHeaders as |customColumnHeader|}}
+        <th class="audit-log-table-column-header {{customColumnHeader.classNames}}">
+          {{customColumnHeader.content}}
+        </th>
+      {{/each}}
+    </tr>
+
+  {{else if (eq section.sectionName "entryRow")}}
+
+    <tr
+      class={{concat-classes
+        section.rowClasses
+        "audit-log-table-entry"
+        (concat "audit-log-severity-" section.entry.severity)
+        (evaluate-function onGetClassNamesForLogEntry section.entry)
+      }}
+      data-row-id={{section.dataRowId}}
+      onclick={{section.onRowClick}}
+    >
+      {{audit-log-browser/timestamp-cell
+        logEntry=section.entry
+        isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
+      }}
+      {{#if isSeverityColumnVisible}}
+        {{audit-log-browser/severity-cell logEntry=section.entry}}
+      {{/if}}
+
+      {{yield section.entry}}
+    </tr>
+
+  {{else if (eq section.sectionName "entryDetails")}}
+
+    {{audit-log-browser/log-entry-details
+      logEntry=section.entry
+      isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
+    }}
+
+  {{/if}}
+{{/infinite-scroll-table}}

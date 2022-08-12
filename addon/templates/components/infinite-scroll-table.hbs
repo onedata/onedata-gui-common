@@ -1,0 +1,94 @@
+{{#perfect-scrollbar-element
+  class="table-scrollable-container"
+  click=(action "mainContentClick")
+}}
+  {{#if title}}
+    <div class="table-title">
+      <span class="title-text">{{title}}</span>
+      {{#if titleTip}}
+        {{one-label-tip
+          class="title-tip"
+          title=titleTip
+          tooltipClass=titleTipClassNames
+        }}
+      {{/if}}
+    </div>
+  {{/if}}
+  <table class="entries-table table one-infinite-list">
+    <thead class="table-head">
+      {{yield (hash
+        sectionName="tableHead"
+      )}}
+    </thead>
+    <tbody class="table-body">
+      <tr class="table-start-row"></tr>
+      <tr class="first-row">
+        <td colspan={{columnsCount}} style={{infiniteScroll.firstRowModel.style}}></td>
+      </tr>
+      {{#if hasNoEntries}}
+        <tr class="table-is-empty-row">
+          <td class="table-is-empty-cell" colspan={{columnsCount}}>
+            {{or noEntriesText (tt this "noEntries")}}
+          </td>
+        </tr>
+      {{else}}
+        {{#if (and isTableTopVisible (or
+          entries.initialLoad.isPending
+          infiniteScroll.fetchingStatus.isFetchingPrev
+        ))}}
+          <tr class="loading-row">
+            <td colspan={{columnsCount}} class="loading-row-cell">
+              {{spin-spinner-block
+                sizeClass="xs"
+                class="absolute-middle-centered"
+              }}
+            </td>
+          </tr>
+        {{/if}}
+
+        {{#each entries key="index" as |entry index|}}
+          {{#if (or (not renderedEntriesLimit) (lt index renderedEntriesLimit))}}
+            {{yield (hash
+              sectionName="entryRow"
+              entry=entry
+              rowClasses=(concat-classes
+                "table-entry data-row"
+                (if doesOpenDetailsOnClick "clickable")
+                (if (eq selectedEntry.index entry.index) "selected")
+              )
+              dataRowId=entry.id
+              onRowClick=(action "entryClick" entry)
+            )}}
+          {{/if}}
+        {{/each}}
+
+        {{#if (and
+          entries.initialLoad.isSettled
+          (or renderedEntriesLimit infiniteScroll.fetchingStatus.isFetchingNext)
+        )}}
+          <tr class="loading-row">
+            <td colspan={{columnsCount}} class="loading-row-cell">
+              {{spin-spinner-block
+                sizeClass="xs"
+                class="absolute-middle-centered"
+              }}
+            </td>
+          </tr>
+        {{/if}}
+      {{/if}}
+    </tbody>
+  </table>
+{{/perfect-scrollbar-element}}
+<div class="bottom-shadow-keeper"></div>
+{{#if doesOpenDetailsOnClick}}
+  {{#infinite-scroll-table/details-container
+    entry=selectedEntry
+    onClose=(action "closeDetails")
+    as |entry|
+  }}
+    {{yield (hash
+      sectionName="entryDetails"
+      entry=entry
+    )}}
+  {{/infinite-scroll-table/details-container}}
+{{/if}}
