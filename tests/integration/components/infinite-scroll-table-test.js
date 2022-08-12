@@ -143,65 +143,114 @@ describe('Integration | Component | infinite scroll table', function () {
     expect(loadingRow.querySelector('.spinner')).to.exist;
   });
 
-  it('updates entries when table is at the top', async function () {
-    const onFetchEntries = this.get('onFetchEntries');
+  [{
+    strategy: 'onTop',
+    topReload: true,
+    middleReload: false,
+  }, {
+    strategy: 'always',
+    topReload: true,
+    middleReload: true,
+  }, {
+    strategy: 'never',
+    topReload: false,
+    middleReload: false,
+  }].forEach(({ strategy, topReload, middleReload }) => {
+    it(`${topReload ? 'updates' : 'does not update'} entries when table is at the top and updateStrategy is "${strategy}"`,
+      async function () {
+        const onFetchEntries = this.get('onFetchEntries');
+        this.set('updateStrategy', strategy);
+        await render(hbs`<div style="display: grid; height: 10em;">
+          {{#infinite-scroll-table
+            onFetchEntries=onFetchEntries
+            updateStrategy=updateStrategy
+            as |section|
+          }}
+            {{#if (eq section.sectionName "entryRow")}}
+              <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}>
+                <td>{{section.entry.index}}</td>
+              </tr>
+            {{/if}}
+          {{/infinite-scroll-table}}
+        </div>`);
 
-    await render(hbs`<div style="display: grid; height: 10em;">
-      {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
-        {{#if (eq section.sectionName "entryRow")}}
-          <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}>
-            <td>{{section.entry.index}}</td>
-          </tr>
-        {{/if}}
-      {{/infinite-scroll-table}}
-    </div>`);
+        onFetchEntries.resetHistory();
+        await waitForPossibleReload(this);
+        if (topReload) {
+          expect(onFetchEntries).to.be.called;
+          expect(find('.table-entry'))
+            .to.have.trimmed.text(String(latestEntryIndex + 1));
+        } else {
+          expect(onFetchEntries).to.be.not.called;
+          expect(find('.table-entry'))
+            .to.have.trimmed.text(String(latestEntryIndex));
+        }
+      }
+    );
 
-    onFetchEntries.resetHistory();
-    await waitForPossibleReload(this);
-    expect(onFetchEntries).to.be.called;
-    expect(find('.table-entry')).to.have.trimmed.text(String(latestEntryIndex + 1));
-  });
+    it(`${middleReload ? 'updates' : 'does not update'} entries when table is not at the top and updateStrategy is "${strategy}"`,
+      async function () {
+        const onFetchEntries = this.get('onFetchEntries');
+        this.set('updateStrategy', strategy);
+        await render(hbs`<div style="display: grid; height: 10em;">
+          {{#infinite-scroll-table
+            onFetchEntries=onFetchEntries
+            updateStrategy=updateStrategy
+            as |section|
+          }}
+            {{#if (eq section.sectionName "entryRow")}}
+              <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}><td></td></tr>
+            {{/if}}
+          {{/infinite-scroll-table}}
+        </div>`);
 
-  it('does not update entries when table is not at the top', async function () {
-    const onFetchEntries = this.get('onFetchEntries');
+        await scrollTo('.table-scrollable-container', 0, 10000);
+        await settled();
+        onFetchEntries.resetHistory();
+        await waitForPossibleReload(this);
+        if (middleReload) {
+          expect(onFetchEntries).to.be.called;
+        } else {
+          expect(onFetchEntries).to.not.be.called;
+        }
+      }
+    );
 
-    await render(hbs`<div style="display: grid; height: 10em;">
-      {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
-        {{#if (eq section.sectionName "entryRow")}}
-          <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}><td></td></tr>
-        {{/if}}
-      {{/infinite-scroll-table}}
-    </div>`);
+    it(`${topReload ? 'updates' : 'does not update'} entries when table is scrolled down and then scrolled back to the top and updateStrategy is "${strategy}"`,
+      async function () {
+        const onFetchEntries = this.get('onFetchEntries');
+        this.set('updateStrategy', strategy);
+        await render(hbs`<div style="display: grid; height: 10em;">
+          {{#infinite-scroll-table
+            onFetchEntries=onFetchEntries
+            updateStrategy=updateStrategy
+            as |section|
+          }}
+            {{#if (eq section.sectionName "entryRow")}}
+              <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}>
+                <td>{{section.entry.index}}</td>
+              </tr>
+            {{/if}}
+          {{/infinite-scroll-table}}
+        </div>`);
 
-    await scrollTo('.table-scrollable-container', 0, 10000);
-    await settled();
-    onFetchEntries.resetHistory();
-    await waitForPossibleReload(this);
-    expect(onFetchEntries).to.not.be.called;
-  });
-
-  it('updates entries when table is scrolled down and then scrolled back to the top', async function () {
-    const onFetchEntries = this.get('onFetchEntries');
-
-    await render(hbs`<div style="display: grid; height: 10em;">
-      {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
-        {{#if (eq section.sectionName "entryRow")}}
-          <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}>
-            <td>{{section.entry.index}}</td>
-          </tr>
-        {{/if}}
-      {{/infinite-scroll-table}}
-    </div>`);
-
-    await scrollTo('.table-scrollable-container', 0, 10000);
-    await settled();
-    await scrollTo('.table-scrollable-container', 0, 0);
-    await settled();
-    onFetchEntries.resetHistory();
-    await waitForPossibleReload(this);
-    expect(onFetchEntries).to.be.called;
-    expect(find('.table-entry'))
-      .to.have.trimmed.text(String(latestEntryIndex + 1));
+        await scrollTo('.table-scrollable-container', 0, 10000);
+        await settled();
+        await scrollTo('.table-scrollable-container', 0, 0);
+        await settled();
+        onFetchEntries.resetHistory();
+        await waitForPossibleReload(this);
+        if (topReload) {
+          expect(onFetchEntries).to.be.called;
+          expect(find('.table-entry'))
+            .to.have.trimmed.text(String(latestEntryIndex + 1));
+        } else {
+          expect(onFetchEntries).to.be.not.called;
+          expect(find('.table-entry'))
+            .to.have.trimmed.text(String(latestEntryIndex));
+        }
+      }
+    );
   });
 
   it('does not render table title when "title" is not set', async function () {

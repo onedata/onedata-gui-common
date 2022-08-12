@@ -107,19 +107,22 @@
  * @property {string} index
  */
 
+/**
+ * @typedef {'onTop'|'always'|'never'} InfiniteScrollTableUpdateStrategy
+ */
+
 import Component from '@ember/component';
 import { observer, computed } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { not, and } from 'ember-awesome-macros';
-import { schedule } from '@ember/runloop';
+import { schedule, next } from '@ember/runloop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import ReplacingChunksArray from 'onedata-gui-common/utils/replacing-chunks-array';
 import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
 import layout from 'onedata-gui-common/templates/components/infinite-scroll-table';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
-import { next } from '@ember/runloop';
 
 export default Component.extend(I18n, {
   layout,
@@ -190,6 +193,12 @@ export default Component.extend(I18n, {
    * @type {boolean}
    */
   doesOpenDetailsOnClick: false,
+
+  /**
+   * @virtual optional
+   * @type {InfiniteScrollTableUpdateStrategy}
+   */
+  updateStrategy: 'onTop',
 
   /**
    * @type {InfiniteScrollEntry|undefined}
@@ -263,6 +272,22 @@ export default Component.extend(I18n, {
     }
   ),
 
+  autoUpdateController: observer(
+    'updateStrategy',
+    'isTableTopVisible',
+    function autoUpdateController() {
+      const shouldBeUpdating = this.updateStrategy === 'always' ||
+        (this.updateStrategy === 'onTop' && this.isTableTopVisible);
+      const isAutoUpdating = this.infiniteScroll.isAutoUpdating;
+
+      if (shouldBeUpdating && !isAutoUpdating) {
+        this.infiniteScroll.startAutoUpdate(true);
+      } else if (!shouldBeUpdating && isAutoUpdating) {
+        this.infiniteScroll.stopAutoUpdate();
+      }
+    }
+  ),
+
   /**
    * @override
    */
@@ -275,17 +300,28 @@ export default Component.extend(I18n, {
       endIndex: 50,
       indexMargin: 10,
     });
+    entries.on(
+      'willChangeArrayBeginning',
+      async ({ updatePromise, newItemsCount }) => {
+        await updatePromise;
+        safeExec(this, () => {
+          this.adjustScrollAfterBeginningChange(newItemsCount);
+        });
+      }
+    );
+
     const infiniteScroll = InfiniteScroll.create({
       entries,
       singleRowHeight: this.rowHeight,
       onScroll: this.handleTableScroll.bind(this),
     });
-    infiniteScroll.startAutoUpdate();
 
     this.setProperties({
       entries,
       infiniteScroll,
     });
+
+    this.autoUpdateController();
   },
 
   /**
@@ -312,6 +348,35 @@ export default Component.extend(I18n, {
     } finally {
       this._super(...arguments);
     }
+  },
+
+  /**
+   * When entries array gets expanded on the beginning (items are unshifted into
+   * array), we need to compensate scroll because new content is added on top.
+   * Currently (as of 2021) not all browsers support scroll anchoring and
+   * `perfect-scrollbar` has issues with it (anchoring is disabled), so we need to do
+   * scroll correction manually.
+   * @param {number} newItemsCount how many items have been added to the beginning
+   *   of the list
+   * @returns {void}
+   */
+  adjustScrollAfterBeginningChange(newEntriesCount = 0) {
+    const topDiff = newEntriesCount * this.rowHeight;
+    if (topDiff <= 0) {
+      return;
+    }
+
+    schedule('afterRender', this, () => {
+      window.requestAnimationFrame(() => {
+        safeExec(this, () => {
+          const scrollableContainer = this.getScrollableContainer();
+          scrollableContainer?.scrollTo(
+            null,
+            scrollableContainer?.scrollTop + topDiff
+          );
+        });
+      });
+    });
   },
 
   /**
@@ -347,19 +412,8 @@ export default Component.extend(I18n, {
    * @returns {void}
    */
   handleTableScroll({ headerVisible }) {
-    if (!this.infiniteScroll) {
-      return;
-    }
-
     if (this.isTableTopVisible !== headerVisible) {
       this.set('isTableTopVisible', headerVisible);
-    }
-
-    const isAutoUpdating = this.infiniteScroll.isAutoUpdating;
-    if (headerVisible && !isAutoUpdating) {
-      this.infiniteScroll.startAutoUpdate(true);
-    } else if (!headerVisible && isAutoUpdating) {
-      this.infiniteScroll.stopAutoUpdate();
     }
   },
 
