@@ -3,7 +3,7 @@
 <div class="details-content">
   {{#if urlProxy.content}}
     <a
-      class="dataset-name details-title"
+      class="dataset-name details-title clickable"
       href={{urlProxy.content}}
       target={{or context.linkTarget "_top"}}
     >
@@ -21,6 +21,7 @@
       {{#if value.rootFilePath}}
         {{#if rootFileUrlProxy.content}}
           <a
+            class="clickable"
             href={{rootFileUrlProxy.content}}
             target={{or context.linkTarget "_top"}}
           >

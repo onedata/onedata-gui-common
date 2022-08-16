@@ -3,7 +3,7 @@ import { dasherize } from '@ember/string';
 /**
  * @typedef {Object} AtmValuePresenterContext
  * @property {(fileId: string) => Promise<AtmFile>} [getSymbolicLinkTargetById]
- * @property {(fileId: string) => Promise<Array<AtmFile>>} [getFilePathById]
+ * @property {(fileId: string) => Promise<string|null>} [getFilePathById]
  * @property {(fileId: string) => Promise<string|null>} [getFileUrlById]
  * @property {(datasetId: string) => Promise<string|null>} [getDatasetUrlById]
  * @property {string} [linkTarget]

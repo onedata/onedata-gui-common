@@ -32,9 +32,21 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {Object}
+   */
+  store: undefined,
+
+  /**
+   * @virtual
    * @type {(browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>}
    */
   getStoreContentCallback: undefined,
+
+  /**
+   * @virtual optional
+   * @type {AtmValuePresenterContext}
+   */
+  context: undefined,
 
   /**
    * @type {ComputedProperty<(listingParams: InfiniteScrollListingParams) => Promise<InfiniteScrollEntriesPage>>}

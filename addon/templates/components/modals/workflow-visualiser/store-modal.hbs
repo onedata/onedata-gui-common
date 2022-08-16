@@ -50,22 +50,26 @@
           store=store
           getStoreContentCallback=getStoreContentCallback
           emptyStoreText=emptyStoreText
+          context=storeContentPresenterContext
         }}
       {{else if (eq store.type "singleValue")}}
         {{modals/workflow-visualiser/store-modal/single-value-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
           emptyStoreText=emptyStoreText
+          context=storeContentPresenterContext
         }}
       {{else if (eq store.type "list")}}
         {{modals/workflow-visualiser/store-modal/list-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
+          context=storeContentPresenterContext
         }}
       {{else if (eq store.type "treeForest")}}
         {{modals/workflow-visualiser/store-modal/tree-forest-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
+          context=storeContentPresenterContext
         }}
       {{else if (eq contentTabRenderer "generic")}}
         {{modals/workflow-visualiser/store-modal/store-content-table

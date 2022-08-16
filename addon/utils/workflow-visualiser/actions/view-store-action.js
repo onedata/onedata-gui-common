@@ -1,5 +1,6 @@
 /**
- * Shows store details. Needs store passed via context.
+ * Shows store details. Needs store and (optionally) storeContentPresenterContext
+ * passed via context.
  *
  * @module utils/workflow-visualiser/actions/view-store-action
  * @author Michał Borzęcki
@@ -27,6 +28,11 @@ export default Action.extend({
   getStoreContentCallback: reads('context.getStoreContentCallback'),
 
   /**
+   * @type {ComputedProperty<AtmValuePresenterContext | undefined>}
+   */
+  storeContentPresenterContext: reads('context.storeContentPresenterContext'),
+
+  /**
    * @override
    */
   onExecute() {
@@ -34,10 +40,12 @@ export default Action.extend({
       store,
       getStoreContentCallback,
       modalManager,
+      storeContentPresenterContext,
     } = this.getProperties(
       'store',
       'getStoreContentCallback',
-      'modalManager'
+      'modalManager',
+      'storeContentPresenterContext'
     );
 
     const result = ActionResult.create();
@@ -46,6 +54,7 @@ export default Action.extend({
         mode: 'view',
         store,
         getStoreContentCallback: (...args) => getStoreContentCallback(store, ...args),
+        storeContentPresenterContext,
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');

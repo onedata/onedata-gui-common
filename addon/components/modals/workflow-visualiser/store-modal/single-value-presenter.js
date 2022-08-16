@@ -27,6 +27,12 @@ export default Component.extend(createDataProxyMixin('valueContainer'), {
   emptyStoreText: undefined,
 
   /**
+   * @virtual optional
+   * @type {AtmValuePresenterContext}
+   */
+  context: undefined,
+
+  /**
    * @type {number}
    */
   valueContainerUpdateInterval: 3000,

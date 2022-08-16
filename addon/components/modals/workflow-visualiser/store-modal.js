@@ -12,6 +12,7 @@
  * - `getTaskRunForInstanceIdCallback` - is needed (but optional) when `mode` is `'view'`
  *   for audit log stores
  * - `actionsFactory` - the same as above
+ * - `storeContentPresenterContext` - is needed (but optional) when `mode` is `'view'`
  *
  * @module components/modals/workflow-visualiser/store-modal
  * @author Michał Borzęcki
@@ -132,6 +133,11 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.WorkflowVisualiser.ActionsFactory | undefined>}
    */
   actionsFactory: reads('modalOptions.actionsFactory'),
+
+  /**
+   * @type {ComputedProperty<AtmValuePresenterContext | undefined>}
+   */
+  storeContentPresenterContext: reads('modalOptions.storeContentPresenterContext'),
 
   /**
    * @type {ComputedProperty<'timeSeries'|'generic'>}

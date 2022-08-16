@@ -129,4 +129,11 @@ export default EmberObject.extend({
   async fetchStoreContent() {
     return notImplementedReject();
   },
+
+  /**
+   * @returns {AtmValuePresenterContext|undefined}
+   */
+  getStoreContentPresenterContext() {
+    return undefined;
+  },
 });

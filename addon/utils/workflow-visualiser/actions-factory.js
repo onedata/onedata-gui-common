@@ -340,7 +340,9 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         getStoreContentCallback: (...args) =>
-          this.get('workflowDataProvider').getStoreContent(...args),
+          this.workflowDataProvider.getStoreContent(...args),
+        storeContentPresenterContext: this.workflowDataProvider
+          .getStoreContentPresenterContext(),
       }, context),
     });
   },
