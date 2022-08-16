@@ -1,45 +1,27 @@
-import Component from '@ember/component';
-import { computed } from '@ember/object';
-import { promise } from 'ember-awesome-macros';
-import layout from 'onedata-gui-common/templates/components/modals/workflow-visualiser/store-modal/range-presenter';
+import SingleValuePresenter from './single-value-presenter';
 
-export default Component.extend({
-  layout,
+export default SingleValuePresenter.extend({
   classNames: ['range-presenter'],
 
   /**
-   * @virtual
-   * @type {Object}
-   */
-  store: undefined,
-
-  /**
-   * @virtual
-   * @type {(browseOptions: AtmRangeStoreContentBrowseOptions) => Promise<AtmRangeStoreContentBrowseResult|null>}
-   */
-  getStoreContentCallback: undefined,
-
-  /**
-   * @virtual
-   * @type {string}
-   */
-  emptyStoreText: undefined,
-
-  /**
-   * @type {AtmDataSpec}
+   * @override
    */
   dataSpec: Object.freeze({
     type: 'range',
   }),
 
   /**
-   * @type {ComputedProperty<AtmRange|null>}
+   * @override
    */
-  valueProxy: promise.object(
-    computed('getStoreContentCallback', async function valueProxy() {
-      return this.getStoreContentCallback?.({
-        type: 'rangeStoreContentBrowseOptions',
-      }) ?? null;
-    })
-  ),
+  async fetchValueContainer() {
+    if (!this.getStoreContentCallback) {
+      return null;
+    }
+
+    const value = await this.getStoreContentCallback({
+      type: 'rangeStoreContentBrowseOptions',
+    });
+
+    return { success: true, value };
+  },
 });
