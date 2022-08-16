@@ -22,7 +22,7 @@ export default ListPresenter.extend({
           ...listingParams,
         });
         return {
-          entries: results.items,
+          entries: results.treeRoots,
           isLast: results.isLast,
         };
       };

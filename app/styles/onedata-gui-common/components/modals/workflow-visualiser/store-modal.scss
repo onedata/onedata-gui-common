@@ -25,9 +25,14 @@
     }
   }
 
+  .list-presenter,
+  .audit-log-presenter {
+    min-height: 0;
+    flex-grow: 1;
+  }
+
   .list-presenter {
     display: grid;
-    min-height: 0;
 
     .details-container .details {
       padding: $infinite-scroll-table-container-padding;
@@ -35,13 +40,8 @@
   }
 
   .audit-log-presenter {
-    min-height: min(20em, 100vh - 300px);
     display: grid;
     place-items: stretch;
-  }
-
-  .audit-log-browser {
-    min-height: 0;
   }
 
   .related-logs-column-header {

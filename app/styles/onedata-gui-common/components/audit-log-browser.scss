@@ -2,6 +2,8 @@ $audit-log-browser-timestamp-cell-width: 7em;
 
 .audit-log-browser {
   display: grid;
+  // Setting useful when parent is flex
+  min-height: 0;
 
   .timestamp-column-header {
     width: $audit-log-browser-timestamp-cell-width;
