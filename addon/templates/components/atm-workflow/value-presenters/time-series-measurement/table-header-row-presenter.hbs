@@ -1,3 +1,3 @@
-<th class="column-timestamp">{{tt this "timestamp"}}</th>
-<th class="column-ts-name">{{tt this "tsName"}}</th>
-<th class="column-value">{{tt this "value"}}</th>
+<th class="column-timestamp">{{#truncated-string}}{{tt this "timestamp"}}{{/truncated-string}}</th>
+<th class="column-ts-name">{{#truncated-string}}{{tt this "tsName"}}{{/truncated-string}}</th>
+<th class="column-value">{{#truncated-string}}{{tt this "value"}}{{/truncated-string}}</th>

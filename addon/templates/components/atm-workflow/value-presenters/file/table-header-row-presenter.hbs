@@ -1,3 +1,3 @@
-<th class="column-name">{{tt this "name"}}</th>
-<th class="column-path">{{tt this "path"}}</th>
-<th class="column-size">{{tt this "size"}}</th>
+<th class="column-name">{{#truncated-string}}{{tt this "name"}}{{/truncated-string}}</th>
+<th class="column-path">{{#truncated-string}}{{tt this "path"}}{{/truncated-string}}</th>
+<th class="column-size">{{#truncated-string}}{{tt this "size"}}{{/truncated-string}}</th>

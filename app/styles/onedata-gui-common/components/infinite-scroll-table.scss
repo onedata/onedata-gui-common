@@ -39,6 +39,7 @@ $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-paddin
   .entries-table {
     table-layout: fixed;
     margin: 0;
+    min-width: calc(var(--infinite-scroll-table-columns-count) * 5em);
   }
 
   .table-head {

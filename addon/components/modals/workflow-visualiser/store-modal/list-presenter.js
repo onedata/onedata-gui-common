@@ -64,6 +64,16 @@ export default Component.extend(I18n, {
   hasUserChangedColumns: false,
 
   /**
+   * @type {number}
+   */
+  maxAvailableColumnsCount: 100,
+
+  /**
+   * @type {number}
+   */
+  maxAutoVisibleColumnsCount: 5,
+
+  /**
    * @type {ComputedProperty<(listingParams: InfiniteScrollListingParams) => Promise<InfiniteScrollEntriesPage>>}
    */
   fetchEntriesCallback: computed(
@@ -150,14 +160,28 @@ export default Component.extend(I18n, {
   },
 
   updateAvailableColumns(newEntries) {
+    if (this.availableColumns.length >= this.maxAvailableColumnsCount) {
+      return;
+    }
+
     const availableColumnsSet = new Set(this.availableColumns);
 
-    newEntries.forEach((entry) => {
+    for (const entry of newEntries) {
       const entryValue = entry?.value;
-      if (typeof entryValue == 'object' && entryValue && !Array.isArray(entryValue)) {
-        Object.keys(entryValue).forEach((key) => availableColumnsSet.add(key));
+      if (typeof entryValue !== 'object' || !entryValue || Array.isArray(entryValue)) {
+        continue;
       }
-    });
+
+      for (const key in entryValue) {
+        availableColumnsSet.add(key);
+        if (availableColumnsSet.size >= this.maxAvailableColumnsCount) {
+          break;
+        }
+      }
+      if (availableColumnsSet.size >= this.maxAvailableColumnsCount) {
+        break;
+      }
+    }
 
     if (availableColumnsSet.size > this.availableColumns.length) {
       this.set(
@@ -168,21 +192,39 @@ export default Component.extend(I18n, {
   },
 
   updateVisibleColumns() {
-    if (this.hasUserChangedColumns || this.visibleColumns.length >= 5) {
+    if (
+      this.hasUserChangedColumns ||
+      this.visibleColumns.length >= this.maxAutoVisibleColumnsCount
+    ) {
       return;
     }
 
     const newVisibleColumns = [...this.visibleColumns];
     for (const column of this.availableColumns) {
-      if (newVisibleColumns.length >= 5) {
-        break;
-      }
       if (!newVisibleColumns.includes(column)) {
         newVisibleColumns.push(column);
+      }
+      if (newVisibleColumns.length >= this.maxAutoVisibleColumnsCount) {
+        break;
       }
     }
     if (this.visibleColumns.length !== newVisibleColumns.length) {
       this.set('visibleColumns', newVisibleColumns);
     }
+  },
+
+  actions: {
+    toggleColumnVisibility(column) {
+      let newVisibleColumns;
+      if (this.visibleColumns.includes(column)) {
+        newVisibleColumns = this.visibleColumns.without(column);
+      } else {
+        newVisibleColumns = [...this.visibleColumns, column];
+      }
+      this.setProperties({
+        hasUserChangedColumns: true,
+        visibleColumns: newVisibleColumns,
+      });
+    },
   },
 });

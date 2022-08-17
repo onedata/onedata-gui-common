@@ -243,8 +243,12 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<string>}
    */
-  style: computed('rowHeight', function style() {
-    return htmlSafe(`--infinite-scroll-table-row-height: ${this.rowHeight}px`);
+  style: computed('rowHeight', 'columnsCount', function style() {
+    const variables = [
+      `--infinite-scroll-table-row-height: ${this.rowHeight}px`,
+      `--infinite-scroll-table-columns-count: ${this.columnsCount}`,
+    ];
+    return htmlSafe(variables.join('; '));
   }),
 
   onFetchEntriesObserver: observer(
