@@ -1,5 +1,8 @@
 {{#global-modal
-  classNames=(concat-classes "store-modal" (if (eq mode "view") "modal-content-overlay"))
+  classNames=(concat-classes
+    "store-modal"
+    (if (eq mode "view") "modal-content-overlay with-close-button")
+  )
   allowClose=(not isSubmitting)
   modalId=modalId
   size=(if (eq activeTab "content") "xl" "lg")
@@ -89,16 +92,17 @@
     {{/if}}
   {{/modal.body}}
 
-  {{#modal.footer class="btn-toolbar"}}
-    {{#bs-button
-      type="default"
-      class="btn-cancel"
-      onClick=modal.close
-      disabled=isSubmitting
-    }}
-      {{cancelBtnText}}
-    {{/bs-button}}
-    {{#if (not-eq mode "view")}}
+  {{#if (not-eq mode "view")}}
+    {{#modal.footer class="btn-toolbar"}}
+      {{#bs-button
+        type="default"
+        class="btn-cancel"
+        onClick=modal.close
+        disabled=isSubmitting
+      }}
+        {{cancelBtnText}}
+      {{/bs-button}}
+
       {{#one-button
         type="primary"
         buttonType="submit"
@@ -108,7 +112,7 @@
       }}
         {{submitBtnText}}
       {{/one-button}}
-    {{/if}}
-  {{/modal.footer}}
+    {{/modal.footer}}
+  {{/if}}
 
 {{/global-modal}}
