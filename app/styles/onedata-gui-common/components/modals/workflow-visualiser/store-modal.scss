@@ -8,11 +8,6 @@
     padding-bottom: $padding-large-vertical;
   }
 
-  .store-content-table {
-    display: flex;
-    flex-direction: column;
-  }
-
   .value-container-presenter {
     display: grid;
 
@@ -78,7 +73,6 @@
   }
 
   @import './store-modal/store-form';
-  @import './store-modal/store-content-table';
 }
 
 .list-store-presenter-properties-popover {

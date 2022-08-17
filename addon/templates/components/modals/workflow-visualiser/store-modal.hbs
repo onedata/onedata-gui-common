@@ -71,24 +71,20 @@
           getStoreContentCallback=getStoreContentCallback
           context=storeContentPresenterContext
         }}
-      {{else if (eq contentTabRenderer "generic")}}
-        {{modals/workflow-visualiser/store-modal/store-content-table
-          store=store
-          getStoreContentCallback=getStoreContentCallback
-          emptyStoreText=emptyStoreText
-        }}
-      {{else if (eq contentTabRenderer "auditLog")}}
+      {{else if (eq store.type "auditLog")}}
         {{modals/workflow-visualiser/store-modal/audit-log-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
           getTaskRunForInstanceIdCallback=getTaskRunForInstanceIdCallback
           actionsFactory=actionsFactory
         }}
-      {{else if (eq contentTabRenderer "timeSeries")}}
+      {{else if (eq store.type "timeSeries")}}
         {{modals/workflow-visualiser/store-modal/time-series-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
         }}
+      {{else}}
+        <p class="text-danger">{{tt this "noContentDueToUnknownStoreType"}}</p>
       {{/if}}
     {{/if}}
   {{/modal.body}}

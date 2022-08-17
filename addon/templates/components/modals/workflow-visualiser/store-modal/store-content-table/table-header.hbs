@@ -1,8 +1,0 @@
-<th class="row-label"></th>
-<th class="column-label entry-expander"></th>
-{{#each columns as |column|}}
-  <th class="column-label property-label table-value-name-{{column.name}}">
-    {{#truncated-string}}{{column.label}}{{/truncated-string}}
-  </th>
-{{/each}}
-{{yield}}
