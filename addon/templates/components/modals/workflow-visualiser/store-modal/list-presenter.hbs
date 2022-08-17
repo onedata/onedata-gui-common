@@ -8,7 +8,9 @@
 }}
   {{#if (eq section.sectionName "tableHead")}}
 
-    {{component tableHeaderRowPresenterComponent}}
+    {{component tableHeaderRowPresenterComponent
+      columns=visibleColumns
+    }}
 
   {{else if (eq section.sectionName "entryRow")}}
 
@@ -17,6 +19,7 @@
         value=section.entry.value
         dataSpec=itemDataSpec
         context=context
+        columns=visibleColumns
         click=section.onRowClick
         class=section.rowClasses
         dataRowId=section.dataRowId

@@ -49,6 +49,21 @@ export default Component.extend(I18n, {
   context: undefined,
 
   /**
+   * @type {Array<string>}
+   */
+  availableColumns: undefined,
+
+  /**
+   * @type {Array<string>}
+   */
+  visibleColumns: undefined,
+
+  /**
+   * @type {boolean}
+   */
+  hasUserChangedColumns: false,
+
+  /**
    * @type {ComputedProperty<(listingParams: InfiniteScrollListingParams) => Promise<InfiniteScrollEntriesPage>>}
    */
   fetchEntriesCallback: computed(
@@ -59,6 +74,9 @@ export default Component.extend(I18n, {
           type: 'listStoreContentBrowseOptions',
           ...listingParams,
         });
+
+        this.updateColumnsIfNeeded(results.items);
+
         return {
           entries: results.items,
           isLast: results.isLast,
@@ -95,9 +113,13 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<number>}
    */
-  tableColumnsCount: computed('itemDataSpec', function tableColumnsCount() {
-    return getTableValuePresenterColumnsCount(this.itemDataSpec);
-  }),
+  tableColumnsCount: computed(
+    'itemDataSpec',
+    'visibleColumns',
+    function tableColumnsCount() {
+      return getTableValuePresenterColumnsCount(this.itemDataSpec, this.visibleColumns);
+    }
+  ),
 
   /**
    * @type {ComputedProperty<(entry: AtmUnavailableValueContainer<unknown>) => string>}
@@ -108,4 +130,59 @@ export default Component.extend(I18n, {
       return `${this.t('storeAccessError')}: ${errorDescription.message || this.t('unknownError')}`;
     };
   }),
+
+  init() {
+    this._super(...arguments);
+
+    this.setProperties({
+      availableColumns: [],
+      visibleColumns: [],
+    });
+  },
+
+  updateColumnsIfNeeded(newEntries) {
+    if (this.itemDataSpec?.type !== 'object' || !newEntries?.length) {
+      return;
+    }
+
+    this.updateAvailableColumns(newEntries);
+    this.updateVisibleColumns();
+  },
+
+  updateAvailableColumns(newEntries) {
+    const availableColumnsSet = new Set(this.availableColumns);
+
+    newEntries.forEach((entry) => {
+      const entryValue = entry?.value;
+      if (typeof entryValue == 'object' && entryValue && !Array.isArray(entryValue)) {
+        Object.keys(entryValue).forEach((key) => availableColumnsSet.add(key));
+      }
+    });
+
+    if (availableColumnsSet.size > this.availableColumns.length) {
+      this.set(
+        'availableColumns',
+        [...availableColumnsSet].sort((a, b) => a.localeCompare(b))
+      );
+    }
+  },
+
+  updateVisibleColumns() {
+    if (this.hasUserChangedColumns || this.visibleColumns.length >= 5) {
+      return;
+    }
+
+    const newVisibleColumns = [...this.visibleColumns];
+    for (const column of this.availableColumns) {
+      if (newVisibleColumns.length >= 5) {
+        break;
+      }
+      if (!newVisibleColumns.includes(column)) {
+        newVisibleColumns.push(column);
+      }
+    }
+    if (this.visibleColumns.length !== newVisibleColumns.length) {
+      this.set('visibleColumns', newVisibleColumns);
+    }
+  },
 });
