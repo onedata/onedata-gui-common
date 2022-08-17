@@ -19,6 +19,7 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
         ownerSource: this.owner,
         workflowDataProvider: {
           getStoreContent: () => resolve({ array: [], isLast: true }),
+          getStoreContentPresenterContext: () => undefined,
         },
       }),
       store: Store.create({

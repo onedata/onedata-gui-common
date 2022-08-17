@@ -152,6 +152,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
     const factory = ActionsFactory.create({ ownerSource: this.owner });
     const workflowDataProvider = {
       getStoreContent: sinon.stub().resolves(),
+      getStoreContentPresenterContext: sinon.stub().returns('abc'),
     };
     factory.setWorkflowDataProvider(workflowDataProvider);
     const store = Store.create();
@@ -164,6 +165,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
 
     get(action, 'getStoreContentCallback')();
     expect(workflowDataProvider.getStoreContent).to.be.calledOnce;
+    expect(action.storeContentPresenterContext).to.equal('abc');
   });
 
   itCreatesStoreAction('ModifyStoreAction', ModifyStoreAction);
