@@ -436,12 +436,12 @@ export default Component.extend(I18n, {
 
     // Entries don't have id, which is required by replacing chunks array.
     // Solution: using entry index as id.
-    const entries = result.entries.map((entry) =>
+    const entries = result?.entries?.map((entry) =>
       Object.assign({}, entry, { id: entry.index })
     );
     return {
-      array: entries,
-      isLast: result.isLast,
+      array: entries || [],
+      isLast: entries ? Boolean(result.isLast) : true,
     };
   },
 

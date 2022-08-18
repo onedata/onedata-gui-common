@@ -127,6 +127,7 @@ $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-paddin
     .details {
       display: grid;
       place-items: stretch;
+      min-height: 0;
     }
 
     .close-details {

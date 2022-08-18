@@ -4,7 +4,7 @@ import OneIconTagged from 'onedata-gui-common/components/one-icon-tagged';
 import { FileType, SymbolicLinkTargetType } from 'onedata-gui-common/utils/file';
 
 export default OneIconTagged.extend({
-  classNames: ['file-icon', 'tag-right'],
+  classNames: ['one-file-icon', 'tag-right'],
   classNameBindings: ['fileTypeClasses', 'isSymbolicLinkBroken:danger'],
 
   /**

@@ -26,13 +26,7 @@ import { inject as service } from '@ember/service';
 import layout from '../../../templates/components/modals/workflow-visualiser/store-modal';
 import { reads } from '@ember/object/computed';
 import { computed, trySet } from '@ember/object';
-import { raw, or, eq, getBy } from 'ember-awesome-macros';
-
-const possibleContentTabRenderers = {
-  default: 'generic',
-  timeSeries: 'timeSeries',
-  auditLog: 'auditLog',
-};
+import { raw, or, eq } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -63,11 +57,6 @@ export default Component.extend(I18n, {
    * @type {String}
    */
   activeTab: undefined,
-
-  /**
-   * @type {Object<string, string>}
-   */
-  possibleContentTabRenderers,
 
   /**
    * @type {Boolean}
@@ -140,14 +129,6 @@ export default Component.extend(I18n, {
   storeContentPresenterContext: reads('modalOptions.storeContentPresenterContext'),
 
   /**
-   * @type {ComputedProperty<'timeSeries'|'generic'>}
-   */
-  contentTabRenderer: or(
-    getBy('possibleContentTabRenderers', 'store.type'),
-    getBy('possibleContentTabRenderers', raw('default'))
-  ),
-
-  /**
    * @type {ComputedProperty<String>}
    */
   headerText: computed(
@@ -174,13 +155,6 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Boolean>}
    */
   areTabsVisible: eq('mode', raw('view')),
-
-  /**
-   * @type {ComputedProperty<String>}
-   */
-  emptyStoreText: computed('viewModeLayout', function emptyStoreText() {
-    return this.t(`emptyStore.${this.get('viewModeLayout')}`);
-  }),
 
   /**
    * @type {ComputedProperty<String>}

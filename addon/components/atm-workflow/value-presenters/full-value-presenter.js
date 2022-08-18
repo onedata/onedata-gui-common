@@ -72,7 +72,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isPresenterTypeToggleVisible: bool('visualPresenterComponent'),
+  isPresenterTypeToggleEnabled: bool('visualPresenterComponent'),
 
   init() {
     this._super(...arguments);

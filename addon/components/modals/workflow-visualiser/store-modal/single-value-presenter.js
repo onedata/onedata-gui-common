@@ -1,12 +1,22 @@
 import Component from '@ember/component';
 import { reads } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/modals/workflow-visualiser/store-modal/single-value-presenter';
 import createDataProxyMixin from 'onedata-gui-common/utils/create-data-proxy-mixin';
 import Looper from 'onedata-gui-common/utils/looper';
+import computedT from 'onedata-gui-common/utils/computed-t';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend(createDataProxyMixin('valueContainer'), {
+export default Component.extend(I18n, createDataProxyMixin('valueContainer'), {
   layout,
   classNames: ['single-value-presenter'],
+
+  i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.modals.workflowVisualiser.storeModal.singleValuePresenter',
 
   /**
    * @virtual
@@ -19,12 +29,6 @@ export default Component.extend(createDataProxyMixin('valueContainer'), {
    * @type {(browseOptions: AtmSingleValueStoreContentBrowseOptions) => Promise<AtmSingleValueStoreContentBrowseResult|null>}
    */
   getStoreContentCallback: undefined,
-
-  /**
-   * @virtual
-   * @type {string}
-   */
-  emptyStoreText: undefined,
 
   /**
    * @virtual optional
@@ -48,6 +52,11 @@ export default Component.extend(createDataProxyMixin('valueContainer'), {
   dataSpec: reads('store.config.itemDataSpec'),
 
   /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  emptyStoreText: computedT('emptyStore'),
+
+  /**
    * @override
    */
   init() {
@@ -55,13 +64,17 @@ export default Component.extend(createDataProxyMixin('valueContainer'), {
     const updater = this.set('valueContainerUpdater', new Looper({
       interval: this.valueContainerUpdateInterval,
     }));
-    updater.on('tick', () => this.updateValueContainerProxy({ replace: true }));
+    updater.on('tick', () => this.updateValueContainerProxy({
+      replace: true,
+      replaceEmpty: true,
+    }));
   },
 
   /**
    * @override
    */
   willDestroyElement() {
+    this._super(...arguments);
     this.valueContainerUpdater?.destroy();
   },
 

@@ -49,7 +49,7 @@ describe('Integration | Component | atm workflow/value presenters/full value pre
       const rawPresenterComponent = getRawValuePresenter(dataSpec);
 
       if (visualPresenterComponent) {
-        it(`shows presenter type toggle and correct presenters for type "${dataSpecType}"`,
+        it(`shows enabled presenter type toggle and correct presenters for type "${dataSpecType}"`,
           async function () {
             const { value, context } = this.setProperties({
               dataSpec,
@@ -66,7 +66,7 @@ describe('Integration | Component | atm workflow/value presenters/full value pre
             );
             await renderComponent();
 
-            expect(find('.presenter-type-selector')).to.exist;
+            expect(find('.presenter-type-selector button[disabled]')).to.not.exist;
             expect(find('.presenter-type-visual')).to.have.class('active');
             let visiblePresenter = find('.visual-presenter');
             expect(visiblePresenter).to.exist;
@@ -86,7 +86,7 @@ describe('Integration | Component | atm workflow/value presenters/full value pre
           }
         );
       } else {
-        it(`hides presenter type toggle and shows only raw presenter for type "${dataSpecType}"`,
+        it(`shows disabled presenter type toggle and only raw presenter for type "${dataSpecType}"`,
           async function () {
             const { value, context } = this.setProperties({
               dataSpec,
@@ -99,7 +99,7 @@ describe('Integration | Component | atm workflow/value presenters/full value pre
             );
             await renderComponent();
 
-            expect(find('.presenter-type-selector')).to.not.exist;
+            expect(find('.presenter-type-selector button:not([disabled])')).to.not.exist;
             const visiblePresenter = find('.raw-presenter');
             expect(visiblePresenter).to.exist;
             expect(visiblePresenter.componentInstance.dataSpec).to.equal(dataSpec);

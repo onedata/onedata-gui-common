@@ -46,7 +46,7 @@ describe('Integration | Component | atm workflow/value presenters/file/visual pr
       value=file
     }}`);
 
-    expect(find('.file-icon')).to.have.class('main-type-regular');
+    expect(find('.one-file-icon')).to.have.class('main-type-regular');
     expect(find('.file-name')).to.have.trimmed.text(file.name)
       .and.to.match('a')
       .and.to.have.attr('href', this.get('fileUrl')(this.get('file.file_id')));
@@ -63,7 +63,7 @@ describe('Integration | Component | atm workflow/value presenters/file/visual pr
       value=file
     }}`);
 
-    expect(find('.file-icon')).to.have.class('main-type-regular');
+    expect(find('.one-file-icon')).to.have.class('main-type-regular');
     expect(find('.file-name')).to.have.trimmed.text('Unknown')
       .and.to.match('span')
       .and.to.not.have.attr('href');
@@ -82,7 +82,7 @@ describe('Integration | Component | atm workflow/value presenters/file/visual pr
       value=file
     }}`);
 
-    expect(find('.file-icon')).to.have.class('main-type-regular');
+    expect(find('.one-file-icon')).to.have.class('main-type-regular');
     expect(find('.file-name')).to.have.trimmed.text('Unknown')
       .and.to.match('a')
       .and.to.have.attr('href', this.get('fileUrl')(this.get('file.file_id')));
@@ -104,7 +104,7 @@ describe('Integration | Component | atm workflow/value presenters/file/visual pr
       value=file
     }}`);
 
-    expect(find('.file-icon')).to.have.class('main-type-symbolic-link')
+    expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
       .and.to.have.class('effective-type-directory');
     expect(find('.file-name')).to.have.trimmed.text(file.name)
       .and.to.match('a')
@@ -133,7 +133,7 @@ describe('Integration | Component | atm workflow/value presenters/file/visual pr
         value=file
       }}`);
 
-      expect(find('.file-icon')).to.have.class('main-type-symbolic-link')
+      expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')
         .and.to.have.class('symbolic-link-broken');
       expect(find('.file-name')).to.have.trimmed.text(file.name)
@@ -164,7 +164,7 @@ describe('Integration | Component | atm workflow/value presenters/file/visual pr
         value=file
       }}`);
 
-      expect(find('.file-icon')).to.have.class('main-type-symbolic-link')
+      expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')
         .and.to.have.class('symbolic-link-broken');
       expect(find('.file-name')).to.have.trimmed.text(file.name)
@@ -195,7 +195,7 @@ describe('Integration | Component | atm workflow/value presenters/file/visual pr
         value=file
       }}`);
 
-      expect(find('.file-icon')).to.have.class('main-type-symbolic-link')
+      expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')
         .and.to.not.have.class('symbolic-link-broken');
       expect(find('.file-name')).to.have.trimmed.text(file.name)
@@ -222,7 +222,7 @@ describe('Integration | Component | atm workflow/value presenters/file/visual pr
         value=file
       }}`);
 
-      expect(find('.file-icon')).to.have.class('main-type-symbolic-link')
+      expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')
         .and.to.not.have.class('symbolic-link-broken');
       expect(find('.file-name')).to.have.trimmed.text(file.name)

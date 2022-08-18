@@ -52,14 +52,12 @@
         {{modals/workflow-visualiser/store-modal/range-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
-          emptyStoreText=emptyStoreText
           context=storeContentPresenterContext
         }}
       {{else if (eq store.type "singleValue")}}
         {{modals/workflow-visualiser/store-modal/single-value-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
-          emptyStoreText=emptyStoreText
           context=storeContentPresenterContext
         }}
       {{else if (eq store.type "list")}}

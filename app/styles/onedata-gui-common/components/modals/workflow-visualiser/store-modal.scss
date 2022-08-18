@@ -10,6 +10,7 @@
 
   .value-container-presenter {
     display: grid;
+    min-height: 0;
 
     &.error {
       align-items: flex-start;
@@ -17,6 +18,15 @@
 
     .resource-load-error {
       margin: 0;
+    }
+  }
+
+  .single-value-presenter {
+    flex-grow: 1;
+    min-height: 10em;
+
+    .value-container-presenter {
+      min-height: 100%;
     }
   }
 

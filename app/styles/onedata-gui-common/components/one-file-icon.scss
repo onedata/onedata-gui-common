@@ -1,8 +1,9 @@
-.file-icon {
-  --file-icon-main-color: $color-file;
+.one-file-icon {
+  --file-icon-main-color: #{$color-file};
 
   line-height: 0;
   font-size: 170%;
+  vertical-align: middle;
 
   .one-icon-tagged-main::before {
     color: var(--file-icon-main-color);
