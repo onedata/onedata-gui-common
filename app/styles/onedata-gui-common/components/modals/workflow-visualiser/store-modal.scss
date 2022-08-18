@@ -56,6 +56,10 @@
     .details-container .details {
       padding: $infinite-scroll-table-container-padding;
     }
+
+    @media (max-width: $screen-xs-max) {
+      --infinite-scroll-table-details-x-offset: 3em;
+    }
   }
 
   .audit-log-presenter {

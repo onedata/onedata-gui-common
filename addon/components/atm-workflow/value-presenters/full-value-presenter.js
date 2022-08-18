@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { bool, conditional, eq, raw } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/full-value-presenter';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -11,6 +12,9 @@ import {
 export default Component.extend(I18n, {
   classNames: ['full-value-presenter'],
   layout,
+
+  i18n: service(),
+  globalClipboard: service(),
 
   /**
    * @override
@@ -82,6 +86,9 @@ export default Component.extend(I18n, {
   actions: {
     presenterTypeChange(type) {
       this.set('presenterType', type);
+    },
+    copyJson() {
+      this.globalClipboard.copy(JSON.stringify(this.value, null, 2));
     },
   },
 });

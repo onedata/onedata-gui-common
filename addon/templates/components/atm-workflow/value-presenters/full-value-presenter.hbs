@@ -18,6 +18,10 @@
       {{/bg.button}}
     {{/each}}
   {{/bs-button-group}}
+  <a class="copy-link clickable" onclick={{action "copyJson"}}>
+    {{one-icon icon="copy"}}
+    {{tt this "copyJson"}}
+  </a>
 </div>
 
 {{#perfect-scrollbar-element class="content-container"}}

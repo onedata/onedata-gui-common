@@ -3,4 +3,5 @@ export default {
     visual: 'Visual',
     raw: 'Raw',
   },
+  copyJson: 'Copy JSON',
 };
