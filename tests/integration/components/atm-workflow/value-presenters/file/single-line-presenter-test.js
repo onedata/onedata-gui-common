@@ -21,6 +21,6 @@ describe('Integration | Component | atm workflow/value presenters/file/single li
       value=value
     }}`);
 
-    expect(find('.single-line-presenter')).to.have.trimmed.text('<File "file1.txt">');
+    expect(find('.single-line-presenter')).to.have.trimmed.text('[File "file1.txt"]');
   });
 });

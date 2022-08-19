@@ -27,6 +27,6 @@ export default SingleLinePresenterBase.extend({
       dateFormat([timestamp], { format: 'report' }) : '–';
     const formattedValue = value !== null ? String(value) : '–';
 
-    return `<TSMeas. ${formattedTimestamp};${formattedTsName};${formattedValue}>`;
+    return `[TSMeas. ${formattedTimestamp};${formattedTsName};${formattedValue}]`;
   }),
 });

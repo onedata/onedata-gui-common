@@ -134,6 +134,7 @@ $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-paddin
       display: grid;
       place-items: center;
       background-color: lighten($color-one-semiwhite, 3%);
+      border-right: 1px solid $main-border-color;
       overflow: hidden;
 
       &:hover {

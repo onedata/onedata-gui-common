@@ -30,7 +30,7 @@ describe('Integration | Component | atm workflow/value presenters/time series me
       const formattedTime = dateFormat([timestamp], { format: 'report' });
 
       expect(find('.single-line-presenter'))
-        .to.have.trimmed.text(`<TSMeas. ${formattedTime};"series1";30>`);
+        .to.have.trimmed.text(`[TSMeas. ${formattedTime};"series1";30]`);
     });
   }
 );

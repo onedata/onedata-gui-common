@@ -33,7 +33,7 @@ describe('Integration | Component | atm workflow/value presenters/array/single l
     }}`);
 
     expect(find('.single-line-presenter')).to.have.trimmed.text(
-      '<Array (2)[<Dataset "abc">, <Dataset "def">]>'
+      '[Array (2): [Dataset "abc"], [Dataset "def"]]'
     );
   });
 
@@ -63,7 +63,7 @@ describe('Integration | Component | atm workflow/value presenters/array/single l
     }}`);
 
     expect(find('.single-line-presenter')).to.have.trimmed.text(
-      '<Array (2)[<Array (2)["ab", "cd"]>, <Array (1)["ef"]>]>'
+      '[Array (2): [Array (2): "ab", "cd"], [Array (1): "ef"]]'
     );
   });
 
@@ -84,7 +84,7 @@ describe('Integration | Component | atm workflow/value presenters/array/single l
       dataSpec=dataSpec
     }}`);
 
-    expect(find('.single-line-presenter')).to.have.trimmed.text('<Array (0)[]>');
+    expect(find('.single-line-presenter')).to.have.trimmed.text('[Array (0)]');
   });
 
   it('presents passed value cropped to the first 10 array items when it is a large array', async function () {
@@ -105,7 +105,7 @@ describe('Integration | Component | atm workflow/value presenters/array/single l
     }}`);
 
     expect(find('.single-line-presenter')).to.have.trimmed.text(
-      '<Array (13)["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", …]>'
+      '[Array (13): "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", …]'
     );
   });
 });

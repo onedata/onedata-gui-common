@@ -21,6 +21,6 @@ describe('Integration | Component | atm workflow/value presenters/range/single l
       value=value
     }}`);
 
-    expect(find('.single-line-presenter')).to.have.trimmed.text('<Range 2:10:3>');
+    expect(find('.single-line-presenter')).to.have.trimmed.text('[Range 2:10:3]');
   });
 });

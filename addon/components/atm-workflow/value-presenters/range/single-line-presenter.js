@@ -18,6 +18,6 @@ export default SingleLinePresenterBase.extend({
     const end = typeof this.value?.end === 'number' ? this.value.end : 0;
     const step = typeof this.value?.step === 'number' ? this.value.step : 0;
 
-    return `<Range ${start}:${end}:${step}>`;
+    return `[Range ${start}:${end}:${step}]`;
   }),
 });

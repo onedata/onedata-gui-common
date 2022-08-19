@@ -45,10 +45,6 @@
 }
 
 .array-visual-presenter {
-  .root-presenter-header .items {
-    display: none;
-  }
-
   .raw-presenter {
     min-height: 15em;
   }
@@ -61,10 +57,24 @@
     min-height: 7em;
   }
 
+  .array-items-list {
+    margin: 0.4em 0;
+  }
+
   .array-item-header {
     display: grid;
     grid-template-columns: auto auto;
     justify-content: flex-start;
+    align-items: center;
+  }
+
+  .array-item + .array-item,
+  .array-item-content {
+    margin-top: 0.2em;
+  }
+
+  .array-item-collapse-icon {
+    margin-left: 0.3em;
   }
 }
 

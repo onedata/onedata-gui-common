@@ -21,6 +21,6 @@ export default SingleLinePresenterBase.extend({
     const lastPathElement = pathElements[pathElements.length - 1];
     const formattedFileName = lastPathElement ? `"${lastPathElement}"` : '–';
 
-    return `<Dataset ${formattedFileName}>`;
+    return `[Dataset ${formattedFileName}]`;
   }),
 });

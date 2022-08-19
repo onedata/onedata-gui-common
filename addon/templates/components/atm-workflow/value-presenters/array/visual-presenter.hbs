@@ -1,10 +1,7 @@
-{{#if topHeaderPresenterComponent}}
-  {{component topHeaderPresenterComponent
-    class="root-presenter-header"
-    value=value
-    dataSpec=dataSpec
-    context=context
-  }}
+{{#if isRootPresenter}}
+  <strong class="root-presenter-header">
+    {{tt this "header" itemsCount=(or value.length 0)}}
+  </strong>
 {{/if}}
 
 <ol class="array-items-list" start="0">

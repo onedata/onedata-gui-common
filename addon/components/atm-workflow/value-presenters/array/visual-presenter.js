@@ -110,20 +110,6 @@ export default Component.extend(I18n, {
   ),
 
   /**
-   * @type {ComputedProperty<string|null>}
-   */
-  topHeaderPresenterComponent: computed(
-    'isRootPresenter',
-    'dataSpec',
-    function topHeaderPresenterComponent() {
-      if (!this.isRootPresenter) {
-        return null;
-      }
-      return getSingleLineValuePresenter(this.dataSpec);
-    }
-  ),
-
-  /**
    * @override
    */
   init() {

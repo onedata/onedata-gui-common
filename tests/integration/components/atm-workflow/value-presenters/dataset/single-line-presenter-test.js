@@ -21,6 +21,6 @@ describe('Integration | Component | atm workflow/value presenters/dataset/single
       value=value
     }}`);
 
-    expect(find('.single-line-presenter')).to.have.trimmed.text('<Dataset "abc">');
+    expect(find('.single-line-presenter')).to.have.trimmed.text('[Dataset "abc"]');
   });
 });

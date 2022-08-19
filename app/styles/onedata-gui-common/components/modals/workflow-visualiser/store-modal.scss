@@ -53,8 +53,9 @@
       grid-area: table;
     }
 
-    .details-container .details {
-      padding: $infinite-scroll-table-container-padding;
+    .details-container .full-value-presenter {
+      border: none;
+      border-radius: initial;
     }
 
     @media (max-width: $screen-xs-max) {

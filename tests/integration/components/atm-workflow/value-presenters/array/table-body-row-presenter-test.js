@@ -43,7 +43,7 @@ describe('Integration | Component | atm workflow/value presenters/array/table bo
     const tds = findAll('.table-body-row-presenter td');
     expect(tds).to.have.length(1);
     expect(tds[0]).to.have.class('column-value')
-      .and.to.have.trimmed.text('<Array (2)[<Array (2)["ab", "cd"]>, <Array (1)["ef"]>]>')
+      .and.to.have.trimmed.text('[Array (2): [Array (2): "ab", "cd"], [Array (1): "ef"]]')
       .and.to.contain('.array-single-line-presenter');
   });
 });

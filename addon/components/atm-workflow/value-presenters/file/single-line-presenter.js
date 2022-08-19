@@ -17,6 +17,6 @@ export default SingleLinePresenterBase.extend({
     const fileName = typeof this.value?.name === 'string' ? this.value.name : '';
     const formattedFileName = fileName ? `"${fileName}"` : '–';
 
-    return `<File ${formattedFileName}>`;
+    return `[File ${formattedFileName}]`;
   }),
 });

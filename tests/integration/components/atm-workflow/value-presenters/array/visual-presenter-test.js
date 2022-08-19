@@ -29,7 +29,7 @@ describe('Integration | Component | atm workflow/value presenters/array/visual p
     });
     await renderComponent();
 
-    expect(find('.root-presenter-header')).to.contain.text('<Array (0)');
+    expect(find('.root-presenter-header')).to.have.trimmed.text('Array (0)');
     expect(find('.array-item')).to.not.exist;
     expect(find('.show-more-array-items')).to.not.exist;
   });
@@ -41,7 +41,7 @@ describe('Integration | Component | atm workflow/value presenters/array/visual p
     });
     await renderComponent();
 
-    expect(find('.root-presenter-header')).to.contain.text('<Array (2)');
+    expect(find('.root-presenter-header')).to.have.trimmed.text('Array (2)');
     const items = findAll('.array-item');
     expect(items).to.have.length(2);
     expect(items[0]).to.contain.text('"a"');
@@ -56,7 +56,7 @@ describe('Integration | Component | atm workflow/value presenters/array/visual p
     });
     await renderComponent();
 
-    expect(find('.root-presenter-header')).to.contain.text('<Array (150)');
+    expect(find('.root-presenter-header')).to.have.trimmed.text('Array (150)');
     const items = findAll('.array-item');
     expect(items).to.have.length(50);
     expect(items[0]).to.contain.text('"0"');
@@ -181,7 +181,6 @@ describe('Integration | Component | atm workflow/value presenters/array/visual p
     });
 
     [
-      'array/single-line-presenter',
       'string/single-line-presenter',
       'string/raw-presenter',
     ].forEach((presenter) => {
@@ -195,7 +194,6 @@ describe('Integration | Component | atm workflow/value presenters/array/visual p
     await click('.array-item-header');
 
     [
-      '.root-presenter-header',
       '.array-item-header .test-component',
       '.array-item-content .test-component',
     ].forEach((presenterSelector) =>
@@ -216,8 +214,8 @@ describe('Integration | Component | atm workflow/value presenters/array/visual p
 
     const firstLevelItems = findAll('.array-item');
     expect(firstLevelItems).to.have.length(2);
-    expect(firstLevelItems[0]).to.contain.trimmed.text('<Array (2)["a", "b"]>');
-    expect(firstLevelItems[1]).to.contain.trimmed.text('<Array (1)["c"]>');
+    expect(firstLevelItems[0]).to.contain.trimmed.text('[Array (2): "a", "b"]');
+    expect(firstLevelItems[1]).to.contain.trimmed.text('[Array (1): "c"]');
 
     await click(firstLevelItems[0].querySelector('.array-item-header'));
     expect(firstLevelItems[0].querySelector('.root-presenter-header')).to.not.exist;
