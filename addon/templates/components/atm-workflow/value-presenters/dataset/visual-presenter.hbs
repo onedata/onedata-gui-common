@@ -3,7 +3,7 @@
 <div class="details-content">
   {{#if urlProxy.content}}
     <a
-      class="dataset-name details-title clickable"
+      class="dataset-name details-title clickable azure"
       href={{urlProxy.content}}
       target={{or context.linkTarget "_top"}}
     >
@@ -15,24 +15,26 @@
     </span>
   {{/if}}
 
-  <div class="property-row root-file-path-property">
-    <strong class="property-label">{{tt this "rootFilePath"}}:</strong>
-    <span class="property-value">
-      {{#if value.rootFilePath}}
-        {{#if rootFileUrlProxy.content}}
-          <a
-            class="clickable"
-            href={{rootFileUrlProxy.content}}
-            target={{or context.linkTarget "_top"}}
-          >
+  <ul class="details-property-list">
+    <li class="property-row root-file-path-property">
+      <span class="property-label">{{tt this "rootFilePath"}}:</span>
+      <span class="property-value">
+        {{#if value.rootFilePath}}
+          {{#if rootFileUrlProxy.content}}
+            <a
+              class="clickable azure"
+              href={{rootFileUrlProxy.content}}
+              target={{or context.linkTarget "_top"}}
+            >
+              {{value.rootFilePath}}
+            </a>
+          {{else}}
             {{value.rootFilePath}}
-          </a>
+          {{/if}}
         {{else}}
-          {{value.rootFilePath}}
+          <em>{{tt this "unknown"}}</em>
         {{/if}}
-      {{else}}
-        <em>{{tt this "unknown"}}</em>
-      {{/if}}
-    </span>
-  </div>
+      </span>
+    </li>
+  </ul>
 </div>

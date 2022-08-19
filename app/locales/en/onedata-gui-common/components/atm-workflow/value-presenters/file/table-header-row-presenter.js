@@ -1,7 +1,7 @@
 import commons from './commons';
 
 export default {
-  name: 'Name',
+  name: 'Files',
   path: commons.path,
   size: commons.size,
 };

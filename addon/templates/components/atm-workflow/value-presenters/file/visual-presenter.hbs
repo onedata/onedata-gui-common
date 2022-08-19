@@ -7,7 +7,7 @@
 <div class="details-content">
   {{#if urlProxy.content}}
     <a
-      class="file-name details-title clickable"
+      class="file-name details-title clickable azure"
       href={{urlProxy.content}}
       target={{or context.linkTarget "_top"}}
     >
@@ -19,28 +19,30 @@
     </span>
   {{/if}}
 
-  <div class="property-row path-property">
-    <strong class="property-label">{{tt this "path"}}:</strong>
-    <span class="property-value">
-      {{#if pathProxy.isPending}}
-        <em>{{tt this "loading"}}</em>
-      {{else if (eq pathProxy.content null)}}
-        <em>{{tt this "unknown"}}</em>
-      {{else}}
-        {{pathProxy.content}}
-      {{/if}}
-    </span>
-  </div>
-  <div class="property-row size-property">
-    <strong class="property-label">{{tt this "size"}}:</strong>
-    <span class="property-value">
-      {{#if sizeProxy.isPending}}
-        <em>{{tt this "loading"}}</em>
-      {{else if (eq sizeProxy.content null)}}
-        <em>{{tt this "unknown"}}</em>
-      {{else}}
-        {{sizeProxy.content}}
-      {{/if}}
-    </span>
-  </div>
+  <ul class="details-property-list">
+    <li class="property-row path-property">
+      <span class="property-label">{{tt this "path"}}:</span>
+      <span class="property-value">
+        {{#if pathProxy.isPending}}
+          <em>{{tt this "loading"}}</em>
+        {{else if (eq pathProxy.content null)}}
+          <em>{{tt this "unknown"}}</em>
+        {{else}}
+          {{pathProxy.content}}
+        {{/if}}
+      </span>
+    </li>
+    <li class="property-row size-property">
+      <span class="property-label">{{tt this "size"}}:</span>
+      <span class="property-value">
+        {{#if sizeProxy.isPending}}
+          <em>{{tt this "loading"}}</em>
+        {{else if (eq sizeProxy.content null)}}
+          <em>{{tt this "unknown"}}</em>
+        {{else}}
+          {{sizeProxy.content}}
+        {{/if}}
+      </span>
+    </li>
+  </ul>
 </div>

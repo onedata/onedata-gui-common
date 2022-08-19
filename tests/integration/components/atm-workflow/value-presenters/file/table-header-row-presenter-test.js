@@ -23,7 +23,7 @@ describe('Integration | Component | atm workflow/value presenters/file/table hea
     const ths = findAll('.table-header-row-presenter th');
     expect(ths).to.have.length(3);
     expect(ths[0]).to.have.class('column-name')
-      .and.to.have.trimmed.text('Name');
+      .and.to.have.trimmed.text('Files');
     expect(ths[1]).to.have.class('column-path')
       .and.to.have.trimmed.text('Path');
     expect(ths[2]).to.have.class('column-size')

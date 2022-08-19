@@ -23,7 +23,7 @@ describe('Integration | Component | atm workflow/value presenters/dataset/table 
     const ths = findAll('.table-header-row-presenter th');
     expect(ths).to.have.length(2);
     expect(ths[0]).to.have.class('column-name')
-      .and.to.have.trimmed.text('Name');
+      .and.to.have.trimmed.text('Datasets');
     expect(ths[1]).to.have.class('column-root-file-path')
       .and.to.have.trimmed.text('Root file path');
   });

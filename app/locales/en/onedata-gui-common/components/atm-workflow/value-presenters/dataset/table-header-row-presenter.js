@@ -1,6 +1,6 @@
 import commons from './commons';
 
 export default {
-  name: 'Name',
+  name: 'Datasets',
   rootFilePath: commons.rootFilePath,
 };

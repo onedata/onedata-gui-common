@@ -2,7 +2,7 @@
   {{one-icon class=(concat-classes "dataset-icon" iconClass) icon=icon}}
   {{#if urlProxy.content}}
     <a
-      class="dataset-name details-title clickable"
+      class="dataset-name details-title clickable azure"
       href={{urlProxy.content}}
       target={{or context.linkTarget "_top"}}
     >
@@ -18,7 +18,7 @@
   {{#if value.rootFilePath}}
     {{#if rootFileUrlProxy.content}}
       <a
-        class="clickable"
+        class="clickable azure"
         href={{rootFileUrlProxy.content}}
         target={{or context.linkTarget "_top"}}
       >

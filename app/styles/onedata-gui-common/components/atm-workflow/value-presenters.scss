@@ -8,42 +8,6 @@
   display: grid;
 }
 
-.visual-presenter {
-  .property-row + .property-row {
-    margin-top: 0.3em;
-  }
-
-  .property-row {
-    white-space: nowrap;
-  }
-
-  .property-label {
-    padding-right: 0.3em;
-  }
-
-  .property-value {
-    white-space: initial;
-    word-break: break-word;
-  }
-
-  &.details-with-icon {
-    display: grid;
-    grid-template-columns: min-content auto;
-
-    .details-icon {
-      margin-left: -0.1em;
-      font-size: 400%;
-    }
-
-    .details-title {
-      @include font-semibold();
-      margin-bottom: 0.2em;
-      font-size: 125%;
-      word-break: break-word;
-    }
-  }
-}
-
 .array-visual-presenter {
   .raw-presenter {
     min-height: 15em;

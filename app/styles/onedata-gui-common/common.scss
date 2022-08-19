@@ -881,3 +881,50 @@ p.text-separated {
     background-color: $color-one-gray-sand;
   }
 }
+
+.details-property-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+
+  .property-row {
+    white-space: nowrap;
+  }
+
+  .property-label {
+    @include font-semibold();
+    padding-right: 0.3em;
+  }
+
+  .property-value {
+    white-space: initial;
+    word-break: break-word;
+  }
+}
+
+.details-with-icon {
+  display: grid;
+  grid-template-columns: min-content auto;
+
+  .details-icon {
+    transform: translateY(-0.05em);
+    margin-left: -0.1em;
+    font-size: 350%;
+  }
+
+  .details-content {
+    padding-left: 0.7em;
+    min-width: 0;
+  }
+
+  .details-title {
+    @include font-semibold();
+    display: block;
+    margin-bottom: 0.4em;
+    word-break: break-word;
+  }
+
+  .details-property-list {
+    font-size: 90%;
+  }
+}
