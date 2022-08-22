@@ -33,6 +33,14 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.actionsPopoverContent',
 
   /**
+   * Name of property with unique value of actions in `actionsArray` to use in `each`
+   * template helper to prevent unnecessary re-rendering.
+   * @virtual optional
+   * @type {string|undefined}
+   */
+  actionKey: undefined,
+
+  /**
    * @type {Array<Utils.Action|Action>>}
    */
   actionsArray: Object.freeze([]),
