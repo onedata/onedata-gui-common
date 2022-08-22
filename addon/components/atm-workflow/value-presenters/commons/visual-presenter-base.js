@@ -1,5 +1,5 @@
 /**
- * A base component for all "table body row" value presenters.
+ * A base component for all "visual" value presenters.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -12,10 +12,8 @@ import { dasherize } from '@ember/string';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 export default Component.extend(I18n, {
-  tagName: 'tr',
-  classNames: ['table-body-row-presenter'],
+  classNames: ['visual-presenter'],
   classNameBindings: ['typeClass'],
-  attributeBindings: ['dataRowId:data-row-id'],
 
   /**
    * @virtual
@@ -37,29 +35,24 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual optional
-   * @type {Array<string>}
-   */
-  columns: undefined,
-
-  /**
-   * Value for `data-row-id` attribute (used by infinite scroll).
-   * @virtual optional
-   * @type {string}
-   */
-  dataRowId: undefined,
-
-  /**
-   * @virtual optional
    * @type {AtmDataSpecType}
    */
   dataSpecType: undefined,
+
+  /**
+   * If set to true, then this component is a top presenter component (has no
+   * parent presenters).
+   * @virtual optional
+   * @type {boolean}
+   */
+  isRootPresenter: true,
 
   /**
    * @override
    */
   i18nPrefix: computed('dataSpecType', function i18nPrefix() {
     const type = this.dataSpecType ?? 'fallback';
-    return `components.atmWorkflow.valuePresenters.${type}.tableBodyRowPresenter`;
+    return `components.atmWorkflow.valuePresenters.${type}.visualPresenter`;
   }),
 
   /**
@@ -67,6 +60,6 @@ export default Component.extend(I18n, {
    */
   typeClass: computed('dataSpecType', function typeClass() {
     const type = this.dataSpecType ?? 'fallback';
-    return `${dasherize(type)}-table-body-row-presenter`;
+    return `${dasherize(type)}-visual-presenter`;
   }),
 });

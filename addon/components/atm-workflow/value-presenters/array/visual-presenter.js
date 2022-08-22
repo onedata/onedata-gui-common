@@ -1,4 +1,12 @@
-import Component from '@ember/component';
+/**
+ * A "visual" array value presenter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
+import VisualPresenterBase from '../commons/visual-presenter-base';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/array/visual-presenter';
@@ -7,42 +15,14 @@ import {
   getRawValuePresenter,
   getVisualValuePresenter,
 } from 'onedata-gui-common/utils/atm-workflow/value-presenters';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend(I18n, {
+export default VisualPresenterBase.extend({
   layout,
-  classNames: ['visual-presenter', 'array-visual-presenter'],
 
   /**
    * @override
    */
-  i18nPrefix: 'components.atmWorkflow.valuePresenters.array.visualPresenter',
-
-  /**
-   * @virtual
-   * @type {AtmArray}
-   */
-  value: undefined,
-
-  /**
-   * @virtual
-   * @type {AtmDataSpec}
-   */
-  dataSpec: undefined,
-
-  /**
-   * @virtual optional
-   * @type {AtmValuePresenterContext}
-   */
-  context: undefined,
-
-  /**
-   * If set to true, then this component is a top presenter component (has no
-   * parent presenters).
-   * @virtual optional
-   * @type {boolean}
-   */
-  isRootPresenter: true,
+  dataSpecType: 'array',
 
   /**
    * @type {number}

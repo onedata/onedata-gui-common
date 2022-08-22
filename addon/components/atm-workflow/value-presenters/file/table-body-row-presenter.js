@@ -1,19 +1,25 @@
+/**
+ * A "table body row" file value presenter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import TableBodyRowPresenterBase from '../commons/table-body-row-presenter-base';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import _ from 'lodash';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/file/table-body-row-presenter';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { FileDetails } from './visual-presenter';
 
-export default TableBodyRowPresenterBase.extend(I18n, {
+export default TableBodyRowPresenterBase.extend({
   layout,
-  classNames: ['file-table-body-row-presenter'],
 
   /**
    * @override
    */
-  i18nPrefix: 'components.atmWorkflow.valuePresenters.file.tableBodyRowPresenter',
+  dataSpecType: 'file',
 
   /**
    * @type {FileDetails|undefined}

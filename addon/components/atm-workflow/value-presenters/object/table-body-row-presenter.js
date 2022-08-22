@@ -1,10 +1,22 @@
+/**
+ * A "table body row" object value presenter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import TableBodyRowPresenterBase from '../commons/table-body-row-presenter-base';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/object/table-body-row-presenter';
 
 export default TableBodyRowPresenterBase.extend({
   layout,
-  classNames: ['object-table-body-row-presenter'],
+
+  /**
+   * @override
+   */
+  dataSpecType: 'object',
 
   /**
    * @type {ComputedProperty<(propertyName: string) => string>}

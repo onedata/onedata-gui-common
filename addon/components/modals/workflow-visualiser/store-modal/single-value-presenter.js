@@ -1,3 +1,11 @@
+/**
+ * Shows single value store content.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';

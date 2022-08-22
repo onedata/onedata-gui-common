@@ -1,15 +1,20 @@
+/**
+ * A "single line" time series measurement value presenter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import SingleLinePresenterBase from '../commons/single-line-presenter-base';
 import { computed } from '@ember/object';
 import { dateFormat } from 'onedata-gui-common/helpers/date-format';
 
 export default SingleLinePresenterBase.extend({
-  classNames: ['time-series-measurement-single-line-presenter'],
-
   /**
-   * @virtual
-   * @type {AtmRange}
+   * @override
    */
-  value: undefined,
+  dataSpecType: 'timeSeriesMeasurement',
 
   /**
    * @override
@@ -27,6 +32,6 @@ export default SingleLinePresenterBase.extend({
       dateFormat([timestamp], { format: 'report' }) : '–';
     const formattedValue = value !== null ? String(value) : '–';
 
-    return `[TSMeas. ${formattedTimestamp};${formattedTsName};${formattedValue}]`;
+    return `[${this.t('typeLabel')} ${formattedTimestamp};${formattedTsName};${formattedValue}]`;
   }),
 });

@@ -1,14 +1,19 @@
+/**
+ * A "single line" dataset value presenter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import SingleLinePresenterBase from '../commons/single-line-presenter-base';
 import { computed } from '@ember/object';
 
 export default SingleLinePresenterBase.extend({
-  classNames: ['dataset-single-line-presenter'],
-
   /**
-   * @virtual
-   * @type {AtmDataset}
+   * @override
    */
-  value: undefined,
+  dataSpecType: 'dataset',
 
   /**
    * @override
@@ -21,6 +26,6 @@ export default SingleLinePresenterBase.extend({
     const lastPathElement = pathElements[pathElements.length - 1];
     const formattedFileName = lastPathElement ? `"${lastPathElement}"` : '–';
 
-    return `[Dataset ${formattedFileName}]`;
+    return `[${this.t('typeLabel')} ${formattedFileName}]`;
   }),
 });

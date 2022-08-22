@@ -1,5 +1,16 @@
+/**
+ * A "raw" time series measurement value presenter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import RawPresenterBase from '../commons/raw-presenter-base';
 
 export default RawPresenterBase.extend({
-  classNames: ['time-series-measurement-raw-presenter'],
+  /**
+   * @override
+   */
+  dataSpecType: 'timeSeriesMeasurement',
 });

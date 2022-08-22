@@ -51,6 +51,7 @@
  *   columnsCount=2
  *   title=(tt this "tableTitle")
  *   titleTip=(tt this "tableTitleTip")
+ *   doesOpenDetailsOnClick=true
  *   as |section|
  * }}
  *   {{#if (eq section.sectionName "tableHead")}}

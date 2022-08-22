@@ -16,7 +16,7 @@ describe('Integration | Component | one file icon', function () {
   });
 
   it('shows regular file icon and has "main-type-regular" class for regular file type', async function () {
-    this.set('fileType', FileType.Regural);
+    this.set('fileType', FileType.Regular);
     await render(hbs`{{one-file-icon fileType=fileType}}`);
 
     expect(find('.one-file-icon')).to.have.class('main-type-regular');

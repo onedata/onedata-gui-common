@@ -1,14 +1,19 @@
+/**
+ * A "single line" range value presenter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import SingleLinePresenterBase from '../commons/single-line-presenter-base';
 import { computed } from '@ember/object';
 
 export default SingleLinePresenterBase.extend({
-  classNames: ['range-single-line-presenter'],
-
   /**
-   * @virtual
-   * @type {AtmRange}
+   * @override
    */
-  value: undefined,
+  dataSpecType: 'range',
 
   /**
    * @override
@@ -18,6 +23,6 @@ export default SingleLinePresenterBase.extend({
     const end = typeof this.value?.end === 'number' ? this.value.end : 0;
     const step = typeof this.value?.step === 'number' ? this.value.step : 0;
 
-    return `[Range ${start}:${end}:${step}]`;
+    return `[${this.t('typeLabel')} ${start}:${end}:${step}]`;
   }),
 });

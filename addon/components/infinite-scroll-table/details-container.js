@@ -1,3 +1,15 @@
+/**
+ * Renders details container for selected `entry`. Is visible on screen
+ * when `entry` is non-empty.
+ *
+ * This component does not close by itself. It calls `onClose` when user tries
+ * to close it and then (if you want to close it) you should clear `entry` value.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/infinite-scroll-table/details-container';

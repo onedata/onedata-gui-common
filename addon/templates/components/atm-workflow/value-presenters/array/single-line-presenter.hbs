@@ -1,1 +1,1 @@
-[Array ({{items.length}}){{#if itemsToRender.length}}: <span class="items">{{#each itemsToRender as |item index|}}{{component itemPresenter value=item dataSpec=itemDataSpec}}{{if (not-eq (add index 1) itemsToRender.length) ", "}}{{/each}}{{if hasMoreItems ", …"}}</span>{{/if}}]
+[{{tt this "typeLabel"}} ({{items.length}}){{#if itemsToRender.length}}: <span class="items">{{#each itemsToRender as |item index|}}{{component itemPresenter value=item dataSpec=itemDataSpec}}{{if (not-eq (add index 1) itemsToRender.length) ", "}}{{/each}}{{if hasMoreItems ", …"}}</span>{{/if}}]

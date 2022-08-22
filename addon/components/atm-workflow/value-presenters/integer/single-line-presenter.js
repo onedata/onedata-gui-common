@@ -1,11 +1,16 @@
+/**
+ * A "single line" integer value presenter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import SingleLinePresenterBase from '../commons/single-line-presenter-base';
 
 export default SingleLinePresenterBase.extend({
-  classNames: ['integer-single-line-presenter'],
-
   /**
-   * @virtual
-   * @type {number}
+   * @override
    */
-  value: undefined,
+  dataSpecType: 'integer',
 });

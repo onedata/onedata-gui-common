@@ -1,11 +1,27 @@
+/**
+ * Renders a tagged icon presenting file type. For regular files and directories
+ * it is enough to specify `fileType`. In case of symbolic link it is expected
+ * to provide also `symbolicLinkTargetType`.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { computed } from '@ember/object';
 import { and, eq, conditional, raw } from 'ember-awesome-macros';
 import OneIconTagged from 'onedata-gui-common/components/one-icon-tagged';
 import { FileType, SymbolicLinkTargetType } from 'onedata-gui-common/utils/file';
 
+const fileTypeToClassString = {
+  [FileType.Regular]: 'regular',
+  [FileType.Directory]: 'directory',
+  [FileType.SymbolicLink]: 'symbolic-link',
+};
+
 export default OneIconTagged.extend({
   classNames: ['one-file-icon', 'tag-right'],
-  classNameBindings: ['fileTypeClasses', 'isSymbolicLinkBroken:danger'],
+  classNameBindings: ['fileTypeClasses', 'isBrokenSymbolicLink:danger'],
 
   /**
    * @virtual
@@ -26,7 +42,6 @@ export default OneIconTagged.extend({
     switch (this.effectiveFileType) {
       case FileType.Directory:
         return 'browser-directory';
-      case FileType.Regular:
       default:
         return 'browser-file';
     }
@@ -40,8 +55,7 @@ export default OneIconTagged.extend({
       return null;
     }
 
-    return this.symbolicLinkTargetType === SymbolicLinkTargetType.Broken ?
-      'x' : 'shortcut';
+    return this.isBrokenSymbolicLink ? 'x' : 'shortcut';
   }),
 
   /**
@@ -52,7 +66,7 @@ export default OneIconTagged.extend({
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isSymbolicLinkBroken: and(
+  isBrokenSymbolicLink: and(
     eq('fileType', raw(FileType.SymbolicLink)),
     eq('symbolicLinkTargetType', raw(SymbolicLinkTargetType.Broken))
   ),
@@ -64,8 +78,13 @@ export default OneIconTagged.extend({
     'fileType',
     'symbolicLinkTargetType',
     function effectiveFileType() {
-      return this.fileType === FileType.SymbolicLink ?
-        this.symbolicLinkTargetType : this.fileType;
+      if (this.isBrokenSymbolicLink) {
+        return FileType.Regular;
+      } else if (this.fileType === FileType.SymbolicLink) {
+        return this.symbolicLinkTargetType;
+      } else {
+        return this.fileType ?? FileType.Regular;
+      }
     }
   ),
 
@@ -74,36 +93,14 @@ export default OneIconTagged.extend({
    */
   fileTypeClasses: computed(
     'fileType',
-    'symbolicLinkTargetType',
-    'isSymbolicLinkBroken',
+    'effectiveFileType',
+    'isBrokenSymbolicLink',
     function fileTypeClass() {
-      let mainType;
-      let effType;
-      switch (this.fileType) {
-        case FileType.Directory:
-          mainType = effType = 'directory';
-          break;
-        case FileType.SymbolicLink:
-          mainType = 'symbolic-link';
-          switch (this.symbolicLinkTargetType) {
-            case SymbolicLinkTargetType.Directory:
-              effType = 'directory';
-              break;
-            case SymbolicLinkTargetType.Regular:
-            case SymbolicLinkTargetType.Broken:
-            default:
-              effType = 'regular';
-              break;
-          }
-          break;
-        case FileType.Regular:
-        default:
-          mainType = effType = 'regular';
-      }
+      const mainTypeString = fileTypeToClassString[this.fileType ?? FileType.Regular];
+      const effTypeString = fileTypeToClassString[this.effectiveFileType];
+      const extraClasses = this.isBrokenSymbolicLink ? 'symbolic-link-broken' : '';
 
-      const extraClasses = this.isSymbolicLinkBroken ? 'symbolic-link-broken' : '';
-
-      return `main-type-${mainType} effective-type-${effType} ${extraClasses}`;
+      return `main-type-${mainTypeString} effective-type-${effTypeString} ${extraClasses}`;
     }
   ),
 });

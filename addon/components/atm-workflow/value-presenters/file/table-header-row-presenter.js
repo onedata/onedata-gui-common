@@ -1,13 +1,19 @@
+/**
+ * A "table header row" file value presenter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import TableHeaderRowPresenterBase from '../commons/table-header-row-presenter-base';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/file/table-header-row-presenter';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default TableHeaderRowPresenterBase.extend(I18n, {
+export default TableHeaderRowPresenterBase.extend({
   layout,
-  classNames: ['file-table-header-row-presenter'],
 
   /**
    * @override
    */
-  i18nPrefix: 'components.atmWorkflow.valuePresenters.file.tableHeaderRowPresenter',
+  dataSpecType: 'file',
 });

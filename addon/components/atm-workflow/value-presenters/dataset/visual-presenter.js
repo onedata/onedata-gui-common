@@ -1,31 +1,26 @@
-import Component from '@ember/component';
+/**
+ * A "visual" dataset value presenter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
+import VisualPresenterBase from '../commons/visual-presenter-base';
 import EmberObject, { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { promise, conditional, eq, raw } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/dataset/visual-presenter';
 import { FileType } from 'onedata-gui-common/utils/file';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend(I18n, {
+export default VisualPresenterBase.extend({
   layout,
-  classNames: ['visual-presenter', 'dataset-visual-presenter', 'details-with-icon'],
+  classNames: ['details-with-icon'],
 
   /**
    * @override
    */
-  i18nPrefix: 'components.atmWorkflow.valuePresenters.dataset.visualPresenter',
-
-  /**
-   * @virtual
-   * @type {AtmFile}
-   */
-  value: undefined,
-
-  /**
-   * @virtual optional
-   * @type {AtmValuePresenterContext}
-   */
-  context: undefined,
+  dataSpecType: 'dataset',
 
   /**
    * @type {ComputedProperty<DatasetDetails>}
