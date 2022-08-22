@@ -48,17 +48,29 @@
 
         {{#each entries key="index" as |entry index|}}
           {{#if (or (not renderedEntriesLimit) (lt index renderedEntriesLimit))}}
-            {{yield (hash
-              sectionName="entryRow"
-              entry=entry
-              rowClasses=(concat-classes
-                "table-entry data-row"
-                (if doesOpenDetailsOnClick "clickable")
-                (if (eq selectedEntry.index entry.index) "selected")
-              )
-              dataRowId=entry.id
-              onRowClick=(action "entryClick" entry)
-            )}}
+            {{#if (not-eq entry.id undefined)}}
+              {{yield (hash
+                sectionName="entryRow"
+                entry=entry
+                rowClasses=(concat-classes
+                  "table-entry data-row"
+                  (if doesOpenDetailsOnClick "clickable")
+                  (if (eq selectedEntry.index entry.index) "selected")
+                )
+                dataRowId=entry.id
+                onRowClick=(action "entryClick" entry)
+              )}}
+            {{else}}
+              {{!-- invalidated row --}}
+              <tr class="table-entry data-row">
+                <td colspan={{columnsCount}} class="loading-row-cell">
+                  {{spin-spinner-block
+                    sizeClass="xs"
+                    class="absolute-middle-centered"
+                  }}
+                </td>
+              </tr>
+            {{/if}}
           {{/if}}
         {{/each}}
 

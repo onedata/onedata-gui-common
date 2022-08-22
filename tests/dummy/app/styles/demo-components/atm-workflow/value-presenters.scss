@@ -1,5 +1,9 @@
-.raw-presenter-container,
-.full-value-presenter-container {
+.raw-presenter-container {
   display: grid;
   height: 100px;
+}
+
+.full-value-presenter-container {
+  display: grid;
+  height: 500px;
 }
