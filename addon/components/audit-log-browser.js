@@ -344,7 +344,7 @@ export default Component.extend(I18n, {
 
       if (newRenderedItemsLimit < this.logEntries.length) {
         next(() => this.increaseRenderedItemsLimit());
-      } else if (newRenderedItemsLimit === this.logEntries.length) {
+      } else if (newRenderedItemsLimit >= this.logEntries.length) {
         newRenderedItemsLimit = null;
       }
 
