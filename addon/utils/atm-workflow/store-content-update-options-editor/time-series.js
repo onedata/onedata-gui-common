@@ -80,7 +80,7 @@ const FormElement = FormFieldsCollectionGroup.extend({
   /**
    * @type {Array<AtmTimeSeriesSchema>}
    */
-  generatorSchemas: reads('storeConfig.schemas'),
+  generatorSchemas: reads('storeConfig.timeSeriesCollectionSchema.timeSeriesSchemas'),
 
   /**
    * @override
@@ -173,7 +173,7 @@ const FormElement = FormFieldsCollectionGroup.extend({
  */
 function formValuesToStoreContentUpdateOptions(values, { storeConfig }) {
   const nameGeneratorToTypeMap = _.fromPairs(
-    ((storeConfig || {}).schemas || [])
+    (storeConfig?.timeSeriesCollectionSchema?.timeSeriesSchemas ?? [])
     .map(({ nameGeneratorType, nameGenerator }) => [nameGenerator, nameGeneratorType])
   );
   const dispatchRules = get(values, '__fieldsValueNames')

@@ -59,7 +59,7 @@ export default Component.extend(...mixins, {
   /**
    * @type {ComputedProperty<Array<AtmTimeSeriesSchema>>}
    */
-  timeSeriesSchemas: reads('store.config.schemas'),
+  timeSeriesSchemas: reads('store.config.timeSeriesCollectionSchema.timeSeriesSchemas'),
 
   /**
    * @type {ComputedProperty<OneTimeSeriesChartsSectionSpec>}

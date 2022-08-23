@@ -42,13 +42,15 @@ describe('Integration | Utility | atm workflow/store content update options edit
 
   beforeEach(function () {
     const storeConfig = {
-      schemas: [{
-        nameGeneratorType: 'exact',
-        nameGenerator: 'exactName',
-      }, {
-        nameGeneratorType: 'addPrefix',
-        nameGenerator: 'addPrefixName',
-      }],
+      timeSeriesCollectionSchema: {
+        timeSeriesSchemas: [{
+          nameGeneratorType: 'exact',
+          nameGenerator: 'exactName',
+        }, {
+          nameGeneratorType: 'addPrefix',
+          nameGenerator: 'addPrefixName',
+        }],
+      },
     };
     this.setProperties({
       storeConfig,
