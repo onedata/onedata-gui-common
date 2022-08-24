@@ -235,15 +235,11 @@ export default Component.extend(I18n, {
     }
   )),
 
-  liveObserver: observer('live', function liveObserver() {
-    const {
-      live,
-      chartConfigurations,
-    } = this.getProperties('live', 'chartConfigurations');
-
+  liveObserver: observer('live', async function liveObserver() {
+    const chartConfigurations = await this.chartConfigurationsProxy;
     chartConfigurations.forEach((config) => {
-      if (config.getViewParameters().live !== live) {
-        config.setViewParameters({ live });
+      if (config.getViewParameters().live !== this.live) {
+        config.setViewParameters({ live: this.live });
       }
     });
   }),
@@ -263,14 +259,16 @@ export default Component.extend(I18n, {
     }));
   },
 
-  willDestroyElement() {
+  async willDestroyElement() {
     this._super(...arguments);
-    const chartModels = this.cacheFor('chartModels');
-    if (chartModels) {
+    const chartModelsProxy = this.cacheFor('chartModelsProxy');
+    if (chartModelsProxy) {
+      const chartModels = await this.chartModelsProxy;
       chartModels.forEach((model) => model.destroy());
     } else {
-      const chartConfigurations = this.cacheFor('chartConfiguration');
-      if (chartConfigurations) {
+      const chartConfigurationsProxy = this.cacheFor('chartConfigurationProxy');
+      if (chartConfigurationsProxy) {
+        const chartConfigurations = await chartConfigurationsProxy;
         chartConfigurations.forEach((config) => config.destroy());
       }
     }

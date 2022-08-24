@@ -85,6 +85,15 @@ export default Component.extend(...mixins, {
     return this.onQueryBatcherFetchData.bind(this);
   }),
 
+  /**
+   * @type {ComputedProperty<(collectionId?: string) => Promise<Array<AtmTimeSeriesSchema>>>}
+   */
+  onGetTimeSeriesSchemas: computed(function onGetTimeSeriesSchemas() {
+    return async () => {
+      return this.store?.config?.timeSeriesCollectionSchema?.timeSeriesSchemas ?? [];
+    };
+  }),
+
   tsNamesPerGeneratorUpdaterToggler: observer(
     'store.contentMayChange',
     function tsNamesPerGeneratorUpdaterToggler() {
