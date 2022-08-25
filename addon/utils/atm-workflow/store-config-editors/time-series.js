@@ -190,7 +190,7 @@ function formValuesToStoreConfig(values) {
     timeSeriesSchemas: formTimeSeriesSchemas,
     dashboardSpec,
   } = getProperties(values, 'timeSeriesSchemas', 'dashboardSpec');
-  const schemas = get(formTimeSeriesSchemas, '__fieldsValueNames')
+  const timeSeriesSchemas = get(formTimeSeriesSchemas, '__fieldsValueNames')
     .map((valueName) => get(formTimeSeriesSchemas, valueName))
     .filter(Boolean)
     .map((timeSeriesSchemaValue) => {
@@ -240,7 +240,9 @@ function formValuesToStoreConfig(values) {
   }
 
   return {
-    schemas,
+    timeSeriesCollectionSchema: {
+      timeSeriesSchemas,
+    },
     dashboardSpec: parsedDashboardSpec,
   };
 }
@@ -263,11 +265,9 @@ function storeConfigToFormValues(storeConfig) {
     ),
   });
 
-  if (!storeConfig || !Array.isArray(storeConfig.schemas)) {
-    return values;
-  }
-
-  storeConfig.schemas.forEach((rawTimeSeriesSchema, idx) => {
+  const rawTimeseriesSchemas =
+    storeConfig?.timeSeriesCollectionSchema?.timeSeriesSchemas;
+  rawTimeseriesSchemas?.forEach((rawTimeSeriesSchema, idx) => {
     if (!rawTimeSeriesSchema) {
       return;
     }

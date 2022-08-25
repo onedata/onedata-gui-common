@@ -259,7 +259,45 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
         this.get('rootGroup.valuesSource.storeEditor')
       );
       expect(storeConfig).to.deep.equal({
-        schemas: [{
+        timeSeriesCollectionSchema: {
+          timeSeriesSchemas: [{
+            nameGeneratorType: 'addPrefix',
+            nameGenerator: 'name_',
+            unit: 'bytes',
+            metrics: {
+              first1m: {
+                aggregator: 'first',
+                resolution: 60,
+                retention: 1440,
+              },
+              id2: {
+                aggregator: 'last',
+                resolution: 0,
+                retention: 1,
+              },
+            },
+          }, {
+            nameGeneratorType: 'exact',
+            nameGenerator: 'my_name',
+            unit: 'custom:Liters',
+            metrics: {
+              sum1w: {
+                aggregator: 'sum',
+                resolution: 7 * 24 * 60 * 60,
+                retention: 520,
+              },
+            },
+          }],
+        },
+        dashboardSpec: null,
+      });
+      expect(this.get('rootGroup.isValid')).to.be.true;
+    });
+
+  it('allows to show existing measurement specs from value constraints', async function () {
+    const formValues = timeSeriesEditor.storeConfigToFormValues({
+      timeSeriesCollectionSchema: {
+        timeSeriesSchemas: [{
           nameGeneratorType: 'addPrefix',
           nameGenerator: 'name_',
           unit: 'bytes',
@@ -287,41 +325,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
             },
           },
         }],
-        dashboardSpec: null,
-      });
-      expect(this.get('rootGroup.isValid')).to.be.true;
-    });
-
-  it('allows to show existing measurement specs from value constraints', async function () {
-    const formValues = timeSeriesEditor.storeConfigToFormValues({
-      schemas: [{
-        nameGeneratorType: 'addPrefix',
-        nameGenerator: 'name_',
-        unit: 'bytes',
-        metrics: {
-          first1m: {
-            aggregator: 'first',
-            resolution: 60,
-            retention: 1440,
-          },
-          id2: {
-            aggregator: 'last',
-            resolution: 0,
-            retention: 1,
-          },
-        },
-      }, {
-        nameGeneratorType: 'exact',
-        nameGenerator: 'my_name',
-        unit: 'custom:Liters',
-        metrics: {
-          sum1w: {
-            aggregator: 'sum',
-            resolution: 7 * 24 * 60 * 60,
-            retention: 520,
-          },
-        },
-      }],
+      },
       dashboardSpec: null,
     });
 

@@ -181,7 +181,9 @@ export default Component.extend(I18n, {
       id: taskTimeSeriesDropdownOptionValue,
       type: 'timeSeries',
       config: {
-        schemas: [],
+        timeSeriesCollectionSchema: {
+          timeSeriesSchemas: [],
+        },
         dashboardSpec: null,
       },
     });
@@ -735,7 +737,9 @@ export default Component.extend(I18n, {
 
     const taskData = this.dumpToTask();
     const newConfig = get(taskData, 'timeSeriesStoreConfig') || {
-      schemas: [],
+      timeSeriesCollectionSchema: {
+        timeSeriesSchemas: [],
+      },
       dashboardSpec: null,
     };
     this.set('timeSeriesStore.config', newConfig);

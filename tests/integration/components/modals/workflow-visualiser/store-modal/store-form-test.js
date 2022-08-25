@@ -422,18 +422,20 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           description: 'someDescription',
           type: 'timeSeries',
           config: {
-            schemas: [{
-              nameGeneratorType: 'exact',
-              nameGenerator: 'some_name',
-              unit: 'bytes',
-              metrics: {
-                sum5s: {
-                  aggregator: 'sum',
-                  resolution: 5,
-                  retention: 1440,
+            timeSeriesCollectionSchema: {
+              timeSeriesSchemas: [{
+                nameGeneratorType: 'exact',
+                nameGenerator: 'some_name',
+                unit: 'bytes',
+                metrics: {
+                  sum5s: {
+                    aggregator: 'sum',
+                    resolution: 5,
+                    retention: 1440,
+                  },
                 },
-              },
-            }],
+              }],
+            },
             dashboardSpec: null,
           },
           requiresInitialContent: false,
@@ -546,18 +548,20 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         description: 'desc',
         type: 'timeSeries',
         config: {
-          schemas: [{
-            nameGeneratorType: 'exact',
-            nameGenerator: 'some_name',
-            unit: 'bytes',
-            metrics: {
-              sum5s: {
-                aggregator: 'sum',
-                resolution: 5,
-                retention: 1440,
+          timeSeriesCollectionSchema: {
+            timeSeriesSchemas: [{
+              nameGeneratorType: 'exact',
+              nameGenerator: 'some_name',
+              unit: 'bytes',
+              metrics: {
+                sum5s: {
+                  aggregator: 'sum',
+                  resolution: 5,
+                  retention: 1440,
+                },
               },
-            },
-          }],
+            }],
+          },
           dashboardSpec: null,
         },
       }));
@@ -701,18 +705,20 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         description: 'desc',
         type: 'timeSeries',
         config: {
-          schemas: [{
-            nameGeneratorType: 'exact',
-            nameGenerator: 'some_name',
-            unit: 'bytes',
-            metrics: {
-              sum5s: {
-                aggregator: 'sum',
-                resolution: 5,
-                retention: 1440,
+          timeSeriesCollectionSchema: {
+            timeSeriesSchemas: [{
+              nameGeneratorType: 'exact',
+              nameGenerator: 'some_name',
+              unit: 'bytes',
+              metrics: {
+                sum5s: {
+                  aggregator: 'sum',
+                  resolution: 5,
+                  retention: 1440,
+                },
               },
-            },
-          }],
+            }],
+          },
           dashboardSpec: null,
         },
       }));

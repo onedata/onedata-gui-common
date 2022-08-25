@@ -59,7 +59,7 @@ export default Component.extend(...mixins, {
   /**
    * @type {ComputedProperty<Array<AtmTimeSeriesSchema>>}
    */
-  timeSeriesSchemas: reads('store.config.schemas'),
+  timeSeriesSchemas: reads('store.config.timeSeriesCollectionSchema.timeSeriesSchemas'),
 
   /**
    * @type {ComputedProperty<OneTimeSeriesChartsSectionSpec>}
@@ -83,6 +83,15 @@ export default Component.extend(...mixins, {
    */
   queryBatcherFetchDataCallback: computed(function queryBatcherFetchDataCallback() {
     return this.onQueryBatcherFetchData.bind(this);
+  }),
+
+  /**
+   * @type {ComputedProperty<(collectionId?: string) => Promise<Array<AtmTimeSeriesSchema>>>}
+   */
+  onGetTimeSeriesSchemas: computed(function onGetTimeSeriesSchemas() {
+    return async () => {
+      return this.store?.config?.timeSeriesCollectionSchema?.timeSeriesSchemas ?? [];
+    };
   }),
 
   tsNamesPerGeneratorUpdaterToggler: observer(
