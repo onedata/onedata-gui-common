@@ -207,8 +207,7 @@ export default Component.extend(I18n, {
     'normalizedExternalDataSources',
     async function chartConfigurationsProxy() {
       const chartSpecs = this.sectionSpec.charts ?? [];
-      const configurations = [];
-      for (const chartSpec of chartSpecs) {
+      return await allFulfilled(chartSpecs.map(async (chartSpec) => {
         const configuration = new OTSCConfiguration({
           nowTimestampOffset: this.globalTimeSecondsOffset ?? 0,
           chartDefinition: chartSpec,
@@ -216,9 +215,8 @@ export default Component.extend(I18n, {
           externalDataSources: this.normalizedExternalDataSources,
         });
         configuration.setViewParameters({ live: this.live });
-        configurations.push(configuration);
-      }
-      return configurations;
+        return configuration;
+      }));
     }
   )),
 
@@ -381,8 +379,8 @@ async function getTimeResolutionSpecs({
     });
 
   // Map found series sources to resolutions
-  const resolutionsPerSource = await allFulfilled(foundSeriesSources
-    .map(async ({
+  const resolutionsPerSource = await allFulfilled(
+    foundSeriesSources.map(async ({
       collectionRef,
       timeSeriesNameGenerator,
       metricNames,
@@ -390,7 +388,8 @@ async function getTimeResolutionSpecs({
       timeSeriesSchemas: await onGetTimeSeriesSchemas(collectionRef),
       timeSeriesNameGenerator,
       metricNames,
-    })));
+    }))
+  );
   const sortedCommonResolutions = _.intersection(...resolutionsPerSource)
     .sort((res1, res2) => res1 - res2);
 
