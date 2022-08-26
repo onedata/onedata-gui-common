@@ -9,7 +9,7 @@
         {{one-label-tip
           class="title-tip"
           title=titleTip
-          tooltipClass=titleTipClassNames
+          tooltipClass=titleTipClassName
         }}
       {{/if}}
     </div>
@@ -52,7 +52,7 @@
               {{yield (hash
                 sectionName="entryRow"
                 entry=entry
-                rowClasses=(concat-classes
+                rowClassName=(concat-classes
                   "table-entry data-row"
                   (if doesOpenDetailsOnClick "clickable")
                   (if (eq selectedEntry.index entry.index) "selected")

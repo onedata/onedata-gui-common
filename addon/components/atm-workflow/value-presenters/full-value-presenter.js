@@ -1,3 +1,15 @@
+/**
+ * A "full" value presenter component, which is able to present any type of
+ * data using switchable raw and visual presenters.
+ *
+ * NOTE: Some data types don't have a dedicated visual presenter. In such case
+ * only a raw presenter is available for a user.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';

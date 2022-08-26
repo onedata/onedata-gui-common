@@ -20,7 +20,7 @@
  *   each entry. Here you have to place `tr` tag with appropriate `td`s inside.
  *   This section contains other yielded props:
  *   - `section.entry` - current entry to show (fetched via `onFetchEntries`)
- *   - `section.rowClasses` - row classes that must be assigned to your `tr` tag
+ *   - `section.rowClassName` - row class that must be assigned to your `tr` tag
  *     (infinite scroll depends on them),
  *   - `section.dataRowId` - `data-row-id` attribute value for your `tr` tag
  *     that also must be assigned (like above, it is for infinite scroll),
@@ -28,7 +28,7 @@
  *     see details window for your entries on click, you have to use it.
  *   Minimal example (where every shown `tr` tag attribute is required) is below:
  *   ```
- *   <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}>
+ *   <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}>
  *     // your cells goes here...
  *   </tr>
  *   ```
@@ -61,7 +61,7 @@
  *     </tr>
  *   {{else if (eq section.sectionName "entryRow")}}
  *     <tr
- *       class=section.rowClasses}}
+ *       class={{section.rowClassName}}
  *       data-row-id={{section.dataRowId}}
  *       onclick={{section.onRowClick}}
  *     >
@@ -182,11 +182,11 @@ export default Component.extend(I18n, {
   titleTip: undefined,
 
   /**
-   * Additional classes that should be added to the rendered title tooltip.
+   * Additional class that should be added to the rendered title tooltip.
    * @virtual optional
    * @type {string}
    */
-  titleTipClassNames: undefined,
+  titleTipClassName: undefined,
 
   /**
    * When true, opens details view on entry click.

@@ -239,7 +239,7 @@ describe('Integration | Component | audit log browser', function () {
     await render(hbs`{{audit-log-browser
       title="test"
       titleTip="some tip"
-      titleTipClassNames="abc"
+      titleTipClassName="abc"
     }}`);
 
     expect(find('.table-title')).to.have.trimmed.text('test');

@@ -72,7 +72,7 @@ describe('Integration | Component | infinite scroll table', function () {
     await render(hbs`<div style="display: grid; height: 10em;">
       {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
         {{#if (eq section.sectionName "entryRow")}}
-          <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}>
+          <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}>
             <td class="my-td">{{section.entry.index}}</td>
           </tr>
         {{/if}}
@@ -97,7 +97,7 @@ describe('Integration | Component | infinite scroll table', function () {
     await render(hbs`<div style="display: grid; height: 10em;">
       {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
         {{#if (eq section.sectionName "entryRow")}}
-          <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}></tr>
+          <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}></tr>
         {{/if}}
       {{/infinite-scroll-table}}
     </div>`);
@@ -110,7 +110,7 @@ describe('Integration | Component | infinite scroll table', function () {
     await render(hbs`<div style="display: grid; height: 10em;">
       {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
         {{#if (eq section.sectionName "entryRow")}}
-          <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}><td></td></tr>
+          <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}><td></td></tr>
         {{/if}}
       {{/infinite-scroll-table}}
     </div>`);
@@ -122,7 +122,7 @@ describe('Integration | Component | infinite scroll table', function () {
     await render(hbs`<div style="display: grid; height: 10em;">
       {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
         {{#if (eq section.sectionName "entryRow")}}
-          <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}><td></td></tr>
+          <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}><td></td></tr>
         {{/if}}
       {{/infinite-scroll-table}}
     </div>`);
@@ -167,7 +167,7 @@ describe('Integration | Component | infinite scroll table', function () {
             as |section|
           }}
             {{#if (eq section.sectionName "entryRow")}}
-              <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}>
+              <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}>
                 <td>{{section.entry.index}}</td>
               </tr>
             {{/if}}
@@ -199,7 +199,7 @@ describe('Integration | Component | infinite scroll table', function () {
             as |section|
           }}
             {{#if (eq section.sectionName "entryRow")}}
-              <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}><td></td></tr>
+              <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}><td></td></tr>
             {{/if}}
           {{/infinite-scroll-table}}
         </div>`);
@@ -227,7 +227,7 @@ describe('Integration | Component | infinite scroll table', function () {
             as |section|
           }}
             {{#if (eq section.sectionName "entryRow")}}
-              <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}>
+              <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}>
                 <td>{{section.entry.index}}</td>
               </tr>
             {{/if}}
@@ -280,11 +280,11 @@ describe('Integration | Component | infinite scroll table', function () {
     expect(tipContent).to.equal('some tip');
   });
 
-  it('adds custom classes to the table title tip when "titleTipClassNames" is set', async function () {
+  it('adds custom classes to the table title tip when "titleTipClassName" is set', async function () {
     await render(hbs`{{infinite-scroll-table
       title="test"
       titleTip="some tip"
-      titleTipClassNames="abc"
+      titleTipClassName="abc"
     }}`);
 
     const tooltipHelper = await new OneTooltipHelper(
@@ -299,7 +299,7 @@ describe('Integration | Component | infinite scroll table', function () {
       await render(hbs`<div style="display: grid; height: 10em;">
         {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
           {{#if (eq section.sectionName "entryRow")}}
-            <tr class={{section.rowClasses}} data-row-id={{section.dataRowId}}><td></td></tr>
+            <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}><td></td></tr>
           {{/if}}
         {{/infinite-scroll-table}}
       </div>`);
@@ -320,7 +320,7 @@ describe('Integration | Component | infinite scroll table', function () {
         }}
           {{#if (eq section.sectionName "entryRow")}}
             <tr
-              class={{section.rowClasses}}
+              class={{section.rowClassName}}
               data-row-id={{section.dataRowId}}
               onclick={{section.onRowClick}}
             ><td></td></tr>
@@ -362,7 +362,7 @@ describe('Integration | Component | infinite scroll table', function () {
             <tr><th class="my-th"></th></tr>
           {{else if (eq section.sectionName "entryRow")}}
             <tr
-              class={{section.rowClasses}}
+              class={{section.rowClassName}}
               data-row-id={{section.dataRowId}}
               onclick={{section.onRowClick}}
             ><td></td></tr>
@@ -386,7 +386,7 @@ describe('Integration | Component | infinite scroll table', function () {
       }}
         {{#if (eq section.sectionName "entryRow")}}
           <tr
-            class={{section.rowClasses}}
+            class={{section.rowClassName}}
             data-row-id={{section.dataRowId}}
             onclick={{section.onRowClick}}
           ><td></td></tr>

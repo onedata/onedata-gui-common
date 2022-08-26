@@ -73,15 +73,18 @@ $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-paddin
   }
 
   .table-entry {
-    background-color: $color-one-white;
-
-    &.clickable:hover {
+    &.clickable:hover > td {
       filter: brightness(95%);
     }
 
     > td {
+      background-color: $color-one-white;
       height: var(--infinite-scroll-table-row-height, 50px);
       overflow: hidden;
+
+      // Using background-clip to fix border hiding under background in Firefox.
+      // See more: https://bugzilla.mozilla.org/show_bug.cgi?id=688556
+      background-clip: padding-box;
     }
   }
 

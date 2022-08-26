@@ -59,12 +59,12 @@
         context=context
         columns=visibleColumns
         click=section.onRowClick
-        class=section.rowClasses
+        class=section.rowClassName
         dataRowId=section.dataRowId
       }}
     {{else}}
       <tr
-        class={{concat-classes section.rowClasses "text-danger"}}
+        class={{concat-classes section.rowClassName "text-danger"}}
         data-row-id={{section.dataRowId}}
         onclick={{section.onRowClick}}
       >

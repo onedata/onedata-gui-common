@@ -21,7 +21,7 @@ const fileTypeToClassString = {
 
 export default OneIconTagged.extend({
   classNames: ['one-file-icon', 'tag-right'],
-  classNameBindings: ['fileTypeClasses', 'isBrokenSymbolicLink:danger'],
+  classNameBindings: ['fileTypeClassName', 'isBrokenSymbolicLink:danger'],
 
   /**
    * @virtual
@@ -91,7 +91,7 @@ export default OneIconTagged.extend({
   /**
    * @type {ComputedProperty<string>}
    */
-  fileTypeClasses: computed(
+  fileTypeClassName: computed(
     'fileType',
     'effectiveFileType',
     'isBrokenSymbolicLink',

@@ -29,7 +29,7 @@
 /**
  * @typedef {Object} AtmDataset
  * @property {string} datasetId
- * @property {string} [rootFileId]
+ * @property {string} [rootFileId] CDMI object ID
  * @property {string} [rootFilePath]
  * @property {FileType} [rootFileType]
  */

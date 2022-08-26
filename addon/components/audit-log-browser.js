@@ -14,7 +14,7 @@
  * - shows log entry details inside sliding mini-window
  *   (see `doesOpenDetailsOnClick` to turn this on).
  * - allows to customize texts (see `noLogEntriesText`, `title`, `titleTip`,
- *   `titleTipClassNames`).
+ *   `titleTipClassName`).
  *
  * # WHAT EXACTLY IS AUDIT LOG?
  *
@@ -164,11 +164,11 @@ export default Component.extend(I18n, {
   titleTip: undefined,
 
   /**
-   * Additional classes that should be added to the rendered title tooltip.
+   * Additional class that should be added to the rendered title tooltip.
    * @virtual optional
    * @type {string}
    */
-  titleTipClassNames: undefined,
+  titleTipClassName: undefined,
 
   /**
    * When true, opens details view on log entry click.
@@ -197,8 +197,8 @@ export default Component.extend(I18n, {
       });
 
       return {
-        entries: results?.logEntries,
-        isLast: results?.isLast,
+        entries: results?.logEntries ?? [],
+        isLast: results?.isLast ?? true,
       };
     };
   }),
