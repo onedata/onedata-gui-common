@@ -16,6 +16,6 @@ export default {
   rawValuePresenter: `${valuePresentersDefaultLocation}/dataset/raw-presenter`,
   visualValuePresenter: `${valuePresentersDefaultLocation}/dataset/visual-presenter`,
   tableHeaderRowValuePresenter: `${valuePresentersDefaultLocation}/dataset/table-header-row-presenter`,
-  tableBodyRowValuePresenters: `${valuePresentersDefaultLocation}/dataset/table-body-row-presenter`,
+  tableBodyRowValuePresenter: `${valuePresentersDefaultLocation}/dataset/table-body-row-presenter`,
   getTableValuePresenterColumnsCount: () => 2,
 };

@@ -5,7 +5,7 @@
 {{/if}}
 
 <ol class="array-items-list" start="0">
-  {{#each itemsToRender as |item index|}}
+  {{#each itemsToRenderWithKeys key="key" as |item index|}}
     {{#let (get expandedItems index) as |isExpanded|}}
       <li class={{concat-classes "array-item" (if isExpanded "expanded")}}>
         <div
@@ -13,7 +13,7 @@
           onclick={{action "toggleItemExpand" index}}
         >
           {{component itemHeaderPresenterComponent
-            value=item
+            value=item.value
             dataSpec=itemDataSpec
             context=context
           }}
@@ -25,7 +25,7 @@
         {{#if isExpanded}}
           <div class="array-item-content">
             {{component itemContentPresenterComponent
-              value=item
+              value=item.value
               dataSpec=itemDataSpec
               context=context
               isRootPresenter=false

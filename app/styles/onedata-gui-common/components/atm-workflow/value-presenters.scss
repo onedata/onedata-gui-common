@@ -90,6 +90,13 @@
   }
 }
 
+.table-body-row-presenter,
+.visual-presenter {
+  a.clickable {
+    text-decoration: underline;
+  }
+}
+
 .dataset-visual-presenter,
 .dataset-table-body-row-presenter {
   .dataset-icon {

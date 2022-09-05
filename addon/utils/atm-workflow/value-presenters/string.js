@@ -15,6 +15,6 @@ export default {
   singleLineValuePresenter: `${valuePresentersDefaultLocation}/string/single-line-presenter`,
   rawValuePresenter: `${valuePresentersDefaultLocation}/string/raw-presenter`,
   tableHeaderRowValuePresenter: `${valuePresentersDefaultLocation}/string/table-header-row-presenter`,
-  tableBodyRowValuePresenters: `${valuePresentersDefaultLocation}/string/table-body-row-presenter`,
+  tableBodyRowValuePresenter: `${valuePresentersDefaultLocation}/string/table-body-row-presenter`,
   getTableValuePresenterColumnsCount: () => 1,
 };

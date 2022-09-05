@@ -6,6 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { valuePresentersDefaultLocation } from './commons';
 import integerPresentersSpec from './integer';
 import stringPresentersSpec from './string';
 import objectPresentersSpec from './object';
@@ -84,11 +85,11 @@ const presenterSpecsPerType = {
 
 /**
  * A "single line" presenter component which should be used when there is no
- * fitting component in `singleLineValuePresenters`.
+ * fitting component in type-specific presenters.
  * @type {string}
  */
 const fallbackSingleLineValuePresenter =
-  'atm-workflow/value-presenters/fallback/single-line-presenter';
+  `${valuePresentersDefaultLocation}/fallback/single-line-presenter`;
 
 /**
  * Returns a name of a "single line" presenter component suitable for passed data spec.
@@ -102,11 +103,11 @@ export function getSingleLineValuePresenter(dataSpec) {
 
 /**
  * A "raw" presenter component which should be used when there is no
- * fitting component in `rawValuePresenters`.
+ * fitting component in type-specific presenters.
  * @type {string}
  */
 const fallbackRawValuePresenter =
-  'atm-workflow/value-presenters/fallback/raw-presenter';
+  `${valuePresentersDefaultLocation}/fallback/raw-presenter`;
 
 /**
  * Returns a name of a "raw" presenter component suitable for passed data spec.
@@ -131,11 +132,11 @@ export function getVisualValuePresenter(dataSpec) {
 
 /**
  * A "table header row" presenter component which should be used when there is no
- * fitting component in `tableHeaderRowValuePresenters`.
+ * fitting component in type-specific presenters.
  * @type {string}
  */
 const fallbackTableHeaderRowValuePresenter =
-  'atm-workflow/value-presenters/fallback/table-header-row-presenter';
+  `${valuePresentersDefaultLocation}/fallback/table-header-row-presenter`;
 
 /**
  * Returns a name of a "table header row" presenter component suitable for
@@ -150,11 +151,11 @@ export function getTableHeaderRowPresenter(dataSpec) {
 
 /**
  * A "table body row" presenter component which should be used when there is no
- * fitting component in `tableBodyRowValuePresenters`.
+ * fitting component in type-specific presenters.
  * @type {string}
  */
 const fallbackTableBodyRowValuePresenter =
-  'atm-workflow/value-presenters/fallback/table-body-row-presenter';
+  `${valuePresentersDefaultLocation}/fallback/table-body-row-presenter`;
 
 /**
  * Returns a name of a "table body row" presenter component suitable for
@@ -169,7 +170,7 @@ export function getTableBodyRowPresenter(dataSpec) {
 
 /**
  * A callback calculating number of columns in table presenters which should be
- * used when there is no fitting callback in `tableValuePresenterColumnsCounts`.
+ * used when there is no fitting callback in type-specific presenters.
  * @type {(columns: Array<string>|undefined) => number}
  */
 const fallbackGetTableValuePresenterColumnsCount = () => 1;

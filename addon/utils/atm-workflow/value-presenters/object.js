@@ -15,7 +15,7 @@ export default {
   singleLineValuePresenter: `${valuePresentersDefaultLocation}/object/single-line-presenter`,
   rawValuePresenter: `${valuePresentersDefaultLocation}/object/raw-presenter`,
   tableHeaderRowValuePresenter: `${valuePresentersDefaultLocation}/object/table-header-row-presenter`,
-  tableBodyRowValuePresenters: `${valuePresentersDefaultLocation}/object/table-body-row-presenter`,
+  tableBodyRowValuePresenter: `${valuePresentersDefaultLocation}/object/table-body-row-presenter`,
   getTableValuePresenterColumnsCount: (columns) =>
     Array.isArray(columns) && columns.length ? columns.length : 1,
 };

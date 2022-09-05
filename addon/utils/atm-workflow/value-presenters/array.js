@@ -16,6 +16,6 @@ export default {
   rawValuePresenter: `${valuePresentersDefaultLocation}/array/raw-presenter`,
   visualValuePresenter: `${valuePresentersDefaultLocation}/array/visual-presenter`,
   tableHeaderRowValuePresenter: `${valuePresentersDefaultLocation}/array/table-header-row-presenter`,
-  tableBodyRowValuePresenters: `${valuePresentersDefaultLocation}/array/table-body-row-presenter`,
+  tableBodyRowValuePresenter: `${valuePresentersDefaultLocation}/array/table-body-row-presenter`,
   getTableValuePresenterColumnsCount: () => 1,
 };

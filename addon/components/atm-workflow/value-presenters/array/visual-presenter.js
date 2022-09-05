@@ -53,6 +53,13 @@ export default VisualPresenterBase.extend({
   }),
 
   /**
+   * @type {ComputedProperty<Array<{ key: string, value: unknown}>>}
+   */
+  itemsToRenderWithKeys: computed('itemsToRender', function itemsWithKeysToRender() {
+    return this.itemsToRender.map((item) => ({ value: item, key: JSON.stringify(item) }));
+  }),
+
+  /**
    * @type {ComputedProperty<boolean>}
    */
   isShowingMoreItemsPossible: computed(
