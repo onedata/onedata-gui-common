@@ -6,7 +6,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { dasherize } from '@ember/string';
+import integerPresentersSpec from './integer';
+import stringPresentersSpec from './string';
+import objectPresentersSpec from './object';
+import filePresentersSpec from './file';
+import datasetPresentersSpec from './dataset';
+import rangePresentersSpec from './range';
+import timeSeriesMeasurementPresentersSpec from './time-series-measurement';
+import arrayPresentersSpec from './array';
 
 /**
  * # WHAT ARE VALUE PRESENTERS
@@ -62,29 +69,25 @@ import { dasherize } from '@ember/string';
  */
 
 /**
- * Contains names of "single line" presenter components for data types.
- * @type {Object<AtmDataSpecType, string>}
+ * @type {Object<AtmDataSpecType, ValuePresentersSpecification>}
  */
-export const singleLineValuePresenters = [
-  'integer',
-  'string',
-  'object',
-  'file',
-  'dataset',
-  'range',
-  'array',
-  'timeSeriesMeasurement',
-].reduce((acc, type) => {
-  acc[type] = `atm-workflow/value-presenters/${dasherize(type)}/single-line-presenter`;
-  return acc;
-}, {});
+const presenterSpecsPerType = {
+  integer: integerPresentersSpec,
+  string: stringPresentersSpec,
+  object: objectPresentersSpec,
+  file: filePresentersSpec,
+  dataset: datasetPresentersSpec,
+  range: rangePresentersSpec,
+  timeSeriesMeasurement: timeSeriesMeasurementPresentersSpec,
+  array: arrayPresentersSpec,
+};
 
 /**
  * A "single line" presenter component which should be used when there is no
  * fitting component in `singleLineValuePresenters`.
  * @type {string}
  */
-export const fallbackSingleLineValuePresenter =
+const fallbackSingleLineValuePresenter =
   'atm-workflow/value-presenters/fallback/single-line-presenter';
 
 /**
@@ -93,33 +96,16 @@ export const fallbackSingleLineValuePresenter =
  * @returns {string}
  */
 export function getSingleLineValuePresenter(dataSpec) {
-  return singleLineValuePresenters[dataSpec?.type] ?? fallbackSingleLineValuePresenter;
+  return presenterSpecsPerType[dataSpec?.type]?.singleLineValuePresenter ??
+    fallbackSingleLineValuePresenter;
 }
-
-/**
- * Contains names of "raw" presenter components for data types.
- * @type {Object<AtmDataSpecType, string>}
- */
-export const rawValuePresenters = [
-  'integer',
-  'string',
-  'object',
-  'file',
-  'dataset',
-  'range',
-  'array',
-  'timeSeriesMeasurement',
-].reduce((acc, type) => {
-  acc[type] = `atm-workflow/value-presenters/${dasherize(type)}/raw-presenter`;
-  return acc;
-}, {});
 
 /**
  * A "raw" presenter component which should be used when there is no
  * fitting component in `rawValuePresenters`.
  * @type {string}
  */
-export const fallbackRawValuePresenter =
+const fallbackRawValuePresenter =
   'atm-workflow/value-presenters/fallback/raw-presenter';
 
 /**
@@ -128,23 +114,9 @@ export const fallbackRawValuePresenter =
  * @returns {string}
  */
 export function getRawValuePresenter(dataSpec) {
-  return rawValuePresenters[dataSpec?.type] ?? fallbackRawValuePresenter;
+  return presenterSpecsPerType[dataSpec?.type]?.rawValuePresenter ??
+    fallbackRawValuePresenter;
 }
-
-/**
- * Contains names of "visual" presenter components for data types.
- * @type {Object<AtmDataSpecType, string>}
- */
-export const visualValuePresenters = [
-  'file',
-  'dataset',
-  'range',
-  'array',
-  'timeSeriesMeasurement',
-].reduce((acc, type) => {
-  acc[type] = `atm-workflow/value-presenters/${dasherize(type)}/visual-presenter`;
-  return acc;
-}, {});
 
 /**
  * Returns a name of a "visual" presenter component suitable for passed data spec.
@@ -154,33 +126,15 @@ export const visualValuePresenters = [
  * @returns {string|null}
  */
 export function getVisualValuePresenter(dataSpec) {
-  return visualValuePresenters[dataSpec?.type] ?? null;
+  return presenterSpecsPerType[dataSpec?.type]?.visualValuePresenter ?? null;
 }
-
-/**
- * Contains names of "table header row" presenter components for data types.
- * @type {Object<AtmDataSpecType, string>}
- */
-export const tableHeaderRowValuePresenters = [
-  'integer',
-  'string',
-  'object',
-  'file',
-  'dataset',
-  'range',
-  'array',
-  'timeSeriesMeasurement',
-].reduce((acc, type) => {
-  acc[type] = `atm-workflow/value-presenters/${dasherize(type)}/table-header-row-presenter`;
-  return acc;
-}, {});
 
 /**
  * A "table header row" presenter component which should be used when there is no
  * fitting component in `tableHeaderRowValuePresenters`.
  * @type {string}
  */
-export const fallbackTableHeaderRowValuePresenter =
+const fallbackTableHeaderRowValuePresenter =
   'atm-workflow/value-presenters/fallback/table-header-row-presenter';
 
 /**
@@ -190,34 +144,16 @@ export const fallbackTableHeaderRowValuePresenter =
  * @returns {string}
  */
 export function getTableHeaderRowPresenter(dataSpec) {
-  return tableHeaderRowValuePresenters[dataSpec?.type] ??
+  return presenterSpecsPerType[dataSpec?.type]?.tableHeaderRowValuePresenter ??
     fallbackTableHeaderRowValuePresenter;
 }
-
-/**
- * Contains names of "table body row" presenter components for data types.
- * @type {Object<AtmDataSpecType, string>}
- */
-export const tableBodyRowValuePresenters = [
-  'integer',
-  'string',
-  'object',
-  'file',
-  'dataset',
-  'range',
-  'array',
-  'timeSeriesMeasurement',
-].reduce((acc, type) => {
-  acc[type] = `atm-workflow/value-presenters/${dasherize(type)}/table-body-row-presenter`;
-  return acc;
-}, {});
 
 /**
  * A "table body row" presenter component which should be used when there is no
  * fitting component in `tableBodyRowValuePresenters`.
  * @type {string}
  */
-export const fallbackTableBodyRowValuePresenter =
+const fallbackTableBodyRowValuePresenter =
   'atm-workflow/value-presenters/fallback/table-body-row-presenter';
 
 /**
@@ -227,31 +163,16 @@ export const fallbackTableBodyRowValuePresenter =
  * @returns {string}
  */
 export function getTableBodyRowPresenter(dataSpec) {
-  return tableBodyRowValuePresenters[dataSpec?.type] ??
+  return presenterSpecsPerType[dataSpec?.type]?.tableBodyRowValuePresenter ??
     fallbackTableBodyRowValuePresenter;
 }
-
-/**
- * Contains callbacks calculating number of columns in table presenters for data types.
- * @type {Object<AtmDataSpecType, (columns: Array<string>|undefined) => number>}
- */
-export const tableValuePresenterColumnsCounts = {
-  integer: () => 1,
-  string: () => 1,
-  object: (columns) => Array.isArray(columns) && columns.length ? columns.length : 1,
-  file: () => 3,
-  dataset: () => 2,
-  range: () => 3,
-  array: () => 1,
-  timeSeriesMeasurement: () => 3,
-};
 
 /**
  * A callback calculating number of columns in table presenters which should be
  * used when there is no fitting callback in `tableValuePresenterColumnsCounts`.
  * @type {(columns: Array<string>|undefined) => number}
  */
-export const fallbackTableValuePresenterColumnsCount = () => 1;
+const fallbackGetTableValuePresenterColumnsCount = () => 1;
 
 /**
  * Returns a number of table presenter columns.
@@ -260,6 +181,7 @@ export const fallbackTableValuePresenterColumnsCount = () => 1;
  * @returns {number}
  */
 export function getTableValuePresenterColumnsCount(dataSpec, columns) {
-  return tableValuePresenterColumnsCounts[dataSpec?.type]?.(columns) ??
-    fallbackTableValuePresenterColumnsCount(columns);
+  return presenterSpecsPerType[dataSpec?.type]
+    ?.getTableValuePresenterColumnsCount?.(columns) ??
+    fallbackGetTableValuePresenterColumnsCount(columns);
 }

@@ -12,6 +12,7 @@ import { reads } from '@ember/object/computed';
 import { promise, conditional, eq, raw } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/dataset/visual-presenter';
 import { FileType } from 'onedata-gui-common/utils/file';
+import { getDatasetNameFromRootFilePath } from 'onedata-gui-common/utils/dataset';
 
 export default VisualPresenterBase.extend({
   layout,
@@ -75,8 +76,7 @@ export const DatasetDetails = EmberObject.extend({
    * @type {ComputedProperty<string|null>}
    */
   name: computed('dataset', function name() {
-    const pathElements = (this.dataset?.rootFilePath || '').split('/');
-    return pathElements[pathElements.length - 1] ?? null;
+    return getDatasetNameFromRootFilePath(this.dataset?.rootFilePath);
   }),
 
   /**

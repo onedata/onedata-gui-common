@@ -61,7 +61,8 @@
                 onRowClick=(action "entryClick" entry)
               )}}
             {{else}}
-              {{!-- invalidated row --}}
+              {{!-- invalidated row - occurs when a scrolled down list is
+              reloaded and some of the entries are marked as not up-to-date  --}}
               <tr class="table-entry data-row">
                 <td colspan={{columnsCount}} class="loading-row-cell">
                   {{spin-spinner-block

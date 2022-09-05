@@ -1,10 +1,11 @@
-$infinite-scroll-table-header-bg-color: #FAFAFA;
+$infinite-scroll-table-header-bg-color: $block-background-color;
+$infinite-scroll-table-border-color: $block-border-color;
 $infinite-scroll-table-cell-padding: 0.5em;
 $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-padding;
 
 .infinite-scroll-table {
   position: relative;
-  border: 1px solid $main-border-color;
+  border: 1px solid $infinite-scroll-table-border-color;
   border-radius: $border-radius-base;
   overflow: hidden;
 
@@ -115,7 +116,7 @@ $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-paddin
     right: 0;
     left: var(--infinite-scroll-table-details-x-offset, 7em);
     z-index: 3;
-    border-left: 1px solid $main-border-color;
+    border-left: 1px solid $infinite-scroll-table-border-color;
     background-color: $color-one-white;
     // Additional 1em move to hide shadow which is outside of the container
     transform: translateX(100%) translateX(1em);
@@ -137,7 +138,7 @@ $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-paddin
       display: grid;
       place-items: center;
       background-color: lighten($color-one-semiwhite, 3%);
-      border-right: 1px solid $main-border-color;
+      border-right: 1px solid $infinite-scroll-table-border-color;
       overflow: hidden;
 
       &:hover {

@@ -1,13 +1,17 @@
 {{#if columns.length}}
   {{#each columns as |column|}}
-    <td class="column-object-property truncate">
-      {{evaluate-function stringifyObjectProperty column}}
+    <td class="column-object-property">
+      {{#truncated-string}}
+        {{evaluate-function stringifyObjectProperty column}}
+      {{/truncated-string}}
     </td>
   {{/each}}
 {{else}}
-  <td class="column-value truncate">
-    {{atm-workflow/value-presenters/object/single-line-presenter
-      value=value
-    }}
+  <td class="column-value">
+    {{#truncated-string}}
+      {{atm-workflow/value-presenters/object/single-line-presenter
+        value=value
+      }}
+    {{/truncated-string}}
   </td>
 {{/if}}

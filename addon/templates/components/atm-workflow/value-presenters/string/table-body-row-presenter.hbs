@@ -1,5 +1,7 @@
-<td class="column-value truncate">
-  {{atm-workflow/value-presenters/string/single-line-presenter
-    value=value
-  }}
+<td class="column-value">
+  {{#truncated-string}}
+    {{atm-workflow/value-presenters/string/single-line-presenter
+      value=value
+    }}
+  {{/truncated-string}}
 </td>

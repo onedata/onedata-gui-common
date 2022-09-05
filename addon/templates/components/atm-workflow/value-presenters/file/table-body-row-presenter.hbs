@@ -1,38 +1,44 @@
-<td class="column-name truncate">
-  {{one-file-icon
-    class="file-icon"
-    fileType=value.type
-    symbolicLinkTargetType=symbolicLinkTargetType
-  }}
-  {{#if urlProxy.content}}
-    <a
-      class="file-name details-title clickable azure"
-      href={{urlProxy.content}}
-      target={{or context.linkTarget "_top"}}
-    >
-      {{#if value.name}}{{value.name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
-    </a>
-  {{else}}
-    <span class="file-name details-title">
-      {{#if value.name}}{{value.name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
-    </span>
-  {{/if}}
+<td class="column-name">
+  {{#truncated-string}}
+    {{one-file-icon
+      class="file-icon"
+      fileType=value.type
+      symbolicLinkTargetType=symbolicLinkTargetType
+    }}
+    {{#if urlProxy.content}}
+      <a
+        class="file-name details-title clickable azure"
+        href={{urlProxy.content}}
+        target={{or context.linkTarget "_top"}}
+      >
+        {{#if value.name}}{{value.name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+      </a>
+    {{else}}
+      <span class="file-name details-title">
+        {{#if value.name}}{{value.name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+      </span>
+    {{/if}}
+  {{/truncated-string}}
 </td>
-<td class="column-path truncate">
-  {{#if pathProxy.isPending}}
-    <em>{{tt this "loading"}}</em>
-  {{else if (eq pathProxy.content null)}}
-    <em>{{tt this "unknown"}}</em>
-  {{else}}
-    {{pathProxy.content}}
-  {{/if}}
+<td class="column-path">
+  {{#truncated-string class=(if pathProxy.isFulfilled "truncate-from-left")}}
+    {{#if pathProxy.isPending}}
+      <em>{{tt this "loading"}}</em>
+    {{else if (eq pathProxy.content null)}}
+      <em>{{tt this "unknown"}}</em>
+    {{else}}
+      <span class="value-container">{{pathProxy.content}}</span>
+    {{/if}}
+  {{/truncated-string}}
 </td>
-<td class="column-size truncate">
-  {{#if sizeProxy.isPending}}
-    <em>{{tt this "loading"}}</em>
-  {{else if (eq sizeProxy.content null)}}
-    <em>{{tt this "unknown"}}</em>
-  {{else}}
-    {{sizeProxy.content}}
-  {{/if}}
+<td class="column-size">
+  {{#truncated-string}}
+    {{#if sizeProxy.isPending}}
+      <em>{{tt this "loading"}}</em>
+    {{else if (eq sizeProxy.content null)}}
+      <em>{{tt this "unknown"}}</em>
+    {{else}}
+      {{sizeProxy.content}}
+    {{/if}}
+  {{/truncated-string}}
 </td>

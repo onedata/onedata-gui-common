@@ -64,6 +64,9 @@ module.exports = function (defaults) {
     'ember-cli-chartist': {
       useCustomCSS: true,
     },
+    'ember-cli-string-helpers': {
+      only: ['dasherize'],
+    },
     'ace': {
       themes: ['textmate'],
       modes: ['json', 'xml'],

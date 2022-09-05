@@ -1,3 +1,5 @@
-<th class="column-name">{{#truncated-string}}{{tt this "name"}}{{/truncated-string}}</th>
-<th class="column-path">{{#truncated-string}}{{tt this "path"}}{{/truncated-string}}</th>
-<th class="column-size">{{#truncated-string}}{{tt this "size"}}{{/truncated-string}}</th>
+{{#each (array "name" "path" "size") as |colName|}}
+  <th class="column-{{dasherize colName}}">
+    {{#truncated-string}}{{tt this colName}}{{/truncated-string}}
+  </th>
+{{/each}}

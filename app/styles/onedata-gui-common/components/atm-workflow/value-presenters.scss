@@ -45,7 +45,7 @@
 .full-value-presenter {
   display: grid;
   grid-template-rows: min-content auto;
-  border: 1px solid $main-border-color;
+  border: 1px solid $block-border-color;
   border-radius: $border-radius-base;
   // Using `overflow: hidden` to hide overflowing header background on corners.
   overflow: hidden;
@@ -56,8 +56,8 @@
 
   > .header-container {
     display: flex;
-    border-bottom: 1px solid $main-border-color;
-    background-color: #FAFAFA;
+    border-bottom: 1px solid $block-border-color;
+    background-color: $block-background-color;
 
     .presenter-type-selector {
       margin-right: auto;
@@ -78,6 +78,15 @@
 
   > .content-container {
     display: grid;
+  }
+}
+
+.table-body-row-presenter .truncated-string.truncate-from-left {
+  direction: rtl;
+  text-align: left;
+
+  .value-container {
+    unicode-bidi: plaintext;
   }
 }
 

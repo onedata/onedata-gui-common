@@ -9,6 +9,17 @@
     {{atm-workflow/value-presenters/integer/raw-presenter value=10}}
   </div>
 </p>
+<p>
+  Table:
+  <table>
+    <thead>
+      {{atm-workflow/value-presenters/integer/table-header-row-presenter}}
+    </thead>
+    <tbody>
+      {{atm-workflow/value-presenters/integer/table-body-row-presenter value=10}}
+    </tbody>
+  </table>
+</p>
 
 <h3>String</h3>
 <p>
@@ -20,6 +31,17 @@
   <div class="raw-presenter-container">
     {{atm-workflow/value-presenters/string/raw-presenter value="abc def"}}
   </div>
+</p>
+<p>
+  Table:
+  <table>
+    <thead>
+      {{atm-workflow/value-presenters/string/table-header-row-presenter}}
+    </thead>
+    <tbody>
+      {{atm-workflow/value-presenters/string/table-body-row-presenter value="abc def"}}
+    </tbody>
+  </table>
 </p>
 
 <h3>Object</h3>
@@ -33,6 +55,23 @@
     {{atm-workflow/value-presenters/object/raw-presenter value=obj1}}
   </div>
 </p>
+<p>
+  Table:
+  <table>
+    <thead>
+      {{atm-workflow/value-presenters/object/table-header-row-presenter
+        columns=(array "a" "c")
+      }}
+    </thead>
+    <tbody>
+      {{atm-workflow/value-presenters/object/table-body-row-presenter
+        value=obj1
+        columns=(array "a" "c")
+      }}
+    </tbody>
+  </table>
+</p>
+
 
 <h3>File</h3>
 <p>
@@ -48,6 +87,20 @@
 <p>
   Visual:
   {{atm-workflow/value-presenters/file/visual-presenter value=file1 context=context}}
+</p>
+<p>
+  Table:
+  <table>
+    <thead>
+      {{atm-workflow/value-presenters/file/table-header-row-presenter}}
+    </thead>
+    <tbody>
+      {{atm-workflow/value-presenters/file/table-body-row-presenter
+        value=file1
+        context=context
+      }}
+    </tbody>
+  </table>
 </p>
 
 <h3>Dataset</h3>
@@ -68,6 +121,20 @@
     context=context
   }}
 </p>
+<p>
+  Table:
+  <table>
+    <thead>
+      {{atm-workflow/value-presenters/dataset/table-header-row-presenter}}
+    </thead>
+    <tbody>
+      {{atm-workflow/value-presenters/dataset/table-body-row-presenter
+        value=dataset1
+        context=context
+      }}
+    </tbody>
+  </table>
+</p>
 
 <h3>Range</h3>
 <p>
@@ -83,6 +150,17 @@
 <p>
   Visual:
   {{atm-workflow/value-presenters/range/visual-presenter value=range1}}
+</p>
+<p>
+  Table:
+  <table>
+    <thead>
+      {{atm-workflow/value-presenters/range/table-header-row-presenter}}
+    </thead>
+    <tbody>
+      {{atm-workflow/value-presenters/range/table-body-row-presenter value=range1}}
+    </tbody>
+  </table>
 </p>
 
 <h3>Time series measurement</h3>
@@ -106,6 +184,19 @@
     value=tsMeasurement1
   }}
 </p>
+<p>
+  Table:
+  <table>
+    <thead>
+      {{atm-workflow/value-presenters/time-series-measurement/table-header-row-presenter}}
+    </thead>
+    <tbody>
+      {{atm-workflow/value-presenters/time-series-measurement/table-body-row-presenter
+        value=tsMeasurement1
+      }}
+    </tbody>
+  </table>
+</p>
 
 <h3>Array</h3>
 <p>
@@ -128,6 +219,21 @@
     dataSpec=array1DataSpec
     context=context
   }}
+</p>
+<p>
+  Table:
+  <table>
+    <thead>
+      {{atm-workflow/value-presenters/array/table-header-row-presenter}}
+    </thead>
+    <tbody>
+      {{atm-workflow/value-presenters/array/table-body-row-presenter
+        value=array1
+        dataSpec=array1DataSpec
+        context=context
+      }}
+    </tbody>
+  </table>
 </p>
 
 <h3>Single value presenter</h3>

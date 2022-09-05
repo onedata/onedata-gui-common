@@ -70,7 +70,7 @@ export default Component.extend({
             type: 'string',
           },
         },
-      }
+      },
     },
   }),
 

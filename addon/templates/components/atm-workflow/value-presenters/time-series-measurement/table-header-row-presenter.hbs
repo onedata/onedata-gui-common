@@ -1,3 +1,5 @@
-<th class="column-timestamp">{{#truncated-string}}{{tt this "timestamp"}}{{/truncated-string}}</th>
-<th class="column-ts-name">{{#truncated-string}}{{tt this "tsName"}}{{/truncated-string}}</th>
-<th class="column-value">{{#truncated-string}}{{tt this "value"}}{{/truncated-string}}</th>
+{{#each (array "timestamp" "tsName" "value") as |colName|}}
+  <th class="column-{{dasherize colName}}">
+    {{#truncated-string}}{{tt this colName}}{{/truncated-string}}
+  </th>
+{{/each}}

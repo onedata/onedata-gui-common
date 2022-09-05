@@ -1,5 +1,11 @@
-<td class="column-timestamp truncate">
-  {{date-format value.timestamp format="report" blank="—"}}
+<td class="column-timestamp">
+  {{#truncated-string}}
+    {{date-format value.timestamp format="report" blank="—"}}
+  {{/truncated-string}}
 </td>
-<td class="column-ts-name truncate">{{value.tsName}}</td>
-<td class="column-value truncate">{{value.value}}</td>
+<td class="column-ts-name">
+  {{#truncated-string}}{{value.tsName}}{{/truncated-string}}
+</td>
+<td class="column-value">
+  {{#truncated-string}}{{value.value}}{{/truncated-string}}
+</td>

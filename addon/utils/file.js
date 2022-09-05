@@ -1,5 +1,5 @@
 /**
- * Contains typedefs and enums related to files.
+ * Contains typedefs and enums and util functions related to files.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -36,3 +36,27 @@ export const SymbolicLinkTargetType = {
   Directory: FileType.Directory,
   Broken: null,
 };
+
+/**
+ * @type {string}
+ */
+export const directorySeparator = '/';
+
+/**
+ * Returns file name from file path. If file name cannot be extracted, `null`
+ * is returned.
+ * @param {string} filePath
+ * @returns {string|null}
+ */
+export function getFileNameFromPath(filePath) {
+  const pathElements = filePath?.split(directorySeparator) ?? [];
+  let lastPathElement = pathElements[pathElements.length - 1];
+
+  // If path ends with a directory separator, then the last element is `''`.
+  // In that case we should take the previoius element.
+  if (lastPathElement === '') {
+    lastPathElement = pathElements[pathElements.length - 2];
+  }
+
+  return lastPathElement || null;
+}
