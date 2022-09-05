@@ -62,7 +62,7 @@ describe('Integration | Component | one time series charts section', function ()
     };
 
     this.setProperties({
-      timeSeriesSchemas: [{
+      onGetTimeSeriesSchemas: async () => [{
         nameGeneratorType: 'exact',
         nameGenerator: 'values-total',
         metrics,
@@ -93,7 +93,7 @@ describe('Integration | Component | one time series charts section', function ()
 
   it('renders empty section when no arguments were passed', async function () {
     this.setProperties({
-      timeSeriesSchemas: null,
+      onGetTimeSeriesSchemas: null,
       onQueryBatcherFetchDataCallback: null,
       externalDataSources: null,
     });
@@ -254,7 +254,7 @@ describe('Integration | Component | one time series charts section', function ()
 async function renderComponent() {
   await render(hbs `{{one-time-series-charts-section
     sectionSpec=sectionSpec
-    timeSeriesSchemas=timeSeriesSchemas
+    onGetTimeSeriesSchemas=onGetTimeSeriesSchemas
     externalDataSources=externalDataSources
     onQueryBatcherFetchData=onQueryBatcherFetchDataCallback
   }}`);

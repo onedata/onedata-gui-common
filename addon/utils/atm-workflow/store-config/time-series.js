@@ -12,7 +12,7 @@ import { commonDataSpecFilters } from './commons';
 
 /**
  * @typedef {Object} AtmTimeSeriesStoreConfig
- * @property {Array<AtmTimeSeriesSchema>} schemas
+ * @property {{ timeSeriesSchemas: Array<AtmTimeSeriesSchema> }} timeSeriesCollectionSchema
  * @property {{ rootSection: OneTimeSeriesChartsSectionSpec }} [dashboardSpec]
  */
 

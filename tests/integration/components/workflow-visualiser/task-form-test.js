@@ -335,7 +335,9 @@ allPossibleStores.push({
   name: 'timeSeriesTimeSeriesMeasurementStore',
   type: 'timeSeries',
   config: {
-    schemas: [],
+    timeSeriesCollectionSchema: {
+      timeSeriesSchemas: [],
+    },
   },
   requiresInitialContent: false,
 });
@@ -368,7 +370,9 @@ const taskTimeSeriesStore = {
   name: 'Current task time series store',
   type: 'time series',
   config: {
-    schemas: [],
+    timeSeriesCollectionSchema: {
+      timeSeriesSchemas: [],
+    },
     dashboardSpec: null,
   },
   requiresInitialContent: false,

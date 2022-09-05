@@ -13,7 +13,8 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
-import { resolve } from 'rsvp';
+import { resolve, all as allFulfilled } from 'rsvp';
+import { promise } from 'ember-awesome-macros';
 import layout from '../templates/components/one-time-series-charts-section';
 import OTSCConfiguration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import OTSCModel from 'onedata-gui-common/utils/one-time-series-chart/model';
@@ -84,9 +85,9 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Array<AtmTimeSeriesSchema>}
+   * @type {(collectionId?: string) => Promise<Array<AtmTimeSeriesSchema>>}
    */
-  timeSeriesSchemas: undefined,
+  onGetTimeSeriesSchemas: undefined,
 
   /**
    * Chart external data sources available for all charts in this section.
@@ -146,11 +147,10 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<boolean>}
    */
   isSharedNavVisible: computed(
-    'sectionSpec.chartNavigation',
-    'chartConfigurations.length',
+    'sectionSpec.{chartNavigation,charts.length}',
     function isSharedNavVisible() {
-      return this.get('sectionSpec.chartNavigation') === 'sharedWithinSection' &&
-        this.get('chartConfigurations.length') > 0;
+      return this.sectionSpec?.chartNavigation === 'sharedWithinSection' &&
+        this.sectionSpec?.charts?.length > 0;
     }
   ),
 
@@ -199,85 +199,74 @@ export default Component.extend(I18n, {
   ),
 
   /**
-   * @type {ComputedProperty<Array<Utils.OneTimeSeriesChart.Configuration>>}
+   * @type {ComputedProperty<PromiseArray<Utils.OneTimeSeriesChart.Configuration>>}
    */
-  chartConfigurations: computed(
+  chartConfigurationsProxy: promise.array(computed(
     'sectionSpec.charts',
     'globalTimeSecondsOffset',
     'normalizedExternalDataSources',
-    function chartConfigurations() {
-      const chartSpecs = this.get('sectionSpec.charts') || [];
-      const {
-        live,
-        globalTimeSecondsOffset,
-        normalizedExternalDataSources,
-      } = this.getProperties(
-        'live',
-        'globalTimeSecondsOffset',
-        'normalizedExternalDataSources',
-      );
-      return chartSpecs.map((chartSpec) => {
+    async function chartConfigurationsProxy() {
+      const chartSpecs = this.sectionSpec.charts ?? [];
+      return await allFulfilled(chartSpecs.map(async (chartSpec) => {
         const configuration = new OTSCConfiguration({
-          nowTimestampOffset: globalTimeSecondsOffset || 0,
+          nowTimestampOffset: this.globalTimeSecondsOffset ?? 0,
           chartDefinition: chartSpec,
-          timeResolutionSpecs: this.getTimeResolutionSpecs(chartSpec),
-          externalDataSources: normalizedExternalDataSources,
+          timeResolutionSpecs: await this.getTimeResolutionSpecs(chartSpec),
+          externalDataSources: this.normalizedExternalDataSources,
         });
-        configuration.setViewParameters({ live });
+        configuration.setViewParameters({ live: this.live });
         return configuration;
-      });
+      }));
     }
-  ),
+  )),
 
   /**
-   * @type {ComputedProperty<Array<Utils.OneTimeSeriesChart.Model>>}
+   * @type {ComputedProperty<PromiseArray<Utils.OneTimeSeriesChart.Model>>}
    */
-  chartModels: computed('chartConfigurations.[]', function chartModels() {
-    return this.get('chartConfigurations').map((configuration) =>
-      OTSCModel.create({ configuration })
-    );
-  }),
+  chartModelsProxy: promise.array(computed(
+    'chartConfigurationsProxy',
+    async function chartModelsProxy() {
+      const chartConfigurations = await this.chartConfigurationsProxy;
+      return chartConfigurations.map((configuration) =>
+        OTSCModel.create({ configuration })
+      );
+    }
+  )),
 
-  liveObserver: observer('live', function liveObserver() {
-    const {
-      live,
-      chartConfigurations,
-    } = this.getProperties('live', 'chartConfigurations');
-
+  liveObserver: observer('live', async function liveObserver() {
+    const chartConfigurations = await this.chartConfigurationsProxy;
     chartConfigurations.forEach((config) => {
-      if (config.getViewParameters().live !== live) {
-        config.setViewParameters({ live });
+      if (config.getViewParameters().live !== this.live) {
+        config.setViewParameters({ live: this.live });
       }
     });
   }),
 
   init() {
     this._super(...arguments);
-    const {
-      timeSeriesSchemas,
-      queryBatchers,
-    } = this.getProperties('timeSeriesSchemas', 'queryBatchers');
 
-    let normalizedQueryBatchers = queryBatchers;
+    let normalizedQueryBatchers = this.queryBatchers;
     if (!normalizedQueryBatchers) {
       this.initializeQueryBatchers();
-      normalizedQueryBatchers = this.get('queryBatchers');
+      normalizedQueryBatchers = this.queryBatchers;
     }
 
     this.set('defaultCallbacks', new DefaultCallbacks({
-      timeSeriesSchemas,
+      onGetTimeSeriesSchemas: this.onGetTimeSeriesSchemas,
       queryBatchers: normalizedQueryBatchers,
     }));
   },
 
-  willDestroyElement() {
+  async willDestroyElement() {
     this._super(...arguments);
-    const chartModels = this.cacheFor('chartModels');
-    if (chartModels) {
+    const chartModelsProxy = this.cacheFor('chartModelsProxy');
+    if (chartModelsProxy) {
+      const chartModels = await this.chartModelsProxy;
       chartModels.forEach((model) => model.destroy());
     } else {
-      const chartConfigurations = this.cacheFor('chartConfiguration');
-      if (chartConfigurations) {
+      const chartConfigurationsProxy = this.cacheFor('chartConfigurationProxy');
+      if (chartConfigurationsProxy) {
+        const chartConfigurations = await chartConfigurationsProxy;
         chartConfigurations.forEach((config) => config.destroy());
       }
     }
@@ -296,7 +285,7 @@ export default Component.extend(I18n, {
       }, {}));
   },
 
-  getTimeResolutionSpecs(chartDefinition) {
+  async getTimeResolutionSpecs(chartDefinition) {
     const {
       onGetTimeResolutionSpecs,
       defaultCallbacks,
@@ -310,19 +299,19 @@ export default Component.extend(I18n, {
 // Contains default implementations of some of the callbacks needed by the component
 // and which are optional to provide through component API.
 class DefaultCallbacks {
-  constructor({ timeSeriesSchemas, queryBatchers }) {
+  constructor({ onGetTimeSeriesSchemas, queryBatchers }) {
     // Default `onGetTimeResolutionSpecs` when none was provided to the component
     this.onGetTimeResolutionSpecs = ({ chartDefinition }) =>
       getTimeResolutionSpecs({
         chartDefinition,
-        timeSeriesSchemas,
+        onGetTimeSeriesSchemas,
       });
     // Default `fetchSeries` when external source does not provide any
     this.fetchSeries = Object.keys(queryBatchers).reduce((acc, dataSourceName) => {
       acc[dataSourceName] = (seriesParameters, sourceParameters) => fetchSeries({
         seriesParameters,
         sourceParameters,
-        timeSeriesSchemas,
+        onGetTimeSeriesSchemas,
         queryBatcher: queryBatchers[dataSourceName],
       });
       return acc;
@@ -336,12 +325,12 @@ class DefaultCallbacks {
 }
 
 /**
- * @param {{ chartDefinition: OTSCChartDefinition, timeSeriesSchemas: Array<AtmTimeSeriesSchema> }} params
+ * @param {{ chartDefinition: OTSCChartDefinition, onGetTimeSeriesSchemas: (collectionRef: string) => Promise<Array<AtmTimeSeriesSchema>> }} params
  * @returns {Array<OTSCTimeResolutionSpec>}
  */
-function getTimeResolutionSpecs({
+async function getTimeResolutionSpecs({
   chartDefinition,
-  timeSeriesSchemas,
+  onGetTimeSeriesSchemas,
 }) {
   const seriesBuildersSpecs = (chartDefinition && chartDefinition.seriesBuilders || [])
     .filter(Boolean);
@@ -390,12 +379,17 @@ function getTimeResolutionSpecs({
     });
 
   // Map found series sources to resolutions
-  const resolutionsPerSource = foundSeriesSources
-    .map(({ timeSeriesNameGenerator, metricNames }) => getResolutionsForMetricNames({
-      timeSeriesSchemas,
+  const resolutionsPerSource = await allFulfilled(
+    foundSeriesSources.map(async ({
+      collectionRef,
       timeSeriesNameGenerator,
       metricNames,
-    }));
+    }) => getResolutionsForMetricNames({
+      timeSeriesSchemas: await onGetTimeSeriesSchemas(collectionRef),
+      timeSeriesNameGenerator,
+      metricNames,
+    }))
+  );
   const sortedCommonResolutions = _.intersection(...resolutionsPerSource)
     .sort((res1, res2) => res1 - res2);
 
@@ -460,33 +454,33 @@ function getResolutionsForMetricNames({
 
 /**
  * Loads series points according to passed parameters. Uses a query batcher to batch requests.
- * @param {{ seriesParameters: OTSCDataSourceFetchParams, sourceParameters: Object, timeSeriesSchemas: Array<AtmTimeSeriesSchema>, queryBatcher: Utils.OneTimeSeriesChart.QueryBatcher }} params
+ * @param {{ seriesParameters: OTSCDataSourceFetchParams, sourceParameters: Object, onGetTimeSeriesSchemas: (collectionRef: string) => Promise<Array<AtmTimeSeriesSchema>>, queryBatcher: Utils.OneTimeSeriesChart.QueryBatcher }} params
  * @returns {Promise<Array<OTSCRawSeriesPoint>>}
  */
-function fetchSeries({
+async function fetchSeries({
   seriesParameters,
   sourceParameters,
-  timeSeriesSchemas,
+  onGetTimeSeriesSchemas,
   queryBatcher,
 }) {
-  if (!seriesParameters ||
-    !seriesParameters.timeResolution ||
-    !sourceParameters ||
-    !sourceParameters.timeSeriesName ||
-    !sourceParameters.timeSeriesNameGenerator
+  if (
+    !seriesParameters?.timeResolution ||
+    !sourceParameters?.timeSeriesName ||
+    !sourceParameters?.timeSeriesNameGenerator
   ) {
-    return resolve([]);
+    return [];
   }
   const metricName = getMetricNameForResolution({
-    timeSeriesSchemas,
+    timeSeriesSchemas: await onGetTimeSeriesSchemas(sourceParameters.collectionRef),
     timeSeriesNameGenerator: sourceParameters.timeSeriesNameGenerator,
     resolution: seriesParameters.timeResolution,
   });
   if (!metricName) {
-    return resolve([]);
+    return [];
   }
 
   const queryParams = {
+    collectionId: sourceParameters.collectionRef,
     seriesId: sourceParameters.timeSeriesName,
     metricId: metricName,
     startTimestamp: seriesParameters.lastPointTimestamp,

@@ -45,7 +45,7 @@ export default {
 
     space_view_atm_workflow_executions: 'view workflow executions',
     space_schedule_atm_workflow_executions: 'schedule workflow executions',
-    space_cancel_atm_workflow_executions: 'cancel workflow executions',
+    space_manage_atm_workflow_executions: 'manage workflow executions',
   },
   atmInventory: {
     atm_inventory_view: 'view inventory',

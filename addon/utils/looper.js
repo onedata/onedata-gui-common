@@ -65,7 +65,7 @@ export default EmberObject.extend(Evented, {
   },
 
   stop() {
-    this.set('interval', null);
+    safeExec(this, () => this.set('interval', null));
   },
 
   notify() {
