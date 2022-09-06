@@ -24,9 +24,14 @@
   .single-value-presenter {
     flex-grow: 1;
     min-height: 10em;
+    display: grid;
 
     .value-container-presenter {
       min-height: 100%;
+    }
+
+    .alert {
+      align-self: flex-start;
     }
   }
 
