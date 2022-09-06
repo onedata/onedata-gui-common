@@ -1,0 +1,37 @@
+<td class="column-name">
+  {{#truncated-string}}
+    {{one-icon class=(concat-classes "dataset-icon" iconClass) icon=icon}}
+    {{#if urlProxy.content}}
+      <a
+        class="dataset-name details-title clickable navy"
+        href={{urlProxy.content}}
+        target={{or context.linkTarget "_top"}}
+      >
+        {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+      </a>
+    {{else}}
+      <span class="dataset-name details-title">
+        {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+      </span>
+    {{/if}}
+  {{/truncated-string}}
+</td>
+<td class="column-root-file-path">
+  {{#truncated-string class=(if rootFileUrlProxy.content "truncate-from-left")}}
+    {{#if value.rootFilePath}}
+      {{#if rootFileUrlProxy.content}}
+        <a
+          class="clickable navy value-container"
+          href={{rootFileUrlProxy.content}}
+          target={{or context.linkTarget "_top"}}
+        >
+          {{value.rootFilePath}}
+        </a>
+      {{else}}
+        <span class="value-container">{{value.rootFilePath}}</span>
+      {{/if}}
+    {{else}}
+      <em>{{tt this "unknown"}}</em>
+    {{/if}}
+  {{/truncated-string}}
+</td>

@@ -1,0 +1,9 @@
+{{#if columns.length}}
+  {{#each columns as |column|}}
+    <th class="column-object-property">
+      {{#truncated-string}}{{column}}{{/truncated-string}}
+    </th>
+  {{/each}}
+{{else}}
+  <th class="column-value">{{tt this "value"}}</th>
+{{/if}}

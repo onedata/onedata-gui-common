@@ -1,0 +1,30 @@
+<div class="header">
+  <div class="timestamp">
+    {{audit-log-browser/timestamp
+      timestamp=logEntry.timestamp
+      isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
+    }}
+  </div>
+  <a class="copy-link clickable" onclick={{action "copyJson"}}>
+    {{one-icon icon="copy"}}
+    {{tt this "copyJson"}}
+  </a>
+</div>
+<div class="content">
+  {{#if logEntry}}
+    {{ember-ace
+      editorClass="full-height"
+      value=stringifiedLogEntry
+      worker="ace/mode/json_worker"
+      mode="ace/mode/json"
+      theme="ace/theme/textmate"
+      tabSize=2
+      useWrapMode=true
+      highlightActiveLine=true
+      showLineNumbers=true
+      showPrintMargin=false
+      readOnly=true
+    }}
+  {{/if}}
+</div>
+{{yield}}

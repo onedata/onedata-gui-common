@@ -8,13 +8,67 @@
     padding-bottom: $padding-large-vertical;
   }
 
-  .store-content-table {
-    display: flex;
-    flex-direction: column;
+  .value-container-presenter {
+    display: grid;
+    min-height: 0;
+
+    &.error {
+      align-items: flex-start;
+    }
+
+    .resource-load-error {
+      margin: 0;
+    }
+  }
+
+  .single-value-presenter {
+    flex-grow: 1;
+    min-height: 10em;
+    display: grid;
+
+    .value-container-presenter {
+      min-height: 100%;
+    }
+
+    .alert {
+      align-self: flex-start;
+    }
+  }
+
+  .list-presenter,
+  .audit-log-presenter {
+    min-height: 0;
+    flex-grow: 1;
+  }
+
+  .list-presenter {
+    display: grid;
+    grid-template-rows: min-content auto;
+    grid-template-areas:
+      'properties-selector'
+      'table';
+
+    .visible-properties-btn {
+      margin-bottom: 0.5em;
+      grid-area: properties-selector;
+      justify-self: flex-start;
+    }
+
+    .infinite-scroll-table {
+      grid-area: table;
+    }
+
+    .details-container .full-value-presenter {
+      border: none;
+      border-radius: initial;
+    }
+
+    @media (max-width: $screen-xs-max) {
+      --infinite-scroll-table-details-x-offset: 3em;
+    }
   }
 
   .audit-log-presenter {
-    min-height: min(20em, 100vh - 300px);
     display: grid;
     place-items: stretch;
   }
@@ -39,5 +93,43 @@
   }
 
   @import './store-modal/store-form';
-  @import './store-modal/store-content-table';
+}
+
+.list-store-presenter-properties-popover {
+  .properties-list-container {
+    min-width: 10em;
+    max-width: 15em;
+    max-height: 15em;
+  }
+
+  .properties-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .property {
+    display: flex;
+    align-items: center;
+
+    & + .property {
+      margin-top: 0.5em;
+    }
+  }
+
+  .property-checkbox {
+    flex-shrink: 0;
+  }
+
+  label {
+    margin: 0;
+    margin-left: 0.5em;
+    min-width: 0;
+  }
+
+  .limited-properties-message {
+    display: block;
+    margin-top: 0.5em;
+    font-style: italic;
+  }
 }

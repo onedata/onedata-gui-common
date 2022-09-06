@@ -142,7 +142,7 @@ export default {
   atmStoreMissingRequiredInitialContent: 'Missing initial content required to create automation store.',
   atmStoreFrozen: 'Failed to perform operation on automation store (ID: "{{atmStoreSchemaId}}") as any modification is forbidden.',
   atmStoreTypeDisallowed: 'Bad automation store: the type of store (ID: "{{atmStoreSchemaId}}") must be one of: {{allowed}}.',
-  atmStoreEmpty: 'Bad automation store: store (ID: "{{atmStoreSchemaId}}") must not be empty.',
+  atmStoreContentNotSet: 'Bad automation store: store (ID: "{{atmStoreSchemaId}}") must not be empty.',
   atmStoreNotFound: 'Bad automation store: store (ID: "{{atmStoreSchemaId}}") does not exist.',
   atmWorkflowEmpty: 'Bad automation workflow: no lanes defined.',
   atmWorkflowExecutionAborting: 'Specified automation workflow execution is aborting.',

@@ -1,0 +1,9 @@
+{{#if valueContainer.success}}
+  {{atm-workflow/value-presenters/full-value-presenter
+    dataSpec=dataSpec
+    value=valueContainer.value
+    context=context
+  }}
+{{else}}
+  {{resource-load-error reason=valueContainer.error}}
+{{/if}}

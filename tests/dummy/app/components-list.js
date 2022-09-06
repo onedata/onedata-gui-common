@@ -1,6 +1,7 @@
 export default [
   'animations',
   'atm-workflow/data-spec-editor',
+  'atm-workflow/value-presenters',
   'audit-log-browser',
   'bezier-curve',
   'checkbox-list',
@@ -9,6 +10,7 @@ export default [
   'global-alert',
   'global-modal',
   'hr-label',
+  'infinite-scroll-table',
   'input-group',
   'json-editor',
   'modals/unsaved-changes-question-modal',
@@ -22,6 +24,7 @@ export default [
   'one-dropdown',
   'one-dynamic-tree',
   'one-echart',
+  'one-file-icon',
   'one-icon-tagged',
   'one-image',
   'one-inline-editor',

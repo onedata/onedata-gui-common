@@ -72,4 +72,11 @@ export default EmberObject.extend({
     }
     return null;
   },
+
+  /**
+   * @returns {AtmValuePresenterContext|undefined}
+   */
+  getStoreContentPresenterContext() {
+    return this.executionDataFetcher?.getStoreContentPresenterContext();
+  },
 });

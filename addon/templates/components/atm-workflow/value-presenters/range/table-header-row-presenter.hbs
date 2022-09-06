@@ -1,0 +1,5 @@
+{{#each (array "start" "end" "step") as |colName|}}
+  <th class="column-{{dasherize colName}}">
+    {{#truncated-string}}{{tt this colName}}{{/truncated-string}}
+  </th>
+{{/each}}

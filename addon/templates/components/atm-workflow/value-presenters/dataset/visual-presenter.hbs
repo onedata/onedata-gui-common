@@ -1,0 +1,40 @@
+{{one-icon class=(concat-classes "dataset-icon details-icon" iconClass) icon=icon}}
+
+<div class="details-content">
+  {{#if urlProxy.content}}
+    <a
+      class="dataset-name details-title clickable navy"
+      href={{urlProxy.content}}
+      target={{or context.linkTarget "_top"}}
+    >
+      {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+    </a>
+  {{else}}
+    <span class="dataset-name details-title">
+      {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+    </span>
+  {{/if}}
+
+  <ul class="details-property-list">
+    <li class="property-row root-file-path-property">
+      <span class="property-label">{{tt this "rootFilePath"}}:</span>
+      <span class="property-value">
+        {{#if value.rootFilePath}}
+          {{#if rootFileUrlProxy.content}}
+            <a
+              class="clickable navy"
+              href={{rootFileUrlProxy.content}}
+              target={{or context.linkTarget "_top"}}
+            >
+              {{value.rootFilePath}}
+            </a>
+          {{else}}
+            {{value.rootFilePath}}
+          {{/if}}
+        {{else}}
+          <em>{{tt this "unknown"}}</em>
+        {{/if}}
+      </span>
+    </li>
+  </ul>
+</div>

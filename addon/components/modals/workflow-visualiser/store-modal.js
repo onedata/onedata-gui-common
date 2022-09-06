@@ -12,6 +12,7 @@
  * - `getTaskRunForInstanceIdCallback` - is needed (but optional) when `mode` is `'view'`
  *   for audit log stores
  * - `actionsFactory` - the same as above
+ * - `storeContentPresenterContext` - is needed (but optional) when `mode` is `'view'`
  *
  * @module components/modals/workflow-visualiser/store-modal
  * @author Michał Borzęcki
@@ -25,15 +26,7 @@ import { inject as service } from '@ember/service';
 import layout from '../../../templates/components/modals/workflow-visualiser/store-modal';
 import { reads } from '@ember/object/computed';
 import { computed, trySet } from '@ember/object';
-import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import { next } from '@ember/runloop';
-import { raw, or, eq, getBy } from 'ember-awesome-macros';
-
-const possibleContentTabRenderers = {
-  default: 'generic',
-  timeSeries: 'timeSeries',
-  auditLog: 'auditLog',
-};
+import { raw, or, eq } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -64,16 +57,6 @@ export default Component.extend(I18n, {
    * @type {String}
    */
   activeTab: undefined,
-
-  /**
-   * @type {Boolean}
-   */
-  isContentTabRendered: true,
-
-  /**
-   * @type {Object<string, string>}
-   */
-  possibleContentTabRenderers,
 
   /**
    * @type {Boolean}
@@ -141,12 +124,9 @@ export default Component.extend(I18n, {
   actionsFactory: reads('modalOptions.actionsFactory'),
 
   /**
-   * @type {ComputedProperty<'timeSeries'|'generic'>}
+   * @type {ComputedProperty<AtmValuePresenterContext | undefined>}
    */
-  contentTabRenderer: or(
-    getBy('possibleContentTabRenderers', 'store.type'),
-    getBy('possibleContentTabRenderers', raw('default'))
-  ),
+  storeContentPresenterContext: reads('modalOptions.storeContentPresenterContext'),
 
   /**
    * @type {ComputedProperty<String>}
@@ -179,13 +159,6 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  emptyStoreText: computed('viewModeLayout', function emptyStoreText() {
-    return this.t(`emptyStore.${this.get('viewModeLayout')}`);
-  }),
-
-  /**
-   * @type {ComputedProperty<String>}
-   */
   cancelBtnText: computed('mode', function cancelBtnText() {
     return this.t(`button.cancel.${this.get('mode')}`);
   }),
@@ -205,12 +178,6 @@ export default Component.extend(I18n, {
   actions: {
     changeTab(selectedTab) {
       this.set('activeTab', selectedTab);
-    },
-    reloadContentTab() {
-      this.set('isContentTabRendered', false);
-      next(() => {
-        safeExec(this, 'set', 'isContentTabRendered', true);
-      });
     },
     formChange({ data, isValid }) {
       this.setProperties({

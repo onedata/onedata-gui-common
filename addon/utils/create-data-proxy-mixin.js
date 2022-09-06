@@ -71,14 +71,26 @@ export default function createDataProxyMixin(name, options) {
     /**
      * If `replace` is true, do not create new ProxyObject, but
      * replace content, so `isPending` of the ProxyObject will not be changed
+     *
+     * If you want to use `replace = true` and it is possible to have a
+     * falsy value as proxy content (`null`, `0` etc.) then `replaceEmpty = true`
+     * must be specified. Otherwise replace will not work when empty value inside
+     * proxy content occurs.
      */
-    [updateDataProxyName]({ replace = false, fetchArgs = [] } = {}) {
+    [updateDataProxyName]({
+      replace = false,
+      replaceEmpty = false,
+      fetchArgs = [],
+    } = {}) {
       const promise = this[fetchDataName](...fetchArgs);
       const internalDataProxy = this.get(internalDataProxyName);
       if (internalDataProxy && get(internalDataProxy, 'isPending')) {
         return internalDataProxy;
       } else {
-        if (replace && this.get(`${internalDataProxyName}.content`)) {
+        if (
+          replace &&
+          this.get(`${internalDataProxyName}.${replaceEmpty ? 'isSettled' : 'content'}`)
+        ) {
           return promise
             .catch(error => {
               set(internalDataProxy, 'reason', error);

@@ -8,20 +8,5 @@
  */
 
 /**
- * @typedef {
- *   AtmSingleValueStoreContentBrowseSuccessfulResult |
- *   AtmSingleValueStoreContentBrowseFailedResult
- * } AtmSingleValueStoreContentBrowseResult
- */
-
-/**
- * @typedef {Object} AtmSingleValueStoreContentBrowseSuccessfulResult
- * @property {true} success
- * @property {unknown} value
- */
-
-/**
- * @typedef {Object} AtmSingleValueStoreContentBrowseFailedResult
- * @property {false} success
- * @property {Object} error
+ * @typedef {AtmValueContainer<unknown>} AtmSingleValueStoreContentBrowseResult
  */

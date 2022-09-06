@@ -1,0 +1,169 @@
+$infinite-scroll-table-header-bg-color: $block-background-color;
+$infinite-scroll-table-border-color: $block-border-color;
+$infinite-scroll-table-cell-padding: 0.5em;
+$infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-padding;
+
+.infinite-scroll-table {
+  position: relative;
+  border: 1px solid $infinite-scroll-table-border-color;
+  border-radius: $border-radius-base;
+  overflow: hidden;
+
+  .table-title {
+    background-color: $infinite-scroll-table-header-bg-color;
+    padding: $infinite-scroll-table-container-padding;
+    padding-bottom: 0;
+
+    .title-text {
+      @include font-semibold();
+      text-transform: uppercase;
+    }
+
+    .title-tip {
+      margin-left: 0.3em;
+    }
+  }
+
+  .table-scrollable-container {
+    height: 100%;
+    cursor: initial !important;
+
+    &.on-top .table-head tr:last-child th {
+      @include hide-before-shadow;
+    }
+
+    &.on-bottom + .bottom-shadow-keeper {
+      @include hide-before-shadow;
+    }
+  }
+
+  .entries-table {
+    table-layout: fixed;
+    margin: 0;
+    min-width: calc(var(--infinite-scroll-table-columns-count) * 5em);
+  }
+
+  .table-head {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: $infinite-scroll-table-header-bg-color;
+
+    th {
+      position: relative;
+      padding: $infinite-scroll-table-container-padding $infinite-scroll-table-cell-padding;
+      text-align: left;
+    }
+
+    tr:last-child th {
+      @include before-bottom-shadow;
+    }
+  }
+
+  .table-entry > td {
+    padding: $infinite-scroll-table-cell-padding;
+  }
+
+  .table-head th,
+  .table-entry > td {
+    vertical-align: middle;
+
+    &:first-child {
+      padding-left: $infinite-scroll-table-container-padding;
+    }
+  }
+
+  .table-entry {
+    &.clickable:hover > td {
+      filter: brightness(95%);
+    }
+
+    > td {
+      background-color: $color-one-white;
+      height: var(--infinite-scroll-table-row-height, 50px);
+      overflow: hidden;
+
+      // Using background-clip to fix border hiding under background in Firefox.
+      // See more: https://bugzilla.mozilla.org/show_bug.cgi?id=688556
+      background-clip: padding-box;
+    }
+  }
+
+  &.shows-details {
+    .table-entry:not(.selected) {
+      opacity: 50%;
+    }
+  }
+
+  .bottom-shadow-keeper {
+    position: relative;
+    @include before-top-shadow;
+
+    &::before {
+      z-index: 2;
+    }
+  }
+
+  .ps__rail-y {
+    z-index: 2;
+  }
+
+  .details-container {
+    @include after-left-shadow();
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: var(--infinite-scroll-table-details-x-offset, 7em);
+    z-index: 3;
+    border-left: 1px solid $infinite-scroll-table-border-color;
+    background-color: $color-one-white;
+    // Additional 1em move to hide shadow which is outside of the container
+    transform: translateX(100%) translateX(1em);
+    transition: transition-ease(transform);
+    display: grid;
+    grid-template-columns: min-content auto;
+
+    &.visible {
+      transform: none;
+    }
+
+    .details {
+      display: grid;
+      place-items: stretch;
+      min-height: 0;
+    }
+
+    .close-details {
+      display: grid;
+      place-items: center;
+      background-color: lighten($color-one-semiwhite, 3%);
+      border-right: 1px solid $infinite-scroll-table-border-color;
+      overflow: hidden;
+
+      &:hover {
+        filter: brightness(95%);
+      }
+
+      .one-icon {
+        display: grid;
+        place-items: center;
+        height: 3em;
+        background-color: $color-one-gray-sand;
+        margin: 0 -0.2em;
+      }
+    }
+  }
+}
+
+// Bugfix
+// When: component is placed inside bs-collapse in transitioning state
+//   (`.collapsing` class)
+// Bug: animation of showing/hiding scroll shadows causes height animation
+//   of bs-collapse to stop
+// Solution: turn off animation of shadows when bs-collapse is transitioning
+.collapsing .infinite-scroll-table {
+  .bottom-shadow-keeper::before, .table-head tr:last-child th::before {
+    transition: none;
+  }
+}

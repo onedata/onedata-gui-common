@@ -1,8 +1,11 @@
 {{#global-modal
-  classNames="store-modal"
+  classNames=(concat-classes
+    "store-modal"
+    (if (eq mode "view") "modal-content-overlay with-close-button")
+  )
   allowClose=(not isSubmitting)
   modalId=modalId
-  size=(if (eq activeTab "content") "xl" "lg")
+  size="lg"
   as |modal|
 }}
 
@@ -44,48 +47,60 @@
         onChange=(action "formChange")
         isDisabled=isSubmitting
       }}
-    {{else if isContentTabRendered}}
-      {{#if (eq contentTabRenderer "generic")}}
-        {{modals/workflow-visualiser/store-modal/store-content-table
+    {{else}}
+      {{#if (eq store.type "range")}}
+        {{modals/workflow-visualiser/store-modal/range-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
-          emptyStoreText=emptyStoreText
+          context=storeContentPresenterContext
         }}
-      {{else if (eq contentTabRenderer "auditLog")}}
+      {{else if (eq store.type "singleValue")}}
+        {{modals/workflow-visualiser/store-modal/single-value-presenter
+          store=store
+          getStoreContentCallback=getStoreContentCallback
+          context=storeContentPresenterContext
+        }}
+      {{else if (eq store.type "list")}}
+        {{modals/workflow-visualiser/store-modal/list-presenter
+          store=store
+          getStoreContentCallback=getStoreContentCallback
+          context=storeContentPresenterContext
+        }}
+      {{else if (eq store.type "treeForest")}}
+        {{modals/workflow-visualiser/store-modal/tree-forest-presenter
+          store=store
+          getStoreContentCallback=getStoreContentCallback
+          context=storeContentPresenterContext
+        }}
+      {{else if (eq store.type "auditLog")}}
         {{modals/workflow-visualiser/store-modal/audit-log-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
           getTaskRunForInstanceIdCallback=getTaskRunForInstanceIdCallback
           actionsFactory=actionsFactory
         }}
-      {{else if (eq contentTabRenderer "timeSeries")}}
+      {{else if (eq store.type "timeSeries")}}
         {{modals/workflow-visualiser/store-modal/time-series-presenter
           store=store
           getStoreContentCallback=getStoreContentCallback
         }}
+      {{else}}
+        <p class="text-danger">{{tt this "noContentDueToUnknownStoreType"}}</p>
       {{/if}}
     {{/if}}
   {{/modal.body}}
 
-  {{#modal.footer class="btn-toolbar"}}
-    {{#if (eq activeTab "content")}}
+  {{#if (not-eq mode "view")}}
+    {{#modal.footer class="btn-toolbar"}}
       {{#bs-button
-        type="primary"
-        class="btn-refresh pull-left"
-        onClick=(action "reloadContentTab")
+        type="default"
+        class="btn-cancel"
+        onClick=modal.close
+        disabled=isSubmitting
       }}
-        {{tt this "button.refresh"}}
+        {{cancelBtnText}}
       {{/bs-button}}
-    {{/if}}
-    {{#bs-button
-      type="default"
-      class="btn-cancel"
-      onClick=modal.close
-      disabled=isSubmitting
-    }}
-      {{cancelBtnText}}
-    {{/bs-button}}
-    {{#if (not-eq mode "view")}}
+
       {{#one-button
         type="primary"
         buttonType="submit"
@@ -95,7 +110,7 @@
       }}
         {{submitBtnText}}
       {{/one-button}}
-    {{/if}}
-  {{/modal.footer}}
+    {{/modal.footer}}
+  {{/if}}
 
 {{/global-modal}}

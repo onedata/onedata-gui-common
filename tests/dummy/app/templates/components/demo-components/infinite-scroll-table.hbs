@@ -1,0 +1,37 @@
+<h2>Infinite scroll table</h2>
+
+<div style="display: grid; height: 30em; width: 50em;">
+  {{#infinite-scroll-table
+    onFetchEntries=onFetchEntries
+    columnsCount=2
+    rowHeight=50
+    title="Some title"
+    titleTip="Some title tip"
+    doesOpenDetailsOnClick=true
+    as |section|
+  }}
+    {{#if (eq section.sectionName "tableHead")}}
+
+      <tr>
+        <th>field1</th>
+        <th>field2</th>
+      </tr>
+
+    {{else if (eq section.sectionName "entryRow")}}
+
+      <tr
+        class={{section.rowClassName}}
+        data-row-id={{section.dataRowId}}
+        onclick={{action section.onRowClick}}
+      >
+        <td>{{section.entry.field1}}</td>
+        <td>{{section.entry.field2}}</td>
+      </tr>
+
+    {{else if (eq section.sectionName "entryDetails")}}
+
+      <p>{{section.entry.field1}}, {{section.entry.field2}}</p>
+
+    {{/if}}
+  {{/infinite-scroll-table}}
+</div>

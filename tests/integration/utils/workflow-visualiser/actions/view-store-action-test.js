@@ -9,7 +9,6 @@ import {
   getModal,
   getModalHeader,
   getModalBody,
-  getModalFooter,
 } from '../../../../helpers/modal';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { resolve } from 'rsvp';
@@ -64,7 +63,7 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
     'returns promise with successful ActionResult after execute() and modal close using "Close"',
     async function () {
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().querySelector('.btn-cancel'));
+      await click(getModalHeader().querySelector('.close'));
       const actionResult = await resultPromise;
 
       expect(get(actionResult, 'status')).to.equal('done');

@@ -1,32 +1,27 @@
 /**
  * Contains typedefs reused between various types of automation stores content browse results.
  *
- * @module utils/atm-workflow/store-content-browse-result/commons
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 /**
- * @typedef {Object} AtmInfiniteLogStoreContainerEntryBase
- * @property {string} index
- */
-
-/**
- * @typedef {AtmInfiniteLogStoreContainerEntryBase} AtmInfiniteLogStoreContainerSuccessfulEntry<T>
+ * @typedef {Object} AtmAvailableValueContainer<T>
  * @property {true} success
  * @property {T} value
  */
 
 /**
- * @typedef {AtmInfiniteLogStoreContainerEntryBase} AtmInfiniteLogStoreContainerFailedEntry
+ * @typedef {Object} AtmUnavailableValueContainer
  * @property {false} success
- * @property {Object} error
+ * @property {unknown} error
  */
 
 /**
- * @typedef {
- *   AtmInfiniteLogStoreContainerSuccessfulEntry<T> |
- *   AtmInfiniteLogStoreContainerFailedEntry
- * } AtmInfiniteLogStoreContainerEntry<T>
+ * @typedef {AtmAvailableValueContainer<T> | AtmUnavailableValueContainer} AtmValueContainer<T>
+ */
+
+/**
+ * @typedef {AtmValueContainer<T> & { index: string }} AtmIndexedValueContainer<T>
  */

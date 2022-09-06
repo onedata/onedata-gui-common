@@ -1,0 +1,48 @@
+{{#if isRootPresenter}}
+  <strong class="root-presenter-header">
+    {{tt this "header" itemsCount=(or value.length 0)}}
+  </strong>
+{{/if}}
+
+<ol class="array-items-list" start="0">
+  {{#each itemsToRenderWithKeys key="key" as |item index|}}
+    {{#let (get expandedItems index) as |isExpanded|}}
+      <li class={{concat-classes "array-item" (if isExpanded "expanded")}}>
+        <div
+          class="array-item-header clickable"
+          onclick={{action "toggleItemExpand" index}}
+        >
+          {{component itemHeaderPresenterComponent
+            value=item.value
+            dataSpec=itemDataSpec
+            context=context
+          }}
+          {{one-icon
+            icon=(if isExpanded "arrow-up" "arrow-down")
+            class="array-item-collapse-icon"
+          }}
+        </div>
+        {{#if isExpanded}}
+          <div class="array-item-content">
+            {{component itemContentPresenterComponent
+              value=item.value
+              dataSpec=itemDataSpec
+              context=context
+              isRootPresenter=false
+            }}
+          </div>
+        {{/if}}
+      </li>
+    {{/let}}
+  {{/each}}
+</ol>
+
+{{#if isShowingMoreItemsPossible}}
+  {{#one-button
+    size="sm"
+    class="show-more-array-items"
+    onClick=(action "showMoreItems")
+  }}
+    {{tt this "showMoreItems" count=showMoreItemsChunkSize}}
+  {{/one-button}}
+{{/if}}

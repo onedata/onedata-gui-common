@@ -160,7 +160,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       });
     });
 
-    it('shows correct header, form in "view" mode and footer', async function (done) {
+    it('shows correct header, form in "view" mode and no footer', async function (done) {
       await showModal(this);
 
       expect(getModalHeader().querySelector('h1').textContent.trim())
@@ -169,12 +169,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       expect(form).to.have.class('mode-view');
       expect(form.querySelector('.name-field .field-component').textContent.trim())
         .to.equal(simplestStore.name);
-      const modalFooter = getModalFooter();
-      const cancelBtn = modalFooter.querySelector('.btn-cancel');
-      const submitBtn = modalFooter.querySelector('.btn-submit');
-      expect(cancelBtn).to.have.class('btn-default');
-      expect(cancelBtn.textContent.trim()).to.equal('Close');
-      expect(submitBtn).to.not.exist;
+      expect(getModalFooter()).to.not.exist;
       done();
     });
 
@@ -190,7 +185,17 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       done();
     });
 
-    itClosesModalOnCancelClick();
+    it('closes modal on "x" click', async function (done) {
+      const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
+
+      await showModal(this);
+      expect(onHideSpy).to.not.been.called;
+
+      await click(getModalHeader().querySelector('.close'));
+      expect(onHideSpy).to.be.calledOnce;
+      done();
+    });
+
     itClosesModalOnBackdropClick();
   });
 });

@@ -1,13 +1,16 @@
 import storeForm from './store-modal/store-form';
-import storeContentTable from './store-modal/store-content-table';
 import timeSeriesPresenter from './store-modal/time-series-presenter';
 import auditLogPresenter from './store-modal/audit-log-presenter';
+import listPresenter from './store-modal/list-presenter';
+import singleValuePresenter from './store-modal/single-value-presenter';
 
 export default {
   storeForm,
-  storeContentTable,
   timeSeriesPresenter,
   auditLogPresenter,
+  listPresenter,
+  singleValuePresenter,
+  noContentDueToUnknownStoreType: 'Store content preview is not available due to unrecognized store type.',
   header: {
     create: 'Create new store',
     edit: 'Modify store',
@@ -25,12 +28,7 @@ export default {
       title: 'Content',
     },
   },
-  emptyStore: {
-    store: 'Store is empty.',
-    auditLog: 'Audit log is empty.',
-  },
   button: {
-    refresh: 'Refresh',
     cancel: {
       create: 'Cancel',
       edit: 'Cancel',
