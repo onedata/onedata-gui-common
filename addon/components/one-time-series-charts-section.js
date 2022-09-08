@@ -480,11 +480,11 @@ async function fetchSeries({
   }
 
   const queryParams = {
-    collectionId: sourceParameters.collectionRef,
-    seriesId: sourceParameters.timeSeriesName,
-    metricId: metricName,
+    collectionRef: sourceParameters.collectionRef,
+    seriesName: sourceParameters.timeSeriesName,
+    metricName,
     startTimestamp: seriesParameters.lastPointTimestamp,
-    limit: seriesParameters.pointsCount,
+    windowLimit: seriesParameters.pointsCount,
   };
 
   return queryBatcher.query(queryParams);

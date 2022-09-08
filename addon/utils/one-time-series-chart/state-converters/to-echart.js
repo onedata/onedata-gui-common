@@ -219,7 +219,7 @@ function formatEchartTooltipSeries({
     const valueFormatter = yAxis ? yAxis.valueFormatter : defaultValueFormatter;
     usedValueFormatters.add(valueFormatter);
     htmlContent +=
-      `<div class="tooltip-series"><span class="tooltip-label tooltip-series-label">${marker} ${_.escape(seriesName)}</span> <span class="tooltip-value tooltip-series-value">${_.escape(valueFormatter(yValue))}</span></div>`;
+      `<div class="tooltip-series"><span class="tooltip-label tooltip-series-label">${marker} <span class="tooltip-label-text">${_.escape(seriesName)}</span></span> <span class="tooltip-value tooltip-series-value">${_.escape(valueFormatter(yValue))}</span></div>`;
     seriesSum += yValue;
   });
 

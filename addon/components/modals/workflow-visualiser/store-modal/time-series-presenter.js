@@ -155,9 +155,9 @@ export default Component.extend(...mixins, {
     const result = await this.getStoreContent({
       type: 'timeSeriesStoreContentBrowseOptions',
       mode: browseModes.slice,
-      layout: batchedQuery.metrics,
+      layout: batchedQuery.layout,
       startTimestamp: batchedQuery.startTimestamp,
-      windowsCount: batchedQuery.limit,
+      windowLimit: batchedQuery.windowLimit,
     });
     return result?.slice;
   },

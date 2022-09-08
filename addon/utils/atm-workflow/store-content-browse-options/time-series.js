@@ -27,7 +27,7 @@
  * @property {Object<string, Array<string>>} layout keys are time series IDs, values
  * are arrays of metric IDs
  * @property {number} [startTimestamp]
- * @property {number} [windowsCount]
+ * @property {number} [windowLimit]
  */
 
 export const browseModes = {

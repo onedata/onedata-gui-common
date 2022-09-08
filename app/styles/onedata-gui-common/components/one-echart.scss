@@ -37,6 +37,10 @@
     display: inline-flex;
     align-items: center;
     max-width: 20em;
+  }
+
+  .tooltip-label,
+  .tooltip-label-text {
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -56,6 +60,7 @@
   .tooltip-series-label > span:first-child {
     // using important to override inline styles
     margin-right: 0.5em !important;
+    flex-shrink: 0;
   }
 
   .tooltip-series-separator {
