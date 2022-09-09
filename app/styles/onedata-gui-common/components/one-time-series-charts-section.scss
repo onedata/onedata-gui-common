@@ -1,6 +1,6 @@
 .one-time-series-charts-section {
-  background-color: rgba(0, 0, 0, 0.02);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: $block-background-transparent-color;
+  border: 1px solid $block-border-transparent-color;
   border-radius: $border-radius-base;
   padding: 1em;
 
@@ -46,7 +46,7 @@
   }
 
   .section-charts {
-    grid-template-columns: repeat(auto-fit, minmax(25em, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(25em, 100%), 1fr));
     grid-auto-rows: 20em;
   }
 
