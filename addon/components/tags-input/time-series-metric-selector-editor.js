@@ -27,12 +27,12 @@ import { validator } from 'ember-cp-validations';
 import layout from '../../templates/components/tags-input/time-series-metric-selector-editor';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import {
-  metricAggregators,
-  metricResolutions,
-  metricResolutionsMap,
-  translateMetricResolution,
-  translateMetricAggregator,
-} from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
+  timeSeriesMetricAggregators,
+  timeSeriesMetricResolutions,
+  timeSeriesMetricResolutionsMap,
+  translateTimeSeriesMetricResolution,
+  translateTimeSeriesMetricAggregator,
+} from 'onedata-gui-common/utils/time-series';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
@@ -44,37 +44,37 @@ import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-fiel
  */
 
 const presetDataPerResolution = {
-  [metricResolutionsMap.fiveSeconds]: {
+  [timeSeriesMetricResolutionsMap.fiveSeconds]: {
     // 2 hours
     retention: 2 * 60 * 12,
     metricNameResolutionPart: '5s',
   },
-  [metricResolutionsMap.minute]: {
+  [timeSeriesMetricResolutionsMap.minute]: {
     // 1 day
     retention: 24 * 60,
     metricNameResolutionPart: '1m',
   },
-  [metricResolutionsMap.hour]: {
+  [timeSeriesMetricResolutionsMap.hour]: {
     // ~2 months
     retention: 2 * 30 * 24,
     metricNameResolutionPart: '1h',
   },
-  [metricResolutionsMap.day]: {
+  [timeSeriesMetricResolutionsMap.day]: {
     // ~2 years
     retention: 2 * 12 * 30,
     metricNameResolutionPart: '1d',
   },
-  [metricResolutionsMap.week]: {
+  [timeSeriesMetricResolutionsMap.week]: {
     // ~5 years
     retention: 10 * 52,
     metricNameResolutionPart: '1w',
   },
-  [metricResolutionsMap.month]: {
+  [timeSeriesMetricResolutionsMap.month]: {
     // ~10 years
     retention: 10 * 12,
     metricNameResolutionPart: '1mo',
   },
-  [metricResolutionsMap.year]: {
+  [timeSeriesMetricResolutionsMap.year]: {
     // 10 years
     retention: 10,
     metricNameResolutionPart: '1y',
@@ -124,11 +124,11 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
     );
 
     const readableName = name ? `"${name}"` : this.t('unknownName');
-    const readableAggregator = metricAggregators.includes(aggregator) ?
-      String(translateMetricAggregator(i18n, aggregator, { short: true }))
+    const readableAggregator = timeSeriesMetricAggregators.includes(aggregator) ?
+      String(translateTimeSeriesMetricAggregator(i18n, aggregator, { short: true }))
       .toLocaleLowerCase() : '?';
-    const readableResolution = metricResolutions.includes(resolution) ?
-      String(translateMetricResolution(i18n, resolution, { short: true }))
+    const readableResolution = timeSeriesMetricResolutions.includes(resolution) ?
+      String(translateTimeSeriesMetricResolution(i18n, resolution, { short: true }))
       .toLocaleLowerCase() : '?';
     const readableRetention = Number.isInteger(retention) ?
       this.t('retention', { retention }) : '?';
@@ -200,9 +200,9 @@ export default Component.extend(I18n, {
    */
   aggregatorOptions: computed(function aggregatorOptions() {
     const i18n = this.get('i18n');
-    return metricAggregators.map((aggregator) => {
+    return timeSeriesMetricAggregators.map((aggregator) => {
       return {
-        label: translateMetricAggregator(i18n, aggregator),
+        label: translateTimeSeriesMetricAggregator(i18n, aggregator),
         value: aggregator,
       };
     });
@@ -215,8 +215,7 @@ export default Component.extend(I18n, {
     'selectedAggregatorOption.value',
     function allAvailableTagValues() {
       const aggregator = this.get('selectedAggregatorOption.value');
-
-      return metricResolutions
+      return timeSeriesMetricResolutions
         .filter((resolution) => resolution in presetDataPerResolution)
         .map((resolution) => {
           return {
@@ -316,15 +315,15 @@ export default Component.extend(I18n, {
         DropdownField.extend({
           options: computed(function options() {
             const i18n = this.get('i18n');
-            return metricResolutions.map((resolution) => ({
+            return timeSeriesMetricResolutions.map((resolution) => ({
               value: resolution,
-              label: translateMetricResolution(i18n, resolution),
+              label: translateTimeSeriesMetricResolution(i18n, resolution),
             }));
           }),
         }).create({
           component: this,
           name: 'resolution',
-          defaultValue: metricResolutions[0],
+          defaultValue: timeSeriesMetricResolutions[0],
           customValidators: [
             validator(function (value, options, model) {
               if (!value) {

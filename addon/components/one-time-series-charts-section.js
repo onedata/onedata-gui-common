@@ -20,7 +20,7 @@ import OTSCConfiguration from 'onedata-gui-common/utils/one-time-series-chart/co
 import OTSCModel from 'onedata-gui-common/utils/one-time-series-chart/model';
 import QueryBatcher from 'onedata-gui-common/utils/one-time-series-chart/query-batcher';
 import escapeHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-html';
-import { metricResolutionsMap } from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
+import { timeSeriesMetricResolutionsMap } from 'onedata-gui-common/utils/time-series';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 /**
@@ -44,19 +44,19 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 const pointsCountPerResolution = {
   // 24 * 5 seconds -> 2 minutes
-  [metricResolutionsMap.fiveSeconds]: 24,
+  [timeSeriesMetricResolutionsMap.fiveSeconds]: 24,
   // 30 * 1 minute -> 0.5 hour
-  [metricResolutionsMap.minute]: 30,
+  [timeSeriesMetricResolutionsMap.minute]: 30,
   // 24 * 1 hour -> 1 day
-  [metricResolutionsMap.hour]: 24,
+  [timeSeriesMetricResolutionsMap.hour]: 24,
   // 30 * 1 day -> 1 month
-  [metricResolutionsMap.day]: 30,
+  [timeSeriesMetricResolutionsMap.day]: 30,
   // 13 * 1 week -> ~3 months (91 days)
-  [metricResolutionsMap.week]: 13,
+  [timeSeriesMetricResolutionsMap.week]: 13,
   // 12 * 1 month -> ~1 year (360 days)
-  [metricResolutionsMap.month]: 12,
+  [timeSeriesMetricResolutionsMap.month]: 12,
   // 10 * 1 year -> 10 years
-  [metricResolutionsMap.year]: 10,
+  [timeSeriesMetricResolutionsMap.year]: 10,
 };
 
 export default Component.extend(I18n, {
@@ -85,7 +85,7 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {(collectionId?: string) => Promise<Array<AtmTimeSeriesSchema>>}
+   * @type {(collectionId?: string) => Promise<Array<TimeSeriesSchema>>}
    */
   onGetTimeSeriesSchemas: undefined,
 
@@ -325,7 +325,7 @@ class DefaultCallbacks {
 }
 
 /**
- * @param {{ chartDefinition: OTSCChartDefinition, onGetTimeSeriesSchemas: (collectionRef: string) => Promise<Array<AtmTimeSeriesSchema>> }} params
+ * @param {{ chartDefinition: OTSCChartDefinition, onGetTimeSeriesSchemas: (collectionRef: string) => Promise<Array<TimeSeriesSchema>> }} params
  * @returns {Array<OTSCTimeResolutionSpec>}
  */
 async function getTimeResolutionSpecs({
@@ -430,7 +430,7 @@ function extractExternalDataSourceRef(possibleSourceRef) {
 
 /**
  * Returns possible resolutions (in seconds) for specific TS name generator and metric names
- * @param {{ timeSeriesSchemas: Array<AtmTimeSeriesSchema>, timeSeriesNameGenerator: string, metricNames: Array<string> }} params
+ * @param {{ timeSeriesSchemas: Array<TimeSeriesSchema>, timeSeriesNameGenerator: string, metricNames: Array<string> }} params
  * @returns {Array<number>}
  */
 function getResolutionsForMetricNames({
@@ -454,7 +454,7 @@ function getResolutionsForMetricNames({
 
 /**
  * Loads series points according to passed parameters. Uses a query batcher to batch requests.
- * @param {{ seriesParameters: OTSCDataSourceFetchParams, sourceParameters: Object, onGetTimeSeriesSchemas: (collectionRef: string) => Promise<Array<AtmTimeSeriesSchema>>, queryBatcher: Utils.OneTimeSeriesChart.QueryBatcher }} params
+ * @param {{ seriesParameters: OTSCDataSourceFetchParams, sourceParameters: Object, onGetTimeSeriesSchemas: (collectionRef: string) => Promise<Array<TimeSeriesSchema>>, queryBatcher: Utils.OneTimeSeriesChart.QueryBatcher }} params
  * @returns {Promise<Array<OTSCRawSeriesPoint>>}
  */
 async function fetchSeries({
@@ -491,7 +491,7 @@ async function fetchSeries({
 }
 
 /**
- * @param {{ timeSeriesSchemas: Array<AtmTimeSeriesSchema>, timeSeriesNameGenerator: string, resolution: number }} params
+ * @param {{ timeSeriesSchemas: Array<TimeSeriesSchema>, timeSeriesNameGenerator: string, resolution: number }} params
  * @returns {string|null}
  */
 function getMetricNameForResolution({

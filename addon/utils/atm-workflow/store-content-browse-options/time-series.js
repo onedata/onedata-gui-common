@@ -21,13 +21,9 @@
  */
 
 /**
- * @typedef {Object} AtmTimeSeriesStoreSliceContentBrowseOptions
+ * @typedef {TimeSeriesCollectionSliceQueryParams} AtmTimeSeriesStoreSliceContentBrowseOptions
  * @property {'timeSeriesStoreContentBrowseOptions'} type
  * @property {'slice'} mode
- * @property {Object<string, Array<string>>} layout keys are time series IDs, values
- * are arrays of metric IDs
- * @property {number} [startTimestamp]
- * @property {number} [windowLimit]
  */
 
 export const browseModes = {

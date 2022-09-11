@@ -57,7 +57,7 @@ export default Component.extend(...mixins, {
   tsNamesPerGeneratorUpdater: undefined,
 
   /**
-   * @type {ComputedProperty<Array<AtmTimeSeriesSchema>>}
+   * @type {ComputedProperty<Array<TimeSeriesSchema>>}
    */
   timeSeriesSchemas: reads('store.config.timeSeriesCollectionSchema.timeSeriesSchemas'),
 
@@ -86,7 +86,7 @@ export default Component.extend(...mixins, {
   }),
 
   /**
-   * @type {ComputedProperty<(collectionId?: string) => Promise<Array<AtmTimeSeriesSchema>>>}
+   * @type {ComputedProperty<(collectionId?: string) => Promise<Array<TimeSeriesSchema>>>}
    */
   onGetTimeSeriesSchemas: computed(function onGetTimeSeriesSchemas() {
     return async () => {
@@ -196,7 +196,7 @@ export default Component.extend(...mixins, {
    * @returns {Object<string, Array<string>>}
    */
   async fetchTsNamesPerGenerator() {
-    const layout = await this.fetchTimeSeriesLayout();
+    const layout = await this.fetchTimeSeriesCollectionLayout();
     const timeSeriesNames = Object.keys(layout);
     const nameGenerators = this.get('timeSeriesSchemas')
       ?.map(({ nameGenerator }) => nameGenerator) || [];
@@ -219,7 +219,7 @@ export default Component.extend(...mixins, {
   /**
    * @returns {Promise<AtmTimeSeriesStoreLayoutContentBrowseResult['layout']>}
    */
-  async fetchTimeSeriesLayout() {
+  async fetchTimeSeriesCollectionLayout() {
     const result = await this.getStoreContent({
       type: 'timeSeriesStoreContentBrowseOptions',
       mode: browseModes.layout,
