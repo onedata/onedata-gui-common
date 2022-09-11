@@ -8,7 +8,6 @@
  */
 
 import _ from 'lodash';
-import { commonDataSpecFilters } from './commons';
 
 /**
  * @typedef {Object} AtmTimeSeriesStoreConfig
@@ -117,7 +116,7 @@ export function translateMetricAggregator(
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getReadDataSpecFilters() {
-  return [...commonDataSpecFilters, {
+  return [{
     filterType: 'typeOrSupertype',
     types: [{ type: 'timeSeriesMeasurement' }],
   }];
@@ -127,7 +126,7 @@ export function getReadDataSpecFilters() {
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getWriteDataSpecFilters() {
-  return [...commonDataSpecFilters, {
+  return [{
     filterType: 'typeOrSubtype',
     types: [{ type: 'timeSeriesMeasurement' }],
   }];

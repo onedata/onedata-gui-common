@@ -6,8 +6,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { commonDataSpecFilters } from './commons';
-
 /**
  * @typedef {Object} AtmRangeStoreConfig
  */
@@ -16,7 +14,7 @@ import { commonDataSpecFilters } from './commons';
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getReadDataSpecFilters() {
-  return [...commonDataSpecFilters, {
+  return [{
     filterType: 'typeOrSupertype',
     types: [{ type: 'range' }],
   }];
@@ -26,7 +24,7 @@ export function getReadDataSpecFilters() {
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getWriteDataSpecFilters() {
-  return [...commonDataSpecFilters, {
+  return [{
     filterType: 'typeOrSubtype',
     types: [{ type: 'range' }],
   }];

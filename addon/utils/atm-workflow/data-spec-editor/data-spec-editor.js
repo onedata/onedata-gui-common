@@ -51,8 +51,7 @@ import { validator } from 'ember-cp-validations';
  *   'string' |
  *   'object' |
  *   'dataset' |
- *   'range' |
- *   'onedatafsCredentials'
+ *   'range'
  * } dataType
  */
 
@@ -120,6 +119,11 @@ export const FormElement = FormField.extend({
    * @override
    */
   areValidationClassesEnabled: false,
+
+  /**
+   * @override
+   */
+  withValidationMessage: false,
 
   /**
    * @type {Map<string, DataSpecEditorElementContext>}
