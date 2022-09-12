@@ -1132,7 +1132,7 @@ function getAtmLambdaResourceValue(resourceSpecOverride, resourceSpec, propName)
 }
 
 function getValueBuilderTypesForDataSpec(dataSpec) {
-  return (!dataSpec || !dataSpec.type) ? [] : [
+  return !dataSpec?.type ? [] : [
     'iteratedItem',
     'singleValueStoreContent',
     'const',
