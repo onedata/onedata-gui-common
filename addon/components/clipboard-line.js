@@ -75,6 +75,12 @@ export default Component.extend(I18n, {
   rawValue: undefined,
 
   /**
+   * @virtual optional
+   * @type {String}
+   */
+  copyHint: undefined,
+
+  /**
    * @type {number}
    */
   textareaRows: 5,
