@@ -16,12 +16,10 @@
 
 /**
  * @typedef {Object} AtmTimeSeriesStoreLayoutContentBrowseResult
- * @property {Object<string, Array<string>} layout Keys are time series IDs,
- * values are arrays of metric IDs
+ * @property {TimeSeriesCollectionLayout} layout
  */
 
 /**
  * @typedef {Object} AtmTimeSeriesStoreSliceContentBrowseResult
- * @property {Object<string, Object<string, { timestamp: number, value: number }>>} slice
- * Keys are time series IDs, nested keys are metric IDs, values are arrays of points
+ * @property {TimeSeriesCollectionSlice} slice
  */

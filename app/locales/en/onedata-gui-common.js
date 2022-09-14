@@ -76,6 +76,7 @@ import utilsWorkflowVisualiser from './onedata-gui-common/utils/workflow-visuali
 import clipboardActions from './onedata-gui-common/utils/clipboard-actions';
 import utilsAtmWorkflow from './onedata-gui-common/utils/atm-workflow';
 import auditLog from './onedata-gui-common/utils/audit-log';
+import timeSeries from './onedata-gui-common/utils/time-series';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
 
@@ -176,6 +177,7 @@ const translations = {
     clipboardActions,
     atmWorkflow: utilsAtmWorkflow,
     auditLog,
+    timeSeries,
   },
   errors: {
     backendErrors,

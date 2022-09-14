@@ -30,26 +30,7 @@ import _ from 'lodash';
  */
 
 /**
- * @typedef {
- *   'none' |
- *   'milliseconds' |
- *   'seconds' |
- *   'bits' |
- *   'bytes' |
- *   'hertz' |
- *   'countsPerSec' |
- *   'bitsPerSec' |
- *   'bytesPerSec' |
- *   'operationsPerSec' |
- *   'requestsPerSec' |
- *   'readsPerSec' |
- *   'writesPerSec' |
- *   'ioOperationsPerSec' |
- *   'percent' |
- *   'percentNormalized' |
- *   'boolean' |
- *   'custom'
- * } UnitName
+ * @typedef {TimeSeriesStandardUnit|'custom'} UnitName
  */
 
 /**

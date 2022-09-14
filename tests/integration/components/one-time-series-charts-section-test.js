@@ -72,8 +72,8 @@ describe('Integration | Component | one time series charts section', function ()
         metrics,
       }],
       onQueryBatcherFetchDataCallback: sinon.spy(({ batchedQuery }) =>
-        Object.keys(batchedQuery.metrics).reduce((acc, seriesId) => {
-          acc[seriesId] = batchedQuery.metrics[seriesId].reduce((acc2, metricName) => {
+        Object.keys(batchedQuery.layout).reduce((acc, seriesName) => {
+          acc[seriesName] = batchedQuery.layout[seriesName].reduce((acc2, metricName) => {
             const resolution = Number(metricName);
             const timestamp = batchedQuery.startTimestamp -
               (batchedQuery.startTimestamp % resolution);
@@ -184,7 +184,7 @@ describe('Integration | Component | one time series charts section', function ()
       .and.to.have.been.calledWith({
         dataSourceName: 'chartData',
         batchedQuery: sinon.match({
-          metrics: {
+          layout: {
             'values-total': ['60'],
           },
         }),

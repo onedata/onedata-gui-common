@@ -15,6 +15,11 @@ export default {
         },
         unit: {
           label: 'Unit',
+          options: {
+            custom: {
+              label: 'Custom',
+            },
+          },
         },
         customUnit: {
           label: 'Custom unit name',

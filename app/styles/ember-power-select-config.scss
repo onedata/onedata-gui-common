@@ -1,5 +1,5 @@
-// above bootstrap modal
-$ember-basic-dropdown-content-z-index: $zindex-modal+1;
+// above bootstrap modal and popover
+$ember-basic-dropdown-content-z-index: $zindex-popover-over-modals + 1;
 
 $ember-power-select-border-color: $input-border;
 $ember-power-select-border-width: 1px;

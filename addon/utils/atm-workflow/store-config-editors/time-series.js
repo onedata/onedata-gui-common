@@ -25,18 +25,18 @@ import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-fiel
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import {
-  customUnit,
-  customUnitsPrefix,
-  units,
-  translateUnit,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec/types/time-series-measurement';
-import {
-  nameGeneratorTypes,
-  metricAggregators,
-  translateNameGeneratorType,
-} from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
+  timeSeriesNameGeneratorTypes,
+  timeSeriesStandardUnits,
+  translateTimeSeriesStandardUnit,
+  timeSeriesCustomUnitPrefix,
+  timeSeriesMetricAggregators,
+  translateTimeSeriesNameGeneratorType,
+} from 'onedata-gui-common/utils/time-series';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import { Tag as MetricTag } from 'onedata-gui-common/components/tags-input/time-series-metric-selector-editor';
+
+// A fake unit used to indicate that user provides some non-standard unit.
+const customPseudoUnit = 'custom';
 
 const FormElement = FormFieldsGroup.extend({
   classes: 'time-series-store-config-editor',
@@ -89,14 +89,14 @@ const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
         DropdownField.extend({
           options: computed(function options() {
             const i18n = this.get('i18n');
-            return nameGeneratorTypes.map((nameGeneratorType) => ({
+            return timeSeriesNameGeneratorTypes.map((nameGeneratorType) => ({
               value: nameGeneratorType,
-              label: translateNameGeneratorType(i18n, nameGeneratorType),
+              label: translateTimeSeriesNameGeneratorType(i18n, nameGeneratorType),
             }));
           }),
         }).create({
           name: 'nameGeneratorType',
-          defaultValue: nameGeneratorTypes[0],
+          defaultValue: timeSeriesNameGeneratorTypes[0],
         }),
         TextField.create({
           name: 'nameGenerator',
@@ -123,17 +123,18 @@ const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
         DropdownField.extend({
           options: computed(function options() {
             const i18n = this.get('i18n');
-            return units.map((unit) => ({
+            return [...timeSeriesStandardUnits, customPseudoUnit].map((unit) => ({
               value: unit,
-              label: translateUnit(i18n, unit),
+              label: unit !== customPseudoUnit ?
+                translateTimeSeriesStandardUnit(i18n, unit) : undefined,
             }));
           }),
         }).create({
           name: 'unit',
-          defaultValue: units[0],
+          defaultValue: timeSeriesStandardUnits[0],
         }),
         TextField.extend({
-          isVisible: eq('parent.value.unit', raw(customUnit)),
+          isVisible: eq('parent.value.unit', raw(customPseudoUnit)),
         }).create({
           name: 'customUnit',
         }),
@@ -162,7 +163,8 @@ const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
                 resolution: bRes,
               } = get(tagB, 'value');
               if (aAgg !== bAgg) {
-                return metricAggregators.indexOf(aAgg) - metricAggregators.indexOf(bAgg);
+                return timeSeriesMetricAggregators.indexOf(aAgg) -
+                  timeSeriesMetricAggregators.indexOf(bAgg);
               } else {
                 return aRes - bRes;
               }
@@ -213,8 +215,8 @@ function formValuesToStoreConfig(values) {
         nameGeneratorType: formNameGeneratorType,
         nameGenerator: formNameGenerator,
       };
-      if (formUnit === customUnit) {
-        rawTimeSeriesSchema.unit = `${customUnitsPrefix}${formCustomUnit}`;
+      if (formUnit === customPseudoUnit) {
+        rawTimeSeriesSchema.unit = `${timeSeriesCustomUnitPrefix}${formCustomUnit}`;
       } else {
         rawTimeSeriesSchema.unit = formUnit;
       }
@@ -286,9 +288,9 @@ function storeConfigToFormValues(storeConfig) {
       nameGenerator,
     };
 
-    if (unit.startsWith(customUnitsPrefix)) {
-      timeSeriesSchemaValue.unit = customUnit;
-      timeSeriesSchemaValue.customUnit = unit.slice(customUnitsPrefix.length);
+    if (unit.startsWith(timeSeriesCustomUnitPrefix)) {
+      timeSeriesSchemaValue.unit = customPseudoUnit;
+      timeSeriesSchemaValue.customUnit = unit.slice(timeSeriesCustomUnitPrefix.length);
     } else {
       timeSeriesSchemaValue.unit = unit;
     }
