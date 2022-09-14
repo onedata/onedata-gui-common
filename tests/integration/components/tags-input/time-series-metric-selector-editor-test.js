@@ -12,70 +12,70 @@ import {
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import sinon from 'sinon';
 import { get } from '@ember/object';
-import { metricResolutionsMap } from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
+import { timeSeriesMetricResolutionsMap } from 'onedata-gui-common/utils/time-series';
 
 const resolutionOptions = [{
   label: '5 seconds',
-  resolution: metricResolutionsMap.fiveSeconds,
+  resolution: timeSeriesMetricResolutionsMap.fiveSeconds,
   shortName: '5s',
 }, {
   label: '1 minute',
-  resolution: metricResolutionsMap.minute,
+  resolution: timeSeriesMetricResolutionsMap.minute,
   shortName: '1m',
 }, {
   label: '1 hour',
-  resolution: metricResolutionsMap.hour,
+  resolution: timeSeriesMetricResolutionsMap.hour,
   shortName: '1h',
 }, {
   label: '1 day',
-  resolution: metricResolutionsMap.day,
+  resolution: timeSeriesMetricResolutionsMap.day,
   shortName: '1d',
 }, {
   label: '1 week',
-  resolution: metricResolutionsMap.week,
+  resolution: timeSeriesMetricResolutionsMap.week,
   shortName: '1w',
 }, {
   label: '1 month',
-  resolution: metricResolutionsMap.month,
+  resolution: timeSeriesMetricResolutionsMap.month,
   shortName: '1mo',
 }, {
   label: '1 year',
-  resolution: metricResolutionsMap.year,
+  resolution: timeSeriesMetricResolutionsMap.year,
   shortName: '1y',
 }];
 
 const perAggregatorPresets = [{
-  resolution: metricResolutionsMap.fiveSeconds,
+  resolution: timeSeriesMetricResolutionsMap.fiveSeconds,
   retention: 2 * 60 * 12,
   nameSuffix: '5s',
   tagLabelSuffix: '5s; 1440 samp.',
 }, {
-  resolution: metricResolutionsMap.minute,
+  resolution: timeSeriesMetricResolutionsMap.minute,
   retention: 24 * 60,
   nameSuffix: '1m',
   tagLabelSuffix: '1m; 1440 samp.',
 }, {
-  resolution: metricResolutionsMap.hour,
+  resolution: timeSeriesMetricResolutionsMap.hour,
   retention: 2 * 30 * 24,
   nameSuffix: '1h',
   tagLabelSuffix: '1h; 1440 samp.',
 }, {
-  resolution: metricResolutionsMap.day,
+  resolution: timeSeriesMetricResolutionsMap.day,
   retention: 2 * 12 * 30,
   nameSuffix: '1d',
   tagLabelSuffix: '1d; 720 samp.',
 }, {
-  resolution: metricResolutionsMap.week,
+  resolution: timeSeriesMetricResolutionsMap.week,
   retention: 10 * 52,
   nameSuffix: '1w',
   tagLabelSuffix: '1w; 520 samp.',
 }, {
-  resolution: metricResolutionsMap.month,
+  resolution: timeSeriesMetricResolutionsMap.month,
   retention: 10 * 12,
   nameSuffix: '1mo',
   tagLabelSuffix: '1mo; 120 samp.',
 }, {
-  resolution: metricResolutionsMap.year,
+  resolution: timeSeriesMetricResolutionsMap.year,
   retention: 10,
   nameSuffix: '1y',
   tagLabelSuffix: '1y; 10 samp.',
