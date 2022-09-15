@@ -1,9 +1,28 @@
 export default {
-  nameGeneratorTypes: {
+  timeSeriesNameGeneratorTypes: {
     exact: 'Exact',
     addPrefix: 'Add prefix',
   },
-  metricResolutions: {
+  timeSeriesStandardUnits: {
+    none: 'None',
+    milliseconds: 'Milliseconds',
+    seconds: 'Seconds',
+    bits: 'Bits',
+    bytes: 'Bytes',
+    hertz: 'Hertz',
+    countsPerSec: 'Counts per sec.',
+    bitsPerSec: 'Bits per sec.',
+    bytesPerSec: 'Bytes per sec.',
+    operationsPerSec: 'Operations per sec.',
+    requestsPerSec: 'Requests per sec.',
+    readsPerSec: 'Reads per sec.',
+    writesPerSec: 'Writes per sec.',
+    ioOperationsPerSec: 'IO operations per sec.',
+    percent: 'Percent',
+    percentNormalized: 'Normalized percent',
+    boolean: 'Boolean',
+  },
+  timeSeriesMetricResolutions: {
     standard: {
       fiveSeconds: '5 seconds',
       minute: '1 minute',
@@ -25,7 +44,7 @@ export default {
       infinity: 'Inf',
     },
   },
-  metricAggregators: {
+  timeSeriesMetricAggregators: {
     standard: {
       sum: 'Sum',
       max: 'Maximum',

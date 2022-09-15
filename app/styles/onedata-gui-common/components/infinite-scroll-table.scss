@@ -7,10 +7,14 @@ $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-paddin
   position: relative;
   border: 1px solid $infinite-scroll-table-border-color;
   border-radius: $border-radius-base;
+  background-color: $color-one-white;
   overflow: hidden;
 
   .table-title {
-    background-color: $infinite-scroll-table-header-bg-color;
+    background-color: var(
+      --infinite-scroll-table-header-bg-color,
+      #{$infinite-scroll-table-header-bg-color}
+    );
     padding: $infinite-scroll-table-container-padding;
     padding-bottom: 0;
 
@@ -47,7 +51,10 @@ $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-paddin
     position: sticky;
     top: 0;
     z-index: 1;
-    background-color: $infinite-scroll-table-header-bg-color;
+    background-color: var(
+      --infinite-scroll-table-header-bg-color,
+      #{$infinite-scroll-table-header-bg-color}
+    );
 
     th {
       position: relative;

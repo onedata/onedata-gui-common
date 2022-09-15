@@ -23,7 +23,7 @@ import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/f
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import { translateNameMatcherType } from '../data-spec/types/time-series-measurement';
-import { translateNameGeneratorType } from '../store-config/time-series';
+import { translateTimeSeriesNameGeneratorType } from 'onedata-gui-common/utils/time-series';
 import {
   prefixCombiners,
   translatePrefixCombiner,
@@ -112,7 +112,7 @@ const FormElement = FormFieldsCollectionGroup.extend({
             const generatorSchemas = this.get('parent.parent.generatorSchemas') || [];
             return generatorSchemas.map((generatorSchema) => ({
               value: generatorSchema.nameGenerator,
-              label: `${translateNameGeneratorType(i18n, generatorSchema.nameGeneratorType)} "${generatorSchema.nameGenerator}"`,
+              label: `${translateTimeSeriesNameGeneratorType(i18n, generatorSchema.nameGeneratorType)} "${generatorSchema.nameGenerator}"`,
             }));
           }),
           defaultValue: reads('options.firstObject.value'),

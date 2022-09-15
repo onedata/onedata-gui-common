@@ -15,16 +15,20 @@ import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/f
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import {
+  timeSeriesStandardUnits,
+  timeSeriesCustomUnitPrefix,
+  translateTimeSeriesStandardUnit,
+} from 'onedata-gui-common/utils/time-series';
+import {
   nameMatcherTypes,
-  customUnit,
-  customUnitsPrefix,
-  units,
   translateNameMatcherType,
-  translateUnit,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/time-series-measurement';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.timeSeriesMeasurement';
+
+// A fake unit used to indicate that user provides some non-standard unit.
+const customPseudoUnit = 'custom';
 
 const FormElement = FormFieldsCollectionGroup.extend({
   classes: 'time-series-measurement-value-constraints-editor boxes-collection-layout',
@@ -56,17 +60,18 @@ const FormElement = FormFieldsCollectionGroup.extend({
         DropdownField.extend({
           options: computed(function options() {
             const i18n = this.get('i18n');
-            return units.map((unit) => ({
+            return [...timeSeriesStandardUnits, customPseudoUnit].map((unit) => ({
               value: unit,
-              label: translateUnit(i18n, unit),
+              label: unit !== customPseudoUnit ?
+                translateTimeSeriesStandardUnit(i18n, unit) : undefined,
             }));
           }),
         }).create({
           name: 'unit',
-          defaultValue: units[0],
+          defaultValue: timeSeriesStandardUnits[0],
         }),
         TextField.extend({
-          isVisible: eq('parent.value.unit', raw(customUnit)),
+          isVisible: eq('parent.value.unit', raw(customPseudoUnit)),
         }).create({
           name: 'customUnit',
         }),
@@ -103,8 +108,8 @@ function formValuesToValueConstraints(values) {
         nameMatcherType: formNameMatcherType,
         nameMatcher: formNameMatcher,
       };
-      if (formUnit === customUnit) {
-        rawMeasurementSpec.unit = `${customUnitsPrefix}${formCustomUnit}`;
+      if (formUnit === customPseudoUnit) {
+        rawMeasurementSpec.unit = `${timeSeriesCustomUnitPrefix}${formCustomUnit}`;
       } else {
         rawMeasurementSpec.unit = formUnit;
       }
@@ -147,9 +152,9 @@ function valueConstraintsToFormValues(valueConstraints) {
       nameMatcher,
     };
 
-    if (unit.startsWith(customUnitsPrefix)) {
-      measurementSpecValue.unit = customUnit;
-      measurementSpecValue.customUnit = unit.slice(customUnitsPrefix.length);
+    if (unit.startsWith(timeSeriesCustomUnitPrefix)) {
+      measurementSpecValue.unit = customPseudoUnit;
+      measurementSpecValue.customUnit = unit.slice(timeSeriesCustomUnitPrefix.length);
     } else {
       measurementSpecValue.unit = unit;
     }

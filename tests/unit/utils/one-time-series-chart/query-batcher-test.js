@@ -22,19 +22,19 @@ const defaultBatchAccumulationTime = 5;
 
 describe('Unit | Utility | one time series chart/query batcher', function () {
   beforeEach(function () {
-    this.fetchData = sinon.stub().callsFake(({ collectionId, metrics, startTimestamp, limit }) => {
+    this.fetchData = sinon.stub().callsFake(({ collectionRef, layout, startTimestamp, windowLimit }) => {
       let negativeValueOccurred = false;
-      const result = Object.keys(metrics).reduce((seriesAcc, seriesId) => {
-        seriesAcc[seriesId] = metrics[seriesId]
-          .reduce((metricsAcc, metricId) => {
+      const result = Object.keys(layout).reduce((seriesAcc, seriesName) => {
+        seriesAcc[seriesName] = layout[seriesName]
+          .reduce((metricsAcc, metricName) => {
             const pointValue = pointValueFromMetricSpec({
-              collectionId,
-              seriesId,
-              metricId,
+              collectionRef,
+              seriesName,
+              metricName,
               startTimestamp,
-              limit,
+              windowLimit,
             });
-            metricsAcc[metricId] = [{
+            metricsAcc[metricName] = [{
               timestamp: 1,
               value: pointValue,
             }];
@@ -152,7 +152,7 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('correctly executes batch of two queries, which have different limit', async function () {
-    const diffQueryParams = queryParams({ limit: 123 });
+    const diffQueryParams = queryParams({ windowLimit: 123 });
     const promise1 = this.batcher.query(queryParams());
     const promise2 = this.batcher.query(diffQueryParams);
     tickBatchTimeout(this);
@@ -164,37 +164,37 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
     expect(await promise2).to.deep.equal(queryResult(diffQueryParams));
   });
 
-  it('correctly executes batch of two queries, which have different metricId', async function () {
-    const diffQueryParams = queryParams({ metricId: 'metric_2' });
+  it('correctly executes batch of two queries, which have different metricName', async function () {
+    const diffQueryParams = queryParams({ metricName: 'metric_2' });
     const promise1 = this.batcher.query(queryParams());
     const promise2 = this.batcher.query(diffQueryParams);
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.calledOnce
       .and.to.be.calledWith(batchedQueryParams({
-        metrics: { series_1: ['metric_1', 'metric_2'] },
+        layout: { series_1: ['metric_1', 'metric_2'] },
       }));
     expect(await promise1).to.deep.equal(queryResult());
     expect(await promise2).to.deep.equal(queryResult(diffQueryParams));
   });
 
-  it('correctly executes batch of two queries, which have different seriesId', async function () {
-    const diffQueryParams = queryParams({ seriesId: 'series_2' });
+  it('correctly executes batch of two queries, which have different seriesName', async function () {
+    const diffQueryParams = queryParams({ seriesName: 'series_2' });
     const promise1 = this.batcher.query(queryParams());
     const promise2 = this.batcher.query(diffQueryParams);
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.calledOnce
       .and.to.be.calledWith(batchedQueryParams({
-        metrics: { series_1: ['metric_1'], series_2: ['metric_1'] },
+        layout: { series_1: ['metric_1'], series_2: ['metric_1'] },
       }));
     expect(await promise1).to.deep.equal(queryResult());
     expect(await promise2).to.deep.equal(queryResult(diffQueryParams));
   });
 
-  it('correctly executes batch of two queries, which have different collectionId', async function () {
-    const queryParams1 = queryParams({ collectionId: 'collection_1' });
-    const queryParams2 = queryParams({ collectionId: 'collection_2' });
+  it('correctly executes batch of two queries, which have different collectionRef', async function () {
+    const queryParams1 = queryParams({ collectionRef: 'collection_1' });
+    const queryParams2 = queryParams({ collectionRef: 'collection_2' });
     const promise1 = this.batcher.query(queryParams(queryParams1));
     const promise2 = this.batcher.query(queryParams2);
     tickBatchTimeout(this);
@@ -208,33 +208,33 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
 
   it('correctly executes batch of many diffrent queries', async function () {
     const queryParamsArray = [
-      queryParams({ collectionId: 'collection_1' }),
-      queryParams({ collectionId: 'collection_2' }),
+      queryParams({ collectionRef: 'collection_1' }),
+      queryParams({ collectionRef: 'collection_2' }),
       queryParams({
-        collectionId: 'collection_1',
-        metricId: 'metric_2',
-        limit: 200,
+        collectionRef: 'collection_1',
+        metricName: 'metric_2',
+        windowLimit: 200,
       }),
       queryParams({
-        collectionId: 'collection_1',
-        seriesId: 'series_2',
-        limit: 200,
+        collectionRef: 'collection_1',
+        seriesName: 'series_2',
+        windowLimit: 200,
       }),
       queryParams({
-        collectionId: 'collection_2',
-        metricId: 'metric_3',
+        collectionRef: 'collection_2',
+        metricName: 'metric_3',
       }),
       queryParams({
-        collectionId: 'collection_2',
-        metricId: 'metric_4',
+        collectionRef: 'collection_2',
+        metricName: 'metric_4',
         startTimestamp: 100,
       }),
       queryParams({
-        collectionId: 'collection_2',
-        metricId: 'metric_5',
+        collectionRef: 'collection_2',
+        metricName: 'metric_5',
         startTimestamp: 100,
       }),
-      queryParams({ collectionId: 'collection_1' }),
+      queryParams({ collectionRef: 'collection_1' }),
     ];
     const promises = queryParamsArray.map(queryParams => this.batcher.query(queryParams));
     tickBatchTimeout(this);
@@ -242,13 +242,13 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
     expect(this.fetchData).to.have.callCount(4)
       .and.to.be.calledWith(batchedQueryParams(queryParamsArray[0]))
       .and.to.be.calledWith(batchedQueryParams(Object.assign({
-        metrics: { series_1: ['metric_1', 'metric_3'] },
+        layout: { series_1: ['metric_1', 'metric_3'] },
       }, queryParamsArray[1])))
       .and.to.be.calledWith(batchedQueryParams(Object.assign({
-        metrics: { series_1: ['metric_2'], series_2: ['metric_1'] },
+        layout: { series_1: ['metric_2'], series_2: ['metric_1'] },
       }, queryParamsArray[2])))
       .and.to.be.calledWith(batchedQueryParams(Object.assign({
-        metrics: { series_1: ['metric_4', 'metric_5'] },
+        layout: { series_1: ['metric_4', 'metric_5'] },
       }, queryParamsArray[5])));
     const results = await allFulfilled(promises);
     results.forEach((result, idx) =>
@@ -259,10 +259,10 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   it('handles mixed resolved and rejected results of fetchData', async function () {
     suppressRejections();
     const queryParamsArray = [
-      queryParams({ collectionId: 'collection_1' }),
-      queryParams({ collectionId: 'collection_2' }),
-      queryParams({ collectionId: 'collection_1', metricId: 'metric_-1' }),
-      queryParams({ collectionId: 'collection_1', limit: 123 }),
+      queryParams({ collectionRef: 'collection_1' }),
+      queryParams({ collectionRef: 'collection_2' }),
+      queryParams({ collectionRef: 'collection_1', metricName: 'metric_-1' }),
+      queryParams({ collectionRef: 'collection_1', windowLimit: 123 }),
     ];
     const promises = queryParamsArray.map(queryParams => this.batcher.query(queryParams));
     tickBatchTimeout(this);
@@ -281,14 +281,14 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
     const promise1 = this.batcher.query(queryParams());
     tickBatchTimeout(this);
 
-    const queryParams2 = queryParams({ seriesId: 'series_2' });
+    const queryParams2 = queryParams({ seriesName: 'series_2' });
     const promise2 = this.batcher.query(queryParams2);
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.calledTwice
       .and.to.be.calledWith(batchedQueryParams())
       .and.to.be.calledWith(batchedQueryParams({
-        metrics: { series_2: ['metric_1'] },
+        layout: { series_2: ['metric_1'] },
       }));
     expect(await promise1).to.deep.equal(queryResult());
     expect(await promise2).to.deep.equal(queryResult(queryParams2));
@@ -296,67 +296,67 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
 });
 
 function queryParams({
-  collectionId = null,
-  seriesId = 'series_1',
-  metricId = 'metric_1',
+  collectionRef = null,
+  seriesName = 'series_1',
+  metricName = 'metric_1',
   startTimestamp = null,
-  limit = 10,
+  windowLimit = 10,
 } = {}) {
   return {
-    collectionId,
-    seriesId,
-    metricId,
+    collectionRef,
+    seriesName,
+    metricName,
     startTimestamp,
-    limit,
+    windowLimit,
   };
 }
 
 function batchedQueryParams({
-  collectionId = null,
-  metrics = { series_1: ['metric_1'] },
+  collectionRef = null,
+  layout = { series_1: ['metric_1'] },
   startTimestamp = null,
-  limit = 10,
+  windowLimit = 10,
 } = {}) {
   return {
-    collectionId,
-    metrics,
+    collectionRef,
+    layout,
     startTimestamp,
-    limit,
+    windowLimit,
   };
 }
 
 function queryResult({
-  collectionId = null,
-  seriesId = 'series_1',
-  metricId = 'metric_1',
+  collectionRef = null,
+  seriesName = 'series_1',
+  metricName = 'metric_1',
   startTimestamp = null,
-  limit = 10,
+  windowLimit = 10,
 } = {}) {
   return [{
     timestamp: 1,
     value: pointValueFromMetricSpec({
-      collectionId,
-      seriesId,
-      metricId,
+      collectionRef,
+      seriesName,
+      metricName,
       startTimestamp,
-      limit,
+      windowLimit,
     }),
   }];
 }
 
 function pointValueFromMetricSpec({
-  collectionId,
-  seriesId,
-  metricId,
+  collectionRef,
+  seriesName,
+  metricName,
   startTimestamp,
-  limit,
+  windowLimit,
 }) {
-  const collectionIdx = collectionId ? parseInt(collectionId.split('_')[1]) : 0;
-  const seriesIdx = parseInt(seriesId.split('_')[1]);
-  const metricIdx = parseInt(metricId.split('_')[1]);
+  const collectionIdx = collectionRef ? parseInt(collectionRef.split('_')[1]) : 0;
+  const seriesIdx = parseInt(seriesName.split('_')[1]);
+  const metricIdx = parseInt(metricName.split('_')[1]);
   if (
     startTimestamp < 0 ||
-    limit < 0 ||
+    windowLimit < 0 ||
     collectionIdx < 0 ||
     seriesIdx < 0 ||
     metricIdx < 0
@@ -364,7 +364,7 @@ function pointValueFromMetricSpec({
     return -1;
   }
   return (startTimestamp || 999999) +
-    limit +
+    windowLimit +
     0.01 * collectionIdx +
     0.0001 * seriesIdx +
     0.000001 * metricIdx;
