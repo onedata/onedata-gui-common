@@ -16,10 +16,11 @@ export default Component.extend({
   classNames: ['truncated-string', 'truncate'],
 
   /**
-   * @virtual
-   * @type {string}
+   * If provided, tooltip will render this text content instead of block text content.
+   * @virtual optional
+   * @type {string|SafeString}
    */
-  tooltipText: undefined,
+  customTooltipText: undefined,
 
   /**
    * Placement of popover with full text.
@@ -34,6 +35,11 @@ export default Component.extend({
    * @type {string}
    */
   tooltipClass: '',
+
+  /**
+   * @type {string}
+   */
+  tooltipText: undefined,
 
   /**
    * If true, tooltip is visible
