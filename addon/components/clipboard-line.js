@@ -78,7 +78,13 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {String}
    */
-  copyHint: undefined,
+  buttonTip: undefined,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  enableValueTip: false,
 
   /**
    * @type {number}
