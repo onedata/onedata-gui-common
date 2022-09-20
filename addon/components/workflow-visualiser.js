@@ -114,6 +114,7 @@ import Looper from 'onedata-gui-common/utils/looper';
 import {
   translateWorkflowStatus,
   workflowEndedStatuses,
+  workflowSuspendedStatuses,
 } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 import { typeOf } from '@ember/utils';
@@ -413,12 +414,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
     'normalizedCancelExecutionAction',
     function executionActions() {
       const {
-        workflow,
         copyInstanceIdAction,
         viewAuditLogAction,
         normalizedCancelExecutionAction,
       } = this.getProperties(
-        'workflow',
         'copyInstanceIdAction',
         'viewAuditLogAction',
         'normalizedCancelExecutionAction'
@@ -426,7 +425,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const actions = [copyInstanceIdAction, viewAuditLogAction];
       if (
         !this.executionHasEnded() &&
-        get(workflow, 'status') !== 'stopping' &&
         normalizedCancelExecutionAction
       ) {
         actions.push(normalizedCancelExecutionAction);
@@ -1170,7 +1168,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const instanceId = rawInstanceId || (schemaId &&
       this.get(`executionState.store.defined.${schemaId}.instanceId`)
     );
-    const contentMayChange = instanceId && !this.executionHasEnded();
+    const contentMayChange = instanceId &&
+      !this.executionHasEnded() &&
+      !this.executionIsSuspended();
 
     const existingStore =
       (instanceId && this.getCachedElement('store', { instanceId })) ||
@@ -1577,6 +1577,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
       placement: 'end',
     });
     this.changeLaneRun(lane, newestRun.runNumber);
+  },
+
+  executionIsSuspended() {
+    return workflowSuspendedStatuses.includes(
+      this.get('executionState.workflow.status')
+    );
   },
 
   executionHasEnded() {

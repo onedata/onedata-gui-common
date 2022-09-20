@@ -70,6 +70,8 @@ export default Action.extend({
       let translationName;
       if (!isWorkflowEnded) {
         translationName = 'workflowNotEnded';
+      } else if (this.workflow.status === 'crashed') {
+        translationName = 'workflowCrashed';
       } else if (!isLaneRunFailed) {
         translationName = 'laneNotFailed';
       } else if (!doesLaneRunExceptionStoreExist) {

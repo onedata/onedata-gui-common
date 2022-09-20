@@ -23,8 +23,6 @@
  */
 
 export const taskEndedStatuses = [
-  'interrupted',
-  'paused',
   'cancelled',
   'skipped',
   'finished',
@@ -35,6 +33,8 @@ export const taskStatuses = [
   'pending',
   'active',
   'stopping',
+  'paused',
+  'interrupted',
   ...taskEndedStatuses,
   taskUnknownStatus,
 ];
@@ -69,8 +69,6 @@ export function translateTaskStatus(i18n, status) {
  */
 
 export const laneEndedStatuses = [
-  'interrupted',
-  'paused',
   'cancelled',
   'skipped',
   'finished',
@@ -86,6 +84,8 @@ export const laneStatuses = [
   'enqueued',
   'active',
   'stopping',
+  'paused',
+  'interrupted',
   ...laneEndedStatuses,
   laneUnknownStatus,
 ];
@@ -116,12 +116,14 @@ export function translateLaneStatus(i18n, status) {
  */
 
 export const workflowEndedStatuses = [
-  'interrupted',
-  'paused',
   'cancelled',
   'finished',
   'failed',
   'crashed',
+];
+export const workflowSuspendedStatuses = [
+  'paused',
+  'interrupted',
 ];
 const workflowUnknownStatus = 'unknown';
 export const workflowStatuses = [
@@ -129,6 +131,7 @@ export const workflowStatuses = [
   'resuming',
   'active',
   'stopping',
+  ...workflowSuspendedStatuses,
   ...workflowEndedStatuses,
   workflowUnknownStatus,
 ];
