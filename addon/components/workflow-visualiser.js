@@ -426,7 +426,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const actions = [copyInstanceIdAction, viewAuditLogAction];
       if (
         !this.executionHasEnded() &&
-        get(workflow, 'status') !== 'aborting' &&
+        get(workflow, 'status') !== 'stopping' &&
         normalizedCancelExecutionAction
       ) {
         actions.push(normalizedCancelExecutionAction);

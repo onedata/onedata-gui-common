@@ -61,26 +61,31 @@ $workflow-visualiser-last-between-task-space-size: 30px;
   }
 
   &.status-scheduled,
-  &.status-preparing,
-  &.status-enqueued {
+  &.status-resuming {
     .workflow-status-container {
       background-color: $color-one-light-blue;
     }
   }
 
   &.status-active,
-  &.status-skipped {
+  &.status-stopping,
+  &.status-interrupted {
     .workflow-status-container {
       background-color: lighten($color-one-warning, 30%);
     }
   }
 
-  &.status-aborting,
-  &.status-interrupted,
   &.status-cancelled,
-  &.status-failed {
+  &.status-failed,
+  &.status-crashed {
     .workflow-status-container {
       background-color: lighten($color-one-danger, 30%);
+    }
+  }
+
+  &.status-paused {
+    .workflow-status-container {
+      background-color: lighten($color-one-light-gray, 30%);
     }
   }
 

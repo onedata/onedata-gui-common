@@ -7,8 +7,24 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+/**
+ * @typedef {
+ * 'pending' |
+ * 'active' |
+ * 'stopping' |
+ * 'interrupted' |
+ * 'paused' |
+ * 'cancelled' |
+ * 'skipped' |
+ * 'finished' |
+ * 'failed' |
+ * 'unknown'
+ * } AtmTaskExecutionStatus
+ */
+
 export const taskEndedStatuses = [
   'interrupted',
+  'paused',
   'cancelled',
   'skipped',
   'finished',
@@ -18,7 +34,7 @@ const taskUnknownStatus = 'unknown';
 export const taskStatuses = [
   'pending',
   'active',
-  'aborting',
+  'stopping',
   ...taskEndedStatuses,
   taskUnknownStatus,
 ];
@@ -32,21 +48,44 @@ export function translateTaskStatus(i18n, status) {
   return i18n.t(`utils.workflowVisualiser.statuses.task.${normalizedStatus}`);
 }
 
+/**
+ * @typedef {
+ * 'pending' |
+ * 'resuming' |
+ * 'scheduled' |
+ * 'preparing' |
+ * 'enqueued' |
+ * 'active' |
+ * 'stopping' |
+ * 'interrupted' |
+ * 'paused' |
+ * 'cancelled' |
+ * 'skipped' |
+ * 'finished' |
+ * 'failed' |
+ * 'crashed' |
+ * 'unknown'
+ * } AtmLaneExecutionStatus
+ */
+
 export const laneEndedStatuses = [
   'interrupted',
+  'paused',
   'cancelled',
   'skipped',
   'finished',
   'failed',
+  'crashed',
 ];
 const laneUnknownStatus = 'unknown';
 export const laneStatuses = [
   'pending',
+  'resuming',
   'scheduled',
   'preparing',
   'enqueued',
   'active',
-  'aborting',
+  'stopping',
   ...laneEndedStatuses,
   laneUnknownStatus,
 ];
@@ -60,20 +99,36 @@ export function translateLaneStatus(i18n, status) {
   return i18n.t(`utils.workflowVisualiser.statuses.lane.${normalizedStatus}`);
 }
 
+/**
+ * @typedef {
+ * 'scheduled' |
+ * 'resuming' |
+ * 'active' |
+ * 'stopping' |
+ * 'interrupted' |
+ * 'paused' |
+ * 'cancelled' |
+ * 'finished' |
+ * 'failed' |
+ * 'crashed' |
+ * 'unknown'
+ * } AtmWorkflowExecutionStatus
+ */
+
 export const workflowEndedStatuses = [
   'interrupted',
+  'paused',
   'cancelled',
-  'skipped',
   'finished',
   'failed',
+  'crashed',
 ];
 const workflowUnknownStatus = 'unknown';
 export const workflowStatuses = [
   'scheduled',
-  'preparing',
-  'enqueued',
+  'resuming',
   'active',
-  'aborting',
+  'stopping',
   ...workflowEndedStatuses,
   workflowUnknownStatus,
 ];
