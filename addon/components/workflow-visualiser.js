@@ -201,6 +201,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @virtual optional
    * @type {Utils.Action}
    */
+  pauseResumeExecutionAction: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Utils.Action}
+   */
   cancelExecutionAction: undefined,
 
   /**
@@ -344,7 +350,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Function>}
    */
-  afterCancelActionHook: computed(function afterCancelActionHook() {
+  lifecycleChangingActionHook: computed(function lifecycleChangingActionHook() {
     return async result => {
       if (!result || get(result, 'status') !== 'done') {
         return;
@@ -352,7 +358,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       try {
         await this.updateExecutionState();
       } catch (error) {
-        console.error('Cannot update workflow status after cancel:', error);
+        console.error('Cannot update workflow status after action:', error);
       }
     };
   }),
@@ -381,54 +387,31 @@ export default Component.extend(I18n, WindowResizeHandler, {
   }),
 
   /**
-   * @type {ComputedProperty<Utils.Action>}
-   */
-  normalizedCancelExecutionAction: computed(
-    'cancelExecutionAction',
-    'afterCancelActionHook',
-    function normalizedCancelExecutionAction() {
-      const {
-        cancelExecutionAction,
-        afterCancelActionHook,
-      } = this.getProperties(
-        'cancelExecutionAction',
-        'afterCancelActionHook'
-      );
-      if (!cancelExecutionAction) {
-        return;
-      }
-      // Remove hook to be sure, that it won't be duplicated.
-      cancelExecutionAction.removeExecuteHook(afterCancelActionHook);
-      cancelExecutionAction.addExecuteHook(afterCancelActionHook);
-      return cancelExecutionAction;
-    }
-  ),
-
-  /**
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
   executionActions: computed(
     'workflow.status',
     'copyInstanceIdAction',
     'viewAuditLogAction',
-    'normalizedCancelExecutionAction',
+    'lifecycleChangingActionHook',
+    'cancelExecutionAction',
     function executionActions() {
-      const {
-        copyInstanceIdAction,
-        viewAuditLogAction,
-        normalizedCancelExecutionAction,
-      } = this.getProperties(
-        'copyInstanceIdAction',
-        'viewAuditLogAction',
-        'normalizedCancelExecutionAction'
-      );
-      const actions = [copyInstanceIdAction, viewAuditLogAction];
-      if (
-        !this.executionHasEnded() &&
-        normalizedCancelExecutionAction
-      ) {
-        actions.push(normalizedCancelExecutionAction);
+      const actions = [this.copyInstanceIdAction, this.viewAuditLogAction];
+
+      if (!this.executionHasEnded()) {
+        const pauseResumeExecutionAction =
+          this.normalizeLifecycleChangingAction(this.pauseResumeExecutionAction);
+        if (pauseResumeExecutionAction) {
+          actions.push(pauseResumeExecutionAction);
+        }
+
+        const cancelExecutionAction =
+          this.normalizeLifecycleChangingAction(this.cancelExecutionAction);
+        if (cancelExecutionAction) {
+          actions.push(cancelExecutionAction);
+        }
       }
+
       return actions;
     }
   ),
@@ -1613,6 +1596,20 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     return this.get('stores').findBy('instanceId', instanceId) || null;
+  },
+
+  /**
+   * @param {Utils.Action|undefined} action
+   * @returns {Utils.Action|undefined}
+   */
+  normalizeLifecycleChangingAction(action) {
+    if (!action) {
+      return;
+    }
+    // Remove hook to be sure, that it won't be duplicated.
+    action.removeExecuteHook(this.lifecycleChangingActionHook);
+    action.addExecuteHook(this.lifecycleChangingActionHook);
+    return action;
   },
 
   actions: {
