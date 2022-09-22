@@ -132,9 +132,11 @@ export default class OneSingletonTaskQueue {
     let hasBeenInserted = false;
     if (options.insertBeforeType) {
       const beforeTaskIndex = this.queue.findIndex(existingTask =>
-        existingTask.type === options.insertBeforeType
+        existingTask.type === options.insertBeforeType &&
+        // do not put task before other, if this task is currently running
+        existingTask !== this.currentTask
       );
-      if (beforeTaskIndex !== -1 && this.queue[beforeTaskIndex] !== this.currentTask) {
+      if (beforeTaskIndex !== -1) {
         this.queue.splice(beforeTaskIndex, 0, task);
         hasBeenInserted = true;
       }
@@ -142,7 +144,6 @@ export default class OneSingletonTaskQueue {
     // if it's not a special case - insert new task on the end
     if (!hasBeenInserted) {
       this.queue.push(task);
-      console.log('normal insert', this.queue.mapBy('type'));
     }
     this.tryExecuteQueue();
     return deferred.promise;

@@ -222,4 +222,21 @@ describe('Unit | Utility | one singleton task queue', function () {
       expect(results).to.deep.equal(['one', 'two']);
     }
   );
+
+  it('puts a task before first non-current duplicate if insertBeforeType option is specified', async function () {
+    const results = [];
+    const taskQueue = new OneSingletonTaskQueue();
+
+    taskQueue.scheduleTask('one', () => results.push('one'));
+    expect(taskQueue.currentTask?.type).to.equal('one');
+    taskQueue.scheduleTask('two', () => results.push('two'));
+    // this is not typical situation, but possible
+    taskQueue.forceScheduleTask('one', () => results.push('one'));
+    taskQueue.scheduleTask('three', () => results.push('three'), {
+      insertBeforeType: 'one',
+    });
+    await taskQueue.executionPromiseObject;
+
+    expect(results).to.deep.equal(['one', 'two', 'three', 'one']);
+  });
 });
