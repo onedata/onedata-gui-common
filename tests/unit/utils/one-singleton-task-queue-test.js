@@ -23,6 +23,25 @@ describe('Unit | Utility | one singleton task queue', function () {
     expect(globalCounter).to.equal(1);
   });
 
+  it('schedules task with existing type if forceScheduleTask is used', async function () {
+    const taskQueue = new OneSingletonTaskQueue();
+    let globalCounter = 0;
+    const fun = async (value) => {
+      for (let i = 0; i < value; ++i) {
+        globalCounter += 1;
+        await sleep(0);
+      }
+    };
+
+    taskQueue.forceScheduleTask('increment', () => fun(1));
+    taskQueue.forceScheduleTask('increment', () => fun(2));
+    taskQueue.forceScheduleTask('increment', () => fun(3));
+
+    await taskQueue.executionPromiseObject;
+
+    expect(globalCounter).to.equal(6);
+  });
+
   it('allows to schedule task with the previously executed type after previous task completion', async function () {
     const taskQueue = new OneSingletonTaskQueue();
     let globalCounter = 0;
@@ -162,4 +181,45 @@ describe('Unit | Utility | one singleton task queue', function () {
     expect(promiseForTask).to.have.property('then');
     expect(await promiseForTask).to.equal(undefined);
   });
+
+  it('puts a task on the queue end by default', async function () {
+    const results = [];
+    const taskQueue = new OneSingletonTaskQueue();
+
+    taskQueue.scheduleTask('one', () => results.push('one'));
+    taskQueue.scheduleTask('two', () => results.push('two'));
+    await taskQueue.executionPromiseObject;
+
+    expect(results).to.deep.equal(['one', 'two']);
+  });
+
+  it('puts a task before other if insertBeforeType option is specified', async function () {
+    const results = [];
+    const taskQueue = new OneSingletonTaskQueue();
+
+    taskQueue.scheduleTask('one', () => results.push('one'));
+    taskQueue.scheduleTask('two', () => results.push('two'));
+    taskQueue.scheduleTask('three', () => results.push('three'), {
+      insertBeforeType: 'two',
+    });
+    await taskQueue.executionPromiseObject;
+
+    expect(results).to.deep.equal(['one', 'three', 'two']);
+  });
+
+  it('does not put a task before other if insertBeforeType option is specified but the other task is currently running',
+    async function () {
+      const results = [];
+      const taskQueue = new OneSingletonTaskQueue();
+
+      taskQueue.scheduleTask('one', () => results.push('one'));
+      expect(taskQueue.currentTask?.type).to.equal('one');
+      taskQueue.scheduleTask('two', () => results.push('two'), {
+        insertBeforeType: 'one',
+      });
+      await taskQueue.executionPromiseObject;
+
+      expect(results).to.deep.equal(['one', 'two']);
+    }
+  );
 });

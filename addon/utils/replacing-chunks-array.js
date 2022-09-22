@@ -177,24 +177,29 @@ export default ArraySlice.extend(Evented, {
       console.debug('util:replacing-chunks-array: cancelled scheduling', taskName);
       return false;
     }
-    const taskPromise = this.taskQueue.scheduleTask(
-      taskName,
-      () => this[methodName](...args)
-    );
+    const fun = () => this[methodName](...args);
+    let taskFun = fun;
+    let options = {};
     if (taskName === 'fetchPrev') {
+      options = { insertBeforeType: 'reload' };
       // For fetch prev: schedule check if user did scroll to region that is still not
       // loaded - if so, we need to schedule next fetchPrev.
       // We need to do this, because auto-fetchPrev scheduling is locked when fetchPrev
       // is in progress (when user performs scroll and loading is in progress).
-      taskPromise.then(async () => {
+      taskFun = () => fun().then(async (result) => {
         await waitForRender();
         if (this.isFetchPrevNeeded()) {
           console.debug('util:replacing-chunks-array: next serial fetchPrev needed');
-          this.scheduleTask('fetchPrev');
+          this.taskQueue.forceScheduleTask('fetchPrev', () => this.fetchPrev(), options);
         }
+        return result;
       });
     }
-    return taskPromise;
+    return await this.taskQueue.scheduleTask(
+      taskName,
+      taskFun,
+      options
+    );
   },
 
   /**
