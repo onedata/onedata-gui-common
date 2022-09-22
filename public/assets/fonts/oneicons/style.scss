@@ -3,9 +3,9 @@
 @font-face {
   font-family: '#{$icomoon-font-family}';
   src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?flnj68') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?flnj68') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?flnj68##{$icomoon-font-family}') format('svg');
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?ybj01t') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?ybj01t') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?ybj01t##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -327,6 +327,11 @@
     content: $oneicon-collection-create; 
   }
 }
+.oneicon-collection {
+  &:before {
+    content: $oneicon-collection; 
+  }
+}
 .oneicon-consume-token {
   &:before {
     content: $oneicon-consume-token; 
@@ -355,6 +360,11 @@
 .oneicon-file {
   &:before {
     content: $oneicon-file; 
+  }
+}
+.oneicon-flatten {
+  &:before {
+    content: $oneicon-flatten; 
   }
 }
 .oneicon-folder-new {
@@ -635,6 +645,11 @@
 .oneicon-password-change {
   &:before {
     content: $oneicon-password-change; 
+  }
+}
+.oneicon-pause {
+  &:before {
+    content: $oneicon-pause; 
   }
 }
 .oneicon-permissions {
