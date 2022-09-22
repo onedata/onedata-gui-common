@@ -394,11 +394,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
     'copyInstanceIdAction',
     'viewAuditLogAction',
     'lifecycleChangingActionHook',
+    'pauseResumeExecutionAction',
     'cancelExecutionAction',
     function executionActions() {
       const actions = [this.copyInstanceIdAction, this.viewAuditLogAction];
 
-      if (!this.executionHasEnded()) {
+      if (!this.isExecutionEnded) {
         const pauseResumeExecutionAction =
           this.normalizeLifecycleChangingAction(this.pauseResumeExecutionAction);
         if (pauseResumeExecutionAction) {
@@ -413,6 +414,30 @@ export default Component.extend(I18n, WindowResizeHandler, {
       }
 
       return actions;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isExecutionSuspended: computed(
+    'executionState.workflow.status',
+    function isExecutionSuspended() {
+      return workflowSuspendedStatuses.includes(
+        this.executionState?.workflow?.status
+      );
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isExecutionEnded: computed(
+    'executionState.workflow.status',
+    function isExecutionSuspended() {
+      return workflowEndedStatuses.includes(
+        this.executionState?.workflow?.status
+      );
     }
   ),
 
@@ -1151,9 +1176,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const instanceId = rawInstanceId || (schemaId &&
       this.get(`executionState.store.defined.${schemaId}.instanceId`)
     );
-    const contentMayChange = instanceId &&
-      !this.executionHasEnded() &&
-      !this.executionIsSuspended();
+    const contentMayChange = instanceId && !this.isExecutionEnded &&
+      !this.isExecutionSuspended;
 
     const existingStore =
       (instanceId && this.getCachedElement('store', { instanceId })) ||
@@ -1560,16 +1584,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
       placement: 'end',
     });
     this.changeLaneRun(lane, newestRun.runNumber);
-  },
-
-  executionIsSuspended() {
-    return workflowSuspendedStatuses.includes(
-      this.get('executionState.workflow.status')
-    );
-  },
-
-  executionHasEnded() {
-    return workflowEndedStatuses.includes(this.get('executionState.workflow.status'));
   },
 
   async updateExecutionState() {

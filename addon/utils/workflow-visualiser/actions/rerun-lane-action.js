@@ -46,6 +46,7 @@ export default Action.extend({
   tip: computed(
     'isRunPreparedInAdvance',
     'isWorkflowEnded',
+    'worflowStatus',
     'disabled',
     function tip() {
       const {
@@ -61,7 +62,7 @@ export default Action.extend({
       let translationName;
       if (!isWorkflowEnded) {
         translationName = 'workflowNotEnded';
-      } else if (this.workflow.status === 'crashed') {
+      } else if (this.worflowStatus === 'crashed') {
         translationName = 'workflowCrashed';
       } else if (isRunPreparedInAdvance) {
         translationName = 'preparedInAdvance';
@@ -78,6 +79,11 @@ export default Action.extend({
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
    */
   workflow: reads('context.workflow'),
+
+  /**
+   * @type {ComputedProperty<AtmWorkflowExecutionStatus>}
+   */
+  worflowStatus: reads('workflow.status'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}
@@ -110,8 +116,8 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  isWorkflowEnded: computed('workflow.status', function isWorkflowEnded() {
-    return workflowEndedStatuses.includes(this.get('workflow.status'));
+  isWorkflowEnded: computed('worflowStatus', function isWorkflowEnded() {
+    return workflowEndedStatuses.includes(this.worflowStatus);
   }),
 
   /**
