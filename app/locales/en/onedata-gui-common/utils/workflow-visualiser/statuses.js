@@ -57,4 +57,10 @@ export default {
     crashed,
     unknown,
   },
+  phase: {
+    waiting: 'Waiting',
+    ongoing: 'Ongoing',
+    ended: 'Ended',
+    suspended: 'Suspended',
+  },
 };

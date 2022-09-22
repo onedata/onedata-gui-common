@@ -144,3 +144,36 @@ export function translateWorkflowStatus(i18n, status) {
   const normalizedStatus = normalizeWorkflowStatus(status);
   return i18n.t(`utils.workflowVisualiser.statuses.workflow.${normalizedStatus}`);
 }
+
+/**
+ * @typedef {'waiting'|'ongoing'|'ended'|'suspended'} AtmWorkflowExecutionPhase
+ */
+
+/**
+ * @type {Object<string, AtmWorkflowExecutionPhase>}
+ */
+export const AtmWorkflowExecutionPhase = Object.freeze({
+  Waiting: 'waiting',
+  Ongoing: 'ongoing',
+  Ended: 'ended',
+  Suspended: 'suspended',
+});
+
+/**
+ * @type {Array<AtmWorkflowExecutionPhase>}
+ */
+export const atmWorkflowExecutionPhases = Object.freeze([
+  AtmWorkflowExecutionPhase.Waiting,
+  AtmWorkflowExecutionPhase.Ongoing,
+  AtmWorkflowExecutionPhase.Ended,
+  AtmWorkflowExecutionPhase.Suspended,
+]);
+
+/**
+ * @param {Ember.Service} i18n
+ * @param {AtmWorkflowExecutionPhase} phase
+ * @returns {SafeString}
+ */
+export function translateAtmWorkflowExecutionPhase(i18n, phase) {
+  return i18n.t(`utils.workflowVisualiser.statuses.phase.${phase}`);
+}
