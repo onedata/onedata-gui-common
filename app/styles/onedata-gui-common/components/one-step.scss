@@ -1,6 +1,7 @@
-@use 'sass:math';
 // requires Bootstrap 3 scaffolding, grid
 // requires onedata colors
+
+@use 'sass:math';
 
 $step-circle-border-width: 3px;
 $step-circle-size: 32px;
@@ -32,7 +33,7 @@ $max-steps: 10;
         // when there are $steps-num steps and $active-step-index step is active
         .steps-#{$steps-num}.step-active-#{$active-step-index} & {
           // when all $cols steps can be shown in the same time
-          @media (min-width: ($cols * $step-width)) {
+          @media (min-width: $cols * $step-width) {
             // set all visible steps width to fill a whole container
             min-width: math.div(100%, $cols);
 
@@ -94,7 +95,7 @@ $max-steps: 10;
   }
 
   .step-separator {
-    border-radius: math.div($step-circle-border-width, 2);
+    border-radius: $step-circle-border-width * 0.5;
     position: absolute;
     top: 1em;
     width:60%;

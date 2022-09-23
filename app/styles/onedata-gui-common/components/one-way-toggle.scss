@@ -1,4 +1,3 @@
-@use 'sass:math';
 $toggle-height: 1.74em;
 $toggle-width: 1.7 * $toggle-height;
 $toggle-track-height: $toggle-height * 0.7;
@@ -87,7 +86,7 @@ $toggle-icon-size: 1.24em;
     @include toggle-color($toggle-bg-color-indeterminate);
 
     .one-way-toggle-thumb {
-      transform: translateX(#{math.div($toggle-slide-space, 2)});
+      transform: translateX(#{$toggle-slide-space * 0.5});
     }
   }
 
@@ -95,7 +94,7 @@ $toggle-icon-size: 1.24em;
   .one-way-toggle-thumb {
     height: $toggle-height;
     border: 1px solid $input-border;
-    border-radius: math.div($toggle-height, 2);
+    border-radius: $toggle-height * 0.5;
   }
 
   .one-way-toggle-control {
@@ -114,7 +113,7 @@ $toggle-icon-size: 1.24em;
     height: $toggle-track-height;
     flex-basis: 100%;
     transition: transition-ease(background-color), transition-ease(opacity);
-    border-radius: math.div($toggle-track-height, 2);
+    border-radius: $toggle-track-height * 0.5;
   }
 
   .one-way-toggle-thumb {
@@ -126,7 +125,7 @@ $toggle-icon-size: 1.24em;
     width: $toggle-thumb-size;
     transition: transition-ease(transform), $control-focus-transition;
     background-color: $input-bg;
-    border-radius: math.div($toggle-thumb-size, 2);
+    border-radius: $toggle-thumb-size * 0.5;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
     .one-icon.thumb-icon {
       font-size: $toggle-icon-size;

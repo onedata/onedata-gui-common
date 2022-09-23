@@ -1,4 +1,3 @@
-@use 'sass:math';
 $one-tree-indent: 50px;
 $one-tree-bullet-top: 16px;
 $one-tree-bullet-size: 17px;
@@ -36,7 +35,7 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
       background-color: inherit;
 
       .one-tree {
-        margin-left: -(math.div($one-tree-bullet-size, 2) + $padding-xs-horizontal + 1px);
+        margin-left: -($one-tree-bullet-size * 0.5 + $padding-xs-horizontal + 1px);
         background-color: inherit;
       }
 
@@ -111,8 +110,8 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
             position: absolute;
             left: $one-tree-indent - $one-tree-bullet-size - $padding-xs-horizontal + 4px;
             top: $one-tree-bullet-top + 1px;
-            width: math.div($one-tree-bullet-size, 2) + 1px;
-            height: math.div($one-tree-bullet-size, 2) + 1px;
+            width: $one-tree-bullet-size * 0.5 + 1px;
+            height: $one-tree-bullet-size * 0.5 + 1px;
             transform: translateY(-50%);
             background-color: $color-one-white;
             color: darken($main-border-color, 30%);
@@ -120,8 +119,8 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
             .one-icon {
               position: relative;
               font-size: $one-tree-bullet-size;
-              top: math.div(-$one-tree-bullet-size, 4);
-              left: math.div(-$one-tree-bullet-size, 4);
+              top: -$one-tree-bullet-size * 0.25;
+              left: -$one-tree-bullet-size * 0.25;
             }
           }
         }

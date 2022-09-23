@@ -1,4 +1,5 @@
 @use 'sass:math';
+
 .application-error {
   $-base-app-error-size-lg: 212px;
   $-base-app-error-size-md: 128px;
@@ -15,7 +16,7 @@
   }
 
   .application-error-show-more {
-    font-size: math.div($-base-app-error-size-lg, 8);
+    font-size: $-base-app-error-size-lg * 0.125;
   }
 
   .error-row {
@@ -49,7 +50,7 @@
         font-size: math.div($-base-app-error-size-md, 6);
     }
     .application-error-show-more {
-        font-size: math.div($-base-app-error-size-md, 8);
+        font-size: $-base-app-error-size-md * 0.125 ;
     }
   }
 }

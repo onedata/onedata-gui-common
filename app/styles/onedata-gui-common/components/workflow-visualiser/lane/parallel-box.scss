@@ -1,4 +1,3 @@
-@use 'sass:math';
 .workflow-visualiser .workflow-visualiser-parallel-box {
   min-width: 0;
 
@@ -59,7 +58,7 @@
     position: absolute;
     top: 50%;
     transform: translateX(50%) translateY(-50%);
-    right: math.div(-$workflow-visualiser-block-border-width, 2);
+    right: -$workflow-visualiser-block-border-width * 0.5;
     font-size: 170%;
 
     &:hover,

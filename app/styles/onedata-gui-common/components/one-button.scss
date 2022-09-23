@@ -1,4 +1,3 @@
-@use 'sass:math';
 .one-button {
   .spinner-container {
     display: inline-block;
@@ -45,7 +44,7 @@
   .spinner-container {
     width: 19px;
     top: 0.15em;
-    margin-left: math.div(-$padding-base-horizontal, 2);
+    margin-left: -$padding-base-horizontal * 0.5;
   }
 
   .spinner {

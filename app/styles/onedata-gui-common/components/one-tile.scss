@@ -1,4 +1,5 @@
 @use 'sass:math';
+
 $-tile-spacing: 40px;
 $-tile-padding: 20px;
 $-tile-content-padding: 4px;
@@ -12,8 +13,8 @@ $-tile-separator-color: #dcdcdc;
   $-tile-footer-height: math.div($-tile-size, 8.75);
 
   margin-top: $-tile-spacing;
-  margin-right: math.div($-tile-spacing, 2);
-  margin-left: math.div($-tile-spacing, 2);
+  margin-right: $-tile-spacing * 0.5;
+  margin-left: $-tile-spacing * 0.5;
   width: $-tile-size;
   height: $-tile-size;
 
@@ -59,8 +60,8 @@ $-tile-separator-color: #dcdcdc;
   margin-bottom: $padding-small-vertical;
 
   @media (min-width: $screen-sm-min) {
-    margin-right: math.div(-$-tile-spacing, 2);
-    margin-left: math.div(-$-tile-spacing, 2);
+    margin-right: -$-tile-spacing * 0.5;
+    margin-left: -$-tile-spacing * 0.5;
   }
 }
 

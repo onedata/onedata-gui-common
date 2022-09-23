@@ -1,4 +1,3 @@
-@use 'sass:math';
 .one-inline-editor.one-size-edit {
   $-btn-modify-width: 144px;
   // space for validation message
@@ -17,7 +16,7 @@
     }
     .btn-confirm-choose {
       padding: 0;
-      width: math.div($-sm-btn-modify-width, 2);
+      width: $-sm-btn-modify-width*0.5;
     }
   }
   &.static, &.editor, &.editor.saving {
@@ -28,7 +27,7 @@
   }
   .btn-confirm-choose {
     padding: 0;
-    width: math.div($-btn-modify-width, 2);
+    width: $-btn-modify-width*0.5;
   }
   .btn .oneicon {
     left: 0;

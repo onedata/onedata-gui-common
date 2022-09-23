@@ -1,7 +1,6 @@
-@use 'sass:math';
 @mixin tag-colors($color, $saturate: 0%, $darken: 0%) {
   color: change-color($color, $saturation: 55%, $lightness: 35%);
-  border-color: change-color($color, $saturation: 50% + math.div($saturate, 2), $lightness: 70% - $darken);
+  border-color: change-color($color, $saturation: 50% + $saturate * 0.5, $lightness: 70% - $darken);
   background-color: change-color($color, $saturation: 50% + $saturate, $lightness: 90%);
   &.tag-status-progress {
     color: change-color($color, $saturation: 55%, $lightness: 10%);
