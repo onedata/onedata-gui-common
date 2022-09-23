@@ -1,3 +1,4 @@
+@use 'sass:math';
 $inline-alert-left-border-width: 60px;
 
 .alert-promise-error {
@@ -10,7 +11,7 @@ $inline-alert-left-border-width: 60px;
   text-align: left;
   &:before {
     position: absolute;
-    left: -$inline-alert-left-border-width / 2;
+    left: math.div(-$inline-alert-left-border-width, 2);
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
     font-family: 'oneicons';

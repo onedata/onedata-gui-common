@@ -9,7 +9,7 @@
 
 /* eslint-env node */
 
-const sass = require('sass');
+const sass = require('sass-embedded');
 
 /**
  * @param {EmberApp} app

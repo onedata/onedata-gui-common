@@ -1,3 +1,4 @@
+@use 'sass:math';
 $steps-row-height: 100px;
 $steps-height: 80px;
 
@@ -5,7 +6,7 @@ $steps-height: 80px;
   .steps-row {
     height: $steps-row-height;
     padding: 0;
-    padding-top: ($steps-row-height - $steps-height - ($content-col-padding / 2)) / 2;
+    padding-top: math.div(($steps-row-height - $steps-height - math.div($content-col-padding, 2)), 2);
     margin-bottom: $content-col-padding;
   }
   .content-info .world-map {

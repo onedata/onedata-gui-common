@@ -1,3 +1,4 @@
+@use 'sass:math';
 // formally this is a component mixin, but don't want to make separate directory
 
 .auto-save-form {
@@ -20,7 +21,7 @@
     margin-right: 4px;
   }
   .control-label {
-    padding-top: $padding-base-vertical / 2;
+    padding-top: math.div($padding-base-vertical, 2);
     text-align: left;
     &.disabled {
       color: $color-one-light-gray;
@@ -54,8 +55,8 @@
       .toggle-column {
         padding-right: 8px;
       }
-      
-      @media (min-width: $-form-second-breakpoint + 1px) { 
+
+      @media (min-width: ($-form-second-breakpoint + 1px)) {
         display: table-row;
         width: 100%;
         .label-column, .fields-column, .toggle-column, .hint-column {
@@ -63,7 +64,7 @@
           vertical-align: top;
         }
         .fields-column {
-          padding: 0 $padding-small-horizontal/2 0 $padding-large-horizontal;
+          padding: 0 math.div($padding-small-horizontal, 2) 0 $padding-large-horizontal;
         }
       }
       @media (max-width: $-form-second-breakpoint) {

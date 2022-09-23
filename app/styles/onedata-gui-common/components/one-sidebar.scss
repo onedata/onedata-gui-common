@@ -1,3 +1,4 @@
+@use 'sass:math';
 $sidebar-item-line-height-desktop: 50px;
 $sidebar-item-line-height-mobile: 54px;
 $sidebar-item-line-height-double-line: 54px;
@@ -172,7 +173,7 @@ $sidebar-item-line-height-double-line: 54px;
   .sidebar-item-title-upper,
   .sidebar-item-title-lower {
     position: relative;
-    line-height: $sidebar-item-line-height-double-line / 2;
+    line-height: math.div($sidebar-item-line-height-double-line, 2);
   }
 
   .sidebar-item-title-upper {

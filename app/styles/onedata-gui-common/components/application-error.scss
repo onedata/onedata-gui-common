@@ -1,3 +1,4 @@
+@use 'sass:math';
 .application-error {
   $-base-app-error-size-lg: 212px;
   $-base-app-error-size-md: 128px;
@@ -8,13 +9,13 @@
   .application-error-icon {
     font-size: $-base-app-error-size-lg;
   }
-  
+
   .application-error-message {
-    font-size: $-base-app-error-size-lg / 6;
+    font-size: math.div($-base-app-error-size-lg, 6);
   }
 
   .application-error-show-more {
-    font-size: $-base-app-error-size-lg / 8;
+    font-size: math.div($-base-app-error-size-lg, 8);
   }
 
   .error-row {
@@ -28,7 +29,7 @@
     opacity: 0;
     color: $main-text-color;
     &.active {
-      opacity: 1; 
+      opacity: 1;
       overflow: auto;
       max-height: 10em;
       margin-top: 10px;
@@ -45,10 +46,10 @@
         font-size: $-base-app-error-size-md;
     }
     .application-error-message {
-        font-size: $-base-app-error-size-md / 6;
+        font-size: math.div($-base-app-error-size-md, 6);
     }
     .application-error-show-more {
-        font-size: $-base-app-error-size-md / 8 ;
+        font-size: math.div($-base-app-error-size-md, 8);
     }
   }
 }

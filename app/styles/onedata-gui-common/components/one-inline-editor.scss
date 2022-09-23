@@ -1,3 +1,4 @@
+@use 'sass:math';
 .one-inline-editor {
   position: relative;
   &:hover {
@@ -101,13 +102,13 @@
       display: inline-block;
       .one-label {
         margin-right: 0;
-        padding: 0 $padding-base-horizontal/2;
-        margin-left: -$padding-base-horizontal/2;
+        padding: 0 math.div($padding-base-horizontal, 2);
+        margin-left: math.div(-$padding-base-horizontal, 2);
       }
       .form-control {
         display: inline-block;
-        padding: $padding-base-vertical/2 $padding-base-horizontal/2;
-        margin-left: -$padding-base-horizontal/2;
+        padding: math.div($padding-base-vertical, 2) math.div($padding-base-horizontal, 2);
+        margin-left: math.div(-$padding-base-horizontal, 2);
         margin-top: -$padding-base-vertical;
         margin-bottom: -$padding-small-vertical;
       }
@@ -115,12 +116,12 @@
     @media screen and (max-width: $screen-xs-max) {
       .one-label {
         line-height: $line-height-base;
-        padding-left: $padding-base-horizontal/2;
-        padding-right: $padding-base-horizontal/2;
-        margin-left: -$padding-base-horizontal/2;
+        padding-left: math.div($padding-base-horizontal, 2);
+        padding-right: math.div($padding-base-horizontal, 2);
+        margin-left: math.div(-$padding-base-horizontal, 2);
       }
       .form-control {
-        padding: $padding-base-vertical/2 $padding-base-horizontal/2;
+        padding: math.div($padding-base-vertical, 2) math.div($padding-base-horizontal, 2);
       }
     }
     .form-control {

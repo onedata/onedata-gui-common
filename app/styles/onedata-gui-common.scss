@@ -41,6 +41,7 @@ $disabled-opacity: 0.6;
 // Addons
 @import 'side-menu';
 
+// FIXME: chartist SCSS before version 1.0.0 causes deprecation warnings
 @import 'chartist/chartist';
 @import 'onedata-gui-common/chartist-overrides';
 @import 'onedata-gui-common/input-tokenizer';

@@ -1,3 +1,4 @@
+@use 'sass:math';
 $chart-legend-height: 30px;
 $chart-labels-font-size: 7pt;
 $chart-font-size-base: 8pt;
@@ -144,7 +145,7 @@ $chart-border-color: $main-border-color;
       }
     }
     .chart-tooltip-arrow {
-      border: ($chart-tooltip-arrow-size / 2) solid transparent;
+      border: math.div($chart-tooltip-arrow-size, 2) solid transparent;
       border-top-color: $chart-border-color;
       width: $chart-tooltip-arrow-size;
       position: absolute;
@@ -154,12 +155,12 @@ $chart-border-color: $main-border-color;
       left: 50%;
       &::after {
         content: '';
-        border: ($chart-tooltip-arrow-size / 2 - 1px) solid transparent;
+        border: (math.div($chart-tooltip-arrow-size, 2) - 1px) solid transparent;
         border-top-color: $color-one-white;
         border-bottom-width: 0;
         width: $chart-tooltip-arrow-size - 2px;
-        margin-left: -($chart-tooltip-arrow-size / 2 - 1px);
-        margin-top: -($chart-tooltip-arrow-size / 2);
+        margin-left: -(math.div($chart-tooltip-arrow-size, 2) - 1px);
+        margin-top: -(math.div($chart-tooltip-arrow-size, 2));
         position: absolute;
       }
     }
