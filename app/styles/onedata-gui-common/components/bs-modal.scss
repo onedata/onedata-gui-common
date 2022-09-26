@@ -87,7 +87,7 @@ $modal-scroll-margin: 14px;
     padding-bottom: $modal-footer-vertical-padding;
     margin-bottom: -$modal-content-bottom-padding;
     @media (max-width: $screen-xs-max) {
-      margin-bottom: -$modal-content-bottom-padding / 2;
+      margin-bottom: -$modal-content-bottom-padding * 0.5;
     }
     &.btn-toolbar {
       margin-top: 0;

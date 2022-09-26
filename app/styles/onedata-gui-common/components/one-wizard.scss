@@ -5,7 +5,7 @@ $steps-height: 80px;
   .steps-row {
     height: $steps-row-height;
     padding: 0;
-    padding-top: ($steps-row-height - $steps-height - ($content-col-padding / 2)) / 2;
+    padding-top: ($steps-row-height - $steps-height - ($content-col-padding * 0.5)) * 0.5;
     margin-bottom: $content-col-padding;
   }
   .content-info .world-map {
