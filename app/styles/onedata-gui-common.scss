@@ -41,7 +41,10 @@ $disabled-opacity: 0.6;
 // Addons
 @import 'side-menu';
 
-@import 'chartist/chartist';
+// NOTE: Using copied chartist base stylesheet to remove SASS deprecations.
+// If you want to upgrade Chartist to v1.0.0+ you should use Chartist SCSS files
+// from node module.
+@import 'onedata-gui-common/chartist';
 @import 'onedata-gui-common/chartist-overrides';
 @import 'onedata-gui-common/input-tokenizer';
 @import 'onedata-gui-common/ember-datetimepicker-overrides';

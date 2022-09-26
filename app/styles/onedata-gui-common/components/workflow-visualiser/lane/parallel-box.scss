@@ -58,7 +58,7 @@
     position: absolute;
     top: 50%;
     transform: translateX(50%) translateY(-50%);
-    right: -$workflow-visualiser-block-border-width / 2;
+    right: -$workflow-visualiser-block-border-width * 0.5;
     font-size: 170%;
 
     &:hover,
