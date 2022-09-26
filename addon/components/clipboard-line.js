@@ -91,11 +91,26 @@ export default Component.extend(I18n, {
    */
   textareaRows: 5,
 
+  /**
+   * If true, tooltip is visible
+   * @type {boolean}
+   */
+  showTooltip: false,
+
   typeClass: tag `clipboard-line-${'type'}`,
 
   clipboardBtnClass: computed('type', function clipboardBtnClass() {
     return `clipboard-btn-${this.get('type')}`;
   }),
+
+  mouseEnter() {
+    const overflowElement = this.get('element').querySelector('.clipboard-input');
+    this.set('showTooltip', overflowElement.offsetWidth < overflowElement.scrollWidth);
+  },
+
+  mouseLeave() {
+    this.set('showTooltip', false);
+  },
 
   actions: {
     notify() {

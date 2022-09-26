@@ -31,7 +31,15 @@
       readonly
     >
     {{#if enableValueTip}}
-      {{one-tooltip title=value}}
+      {{#render-later triggerRender=showTooltip as |renderLater|}}
+        {{one-tooltip
+          class="string-path-tooltip"
+          title=value
+          visible=showTooltip
+          triggerEvents=""
+          onHidden=renderLater.resetRenderTrigger
+        }}
+      {{/render-later}}
     {{/if}}
   </span>
 {{/if}}
