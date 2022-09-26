@@ -11,7 +11,7 @@
 
 const sass = require('sass-embedded');
 
-module.exports = function (app, colors) {
+module.exports = function defineSassColors(app, colors) {
   if (!app.options.sassOptions) {
     app.options.sassOptions = {};
   }
@@ -28,10 +28,31 @@ module.exports = function (app, colors) {
   sassOptions.functions =
     Object.keys(colors).reduce(function (functions, colorName) {
       functions['color-one-' + colorName] = function () {
-        return new sassImplementation.types.Color(
-          parseInt(colors[colorName].substring(1), 16) + 0xff000000
-        );
+        return new sassImplementation.SassColor(hexToRgb(colors[colorName]));
       };
       return functions;
     }, sassOptions.functions);
 };
+
+/**
+ * @param {string} hexString Color in 6-char HEX format preceeded with # sign,
+ *   eg. #FA1234.
+ * @returns {{red: number, green: number, blue: number}} Decimal values of color
+ *   components.
+ */
+function hexToRgb(hexString) {
+  const red = getColorDecimalValue(hexString, 1);
+  const green = getColorDecimalValue(hexString, 3);
+  const blue = getColorDecimalValue(hexString, 5);
+  return { red, green, blue };
+}
+
+/**
+ * @param {string} hexString Color in 6-char HEX format preceeded with # sign,
+ *   eg. #FA1234.
+ * @param {number} startIndex Index of first of two chars of 2-char hex value, eg. FA.
+ * @returns {number} Decimal value of single color component.
+ */
+function getColorDecimalValue(hexString, startIndex) {
+  return Number.parseInt(hexString.substring(startIndex, startIndex + 2), 16);
+}

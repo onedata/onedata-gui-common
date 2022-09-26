@@ -18,7 +18,7 @@ const sass = require('sass-embedded');
  *    - screenMd
  *    - screenLg
  */
-module.exports = function (app, breakpoints) {
+module.exports = function defineSassBreakpoints(app, breakpoints) {
   if (!app.options.sassOptions) {
     app.options.sassOptions = {};
   }
@@ -35,7 +35,7 @@ module.exports = function (app, breakpoints) {
   sassOptions.functions =
     Object.keys(breakpoints).reduce(function (functions, breakpointName) {
       functions['def-' + breakpointName] = function () {
-        return new sassImplementation.types.Number(breakpoints[breakpointName]);
+        return new sassImplementation.SassNumber(breakpoints[breakpointName]);
       };
       return functions;
     }, sassOptions.functions);
