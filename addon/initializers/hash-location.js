@@ -35,7 +35,7 @@ import HashLocation from '@ember/routing/hash-location';
 
 const FixedHashLocation = HashLocation.extend({
   replaceURL(path) {
-    this.location.replace(`${this.location.origin}${this.location.pathname}#${path}`);
+    this.location.replace(`${this.location.origin}${this.location.pathname}${this.location.search}#${path}`);
     this.set('lastSetURL', path);
   },
 });
