@@ -44,7 +44,7 @@
   .spinner-container {
     width: 19px;
     top: 0.15em;
-    margin-left: -$padding-base-horizontal / 2;
+    margin-left: -$padding-base-horizontal * 0.5;
   }
 
   .spinner {

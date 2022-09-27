@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $input-bg-light: $color-one-white;
 $icon-btn-active-color: $color-one-red;
 
@@ -719,7 +721,7 @@ label.align-left {
     color: $color-one-info;
   }
   &.alert-warning .alert-icon {
-    color: adjust-hue($color-one-warning, -6%);
+    color: color.adjust($color-one-warning, $hue: -4deg);
   }
   &.alert-danger .alert-icon {
     color: $color-one-danger;
