@@ -20,7 +20,7 @@
     margin-right: 4px;
   }
   .control-label {
-    padding-top: $padding-base-vertical / 2;
+    padding-top: $padding-base-vertical * 0.5;
     text-align: left;
     &.disabled {
       color: $color-one-light-gray;
@@ -63,7 +63,7 @@
           vertical-align: top;
         }
         .fields-column {
-          padding: 0 $padding-small-horizontal/2 0 $padding-large-horizontal;
+          padding: 0 $padding-small-horizontal*0.5 0 $padding-large-horizontal;
         }
       }
       @media (max-width: $-form-second-breakpoint) {

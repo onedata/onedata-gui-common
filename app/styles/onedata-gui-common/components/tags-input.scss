@@ -2,7 +2,7 @@ $tags-input-font-scale: 0.9;
 $tags-input-tag-line-height: $line-height-computed * $tags-input-font-scale;
 $tags-input-tag-vertical-padding: 4px;
 $tags-input-tag-height: $tags-input-tag-line-height + 2 * $tags-input-tag-vertical-padding + 2px;
-$tags-input-input-padding-top: ($input-height-base - $tags-input-tag-height - 2px) / 2;
+$tags-input-input-padding-top: ($input-height-base - $tags-input-tag-height - 2px) * 0.5;
 $tags-input-tag-border: 1px solid $color-token-border;
 $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-horizontal;
 
@@ -69,7 +69,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
       margin-left: 0;
       margin-right: 0;
       + .tag-item-plaintext {
-        margin-left: -$padding-xs-horizontal/2;
+        margin-left: -$padding-xs-horizontal*0.5;
       }
     }
     + .tag-item-plaintext {
@@ -128,7 +128,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
 
   .input-clear-trigger {
     position: absolute;
-    top: $input-height-base / 2;
+    top: $input-height-base * 0.5;
     right: $padding-base-horizontal - $padding-xs-horizontal;
     transform: translateY(-50%);
     margin: 0;
