@@ -29,6 +29,10 @@ $workflow-visualiser-last-between-task-space-size: 30px;
 .workflow-visualiser {
   $main-border: $workflow-visualiser-lane-border-width solid $workflow-visualiser-lane-border-color;
 
+  @function workflow-status-bg-color($base-color) {
+    @return scale-color($base-color, $lightness: 60%);
+  }
+
   position: relative;
   display: flex;
   flex-direction: column;
@@ -71,7 +75,7 @@ $workflow-visualiser-last-between-task-space-size: 30px;
   &.status-stopping,
   &.status-interrupted {
     .workflow-status-container {
-      background-color: scale-color($color-one-warning, $lightness: 60%);
+      background-color: workflow-status-bg-color($color-one-warning);
     }
   }
 
@@ -79,19 +83,19 @@ $workflow-visualiser-last-between-task-space-size: 30px;
   &.status-failed,
   &.status-crashed {
     .workflow-status-container {
-      background-color: scale-color($color-one-danger, $lightness: 60%);
+      background-color: workflow-status-bg-color($color-one-danger);
     }
   }
 
   &.status-paused {
     .workflow-status-container {
-      background-color: scale-color($color-one-light-gray, $lightness: 60%);
+      background-color: workflow-status-bg-color($color-one-light-gray);
     }
   }
 
   &.status-finished {
     .workflow-status-container {
-      background-color: scale-color($color-one-success, $lightness: 60%);
+      background-color: workflow-status-bg-color($color-one-success);
     }
   }
 

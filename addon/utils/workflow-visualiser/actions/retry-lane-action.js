@@ -51,7 +51,7 @@ export default Action.extend({
    */
   tip: computed(
     'isWorkflowEnded',
-    'worflowStatus',
+    'workflowStatus',
     'isLaneRunFailed',
     'doesLaneRunExceptionStoreExist',
     'disabled',
@@ -71,7 +71,7 @@ export default Action.extend({
       let translationName;
       if (!isWorkflowEnded) {
         translationName = 'workflowNotEnded';
-      } else if (this.worflowStatus === 'crashed') {
+      } else if (this.workflowStatus === 'crashed') {
         translationName = 'workflowCrashed';
       } else if (!isLaneRunFailed) {
         translationName = 'laneNotFailed';
@@ -94,7 +94,7 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<AtmWorkflowExecutionStatus>}
    */
-  worflowStatus: reads('workflow.status'),
+  workflowStatus: reads('workflow.status'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}
@@ -117,8 +117,8 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  isWorkflowEnded: computed('worflowStatus', function isWorkflowEnded() {
-    return workflowEndedStatuses.includes(this.worflowStatus);
+  isWorkflowEnded: computed('workflowStatus', function isWorkflowEnded() {
+    return workflowEndedStatuses.includes(this.workflowStatus);
   }),
 
   /**

@@ -1,4 +1,8 @@
 .workflow-visualiser .workflow-visualiser-task {
+  @function task-status-bg-color($base-color) {
+    @return scale-color($base-color, $lightness: 60%);
+  }
+
   position: relative;
   border: $workflow-visualiser-block-border-width solid $workflow-visualiser-task-border-color;
   border-radius: $border-radius-base;
@@ -47,29 +51,29 @@
 
   &.status-skipped {
     .draggable-task {
-      border: $workflow-visualiser-block-border-width solid $color-one-blue-gray;;
-      background-color: scale-color($color-one-blue-gray, $lightness: 60%);
+      border: $workflow-visualiser-block-border-width solid $color-one-blue-gray;
+      background-color: task-status-bg-color($color-one-blue-gray);
     }
   }
 
   &.status-finished {
     .draggable-task {
       border: $workflow-visualiser-block-border-width solid $color-one-success;
-      background-color: scale-color($color-one-success, $lightness: 60%);
+      background-color: task-status-bg-color($color-one-success);
     }
   }
 
   &.status-interrupted {
     .draggable-task {
       border: $workflow-visualiser-block-border-width solid $color-one-warning;
-      background-color: scale-color($color-one-warning, $lightness: 60%);
+      background-color: task-status-bg-color($color-one-warning);
     }
   }
 
   &.status-paused {
     .draggable-task {
       border: $workflow-visualiser-block-border-width solid $color-one-light-gray;
-      background-color: scale-color($color-one-light-gray, $lightness: 60%);
+      background-color: task-status-bg-color($color-one-light-gray);
     }
   }
 
@@ -77,7 +81,7 @@
   &.status-cancelled {
     .draggable-task {
       border: $workflow-visualiser-block-border-width solid $color-one-danger;
-      background-color: scale-color($color-one-danger, $lightness: 60%);
+      background-color: task-status-bg-color($color-one-danger);
     }
   }
 
