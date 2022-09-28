@@ -8,6 +8,7 @@ const colors = require('./config/colors');
 const breakpoints = require('./config/breakpoints');
 const copyDynamicLibraries = require('./addon/utils/copy-dynamic-libraries');
 const dynamicLibraries = require('./config/dynamic-libraries');
+const sass = require('sass-embedded');
 
 module.exports = function (defaults) {
   const app = new EmberAddon(defaults, {
@@ -34,6 +35,8 @@ module.exports = function (defaults) {
     // options as in `preset-env` in standard Babel config
     'babel': {},
     'sassOptions': {
+      implementation: sass,
+      outputStyle: 'expanded',
       includePaths: [
         'app/styles',
         'app/styles/onedata-gui-common',

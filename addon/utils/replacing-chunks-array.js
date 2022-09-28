@@ -26,6 +26,7 @@ import {
 } from 'rsvp';
 import Evented from '@ember/object/evented';
 import OneSingletonTaskQueue from 'onedata-gui-common/utils/one-singleton-task-queue';
+import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 export const emptyItem = {};
 
@@ -112,6 +113,11 @@ export default ArraySlice.extend(Evented, {
     return allFulfilled([this.startChanged(), this.endChanged()]);
   },
 
+  isFetchPrevNeeded() {
+    return !get(this.sourceArray, 'length') ||
+      !this._startReached && this._start - this.loadMoreThreshold <= this.emptyIndex;
+  },
+
   startChanged: observer(
     '_start',
     '_startReached',
@@ -119,23 +125,7 @@ export default ArraySlice.extend(Evented, {
     'sourceArray.[]',
     'emptyIndex',
     function startChanged() {
-      const {
-        _start,
-        _startReached,
-        loadMoreThreshold,
-        sourceArray,
-        emptyIndex,
-      } = this.getProperties(
-        '_start',
-        '_startReached',
-        'loadMoreThreshold',
-        'sourceArray',
-        'emptyIndex',
-      );
-      const sourceArrayLength = get(sourceArray, 'length');
-      if (!sourceArrayLength ||
-        !_startReached && _start - loadMoreThreshold <= emptyIndex
-      ) {
+      if (this.isFetchPrevNeeded()) {
         return this.scheduleTask('fetchPrev');
       }
     }
@@ -187,9 +177,28 @@ export default ArraySlice.extend(Evented, {
       console.debug('util:replacing-chunks-array: cancelled scheduling', taskName);
       return false;
     }
-    return this.get('taskQueue').scheduleTask(
+    const fun = () => this[methodName](...args);
+    let taskFun = fun;
+    let options = {};
+    if (taskName === 'fetchPrev') {
+      options = { insertBeforeType: 'reload' };
+      // For fetch prev: schedule check if user did scroll to region that is still not
+      // loaded - if so, we need to schedule next fetchPrev.
+      // We need to do this, because auto-fetchPrev scheduling is locked when fetchPrev
+      // is in progress (when user performs scroll and loading is in progress).
+      taskFun = () => fun().then(async (result) => {
+        await waitForRender();
+        if (this.isFetchPrevNeeded()) {
+          console.debug('util:replacing-chunks-array: next serial fetchPrev needed');
+          this.taskQueue.forceScheduleTask('fetchPrev', () => this.fetchPrev(), options);
+        }
+        return result;
+      });
+    }
+    return await this.taskQueue.scheduleTask(
       taskName,
-      () => this[methodName](...args)
+      taskFun,
+      options
     );
   },
 

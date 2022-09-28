@@ -172,7 +172,7 @@ $sidebar-item-line-height-double-line: 54px;
   .sidebar-item-title-upper,
   .sidebar-item-title-lower {
     position: relative;
-    line-height: $sidebar-item-line-height-double-line / 2;
+    line-height: $sidebar-item-line-height-double-line * 0.5;
   }
 
   .sidebar-item-title-upper {
