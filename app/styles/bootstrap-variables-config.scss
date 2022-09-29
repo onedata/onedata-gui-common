@@ -329,7 +329,10 @@ $zindex-navbar-fixed:      1030 !default;
 $zindex-modal-background:  1040 !default;
 $zindex-modal:             1050 !default;
 
-$zindex-popover-over-modals: $zindex-modal + 1;
+// Additional styles for modals above modals and popovers above modals
+$zindex-modal-secondary-backdrop: $zindex-modal + 5;
+$zindex-modal-secondary: $zindex-modal-secondary-backdrop + 1;
+$zindex-popover-over-modals: $zindex-modal-secondary + 1;
 
 //== Media queries breakpoints
 //
