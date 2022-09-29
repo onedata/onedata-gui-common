@@ -16,7 +16,7 @@
     }
     .btn-confirm-choose {
       padding: 0;
-      width: $-sm-btn-modify-width/2;
+      width: $-sm-btn-modify-width*0.5;
     }
   }
   &.static, &.editor, &.editor.saving {
@@ -27,7 +27,7 @@
   }
   .btn-confirm-choose {
     padding: 0;
-    width: $-btn-modify-width/2;
+    width: $-btn-modify-width*0.5;
   }
   .btn .oneicon {
     left: 0;
