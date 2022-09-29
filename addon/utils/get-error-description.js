@@ -102,7 +102,7 @@ export default function getErrorDescription(error, i18n) {
     stringifyError = true;
   } else if (typeof error === 'object' && error.message) {
     message = error.message;
-  } else if (isHTMLSafe(error)) {
+  } else if (typeof error === 'string' || isHTMLSafe(error)) {
     message = error;
   } else {
     stringifyError = true;
