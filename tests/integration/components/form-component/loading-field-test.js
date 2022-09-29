@@ -72,7 +72,7 @@ describe('Integration | Component | form component/loading field', function () {
 
       expect(find('.resource-load-error')).to.exist;
       expect(find('.resource-load-error .error-details').textContent.trim())
-        .to.equal('"err"');
+        .to.equal('err');
     }
   );
 
