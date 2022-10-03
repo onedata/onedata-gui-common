@@ -6,6 +6,7 @@ import {
   translateFileType,
   translateFileCount,
   FileType,
+  LegacyFileType,
 } from 'onedata-gui-common/utils/file';
 import { lookupService } from '../../helpers/stub-service';
 
@@ -32,6 +33,10 @@ describe('Unit | Utility | file', function () {
     testTranslateFileType(FileType.Directory, options, 'directory');
     testTranslateFileType(FileType.SymbolicLink, options, 'symbolic link');
     testTranslateFileType(null, options, 'item');
+    // Test legacy file types
+    testTranslateFileType(LegacyFileType.Regular, options, 'file');
+    testTranslateFileType(LegacyFileType.Directory, options, 'directory');
+    testTranslateFileType(LegacyFileType.SymbolicLink, options, 'symbolic link');
 
     options = { form: 'plural' };
     testTranslateFileType(FileType.Regular, options, 'files');
@@ -80,6 +85,10 @@ describe('Unit | Utility | file', function () {
     testTranslateFileCount(null, 1, '1 item');
     testTranslateFileCount(null, 2, '2 items');
     testTranslateFileCount(null, 10, '10 items');
+
+    testTranslateFileCount(LegacyFileType.Regular, 0, '0 files');
+    testTranslateFileCount(LegacyFileType.Directory, 0, '0 directories');
+    testTranslateFileCount(LegacyFileType.SymbolicLink, 0, '0 symbolic links');
   });
 });
 

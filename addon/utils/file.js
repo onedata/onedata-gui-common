@@ -24,6 +24,26 @@ export const FileType = {
 };
 
 /**
+ * @typedef {'file'|'dir'|'symlink'} LegacyFileType
+ * Describes a type of a file - regular, directory or symbolic link. It is
+ * a legacy form used in existing code of Oneprovider GUI. Should be avoided
+ * in new code (if possible).
+ */
+
+/**
+ * Enum with file types in existing code of Oneprovider GUI. Should be avoided
+ * in new code (if possible).
+ * TODO: VFS-9944 Remove all legacy file type usages (including those written
+ * without enum).
+ * @type {Object<string, LegacyFileType>}
+ */
+export const LegacyFileType = {
+  Regular: 'REG',
+  Directory: 'DIR',
+  SymbolicLink: 'SYMLNK',
+};
+
+/**
  * @typedef {FileType.Regular|FileType.Directory|null} SymbolicLinkTargetType
  * Describes a type of a file pointed by a symbolic link. `null` is for broken
  * symbolic links (unknown target type).
@@ -70,7 +90,7 @@ const i18nPrefix = 'utils.file';
 
 /**
  * @param {Ember.Service} i18n
- * @param {FileType|null} fileType null means unknown type
+ * @param {FileType|LegacyFileType|null} fileType null means unknown type
  * @param {{ form: 'singular'|'plural', upperFirst: boolean }} [options]
  * @returns {string} strings like "file", "directory" etc.
  */
@@ -83,8 +103,10 @@ export function translateFileType(i18n, fileType, {
     return '';
   }
 
+  const normalizedFileType = fileType ?
+    convertFromLegacyFileTypeIfNeeded(fileType) : null;
   const normalizedForm = form === 'plural' ? 'plural' : 'singular';
-  const i18nKey = `${i18nPrefix}.fileTypes.${fileType ?? null}.${normalizedForm}`;
+  const i18nKey = `${i18nPrefix}.fileTypes.${normalizedFileType}.${normalizedForm}`;
 
   const translation = String(i18n.t(i18nKey)) || '';
   return upperFirst ? _.upperFirst(translation) : translation;
@@ -92,7 +114,7 @@ export function translateFileType(i18n, fileType, {
 
 /**
  * @param {Ember.Service} i18n
- * @param {FileType|null} fileType null means unknown type
+ * @param {FileType|LegacyFileType|null} fileType null means unknown type
  * @param {number} count
  * @returns {string} strings like "2 files" or "1 directory" etc.
  */
@@ -101,4 +123,19 @@ export function translateFileCount(i18n, fileType, count) {
   const form = normalizedCount === 1 || normalizedCount === -1 ?
     'singular' : 'plural';
   return `${count} ${translateFileType(i18n, fileType, { form })}`;
+}
+
+/**
+ * @param {FileType|LegacyFileType} fileType
+ * @returns {FileType}
+ */
+function convertFromLegacyFileTypeIfNeeded(fileType) {
+  switch (fileType) {
+    case LegacyFileType.Regular:
+      return FileType.Regular;
+    case LegacyFileType.Directory:
+      return FileType.Directory;
+    case LegacyFileType.SymbolicLink:
+      return FileType.SymbolicLink;
+  }
 }
