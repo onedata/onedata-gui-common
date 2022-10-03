@@ -121,37 +121,44 @@ export default Component.extend({
     }
   }),
 
-  dataSpecFiltersObserver: observer(
+  /**
+   * @type {ComputedProperty<() => void>}
+   */
+  notifyFormChangeCallback: computed(function notifyFormChangeCallback() {
+    return () => this.notifyFormChange();
+  }),
+
+  formRootSetuper: observer(
+    'formRootGroup',
+    'formValues',
     'dataSpecFilters',
-    function dataSpecFiltersObserver() {
-      const {
-        dataSpecFilters,
-        formRootGroup,
-      } = this.getProperties('dataSpecFilters', 'formRootGroup');
-      const dataTypeEditor = formRootGroup &&
-        formRootGroup.getFieldByPath('dataTypeEditor');
-      if (dataTypeEditor && get(dataTypeEditor, 'dataSpecFilters') !== dataSpecFilters) {
-        set(dataTypeEditor, 'dataSpecFilters', dataSpecFilters);
+    'notifyFormChangeCallback',
+    function formRootSetuper() {
+      if (!this.formRootGroup) {
+        return;
+      }
+
+      if (this.formValues && this.formValues !== this.formRootGroup.valuesSource) {
+        set(this.formRootGroup, 'valuesSource', this.formValues);
+      }
+
+      if (this.formRootGroup.onNotifyAboutChange !== this.notifyFormChangeCallback) {
+        set(this.formRootGroup, 'onNotifyAboutChange', this.notifyFormChangeCallback);
+      }
+
+      const dataTypeEditor = this.formRootGroup.getFieldByPath('dataTypeEditor');
+      if (dataTypeEditor && dataTypeEditor.dataSpecFilters !== this.dataSpecFilters) {
+        set(dataTypeEditor, 'dataSpecFilters', this.dataSpecFilters);
       }
     }
   ),
 
+  /**
+   * @override
+   */
   init() {
     this._super(...arguments);
-
-    const {
-      formValues,
-      formRootGroup,
-    } = this.getProperties('formValues', 'formRootGroup');
-
-    if (formRootGroup) {
-      if (formValues && formValues !== get(formRootGroup, 'valuesSource')) {
-        set(formRootGroup, 'valuesSource', formValues);
-      }
-
-      set(formRootGroup, 'onNotifyAboutChange', () => this.notifyFormChange());
-    }
-    this.dataSpecFiltersObserver();
+    this.formRootSetuper();
   },
 
   /**
