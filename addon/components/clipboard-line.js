@@ -75,6 +75,18 @@ export default Component.extend(I18n, {
   rawValue: undefined,
 
   /**
+   * @virtual optional
+   * @type {String}
+   */
+  buttonTip: undefined,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  enableValueTip: false,
+
+  /**
    * @type {number}
    */
   textareaRows: 5,
