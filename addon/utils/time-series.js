@@ -289,6 +289,33 @@ export function translateTimeSeriesMetricResolution(
 }
 
 /**
+ * @param {TimeSeriesSchema} timeSeriesSchema
+ * @param {TimeSeriesMetricAggregator} aggregator
+ * @param {{ allowInfinityResolution: boolean }} [options]
+ * @returns {Array<string>}
+ */
+export function getTimeSeriesMetricNamesWithAggregator(
+  timeSeriesSchema, aggregator, { allowInfinityResolution = false } = {}
+) {
+  const metrics = timeSeriesSchema?.metrics ?? {};
+  return Object.keys(metrics)
+    .filter((metricName) =>
+      metrics[metricName]?.aggregator === aggregator && (
+        metrics[metricName]?.resolution || allowInfinityResolution
+      )
+    )
+    .sort((m1, m2) => {
+      if (!metrics[m1].resolution) {
+        return 1;
+      } else if (!metrics[m2].resolution) {
+        return -1;
+      } else {
+        return metrics[m1].resolution - metrics[m2].resolution;
+      }
+    });
+}
+
+/**
  * @typedef {Object<string, Array<string>} TimeSeriesCollectionLayout
  * It's a map (seriesName -> (array of metric names)). Can be used to pass
  * information about collection current time series or describe which time windows

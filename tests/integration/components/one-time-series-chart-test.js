@@ -175,7 +175,7 @@ describe('Integration | Component | one time series chart', function () {
     expect(find('.show-newer-btn').disabled).to.be.true;
     expect(config.getViewParameters().lastPointTimestamp)
       .to.be.closeTo(Math.floor(Date.now() / 1000), 60);
-    expectEchartDummyPoints(null, 60, 60);
+    expectEchartDummyPoints(config.getViewParameters().lastPointTimestamp, 60, 60);
   });
 
   it('moving to the newest data in live mode changes lastPointTimestamp to null', async function () {
