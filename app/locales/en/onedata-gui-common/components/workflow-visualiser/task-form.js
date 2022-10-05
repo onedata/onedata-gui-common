@@ -1,16 +1,24 @@
 import taskResourcesFields from '../../utils/workflow-visualiser/task-resources-fields';
 
 export default {
-  usedLambda: {
-    header: 'Used lambda',
-    name: 'Name',
-    revisionNumber: 'Revision',
-    summary: 'Summary',
-  },
-  taskDetailsHeader: 'Task details',
   fields: {
-    name: {
-      label: 'Name',
+    lambda: {
+      label: 'Used lambda',
+      name: {
+        label: 'Name',
+      },
+      revisionNumber: {
+        label: 'Revision',
+      },
+      summary: {
+        label: 'Summary',
+      },
+    },
+    details: {
+      label: 'Task details',
+      name: {
+        label: 'Name',
+      },
     },
     argumentMappings: {
       label: 'Arguments',
@@ -27,10 +35,6 @@ export default {
             const: {
               label: 'Constant value',
             },
-            // TODO: VFS-7816 uncomment or remove future code
-            // storeCredentials: {
-            //   label: 'Store credentials',
-            // },
             singleValueStoreContent: {
               label: 'Store content',
             },
@@ -81,13 +85,6 @@ export default {
         dispatchFunction: {
           label: 'Dispatch function',
           options: {
-            // TODO: VFS-7816 uncomment or remove future code
-            // add: {
-            //   label: 'Add',
-            // },
-            // remove: {
-            //   label: 'Remove',
-            // },
             append: {
               label: 'Append',
             },

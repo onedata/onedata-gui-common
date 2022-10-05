@@ -37,6 +37,7 @@ import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-fiel
 import HiddenField from 'onedata-gui-common/utils/form-component/hidden-field';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
+import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
@@ -58,6 +59,7 @@ import {
   doesDataSpecFitToStoreRead,
   doesDataSpecFitToStoreWrite,
 } from 'onedata-gui-common/utils/atm-workflow/store-config';
+import sortRevisionNumbers from 'onedata-gui-common/utils/revisions/sort-revision-numbers';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -200,20 +202,6 @@ export default Component.extend(I18n, {
   argumentStores: reads('definedStores'),
 
   /**
-   * @type {ComputedProperty<AtmLambdaRevision>}
-   */
-  atmLambdaRevision: computed(
-    'atmLambda.revisionRegistry',
-    'atmLambdaRevisionNumber',
-    function atmLambdaRevision() {
-      const atmLambdaRevisionNumber = this.get('atmLambdaRevisionNumber');
-      return atmLambdaRevisionNumber && this.get(
-        `atmLambda.revisionRegistry.${atmLambdaRevisionNumber}`
-      );
-    }
-  ),
-
-  /**
    * @type {ComputedProperty<Array<Object>>}
    */
   resultStores: computed(
@@ -262,13 +250,10 @@ export default Component.extend(I18n, {
    */
   passedFormValues: computed(
     'task.{name,argumentMappings,resultMappings,timeSeriesStoreConfig,resourceSpecOverride}',
-    'atmLambdaRevision',
+    'atmLambda',
+    'atmLambdaRevisionNumber',
     function passedStoreFormValues() {
-      const {
-        task,
-        atmLambdaRevision,
-      } = this.getProperties('task', 'atmLambdaRevision');
-      return taskToFormData(task, atmLambdaRevision);
+      return taskToFormData(this.task, this.atmLambda, this.atmLambdaRevisionNumber);
     }
   ),
 
@@ -277,7 +262,6 @@ export default Component.extend(I18n, {
    */
   fields: computed(function fields() {
     const {
-      nameField,
       argumentMappingsFieldsCollectionGroup,
       resultMappingsFieldsCollectionGroup,
       timeSeriesStoreSectionFields,
@@ -309,7 +293,8 @@ export default Component.extend(I18n, {
     }).create({
       component: this,
       fields: [
-        nameField,
+        this.lambdaFieldsGroup,
+        this.detailsFieldsGroup,
         argumentMappingsFieldsCollectionGroup,
         resultMappingsFieldsCollectionGroup,
         timeSeriesStoreSectionFields,
@@ -319,12 +304,66 @@ export default Component.extend(I18n, {
   }),
 
   /**
-   * @type {ComputedProperty<Utils.FormComponent.TextField>}
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
    */
-  nameField: computed(function nameField() {
-    return TextField.create({
-      component: this,
-      name: 'name',
+  lambdaFieldsGroup: computed(function lambdaFieldsGroup() {
+    const component = this;
+    return FormFieldsGroup.create({
+      name: 'lambda',
+      classes: 'task-form-section',
+      addColonToLabel: false,
+      fields: [
+        StaticTextField.create({
+          name: 'name',
+        }),
+        DropdownField.extend({
+          options: computed(
+            'component.atmLambda.revisionRegistry',
+            function options() {
+              const atmLambda = this.component.atmLambda;
+              const revisionNumbers = sortRevisionNumbers(
+                Object.keys(atmLambda?.revisionRegistry || {})
+              );
+              return revisionNumbers
+                .map((num) => ({ label: String(num), value: num }));
+            }
+          ),
+          onValueChange(value) {
+            this._super(...arguments);
+            component.changeAtmLambdaRevisionNumber(value);
+          },
+        }).create({
+          component,
+          name: 'revisionNumber',
+        }),
+        StaticTextField.extend({
+          value: computed('valuesSource.lambda.revisionNumber', function value() {
+            const atmLambda = component.atmLambda;
+            const atmLambdaRevisionNumber = this.valuesSource?.lambda?.revisionNumber;
+            const atmLambdaRevision =
+              atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber];
+            return atmLambdaRevision?.summary;
+          }),
+          isVisible: reads('value'),
+        }).create({
+          name: 'summary',
+        }),
+      ],
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
+   */
+  detailsFieldsGroup: computed(function detailsFieldsGroup() {
+    return FormFieldsGroup.create({
+      classes: 'task-form-section',
+      addColonToLabel: false,
+      name: 'details',
+      fields: [TextField.create({
+        component: this,
+        name: 'name',
+      })],
     });
   }),
 
@@ -642,7 +681,8 @@ export default Component.extend(I18n, {
   }),
 
   atmLambdaRevisionObserver: observer(
-    'atmLambdaRevision',
+    'atmLambda',
+    'atmLambdaRevisionNumber',
     function atmLambdaRevisionObserver() {
       this.resetFormValues();
     }
@@ -715,17 +755,11 @@ export default Component.extend(I18n, {
   },
 
   dumpToTask() {
-    const {
-      fields,
-      atmLambdaRevision,
-      allStores,
-    } = this.getProperties(
-      'fields',
-      'atmLambdaRevision',
-      'allStores'
+    return formDataToTask(
+      this.fields.dumpValue(),
+      this.atmLambda,
+      this.allStores
     );
-
-    return formDataToTask(fields.dumpValue(), atmLambdaRevision, allStores);
   },
 
   updateTimeSeriesStoreSchema() {
@@ -796,6 +830,14 @@ export default Component.extend(I18n, {
     }
   },
 
+  /**
+   * @param {RevisionNumber} newRevisionNumber
+   * @returns {void}
+   */
+  changeAtmLambdaRevisionNumber(newRevisionNumber) {
+    console.log('change', newRevisionNumber);
+  },
+
   actions: {
     formNativeSubmit(event) {
       event.preventDefault();
@@ -803,7 +845,7 @@ export default Component.extend(I18n, {
   },
 });
 
-function taskToFormData(task, atmLambdaRevision) {
+function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
   const {
     name,
     argumentMappings,
@@ -819,6 +861,8 @@ function taskToFormData(task, atmLambdaRevision) {
     'timeSeriesStoreConfig'
   );
 
+  const atmLambdaRevision =
+    atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber] ?? {};
   const {
     name: lambdaName,
     argumentSpecs,
@@ -831,6 +875,14 @@ function taskToFormData(task, atmLambdaRevision) {
     'resultSpecs',
     'resourceSpec'
   );
+
+  const lambdaSection = createValuesContainer({
+    name: lambdaName,
+    revisionNumber: atmLambdaRevisionNumber,
+  });
+  const detailsSection = createValuesContainer({
+    name: name || lambdaName,
+  });
 
   const formArgumentMappings = {
     __fieldsValueNames: [],
@@ -932,7 +984,8 @@ function taskToFormData(task, atmLambdaRevision) {
   };
 
   return {
-    name: name || lambdaName,
+    lambda: lambdaSection,
+    details: detailsSection,
     argumentMappings: createValuesContainer(formArgumentMappings),
     resultMappings: createValuesContainer(formResultMappings),
     timeSeriesStoreSection,
@@ -984,21 +1037,25 @@ function generateResourcesFormData(resourceSpec, resourceSpecOverride) {
   });
 }
 
-function formDataToTask(formData, atmLambdaRevision, stores) {
+function formDataToTask(formData, atmLambda, stores) {
   const {
-    name,
+    lambda,
+    details,
     argumentMappings,
     resultMappings,
     timeSeriesStoreSection,
     resources,
   } = getProperties(
     formData,
-    'name',
+    'lambda',
+    'details',
     'argumentMappings',
     'resultMappings',
     'timeSeriesStoreSection',
     'resources'
   );
+  const atmLambdaRevisionNumber = lambda.revisionNumber;
+  const atmLambdaRevision = atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber];
   const {
     argumentSpecs,
     resultSpecs,
@@ -1009,7 +1066,7 @@ function formDataToTask(formData, atmLambdaRevision, stores) {
   } = getProperties(resources || {}, 'overrideResources', 'resourcesSections');
 
   const task = {
-    name,
+    name: details.name,
     argumentMappings: [],
     resultMappings: [],
   };
