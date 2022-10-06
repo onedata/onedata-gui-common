@@ -1,29 +1,9 @@
 import { expect } from 'chai';
 import { describe, context, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, fillIn, find } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import {
-  getOneDropdownTrigger,
-  getOneDropdownSelectedOptionText,
-  getOneDropdownPlaceholder,
-  isOneDropdownDisabled,
-  isOneDropdownOpened,
-  openOneDropdown,
-  closeOneDropdown,
-  getOneDropdownOptionsContainer,
-  isOneDropdownHavingSearch,
-  fillInOneDropdownSearch,
-  getOneDropdownSearchValue,
-  getOneDropdownOptions,
-  getOneDropdownOptionsText,
-  getOneDropdownOptionByText,
-  getOneDropdownOptionByIndex,
-  isOneDropdownOptionDisabled,
-  selectOneDropdownOption,
-  selectOneDropdownOptionByText,
-  selectOneDropdownOptionByIndex,
-} from '../../helpers/one-dropdown';
+import OneDrodopdownHelper from '../../helpers/one-dropdown';
 import sinon from 'sinon';
 import { clickTrigger } from 'ember-power-select/test-support/helpers';
 
@@ -52,97 +32,97 @@ describe('Integration | Test helper | one dropdown', function () {
         this.set('renderInPlace', renderInPlace);
       });
 
-      describe('getOneDropdownTrigger', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('getTrigger', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`returns trigger of the first found dropdown when ${selectorKind}`,
             async function () {
               await renderOneDropdown();
 
-              expect(getOneDropdownTrigger(selectorProvider()))
-                .to.have.class('trigger1');
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              expect(helper.getTrigger()).to.have.class('trigger1');
             }
           );
         });
       });
 
-      describe('getOneDropdownSelectedOptionText', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('getSelectedOptionText', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`returns trigger text of the first found dropdown when option is selected and ${selectorKind}`,
             async function () {
               setDropdownsOption(this, 'selected', ['a', 'b', 'c']);
               await renderOneDropdown();
 
-              expect(getOneDropdownSelectedOptionText(selectorProvider()))
-                .to.equal('b');
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              expect(helper.getSelectedOptionText()).to.equal('b');
             }
           );
         });
 
-        it('returns trigger text of the first found dropdown when nothing is selected',
+        it('returns null for the first found dropdown when nothing is selected',
           async function () {
             setDropdownsOption(this, 'selected', ['a', undefined, 'c']);
             await renderOneDropdown();
 
-            expect(getOneDropdownSelectedOptionText('.testing-dropdowns'))
-              .to.equal('');
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            expect(helper.getSelectedOptionText()).to.be.null;
           }
         );
 
-        it('returns trigger text of the first found dropdown when nothing is selected and placeholder is specified',
+        it('returns null for the first found dropdown when nothing is selected and placeholder is specified',
           async function () {
             setDropdownsOption(this, 'selected', ['a', undefined, 'c']);
             setDropdownsOption(this, 'placeholder', [undefined, 'p', undefined]);
             await renderOneDropdown();
 
-            expect(getOneDropdownSelectedOptionText('.testing-dropdowns'))
-              .to.equal('');
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            expect(helper.getSelectedOptionText()).to.be.null;
           }
         );
       });
 
-      describe('getOneDropdownPlaceholder', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('getPlaceholder', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`returns placeholder text of the first found dropdown when nothing is selected and placeholder is set and ${selectorKind}`,
             async function () {
               setDropdownsOption(this, 'placeholder', ['o', 'p', 'q']);
               await renderOneDropdown();
 
-              expect(getOneDropdownPlaceholder(selectorProvider()))
-                .to.equal('p');
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              expect(helper.getPlaceholder()).to.equal('p');
             }
           );
         });
 
-        it('returns empty placeholder text of the first found dropdown when option is selected and placeholder is set',
+        it('returns null for the first found dropdown when option is selected and placeholder is set',
           async function () {
             setDropdownsOption(this, 'selected', ['a', 'b', 'c']);
             setDropdownsOption(this, 'placeholder', [undefined, 'p', undefined]);
             await renderOneDropdown();
 
-            expect(getOneDropdownPlaceholder('.testing-dropdowns'))
-              .to.equal('');
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            expect(helper.getPlaceholder()).to.be.null;
           }
         );
 
-        it('returns empty placeholder text of the first found dropdown when nothing is selected and placeholder is not set',
+        it('returns null for the first found dropdown when nothing is selected and placeholder is not set',
           async function () {
             await renderOneDropdown();
 
-            expect(getOneDropdownPlaceholder('.testing-dropdowns'))
-              .to.equal('');
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            expect(helper.getPlaceholder()).to.be.null;
           }
         );
       });
 
-      describe('isOneDropdownDisabled', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('isDisabled', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`returns false when the first found dropdown is not disabled and ${selectorKind}`,
             async function () {
               setDropdownsOption(this, 'disabled', [true, false, true]);
               await renderOneDropdown();
 
-              expect(isOneDropdownDisabled(selectorProvider()))
-                .to.be.false;
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              expect(helper.isDisabled()).to.be.false;
             }
           );
         });
@@ -152,20 +132,20 @@ describe('Integration | Test helper | one dropdown', function () {
             setDropdownsOption(this, 'disabled', [false, true, false]);
             await renderOneDropdown();
 
-            expect(isOneDropdownDisabled('.testing-dropdowns'))
-              .to.be.true;
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            expect(helper.isDisabled()).to.be.true;
           }
         );
       });
 
-      describe('isOneDropdownOpened', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('isOpened', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`returns false when the first found dropdown is closed and ${selectorKind}`,
             async function () {
               await renderOneDropdown();
 
-              expect(isOneDropdownOpened(selectorProvider()))
-                .to.be.false;
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              expect(helper.isOpened()).to.be.false;
             }
           );
         });
@@ -174,19 +154,22 @@ describe('Integration | Test helper | one dropdown', function () {
           await renderOneDropdown();
           await clickTrigger('.testing-dropdowns');
 
-          expect(isOneDropdownOpened('.testing-dropdowns')).to.be.true;
+          const helper = new OneDrodopdownHelper('.testing-dropdowns');
+          expect(helper.isOpened()).to.be.true;
         });
       });
 
-      describe('openOneDropdown', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('open', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`opens the first found dropdown if it is closed and ${selectorKind}`,
             async function () {
               await renderOneDropdown();
 
-              await openOneDropdown(selectorProvider());
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              await helper.open();
 
-              expect(find('.trigger1')).to.have.attribute('aria-expanded', 'true');
+              expect(find('.trigger1'))
+                .to.have.attribute('aria-expanded', 'true');
             }
           );
         });
@@ -196,21 +179,24 @@ describe('Integration | Test helper | one dropdown', function () {
             await renderOneDropdown();
             await clickTrigger('.testing-dropdowns');
 
-            await openOneDropdown('.testing-dropdowns');
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            await helper.open();
 
-            expect(find('.trigger1')).to.have.attribute('aria-expanded', 'true');
+            expect(find('.trigger1'))
+              .to.have.attribute('aria-expanded', 'true');
           }
         );
       });
 
-      describe('closeOneDropdown', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('close', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`closes the first found dropdown if it is opened and ${selectorKind}`,
             async function () {
               await renderOneDropdown();
               await clickTrigger('.testing-dropdowns');
 
-              await closeOneDropdown(selectorProvider());
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              await helper.close();
 
               expect(find('.trigger1')).to.not.have.attribute('aria-expanded');
             }
@@ -221,115 +207,78 @@ describe('Integration | Test helper | one dropdown', function () {
           async function () {
             await renderOneDropdown();
 
-            await closeOneDropdown('.testing-dropdowns');
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            await helper.close();
 
             expect(find('.trigger1')).to.not.have.attribute('aria-expanded');
           }
         );
       });
 
-      describe('getOneDropdownOptionsContainer', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('getOptionsContainer', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`returns options container for the first found dropdown when ${selectorKind}`,
             async function () {
               await renderOneDropdown();
 
-              const optionsContainer =
-                await getOneDropdownOptionsContainer(selectorProvider());
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const optionsContainer = await helper.getOptionsContainer();
 
-              expect(optionsContainer).to.have.class('ember-power-select-dropdown');
-              expect(find('.trigger1')).to.have.attribute('aria-expanded', 'true');
+              expect(optionsContainer)
+                .to.have.class('ember-power-select-dropdown');
+              expect(find('.trigger1'))
+                .to.have.attribute('aria-expanded', 'true');
             }
           );
         });
       });
 
-      describe('isOneDropdownHavingSearch', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
-          it(`returns false when the first found dropdown does not have search input and ${selectorKind}`,
+      describe('getSearchInput', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
+          it(`returns null when the first found dropdown does not have search input and ${selectorKind}`,
             async function () {
               setDropdownsOption(this, 'searchEnabled', [true, false, true]);
               await renderOneDropdown();
 
-              expect(await isOneDropdownHavingSearch(selectorProvider()))
-                .to.be.false;
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              expect(await helper.getSearchInput()).to.be.null;
             }
           );
         });
 
-        it('returns true when the first found dropdown has search input',
+        it('returns input when the first found dropdown has search input',
           async function () {
             setDropdownsOption(this, 'searchEnabled', [false, true, false]);
             await renderOneDropdown();
 
-            expect(await isOneDropdownHavingSearch('.testing-dropdowns'))
-              .to.be.true;
-          }
-        );
-
-        it('lefts the first found dropdown in the open state the same as it was at the beginning',
-          async function () {
-            await renderOneDropdown();
-
-            await isOneDropdownHavingSearch('.testing-dropdowns');
-            expect(find('.trigger1')).to.not.have.attribute('aria-expanded');
-
-            await clickTrigger('.testing-dropdowns');
-            await isOneDropdownHavingSearch('.testing-dropdowns');
-            expect(find('.trigger1')).to.have.attribute('aria-expanded', 'true');
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            expect(await helper.getSearchInput())
+              .to.have.class('ember-power-select-search-input');
           }
         );
       });
 
-      describe('fillInOneDropdownSearch', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('fillInSearchInput', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`fills in search input in the first found dropdown when ${selectorKind}`,
             async function () {
               setDropdownsOption(this, 'searchEnabled', [false, true, false]);
               await renderOneDropdown();
 
-              await fillInOneDropdownSearch(selectorProvider(), 'b');
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              await helper.fillInSearchInput('b');
 
-              expect(find('.ember-power-select-search-input')).to.have.value('b');
-              expect(find('.ember-power-select-dropdown')).to.not.contain.text('c');
+              expect(find('.ember-power-select-search-input'))
+                .to.have.value('b');
+              expect(find('.ember-power-select-dropdown'))
+                .to.not.contain.text('c');
             }
           );
         });
       });
 
-      describe('getOneDropdownSearchValue', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
-          it(`returns search input value of the first found dropdown when ${selectorKind}`,
-            async function () {
-              setDropdownsOption(this, 'searchEnabled', [false, true, false]);
-              await renderOneDropdown();
-
-              await clickTrigger('.testing-dropdowns');
-              await fillIn('.ember-power-select-search-input', 'b');
-
-              expect(await getOneDropdownSearchValue(selectorProvider()))
-                .to.equal('b');
-            }
-          );
-        });
-
-        it('lefts the first found dropdown in the open state the same as it was at the beginning',
-          async function () {
-            setDropdownsOption(this, 'searchEnabled', [false, true, false]);
-            await renderOneDropdown();
-
-            await getOneDropdownSearchValue('.testing-dropdowns');
-            expect(find('.trigger1')).to.not.have.attribute('aria-expanded');
-
-            await clickTrigger('.testing-dropdowns');
-            await getOneDropdownSearchValue('.testing-dropdowns');
-            expect(find('.trigger1')).to.have.attribute('aria-expanded', 'true');
-          }
-        );
-      });
-
-      describe('getOneDropdownOptions', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('getOptions', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`returns options of the first found dropdown when ${selectorKind}`,
             async function () {
               setDropdownsOption(this, 'options', [
@@ -339,7 +288,8 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              const options = await getOneDropdownOptions(selectorProvider());
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const options = await helper.getOptions();
 
               expect(options).to.have.length(2);
               expect(options[0]).to.contain.text('a');
@@ -357,15 +307,16 @@ describe('Integration | Test helper | one dropdown', function () {
             ]);
             await renderOneDropdown();
 
-            const options = await getOneDropdownOptions('.testing-dropdowns');
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const options = await helper.getOptions();
 
             expect(options).to.have.length(0);
           }
         );
       });
 
-      describe('getOneDropdownOptionsText', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('getOptionsText', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`returns options text of the first found dropdown when ${selectorKind}`,
             async function () {
               setDropdownsOption(this, 'options', [
@@ -375,8 +326,8 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              expect(await getOneDropdownOptionsText(selectorProvider()))
-                .to.deep.equal(['a', 'b']);
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              expect(await helper.getOptionsText()).to.deep.equal(['a', 'b']);
             }
           );
         });
@@ -390,8 +341,8 @@ describe('Integration | Test helper | one dropdown', function () {
             ]);
             await renderOneDropdown();
 
-            expect(await getOneDropdownOptionsText('.testing-dropdowns'))
-              .to.have.length(0);
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            expect(await helper.getOptionsText()).to.have.length(0);
           }
         );
 
@@ -399,18 +350,19 @@ describe('Integration | Test helper | one dropdown', function () {
           async function () {
             await renderOneDropdown();
 
-            await getOneDropdownOptionsText('.testing-dropdowns');
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            await helper.getOptionsText();
             expect(find('.trigger1')).to.not.have.attribute('aria-expanded');
 
             await clickTrigger('.testing-dropdowns');
-            await getOneDropdownOptionsText('.testing-dropdowns');
+            await helper.getOptionsText();
             expect(find('.trigger1')).to.have.attribute('aria-expanded', 'true');
           }
         );
       });
 
-      describe('getOneDropdownOptionByText', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('getOptionByText', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`returns matching option in the first found dropdown when ${selectorKind}`,
             async function () {
               setDropdownsOption(this, 'options', [
@@ -420,7 +372,8 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              expect(await getOneDropdownOptionByText(selectorProvider(), 'b'))
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              expect(await helper.getOptionByText('b'))
                 .to.contain.trimmed.text('abc');
             }
           );
@@ -435,14 +388,14 @@ describe('Integration | Test helper | one dropdown', function () {
             ]);
             await renderOneDropdown();
 
-            expect(await getOneDropdownOptionByText('.testing-dropdowns', 'c'))
-              .to.be.null;
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            expect(await helper.getOptionByText('c')).to.be.null;
           }
         );
       });
 
-      describe('getOneDropdownOptionByIndex', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('getOptionByIndex', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`returns matching option in the first found dropdown when ${selectorKind}`,
             async function () {
               setDropdownsOption(this, 'options', [
@@ -452,7 +405,8 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              expect(await getOneDropdownOptionByIndex(selectorProvider(), 1))
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              expect(await helper.getOptionByIndex(1))
                 .to.contain.trimmed.text('def');
             }
           );
@@ -467,14 +421,14 @@ describe('Integration | Test helper | one dropdown', function () {
             ]);
             await renderOneDropdown();
 
-            expect(await getOneDropdownOptionByIndex('.testing-dropdowns', 2))
-              .to.be.null;
+            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            expect(await helper.getOptionByIndex(2)).to.be.null;
           }
         );
       });
 
-      describe('selectOneDropdownOptionByText', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('selectOptionByText', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`selects matching option in the first found dropdown when ${selectorKind}`,
             async function () {
               setDropdownsOption(this, 'options', [
@@ -484,7 +438,8 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              await selectOneDropdownOptionByText(selectorProvider(), 'b');
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              await helper.selectOptionByText('b');
 
               expect(this.onChange1).to.have.been.calledWith('abc', sinon.match.any);
             }
@@ -492,8 +447,8 @@ describe('Integration | Test helper | one dropdown', function () {
         });
       });
 
-      describe('selectOneDropdownOptionByIndex', function () {
-        testForAllSelectors((selectorProvider, selectorKind) => {
+      describe('selectOptionByIndex', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
           it(`selects matching option in the first found dropdown when ${selectorKind}`,
             async function () {
               setDropdownsOption(this, 'options', [
@@ -503,53 +458,63 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              await selectOneDropdownOptionByIndex(selectorProvider(), 1);
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              await helper.selectOptionByIndex(1);
 
-              expect(this.onChange1).to.have.been.calledWith('def', sinon.match.any);
+              expect(this.onChange1)
+                .to.have.been.calledWith('def', sinon.match.any);
             }
           );
         });
       });
-    });
-  });
 
-  describe('isOneDropdownOptionDisabled', function () {
-    it('returns false when given option is not disabled', async function () {
-      setDropdownsOption(this, 'options', [
-        [{ disabled: true }],
-        [{ disabled: false }, { disabled: true }],
-        [{ disabled: true }],
-      ]);
-      await renderOneDropdown();
+      describe('isOptionDisabled', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
+          it(`returns false when given option is not disabled when ${selectorKind}`,
+            async function () {
+              setDropdownsOption(this, 'options', [
+                [{ disabled: true }],
+                [{ disabled: false }, { disabled: true }],
+                [{ disabled: true }],
+              ]);
+              await renderOneDropdown();
 
-      await clickTrigger('.testing-dropdowns');
-      const option = find('.ember-power-select-dropdown li');
-      expect(isOneDropdownOptionDisabled(option)).to.be.false;
-    });
+              await clickTrigger('.testing-dropdowns');
+              const option = find('.ember-power-select-dropdown li');
+              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              expect(helper.isOptionDisabled(option)).to.be.false;
+            });
+        });
 
-    it('returns true when given option is disabled', async function () {
-      setDropdownsOption(this, 'options', [
-        [{ disabled: false }],
-        [{ disabled: true }, { disabled: false }],
-        [{ disabled: false }],
-      ]);
-      await renderOneDropdown();
+        it('returns true when given option is disabled', async function () {
+          setDropdownsOption(this, 'options', [
+            [{ disabled: false }],
+            [{ disabled: true }, { disabled: false }],
+            [{ disabled: false }],
+          ]);
+          await renderOneDropdown();
 
-      await clickTrigger('.testing-dropdowns');
-      const option = find('.ember-power-select-dropdown li');
-      expect(isOneDropdownOptionDisabled(option)).to.be.true;
-    });
-  });
+          await clickTrigger('.testing-dropdowns');
+          const option = find('.ember-power-select-dropdown li');
+          const helper = new OneDrodopdownHelper('.testing-dropdowns');
+          expect(helper.isOptionDisabled(option)).to.be.true;
+        });
+      });
 
-  describe('selectOneDropdownOption', function () {
-    it('selects given option', async function () {
-      await renderOneDropdown();
-      await clickTrigger('.testing-dropdowns');
-      const option = find('.ember-power-select-dropdown li');
+      describe('selectOption', function () {
+        testForAllSelectors((getElementOrSelector, selectorKind) => {
+          it(`selects given option when ${selectorKind}`, async function () {
+            await renderOneDropdown();
+            await clickTrigger('.testing-dropdowns');
+            const option = find('.ember-power-select-dropdown li');
 
-      await selectOneDropdownOption(option);
+            const helper = new OneDrodopdownHelper(getElementOrSelector());
+            await helper.selectOption(option);
 
-      expect(this.onChange1).to.have.been.calledWith('a');
+            expect(this.onChange1).to.have.been.calledWith('a');
+          });
+        });
+      });
     });
   });
 });
@@ -605,24 +570,33 @@ async function renderOneDropdown() {
   `);
 }
 
+/**
+ * @param {(getElementOrSelector: () => (Element|string), selectorKind: string) => void} testCallback
+ */
 function testForAllSelectors(testCallback) {
   [{
-    selectorProvider: () => find('.testing-dropdowns'),
+    getElementOrSelector: () => find('.testing-dropdowns'),
     selectorKind: 'parent element has been provided',
   }, {
-    selectorProvider: () => find('.trigger1'),
+    getElementOrSelector: () => find('.trigger1'),
     selectorKind: 'trigger element has been provided',
   }, {
-    selectorProvider: () => '.testing-dropdowns',
+    getElementOrSelector: () => '.testing-dropdowns',
     selectorKind: 'parent element selector has been provided',
   }, {
-    selectorProvider: () => '.trigger1',
+    getElementOrSelector: () => '.trigger1',
     selectorKind: 'trigger selector has been provided',
-  }].forEach(({ selectorProvider, selectorKind }) =>
-    testCallback(selectorProvider, selectorKind)
+  }].forEach(({ getElementOrSelector, selectorKind }) =>
+    testCallback(getElementOrSelector, selectorKind)
   );
 }
 
+/**
+ * Sets given property for all three test dropdowns at once
+ * @param {Mocha.Context} testCase
+ * @param {'onChange'|'options'|'selected'|'placeholder'|'disabled'|'searchEnabled'} name
+ * @param {[unknown, unknown, unknown]} values
+ */
 function setDropdownsOption(testCase, name, values) {
   values.forEach((value, index) => testCase.set(`${name}${index}`, value));
 }
