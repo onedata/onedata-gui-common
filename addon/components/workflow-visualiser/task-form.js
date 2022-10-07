@@ -326,7 +326,8 @@ export default Component.extend(I18n, {
                 Object.keys(atmLambda?.revisionRegistry || {})
               );
               return revisionNumbers
-                .map((num) => ({ label: String(num), value: num }));
+                .map((num) => ({ label: String(num), value: num }))
+                .reverse();
             }
           ),
           onValueChange(value) {
