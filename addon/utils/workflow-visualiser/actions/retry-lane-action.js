@@ -68,6 +68,10 @@ export default Action.extend({
         'disabled'
       );
 
+      if (!disabled) {
+        return null;
+      }
+
       let translationName;
       if (!isWorkflowEnded) {
         translationName = 'workflowNotEnded';
@@ -77,12 +81,12 @@ export default Action.extend({
         translationName = 'laneNotFailed';
       } else if (!doesLaneRunExceptionStoreExist) {
         translationName = 'noExceptionStoreAvailable';
-      } else if (disabled) {
+      } else {
         // Lane run cannot be retried due to some backend constraints we don't know
         translationName = 'unknownReason';
       }
 
-      return translationName ? this.t(`disabledTip.${translationName}`) : null;
+      return this.t(`disabledTip.${translationName}`);
     }
   ),
 

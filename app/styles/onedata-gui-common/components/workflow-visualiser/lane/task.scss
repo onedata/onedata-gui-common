@@ -28,12 +28,20 @@
     }
   }
 
+  &.status-resuming,
   &.status-active,
   &.status-stopping {
     .draggable-task {
       @extend .animated;
       @extend .infinite;
       @extend .hinge;
+    }
+  }
+
+  &.status-resuming {
+    .draggable-task {
+      --pulse-bg-color: #{task-status-bg-color($color-one-azure)};
+      @extend .pulse-bg-variable;
     }
   }
 
@@ -82,6 +90,13 @@
     .draggable-task {
       border: $workflow-visualiser-block-border-width solid $color-one-danger;
       background-color: task-status-bg-color($color-one-danger);
+    }
+  }
+
+  &.status-unscheduled {
+    .draggable-task {
+      opacity: 0.6;
+      background-color: scale-color($color-one-light-gray, $lightness: 80%);
     }
   }
 

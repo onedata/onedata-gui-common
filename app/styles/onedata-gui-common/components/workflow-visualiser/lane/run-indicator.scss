@@ -13,11 +13,12 @@ $workflow-visualiser-run-indicator-size: 25px;
     "stopping": $color-one-warning,
     "interrupted": $color-one-warning,
     "paused": $color-one-light-gray,
-    "cancelled": $color-one-warning,
+    "cancelled": $color-one-danger,
     "skipped": $color-one-warning,
     "finished": $color-one-success,
     "failed": $color-one-danger,
     "crashed": $color-one-danger,
+    "unscheduled": scale-color($color-one-light-gray, $lightness: 50%),
     "unknown": $color-one-light-gray,
   );
 

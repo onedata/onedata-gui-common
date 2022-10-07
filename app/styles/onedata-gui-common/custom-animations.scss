@@ -52,6 +52,12 @@
   darken($color-one-main, 30%)
 );
 
+@include animation-bg-color-change(
+  pulse-bg-variable,
+  inherit,
+  var(--pulse-bg-color)
+);
+
 @include animation-text-color-change(
   pulse-red-text-color,
   $color-one-red,

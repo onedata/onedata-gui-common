@@ -12,11 +12,13 @@ const skipped = 'Skipped';
 const finished = 'Finished';
 const failed = 'Failed';
 const crashed = 'Crashed';
+const unscheduled = 'Unscheduled';
 const unknown = 'Unknown';
 
 export default {
   task: {
     pending,
+    resuming,
     active,
     stopping,
     interrupted,
@@ -25,6 +27,7 @@ export default {
     skipped,
     finished,
     failed,
+    unscheduled,
     unknown,
   },
   lane: {
@@ -42,6 +45,7 @@ export default {
     finished,
     failed,
     crashed,
+    unscheduled,
     unknown,
   },
   workflow: {

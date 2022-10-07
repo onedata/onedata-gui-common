@@ -50,6 +50,9 @@ const statuses = [{
   name: 'crashed',
   translation: 'crashed',
 }, {
+  name: 'unscheduled',
+  translation: 'unscheduled',
+}, {
   name: 'unknown',
   translation: 'unknown',
 }];

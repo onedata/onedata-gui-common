@@ -1,15 +1,15 @@
 /**
  * Exports values and functions related to workflow execution status.
  *
- * @module utils/workflow-visualiser/statuses
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 /**
  * @typedef {
  * 'pending' |
+ * 'resuming' |
  * 'active' |
  * 'stopping' |
  * 'interrupted' |
@@ -18,8 +18,11 @@
  * 'skipped' |
  * 'finished' |
  * 'failed' |
+ * 'unscheduled' |
  * 'unknown'
  * } AtmTaskExecutionStatus
+ * Status `unscheduled` does not exist in backend API and is only to mark tasks
+ * which won't be created due to workflow stop.
  */
 
 export const taskEndedStatuses = [
@@ -31,10 +34,12 @@ export const taskEndedStatuses = [
 const taskUnknownStatus = 'unknown';
 export const taskStatuses = [
   'pending',
+  'resuming',
   'active',
   'stopping',
   'paused',
   'interrupted',
+  'unscheduled',
   ...taskEndedStatuses,
   taskUnknownStatus,
 ];
@@ -64,8 +69,11 @@ export function translateTaskStatus(i18n, status) {
  * 'finished' |
  * 'failed' |
  * 'crashed' |
+ * 'unscheduled' |
  * 'unknown'
  * } AtmLaneExecutionStatus
+ * Status `unscheduled` does not exist in backend API and is only to mark lanes
+ * which won't be created due to workflow stop.
  */
 
 export const laneEndedStatuses = [
@@ -74,6 +82,10 @@ export const laneEndedStatuses = [
   'finished',
   'failed',
   'crashed',
+];
+export const laneSuspendedStatuses = [
+  'paused',
+  'interrupted',
 ];
 const laneUnknownStatus = 'unknown';
 export const laneStatuses = [
@@ -84,8 +96,8 @@ export const laneStatuses = [
   'enqueued',
   'active',
   'stopping',
-  'paused',
-  'interrupted',
+  'unscheduled',
+  ...laneSuspendedStatuses,
   ...laneEndedStatuses,
   laneUnknownStatus,
 ];
