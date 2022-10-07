@@ -111,6 +111,14 @@ export default Component.extend(I18n, {
   onFetchLogEntries: undefined,
 
   /**
+   * Name of component to render as `log-entry-details` sliding panel.
+   * By default it uses component with raw log entry presenter.
+   * @virtual optional
+   * @type {string}
+   */
+  logEntryDetailsComponentName: 'audit-log-browser/log-entry-details',
+
+  /**
    * Returns class names for each log entry. These classes are then applied to
    * the corresponding table row.
    * @virtual optional
@@ -176,6 +184,18 @@ export default Component.extend(I18n, {
    * @type {boolean}
    */
   doesOpenDetailsOnClick: false,
+
+  /**
+   * Extra data provided to configure default log-entry-details view.
+   * May be overriden if custom log entry details component is used.
+   * @type {any}
+   */
+  logEntryDetailsModel: computed(
+    'isTimestampRoundedToSeconds',
+    function logEntryDetailsModel() {
+      return { isTimestampRoundedToSeconds: this.isTimestampRoundedToSeconds };
+    }
+  ),
 
   /**
    * `onFetchLogEntries` adjusted to be compatible with infinite-scroll-table
