@@ -23,12 +23,17 @@
     </div>
   </div>
 {{else}}
-  <input
-    type="text"
-    class="clipboard-input form-control {{inputClass}} {{if size (concat "input-" size)}}"
-    value={{value}}
-    readonly
-  >
+  <span class="clipboard-container">
+    <input
+      type="text"
+      class="clipboard-input form-control {{inputClass}} {{if size (concat "input-" size)}}"
+      value={{value}}
+      readonly
+    >
+    {{#if enableValueTip}}
+      {{one-tooltip class="string-path-tooltip" title=value}}
+    {{/if}}
+  </span>
 {{/if}}
 {{#if rawValue}}
   <input class="hidden-clipboard-source" value={{rawValue}} readonly>
@@ -41,5 +46,5 @@
 }}
   <div class="copy-btn-background"></div>
   {{one-icon class="copy-btn-icon" icon="browser-copy"}}
-  {{one-tooltip title=(tt this "copyHint")}}
+  {{one-tooltip title=(or buttonTip (tt this "copyHint"))}}
 {{/one-copy-button}}
