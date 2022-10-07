@@ -60,6 +60,7 @@ import {
   doesDataSpecFitToStoreWrite,
 } from 'onedata-gui-common/utils/atm-workflow/store-config';
 import sortRevisionNumbers from 'onedata-gui-common/utils/revisions/sort-revision-numbers';
+import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -329,8 +330,13 @@ export default Component.extend(I18n, {
             }
           ),
           onValueChange(value) {
+            const currentRevisionNumber = this.value;
             this._super(...arguments);
-            component.changeAtmLambdaRevisionNumber(value);
+
+            component.changeAtmLambdaRevisionNumber(
+              currentRevisionNumber,
+              value
+            );
           },
         }).create({
           component,
@@ -400,6 +406,20 @@ export default Component.extend(I18n, {
                     return opts;
                   }
                 ),
+                optionsObserver: observer('options.[]', function optionsObserver() {
+                  scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
+                }),
+                init() {
+                  this._super(...arguments);
+                  this.optionsObserver();
+                },
+                adjustValueForNewOptions() {
+                  safeExec(this, () => {
+                    if (!this.options.find(({ value }) => value === this.value)) {
+                      this.valueChanged(this.options[0]?.value);
+                    }
+                  });
+                },
               }).create({
                 classes: 'floating-field-label',
                 name: 'valueBuilderType',
@@ -435,6 +455,13 @@ export default Component.extend(I18n, {
                     return opts;
                   }
                 ),
+                optionsObserver: observer('options.[]', function optionsObserver() {
+                  scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
+                }),
+                init() {
+                  this._super(...arguments);
+                  this.optionsObserver();
+                },
                 valueChanged(value) {
                   if (value === createStoreDropdownOptionValue) {
                     const dataSpec = this.get('parent.value.context.dataSpec');
@@ -442,6 +469,13 @@ export default Component.extend(I18n, {
                   } else {
                     return this._super(...arguments);
                   }
+                },
+                adjustValueForNewOptions() {
+                  safeExec(this, () => {
+                    if (!this.options.find(({ value }) => value === this.value)) {
+                      this.valueChanged(undefined);
+                    }
+                  });
                 },
               }).create({
                 component,
@@ -515,15 +549,12 @@ export default Component.extend(I18n, {
                   }
                 ),
                 optionsObserver: observer('options.[]', function optionsObserver() {
-                  const {
-                    options,
-                    value,
-                  } = this.getProperties('options', 'value');
-                  if (!options.findBy('value', value)) {
-                    // options[1] is "leaveUnassigned"
-                    this.valueChanged(get(options[1], 'value'));
-                  }
+                  scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
                 }),
+                init() {
+                  this._super(...arguments);
+                  this.optionsObserver();
+                },
                 valueChanged(value) {
                   if (value === createStoreDropdownOptionValue) {
                     const dataSpec = this.get('parent.value.context.dataSpec');
@@ -531,6 +562,14 @@ export default Component.extend(I18n, {
                   } else {
                     return this._super(...arguments);
                   }
+                },
+                adjustValueForNewOptions() {
+                  safeExec(this, () => {
+                    if (!this.options.find(({ value }) => value === this.value)) {
+                      // options[1] is "leaveUnassigned"
+                      this.valueChanged(this.options[1]?.value);
+                    }
+                  });
                 },
               }).create({
                 component,
@@ -834,8 +873,37 @@ export default Component.extend(I18n, {
    * @param {RevisionNumber} newRevisionNumber
    * @returns {void}
    */
-  changeAtmLambdaRevisionNumber(newRevisionNumber) {
-    console.log('change', newRevisionNumber);
+  changeAtmLambdaRevisionNumber(currentRevisionNumber, newRevisionNumber) {
+    const currentRevValues = this.fields.valuesSource;
+    const newRevPlainValues =
+      taskToFormData(this.task, this.atmLambda, newRevisionNumber);
+
+    const currentRevision = this.atmLambda?.revisionRegistry[currentRevisionNumber];
+    const newRevision = this.atmLambda?.revisionRegistry[newRevisionNumber];
+
+    const newArgumentMappings = migrateArgResRevision(
+      currentRevision?.argumentSpecs ?? [],
+      currentRevValues.argumentMappings,
+      newRevision?.argumentSpecs ?? [],
+      newRevPlainValues.argumentMappings
+    );
+    set(currentRevValues, 'argumentMappings', newArgumentMappings);
+
+    const newResultMappings = migrateArgResRevision(
+      currentRevision?.resultSpecs ?? [],
+      currentRevValues.resultMappings,
+      newRevision?.resultSpecs ?? [],
+      newRevPlainValues.resultMappings
+    );
+    set(currentRevValues, 'resultMappings', newResultMappings);
+
+    if (!currentRevValues.resources.overrideResources) {
+      set(
+        currentRevValues.resources,
+        'resourcesSections',
+        newRevPlainValues.resources.resourcesSections
+      );
+    }
   },
 
   actions: {
@@ -1054,6 +1122,7 @@ function formDataToTask(formData, atmLambda, stores) {
     'timeSeriesStoreSection',
     'resources'
   );
+  const atmLambdaId = atmLambda?.entityId;
   const atmLambdaRevisionNumber = lambda.revisionNumber;
   const atmLambdaRevision = atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber];
   const {
@@ -1066,6 +1135,8 @@ function formDataToTask(formData, atmLambda, stores) {
   } = getProperties(resources || {}, 'overrideResources', 'resourcesSections');
 
   const task = {
+    lambdaId: atmLambdaId,
+    lambdaRevisionNumber: atmLambdaRevisionNumber,
     name: details.name,
     argumentMappings: [],
     resultMappings: [],
@@ -1233,4 +1304,62 @@ function getDispatchFunctionsForStoreType(storeType) {
 
 function getStoreContentUpdateOptionsType(storeType) {
   return `${storeType}StoreContentUpdateOptions`;
+}
+
+function migrateArgResRevision(fromSpecs, currentValues, toSpecs, newValues) {
+  const namesMapping = findArgResRevisionMigrationMapping(
+    fromSpecs,
+    toSpecs
+  );
+
+  for (const toFieldName of newValues.__fieldsValueNames) {
+    const toName = newValues[toFieldName].context.name;
+    const fromName = namesMapping[toName];
+    if (!fromName) {
+      continue;
+    }
+    for (const fromFieldName of currentValues.__fieldsValueNames) {
+      if (currentValues[fromFieldName].context.name === fromName) {
+        const newContext = newValues[toFieldName].context;
+        set(
+          newValues,
+          toFieldName,
+          cloneValue(currentValues[fromFieldName])
+        );
+        set(newValues[toFieldName], 'context', newContext);
+        break;
+      }
+    }
+  }
+  return newValues;
+}
+
+function findArgResRevisionMigrationMapping(from, to) {
+  const fromAsMap = _.keyBy(from, 'name');
+  const toAsMap = _.keyBy(to, 'name');
+  const mapping = {};
+  for (const toName in toAsMap) {
+    if (toName in fromAsMap) {
+      mapping[toName] = toName;
+      delete toAsMap[toName];
+      delete fromAsMap[toName];
+    }
+  }
+
+  for (const toName in toAsMap) {
+    const toDataSpec = toAsMap[toName].dataSpec;
+    for (const fromName in fromAsMap) {
+      const fromDataSpec = fromAsMap[fromName].dataSpec;
+      if (_.isEqual(toDataSpec, fromDataSpec)) {
+        mapping[toName] = fromName;
+        delete toAsMap[toName];
+        delete fromAsMap[fromName];
+      }
+    }
+  }
+  for (const toName in toAsMap) {
+    mapping[toName] = null;
+    delete toAsMap[toName];
+  }
+  return mapping;
 }

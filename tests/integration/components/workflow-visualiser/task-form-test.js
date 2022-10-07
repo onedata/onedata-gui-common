@@ -449,6 +449,7 @@ const exampleAtmLambdaRevision = {
 };
 
 const exampleAtmLambda = {
+  entityId: 'id1',
   revisionRegistry: {
     1: exampleAtmLambdaRevision,
   },
@@ -586,6 +587,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
+          lambdaId: 'id1',
+          lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           name: exampleAtmLambdaRevision.name,
           argumentMappings: [],
           resultMappings: [],
@@ -599,6 +602,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
+          lambdaId: 'id1',
+          lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           name: 'someName',
           argumentMappings: [],
           resultMappings: [],
@@ -699,6 +704,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
           expect(this.get('changeSpy')).to.be.calledWith({
             data: {
+              lambdaId: 'id1',
+              lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
               name: 'function1',
               argumentMappings: [],
               resultMappings: [],
@@ -726,6 +733,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
             expect(this.get('changeSpy')).to.be.calledWith({
               data: {
+                lambdaId: 'id1',
+                lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
                 name: 'function1',
                 argumentMappings: [{
                   argumentName: 'arg1',
@@ -784,6 +793,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
             expect(this.get('changeSpy')).to.be.calledWith({
               data: {
+                lambdaId: 'id1',
+                lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
                 name: 'function1',
                 argumentMappings: [{
                   argumentName: 'arg1',
@@ -861,6 +872,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
             expect(this.get('changeSpy')).to.be.calledWith({
               data: {
+                lambdaId: 'id1',
+                lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
                 name: 'function1',
                 argumentMappings: [{
                   argumentName: 'arg1',
@@ -948,6 +961,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
             expect(this.get('changeSpy')).to.be.calledWith({
               data: {
+                lambdaId: 'id1',
+                lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
                 name: 'function1',
                 argumentMappings: [{
                   argumentName: 'arg1',
@@ -1094,6 +1109,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
         expect(this.get('changeSpy')).to.be.calledWith({
           data: {
+            lambdaId: 'id1',
+            lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
             name: 'function1',
             argumentMappings: [],
             resultMappings: [],
@@ -1118,6 +1135,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
+          lambdaId: 'id1',
+          lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           name: 'function1',
           argumentMappings: [],
           resultMappings: [{
@@ -1149,6 +1168,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
+          lambdaId: 'id1',
+          lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           name: 'function1',
           argumentMappings: [],
           resultMappings: [{
@@ -1409,6 +1430,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       this.setProperties({
         mode: 'edit',
         task: _.cloneDeep(exampleTask),
+        changeSpy: sinon.spy(),
       });
     });
 
@@ -1435,6 +1457,243 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       expect(find('.details-field .name-field .form-control'))
         .to.have.value(exampleTask.name);
+      done();
+    });
+
+    it('migrates form values when user changes revision number', async function (done) {
+      const revision1 = {
+        name: 'f1',
+        summary: 'f1sum',
+        argumentSpecs: [{
+          name: 'arg1',
+          dataSpec: {
+            type: 'integer',
+            valueConstraints: {},
+          },
+          isOptional: true,
+        }, {
+          name: 'arg2',
+          dataSpec: {
+            type: 'string',
+            valueConstraints: {},
+          },
+          isOptional: true,
+        }, {
+          name: 'arg3',
+          dataSpec: {
+            type: 'integer',
+            valueConstraints: {},
+          },
+          isOptional: true,
+        }],
+        resultSpecs: [{
+          name: 'res1',
+          dataSpec: {
+            type: 'string',
+            valueConstraints: {},
+          },
+        }, {
+          name: 'res2',
+          dataSpec: {
+            type: 'file',
+            valueConstraints: {
+              fileType: 'ANY',
+            },
+          },
+        }, {
+          name: 'res3',
+          dataSpec: {
+            type: 'string',
+            valueConstraints: {},
+          },
+        }, {
+          name: 'res4',
+          dataSpec: {
+            type: 'range',
+            valueConstraints: {},
+          },
+        }],
+        resourceSpec: {
+          cpuRequested: 0.1,
+          cpuLimit: null,
+          memoryRequested: 128 * 1024 * 1024,
+          memoryLimit: null,
+          ephemeralStorageRequested: 0,
+          ephemeralStorageLimit: null,
+        },
+      };
+      const revision2 = _.cloneDeep(revision1);
+      revision2.name = 'f2';
+      revision2.summary = 'f2sum';
+      revision2.argumentSpecs = [{
+        name: 'arg2',
+        dataSpec: {
+          type: 'string',
+          valueConstraints: {},
+        },
+        isOptional: true,
+      }, {
+        name: 'arg1',
+        dataSpec: {
+          type: 'integer',
+          valueConstraints: {},
+        },
+        isOptional: true,
+      }, {
+        name: 'arg3',
+        dataSpec: {
+          type: 'string',
+          valueConstraints: {},
+        },
+        isOptional: true,
+      }];
+      revision2.resultSpecs = [{
+        name: 'res2',
+        dataSpec: {
+          type: 'file',
+          valueConstraints: {
+            fileType: 'ANY',
+          },
+        },
+      }, {
+        name: 'res1',
+        dataSpec: {
+          type: 'string',
+          valueConstraints: {},
+        },
+      }, {
+        name: 'res3',
+        dataSpec: {
+          type: 'integer',
+          valueConstraints: {},
+        },
+      }, {
+        name: 'res4new',
+        dataSpec: {
+          type: 'range',
+          valueConstraints: {},
+        },
+      }];
+      this.setProperties({
+        atmLambda: {
+          entityId: 'id1',
+          revisionRegistry: {
+            1: revision1,
+            2: revision2,
+          },
+        },
+        task: {
+          id: 't1',
+          name: 't1',
+          argumentMappings: [{
+            argumentName: 'arg1',
+            valueBuilder: {
+              valueBuilderType: 'iteratedItem',
+            },
+          }, {
+            argumentName: 'arg2',
+            valueBuilder: {
+              valueBuilderType: 'const',
+              valueBuilderRecipe: 'abc',
+            },
+          }, {
+            argumentName: 'arg3',
+            valueBuilder: {
+              valueBuilderType: 'singleValueStoreContent',
+              valueBuilderRecipe: 'singleValueIntegerId',
+            },
+          }],
+          resultMappings: [{
+            resultName: 'res1',
+            storeSchemaId: 'singleValueStringId',
+            storeContentUpdateOptions: {
+              type: 'singleValueStoreContentUpdateOptions',
+            },
+          }, {
+            resultName: 'res2',
+            storeSchemaId: 'treeForestAnyFileId',
+            storeContentUpdateOptions: {
+              type: 'treeForestStoreContentUpdateOptions',
+              function: 'append',
+            },
+          }, {
+            resultName: 'res3',
+            storeSchemaId: 'singleValueStringId',
+            storeContentUpdateOptions: {
+              type: 'singleValueStoreContentUpdateOptions',
+            },
+          }, {
+            resultName: 'res4',
+            storeSchemaId: 'singleValueRangeId',
+            storeContentUpdateOptions: {
+              type: 'singleValueStoreContentUpdateOptions',
+            },
+          }],
+          timeSeriesStoreConfig: null,
+        },
+      });
+      await renderComponent();
+
+      await selectChoose('.lambda-field .revisionNumber-field', '2');
+
+      // Fixing missing values after revision change - it is not possible to guess
+      // and convert everything.
+      const missingValueBuilderStoreDropdown =
+        find('.collection-item:nth-child(3) .valueBuilderStore-field');
+      expect(missingValueBuilderStoreDropdown).to.have.class('has-error');
+      await selectChoose(
+        '.collection-item:nth-child(3) .valueBuilderStore-field',
+        'singleValueStringStore'
+      );
+
+      expect(this.get('changeSpy')).to.be.calledWith({
+        data: {
+          lambdaId: 'id1',
+          lambdaRevisionNumber: 2,
+          name: 't1',
+          argumentMappings: [{
+            argumentName: 'arg2',
+            valueBuilder: {
+              valueBuilderType: 'const',
+              valueBuilderRecipe: 'abc',
+            },
+          }, {
+            argumentName: 'arg1',
+            valueBuilder: {
+              valueBuilderType: 'iteratedItem',
+            },
+          }, {
+            argumentName: 'arg3',
+            valueBuilder: {
+              valueBuilderType: 'singleValueStoreContent',
+              valueBuilderRecipe: 'singleValueStringId',
+            },
+          }],
+          resultMappings: [{
+            resultName: 'res2',
+            storeSchemaId: 'treeForestAnyFileId',
+            storeContentUpdateOptions: {
+              type: 'treeForestStoreContentUpdateOptions',
+              function: 'append',
+            },
+          }, {
+            resultName: 'res1',
+            storeSchemaId: 'singleValueStringId',
+            storeContentUpdateOptions: {
+              type: 'singleValueStoreContentUpdateOptions',
+            },
+          }, {
+            resultName: 'res4new',
+            storeSchemaId: 'singleValueRangeId',
+            storeContentUpdateOptions: {
+              type: 'singleValueStoreContentUpdateOptions',
+            },
+          }],
+          timeSeriesStoreConfig: null,
+        },
+        isValid: true,
+      });
+
       done();
     });
   });
@@ -1594,6 +1853,8 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
+          lambdaId: 'id1',
+          lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           name: 'function1',
           argumentMappings: [],
           resultMappings: [{
@@ -1628,6 +1889,8 @@ function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
+          lambdaId: 'id1',
+          lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           name: 'function1',
           argumentMappings: [],
           resultMappings: [{

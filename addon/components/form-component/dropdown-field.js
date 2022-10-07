@@ -46,7 +46,8 @@ export default FieldComponentBase.extend({
    */
   matchDropdownOption(option, term) {
     const label = option && option.label || '';
-    return label.toLowerCase().indexOf((term || '').trim().toLowerCase());
+    // Using `String()` in case of SafeString
+    return String(label).toLowerCase().indexOf((term || '').trim().toLowerCase());
   },
 
   actions: {
