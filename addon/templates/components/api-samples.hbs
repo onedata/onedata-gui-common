@@ -107,8 +107,62 @@
             size=(if smallContent "sm")
             class="monospace-font compact"
           }}
+          {{#if isOptionalParameters}}
+            <div class="optional-parameters-text">
+              {{tt this "apiOptionalParameters"}} 
+              {{#each optionalParameters as |param|}}
+                <strong>{{param}},</strong>
+              {{/each}}
+              {{tt this "coverIn"}}
+              <a href={{one-api-doc-url
+                product="onezone"
+                version="latest"
+                anchor=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
+              }}>{{tt this "documentation"}}</a>.
+            </div>
+          {{/if}}
         </div>
       </td>
     </tr>
+    {{#if (or isPlaceholders requiresAuthorization)}}
+      <tr class="item-info-row-variables">
+        <td class="property-name with-input">
+          {{tt this "variables"}}
+        </td>
+        <td class="property-value placeholders-value with-input">
+          <div>
+            <table class="env-variables-table">
+              <tr>
+                <td colspan="2" class="header-table">
+                  {{tt this "envVariableTableHeader"}}
+                </td>
+              </tr>
+              <tbody>
+                {{#if requiresAuthorization}}
+                  <tr>
+                    <td class="placeholder-variable">
+                      {{tt this "tokenVariable"}}
+                    </td>
+                    <td class="placeholder-description">
+                      {{tt this "authorizationTokenDescription"}} <a href={{getTokenUrl}} target="_top">{{tt this "tokenPage"}}</a>.
+                    </td>
+                  </tr>
+                {{/if}}
+                {{#each-in placeholders as |placeholder description|}}
+                  <tr>
+                    <td class="placeholder-variable">
+                      {{placeholder}}
+                    </td>
+                    <td class="placeholder-description">
+                      {{description}}
+                    </td>
+                  </tr>
+                {{/each-in}}
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+    {{/if}}
   </tbody>
 </table>

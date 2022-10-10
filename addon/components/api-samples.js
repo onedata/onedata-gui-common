@@ -20,6 +20,7 @@ export default Component.extend(I18n, {
 
   apiStringGenerator: service(),
   restApiGenerator: service(),
+  appProxy: service(),
 
   /**
    * @override
@@ -58,6 +59,49 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<String>}
    */
   description: reads('effSelectedApiCommand.description'),
+
+  /**
+   * @type {ComputedProperty<Array<String>>}
+   */
+  optionalParameters: reads('effSelectedApiCommand.optionalParameters'),
+
+  /**
+   * @type {ComputedProperty<Number>}
+   */
+  isOptionalParameters: reads('optionalParameters.length'),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isPlaceholders: computed(
+    'effSelectedApiCommand.placeholders',
+    function isPlaceholders() {
+      return this.effSelectedApiCommand.placeholders &&
+        Object.keys(this.effSelectedApiCommand.placeholders).length !== 0;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Object|null>}
+   */
+  placeholders: computed(
+    'effSelectedApiCommand',
+    function placeHolders() {
+      return this.effSelectedApiCommand.placeholders || null;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  requiresAuthorization: reads('effSelectedApiCommand.requiresAuthorization'),
+
+  /**
+   * @type {String} URL to create access token view
+   */
+  getAccessTokenUrl: computed(function getAccessTokenUrl() {
+    return this.appProxy.callParent('getAccessTokenUrl');
+  }),
 
   /**
    * @type {ComputedProperty<String>}

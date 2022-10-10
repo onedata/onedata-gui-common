@@ -3,6 +3,7 @@ export default {
   type: 'Type',
   description: 'Description',
   command: 'Command example',
+  variables: 'Variables',
   apiType: {
     rest: 'REST',
     xrootd: 'XRootD',
@@ -15,4 +16,11 @@ export default {
     rest: 'REST API',
     xrootd: 'XRootD',
   },
+  apiOptionalParameters: 'This endpoint supports optional parameter(s):',
+  coverIn: 'cover in',
+  documentation: 'the documentation',
+  envVariableTableHeader: 'The following env variables must be exported',
+  tokenVariable: '$TOKEN',
+  authorizationTokenDescription: 'Access token that is valid for accessing Onezone REST Api. To create that token going to',
+  tokenPage: 'token page',
 };

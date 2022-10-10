@@ -39,10 +39,21 @@ export default ApiStringGenerator.extend({
     const method = get(apiSample, 'method');
     const path = get(apiSample, 'apiRoot') + get(apiSample, 'path');
     const redirect = get(apiSample, 'followRedirects') ? '-L' : '';
-    return this.fillTemplate(['curl', '{redirect}', '-X', '{method}', '{path}'], {
+    const authorizationOption = get(apiSample, 'requiresAuthorization') ? '-H' : '';
+    const authorizationHeader = authorizationOption ? 'x-auth-token: $TOKEN' : '';
+    const data = get(apiSample, 'data') || '';
+    const dataOption = data ? '-d' : '';
+
+    return this.fillTemplate(['curl', '{redirect}', '-X', '{method}', '{path}',
+      '{authorizationOption}', '{authorizationHeader}', '{dataOption}', '{data}',
+    ], {
       redirect,
       method,
       path,
+      authorizationOption,
+      authorizationHeader,
+      dataOption,
+      data,
     });
   },
 
