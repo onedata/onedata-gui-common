@@ -54,7 +54,7 @@ export default ApiStringGenerator.extend({
       authorizationHeader,
       dataOption,
       data,
-    });
+    }).trim();
   },
 
   curlize(url, curlOptions) {
