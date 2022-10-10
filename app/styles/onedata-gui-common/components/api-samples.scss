@@ -62,6 +62,10 @@
   .placeholders-value .env-variables-table {
     width: 100%;
 
+    td {
+      margin-top: 0px;
+    }
+
     > tbody > tr > td {
       border-top: 1px solid $table-border-color;
     }
