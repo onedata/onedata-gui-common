@@ -38,9 +38,9 @@ export const FileType = {
  * @type {Object<string, LegacyFileType>}
  */
 export const LegacyFileType = {
-  Regular: 'REG',
-  Directory: 'DIR',
-  SymbolicLink: 'SYMLNK',
+  Regular: 'file',
+  Directory: 'dir',
+  SymbolicLink: 'symlink',
 };
 
 /**
