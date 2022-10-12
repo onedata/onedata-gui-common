@@ -49,13 +49,7 @@ export const atmDataSpecTypeDefinition = {
   },
   getValueConstraintsConditions(filters) {
     const allowedFileTypesPerFilter = filters
-      ?.filter((filter) =>
-        filter?.filterType === 'typeOrSupertype' ||
-        filter?.filterType === 'typeOrSubtype'
-      )
       ?.map((filter) => {
-        // This generic way of getting file types from filters works only for
-        // filters mentioned in `filter()` above.
         const filterFileTypes = filter
           ?.types
           ?.map((type) => type?.valueConstraints?.fileType)
@@ -71,13 +65,30 @@ export const atmDataSpecTypeDefinition = {
               fileType,
               ...atmFileTypeSubtypes[fileType],
             ])));
+          case 'forbiddenType': {
+            const directlyForbiddenFileTypes = _.uniq(_.flatten(filterFileTypes));
+            const indirectlyForbiddenFileTypes = _.uniq(_.flatten(
+              directlyForbiddenFileTypes.map((fileType) => atmFileTypeSubtypes[fileType])
+            ));
+            const allForbiddenFileTypes = _.uniq([
+              ...directlyForbiddenFileTypes,
+              ...indirectlyForbiddenFileTypes,
+            ]);
+            return atmFileTypesArray
+              .filter((fileType) => !allForbiddenFileTypes.includes(fileType));
+          }
           default:
             return atmFileTypesArray;
         }
       }) ?? [];
 
+    const allowedFileTypes = allowedFileTypesPerFilter.length ?
+      _.intersection(...allowedFileTypesPerFilter) : atmFileTypesArray;
+    const sortedAllowedFileTypes = atmFileTypesArray
+      .filter((fileType) => allowedFileTypes.includes(fileType));
+
     return {
-      allowedFileTypes: _.intersection(allowedFileTypesPerFilter),
+      allowedFileTypes: sortedAllowedFileTypes,
     };
   },
   isMatchingFilters(atmDataSpec, filters, context) {

@@ -6,6 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import _ from 'lodash';
 import { isAtmDataSpecMatchingFiltersGeneric } from './commons';
 
 /**
@@ -47,20 +48,28 @@ export const atmDataSpecTypeDefinition = {
   },
   getValueConstraintsConditions(filters) {
     const itemDataSpecFilters = filters?.map((filter) => {
+      const itemDataSpecs = filter?.types
+        ?.map((dataSpec) =>
+          dataSpec?.type === 'array' ? dataSpec?.valueConstraints?.itemDataSpec : null
+        )
+        ?.filter(Boolean) ?? [];
       switch (filter.filterType) {
         case 'typeOrSupertype':
         case 'typeOrSubtype': {
-          const itemDataSpecs = filter?.type
-            ?.map((dataSpec) =>
-              dataSpec?.type === 'array' ? dataSpec?.valueConstraints?.itemDataSpec : null
-            )
-            ?.filter(Boolean) ?? [];
           return itemDataSpecs.length ? Object.assign({}, filter, {
             types: itemDataSpecs,
           }) : null;
         }
-        case 'forbiddenType':
-          return filter;
+        case 'forbiddenType': {
+          const newFilter = Object.assign({}, filter, {
+            types: [...filter.types ?? []],
+          });
+          const typesToAppend = itemDataSpecs.filter((itemDataSpec) =>
+            newFilter.types.every((dataSpec) => !_.isEqual(dataSpec, itemDataSpec))
+          );
+          newFilter.types.push(...typesToAppend);
+          return newFilter;
+        }
         default:
           return null;
       }

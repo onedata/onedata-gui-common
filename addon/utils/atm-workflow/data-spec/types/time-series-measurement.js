@@ -35,10 +35,11 @@ export const atmDataSpecTypeDefinition = {
     return true;
   },
   getValueConstraintsConditions() {
-    return {
-      allowedSpecs: null,
-      requiredSpecs: null,
-    };
+    return null;
+    // return {
+    //   allowedSpecs: null,
+    //   requiredSpecs: null,
+    // };
   },
   isMatchingFilters(atmDataSpec, filters, context) {
     return isAtmDataSpecMatchingFiltersGeneric(atmDataSpec, filters, context);

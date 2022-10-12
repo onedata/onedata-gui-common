@@ -1,7 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, context } from 'mocha';
-import { isAtmDataSpecMatchingFilters, dataSpecTypes } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import {
+  dataSpecTypes,
+  isAtmDataSpecMatchingFilters,
+  getAtmValueConstraintsConditions,
+} from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+import {
+  AtmFileType,
   atmFileTypesArray,
   atmFileTypeSupertypes,
   atmFileTypeSubtypes,
@@ -660,6 +665,244 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       }, {
         type: 'object',
       }, false);
+    });
+  });
+
+  describe('getAtmValueConstraintsConditions', function () {
+    _.difference(dataSpecTypes, ['array', 'file'])
+      .forEach((atmDataSpecType) => {
+        it(`returns null for type ${atmDataSpecType} regardless filters`, function () {
+          [
+            [],
+            [{ filterType: 'typeOrSupertype', types: [{ type: 'dataset' }] }],
+            [{ filterType: 'typeOrSubtype', types: [{ type: 'object' }] }],
+            [{ filterType: 'forbiddenType', types: [{ type: 'object' }] }],
+          ].forEach((filters) => {
+            expect(getAtmValueConstraintsConditions(atmDataSpecType, filters)).to.be.null;
+          });
+        });
+      });
+
+    it('returns empty conditions for type array when filters are empty', function () {
+      expect(getAtmValueConstraintsConditions('array', [])).to.deep.equal({
+        itemDataSpecFilters: [],
+      });
+    });
+
+    it('returns correct conditions for all types of filters', function () {
+      const filters = [{
+        filterType: 'typeOrSupertype',
+        types: [{
+          type: 'dataset',
+        }, {
+          type: 'array',
+          valueConstraints: {
+            itemDataSpec: {
+              type: 'integer',
+            },
+          },
+        }],
+      }, {
+        filterType: 'typeOrSubtype',
+        types: [{
+          type: 'file',
+        }, {
+          type: 'array',
+          valueConstraints: {
+            itemDataSpec: {
+              type: 'string',
+            },
+          },
+        }],
+      }, {
+        filterType: 'forbiddenType',
+        types: [{
+          type: 'range',
+        }, {
+          type: 'array',
+          valueConstraints: {
+            itemDataSpec: {
+              type: 'file',
+            },
+          },
+        }],
+      }];
+      expect(getAtmValueConstraintsConditions('array', filters)).to.deep.equal({
+        itemDataSpecFilters: [{
+          filterType: 'typeOrSupertype',
+          types: [{
+            type: 'integer',
+          }],
+        }, {
+          filterType: 'typeOrSubtype',
+          types: [{
+            type: 'string',
+          }],
+        }, {
+          filterType: 'forbiddenType',
+          types: [{
+            type: 'range',
+          }, {
+            type: 'array',
+            valueConstraints: {
+              itemDataSpec: {
+                type: 'file',
+              },
+            },
+          }, {
+            type: 'file',
+          }],
+        }],
+      });
+    });
+
+    it('returns conditions containing all possible file types for type file when filters are empty',
+      function () {
+        expect(getAtmValueConstraintsConditions('file', [])).to.deep.equal({
+          allowedFileTypes: atmFileTypesArray,
+        });
+      }
+    );
+
+    it('returns conditions matching typeOrSupertype filter for type file', function () {
+      expect(getAtmValueConstraintsConditions('file', [{
+        filterType: 'typeOrSupertype',
+        types: [{
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Regular,
+          },
+        }, {
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Directory,
+          },
+        }],
+      }])).to.deep.equal({
+        allowedFileTypes: [
+          AtmFileType.Any,
+          AtmFileType.Regular,
+          AtmFileType.Directory,
+        ],
+      });
+    });
+
+    it('returns conditions matching typeOrSubtype filter for type file', function () {
+      expect(getAtmValueConstraintsConditions('file', [{
+        filterType: 'typeOrSubtype',
+        types: [{
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Regular,
+          },
+        }, {
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Directory,
+          },
+        }],
+      }])).to.deep.equal({
+        allowedFileTypes: [
+          AtmFileType.Regular,
+          AtmFileType.Directory,
+        ],
+      });
+      expect(getAtmValueConstraintsConditions('file', [{
+        filterType: 'typeOrSubtype',
+        types: [{
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Any,
+          },
+        }, {
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Directory,
+          },
+        }],
+      }])).to.deep.equal({
+        allowedFileTypes: atmFileTypesArray,
+      });
+    });
+
+    it('returns conditions matching forbiddenType filter for type file', function () {
+      expect(getAtmValueConstraintsConditions('file', [{
+        filterType: 'forbiddenType',
+        types: [{
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Regular,
+          },
+        }, {
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Directory,
+          },
+        }],
+      }])).to.deep.equal({
+        allowedFileTypes: [
+          AtmFileType.Any,
+          AtmFileType.SymbolicLink,
+        ],
+      });
+      expect(getAtmValueConstraintsConditions('file', [{
+        filterType: 'forbiddenType',
+        types: [{
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Any,
+          },
+        }],
+      }])).to.deep.equal({
+        allowedFileTypes: [],
+      });
+    });
+
+    it('returns conditions matching many different filters for type file', function () {
+      expect(getAtmValueConstraintsConditions('file', [{
+        filterType: 'typeOrSubtype',
+        types: [{
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Any,
+          },
+        }],
+      }, {
+        filterType: 'forbiddenType',
+        types: [{
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.SymbolicLink,
+          },
+        }],
+      }])).to.deep.equal({
+        allowedFileTypes: [
+          AtmFileType.Any,
+          AtmFileType.Regular,
+          AtmFileType.Directory,
+        ],
+      });
+      expect(getAtmValueConstraintsConditions('file', [{
+        filterType: 'typeOrSupertype',
+        types: [{
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Regular,
+          },
+        }],
+      }, {
+        filterType: 'forbiddenType',
+        types: [{
+          type: 'file',
+          valueConstraints: {
+            fileType: AtmFileType.Regular,
+          },
+        }],
+      }])).to.deep.equal({
+        allowedFileTypes: [
+          AtmFileType.Any,
+        ],
+      });
     });
   });
 });
