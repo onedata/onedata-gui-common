@@ -6,7 +6,15 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { canValueConstraintsContain as canFileValueConstraintsContain } from './file';
+import { atmDataSpecTypeDefinition as integerTypeDefinition } from './integer';
+import { atmDataSpecTypeDefinition as stringTypeDefinition } from './string';
+import { atmDataSpecTypeDefinition as objectTypeDefinition } from './object';
+import { atmDataSpecTypeDefinition as fileTypeDefinition } from './file';
+import { atmDataSpecTypeDefinition as datasetTypeDefinition } from './dataset';
+import { atmDataSpecTypeDefinition as rangeTypeDefinition } from './range';
+import { atmDataSpecTypeDefinition as arrayTypeDefinition } from './array';
+import { atmDataSpecTypeDefinition as timeSeriesMeasurementTypeDefinition } from './time-series-measurement';
+import { atmDataSpecTypeDefinition as onedataFsCredentialsTypeDefinition } from './onedatafs-credentials';
 
 /**
  * @typedef {
@@ -52,33 +60,73 @@ export const dataSpecTypes = Object.freeze([
 ]);
 
 /**
- * @type {Object<AtmDataSpecType, Array<AtmDataSpecType>>}
+ * @type {Object<AtmDataSpecType, AtmDataSpecTypeDefinition>}
  */
-export const dataSpecSupertypes = Object.freeze({
-  integer: [],
-  string: [],
-  object: [],
-  file: ['object'],
-  dataset: ['object'],
-  range: ['object'],
-  array: [],
-  timeSeriesMeasurement: ['object'],
-  onedatafsCredentials: ['object'],
+const atmDataSpecTypeDefinitions = Object.freeze({
+  integer: integerTypeDefinition,
+  string: stringTypeDefinition,
+  object: objectTypeDefinition,
+  file: fileTypeDefinition,
+  dataset: datasetTypeDefinition,
+  range: rangeTypeDefinition,
+  array: arrayTypeDefinition,
+  timeSeriesMeasurement: timeSeriesMeasurementTypeDefinition,
+  onedatafsCredentials: onedataFsCredentialsTypeDefinition,
 });
 
 /**
  * @type {Object<AtmDataSpecType, Array<AtmDataSpecType>>}
  */
-export const dataSpecSubtypes = Object.freeze(
+const atmDataSpecTypeSubtypes = Object.freeze(
   dataSpecTypes.reduce((acc, dataSpecType) => {
-    acc[dataSpecType] = acc[dataSpecType] || [];
-    dataSpecSupertypes[dataSpecType].forEach((superType) => {
-      acc[superType] = acc[superType] || [];
+    acc[dataSpecType] = acc[dataSpecType] ?? [];
+    atmDataSpecTypeDefinitions[dataSpecType].superTypes.forEach((superType) => {
+      acc[superType] = acc[superType] ?? [];
       acc[superType].push(dataSpecType);
     });
     return acc;
   }, {})
 );
+
+/**
+ * @param {AtmDataSpecType} atmDataSpecType
+ * @returns {Array<AtmDataSpecType>}
+ */
+export function getAtmDataSpecTypeSupertypes(atmDataSpecType) {
+  return atmDataSpecTypeDefinitions[atmDataSpecType]?.superTypes ?? [];
+}
+
+/**
+ * @param {AtmDataSpecType} atmDataSpecType
+ * @returns {Array<AtmDataSpecType>}
+ */
+export function getAtmDataSpecTypeSubtypes(atmDataSpecType) {
+  return atmDataSpecTypeSubtypes[atmDataSpecType] ?? [];
+}
+
+/**
+ * @param {T extends AtmDataSpecType} atmDataSpecType
+ * @param {Array<AtmDataSpecFilter>} filters
+ * @returns {ReturnType<(typeof atmDataSpecTypeDefinitions)[T]['getValueConstraintsConditions']>|null}
+ */
+export function getAtmValueConstraintsConditions(atmDataSpecType, filters) {
+  return atmDataSpecTypeDefinitions[atmDataSpecType]
+    ?.getValueConstraintsConditions?.(filters) ?? null;
+}
+
+/**
+ * @param {AtmDataSpecType} atmDataSpec
+ * @param {Array<AtmDataSpecFilter>} filters
+ * @returns {boolean}
+ */
+export function isAtmDataSpecMatchingFilters(atmDataSpec, filters) {
+  const context = {
+    canDataSpecContain,
+    isAtmDataSpecMatchingFilters,
+  };
+  return atmDataSpecTypeDefinitions[atmDataSpec?.type]
+    ?.isMatchingFilters?.(atmDataSpec, filters, context) ?? null;
+}
 
 /**
  * @param {Ember.Service} i18n
@@ -90,6 +138,19 @@ export function translateDataSpecType(i18n, dataSpecType) {
     `utils.atmWorkflow.dataSpec.types.${dataSpecType}`;
   return i18nPath ? i18n.t(i18nPath, {}, { defaultValue: '' }) : '';
 }
+
+/**
+ * @typedef {Object} CanDataSpecContainFunctionContext
+ * @property {(containerDataSpec: AtmDataSpec, toContainDataSpec: AtmDataSpec, ignoreEmpty: boolean) => boolean} canDataSpecContain
+ */
+
+/**
+ * @typedef {Object} AtmDataSpecTypeDefinition<T,U>
+ * @property {Array<AtmDataSpecType>} superTypes
+ * @property {(containerConstraints: T, toContainConstraints: T, ignoreEmpty: boolean, context: CanValueConstraintsContainFunctionContext) => boolean} canValueConstraintsContain
+ * @property {(filters: Array<AtmDataSpecFilter>) => U)} getValueConstraintsConditions
+ * @property {(atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>, context: IsAtmDataSpecMatchingFiltersGenericFunctionContext) => boolean} isMatchingFilters
+ */
 
 /**
  * Returns true, when data fulfilling `toContainDataSpec` can be persisted
@@ -109,27 +170,21 @@ export function canDataSpecContain(
     return ignoreEmpty;
   }
 
-  if (
-    containerDataSpec.type === 'array' &&
-    toContainDataSpec.type === 'array'
-  ) {
-    return canDataSpecContain(
-      containerDataSpec.valueConstraints?.itemDataSpec,
-      toContainDataSpec.valueConstraints?.itemDataSpec,
-      ignoreEmpty
-    );
-  } else if (containerDataSpec.type === toContainDataSpec.type) {
-    if (containerDataSpec.type === 'file') {
-      return canFileValueConstraintsContain(
+  const context = { canDataSpecContain };
+  if (containerDataSpec.type === toContainDataSpec.type) {
+    if (containerDataSpec.type in atmDataSpecTypeDefinitions) {
+      const atmDataSpecDefinition = atmDataSpecTypeDefinitions[containerDataSpec.type];
+      return atmDataSpecDefinition.canValueConstraintsContain(
         containerDataSpec.valueConstraints,
         toContainDataSpec.valueConstraints,
-        ignoreEmpty
+        ignoreEmpty,
+        context
       );
     } else {
       return true;
     }
   } else {
-    return dataSpecSupertypes[toContainDataSpec.type]
-      ?.includes(containerDataSpec.type) || false;
+    return atmDataSpecTypeDefinitions[toContainDataSpec.type].superTypes
+      .includes(containerDataSpec.type) || false;
   }
 }

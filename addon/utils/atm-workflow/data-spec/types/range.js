@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { isAtmDataSpecMatchingFiltersGeneric } from './commons';
+
 /**
  * @typedef {Object} AtmRangeDataSpec
  * @property {'range'} type
@@ -15,3 +17,19 @@
 /**
  * @typedef {Object} AtmRangeValueConstraints
  */
+
+/**
+ * @type {AtmDataSpecTypeDefinition<AtmRangeValueConstraints, null>}
+ */
+export const atmDataSpecTypeDefinition = {
+  superTypes: ['object'],
+  canValueConstraintsContain() {
+    return true;
+  },
+  getValueConstraintsConditions() {
+    return null;
+  },
+  isMatchingFilters(atmDataSpec, filters, context) {
+    return isAtmDataSpecMatchingFiltersGeneric(atmDataSpec, filters, context);
+  },
+};

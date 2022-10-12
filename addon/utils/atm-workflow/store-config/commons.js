@@ -8,7 +8,7 @@
 
 export const commonDataSpecFilters = [{
   filterType: 'forbiddenType',
-  forbiddenTypes: [{
+  types: [{
     type: 'onedatafsCredentials',
   }],
 }];

@@ -15,9 +15,9 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import {
-  fileTypes,
-  fileSupertypes,
-  fileSubtypes,
+  atmFileTypesArray,
+  atmFileTypeSupertypes,
+  atmFileTypeSubtypes,
   translateFileType,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
@@ -37,7 +37,7 @@ const FormElement = FormFieldsGroup.extend({
   allowedFileTypes: computed('dataSpecFilters', function allowedFileTypes() {
     const dataSpecFilters = this.get('dataSpecFilters') || [];
     const allowedTypes = [];
-    for (const fileType of fileTypes) {
+    for (const fileType of atmFileTypesArray) {
       let typeRejected = false;
       for (const dataSpecFilter of dataSpecFilters) {
         const fileTypesFromFilter = getFileTypesFromDataSpecFilter(dataSpecFilter);
@@ -48,7 +48,7 @@ const FormElement = FormFieldsGroup.extend({
           case 'typeOrSupertype': {
             const fileTypeMatchesSupertype = fileTypesFromFilter.some(
               (filterFileType) =>
-              (fileSupertypes[filterFileType] || []).includes(fileType)
+              (atmFileTypeSupertypes[filterFileType] || []).includes(fileType)
             );
             if (!fileTypesFromFilter.includes(fileType) && !fileTypeMatchesSupertype) {
               typeRejected = true;
@@ -57,7 +57,8 @@ const FormElement = FormFieldsGroup.extend({
           }
           case 'typeOrSubtype': {
             const fileTypeMatchesSubtype = fileTypesFromFilter.some(
-              (filterFileType) => (fileSubtypes[filterFileType] || []).includes(fileType)
+              (filterFileType) => (atmFileTypeSubtypes[filterFileType] || [])
+              .includes(fileType)
             );
             if (!fileTypesFromFilter.includes(fileType) && !fileTypeMatchesSubtype) {
               typeRejected = true;
@@ -92,17 +93,7 @@ const FormElement = FormFieldsGroup.extend({
 });
 
 function getFileTypesFromDataSpecFilter(dataSpecFilter) {
-  let fileDataSpecs = [];
-  switch (dataSpecFilter && dataSpecFilter.filterType) {
-    case 'typeOrSupertype':
-    case 'typeOrSubtype':
-      fileDataSpecs = get(dataSpecFilter, 'types');
-      break;
-    case 'forbiddenType':
-      fileDataSpecs = get(dataSpecFilter, 'forbiddenTypes');
-      break;
-  }
-  return fileDataSpecs.filter((dataSpec) =>
+  return get(dataSpecFilter, 'types').filter((dataSpec) =>
     dataSpec && dataSpec.type === 'file' &&
     get(dataSpec, 'valueConstraints.fileType')
   ).map((dataSpec) => dataSpec.valueConstraints.fileType).compact().uniq();
@@ -141,7 +132,8 @@ const FileTypeDropdown = DropdownField.extend({
  */
 function formValuesToValueConstraints(values) {
   const formFileType = values && get(values, 'fileType');
-  const fileType = fileTypes.includes(formFileType) ? formFileType : fileTypes[0];
+  const fileType = atmFileTypesArray.includes(formFileType) ?
+    formFileType : atmFileTypesArray[0];
   return { fileType };
 }
 
@@ -151,7 +143,7 @@ function formValuesToValueConstraints(values) {
  * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in a form
  */
 function valueConstraintsToFormValues(valueConstraints) {
-  const fileType = valueConstraints && valueConstraints.fileType || fileTypes[0];
+  const fileType = valueConstraints && valueConstraints.fileType || atmFileTypesArray[0];
   return createValuesContainer({
     fileType,
   });
@@ -164,7 +156,8 @@ function valueConstraintsToFormValues(valueConstraints) {
  */
 function summarizeFormValues(i18n, values) {
   const formFileType = values && get(values, 'fileType');
-  const fileType = fileTypes.includes(formFileType) ? formFileType : fileTypes[0];
+  const fileType = atmFileTypesArray.includes(formFileType) ?
+    formFileType : atmFileTypesArray[0];
   return i18n.t(`${i18nPrefix}.summary`, {
     fileType: translateFileType(i18n, fileType),
   });

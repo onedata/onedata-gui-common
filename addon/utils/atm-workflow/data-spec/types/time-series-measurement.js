@@ -7,6 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { isAtmDataSpecMatchingFiltersGeneric } from './commons';
+
 /**
  * @typedef {Object} AtmTimeSeriesMeasurementDataSpec
  * @property {'timeSeriesMeasurement'} type
@@ -17,6 +19,31 @@
  * @typedef {Object} AtmTimeSeriesMeasurementValueConstraints
  * @property {Array<AtmTimeSeriesMeasurementSpec>} specs
  */
+
+/**
+ * @typedef {Object} AtmTimeSeriesMeasurementValueConstraintsConditions
+ * @property {Array<AtmTimeSeriesMeasurementSpec>|null} allowedSpecs // dla subtype
+ * @property {Array<AtmTimeSeriesMeasurementSpec>|null} requiredSpecs // dla supertype
+ */
+
+/**
+ * @type {AtmDataSpecTypeDefinition<AtmTimeSeriesMeasurementValueConstraints, AtmTimeSeriesMeasurementValueConstraintsConditions>}
+ */
+export const atmDataSpecTypeDefinition = {
+  superTypes: ['object'],
+  canValueConstraintsContain() {
+    return true;
+  },
+  getValueConstraintsConditions() {
+    return {
+      allowedSpecs: null,
+      requiredSpecs: null,
+    };
+  },
+  isMatchingFilters(atmDataSpec, filters, context) {
+    return isAtmDataSpecMatchingFiltersGeneric(atmDataSpec, filters, context);
+  },
+};
 
 /**
  * @typedef {Object} AtmTimeSeriesMeasurementSpec
