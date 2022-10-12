@@ -49,7 +49,7 @@
           >
             {{one-icon
               id=apiCommandInfoTriggerId
-              icon="browser-info"
+              icon="sign-question-rounded"
               class="api-command-type-info-trigger hint-trigger clickable"
             }}
           </div>
@@ -67,7 +67,7 @@
           }}
             <p class="api-command-tip-intro">
               {{tt this
-                (concat "apiCommandTipIntro." effSelectedApiCommand.type)
+                (concat "apiCommandTipIntro." effSelectedApiCommand.type (if previewMode "Public" "Private"))
               }}
             </p>
           {{/click-outside}}
@@ -87,7 +87,7 @@
           href=(if (eq effSelectedApiCommand.type "xrootd")
             "https://xrootd.slac.stanford.edu/"
             (one-api-doc-url
-              product="onezone"
+              product="oneprovider"
               version="latest"
               anchor=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
             )
@@ -107,57 +107,67 @@
             size=(if smallContent "sm")
             class="monospace-font compact"
           }}
-          {{#if isOptionalParameters}}
+          {{#if hasOptionalParameters}}
             <div class="optional-parameters-text">
               {{tt this "apiOptionalParameters"}} 
               {{#each optionalParameters as |param|}}
                 <strong>{{param}},</strong>
               {{/each}}
               {{tt this "coverIn"}}
-              <a href={{one-api-doc-url
-                product="onezone"
-                version="latest"
-                anchor=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
-              }}>{{tt this "documentation"}}</a>.
+              <a 
+                href={{one-api-doc-url
+                  product="oneprovider"
+                  version="latest"
+                  anchor=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
+                }}
+                target="_blank"
+              >{{tt this "documentation"}}</a>.
             </div>
           {{/if}}
         </div>
       </td>
     </tr>
-    {{#if (or isPlaceholders requiresAuthorization)}}
+    {{#if (or hasPlaceholders requiresAuthorization)}}
       <tr class="item-info-row-variables">
         <td class="property-name with-input">
-          {{tt this "variables"}}
+          {{tt this "envVariables"}}
+          <span class="env-variables-info-icon-container">
+            {{one-icon icon="sign-question-rounded" class="env-variables-info-icon"}}
+            {{one-tooltip title=(tt this "variablesTooltip")}}
+          </span>
         </td>
         <td class="property-value placeholders-value with-input">
-          <div>
+          <div class="env-variables-table-container">
             <table class="env-variables-table">
-              <tr>
-                <td colspan="2" class="header-table">
-                  {{tt this "envVariableTableHeader"}}
-                </td>
-              </tr>
+              {{#unless (media "isMobile")}}
+                <thead>
+                  <tr>
+                    <td>{{tt this "variable"}}</td>
+                    <td>{{tt this "description"}}</td>
+                  </tr>
+                </thead>
+              {{/unless}}
               <tbody>
                 {{#if requiresAuthorization}}
-                  <tr>
-                    <td class="placeholder-variable">
-                      {{tt this "tokenVariable"}}
-                    </td>
-                    <td class="placeholder-description">
-                      {{tt this "authorizationTokenDescription"}} <a href={{getTokenUrl}} target="_top">{{tt this "tokenPage"}}</a>.
-                    </td>
-                  </tr>
-                {{/if}}
-                {{#each-in placeholders as |placeholder description|}}
-                  <tr>
-                    <td class="placeholder-variable">
-                      {{placeholder}}
-                    </td>
-                    <td class="placeholder-description">
-                      {{description}}
-                    </td>
-                  </tr>
-                {{/each-in}}
+                <tr>
+                  <td class="placeholder-variable">
+                    $TOKEN
+                  </td>
+                  <td class="placeholder-description">
+                    {{tt this "authorizationTokenDescription"}} <a href={{getAccessTokenUrl}} target="_blank">{{tt this "tokenPage"}}</a>.
+                  </td>
+                </tr>
+              {{/if}}
+              {{#each-in placeholders as |placeholder description|}}
+                <tr>
+                  <td class="placeholder-variable">
+                    {{placeholder}}
+                  </td>
+                  <td class="placeholder-description">
+                    {{description}}
+                  </td>
+                </tr>
+              {{/each-in}}
               </tbody>
             </table>
           </div>

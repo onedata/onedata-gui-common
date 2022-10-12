@@ -36,25 +36,33 @@ export default ApiStringGenerator.extend({
    * @returns {String}
    */
   generateSample(apiSample) {
-    const method = get(apiSample, 'method');
-    const path = get(apiSample, 'apiRoot') + get(apiSample, 'path');
-    const redirect = get(apiSample, 'followRedirects') ? '-L' : '';
-    const authorizationOption = get(apiSample, 'requiresAuthorization') ? '-H' : '';
-    const authorizationHeader = authorizationOption ? 'x-auth-token: $TOKEN' : '';
-    const data = get(apiSample, 'data') || '';
-    const dataOption = data ? '-d' : '';
+    const template = ['curl'];
 
-    return this.fillTemplate(['curl', '{redirect}', '-X', '{method}', '{path}',
-      '{authorizationOption}', '{authorizationHeader}', '{dataOption}', '{data}',
-    ], {
-      redirect,
-      method,
-      path,
-      authorizationOption,
-      authorizationHeader,
-      dataOption,
-      data,
-    }).trim();
+    // "Follow redirects" flag
+    if (apiSample.followRedirects) {
+      template.push('-L');
+    }
+
+    // HTTP method and path
+    template.push('-X', '{method}', '{path}');
+    const templateData = {
+      method: apiSample.method,
+      path: apiSample.apiRoot + apiSample.path,
+    };
+
+    // Authorization header
+    if (apiSample.requiresAuthorization) {
+      template.push('-H', '{authorizationHeader}');
+      templateData.authorizationHeader = 'x-auth-token: $TOKEN';
+    }
+
+    // Data
+    if (apiSample.data) {
+      template.push('-d', '{data}');
+      templateData.data = apiSample.data || '';
+    }
+
+    return this.fillTemplate(template, templateData);
   },
 
   curlize(url, curlOptions) {

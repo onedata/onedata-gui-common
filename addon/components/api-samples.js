@@ -10,9 +10,10 @@ import Component from '@ember/component';
 import { computed, get } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { reads } from '@ember/object/computed';
-import { conditional, array, tag } from 'ember-awesome-macros';
+import { conditional, array, tag, bool } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 import layout from '../templates/components/api-samples';
+import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 
 export default Component.extend(I18n, {
   layout,
@@ -20,7 +21,6 @@ export default Component.extend(I18n, {
 
   apiStringGenerator: service(),
   restApiGenerator: service(),
-  appProxy: service(),
 
   /**
    * @override
@@ -68,14 +68,14 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Number>}
    */
-  isOptionalParameters: reads('optionalParameters.length'),
+  hasOptionalParameters: bool('optionalParameters.length'),
 
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  isPlaceholders: computed(
+  hasPlaceholders: computed(
     'effSelectedApiCommand.placeholders',
-    function isPlaceholders() {
+    function hasPlaceholders() {
       return this.effSelectedApiCommand.placeholders &&
         Object.keys(this.effSelectedApiCommand.placeholders).length !== 0;
     }
@@ -86,7 +86,7 @@ export default Component.extend(I18n, {
    */
   placeholders: computed(
     'effSelectedApiCommand',
-    function placeHolders() {
+    function placeholders() {
       return this.effSelectedApiCommand.placeholders || null;
     }
   ),
@@ -99,9 +99,7 @@ export default Component.extend(I18n, {
   /**
    * @type {String} URL to create access token view
    */
-  getAccessTokenUrl: computed(function getAccessTokenUrl() {
-    return this.appProxy.callParent('getAccessTokenUrl');
-  }),
+  getAccessTokenUrl: notImplementedThrow,
 
   /**
    * @type {ComputedProperty<String>}

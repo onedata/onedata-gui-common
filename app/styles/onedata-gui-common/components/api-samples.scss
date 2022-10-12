@@ -49,6 +49,7 @@
         // makes tooltip to be nearer the icon center
         line-height: 0.5;
         transform: translateY(-50%) translateY(2px);
+        font-size: 110%;
       }
     }
   }
@@ -59,6 +60,18 @@
     }
   }
 
+  .env-variables-info-icon {
+    opacity: 0.4;
+  }
+
+  .env-variables-info-icon-container {
+    vertical-align: middle;
+  }
+
+  .env-variables-table-container {
+    overflow: hidden;
+  }
+
   .placeholders-value .env-variables-table {
     width: 100%;
 
@@ -66,12 +79,19 @@
       margin-top: 0px;
     }
 
-    > tbody > tr > td {
-      border-top: 1px solid $table-border-color;
+    @media (max-width: $screen-xs-max) {
+      tr:first-of-type td:first-of-type {
+        border-top: none;
+      }
     }
 
-    .header-table {
-      background-color: #f7f7f7;
+    thead {
+      background-color: $block-background-color;
+      @include font-semibold;
+    }
+
+    tbody td {
+      border-top: 1px solid $table-border-color;
     }
 
     .placeholder-variable {
@@ -84,7 +104,7 @@
   }
 
   table .placeholders-value div {
-    border: 1px solid #d6d6d6;
+    border: 1px solid $table-border-color;
     border-radius: $border-radius-base;
   }
 }

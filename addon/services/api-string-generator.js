@@ -21,7 +21,8 @@ export default Service.extend({
     if (typeof apiTemplate === 'string') {
       return pupa(apiTemplate, templateParams);
     } else if (Array.isArray(apiTemplate)) {
-      return shellEscape(apiTemplate.map(arg => pupa(arg, templateParams)));
+      return shellEscape(apiTemplate.map(arg => pupa(arg, templateParams)))
+        .replaceAll('\'', '"');
     } else {
       return '';
     }
