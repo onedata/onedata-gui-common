@@ -66,7 +66,7 @@ export default OnePieChart.extend({
           providersColors,
         } = this.getProperties('space', 'providersColors');
         const supportSizes = get(space, 'supportSizes');
-        const providers = this.get('providers').toArray();
+        const providers = this.providers?.toArray() || [];
         return A(providers
           .filter(p => get(supportSizes, get(p, 'entityId')))
           .map(provider => {
@@ -104,8 +104,12 @@ export default OnePieChart.extend({
         } = getProperties(space, 'totalSize', 'supportSizes');
         const providers = this.get('providers');
 
-        if (typeof totalSize !== 'number' || totalSize < 0 ||
-          !supportSizes || !isArray(providers)) {
+        if (
+          typeof totalSize !== 'number' ||
+          totalSize < 0 ||
+          !supportSizes ||
+          !isArray(providers)
+        ) {
           return false;
         }
 
