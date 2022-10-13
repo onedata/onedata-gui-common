@@ -137,5 +137,7 @@ function convertFromLegacyFileTypeIfNeeded(fileType) {
       return FileType.Directory;
     case LegacyFileType.SymbolicLink:
       return FileType.SymbolicLink;
+    default:
+      return fileType;
   }
 }
