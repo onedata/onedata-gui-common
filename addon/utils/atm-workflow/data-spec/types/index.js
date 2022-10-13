@@ -16,6 +16,8 @@ import { atmDataSpecTypeDefinition as arrayTypeDefinition } from './array';
 import { atmDataSpecTypeDefinition as timeSeriesMeasurementTypeDefinition } from './time-series-measurement';
 import { atmDataSpecTypeDefinition as onedataFsCredentialsTypeDefinition } from './onedatafs-credentials';
 
+export { getMatchingAtmDataSpecTypes } from '../filters';
+
 /**
  * @typedef {
  *   AtmDatasetDataSpec |
@@ -47,7 +49,7 @@ import { atmDataSpecTypeDefinition as onedataFsCredentialsTypeDefinition } from 
 /**
  * @type {Array<AtmDataSpecType>}
  */
-export const dataSpecTypes = Object.freeze([
+export const atmDataSpecTypesArray = Object.freeze([
   'integer',
   'string',
   'object',
@@ -78,7 +80,7 @@ const atmDataSpecTypeDefinitions = Object.freeze({
  * @type {Object<AtmDataSpecType, Array<AtmDataSpecType>>}
  */
 const atmDataSpecTypeSubtypes = Object.freeze(
-  dataSpecTypes.reduce((acc, dataSpecType) => {
+  atmDataSpecTypesArray.reduce((acc, dataSpecType) => {
     acc[dataSpecType] = acc[dataSpecType] ?? [];
     atmDataSpecTypeDefinitions[dataSpecType].superTypes.forEach((superType) => {
       acc[superType] = acc[superType] ?? [];

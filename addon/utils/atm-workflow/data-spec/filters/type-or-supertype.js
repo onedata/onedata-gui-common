@@ -1,4 +1,4 @@
-import { dataSpecTypes, getAtmDataSpecTypeSupertypes } from '../types';
+import { atmDataSpecTypesArray, getAtmDataSpecTypeSupertypes } from '../types';
 
 /**
  * @typedef {Object} AtmDataSpecSupertypeFilter Only types which are equal or are supertype (parent type)
@@ -18,12 +18,12 @@ export default {
   getMatchingAtmDataSpecTypes(filter) {
     const types = filter?.types ?? [];
     if (!types.length) {
-      return dataSpecTypes;
+      return atmDataSpecTypesArray;
     }
 
     const allowedAtmDataSpecTypes = new Set();
     for (const dataSpec of types) {
-      if (!dataSpecTypes.includes(dataSpec?.type)) {
+      if (!atmDataSpecTypesArray.includes(dataSpec?.type)) {
         continue;
       }
 
@@ -36,6 +36,6 @@ export default {
       );
     }
 
-    return dataSpecTypes.filter((type) => allowedAtmDataSpecTypes.has(type));
+    return atmDataSpecTypesArray.filter((type) => allowedAtmDataSpecTypes.has(type));
   },
 };

@@ -1,4 +1,4 @@
-import { dataSpecTypes, getAtmDataSpecTypeSubtypes } from '../types';
+import { atmDataSpecTypesArray, getAtmDataSpecTypeSubtypes } from '../types';
 
 /**
  * @typedef {Object} AtmDataSpecForbiddenFilter Only types which are different
@@ -21,12 +21,12 @@ export default {
   getMatchingAtmDataSpecTypes(filter) {
     const types = filter?.types ?? [];
     if (!types.length) {
-      return dataSpecTypes;
+      return atmDataSpecTypesArray;
     }
 
     const forbiddenAtmDataSpecTypes = new Set();
     for (const dataSpec of types) {
-      if (!dataSpecTypes.includes(dataSpec?.type)) {
+      if (!atmDataSpecTypesArray.includes(dataSpec?.type)) {
         continue;
       }
 
@@ -39,6 +39,6 @@ export default {
       );
     }
 
-    return dataSpecTypes.filter((type) => !forbiddenAtmDataSpecTypes.has(type));
+    return atmDataSpecTypesArray.filter((type) => !forbiddenAtmDataSpecTypes.has(type));
   },
 };

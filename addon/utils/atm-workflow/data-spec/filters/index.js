@@ -2,6 +2,7 @@ import _ from 'lodash';
 import typeOrSupertypeFilterDefinition from './type-or-supertype';
 import typeOrSubtypeFilterDefinition from './type-or-subtype';
 import forbiddenTypeFilterDefinition from './forbidden-type';
+import { atmDataSpecTypesArray } from '../types';
 
 /**
  * @typedef {
@@ -33,5 +34,6 @@ export function getMatchingAtmDataSpecTypes(filters) {
       atmDataSpecFilterDefinitionsMap[filter.filterType]
       .getMatchingAtmDataSpecTypes(filter)
     ) ?? [];
-  return _.intersection(...allowedDataSpecTypesPerFilter);
+  return allowedDataSpecTypesPerFilter.length ?
+    _.intersection(...allowedDataSpecTypesPerFilter) : atmDataSpecTypesArray;
 }

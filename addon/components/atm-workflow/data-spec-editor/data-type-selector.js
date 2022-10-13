@@ -13,7 +13,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import {
-  dataSpecTypes,
+  atmDataSpecTypesArray,
   translateDataSpecType,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { getMatchingAtmDataSpecTypes } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
@@ -83,7 +83,7 @@ export default Component.extend(I18n, {
     } = this.getProperties('i18n', 'dataSpecFilters');
 
     const allowedDataSpecTypes = getMatchingAtmDataSpecTypes(dataSpecFilters);
-    return dataSpecTypes
+    return atmDataSpecTypesArray
       .filter((type) => allowedDataSpecTypes.includes(type))
       .map((dataSpecType) => ({
         value: dataSpecType,
