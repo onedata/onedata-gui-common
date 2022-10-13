@@ -1,3 +1,11 @@
+/**
+ * Contains typedefs and functions specific for `typeOrSubtype` filter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { atmDataSpecTypesArray, getAtmDataSpecTypeSubtypes } from '../types';
 
 /**
@@ -37,5 +45,14 @@ export default {
     }
 
     return atmDataSpecTypesArray.filter((type) => allowedAtmDataSpecTypes.has(type));
+  },
+  doesAtmDataSpecMatchFilter(atmDataSpec, filter, context) {
+    const filterTypes = filter?.types?.filter(Boolean) ?? [];
+    for (const type of filterTypes) {
+      if (context.canAtmDataSpecContain(type, atmDataSpec, true)) {
+        return true;
+      }
+    }
+    return filterTypes.length === 0;
   },
 };

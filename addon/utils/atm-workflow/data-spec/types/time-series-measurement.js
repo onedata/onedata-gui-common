@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { isAtmDataSpecMatchingFiltersGeneric } from './commons';
+import { doesAtmDataSpecMatchFilters } from '../filters';
 
 /**
  * @typedef {Object} AtmTimeSeriesMeasurementDataSpec
@@ -22,27 +22,23 @@ import { isAtmDataSpecMatchingFiltersGeneric } from './commons';
 
 /**
  * @typedef {Object} AtmTimeSeriesMeasurementValueConstraintsConditions
- * @property {Array<AtmTimeSeriesMeasurementSpec>|null} allowedSpecs // dla subtype
- * @property {Array<AtmTimeSeriesMeasurementSpec>|null} requiredSpecs // dla supertype
+ * @property {Array<AtmTimeSeriesMeasurementSpec>|null} allowedSpecs for subtype
+ * @property {Array<AtmTimeSeriesMeasurementSpec>|null} requiredSpecs for supertype
  */
 
 /**
  * @type {AtmDataSpecTypeDefinition<AtmTimeSeriesMeasurementValueConstraints, AtmTimeSeriesMeasurementValueConstraintsConditions>}
  */
 export const atmDataSpecTypeDefinition = {
-  superTypes: ['object'],
+  supertype: 'object',
   canValueConstraintsContain() {
     return true;
   },
   getValueConstraintsConditions() {
     return null;
-    // return {
-    //   allowedSpecs: null,
-    //   requiredSpecs: null,
-    // };
   },
   isMatchingFilters(atmDataSpec, filters, context) {
-    return isAtmDataSpecMatchingFiltersGeneric(atmDataSpec, filters, context);
+    return doesAtmDataSpecMatchFilters(atmDataSpec, filters, context);
   },
 };
 

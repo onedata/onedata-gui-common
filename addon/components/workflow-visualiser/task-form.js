@@ -53,7 +53,7 @@ import storeContentUpdateOptionsEditors from 'onedata-gui-common/utils/atm-workf
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editors';
 import { validator } from 'ember-cp-validations';
-import { canDataSpecContain } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+import { canAtmDataSpecContain } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import {
   doesDataSpecFitToStoreRead,
   doesDataSpecFitToStoreWrite,
@@ -1143,7 +1143,7 @@ function getValueBuilderTypesForDataSpec(dataSpec) {
       'singleValueStoreContent',
       'const',
     ];
-    if (canDataSpecContain(dataSpec, { type: 'onedatafsCredentials' })) {
+    if (canAtmDataSpecContain(dataSpec, { type: 'onedatafsCredentials' })) {
       builders.push('onedatafsCredentials');
     }
     return builders;

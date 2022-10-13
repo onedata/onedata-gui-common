@@ -14,7 +14,7 @@ import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import {
   atmDataSpecTypesArray,
-  translateDataSpecType,
+  translateAtmDataSpecType,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { getMatchingAtmDataSpecTypes } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import { createDataTypeElement } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/editor-element-creators';
@@ -88,7 +88,7 @@ export default Component.extend(I18n, {
       .filter((type) => allowedDataSpecTypes.includes(type))
       .map((dataSpecType) => ({
         value: dataSpecType,
-        label: translateDataSpecType(i18n, dataSpecType),
+        label: translateAtmDataSpecType(i18n, dataSpecType),
       }));
   }),
 

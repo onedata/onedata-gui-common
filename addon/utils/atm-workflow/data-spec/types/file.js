@@ -7,7 +7,7 @@
  */
 
 import _ from 'lodash';
-import { isAtmDataSpecMatchingFiltersGeneric } from './commons';
+import { doesAtmDataSpecMatchFilters } from '../filters';
 import { FileType } from 'onedata-gui-common/utils/file';
 
 /**
@@ -30,7 +30,7 @@ import { FileType } from 'onedata-gui-common/utils/file';
  * @type {AtmDataSpecTypeDefinition<AtmFileValueConstraints, AtmFileValueConstraintsConditions>}
  */
 export const atmDataSpecTypeDefinition = {
-  superTypes: ['object'],
+  supertype: 'object',
   canValueConstraintsContain(
     containerConstraints,
     toContainConstraints,
@@ -92,7 +92,7 @@ export const atmDataSpecTypeDefinition = {
     };
   },
   isMatchingFilters(atmDataSpec, filters, context) {
-    return isAtmDataSpecMatchingFiltersGeneric(atmDataSpec, filters, context);
+    return doesAtmDataSpecMatchFilters(atmDataSpec, filters, context);
   },
 };
 

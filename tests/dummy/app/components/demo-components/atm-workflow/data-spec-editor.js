@@ -48,7 +48,6 @@ const RootGroup = FormFieldsRootGroup.extend({
           types: [{
             type: 'onedatafsCredentials',
           }],
-          ignoredContexts: ['root'],
         }],
       }),
     ];

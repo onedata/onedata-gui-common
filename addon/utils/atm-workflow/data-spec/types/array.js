@@ -7,7 +7,7 @@
  */
 
 import _ from 'lodash';
-import { isAtmDataSpecMatchingFiltersGeneric } from './commons';
+import { doesAtmDataSpecMatchFilters } from '../filters';
 
 /**
  * @typedef {Object} AtmArrayDataSpec
@@ -29,7 +29,7 @@ import { isAtmDataSpecMatchingFiltersGeneric } from './commons';
  * @type {AtmDataSpecTypeDefinition<AtmArrayValueConstraints, AtmArrayValueConstraintsConditions>}
  */
 export const atmDataSpecTypeDefinition = {
-  superTypes: [],
+  supertype: null,
   canValueConstraintsContain(
     containerConstraints,
     toContainConstraints,
@@ -40,7 +40,7 @@ export const atmDataSpecTypeDefinition = {
       return ignoreEmpty;
     }
 
-    return context.canDataSpecContain(
+    return context.canAtmDataSpecContain(
       containerConstraints.itemDataSpec,
       toContainConstraints.itemDataSpec,
       ignoreEmpty
@@ -80,24 +80,21 @@ export const atmDataSpecTypeDefinition = {
     };
   },
   isMatchingFilters(atmDataSpec, filters, context) {
-    return isAtmDataSpecMatchingFiltersGeneric(
-      atmDataSpec,
-      filters,
-      context,
-      (atmDataSpec, filters, context) => {
-        const itemDataSpec = atmDataSpec?.valueConstraints?.itemDataSpec;
-        const filtersToCheck = filters?.filter((filter) =>
-          filter?.filterType !== 'typeOrSupertype' &&
-          filter?.filterType !== 'typeOrSubtype'
-        );
-        if (
-          itemDataSpec &&
-          !context.isAtmDataSpecMatchingFilters(itemDataSpec, filtersToCheck)
-        ) {
-          return false;
-        }
-        return true;
-      }
+    if (!doesAtmDataSpecMatchFilters(atmDataSpec, filters, context)) {
+      return false;
+    }
+
+    const itemDataSpec = atmDataSpec?.valueConstraints?.itemDataSpec;
+    const filtersToCheck = filters?.filter((filter) =>
+      filter?.filterType !== 'typeOrSupertype' &&
+      filter?.filterType !== 'typeOrSubtype'
     );
+    if (
+      itemDataSpec &&
+      !doesAtmDataSpecMatchFilters(itemDataSpec, filtersToCheck, context)
+    ) {
+      return false;
+    }
+    return true;
   },
 };

@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { isAtmDataSpecMatchingFiltersGeneric } from './commons';
+import { doesAtmDataSpecMatchFilters } from '../filters';
 
 /**
  * @typedef {Object} AtmStringDataSpec
@@ -22,7 +22,7 @@ import { isAtmDataSpecMatchingFiltersGeneric } from './commons';
  * @type {AtmDataSpecTypeDefinition<AtmStringValueConstraints, null>}
  */
 export const atmDataSpecTypeDefinition = {
-  superTypes: [],
+  supertype: '',
   canValueConstraintsContain() {
     return true;
   },
@@ -30,6 +30,6 @@ export const atmDataSpecTypeDefinition = {
     return null;
   },
   isMatchingFilters(atmDataSpec, filters, context) {
-    return isAtmDataSpecMatchingFiltersGeneric(atmDataSpec, filters, context);
+    return doesAtmDataSpecMatchFilters(atmDataSpec, filters, context);
   },
 };

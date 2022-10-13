@@ -12,7 +12,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import {
-  translateDataSpecType,
+  translateAtmDataSpecType,
   getAtmValueConstraintsConditions,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/array-data-type-editor';
@@ -75,7 +75,7 @@ export default Component.extend({
    * @type {ComputedProperty<SafeString>}
    */
   dataTypeTranslation: computed(function dataTypeTranslation() {
-    return translateDataSpecType(this.get('i18n'), 'array');
+    return translateAtmDataSpecType(this.get('i18n'), 'array');
   }),
 
   /**

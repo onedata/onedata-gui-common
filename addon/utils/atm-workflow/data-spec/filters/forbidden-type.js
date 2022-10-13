@@ -1,3 +1,11 @@
+/**
+ * Contains typedefs and functions specific for `forbiddenType` filter.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { atmDataSpecTypesArray, getAtmDataSpecTypeSubtypes } from '../types';
 
 /**
@@ -7,11 +15,7 @@ import { atmDataSpecTypesArray, getAtmDataSpecTypeSubtypes } from '../types';
  * To check is file and filter.types is [object] -> ok (file is not directly forbidden)
  * To check is object and filter.types is [range,object] -> not ok (object is present in the forbidden list)
  * @property {'forbiddenType'} filterType
- * @property {Array<AtmLeafDataSpec>} types
- * @property {Array<AtmDataSpecPlacementContext>} ignoredContexts if provided,
- * allows to turn off this filter in some circumstances. E.g. when set to `root`
- * it means, that at the top level of the data spec it is possible to use types
- * from `types`, but it is still not allowed to use them at any nested level.
+ * @property {Array<AtmDataSpec>} types
  */
 
 /**
@@ -40,5 +44,14 @@ export default {
     }
 
     return atmDataSpecTypesArray.filter((type) => !forbiddenAtmDataSpecTypes.has(type));
+  },
+  doesAtmDataSpecMatchFilter(atmDataSpec, filter, context) {
+    const filterTypes = filter?.types?.filter(Boolean) ?? [];
+    for (const type of filterTypes) {
+      if (context.canAtmDataSpecContain(type, atmDataSpec, true)) {
+        return false;
+      }
+    }
+    return true;
   },
 };
