@@ -186,6 +186,11 @@ export default Component.extend(I18n, {
   doesOpenDetailsOnClick: false,
 
   /**
+   * @type {InfiniteScrollTableUpdateStrategy}
+   */
+  updateStrategy: 'onTop',
+
+  /**
    * Extra data provided to configure default log-entry-details view.
    * May be overriden if custom log entry details component is used.
    * @type {any}
