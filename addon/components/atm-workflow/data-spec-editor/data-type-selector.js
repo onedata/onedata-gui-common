@@ -23,6 +23,7 @@ import layout from '../../../templates/components/atm-workflow/data-spec-editor/
 
 export default Component.extend(I18n, {
   layout,
+  classNames: ['data-type-selector'],
 
   i18n: service(),
 

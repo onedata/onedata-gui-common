@@ -100,6 +100,9 @@ export const atmDataSpecTypeDefinition = {
  * @typedef {'ANY'|FileType} AtmFileType
  */
 
+/**
+ * @type {Object<string, AtmFileType>}
+ */
 export const AtmFileType = Object.freeze({
   Any: 'ANY',
   Regular: FileType.Regular,
@@ -107,6 +110,9 @@ export const AtmFileType = Object.freeze({
   SymbolicLink: FileType.SymbolicLink,
 });
 
+/**
+ * @type {Array<AtmFileType>}
+ */
 export const atmFileTypesArray = Object.freeze([
   AtmFileType.Any,
   AtmFileType.Regular,
@@ -114,6 +120,9 @@ export const atmFileTypesArray = Object.freeze([
   AtmFileType.SymbolicLink,
 ]);
 
+/**
+ * @type {Object<AtmFileType, Array<AtmFileType>>}
+ */
 export const atmFileTypeSupertypes = Object.freeze({
   [AtmFileType.Any]: [],
   [AtmFileType.Regular]: [AtmFileType.Any],
@@ -121,6 +130,9 @@ export const atmFileTypeSupertypes = Object.freeze({
   [AtmFileType.SymbolicLink]: [AtmFileType.Any],
 });
 
+/**
+ * @type {Object<AtmFileType, Array<AtmFileType>>}
+ */
 export const atmFileTypeSubtypes = Object.freeze({
   [AtmFileType.Any]: [
     AtmFileType.Regular,
@@ -134,9 +146,16 @@ export const atmFileTypeSubtypes = Object.freeze({
 
 /**
  * @param {Ember.Service} i18n
- * @param {AtmFileType} fileType
+ * @param {AtmFileType} atmFileType
+ * @param {{ upperFirst: boolean }} [options]
  * @returns {SafeString}
  */
-export function translateFileType(i18n, fileType) {
-  return i18n.t(`utils.atmWorkflow.dataSpec.file.fileTypes.${fileType}`);
+export function translateAtmFileType(i18n, atmFileType, { upperFirst = false } = {}) {
+  if (!i18n) {
+    console.error('translateAtmFileType: i18n is undefined');
+    return '';
+  }
+
+  const translation = i18n.t(`utils.atmWorkflow.dataSpec.file.fileTypes.${atmFileType}`);
+  return upperFirst ? _.upperFirst(translation) : translation;
 }

@@ -14,11 +14,10 @@ import { scheduleOnce } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
+import { getAtmValueConstraintsConditions } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import {
   atmFileTypesArray,
-  atmFileTypeSupertypes,
-  atmFileTypeSubtypes,
-  translateFileType,
+  translateAtmFileType,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
@@ -35,49 +34,11 @@ const FormElement = FormFieldsGroup.extend({
    * @type {ComputedProperty<Array<AtmFileType>>}
    */
   allowedFileTypes: computed('dataSpecFilters', function allowedFileTypes() {
-    const dataSpecFilters = this.get('dataSpecFilters') || [];
-    const allowedTypes = [];
-    for (const fileType of atmFileTypesArray) {
-      let typeRejected = false;
-      for (const dataSpecFilter of dataSpecFilters) {
-        const fileTypesFromFilter = getFileTypesFromDataSpecFilter(dataSpecFilter);
-        if (!fileTypesFromFilter.length) {
-          continue;
-        }
-        switch (dataSpecFilter.filterType) {
-          case 'typeOrSupertype': {
-            const fileTypeMatchesSupertype = fileTypesFromFilter.some(
-              (filterFileType) =>
-              (atmFileTypeSupertypes[filterFileType] || []).includes(fileType)
-            );
-            if (!fileTypesFromFilter.includes(fileType) && !fileTypeMatchesSupertype) {
-              typeRejected = true;
-            }
-            break;
-          }
-          case 'typeOrSubtype': {
-            const fileTypeMatchesSubtype = fileTypesFromFilter.some(
-              (filterFileType) => (atmFileTypeSubtypes[filterFileType] || [])
-              .includes(fileType)
-            );
-            if (!fileTypesFromFilter.includes(fileType) && !fileTypeMatchesSubtype) {
-              typeRejected = true;
-            }
-            break;
-          }
-          case 'forbiddenType':
-            // `forbiddenType` filter works only at the whole data specs level.
-            break;
-        }
-        if (typeRejected) {
-          break;
-        }
-      }
-      if (!typeRejected) {
-        allowedTypes.push(fileType);
-      }
-    }
-    return allowedTypes;
+    const conditions = getAtmValueConstraintsConditions(
+      'file',
+      this.dataSpecFilters ?? []
+    );
+    return conditions.allowedFileTypes;
   }),
 
   classes: 'file-value-constraints-editor',
@@ -92,19 +53,12 @@ const FormElement = FormFieldsGroup.extend({
   }),
 });
 
-function getFileTypesFromDataSpecFilter(dataSpecFilter) {
-  return get(dataSpecFilter, 'types').filter((dataSpec) =>
-    dataSpec && dataSpec.type === 'file' &&
-    get(dataSpec, 'valueConstraints.fileType')
-  ).map((dataSpec) => dataSpec.valueConstraints.fileType).compact().uniq();
-}
-
 const FileTypeDropdown = DropdownField.extend({
   options: computed('parent.allowedFileTypes', function options() {
     const i18n = this.get('i18n');
     return this.get('parent.allowedFileTypes').map((fileType) => ({
       value: fileType,
-      label: translateFileType(i18n, fileType),
+      label: translateAtmFileType(i18n, fileType, { upperFirst: true }),
     }));
   }),
   defaultValue: reads('parent.allowedFileTypes.0'),
@@ -159,7 +113,7 @@ function summarizeFormValues(i18n, values) {
   const fileType = atmFileTypesArray.includes(formFileType) ?
     formFileType : atmFileTypesArray[0];
   return i18n.t(`${i18nPrefix}.summary`, {
-    fileType: translateFileType(i18n, fileType),
+    fileType: translateAtmFileType(i18n, fileType, { upperFirst: true }),
   });
 }
 
