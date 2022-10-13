@@ -72,6 +72,13 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       done();
     });
 
+    it('has "Select type..." dropdown placeholder', async function (done) {
+      await renderForm();
+
+      expect(atmDataSpecTypeHelper.getPlaceholder()).to.equal('Select type...');
+      done();
+    });
+
     simpleAtmDataSpecTypesInfo.forEach(({ type, label }) => {
       it(`allows to create ${type} type data spec`, async function (done) {
         await renderForm();
@@ -140,6 +147,14 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
           },
         },
       });
+      done();
+    });
+
+    it('has "Select item type..." dropdown placeholder when inside array type', async function (done) {
+      await renderForm();
+
+      await atmDataSpecTypeHelper.selectOptionByText('Array');
+      expect(atmDataSpecTypeHelper.getPlaceholder()).to.equal('Select item type...');
       done();
     });
 

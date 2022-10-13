@@ -46,12 +46,6 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {AtmDataSpecPlacementContext}
-   */
-  placementContext: undefined,
-
-  /**
-   * @virtual
    * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
@@ -73,6 +67,18 @@ export default Component.extend(I18n, {
    * @type {() => void}
    */
   onFocusLost: undefined,
+
+  /**
+   * @type {ComputedProperty<'array'|'default'>}
+   */
+  placementContext: computed('parentEditorElement', function placementContext() {
+    const parentDataType = this.get('parentEditorElement.config.dataType');
+    if (parentDataType === 'array') {
+      return 'array';
+    } else {
+      return 'default';
+    }
+  }),
 
   /**
    * @type {ComputedProperty<{ value: string, label: SafeString }>}

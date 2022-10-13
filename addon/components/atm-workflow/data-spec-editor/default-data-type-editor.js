@@ -36,12 +36,6 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {AtmDataSpecPlacementContext}
-   */
-  placementContext: undefined,
-
-  /**
-   * @virtual
    * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
