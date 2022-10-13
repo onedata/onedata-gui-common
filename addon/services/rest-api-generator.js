@@ -12,7 +12,6 @@
  */
 
 import ApiStringGenerator from './api-string-generator';
-import { get } from '@ember/object';
 
 /**
  * @typedef {Object} ApiSample
