@@ -58,6 +58,11 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
+  type: reads('effSelectedApiCommand.type'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
   description: reads('effSelectedApiCommand.description'),
 
   /**
@@ -99,7 +104,7 @@ export default Component.extend(I18n, {
   /**
    * @type {String} URL to create access token view
    */
-  getAccessTokenUrl: notImplementedThrow,
+  accessTokenUrl: notImplementedThrow,
 
   /**
    * @type {ComputedProperty<String>}
@@ -120,6 +125,15 @@ export default Component.extend(I18n, {
       }
     }
   ),
+
+  apiCommandTipIntro: computed('previewMode', 'type', function apiCommandTipIntro() {
+    const {
+      previewMode,
+      type,
+    } = this.getProperties('previewMode', 'type');
+    const path = 'apiCommandTipIntro.' + type + (previewMode ? 'Public' : 'Private');
+    return this.t(path, {}, { defaultValue: '' });
+  }),
 
   actions: {
     selectApiCommand(apiCommand) {
