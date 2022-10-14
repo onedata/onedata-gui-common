@@ -42,17 +42,29 @@ export default ApiStringGenerator.extend({
       template.push('-L');
     }
 
-    // HTTP method and path
-    template.push('-X', '{method}', '{path}');
+    // HTTP method
+    template.push('-X', '{method}');
     const templateData = {
       method: apiSample.method,
-      path: apiSample.apiRoot + apiSample.path,
     };
 
     // Authorization header
     if (apiSample.requiresAuthorization) {
       template.push('-H', '{authorizationHeader}');
       templateData.authorizationHeader = 'x-auth-token: $TOKEN';
+    }
+
+    // HTTP path
+    template.push('{path}');
+    templateData.path = apiSample.apiRoot + apiSample.path;
+
+    // Others headers
+    if (Object.keys(apiSample.headers)) {
+      for (const [key, value] of Object.entries(apiSample.headers)) {
+        const formattedKey = key.replace('-', '');
+        template.push('-H', `{${formattedKey}}`);
+        templateData[formattedKey] = key + ': ' + value;
+      }
     }
 
     // Data
