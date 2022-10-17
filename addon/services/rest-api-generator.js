@@ -12,6 +12,7 @@
  */
 
 import ApiStringGenerator from './api-string-generator';
+import { ShellSafeString } from '../utils/shell-escape';
 
 /**
  * @typedef {Object} ApiSample
@@ -50,26 +51,26 @@ export default ApiStringGenerator.extend({
 
     // Authorization header
     if (apiSample.requiresAuthorization) {
-      template.push('-H', '{authorizationHeader}');
+      template.push('-H', new ShellSafeString('{authorizationHeader}'));
       templateData.authorizationHeader = 'x-auth-token: $TOKEN';
     }
 
     // HTTP path
-    template.push('{path}');
+    template.push(new ShellSafeString('{path}'));
     templateData.path = apiSample.apiRoot + apiSample.path;
 
     // Others headers
     if (Object.keys(apiSample.headers)) {
       for (const [key, value] of Object.entries(apiSample.headers)) {
         const formattedKey = key.replace('-', '');
-        template.push('-H', `{${formattedKey}}`);
+        template.push('-H', new ShellSafeString(`{${formattedKey}}`));
         templateData[formattedKey] = key + ': ' + value;
       }
     }
 
     // Data
     if (apiSample.data) {
-      template.push('-d', '{data}');
+      template.push('-d', new ShellSafeString('{data}'));
       templateData.data = apiSample.data || '';
     }
 
