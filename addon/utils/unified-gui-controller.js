@@ -24,7 +24,7 @@ export default Object.freeze({
    * @return {void}
    */
   setAsOpened() {
-    this.setNonIframeRedirectFlag(true);
+    this.setNonIframeRedirectFlag(false);
   },
 
   isInIframe() {
