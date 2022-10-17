@@ -16,6 +16,7 @@ describe('Unit | Service | rest api generator', function () {
       description: 'Return test data',
       method: 'GET',
       followRedirects: true,
+      headers: {},
     };
     const service = this.subject();
     expect(service.generateSample(apiSample))

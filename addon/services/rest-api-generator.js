@@ -60,7 +60,7 @@ export default ApiStringGenerator.extend({
     templateData.path = apiSample.apiRoot + apiSample.path;
 
     // Others headers
-    if (Object.keys(apiSample.headers)) {
+    if (apiSample.headers && Object.keys(apiSample.headers)) {
       for (const [key, value] of Object.entries(apiSample.headers)) {
         const formattedKey = key.replace('-', '');
         template.push('-H', new ShellSafeString(`{${formattedKey}}`));
