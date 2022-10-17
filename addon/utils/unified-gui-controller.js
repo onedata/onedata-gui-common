@@ -1,3 +1,11 @@
+/**
+ * Utils for opening embedded apps in unified Onezone GUI.
+ *
+ * @author Jakub Liput
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 const nonIframeRedirectFlag = 'oneprovider-non-iframe-redirect';
 
 export default Object.freeze({
