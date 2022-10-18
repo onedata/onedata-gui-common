@@ -9,6 +9,13 @@
 const nonIframeRedirectFlag = 'oneprovider-non-iframe-redirect';
 
 export default Object.freeze({
+  /**
+   * Checks if current location should be changed to Onezone unified GUI.
+   * This method should be invoked only in embedded service (eg. Oneprovider GUI),
+   * because in unified Onezone GUI it makes no sense (we are already on unified GUI).
+   * @public
+   * @returns {boolean}
+   */
   shouldRedirectToOnezone() {
     return !this.getNonIframeRedirectFlag() && !this.isInIframe();
   },
@@ -16,6 +23,7 @@ export default Object.freeze({
   /**
    * If application that should be opened in unifed GUI's iframe is attempted to be opened
    * directly in window, redirect to its dedicated view in unified GUI (Onezone).
+   * @public
    * @param {string} [path] Everthing after origin in Onezone URL: location's
    *   pathname + search + hash.
    * @return {void}
@@ -29,6 +37,7 @@ export default Object.freeze({
   /**
    * Invoke when unified GUI (Onezone GUI) has been opened.
    * It sets redirect flags to not lock redirection from Oneprovider GUI anymore.
+   * @public
    * @return {void}
    */
   setAsOpened() {
