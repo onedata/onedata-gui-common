@@ -186,6 +186,7 @@ export default Component.extend(I18n, {
   doesOpenDetailsOnClick: false,
 
   /**
+   * @virtual optional
    * @type {InfiniteScrollTableUpdateStrategy}
    */
   updateStrategy: 'onTop',
