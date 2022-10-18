@@ -19,7 +19,7 @@ import layout from 'onedata-gui-common/templates/components/audit-log-browser/lo
 import { or, raw } from 'ember-awesome-macros';
 
 /**
- * @typedef {Object} DefaultLogEntryDetailsModel
+ * @typedef {Object} DefaultLogEntryDetailsConfiguration
  * @property {boolean} isTimestampRoundedToSeconds When false, renders the timestamp
  *   including milliseconds. When true, rounds the timestamp to seconds and hides
  *   milliseconds during rendering.
@@ -48,9 +48,9 @@ export default Component.extend(I18n, {
   /**
    * Extra data provided to configure default log-entry-details view.
    * @virtual
-   * @type {DefaultLogEntryDetailsModel}
+   * @type {DefaultLogEntryDetailsConfiguration}
    */
-  logEntryDetailsModel: undefined,
+  logEntryDetailsConfiguration: undefined,
 
   /**
    * When false, renders the timestamp including milliseconds. When true,
@@ -58,7 +58,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<boolean>}
    */
   isTimestampRoundedToSeconds: or(
-    'logEntryDetailsModel.isTimestampRoundedToSeconds',
+    'logEntryDetailsConfiguration.isTimestampRoundedToSeconds',
     raw(false),
   ),
 

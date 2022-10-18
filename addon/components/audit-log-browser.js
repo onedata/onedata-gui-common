@@ -195,9 +195,9 @@ export default Component.extend(I18n, {
    * May be overriden if custom log entry details component is used.
    * @type {any}
    */
-  logEntryDetailsModel: computed(
+  logEntryDetailsConfiguration: computed(
     'isTimestampRoundedToSeconds',
-    function logEntryDetailsModel() {
+    function logEntryDetailsConfiguration() {
       return { isTimestampRoundedToSeconds: this.isTimestampRoundedToSeconds };
     }
   ),
