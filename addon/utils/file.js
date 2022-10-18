@@ -24,6 +24,19 @@ export const FileType = {
 };
 
 /**
+ * @type {Array<FileType>}
+ */
+const fileTypeValues = Object.values(FileType);
+
+/**
+ * Returns true if the value is `FileType` value.
+ * @returns {boolean}
+ */
+export function isFileType(value) {
+  return fileTypeValues.includes(value);
+}
+
+/**
  * @typedef {'file'|'dir'|'symlink'} LegacyFileType
  * Describes a type of a file - regular, directory or symbolic link. It is
  * a legacy form used in existing code of Oneprovider GUI. Should be avoided
