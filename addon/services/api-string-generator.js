@@ -9,7 +9,7 @@
 
 import Service from '@ember/service';
 import pupa from 'pupa';
-import { shellEscape, ShellSafeString } from '../utils/shell-escape';
+import { shellEscape, ShellSafeString } from 'onedata-gui-common/utils/shell-escape';
 
 export default Service.extend({
   /**

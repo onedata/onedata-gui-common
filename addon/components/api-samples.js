@@ -13,7 +13,6 @@ import { reads } from '@ember/object/computed';
 import { conditional, array, tag, bool } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 import layout from '../templates/components/api-samples';
-import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 
 export default Component.extend(I18n, {
   layout,
@@ -104,7 +103,7 @@ export default Component.extend(I18n, {
   /**
    * @type {String} URL to create access token view
    */
-  accessTokenUrl: notImplementedThrow,
+  accessTokenUrl: undefined,
 
   /**
    * @type {ComputedProperty<String>}

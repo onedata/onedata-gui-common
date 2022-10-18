@@ -1,7 +1,9 @@
 /**
- * Escape array of strings and create string that may be executed on the shell.
+ * Escape array of strings and create string that may be executed on the shell. 
+ * Reimplement utils taken from package shell-escape 
+ * See more: https://github.com/xxorax/node-shell-escape
  * 
- * @author Agnieszka Warchoł
+ * @author Agnieszka Warchoł, Martin Panel
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -18,16 +20,17 @@ export function shellEscape(a) {
     }
     const quoteToChange = isSafe ? '"' : '\'';
     if (/[^A-Za-z0-9_/:=-]/.test(str)) {
+      const quote = new RegExp(quoteToChange, 'g');
       str = quoteToChange +
-        str.replace(/'/g, `${quoteToChange}\\${quoteToChange}${quoteToChange}`) +
+        str.replace(quote, `${quoteToChange}\\${quoteToChange}${quoteToChange}`) +
         quoteToChange;
-      const singleQuoteAtBeginning = new RegExp(`^(?:${quoteToChange}${quoteToChange})+`, 'g');
-      const nonEscapedSingleQuote = new RegExp(
-        `\\${quoteToChange}${quoteToChange}${quoteToChange}`, 'g'
+      const quoteAtBeginning = new RegExp(`^(?:${quoteToChange}${quoteToChange})+`, 'g');
+      const nonEscapedQuote = new RegExp(
+        `\\\\${quoteToChange}${quoteToChange}${quoteToChange}`, 'g'
       );
-      str = str.replace(singleQuoteAtBeginning, '') // unduplicate single-quote at the beginning
-        .replace(nonEscapedSingleQuote,
-          `\\${quoteToChange}`); // remove non-escaped single-quote if there are enclosed between 2 escaped
+      str = str.replace(quoteAtBeginning, '') // unduplicate quote at the beginning
+        .replace(nonEscapedQuote,
+          `\\${quoteToChange}`); // remove non-escaped quote if there are enclosed between 2 escaped
     }
     ret.push(str);
   });
