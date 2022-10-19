@@ -7,8 +7,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { commonDataSpecFilters } from './commons';
-
 /**
  * @typedef {Object} AtmTimeSeriesStoreConfig
  * @property {TimeSeriesCollectionSchema} timeSeriesCollectionSchema
@@ -19,7 +17,7 @@ import { commonDataSpecFilters } from './commons';
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getReadDataSpecFilters() {
-  return [...commonDataSpecFilters, {
+  return [{
     filterType: 'typeOrSupertype',
     types: [{ type: 'timeSeriesMeasurement' }],
   }];
@@ -29,7 +27,7 @@ export function getReadDataSpecFilters() {
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getWriteDataSpecFilters() {
-  return [...commonDataSpecFilters, {
+  return [{
     filterType: 'typeOrSubtype',
     types: [{ type: 'timeSeriesMeasurement' }],
   }];
