@@ -2,15 +2,15 @@ import taskResourcesFields from '../../utils/workflow-visualiser/task-resources-
 
 export default {
   fields: {
-    lambda: {
+    atmLambda: {
       label: 'Used lambda',
-      name: {
+      atmLambdaName: {
         label: 'Name',
       },
-      revisionNumber: {
+      atmLambdaRevisionNumber: {
         label: 'Revision',
       },
-      summary: {
+      atmLambdaSummary: {
         label: 'Summary',
       },
     },

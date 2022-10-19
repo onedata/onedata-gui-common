@@ -28,6 +28,7 @@ import {
   observer,
   getProperties,
   get,
+  setProperties,
   set,
 } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -262,19 +263,6 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
   fields: computed(function fields() {
-    const {
-      argumentMappingsFieldsCollectionGroup,
-      resultMappingsFieldsCollectionGroup,
-      timeSeriesStoreSectionFields,
-      resourcesFieldsGroup,
-    } = this.getProperties(
-      'nameField',
-      'argumentMappingsFieldsCollectionGroup',
-      'resultMappingsFieldsCollectionGroup',
-      'timeSeriesStoreSectionFields',
-      'resourcesFieldsGroup'
-    );
-
     return FormFieldsRootGroup.extend({
       i18nPrefix: tag `${'component.i18nPrefix'}.fields`,
       ownerSource: reads('component'),
@@ -294,12 +282,12 @@ export default Component.extend(I18n, {
     }).create({
       component: this,
       fields: [
-        this.lambdaFieldsGroup,
+        this.atmLambdaFieldsGroup,
         this.detailsFieldsGroup,
-        argumentMappingsFieldsCollectionGroup,
-        resultMappingsFieldsCollectionGroup,
-        timeSeriesStoreSectionFields,
-        resourcesFieldsGroup,
+        this.argumentMappingsFieldsCollectionGroup,
+        this.resultMappingsFieldsCollectionGroup,
+        this.timeSeriesStoreSectionFields,
+        this.resourcesFieldsGroup,
       ],
     });
   }),
@@ -307,15 +295,15 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
    */
-  lambdaFieldsGroup: computed(function lambdaFieldsGroup() {
+  atmLambdaFieldsGroup: computed(function atmLambdaFieldsGroup() {
     const component = this;
     return FormFieldsGroup.create({
-      name: 'lambda',
+      name: 'atmLambda',
       classes: 'task-form-section',
       addColonToLabel: false,
       fields: [
         StaticTextField.create({
-          name: 'name',
+          name: 'atmLambdaName',
         }),
         DropdownField.extend({
           options: computed(
@@ -341,19 +329,19 @@ export default Component.extend(I18n, {
           },
         }).create({
           component,
-          name: 'revisionNumber',
+          name: 'atmLambdaRevisionNumber',
         }),
         StaticTextField.extend({
-          value: computed('valuesSource.lambda.revisionNumber', function value() {
+          value: computed('valuesSource.atmLambda.atmLambdaRevisionNumber', function value() {
             const atmLambda = component.atmLambda;
-            const atmLambdaRevisionNumber = this.valuesSource?.lambda?.revisionNumber;
+            const atmLambdaRevisionNumber = this.valuesSource?.atmLambda?.atmLambdaRevisionNumber;
             const atmLambdaRevision =
               atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber];
             return atmLambdaRevision?.summary;
           }),
           isVisible: reads('value'),
         }).create({
-          name: 'summary',
+          name: 'atmLambdaSummary',
         }),
       ],
     });
@@ -871,6 +859,7 @@ export default Component.extend(I18n, {
   },
 
   /**
+   * @param {RevisionNumber} currentRevisionNumber
    * @param {RevisionNumber} newRevisionNumber
    * @returns {void}
    */
@@ -879,8 +868,9 @@ export default Component.extend(I18n, {
     const newRevPlainValues =
       taskToFormData(this.task, this.atmLambda, newRevisionNumber);
 
-    const currentRevision = this.atmLambda?.revisionRegistry[currentRevisionNumber];
-    const newRevision = this.atmLambda?.revisionRegistry[newRevisionNumber];
+    const currentRevision = this.atmLambda?.revisionRegistry?.[currentRevisionNumber];
+    const newRevision = this.atmLambda?.revisionRegistry?.[newRevisionNumber];
+    const propsToUpdateInCurrentRevision = {};
 
     const newArgumentMappings = migrateArgResRevision(
       currentRevision?.argumentSpecs ?? [],
@@ -888,7 +878,7 @@ export default Component.extend(I18n, {
       newRevision?.argumentSpecs ?? [],
       newRevPlainValues.argumentMappings
     );
-    set(currentRevValues, 'argumentMappings', newArgumentMappings);
+    propsToUpdateInCurrentRevision.argumentMappings = newArgumentMappings;
 
     const newResultMappings = migrateArgResRevision(
       currentRevision?.resultSpecs ?? [],
@@ -896,7 +886,7 @@ export default Component.extend(I18n, {
       newRevision?.resultSpecs ?? [],
       newRevPlainValues.resultMappings
     );
-    set(currentRevValues, 'resultMappings', newResultMappings);
+    propsToUpdateInCurrentRevision.resultMappings = newResultMappings;
 
     if (!currentRevValues.resources.overrideResources) {
       set(
@@ -905,6 +895,8 @@ export default Component.extend(I18n, {
         newRevPlainValues.resources.resourcesSections
       );
     }
+
+    setProperties(currentRevValues, propsToUpdateInCurrentRevision);
   },
 
   actions: {
@@ -933,7 +925,7 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
   const atmLambdaRevision =
     atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber] ?? {};
   const {
-    name: lambdaName,
+    name: atmLambdaName,
     argumentSpecs,
     resultSpecs,
     resourceSpec,
@@ -945,12 +937,12 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
     'resourceSpec'
   );
 
-  const lambdaSection = createValuesContainer({
-    name: lambdaName,
-    revisionNumber: atmLambdaRevisionNumber,
+  const atmLambdaSection = createValuesContainer({
+    atmLambdaName: atmLambdaName,
+    atmLambdaRevisionNumber: atmLambdaRevisionNumber,
   });
   const detailsSection = createValuesContainer({
-    name: name || lambdaName,
+    name: name || atmLambdaName,
   });
 
   const formArgumentMappings = {
@@ -1053,7 +1045,7 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
   };
 
   return {
-    lambda: lambdaSection,
+    atmLambda: atmLambdaSection,
     details: detailsSection,
     argumentMappings: createValuesContainer(formArgumentMappings),
     resultMappings: createValuesContainer(formResultMappings),
@@ -1108,7 +1100,7 @@ function generateResourcesFormData(resourceSpec, resourceSpecOverride) {
 
 function formDataToTask(formData, atmLambda, stores) {
   const {
-    lambda,
+    atmLambda: formAtmLambda,
     details,
     argumentMappings,
     resultMappings,
@@ -1116,7 +1108,7 @@ function formDataToTask(formData, atmLambda, stores) {
     resources,
   } = getProperties(
     formData,
-    'lambda',
+    'atmLambda',
     'details',
     'argumentMappings',
     'resultMappings',
@@ -1124,7 +1116,7 @@ function formDataToTask(formData, atmLambda, stores) {
     'resources'
   );
   const atmLambdaId = atmLambda?.entityId;
-  const atmLambdaRevisionNumber = lambda.revisionNumber;
+  const atmLambdaRevisionNumber = formAtmLambda.atmLambdaRevisionNumber;
   const atmLambdaRevision = atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber];
   const {
     argumentSpecs,
@@ -1307,6 +1299,20 @@ function getStoreContentUpdateOptionsType(storeType) {
   return `${storeType}StoreContentUpdateOptions`;
 }
 
+/**
+ * Copies arguments/results values from `currentValues` (compatible with specs
+ * from `fromSpecs`) into `newValues` (compatible with specs `toSpecs`). This operation
+ * takes place when user changes revision of lambda and existing argument/result
+ * setup has to be migrated into next revision's format with the smallest
+ * possible data loss.
+ * @param {Array<AtmLambdaArgumentSpec>|Array<AtmLambdaResultSpec>} fromSpecs
+ * @param {Utils.FormComponent.ValuesContainer} currentValues values of arguments/results
+ * (compatible with `fromSpecs`)
+ * @param {Array<AtmLambdaArgumentSpec>|Array<AtmLambdaResultSpec>} toSpecs
+ * @param {Utils.FormComponent.ValuesContainer} newValues values of arguments/results
+ * (compatible with `toSpecs`)
+ * @returns {Utils.FormComponent.ValuesContainer} reference to `newValues`
+ */
 function migrateArgResRevision(fromSpecs, currentValues, toSpecs, newValues) {
   const namesMapping = findArgResRevisionMigrationMapping(
     fromSpecs,
@@ -1335,32 +1341,42 @@ function migrateArgResRevision(fromSpecs, currentValues, toSpecs, newValues) {
   return newValues;
 }
 
-function findArgResRevisionMigrationMapping(from, to) {
-  const fromAsMap = _.keyBy(from, 'name');
-  const toAsMap = _.keyBy(to, 'name');
+/**
+ * Tries to find the best data migration mapping from `fromSpecs` arguments/results
+ * format to `toSpecs` arguments/results format. Such mapping can be later used
+ * to migrate form values from one revision to another.
+ * @param {Array<AtmLambdaArgumentSpec>|Array<AtmLambdaResultSpec>} fromSpecs
+ * @param {Array<AtmLambdaArgumentSpec>|Array<AtmLambdaResultSpec>} toSpecs
+ * @returns {Object<string, string|null>} keys are names from `toSpecs`, values are
+ * names from `fromSpecs` or null if there is no clear migration to that specific
+ * "to" spec.
+ */
+function findArgResRevisionMigrationMapping(fromSpecs, toSpecs) {
+  const fromSpecsAsMap = _.keyBy(fromSpecs, 'name');
+  const toSpecsAsMap = _.keyBy(toSpecs, 'name');
   const mapping = {};
-  for (const toName in toAsMap) {
-    if (toName in fromAsMap) {
-      mapping[toName] = toName;
-      delete toAsMap[toName];
-      delete fromAsMap[toName];
+  for (const toSpecName in toSpecsAsMap) {
+    if (toSpecName in fromSpecsAsMap) {
+      mapping[toSpecName] = toSpecName;
+      delete toSpecsAsMap[toSpecName];
+      delete fromSpecsAsMap[toSpecName];
     }
   }
 
-  for (const toName in toAsMap) {
-    const toDataSpec = toAsMap[toName].dataSpec;
-    for (const fromName in fromAsMap) {
-      const fromDataSpec = fromAsMap[fromName].dataSpec;
+  for (const toSpecName in toSpecsAsMap) {
+    const toDataSpec = toSpecsAsMap[toSpecName].dataSpec;
+    for (const fromSpecName in fromSpecsAsMap) {
+      const fromDataSpec = fromSpecsAsMap[fromSpecName].dataSpec;
       if (_.isEqual(toDataSpec, fromDataSpec)) {
-        mapping[toName] = fromName;
-        delete toAsMap[toName];
-        delete fromAsMap[fromName];
+        mapping[toSpecName] = fromSpecName;
+        delete toSpecsAsMap[toSpecName];
+        delete fromSpecsAsMap[fromSpecName];
       }
     }
   }
-  for (const toName in toAsMap) {
-    mapping[toName] = null;
-    delete toAsMap[toName];
+  for (const toSpecName in toSpecsAsMap) {
+    mapping[toSpecName] = null;
+    delete toSpecsAsMap[toSpecName];
   }
   return mapping;
 }

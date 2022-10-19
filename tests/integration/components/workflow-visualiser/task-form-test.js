@@ -546,8 +546,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     it('renders "name" field', async function (done) {
       await renderComponent();
 
-      const label = find('.details-field .name-field .control-label');
-      const field = find('.details-field .name-field .form-control');
+      const label = find('.name-field .control-label');
+      const field = find('.name-field .form-control');
       expect(label.textContent.trim()).to.equal('Name:');
       expect(field.type).to.equal('text');
       done();
@@ -556,7 +556,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     it('uses lambda name as default value for name field', async function (done) {
       await renderComponent();
 
-      expect(find('.details-field .name-field .form-control'))
+      expect(find('.name-field .form-control'))
         .to.have.value(exampleAtmLambdaRevision.name);
       done();
     });
@@ -564,18 +564,18 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     it('marks "name" field as invalid when it is empty', async function (done) {
       await renderComponent();
 
-      await fillIn('.details-field .name-field .form-control', '');
+      await fillIn('.name-field .form-control', '');
 
-      expect(find('.details-field .name-field')).to.have.class('has-error');
+      expect(find('.name-field')).to.have.class('has-error');
       done();
     });
 
     it('marks "name" field as valid when it is not empty', async function (done) {
       await renderComponent();
 
-      await fillIn('.details-field .name-field .form-control', 'somename');
+      await fillIn('.name-field .form-control', 'somename');
 
-      expect(find('.details-field .name-field')).to.have.class('has-success');
+      expect(find('.name-field')).to.have.class('has-success');
       done();
     });
 
@@ -598,7 +598,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       });
       changeSpy.resetHistory();
 
-      await fillIn('.details-field .name-field .form-control', 'someName');
+      await fillIn('.name-field .form-control', 'someName');
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
@@ -1455,8 +1455,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       this.set('task', Object.assign({}, exampleTask, { name: 'task2' }));
       await settled();
 
-      expect(find('.details-field .name-field .form-control'))
-        .to.have.value(exampleTask.name);
+      expect(find('.name-field .form-control')).to.have.value(exampleTask.name);
       done();
     });
 
@@ -1634,7 +1633,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       });
       await renderComponent();
 
-      await selectChoose('.lambda-field .revisionNumber-field', '2');
+      await selectChoose('.atmLambdaRevisionNumber-field', '2');
 
       // Fixing missing values after revision change - it is not possible to guess
       // and convert everything.
@@ -1725,8 +1724,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       this.set('task', Object.assign({}, exampleTask, { name: 'task2' }));
       await settled();
 
-      expect(find('.details-field .name-field .field-component'))
-        .to.have.trimmed.text('task2');
+      expect(find('.name-field .field-component')).to.have.trimmed.text('task2');
       done();
     });
   });
@@ -1794,11 +1792,11 @@ function itShowsLambdaInfo() {
   it('shows brief information about used lambda', async function (done) {
     await renderComponent();
 
-    expect(find('.lambda-field .name-field .field-component'))
+    expect(find('.atmLambdaName-field .field-component'))
       .to.have.trimmed.text(exampleAtmLambdaRevision.name);
-    expect(find('.lambda-field .revisionNumber-field .field-component'))
+    expect(find('.atmLambdaRevisionNumber-field .field-component'))
       .to.have.trimmed.text('1');
-    expect(find('.lambda-field .summary-field .field-component'))
+    expect(find('.atmLambdaSummary-field .field-component'))
       .to.have.trimmed.text(exampleAtmLambdaRevision.summary);
     done();
   });
@@ -1914,11 +1912,9 @@ function itFillsFieldsWithDataOfPassedTask() {
     await renderComponent();
 
     if (inEditMode) {
-      expect(find('.details-field .name-field .form-control'))
-        .to.have.value(exampleTask.name);
+      expect(find('.name-field .form-control')).to.have.value(exampleTask.name);
     } else {
-      expect(find('.details-field .name-field .field-component'))
-        .to.have.trimmed.text(exampleTask.name);
+      expect(find('.name-field .field-component')).to.have.trimmed.text(exampleTask.name);
     }
     const args = findAll('.argumentMapping-field');
     expect(args).to.have.length(exampleAtmLambdaRevision.argumentSpecs.length);
