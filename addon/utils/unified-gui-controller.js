@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import config from 'ember-get-config';
+
 const nonIframeRedirectFlag = 'oneprovider-non-iframe-redirect';
 
 export default Object.freeze({
@@ -17,7 +19,9 @@ export default Object.freeze({
    * @returns {boolean}
    */
   shouldRedirectToOnezone() {
-    return !this.getNonIframeRedirectFlag() && !this.isInIframe();
+    return this.isNonDummyEnvironment() &&
+      !this.getNonIframeRedirectFlag() &&
+      !this.isInIframe();
   },
 
   /**
@@ -48,9 +52,13 @@ export default Object.freeze({
     return window.parent !== window;
   },
 
+  isNonDummyEnvironment() {
+    return ['production', 'development-backend'].includes(config.environment);
+  },
+
   /**
    * True if last load of the Oneprovider GUI in current browser tab caused redirect
-   * to other location becuase it attempted to load not in an iframe. 
+   * to other location becuase it attempted to load not in an iframe.
    * @returns {boolean}
    */
   getNonIframeRedirectFlag() {
