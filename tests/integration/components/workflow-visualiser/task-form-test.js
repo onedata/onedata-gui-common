@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
+import OneDrodopdownHelper from '../../../helpers/one-dropdown';
 import sinon from 'sinon';
 import _ from 'lodash';
 import { classify } from '@ember/string';
@@ -492,6 +492,12 @@ const exampleTask = {
   timeSeriesStoreConfig: null,
 };
 
+const atmLambdaRevisionNumberDropdown = new OneDrodopdownHelper('.atmLambdaRevisionNumber-field');
+const valueBuilderTypeDropdown = new OneDrodopdownHelper('.valueBuilderType-field');
+const valueBuilderStoreDropdown = new OneDrodopdownHelper('.valueBuilderStore-field');
+const targetStoreDropdown = new OneDrodopdownHelper('.targetStore-field');
+const dispatchFunctionDropdown = new OneDrodopdownHelper('.dispatchFunction-field');
+
 describe('Integration | Component | workflow visualiser/task form', function () {
   setupRenderingTest();
 
@@ -650,17 +656,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           }]);
 
           await renderComponent();
-          await clickTrigger('.argumentMapping-field .valueBuilderType-field');
 
-          expect(
-            find('.valueBuilderType-field .dropdown-field-trigger').textContent.trim()
-          ).to.equal(valueBuilderTypeLabels[valueBuilderTypes[0]]);
-          const options = document.querySelectorAll('.ember-power-select-option');
-          expect(options).to.have.length(valueBuilderTypes.length);
-          valueBuilderTypes.forEach((type, idx) =>
-            expect(options[idx].textContent.trim())
-            .to.equal(valueBuilderTypeLabels[type])
-          );
+          expect(valueBuilderTypeDropdown.getSelectedOptionText())
+            .to.equal(valueBuilderTypeLabels[valueBuilderTypes[0]]);
+          expect(await valueBuilderTypeDropdown.getOptionsText())
+            .to.deep.equal(valueBuilderTypes.map((type) => valueBuilderTypeLabels[type]));
           done();
         });
 
@@ -673,18 +673,12 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           }]);
 
           await renderComponent();
-          await clickTrigger('.argumentMapping-field .valueBuilderType-field');
-
-          expect(
-            find('.valueBuilderType-field .dropdown-field-trigger').textContent.trim()
-          ).to.equal('Leave unassigned');
-          const options = document.querySelectorAll('.ember-power-select-option');
-          expect(options).to.have.length(valueBuilderTypes.length + 1);
-          expect(options[0].textContent.trim()).to.equal('Leave unassigned');
-          valueBuilderTypes.forEach((type, idx) =>
-            expect(options[idx + 1].textContent.trim())
-            .to.equal(valueBuilderTypeLabels[type])
-          );
+          expect(valueBuilderTypeDropdown.getSelectedOptionText())
+            .to.equal('Leave unassigned');
+          expect(await valueBuilderTypeDropdown.getOptionsText()).to.deep.equal([
+            'Leave unassigned',
+            ...valueBuilderTypes.map((type) => valueBuilderTypeLabels[type]),
+          ]);
           done();
         });
 
@@ -697,10 +691,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           }]);
 
           await renderComponent();
-          await selectChoose(
-            '.argumentMapping-field .valueBuilderType-field',
-            'Leave unassigned'
-          );
+          await valueBuilderTypeDropdown.selectOptionByText('Leave unassigned');
 
           expect(this.get('changeSpy')).to.be.calledWith({
             data: {
@@ -726,10 +717,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             }]);
 
             await renderComponent();
-            await selectChoose(
-              '.argumentMapping-field .valueBuilderType-field',
-              'Iterated item'
-            );
+            await valueBuilderTypeDropdown.selectOptionByText('Iterated item');
 
             expect(this.get('changeSpy')).to.be.calledWith({
               data: {
@@ -772,24 +760,15 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             const sortedPossibleStores = possibleStores.sortBy('name');
 
             await renderComponent();
-            await selectChoose(
-              '.argumentMapping-field .valueBuilderType-field',
-              'Store content'
-            );
-            await clickTrigger('.argumentMapping-field .valueBuilderStore-field');
-
-            const options = document.querySelectorAll('.ember-power-select-option');
-            expect(options).to.have.length(sortedPossibleStores.length + 1);
-            expect(options[0].textContent.trim()).to.equal('Create store...');
-            sortedPossibleStores.forEach(({ name }, idx) =>
-              expect(options[idx + 1].textContent.trim()).to.equal(name)
-            );
+            await valueBuilderTypeDropdown.selectOptionByText('Store content');
+            expect(await valueBuilderStoreDropdown.getOptionsText())
+              .to.deep.equal([
+                'Create store...',
+                ...sortedPossibleStores.map(({ name }) => name),
+              ]);
 
             const storeToSelect = sortedPossibleStores[sortedPossibleStores.length - 1];
-            await selectChoose(
-              '.argumentMapping-field .valueBuilderStore-field',
-              storeToSelect.name
-            );
+            await valueBuilderStoreDropdown.selectOptionByText(storeToSelect.name);
 
             expect(this.get('changeSpy')).to.be.calledWith({
               data: {
@@ -830,18 +809,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             const allowedStoreTypes = ['singleValue'];
 
             await renderComponent();
-            await selectChoose(
-              '.argumentMapping-field .valueBuilderType-field',
-              'Store content'
-            );
-            await selectChoose(
-              '.argumentMapping-field .valueBuilderStore-field',
-              'Create store...'
-            );
+            await valueBuilderTypeDropdown.selectOptionByText('Store content');
+            await valueBuilderStoreDropdown.selectOptionByText('Create store...');
 
-            expect(
-              find('.valueBuilderStore-field .dropdown-field-trigger').textContent.trim()
-            ).to.equal('new store');
+            expect(valueBuilderStoreDropdown.getSelectedOptionText())
+              .to.equal('new store');
             const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
             expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
             const lastCreateStoreCallArg = createCreateStoreActionStub.lastCall.args[0];
@@ -864,10 +836,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             }]);
 
             await renderComponent();
-            await selectChoose(
-              '.argumentMapping-field .valueBuilderType-field',
-              'Constant value'
-            );
+            await valueBuilderTypeDropdown.selectOptionByText('Constant value');
             await fillIn('.valueBuilderConstValue-field .form-control', '123');
 
             expect(this.get('changeSpy')).to.be.calledWith({
@@ -954,10 +923,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             }]);
 
             await renderComponent();
-            await selectChoose(
-              '.argumentMapping-field .valueBuilderType-field',
-              'OnedataFS credentials'
-            );
+            await valueBuilderTypeDropdown.selectOptionByText('OnedataFS credentials');
 
             expect(this.get('changeSpy')).to.be.calledWith({
               data: {
@@ -1032,32 +998,19 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           });
 
           await renderComponent();
-          await clickTrigger('.resultMapping-field .targetStore-field');
-
-          expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
-            .to.equal('Leave unassigned');
-          const options = document.querySelectorAll('.ember-power-select-option');
-          let extraOptionsCount = 2;
-          if (allowSystemAuditLogStores) {
-            extraOptionsCount += 2;
-          }
-          if (allowTaskTimeSeriesStore) {
-            extraOptionsCount += 1;
-          }
-          expect(options)
-            .to.have.length(sortedPossibleStores.length + extraOptionsCount);
-          expect(options[0].textContent.trim()).to.equal('Create store...');
-          expect(options[1].textContent.trim()).to.equal('Leave unassigned');
-          if (allowSystemAuditLogStores) {
-            expect(options[2].textContent.trim()).to.equal(taskAuditLogStore.name);
-            expect(options[3].textContent.trim()).to.equal(workflowAuditLogStore.name);
-          } else if (allowTaskTimeSeriesStore) {
-            expect(options[2].textContent.trim()).to.equal(taskTimeSeriesStore.name);
-          }
-          sortedPossibleStores.forEach((store, idx) =>
-            expect(options[idx + extraOptionsCount].textContent.trim())
-            .to.equal(store.name)
-          );
+          expect(targetStoreDropdown.getSelectedOptionText()).to.equal('Leave unassigned');
+          const targetStoreExpectedOptions = [
+            'Create store...',
+            'Leave unassigned',
+            ...(allowSystemAuditLogStores ? [
+              taskAuditLogStore.name,
+              workflowAuditLogStore.name,
+            ] : []),
+            ...(allowTaskTimeSeriesStore ? [taskTimeSeriesStore.name] : []),
+            ...sortedPossibleStores.map(({ name }) => name),
+          ];
+          expect(await targetStoreDropdown.getOptionsText())
+            .to.deep.equal(targetStoreExpectedOptions);
           done();
         });
 
@@ -1078,7 +1031,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           });
 
           await renderComponent();
-          await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
+          await targetStoreDropdown.selectOptionByText('Create store...');
 
           expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
             .to.equal('new store');
@@ -1102,10 +1055,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         }]);
 
         await renderComponent();
-        await selectChoose(
-          '.resultMapping-field .targetStore-field',
-          'Leave unassigned'
-        );
+        await targetStoreDropdown.selectOptionByText('Leave unassigned');
 
         expect(this.get('changeSpy')).to.be.calledWith({
           data: {
@@ -1128,10 +1078,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       }]);
 
       await renderComponent();
-      await selectChoose(
-        '.resultMapping-field .targetStore-field',
-        taskAuditLogStore.name
-      );
+      await targetStoreDropdown.selectOptionByText(taskAuditLogStore.name);
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
@@ -1161,10 +1108,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       }]);
 
       await renderComponent();
-      await selectChoose(
-        '.resultMapping-field .targetStore-field',
-        workflowAuditLogStore.name
-      );
+      await targetStoreDropdown.selectOptionByText(workflowAuditLogStore.name);
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
@@ -1257,8 +1201,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         }]);
 
         await renderComponent();
-        await selectChoose('.resultMapping-field .targetStore-field', 'listIntegerStore');
-        await selectChoose('.resultMapping-field .targetStore-field', 'singleValueIntegerStore');
+        await targetStoreDropdown.selectOptionByText('listIntegerStore');
+        await targetStoreDropdown.selectOptionByText('singleValueIntegerStore');
 
         expect(find('.dispatchFunction-field')).to.not.exist;
         done();
@@ -1633,17 +1577,15 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       });
       await renderComponent();
 
-      await selectChoose('.atmLambdaRevisionNumber-field', '2');
+      await atmLambdaRevisionNumberDropdown.selectOptionByText('2');
 
       // Fixing missing values after revision change - it is not possible to guess
       // and convert everything.
       const missingValueBuilderStoreDropdown =
         find('.collection-item:nth-child(3) .valueBuilderStore-field');
       expect(missingValueBuilderStoreDropdown).to.have.class('has-error');
-      await selectChoose(
-        '.collection-item:nth-child(3) .valueBuilderStore-field',
-        'singleValueStringStore'
-      );
+      await new OneDrodopdownHelper(missingValueBuilderStoreDropdown)
+        .selectOptionByText('singleValueStringStore');
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
@@ -1815,16 +1757,12 @@ function itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
       }]);
 
       await renderComponent();
-      await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
-      await clickTrigger('.resultMapping-field .dispatchFunction-field');
+      await targetStoreDropdown.selectOptionByText(targetStore.name);
 
-      expect(find('.dispatchFunction-field .dropdown-field-trigger').textContent.trim())
+      expect(dispatchFunctionDropdown.getSelectedOptionText())
         .to.equal(dispatchFunctionLabels[dispatchFunctions[0]]);
-      const options = document.querySelectorAll('.ember-power-select-option');
-      expect(options).to.have.length(dispatchFunctions.length);
-      dispatchFunctions.forEach((dispatchFunction, idx) =>
-        expect(options[idx].textContent.trim())
-        .to.equal(dispatchFunctionLabels[dispatchFunction])
+      expect(await dispatchFunctionDropdown.getOptionsText()).to.deep.equal(
+        dispatchFunctions.map((func) => dispatchFunctionLabels[func])
       );
       done();
     });
@@ -1843,9 +1781,8 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
       }]);
 
       await renderComponent();
-      await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
-      await selectChoose(
-        '.resultMapping-field .dispatchFunction-field',
+      await targetStoreDropdown.selectOptionByText(targetStore.name);
+      await dispatchFunctionDropdown.selectOptionByText(
         dispatchFunctionLabels[dispatchFunction]
       );
 
@@ -1883,7 +1820,7 @@ function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
       }]);
 
       await renderComponent();
-      await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
+      await targetStoreDropdown.selectOptionByText(targetStore.name);
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
@@ -1931,13 +1868,16 @@ function itFillsFieldsWithDataOfPassedTask() {
       // TODO: VFS-7816 uncomment or remove future code
       // 'Store credentials',
       'OnedataFS credentials',
-    ].forEach((builderLabel, idx) =>
-      expect(
-        argumentValueBuilderTypes[idx]
-        .querySelector('.field-component')
-        .textContent.trim()
-      ).to.equal(builderLabel)
-    );
+    ].forEach((builderLabel, idx) => {
+      const argumentValueBuilderType = argumentValueBuilderTypes[idx];
+      if (inEditMode) {
+        expect(new OneDrodopdownHelper(argumentValueBuilderType).getSelectedOptionText())
+          .to.equal(builderLabel);
+      } else {
+        expect(argumentValueBuilderType.querySelector('.field-component'))
+          .to.have.trimmed.text(builderLabel);
+      }
+    });
     // TODO: VFS-7816 uncomment or remove future code
     // expect(args[2].querySelector('.valueBuilderStore-field .field-component').textContent.trim())
     //   .to.equal('singleValueObjectStore');
@@ -2025,6 +1965,7 @@ function itFillsFieldsWithDataAboutResourceOverride() {
 function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuilder() {
   it('fills fields with data about arguments of all possible types, that uses "Iterated item" value builder',
     async function (done) {
+      const inEditMode = this.get('mode') !== 'view';
       const possibleDataSpecs = dataSpecs
         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('iteratedItem'))
         .mapBy('dataSpec');
@@ -2047,10 +1988,15 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuild
       possibleDataSpecs.forEach((dataSpec, idx) => {
         expect(args[idx].querySelector('.control-label').textContent.trim())
           .to.equal(`arg${idx}:`);
-        expect(
-          args[idx].querySelector('.valueBuilderType-field .field-component')
-          .textContent.trim()
-        ).to.equal('Iterated item');
+        if (inEditMode) {
+          expect(
+            new OneDrodopdownHelper(args[idx].querySelector('.valueBuilderType-field'))
+            .getSelectedOptionText()
+          ).to.equal('Iterated item');
+        } else {
+          expect(args[idx].querySelector('.valueBuilderType-field .field-component'))
+            .to.have.trimmed.text('Iterated item');
+        }
       });
       done();
     });
@@ -2059,6 +2005,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuild
 function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuilder() {
   it('fills fields with data about arguments of all possible types, that uses "Constant value" value builder',
     async function (done) {
+      const inEditMode = this.get('mode') !== 'view';
       const possibleDataSpecs = dataSpecs
         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('const'))
         .mapBy('dataSpec');
@@ -2082,10 +2029,15 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
       possibleDataSpecs.forEach((dataSpec, idx) => {
         expect(args[idx].querySelector('.control-label').textContent.trim())
           .to.equal(`arg${idx}:`);
-        expect(
-          args[idx].querySelector('.valueBuilderType-field .field-component')
-          .textContent.trim()
-        ).to.equal('Constant value');
+        if (inEditMode) {
+          expect(
+            new OneDrodopdownHelper(args[idx].querySelector('.valueBuilderType-field'))
+            .getSelectedOptionText()
+          ).to.equal('Constant value');
+        } else {
+          expect(args[idx].querySelector('.valueBuilderType-field .field-component'))
+            .to.have.trimmed.text('Constant value');
+        }
         expect(
           args[idx].querySelector('.valueBuilderConstValue-field .form-control').value
         ).to.equal(`"${idx}"`);
@@ -2197,6 +2149,7 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
     .forEach(({ storeDesc, targetStore, dispatchFunctions = [undefined] }) => {
       it(`fills fields with data about results that uses "${storeDesc}" stores and all possible dispatch methods`,
         async function (done) {
+          const inEditMode = this.get('mode') !== 'view';
           this.set(
             'atmLambda.revisionRegistry.1.resultSpecs',
             dispatchFunctions.map((dispatchFunction, idx) => ({
@@ -2224,15 +2177,25 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
           dispatchFunctions.forEach((dispatchFunction, idx) => {
             expect(results[idx].querySelector('.control-label').textContent.trim())
               .to.equal(`res${idx}:`);
-            expect(
-              results[idx].querySelector('.targetStore-field .field-component')
-              .textContent.trim()
-            ).to.equal(targetStore.name);
-            if (dispatchFunction) {
+            if (inEditMode) {
               expect(
-                results[idx].querySelector('.dispatchFunction-field .field-component')
-                .textContent.trim()
-              ).to.equal(dispatchFunctionLabels[dispatchFunction]);
+                new OneDrodopdownHelper(results[idx].querySelector('.targetStore-field'))
+                .getSelectedOptionText()
+              ).to.equal(targetStore.name);
+            } else {
+              expect(results[idx].querySelector('.targetStore-field .field-component'))
+                .to.have.trimmed.text(targetStore.name);
+            }
+            if (dispatchFunction) {
+              if (inEditMode) {
+                expect(
+                  new OneDrodopdownHelper(results[idx].querySelector('.dispatchFunction-field'))
+                  .getSelectedOptionText()
+                ).to.equal(dispatchFunctionLabels[dispatchFunction]);
+              } else {
+                expect(results[idx].querySelector('.dispatchFunction-field .field-component'))
+                  .to.have.trimmed.text(dispatchFunctionLabels[dispatchFunction]);
+              }
             } else {
               expect(results[idx].querySelector('.dispatchFunction-field'))
                 .to.not.exist;
@@ -2246,6 +2209,7 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
 function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
   it('fills fields with data about results that are left unassigned',
     async function (done) {
+      const inEditMode = this.get('mode') !== 'view';
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
@@ -2257,11 +2221,18 @@ function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
 
       const results = findAll('.resultMapping-field');
       expect(results).to.have.length(1);
+      if (inEditMode) {
+        expect(
+          new OneDrodopdownHelper(results[0].querySelector('.targetStore-field'))
+          .getSelectedOptionText()
+        ).to.equal('Leave unassigned');
+      } else {
+        expect(
+          results[0].querySelector('.targetStore-field .field-component')
+          .textContent.trim()
+        ).to.equal('Leave unassigned');
+      }
       expect(results[0].querySelector('.control-label').textContent.trim()).to.equal('res1:');
-      expect(
-        results[0].querySelector('.targetStore-field .field-component')
-        .textContent.trim()
-      ).to.equal('Leave unassigned');
       expect(results[0].querySelector('.dispatchFunction-field')).to.not.exist;
       done();
     });
