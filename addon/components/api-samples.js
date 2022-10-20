@@ -10,7 +10,7 @@ import Component from '@ember/component';
 import { computed, get } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { reads } from '@ember/object/computed';
-import { conditional, array, tag } from 'ember-awesome-macros';
+import { conditional, array, tag, bool } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 import layout from '../templates/components/api-samples';
 
@@ -57,7 +57,53 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
+  type: reads('effSelectedApiCommand.type'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
   description: reads('effSelectedApiCommand.description'),
+
+  /**
+   * @type {ComputedProperty<Array<String>>}
+   */
+  optionalParameters: reads('effSelectedApiCommand.optionalParameters'),
+
+  /**
+   * @type {ComputedProperty<Number>}
+   */
+  hasOptionalParameters: bool('optionalParameters.length'),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  hasPlaceholders: computed(
+    'effSelectedApiCommand.placeholders',
+    function hasPlaceholders() {
+      return this.effSelectedApiCommand.placeholders &&
+        Object.keys(this.effSelectedApiCommand.placeholders).length !== 0;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Object|null>}
+   */
+  placeholders: computed(
+    'effSelectedApiCommand',
+    function placeholders() {
+      return this.effSelectedApiCommand.placeholders || null;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  requiresAuthorization: reads('effSelectedApiCommand.requiresAuthorization'),
+
+  /**
+   * @type {String} URL to create access token view
+   */
+  accessTokenUrl: undefined,
 
   /**
    * @type {ComputedProperty<String>}
@@ -78,6 +124,15 @@ export default Component.extend(I18n, {
       }
     }
   ),
+
+  apiCommandTipIntro: computed('previewMode', 'type', function apiCommandTipIntro() {
+    const {
+      previewMode,
+      type,
+    } = this.getProperties('previewMode', 'type');
+    const path = 'apiCommandTipIntro.' + type + (previewMode ? 'Public' : 'Private');
+    return this.t(path, {}, { defaultValue: '' });
+  }),
 
   actions: {
     selectApiCommand(apiCommand) {
