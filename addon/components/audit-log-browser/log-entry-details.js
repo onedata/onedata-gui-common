@@ -16,6 +16,14 @@ import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/audit-log-browser/log-entry-details';
+import { or, raw } from 'ember-awesome-macros';
+
+/**
+ * @typedef {Object} DefaultLogEntryDetailsConfiguration
+ * @property {boolean} isTimestampRoundedToSeconds When false, renders the timestamp
+ *   including milliseconds. When true, rounds the timestamp to seconds and hides
+ *   milliseconds during rendering.
+ */
 
 export default Component.extend(I18n, {
   layout,
@@ -38,12 +46,21 @@ export default Component.extend(I18n, {
   logEntry: undefined,
 
   /**
+   * Extra data provided to configure default log-entry-details view.
+   * @virtual
+   * @type {DefaultLogEntryDetailsConfiguration}
+   */
+  logEntryDetailsConfiguration: undefined,
+
+  /**
    * When false, renders the timestamp including milliseconds. When true,
    * rounds the timestamp to seconds and hides milliseconds during rendering.
-   * @virtual optional
-   * @type {boolean}
+   * @type {ComputedProperty<boolean>}
    */
-  isTimestampRoundedToSeconds: false,
+  isTimestampRoundedToSeconds: or(
+    'logEntryDetailsConfiguration.isTimestampRoundedToSeconds',
+    raw(false),
+  ),
 
   /**
    * @type {ComputedProperty<string>}
