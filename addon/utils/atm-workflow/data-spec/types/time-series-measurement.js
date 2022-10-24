@@ -22,6 +22,7 @@ import { doesAtmDataSpecMatchFilters } from '../filters';
 
 /**
  * @typedef {Object} AtmTimeSeriesMeasurementValueConstraintsConditions
+ * TODO: VFS-10007 implement understanding these conditions
  * @property {Array<AtmTimeSeriesMeasurementSpec>|null} allowedSpecs for subtype
  * @property {Array<AtmTimeSeriesMeasurementSpec>|null} requiredSpecs for supertype
  */
@@ -35,6 +36,7 @@ export const atmDataSpecTypeDefinition = {
     return true;
   },
   getValueConstraintsConditions() {
+    // TODO: VFS-10007 implement generating these conditions
     return null;
   },
   isMatchingFilters(atmDataSpec, filters, context) {
