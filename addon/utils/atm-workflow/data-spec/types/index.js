@@ -14,7 +14,6 @@ import { atmDataSpecTypeDefinition as datasetTypeDefinition } from './dataset';
 import { atmDataSpecTypeDefinition as rangeTypeDefinition } from './range';
 import { atmDataSpecTypeDefinition as arrayTypeDefinition } from './array';
 import { atmDataSpecTypeDefinition as timeSeriesMeasurementTypeDefinition } from './time-series-measurement';
-import { atmDataSpecTypeDefinition as onedatafsCredentialsTypeDefinition } from './onedatafs-credentials';
 
 export { getMatchingAtmDataSpecTypes } from '../filters';
 
@@ -24,7 +23,6 @@ export { getMatchingAtmDataSpecTypes } from '../filters';
  *   AtmFileDataSpec |
  *   AtmIntegerDataSpec |
  *   AtmObjectDataSpec |
- *   AtmOnedatafsCredentialsDataSpec |
  *   AtmRangeDataSpec |
  *   AtmStringDataSpec |
  *   AtmTimeSeriesMeasurementDataSpec
@@ -43,7 +41,7 @@ export { getMatchingAtmDataSpecTypes } from '../filters';
  */
 
 /**
- * @typedef {'integer'|'string'|'object'|'file'|'dataset'|'range'|'array'|'timeSeriesMeasurement'|'onedatafsCredentials'} AtmDataSpecType
+ * @typedef {'integer'|'string'|'object'|'file'|'dataset'|'range'|'array'|'timeSeriesMeasurement'} AtmDataSpecType
  */
 
 /**
@@ -58,7 +56,6 @@ export const AtmDataSpecType = Object.freeze({
   Range: 'range',
   Array: 'array',
   TimeSeriesMeasurement: 'timeSeriesMeasurement',
-  OnedatafsCredentials: 'onedatafsCredentials',
 });
 
 /**
@@ -73,7 +70,6 @@ export const atmDataSpecTypesArray = Object.freeze([
   AtmDataSpecType.Range,
   AtmDataSpecType.Array,
   AtmDataSpecType.TimeSeriesMeasurement,
-  AtmDataSpecType.OnedatafsCredentials,
 ]);
 
 /**
@@ -101,7 +97,6 @@ const atmDataSpecTypeDefinitions = Object.freeze({
   range: rangeTypeDefinition,
   array: arrayTypeDefinition,
   timeSeriesMeasurement: timeSeriesMeasurementTypeDefinition,
-  onedatafsCredentials: onedatafsCredentialsTypeDefinition,
 });
 
 /**

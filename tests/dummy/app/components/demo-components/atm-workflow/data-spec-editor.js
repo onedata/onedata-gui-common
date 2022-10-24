@@ -43,12 +43,6 @@ const RootGroup = FormFieldsRootGroup.extend({
     return [
       DataSpecEditor.create({
         name: 'dataSpec',
-        dataSpecFilters: [{
-          filterType: 'forbiddenType',
-          types: [{
-            type: 'onedatafsCredentials',
-          }],
-        }],
       }),
     ];
   }),

@@ -99,6 +99,17 @@ describe('Integration | Component | form component/field renderer', function () 
     }
   );
 
+  it('does not render error message when field is not valid, is modified and has falsy withValidationMessage',
+    async function () {
+      this.set('textField.withValidationMessage', false);
+      this.get('textField').markAsModified();
+
+      await render(hbs `{{form-component/field-renderer field=textField}}`);
+
+      expect(find('.field-message')).to.not.exist;
+    }
+  );
+
   it(
     'does not render validation icon when field is not modified',
     async function () {

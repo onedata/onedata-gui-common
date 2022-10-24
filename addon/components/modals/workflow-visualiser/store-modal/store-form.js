@@ -624,12 +624,7 @@ export default Component.extend(I18n, {
       'allowedStoreWriteDataSpec',
     );
 
-    const filters = [{
-      filterType: 'forbiddenType',
-      types: [{
-        type: 'onedatafsCredentials',
-      }],
-    }];
+    const filters = [];
 
     if (allowedStoreReadDataSpec) {
       filters.push({

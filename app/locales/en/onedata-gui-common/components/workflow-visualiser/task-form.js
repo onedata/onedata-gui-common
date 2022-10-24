@@ -34,9 +34,6 @@ export default {
             singleValueStoreContent: {
               label: 'Store content',
             },
-            onedatafsCredentials: {
-              label: 'OnedataFS credentials',
-            },
           },
         },
         valueBuilderConstValue: {

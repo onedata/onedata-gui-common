@@ -46,6 +46,7 @@ export default Action.extend({
   tip: computed(
     'isRunPreparedInAdvance',
     'isWorkflowEnded',
+    'workflowStatus',
     'disabled',
     function tip() {
       const {
@@ -58,17 +59,23 @@ export default Action.extend({
         'disabled'
       );
 
+      if (!disabled) {
+        return null;
+      }
+
       let translationName;
       if (!isWorkflowEnded) {
         translationName = 'workflowNotEnded';
+      } else if (this.workflowStatus === 'crashed') {
+        translationName = 'workflowCrashed';
       } else if (isRunPreparedInAdvance) {
         translationName = 'preparedInAdvance';
-      } else if (disabled) {
+      } else {
         // Lane run cannot be rerun due to some backend constraints we don't know
         translationName = 'unknownReason';
       }
 
-      return translationName ? this.t(`disabledTip.${translationName}`) : null;
+      return this.t(`disabledTip.${translationName}`);
     }
   ),
 
@@ -76,6 +83,11 @@ export default Action.extend({
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
    */
   workflow: reads('context.workflow'),
+
+  /**
+   * @type {ComputedProperty<AtmWorkflowExecutionStatus>}
+   */
+  workflowStatus: reads('workflow.status'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}
@@ -108,8 +120,8 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  isWorkflowEnded: computed('workflow.status', function isWorkflowEnded() {
-    return workflowEndedStatuses.includes(this.get('workflow.status'));
+  isWorkflowEnded: computed('workflowStatus', function isWorkflowEnded() {
+    return workflowEndedStatuses.includes(this.workflowStatus);
   }),
 
   /**

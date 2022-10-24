@@ -1,15 +1,20 @@
 <div class="workflow-visualiser">
   {{#each (array
+    "pending"
+    "resuming"
     "scheduled"
     "preparing"
     "enqueued"
     "active"
-    "aborting"
+    "stopping"
     "interrupted"
+    "paused"
     "cancelled"
     "skipped"
     "finished"
     "failed"
+    "crashed"
+    "unscheduled"
     "unknown"
     "randomValue"
   ) as |status|}}

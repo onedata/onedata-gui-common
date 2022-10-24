@@ -9,7 +9,7 @@
 
 import Service from '@ember/service';
 import pupa from 'pupa';
-import shellEscape from 'shell-escape';
+import { shellEscape, ShellSafeString } from 'onedata-gui-common/utils/shell-escape';
 
 export default Service.extend({
   /**
@@ -21,7 +21,13 @@ export default Service.extend({
     if (typeof apiTemplate === 'string') {
       return pupa(apiTemplate, templateParams);
     } else if (Array.isArray(apiTemplate)) {
-      return shellEscape(apiTemplate.map(arg => pupa(arg, templateParams)));
+      return shellEscape(apiTemplate.map(str => {
+        if (str instanceof ShellSafeString) {
+          return new ShellSafeString(pupa(str.string, templateParams));
+        } else {
+          return pupa(str, templateParams);
+        }
+      }));
     } else {
       return '';
     }

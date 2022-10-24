@@ -11,6 +11,9 @@ const statuses = [{
   name: 'pending',
   translation: 'pending',
 }, {
+  name: 'resuming',
+  translation: 'resuming',
+}, {
   name: 'scheduled',
   translation: 'scheduled',
 }, {
@@ -23,8 +26,14 @@ const statuses = [{
   name: 'active',
   translation: 'active',
 }, {
-  name: 'aborting',
-  translation: 'aborting',
+  name: 'stopping',
+  translation: 'stopping',
+}, {
+  name: 'interrupted',
+  translation: 'interrupted',
+}, {
+  name: 'paused',
+  translation: 'paused',
 }, {
   name: 'cancelled',
   translation: 'cancelled',
@@ -37,6 +46,12 @@ const statuses = [{
 }, {
   name: 'failed',
   translation: 'failed',
+}, {
+  name: 'crashed',
+  translation: 'crashed',
+}, {
+  name: 'unscheduled',
+  translation: 'unscheduled',
 }, {
   name: 'unknown',
   translation: 'unknown',

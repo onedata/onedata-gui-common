@@ -41,9 +41,21 @@
 );
 
 @include animation-bg-color-change(
+  pulse-bg-light-orange,
+  inherit,
+  lighten($color-one-orange, 30%)
+);
+
+@include animation-bg-color-change(
   pulse-bg-one-main,
   $color-one-main,
   darken($color-one-main, 30%)
+);
+
+@include animation-bg-color-change(
+  pulse-bg-variable,
+  inherit,
+  var(--pulse-bg-color)
 );
 
 @include animation-text-color-change(
@@ -55,6 +67,12 @@
 @include animation-fg-color-change(
   pulse-red-transparent,
   $color-one-red,
+  transparent
+);
+
+@include animation-fg-color-change(
+  pulse-orange-transparent,
+  $color-one-orange,
   transparent
 );
 

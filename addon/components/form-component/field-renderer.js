@@ -104,6 +104,11 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<boolean>}
    */
+  withValidationMessage: reads('field.withValidationMessage'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
   areValidationClassesEnabled: reads('field.areValidationClassesEnabled'),
 
   /**
@@ -149,6 +154,7 @@ export default Component.extend({
   canShowValidationMessage: and(
     'isModified',
     'isEffectivelyEnabled',
+    'withValidationMessage',
     'error.message',
     equal('mode', raw('edit'))
   ),
