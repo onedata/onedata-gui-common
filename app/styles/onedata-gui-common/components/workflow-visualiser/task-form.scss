@@ -1,29 +1,26 @@
 .workflow-visualiser-task-form {
-  $section-border: 1px solid $main-border-color;
-
-  .atm-lambda-info {
-    margin-bottom: $padding-large-vertical;
-    padding-bottom: $padding-large-vertical;
-    border-bottom: $section-border;
-  }
-
   .control-label {
     text-align: left;
   }
 
   .task-form-section {
-    border-top: $section-border;
     margin-bottom: 0;
     min-width: 0;
 
     > .control-label {
       flex-basis: 100%;
-      padding-top: $padding-large-vertical;
+    }
+
+    &:not(:first-child) {
+      border-top: 1px solid $main-border-color;
+
+      > .control-label {
+        padding-top: $padding-large-vertical;
+      }
     }
   }
 
-  .task-form-section > .control-label,
-  .section-header {
+  .task-form-section > .control-label {
     @include font-semibold();
     text-transform: uppercase;
     margin-bottom: 0.7em;

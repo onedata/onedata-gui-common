@@ -103,6 +103,23 @@ const FormElement = FormFieldsCollectionGroup.extend({
             }));
           }),
           defaultValue: reads('options.firstObject.value'),
+          optionsObserver: observer('options.[]', function optionsObserver() {
+            scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
+          }),
+          init() {
+            this._super(...arguments);
+            this.optionsObserver();
+          },
+          adjustValueForNewOptions() {
+            safeExec(this, () => {
+              if (
+                !this.value ||
+                !this.options.find(({ value }) => value === this.value)
+              ) {
+                this.valueChanged(this.options[0]?.value);
+              }
+            });
+          },
         }).create({
           name: 'measurementNameMatcher',
         }),
@@ -119,14 +136,17 @@ const FormElement = FormFieldsCollectionGroup.extend({
           optionsObserver: observer('options.[]', function optionsObserver() {
             scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
           }),
+          init() {
+            this._super(...arguments);
+            this.optionsObserver();
+          },
           adjustValueForNewOptions() {
             safeExec(this, () => {
-              const {
-                options,
-                value,
-              } = this.getProperties('options', 'value');
-              if (!value || !options.findBy('value', value)) {
-                this.valueChanged(get(options[0] || {}, 'value'));
+              if (
+                !this.value ||
+                !this.options.find(({ value }) => value === this.value)
+              ) {
+                this.valueChanged(this.options[0]?.value);
               }
             });
           },
@@ -146,8 +166,8 @@ const FormElement = FormFieldsCollectionGroup.extend({
             'parent.value.{measurementNameMatcher,timeSeriesNameGenerator}',
             function isVisible() {
               const nameMatcherType = deserializeNameMatcherValue(
-                this.get('parent.value.measurementNameMatcher') || ''
-              ).nameMatcherType;
+                this.get('parent.value.measurementNameMatcher')
+              )?.nameMatcherType;
               const nameGenerator = this.get('parent.value.timeSeriesNameGenerator');
               const timeSeriesGenerator = (this.get('parent.parent.generatorSchemas') || [])
                 .findBy('nameGenerator', nameGenerator);
@@ -178,7 +198,9 @@ function formValuesToStoreContentUpdateOptions(values, { storeConfig }) {
   );
   const dispatchRules = get(values, '__fieldsValueNames')
     .map((valueName) => get(values, valueName))
-    .filter(Boolean)
+    .filter((dispatchRuleValue) =>
+      dispatchRuleValue && dispatchRuleValue.measurementNameMatcher
+    )
     .map((dispatchRuleValue) => {
       const {
         measurementNameMatcher: formMeasurementNameMatcher,
@@ -258,6 +280,9 @@ function serializeNameMatcherValue(nameMatcherType, nameMatcher) {
 }
 
 function deserializeNameMatcherValue(nameMatcherValue) {
+  if (!nameMatcherValue) {
+    return null;
+  }
   // Not using `split()` because second part of value (nameMatcher) can contain characters
   // the same as used separator.
   const typeSeparatorPosition = nameMatcherValue.indexOf('|');

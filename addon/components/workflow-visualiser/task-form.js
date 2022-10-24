@@ -28,6 +28,7 @@ import {
   observer,
   getProperties,
   get,
+  setProperties,
   set,
 } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -37,6 +38,7 @@ import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-fiel
 import HiddenField from 'onedata-gui-common/utils/form-component/hidden-field';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
+import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
@@ -57,6 +59,8 @@ import {
   doesDataSpecFitToStoreRead,
   doesDataSpecFitToStoreWrite,
 } from 'onedata-gui-common/utils/atm-workflow/store-config';
+import sortRevisionNumbers from 'onedata-gui-common/utils/revisions/sort-revision-numbers';
+import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -199,20 +203,6 @@ export default Component.extend(I18n, {
   argumentStores: reads('definedStores'),
 
   /**
-   * @type {ComputedProperty<AtmLambdaRevision>}
-   */
-  atmLambdaRevision: computed(
-    'atmLambda.revisionRegistry',
-    'atmLambdaRevisionNumber',
-    function atmLambdaRevision() {
-      const atmLambdaRevisionNumber = this.get('atmLambdaRevisionNumber');
-      return atmLambdaRevisionNumber && this.get(
-        `atmLambda.revisionRegistry.${atmLambdaRevisionNumber}`
-      );
-    }
-  ),
-
-  /**
    * @type {ComputedProperty<Array<Object>>}
    */
   resultStores: computed(
@@ -261,13 +251,10 @@ export default Component.extend(I18n, {
    */
   passedFormValues: computed(
     'task.{name,argumentMappings,resultMappings,timeSeriesStoreConfig,resourceSpecOverride}',
-    'atmLambdaRevision',
+    'atmLambda',
+    'atmLambdaRevisionNumber',
     function passedStoreFormValues() {
-      const {
-        task,
-        atmLambdaRevision,
-      } = this.getProperties('task', 'atmLambdaRevision');
-      return taskToFormData(task, atmLambdaRevision);
+      return taskToFormData(this.task, this.atmLambda, this.atmLambdaRevisionNumber);
     }
   ),
 
@@ -275,20 +262,6 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
   fields: computed(function fields() {
-    const {
-      nameField,
-      argumentMappingsFieldsCollectionGroup,
-      resultMappingsFieldsCollectionGroup,
-      timeSeriesStoreSectionFields,
-      resourcesFieldsGroup,
-    } = this.getProperties(
-      'nameField',
-      'argumentMappingsFieldsCollectionGroup',
-      'resultMappingsFieldsCollectionGroup',
-      'timeSeriesStoreSectionFields',
-      'resourcesFieldsGroup'
-    );
-
     return FormFieldsRootGroup.extend({
       i18nPrefix: tag `${'component.i18nPrefix'}.fields`,
       ownerSource: reads('component'),
@@ -308,22 +281,83 @@ export default Component.extend(I18n, {
     }).create({
       component: this,
       fields: [
-        nameField,
-        argumentMappingsFieldsCollectionGroup,
-        resultMappingsFieldsCollectionGroup,
-        timeSeriesStoreSectionFields,
-        resourcesFieldsGroup,
+        this.atmLambdaFieldsGroup,
+        this.detailsFieldsGroup,
+        this.argumentMappingsFieldsCollectionGroup,
+        this.resultMappingsFieldsCollectionGroup,
+        this.timeSeriesStoreSectionFields,
+        this.resourcesFieldsGroup,
       ],
     });
   }),
 
   /**
-   * @type {ComputedProperty<Utils.FormComponent.TextField>}
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
    */
-  nameField: computed(function nameField() {
-    return TextField.create({
-      component: this,
-      name: 'name',
+  atmLambdaFieldsGroup: computed(function atmLambdaFieldsGroup() {
+    const component = this;
+    return FormFieldsGroup.create({
+      name: 'atmLambda',
+      classes: 'task-form-section',
+      addColonToLabel: false,
+      fields: [
+        StaticTextField.create({
+          name: 'atmLambdaName',
+        }),
+        DropdownField.extend({
+          options: computed(
+            'component.atmLambda.revisionRegistry',
+            function options() {
+              const atmLambda = this.component.atmLambda;
+              const revisionNumbers = sortRevisionNumbers(
+                Object.keys(atmLambda?.revisionRegistry || {})
+              );
+              return revisionNumbers
+                .map((num) => ({ label: String(num), value: num }))
+                .reverse();
+            }
+          ),
+          onValueChange(value) {
+            const currentRevisionNumber = this.value;
+            this._super(...arguments);
+
+            component.changeAtmLambdaRevisionNumber(
+              currentRevisionNumber,
+              value
+            );
+          },
+        }).create({
+          component,
+          name: 'atmLambdaRevisionNumber',
+        }),
+        StaticTextField.extend({
+          value: computed('valuesSource.atmLambda.atmLambdaRevisionNumber', function value() {
+            const atmLambda = component.atmLambda;
+            const atmLambdaRevisionNumber = this.valuesSource?.atmLambda?.atmLambdaRevisionNumber;
+            const atmLambdaRevision =
+              atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber];
+            return atmLambdaRevision?.summary;
+          }),
+          isVisible: reads('value'),
+        }).create({
+          name: 'atmLambdaSummary',
+        }),
+      ],
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
+   */
+  detailsFieldsGroup: computed(function detailsFieldsGroup() {
+    return FormFieldsGroup.create({
+      classes: 'task-form-section',
+      addColonToLabel: false,
+      name: 'details',
+      fields: [TextField.create({
+        component: this,
+        name: 'name',
+      })],
     });
   }),
 
@@ -360,6 +394,20 @@ export default Component.extend(I18n, {
                     return opts;
                   }
                 ),
+                optionsObserver: observer('options.[]', function optionsObserver() {
+                  scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
+                }),
+                init() {
+                  this._super(...arguments);
+                  this.optionsObserver();
+                },
+                adjustValueForNewOptions() {
+                  safeExec(this, () => {
+                    if (!this.options.find(({ value }) => value === this.value)) {
+                      this.valueChanged(this.options[0]?.value);
+                    }
+                  });
+                },
               }).create({
                 classes: 'floating-field-label',
                 name: 'valueBuilderType',
@@ -395,6 +443,13 @@ export default Component.extend(I18n, {
                     return opts;
                   }
                 ),
+                optionsObserver: observer('options.[]', function optionsObserver() {
+                  scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
+                }),
+                init() {
+                  this._super(...arguments);
+                  this.optionsObserver();
+                },
                 valueChanged(value) {
                   if (value === createStoreDropdownOptionValue) {
                     const dataSpec = this.get('parent.value.context.dataSpec');
@@ -402,6 +457,13 @@ export default Component.extend(I18n, {
                   } else {
                     return this._super(...arguments);
                   }
+                },
+                adjustValueForNewOptions() {
+                  safeExec(this, () => {
+                    if (!this.options.find(({ value }) => value === this.value)) {
+                      this.valueChanged(undefined);
+                    }
+                  });
                 },
               }).create({
                 component,
@@ -475,15 +537,12 @@ export default Component.extend(I18n, {
                   }
                 ),
                 optionsObserver: observer('options.[]', function optionsObserver() {
-                  const {
-                    options,
-                    value,
-                  } = this.getProperties('options', 'value');
-                  if (!options.findBy('value', value)) {
-                    // options[1] is "leaveUnassigned"
-                    this.valueChanged(get(options[1], 'value'));
-                  }
+                  scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
                 }),
+                init() {
+                  this._super(...arguments);
+                  this.optionsObserver();
+                },
                 valueChanged(value) {
                   if (value === createStoreDropdownOptionValue) {
                     const dataSpec = this.get('parent.value.context.dataSpec');
@@ -491,6 +550,14 @@ export default Component.extend(I18n, {
                   } else {
                     return this._super(...arguments);
                   }
+                },
+                adjustValueForNewOptions() {
+                  safeExec(this, () => {
+                    if (!this.options.find(({ value }) => value === this.value)) {
+                      // options[1] is "leaveUnassigned"
+                      this.valueChanged(this.options[1]?.value);
+                    }
+                  });
                 },
               }).create({
                 component,
@@ -641,7 +708,8 @@ export default Component.extend(I18n, {
   }),
 
   atmLambdaRevisionObserver: observer(
-    'atmLambdaRevision',
+    'atmLambda',
+    'atmLambdaRevisionNumber',
     function atmLambdaRevisionObserver() {
       this.resetFormValues();
     }
@@ -714,17 +782,11 @@ export default Component.extend(I18n, {
   },
 
   dumpToTask() {
-    const {
-      fields,
-      atmLambdaRevision,
-      allStores,
-    } = this.getProperties(
-      'fields',
-      'atmLambdaRevision',
-      'allStores'
+    return formDataToTask(
+      this.fields.dumpValue(),
+      this.atmLambda,
+      this.allStores
     );
-
-    return formDataToTask(fields.dumpValue(), atmLambdaRevision, allStores);
   },
 
   updateTimeSeriesStoreSchema() {
@@ -795,6 +857,47 @@ export default Component.extend(I18n, {
     }
   },
 
+  /**
+   * @param {RevisionNumber} currentRevisionNumber
+   * @param {RevisionNumber} newRevisionNumber
+   * @returns {void}
+   */
+  changeAtmLambdaRevisionNumber(currentRevisionNumber, newRevisionNumber) {
+    const currentRevValues = this.fields.valuesSource;
+    const newRevPlainValues =
+      taskToFormData(this.task, this.atmLambda, newRevisionNumber);
+
+    const currentRevision = this.atmLambda?.revisionRegistry?.[currentRevisionNumber];
+    const newRevision = this.atmLambda?.revisionRegistry?.[newRevisionNumber];
+    const propsToUpdateInCurrentRevision = {};
+
+    const newArgumentMappings = migrateArgResRevision(
+      currentRevision?.argumentSpecs ?? [],
+      currentRevValues.argumentMappings,
+      newRevision?.argumentSpecs ?? [],
+      newRevPlainValues.argumentMappings
+    );
+    propsToUpdateInCurrentRevision.argumentMappings = newArgumentMappings;
+
+    const newResultMappings = migrateArgResRevision(
+      currentRevision?.resultSpecs ?? [],
+      currentRevValues.resultMappings,
+      newRevision?.resultSpecs ?? [],
+      newRevPlainValues.resultMappings
+    );
+    propsToUpdateInCurrentRevision.resultMappings = newResultMappings;
+
+    if (!currentRevValues.resources.overrideResources) {
+      set(
+        currentRevValues.resources,
+        'resourcesSections',
+        newRevPlainValues.resources.resourcesSections
+      );
+    }
+
+    setProperties(currentRevValues, propsToUpdateInCurrentRevision);
+  },
+
   actions: {
     formNativeSubmit(event) {
       event.preventDefault();
@@ -802,7 +905,7 @@ export default Component.extend(I18n, {
   },
 });
 
-function taskToFormData(task, atmLambdaRevision) {
+function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
   const {
     name,
     argumentMappings,
@@ -818,8 +921,10 @@ function taskToFormData(task, atmLambdaRevision) {
     'timeSeriesStoreConfig'
   );
 
+  const atmLambdaRevision =
+    atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber] ?? {};
   const {
-    name: lambdaName,
+    name: atmLambdaName,
     argumentSpecs,
     resultSpecs,
     resourceSpec,
@@ -830,6 +935,14 @@ function taskToFormData(task, atmLambdaRevision) {
     'resultSpecs',
     'resourceSpec'
   );
+
+  const atmLambdaSection = createValuesContainer({
+    atmLambdaName: atmLambdaName,
+    atmLambdaRevisionNumber: atmLambdaRevisionNumber,
+  });
+  const detailsSection = createValuesContainer({
+    name: name || atmLambdaName,
+  });
 
   const formArgumentMappings = {
     __fieldsValueNames: [],
@@ -931,7 +1044,8 @@ function taskToFormData(task, atmLambdaRevision) {
   };
 
   return {
-    name: name || lambdaName,
+    atmLambda: atmLambdaSection,
+    details: detailsSection,
     argumentMappings: createValuesContainer(formArgumentMappings),
     resultMappings: createValuesContainer(formResultMappings),
     timeSeriesStoreSection,
@@ -983,21 +1097,26 @@ function generateResourcesFormData(resourceSpec, resourceSpecOverride) {
   });
 }
 
-function formDataToTask(formData, atmLambdaRevision, stores) {
+function formDataToTask(formData, atmLambda, stores) {
   const {
-    name,
+    atmLambda: formAtmLambda,
+    details,
     argumentMappings,
     resultMappings,
     timeSeriesStoreSection,
     resources,
   } = getProperties(
     formData,
-    'name',
+    'atmLambda',
+    'details',
     'argumentMappings',
     'resultMappings',
     'timeSeriesStoreSection',
     'resources'
   );
+  const atmLambdaId = atmLambda?.entityId;
+  const atmLambdaRevisionNumber = formAtmLambda.atmLambdaRevisionNumber;
+  const atmLambdaRevision = atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber];
   const {
     argumentSpecs,
     resultSpecs,
@@ -1008,7 +1127,9 @@ function formDataToTask(formData, atmLambdaRevision, stores) {
   } = getProperties(resources || {}, 'overrideResources', 'resourcesSections');
 
   const task = {
-    name,
+    lambdaId: atmLambdaId,
+    lambdaRevisionNumber: atmLambdaRevisionNumber,
+    name: details.name,
     argumentMappings: [],
     resultMappings: [],
   };
@@ -1165,4 +1286,86 @@ function getDispatchFunctionsForStoreType(storeType) {
 
 function getStoreContentUpdateOptionsType(storeType) {
   return `${storeType}StoreContentUpdateOptions`;
+}
+
+/**
+ * Copies arguments/results values from `currentValues` (compatible with specs
+ * from `fromSpecs`) into `newValues` (compatible with specs `toSpecs`). This operation
+ * takes place when user changes revision of lambda and existing argument/result
+ * setup has to be migrated into next revision's format with the smallest
+ * possible data loss.
+ * @param {Array<AtmLambdaArgumentSpec>|Array<AtmLambdaResultSpec>} fromSpecs
+ * @param {Utils.FormComponent.ValuesContainer} currentValues values of arguments/results
+ * (compatible with `fromSpecs`)
+ * @param {Array<AtmLambdaArgumentSpec>|Array<AtmLambdaResultSpec>} toSpecs
+ * @param {Utils.FormComponent.ValuesContainer} newValues values of arguments/results
+ * (compatible with `toSpecs`)
+ * @returns {Utils.FormComponent.ValuesContainer} reference to `newValues`
+ */
+function migrateArgResRevision(fromSpecs, currentValues, toSpecs, newValues) {
+  const namesMapping = findArgResRevisionMigrationMapping(
+    fromSpecs,
+    toSpecs
+  );
+
+  for (const toFieldName of newValues.__fieldsValueNames) {
+    const toName = newValues[toFieldName].context.name;
+    const fromName = namesMapping[toName];
+    if (!fromName) {
+      continue;
+    }
+    for (const fromFieldName of currentValues.__fieldsValueNames) {
+      if (currentValues[fromFieldName].context.name === fromName) {
+        const newContext = newValues[toFieldName].context;
+        set(
+          newValues,
+          toFieldName,
+          cloneValue(currentValues[fromFieldName])
+        );
+        set(newValues[toFieldName], 'context', newContext);
+        break;
+      }
+    }
+  }
+  return newValues;
+}
+
+/**
+ * Tries to find the best data migration mapping from `fromSpecs` arguments/results
+ * format to `toSpecs` arguments/results format. Such mapping can be later used
+ * to migrate form values from one revision to another.
+ * @param {Array<AtmLambdaArgumentSpec>|Array<AtmLambdaResultSpec>} fromSpecs
+ * @param {Array<AtmLambdaArgumentSpec>|Array<AtmLambdaResultSpec>} toSpecs
+ * @returns {Object<string, string|null>} keys are names from `toSpecs`, values are
+ * names from `fromSpecs` or null if there is no clear migration to that specific
+ * "to" spec.
+ */
+function findArgResRevisionMigrationMapping(fromSpecs, toSpecs) {
+  const fromSpecsAsMap = _.keyBy(fromSpecs, 'name');
+  const toSpecsAsMap = _.keyBy(toSpecs, 'name');
+  const mapping = {};
+  for (const toSpecName in toSpecsAsMap) {
+    if (toSpecName in fromSpecsAsMap) {
+      mapping[toSpecName] = toSpecName;
+      delete toSpecsAsMap[toSpecName];
+      delete fromSpecsAsMap[toSpecName];
+    }
+  }
+
+  for (const toSpecName in toSpecsAsMap) {
+    const toDataSpec = toSpecsAsMap[toSpecName].dataSpec;
+    for (const fromSpecName in fromSpecsAsMap) {
+      const fromDataSpec = fromSpecsAsMap[fromSpecName].dataSpec;
+      if (_.isEqual(toDataSpec, fromDataSpec)) {
+        mapping[toSpecName] = fromSpecName;
+        delete toSpecsAsMap[toSpecName];
+        delete fromSpecsAsMap[fromSpecName];
+      }
+    }
+  }
+  for (const toSpecName in toSpecsAsMap) {
+    mapping[toSpecName] = null;
+    delete toSpecsAsMap[toSpecName];
+  }
+  return mapping;
 }

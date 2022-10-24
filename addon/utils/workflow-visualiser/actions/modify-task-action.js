@@ -85,6 +85,7 @@ export default Action.extend({
     const task = this.get('task');
 
     const keysToCheck = [
+      'lambdaRevisionNumber',
       'name',
       'argumentMappings',
       'resultMappings',
