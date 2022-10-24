@@ -137,13 +137,16 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     });
 
     itShowsStatus('pending', 'Pending');
+    itShowsStatus('resuming', 'Resuming');
     itShowsStatus('active', 'Active');
-    itShowsStatus('aborting', 'Aborting');
+    itShowsStatus('stopping', 'Stopping');
     itShowsStatus('interrupted', 'Interrupted');
+    itShowsStatus('paused', 'Paused');
     itShowsStatus('cancelled', 'Cancelled');
     itShowsStatus('skipped', 'Skipped');
     itShowsStatus('finished', 'Finished');
     itShowsStatus('failed', 'Failed');
+    itShowsStatus('unscheduled', 'Unscheduled');
     itShowsStatus('unknown', 'Unknown');
 
     it('allows to copy task instance id', async function (done) {

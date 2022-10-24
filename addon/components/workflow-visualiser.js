@@ -114,6 +114,7 @@ import Looper from 'onedata-gui-common/utils/looper';
 import {
   translateWorkflowStatus,
   workflowEndedStatuses,
+  workflowSuspendedStatuses,
 } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 import { typeOf } from '@ember/utils';
@@ -195,6 +196,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {Utils.WorkflowVisualiser.ExecutionDataFetcher}
    */
   executionDataFetcher: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Utils.Action}
+   */
+  pauseResumeExecutionAction: undefined,
 
   /**
    * @virtual optional
@@ -343,7 +350,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Function>}
    */
-  afterCancelActionHook: computed(function afterCancelActionHook() {
+  lifecycleChangingActionHook: computed(function lifecycleChangingActionHook() {
     return async result => {
       if (!result || get(result, 'status') !== 'done') {
         return;
@@ -351,7 +358,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       try {
         await this.updateExecutionState();
       } catch (error) {
-        console.error('Cannot update workflow status after cancel:', error);
+        console.error('Cannot update workflow status after action:', error);
       }
     };
   }),
@@ -380,58 +387,57 @@ export default Component.extend(I18n, WindowResizeHandler, {
   }),
 
   /**
-   * @type {ComputedProperty<Utils.Action>}
-   */
-  normalizedCancelExecutionAction: computed(
-    'cancelExecutionAction',
-    'afterCancelActionHook',
-    function normalizedCancelExecutionAction() {
-      const {
-        cancelExecutionAction,
-        afterCancelActionHook,
-      } = this.getProperties(
-        'cancelExecutionAction',
-        'afterCancelActionHook'
-      );
-      if (!cancelExecutionAction) {
-        return;
-      }
-      // Remove hook to be sure, that it won't be duplicated.
-      cancelExecutionAction.removeExecuteHook(afterCancelActionHook);
-      cancelExecutionAction.addExecuteHook(afterCancelActionHook);
-      return cancelExecutionAction;
-    }
-  ),
-
-  /**
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
   executionActions: computed(
     'workflow.status',
     'copyInstanceIdAction',
     'viewAuditLogAction',
-    'normalizedCancelExecutionAction',
+    'lifecycleChangingActionHook',
+    'pauseResumeExecutionAction',
+    'cancelExecutionAction',
     function executionActions() {
-      const {
-        workflow,
-        copyInstanceIdAction,
-        viewAuditLogAction,
-        normalizedCancelExecutionAction,
-      } = this.getProperties(
-        'workflow',
-        'copyInstanceIdAction',
-        'viewAuditLogAction',
-        'normalizedCancelExecutionAction'
-      );
-      const actions = [copyInstanceIdAction, viewAuditLogAction];
-      if (
-        !this.executionHasEnded() &&
-        get(workflow, 'status') !== 'aborting' &&
-        normalizedCancelExecutionAction
-      ) {
-        actions.push(normalizedCancelExecutionAction);
+      const actions = [this.copyInstanceIdAction, this.viewAuditLogAction];
+
+      if (!this.isExecutionEnded) {
+        const pauseResumeExecutionAction =
+          this.normalizeLifecycleChangingAction(this.pauseResumeExecutionAction);
+        if (pauseResumeExecutionAction) {
+          actions.push(pauseResumeExecutionAction);
+        }
+
+        const cancelExecutionAction =
+          this.normalizeLifecycleChangingAction(this.cancelExecutionAction);
+        if (cancelExecutionAction) {
+          actions.push(cancelExecutionAction);
+        }
       }
+
       return actions;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isExecutionSuspended: computed(
+    'executionState.workflow.status',
+    function isExecutionSuspended() {
+      return workflowSuspendedStatuses.includes(
+        this.executionState?.workflow?.status
+      );
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isExecutionEnded: computed(
+    'executionState.workflow.status',
+    function isExecutionSuspended() {
+      return workflowEndedStatuses.includes(
+        this.executionState?.workflow?.status
+      );
     }
   ),
 
@@ -1170,7 +1176,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const instanceId = rawInstanceId || (schemaId &&
       this.get(`executionState.store.defined.${schemaId}.instanceId`)
     );
-    const contentMayChange = instanceId && !this.executionHasEnded();
+    const contentMayChange = instanceId && !this.isExecutionEnded &&
+      !this.isExecutionSuspended;
 
     const existingStore =
       (instanceId && this.getCachedElement('store', { instanceId })) ||
@@ -1579,10 +1586,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
     this.changeLaneRun(lane, newestRun.runNumber);
   },
 
-  executionHasEnded() {
-    return workflowEndedStatuses.includes(this.get('executionState.workflow.status'));
-  },
-
   async updateExecutionState() {
     const executionDataFetcher = this.get('executionDataFetcher');
     if (!executionDataFetcher) {
@@ -1607,6 +1610,20 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     return this.get('stores').findBy('instanceId', instanceId) || null;
+  },
+
+  /**
+   * @param {Utils.Action|undefined} action
+   * @returns {Utils.Action|undefined}
+   */
+  normalizeLifecycleChangingAction(action) {
+    if (!action) {
+      return;
+    }
+    // Remove hook to be sure, that it won't be duplicated.
+    action.removeExecuteHook(this.lifecycleChangingActionHook);
+    action.addExecuteHook(this.lifecycleChangingActionHook);
+    return action;
   },
 
   actions: {

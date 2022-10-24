@@ -11,7 +11,6 @@ export default {
     range: 'Range',
     array: 'Array',
     timeSeriesMeasurement: 'Time series measurement',
-    onedatafsCredentials: 'OnedataFS credentials',
   },
   file,
   timeSeriesMeasurement,

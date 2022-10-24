@@ -320,6 +320,13 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   withValidationIcon: true,
 
   /**
+   * Should validation message be visible (when non-empty).
+   * @virtual optional
+   * @type {boolean}
+   */
+  withValidationMessage: true,
+
+  /**
    * If false, then bootstrap classes ("has-success", "has-error") will not be
    * added to the field component. Along with withValidationIcon it can be used
    * to hide validation status notification.

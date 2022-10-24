@@ -14,7 +14,6 @@ import { canValueConstraintsContain as canFileValueConstraintsContain } from './
  *   AtmFileDataSpec |
  *   AtmIntegerDataSpec |
  *   AtmObjectDataSpec |
- *   AtmOnedatafsCredentialsDataSpec |
  *   AtmRangeDataSpec |
  *   AtmStringDataSpec |
  *   AtmTimeSeriesMeasurementDataSpec
@@ -33,7 +32,7 @@ import { canValueConstraintsContain as canFileValueConstraintsContain } from './
  */
 
 /**
- * @typedef {'integer'|'string'|'object'|'file'|'dataset'|'range'|'array'|'timeSeriesMeasurement'|'onedatafsCredentials'} AtmDataSpecType
+ * @typedef {'integer'|'string'|'object'|'file'|'dataset'|'range'|'array'|'timeSeriesMeasurement'} AtmDataSpecType
  */
 
 /**
@@ -48,7 +47,6 @@ export const dataSpecTypes = Object.freeze([
   'range',
   'array',
   'timeSeriesMeasurement',
-  'onedatafsCredentials',
 ]);
 
 /**
@@ -63,7 +61,6 @@ export const dataSpecSupertypes = Object.freeze({
   range: ['object'],
   array: [],
   timeSeriesMeasurement: ['object'],
-  onedatafsCredentials: ['object'],
 });
 
 /**
