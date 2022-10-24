@@ -16,12 +16,9 @@
     }}
       {{one-icon icon=act.icon}}
       <span class="text">{{act.title}}</span>
-      {{#if (and act.tip isMinimized)}}
+      {{#if act.tip}}
         {{one-tooltip title=act.tip placement=(or act.tipPlacement "top")}}
       {{/if}}
     {{/dropdown.item}}
-    {{#if (and act.tip (not isMinimized))}}
-      {{one-tooltip title=act.tip placement=(or act.tipPlacement "top")}}
-    {{/if}}
   {{/each}}
 {{/one-collapsible-toolbar}}

@@ -6,8 +6,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { commonDataSpecFilters } from './commons';
-
 /**
  * @typedef {Object} AtmAuditLogStoreConfig
  * @property {AtmDataSpec} logContentDataSpec
@@ -17,7 +15,7 @@ import { commonDataSpecFilters } from './commons';
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getReadDataSpecFilters() {
-  return [...commonDataSpecFilters, {
+  return [{
     filterType: 'typeOrSupertype',
     types: [{ type: 'object' }],
   }];
@@ -28,7 +26,7 @@ export function getReadDataSpecFilters() {
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getWriteDataSpecFilters(storeConfig) {
-  const filters = [...commonDataSpecFilters];
+  const filters = [];
 
   const logContentDataSpec = storeConfig && storeConfig.logContentDataSpec;
   if (logContentDataSpec) {

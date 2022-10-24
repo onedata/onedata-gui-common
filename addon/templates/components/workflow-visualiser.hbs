@@ -7,7 +7,7 @@
       </div>
       {{#if executionActions.length}}
         {{actions-toolbar
-          isMinimized=false
+          isMinimized=(media "isMobile")
           toolbarClasses="execution-actions"
           dropdownPlacement="auto"
           actionsArray=executionActions

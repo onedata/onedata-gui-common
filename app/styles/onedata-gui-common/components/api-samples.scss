@@ -49,6 +49,7 @@
         // makes tooltip to be nearer the icon center
         line-height: 0.5;
         transform: translateY(-50%) translateY(2px);
+        font-size: 110%;
       }
     }
   }
@@ -57,6 +58,54 @@
     .clipboard-line {
       word-break: break-all;
     }
+  }
+
+  .env-variables-info-icon {
+    opacity: 0.4;
+  }
+
+  .env-variables-info-icon-container {
+    vertical-align: middle;
+  }
+
+  .env-variables-table-container {
+    overflow: hidden;
+  }
+
+  .placeholders-value .env-variables-table {
+    width: 100%;
+
+    td {
+      margin-top: 0px;
+    }
+
+    @media (max-width: $screen-xs-max) {
+      tr:first-of-type td:first-of-type {
+        border-top: none;
+      }
+    }
+
+    thead {
+      background-color: $block-background-color;
+      @include font-semibold;
+    }
+
+    tbody td {
+      border-top: 1px solid $table-border-color;
+    }
+
+    .placeholder-variable {
+      @include font-monospace();
+    }
+  }
+
+  .optional-parameters-text {
+    padding-top: 5px;
+  }
+
+  table .placeholders-value div {
+    border: 1px solid $table-border-color;
+    border-radius: $border-radius-base;
   }
 }
 

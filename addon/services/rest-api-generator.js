@@ -12,7 +12,7 @@
  */
 
 import ApiStringGenerator from './api-string-generator';
-import { get } from '@ember/object';
+import { ShellSafeString } from '../utils/shell-escape';
 
 /**
  * @typedef {Object} ApiSample
@@ -36,14 +36,45 @@ export default ApiStringGenerator.extend({
    * @returns {String}
    */
   generateSample(apiSample) {
-    const method = get(apiSample, 'method');
-    const path = get(apiSample, 'apiRoot') + get(apiSample, 'path');
-    const redirect = get(apiSample, 'followRedirects') ? '-L' : '';
-    return this.fillTemplate(['curl', '{redirect}', '-X', '{method}', '{path}'], {
-      redirect,
-      method,
-      path,
-    });
+    const template = ['curl'];
+
+    // "Follow redirects" flag
+    if (apiSample.followRedirects) {
+      template.push('-L');
+    }
+
+    // HTTP method
+    template.push('-X', '{method}');
+    const templateData = {
+      method: apiSample.method,
+    };
+
+    // Authorization header
+    if (apiSample.requiresAuthorization) {
+      template.push('-H', new ShellSafeString('{authorizationHeader}'));
+      templateData.authorizationHeader = 'x-auth-token: $TOKEN';
+    }
+
+    // HTTP path
+    template.push(new ShellSafeString('{path}'));
+    templateData.path = apiSample.apiRoot + apiSample.path;
+
+    // Others headers
+    if (apiSample.headers && Object.keys(apiSample.headers)) {
+      for (const [key, value] of Object.entries(apiSample.headers)) {
+        const formattedKey = key.replace('-', '');
+        template.push('-H', new ShellSafeString(`{${formattedKey}}`));
+        templateData[formattedKey] = key + ': ' + value;
+      }
+    }
+
+    // Data
+    if (apiSample.data) {
+      template.push('-d', new ShellSafeString('{data}'));
+      templateData.data = apiSample.data || '';
+    }
+
+    return this.fillTemplate(template, templateData);
   },
 
   curlize(url, curlOptions) {

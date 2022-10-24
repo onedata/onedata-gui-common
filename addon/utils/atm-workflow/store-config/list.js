@@ -6,8 +6,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { commonDataSpecFilters } from './commons';
-
 /**
  * @typedef {Object} AtmListStoreConfig
  * @property {AtmDataSpec} itemDataSpec
@@ -18,7 +16,7 @@ import { commonDataSpecFilters } from './commons';
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getReadDataSpecFilters(storeConfig) {
-  const filters = [...commonDataSpecFilters];
+  const filters = [];
 
   const itemDataSpec = storeConfig && storeConfig.itemDataSpec;
   if (itemDataSpec) {
@@ -36,7 +34,7 @@ export function getReadDataSpecFilters(storeConfig) {
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getWriteDataSpecFilters(storeConfig) {
-  const filters = [...commonDataSpecFilters];
+  const filters = [];
 
   const itemDataSpec = storeConfig && storeConfig.itemDataSpec;
   if (itemDataSpec) {

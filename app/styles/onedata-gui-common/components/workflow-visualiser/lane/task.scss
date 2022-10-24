@@ -1,4 +1,8 @@
 .workflow-visualiser .workflow-visualiser-task {
+  @function task-status-bg-color($base-color) {
+    @return scale-color($base-color, $lightness: 60%);
+  }
+
   position: relative;
   border: $workflow-visualiser-block-border-width solid $workflow-visualiser-task-border-color;
   border-radius: $border-radius-base;
@@ -24,12 +28,20 @@
     }
   }
 
+  &.status-resuming,
   &.status-active,
-  &.status-aborting {
+  &.status-stopping {
     .draggable-task {
       @extend .animated;
       @extend .infinite;
       @extend .hinge;
+    }
+  }
+
+  &.status-resuming {
+    .draggable-task {
+      --pulse-bg-color: #{task-status-bg-color($color-one-azure)};
+      @extend .pulse-bg-variable;
     }
   }
 
@@ -39,32 +51,52 @@
     }
   }
 
-  &.status-aborting {
+  &.status-stopping {
     .draggable-task {
-      @extend .pulse-bg-light-red;
+      @extend .pulse-bg-light-orange;
     }
   }
 
   &.status-skipped {
     .draggable-task {
-      border: $workflow-visualiser-block-border-width solid $color-one-orange;
-      background-color: lighten($color-one-orange, 30%);
+      border: $workflow-visualiser-block-border-width solid $color-one-blue-gray;
+      background-color: task-status-bg-color($color-one-blue-gray);
     }
   }
 
   &.status-finished {
     .draggable-task {
       border: $workflow-visualiser-block-border-width solid $color-one-success;
-      background-color: lighten($color-one-success, 30%);
+      background-color: task-status-bg-color($color-one-success);
+    }
+  }
+
+  &.status-interrupted {
+    .draggable-task {
+      border: $workflow-visualiser-block-border-width solid $color-one-warning;
+      background-color: task-status-bg-color($color-one-warning);
+    }
+  }
+
+  &.status-paused {
+    .draggable-task {
+      border: $workflow-visualiser-block-border-width solid $color-one-light-gray;
+      background-color: task-status-bg-color($color-one-light-gray);
     }
   }
 
   &.status-failed,
-  &.status-cancelled,
-  &.status-interrupted {
+  &.status-cancelled {
     .draggable-task {
       border: $workflow-visualiser-block-border-width solid $color-one-danger;
-      background-color: lighten($color-one-danger, 30%);
+      background-color: task-status-bg-color($color-one-danger);
+    }
+  }
+
+  &.status-unscheduled {
+    .draggable-task {
+      opacity: 0.6;
+      background-color: scale-color($color-one-light-gray, $lightness: 80%);
     }
   }
 

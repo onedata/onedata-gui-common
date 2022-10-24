@@ -1,14 +1,31 @@
 /**
  * Exports values and functions related to workflow execution status.
  *
- * @module utils/workflow-visualiser/statuses
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+/**
+ * @typedef {
+ * 'pending' |
+ * 'resuming' |
+ * 'active' |
+ * 'stopping' |
+ * 'interrupted' |
+ * 'paused' |
+ * 'cancelled' |
+ * 'skipped' |
+ * 'finished' |
+ * 'failed' |
+ * 'unscheduled' |
+ * 'unknown'
+ * } AtmTaskExecutionStatus
+ * Status `unscheduled` does not exist in backend API and is only to mark tasks
+ * which won't be created due to workflow stop.
+ */
+
 export const taskEndedStatuses = [
-  'interrupted',
   'cancelled',
   'skipped',
   'finished',
@@ -17,8 +34,12 @@ export const taskEndedStatuses = [
 const taskUnknownStatus = 'unknown';
 export const taskStatuses = [
   'pending',
+  'resuming',
   'active',
-  'aborting',
+  'stopping',
+  'paused',
+  'interrupted',
+  'unscheduled',
   ...taskEndedStatuses,
   taskUnknownStatus,
 ];
@@ -32,21 +53,51 @@ export function translateTaskStatus(i18n, status) {
   return i18n.t(`utils.workflowVisualiser.statuses.task.${normalizedStatus}`);
 }
 
+/**
+ * @typedef {
+ * 'pending' |
+ * 'resuming' |
+ * 'scheduled' |
+ * 'preparing' |
+ * 'enqueued' |
+ * 'active' |
+ * 'stopping' |
+ * 'interrupted' |
+ * 'paused' |
+ * 'cancelled' |
+ * 'skipped' |
+ * 'finished' |
+ * 'failed' |
+ * 'crashed' |
+ * 'unscheduled' |
+ * 'unknown'
+ * } AtmLaneExecutionStatus
+ * Status `unscheduled` does not exist in backend API and is only to mark lanes
+ * which won't be created due to workflow stop.
+ */
+
 export const laneEndedStatuses = [
-  'interrupted',
   'cancelled',
   'skipped',
   'finished',
   'failed',
+  'crashed',
+];
+export const laneSuspendedStatuses = [
+  'paused',
+  'interrupted',
 ];
 const laneUnknownStatus = 'unknown';
 export const laneStatuses = [
   'pending',
+  'resuming',
   'scheduled',
   'preparing',
   'enqueued',
   'active',
-  'aborting',
+  'stopping',
+  'unscheduled',
+  ...laneSuspendedStatuses,
   ...laneEndedStatuses,
   laneUnknownStatus,
 ];
@@ -60,20 +111,39 @@ export function translateLaneStatus(i18n, status) {
   return i18n.t(`utils.workflowVisualiser.statuses.lane.${normalizedStatus}`);
 }
 
+/**
+ * @typedef {
+ * 'scheduled' |
+ * 'resuming' |
+ * 'active' |
+ * 'stopping' |
+ * 'interrupted' |
+ * 'paused' |
+ * 'cancelled' |
+ * 'finished' |
+ * 'failed' |
+ * 'crashed' |
+ * 'unknown'
+ * } AtmWorkflowExecutionStatus
+ */
+
 export const workflowEndedStatuses = [
-  'interrupted',
   'cancelled',
-  'skipped',
   'finished',
   'failed',
+  'crashed',
+];
+export const workflowSuspendedStatuses = [
+  'paused',
+  'interrupted',
 ];
 const workflowUnknownStatus = 'unknown';
 export const workflowStatuses = [
   'scheduled',
-  'preparing',
-  'enqueued',
+  'resuming',
   'active',
-  'aborting',
+  'stopping',
+  ...workflowSuspendedStatuses,
   ...workflowEndedStatuses,
   workflowUnknownStatus,
 ];
@@ -85,4 +155,37 @@ export function normalizeWorkflowStatus(status) {
 export function translateWorkflowStatus(i18n, status) {
   const normalizedStatus = normalizeWorkflowStatus(status);
   return i18n.t(`utils.workflowVisualiser.statuses.workflow.${normalizedStatus}`);
+}
+
+/**
+ * @typedef {'waiting'|'ongoing'|'ended'|'suspended'} AtmWorkflowExecutionPhase
+ */
+
+/**
+ * @type {Object<string, AtmWorkflowExecutionPhase>}
+ */
+export const AtmWorkflowExecutionPhase = Object.freeze({
+  Waiting: 'waiting',
+  Ongoing: 'ongoing',
+  Ended: 'ended',
+  Suspended: 'suspended',
+});
+
+/**
+ * @type {Array<AtmWorkflowExecutionPhase>}
+ */
+export const atmWorkflowExecutionPhases = Object.freeze([
+  AtmWorkflowExecutionPhase.Waiting,
+  AtmWorkflowExecutionPhase.Ongoing,
+  AtmWorkflowExecutionPhase.Ended,
+  AtmWorkflowExecutionPhase.Suspended,
+]);
+
+/**
+ * @param {Ember.Service} i18n
+ * @param {AtmWorkflowExecutionPhase} phase
+ * @returns {SafeString}
+ */
+export function translateAtmWorkflowExecutionPhase(i18n, phase) {
+  return i18n.t(`utils.workflowVisualiser.statuses.phase.${phase}`);
 }

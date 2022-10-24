@@ -38,9 +38,9 @@
         <div class="api-type-row">
           <span class="labels-container">
             <span
-              class="label label-info api-tag-label {{effSelectedApiCommand.type}}-api-tag-label"
+              class="label label-info api-tag-label {{type}}-api-tag-label"
             >
-              {{tt this (concat "apiType." effSelectedApiCommand.type)}}
+              {{tt this (concat "apiType." type)}}
             </span>
           </span>
           <div
@@ -49,7 +49,7 @@
           >
             {{one-icon
               id=apiCommandInfoTriggerId
-              icon="browser-info"
+              icon="sign-question-rounded"
               class="api-command-type-info-trigger hint-trigger clickable"
             }}
           </div>
@@ -66,9 +66,7 @@
             exceptSelector=".api-command-type-info-trigger, .webui-popover-api-command-type-info"
           }}
             <p class="api-command-tip-intro">
-              {{tt this
-                (concat "apiCommandTipIntro." effSelectedApiCommand.type)
-              }}
+              {{apiCommandTipIntro}}
             </p>
           {{/click-outside}}
         {{/one-webui-popover}}
@@ -87,7 +85,7 @@
           href=(if (eq effSelectedApiCommand.type "xrootd")
             "https://xrootd.slac.stanford.edu/"
             (one-api-doc-url
-              product="onezone"
+              product=(if previewMode "onezone" "oneprovider")
               version="latest"
               anchor=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
             )
@@ -107,8 +105,73 @@
             size=(if smallContent "sm")
             class="monospace-font compact"
           }}
+          {{#if hasOptionalParameters}}
+            <div class="optional-parameters-text">
+              {{tt this "apiOptionalParameters"}} 
+              {{#each optionalParameters as |param|}}
+                <strong>{{param}},</strong>
+              {{/each}}
+              {{tt this "coverIn"}}
+              <a 
+                href={{one-api-doc-url
+                  product="oneprovider"
+                  version="latest"
+                  anchor=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
+                }}
+                target="_blank"
+              >{{tt this "documentation"}}</a>.
+            </div>
+          {{/if}}
         </div>
       </td>
     </tr>
+    {{#if (or hasPlaceholders requiresAuthorization)}}
+      <tr class="item-info-row-variables">
+        <td class="property-name with-input">
+          {{tt this "envVariables"}}
+          <span class="env-variables-info-icon-container">
+            {{one-icon icon="sign-question-rounded" class="env-variables-info-icon"}}
+            {{one-tooltip title=(tt this "variablesTooltip")}}
+          </span>
+        </td>
+        <td class="property-value placeholders-value with-input">
+          <div class="env-variables-table-container">
+            <table class="env-variables-table">
+              {{#unless (media "isMobile")}}
+                <thead>
+                  <tr>
+                    <td>{{tt this "variable"}}</td>
+                    <td>{{tt this "description"}}</td>
+                  </tr>
+                </thead>
+              {{/unless}}
+              <tbody>
+                {{#if requiresAuthorization}}
+                  <tr>
+                    <td class="placeholder-variable">
+                      $TOKEN
+                    </td>
+                    <td class="placeholder-description">
+                      {{tt this "authorizationTokenDescription"}} 
+                      <a href={{accessTokenUrl}} target="_blank">{{tt this "tokenPage"}}</a>.
+                    </td>
+                  </tr>
+                {{/if}}
+                {{#each-in placeholders as |placeholder description|}}
+                  <tr>
+                    <td class="placeholder-variable">
+                      {{placeholder}}
+                    </td>
+                    <td class="placeholder-description">
+                      {{description}}
+                    </td>
+                  </tr>
+                {{/each-in}}
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+    {{/if}}
   </tbody>
 </table>

@@ -51,7 +51,3 @@
  * @property {number} timestamp
  * @property {number} value
  */
-
-/**
- * @typedef {unknown} AtmOnedatafsCredentials
- */
