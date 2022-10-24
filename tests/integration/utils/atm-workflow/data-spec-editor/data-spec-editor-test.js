@@ -37,9 +37,6 @@ const atmDataSpecTypesInfo = [{
 }, {
   type: 'timeSeriesMeasurement',
   label: 'Time series measurement',
-}, {
-  type: 'onedatafsCredentials',
-  label: 'OnedataFS credentials',
 }];
 
 const simpleAtmDataSpecTypesInfo = atmDataSpecTypesInfo.filter(({ type }) =>
@@ -209,7 +206,6 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
           'Dataset',
           'Range',
           'Time series measurement',
-          'OnedataFS credentials',
         ]);
     });
 

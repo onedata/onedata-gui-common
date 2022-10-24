@@ -49,7 +49,6 @@ const objectSubtypes = [
   'dataset',
   'range',
   'timeSeriesMeasurement',
-  'onedatafsCredentials',
 ];
 
 describe('Unit | Utility | atm workflow/data spec/types', function () {
@@ -707,7 +706,6 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       ['range', ['object', 'range']],
       ['array', ['array']],
       ['timeSeriesMeasurement', ['object', 'timeSeriesMeasurement']],
-      ['onedatafsCredentials', ['object', 'onedatafsCredentials']],
     ].forEach(([type, typeOrSupertypes]) => {
       it(`returns types matching typeOrSupertype filter with type ${type}`, function () {
         expect(getMatchingAtmDataSpecTypes([{
@@ -727,13 +725,12 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
     [
       ['integer', ['integer']],
       ['string', ['string']],
-      ['object', ['object', 'file', 'dataset', 'range', 'timeSeriesMeasurement', 'onedatafsCredentials']],
+      ['object', ['object', 'file', 'dataset', 'range', 'timeSeriesMeasurement']],
       ['file', ['file']],
       ['dataset', ['dataset']],
       ['range', ['range']],
       ['array', ['array']],
       ['timeSeriesMeasurement', ['timeSeriesMeasurement']],
-      ['onedatafsCredentials', ['onedatafsCredentials']],
     ].forEach(([type, typeOrSubtypes]) => {
       it(`returns types matching typeOrSubtype filter with type ${type}`, function () {
         expect(getMatchingAtmDataSpecTypes([{
@@ -754,14 +751,13 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       ['integer', _.difference(atmDataSpecTypesArray, ['integer'])],
       ['string', _.difference(atmDataSpecTypesArray, ['string'])],
       ['object', _.difference(atmDataSpecTypesArray,
-        ['object', 'file', 'dataset', 'range', 'timeSeriesMeasurement', 'onedatafsCredentials']
+        ['object', 'file', 'dataset', 'range', 'timeSeriesMeasurement']
       )],
       ['file', _.difference(atmDataSpecTypesArray, ['file'])],
       ['dataset', _.difference(atmDataSpecTypesArray, ['dataset'])],
       ['range', _.difference(atmDataSpecTypesArray, ['range'])],
       ['array', _.difference(atmDataSpecTypesArray, ['array'])],
       ['timeSeriesMeasurement', _.difference(atmDataSpecTypesArray, ['timeSeriesMeasurement'])],
-      ['onedatafsCredentials', _.difference(atmDataSpecTypesArray, ['onedatafsCredentials'])],
     ].forEach(([type, allowedTypes]) => {
       it(`returns types matching forbiddenType filter with type ${type}`, function () {
         expect(getMatchingAtmDataSpecTypes([{
