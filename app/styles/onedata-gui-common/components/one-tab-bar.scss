@@ -24,7 +24,7 @@ $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
 .one-tab-bar {
   position: relative;
   padding-right: $-one-tab-bar-selector-width + $-one-tab-bar-selector-padding;
-  
+
   .tab-bar-ul-container {
     position: relative;
     overflow-y: hidden;
@@ -62,7 +62,7 @@ $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
         &.tab-bar-ul-arrow-left {
           left: 0;
           text-align: left;
-          
+
           .arrow-separator {
             right: 0;
           }
@@ -70,7 +70,7 @@ $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
         &.tab-bar-ul-arrow-right {
           right: 0;
           text-align: right;
-          
+
           .arrow-separator {
             left: 0;
           }
@@ -98,12 +98,17 @@ $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
     position: relative;
     display: inline-block;
     white-space: nowrap;
+    display: inline-flex;
   }
   .tab-bar-li {
+    display: flex;
+    height: $-one-tab-bar-height;
+    + .tab-bar-li {
+      margin-left: 0.2em;
+    }
     .nav-link {
-      display: inline-block;
       padding: $nav-link-padding;
-      
+
       transition: transition-linear(max-width);
     }
     &.apply-truncate {
