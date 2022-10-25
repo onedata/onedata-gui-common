@@ -23,7 +23,10 @@ $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
 
 .one-tab-bar {
   position: relative;
-  padding-right: $-one-tab-bar-selector-width + $-one-tab-bar-selector-padding;
+
+  &.with-dropdown {
+    padding-right: $-one-tab-bar-selector-width + $-one-tab-bar-selector-padding;
+  }
 
   .tab-bar-ul-container {
     position: relative;
