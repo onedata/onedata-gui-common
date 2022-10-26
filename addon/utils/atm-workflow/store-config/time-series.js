@@ -29,7 +29,16 @@ export function getReadDataSpecFilters() {
 export function getWriteDataSpecFilters() {
   return [{
     filterType: 'typeOrSubtype',
-    types: [{ type: 'timeSeriesMeasurement' }],
+    types: [{
+      type: 'timeSeriesMeasurement',
+    }, {
+      type: 'array',
+      valueConstraints: {
+        itemDataSpec: {
+          type: 'timeSeriesMeasurement',
+        },
+      },
+    }],
   }];
 }
 
