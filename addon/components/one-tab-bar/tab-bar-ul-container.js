@@ -8,7 +8,7 @@
  *
  * @module components/one-tab-bar/tab-bar-ul-container
  * @author Jakub Liput
- * @copyright (C) 2019-2020 ACK CYFRONET AGH
+ * @copyright (C) 2019-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -19,6 +19,7 @@ import { computed, observer } from '@ember/object';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 export default Component.extend(ContentOverFlowdetector, {
   layout,
@@ -64,11 +65,20 @@ export default Component.extend(ContentOverFlowdetector, {
    * @type {jQuery}
    */
   $innerScrollContent: computed('element', function $innerScrollContent() {
-    return $(this.get('element').querySelector('.container-inner-scroll-content'));
+    if (!this.element) {
+      return null;
+    }
+    return $(this.element.querySelector('.container-inner-scroll-content'));
   }),
 
   hasOverflowObserver: observer('hasOverflow', function hasOverflowObserver() {
-    this.get('hasOverflowChanged')(this.get('hasOverflow'));
+    (async () => {
+      await waitForRender();
+      if (this.$innerScrollContent) {
+        this.innerScrollContentScrolled(this.$innerScrollContent);
+      }
+    })();
+    this.hasOverflowChanged(this.hasOverflow);
   }),
 
   didInsertElement() {
