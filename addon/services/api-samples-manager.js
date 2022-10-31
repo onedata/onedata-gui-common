@@ -13,6 +13,11 @@ export default Service.extend({
   onedataGraph: service(),
 
   /**
+   * @type {Array<String>}
+   */
+  responseBlacklist: Object.freeze(['revision', 'gri']),
+
+  /**
    * @param {String} entityId
    * @param {String} entityType
    * @param {String} scope one of: private, public
@@ -31,6 +36,9 @@ export default Service.extend({
     });
     let availableApiSamples = [];
     for (const [key, value] of Object.entries(apiSamples)) {
+      if (this.responseBlacklist.includes(key)) {
+        continue;
+      }
       if (value.samples) {
         availableApiSamples = availableApiSamples.concat(
           value.samples.map(sample => {
