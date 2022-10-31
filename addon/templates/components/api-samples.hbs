@@ -85,7 +85,7 @@
           href=(if (eq effSelectedApiCommand.type "xrootd")
             "https://xrootd.slac.stanford.edu/"
             (one-api-doc-url
-              product=(if previewMode "onezone" "oneprovider")
+              product=(if previewMode "onezone" product)
               version="latest"
               anchor=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
             )
@@ -114,7 +114,7 @@
               {{tt this "coverIn"}}
               <a 
                 href={{one-api-doc-url
-                  product="oneprovider"
+                  product=product
                   version="latest"
                   anchor=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
                 }}

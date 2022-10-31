@@ -106,6 +106,11 @@ export default Component.extend(I18n, {
   accessTokenUrl: undefined,
 
   /**
+   * @type {String} One of: 'onezone', 'oneprovider'
+   */
+  product: undefined,
+
+  /**
    * @type {ComputedProperty<String>}
    */
   selectedApiCommandString: computed(
@@ -125,14 +130,20 @@ export default Component.extend(I18n, {
     }
   ),
 
-  apiCommandTipIntro: computed('previewMode', 'type', function apiCommandTipIntro() {
-    const {
-      previewMode,
-      type,
-    } = this.getProperties('previewMode', 'type');
-    const path = 'apiCommandTipIntro.' + type + (previewMode ? 'Public' : 'Private');
-    return this.t(path, {}, { defaultValue: '' });
-  }),
+  apiCommandTipIntro: computed(
+    'previewMode',
+    'type',
+    'product',
+    function apiCommandTipIntro() {
+      const {
+        previewMode,
+        type,
+        product,
+      } = this.getProperties('previewMode', 'type', 'product');
+      const path = 'apiCommandTipIntro.' + type + '.' + (previewMode ? 'public' : product);
+      return this.t(path, {}, { defaultValue: '' });
+    }
+  ),
 
   actions: {
     selectApiCommand(apiCommand) {
