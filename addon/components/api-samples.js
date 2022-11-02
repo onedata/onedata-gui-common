@@ -133,14 +133,12 @@ export default Component.extend(I18n, {
   apiCommandTipIntro: computed(
     'previewMode',
     'type',
-    'product',
     function apiCommandTipIntro() {
       const {
         previewMode,
         type,
-        product,
-      } = this.getProperties('previewMode', 'type', 'product');
-      const path = 'apiCommandTipIntro.' + type + '.' + (previewMode ? 'public' : product);
+      } = this.getProperties('previewMode', 'type');
+      const path = 'apiCommandTipIntro.' + type + '.' + (previewMode ? 'public' : 'private');
       return this.t(path, {}, { defaultValue: '' });
     }
   ),
