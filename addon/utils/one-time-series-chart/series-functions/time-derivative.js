@@ -27,7 +27,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 
 /**
@@ -36,17 +35,12 @@ import _ from 'lodash';
  * @property {OTSCRawFunction} [timeSpanProvider]
  */
 
-const defaultTimeSpanArg = {
-  type: 'basic',
-  data: 1,
-};
-
 /**
  * @param {OTSCSeriesFunctionContext} context
  * @param {OTSCRateSeriesFunctionArguments} args
  * @returns {Promise<OTSCSeriesFunctionGenericResult<Array<number|null>|number|null>>}
  */
-export default async function rate(context, args) {
+export default async function timeDerivative(context, args) {
   if (!args || !args.inputDataProvider) {
     return {
       type: 'basic',
@@ -54,22 +48,16 @@ export default async function rate(context, args) {
     };
   }
 
-  const contextForInputData =
-    Object.assign({}, context, { pointsCount: context.pointsCount + 1 });
-  const [
-    inputData,
-    { data: timeSpan },
-  ] = await allFulfilled([
-    context.evaluateSeriesFunction(contextForInputData, args.inputDataProvider),
-    context.evaluateSeriesFunction(context, args.timeSpanProvider)
-    .then((timeSpanArg) => normalizeTimeSpanArg(timeSpanArg)),
-  ]);
+  const inputData = await context.evaluateSeriesFunction(
+    Object.assign({}, context, { pointsCount: context.pointsCount + 1 }),
+    args.inputDataProvider
+  );
 
   const inputDataIsArray = Array.isArray(inputData.data);
   const inputDataAsArray = inputDataIsArray ? inputData.data : [inputData.data];
   const numericInputData = inputData?.type === 'points' ?
     inputDataAsArray.map((point) => point?.value ?? null) : inputDataAsArray;
-  const numericResultData = [];
+  const numericDeltaData = [];
 
   for (let i = 0; i < numericInputData.length - 1; i++) {
     let thisValue = numericInputData[i];
@@ -84,41 +72,32 @@ export default async function rate(context, args) {
       thisValue = 0;
     }
     if (!Number.isFinite(thisValue) || !Number.isFinite(nextValue)) {
-      numericResultData.push(null);
+      numericDeltaData.push(null);
     } else {
-      const delta = nextValue - thisValue;
-      numericResultData.push((delta / context.timeResolution) * timeSpan);
+      numericDeltaData.push(nextValue - thisValue);
     }
   }
 
+  let inputDataDelta;
   if (inputData.type === 'points') {
-    const result =
+    inputDataDelta =
       _.cloneDeep(Object.assign({}, inputData, { data: inputData.data.slice(1) }));
-    result.data.forEach((point, idx) => point.value = numericResultData[idx]);
-    return result;
+    inputDataDelta.data.forEach((point, idx) => point.value = numericDeltaData[idx]);
   } else {
-    return {
+    inputDataDelta = {
       type: 'basic',
-      data: inputDataIsArray ? numericResultData : (numericResultData[0] ?? null),
+      data: inputDataIsArray ? numericDeltaData : (numericDeltaData[0] ?? null),
     };
   }
-}
 
-function normalizeTimeSpanArg(timeSpanArg) {
-  let timeSpanCandidate = null;
-  if (
-    timeSpanArg?.type === 'points' &&
-    timeSpanArg?.data?.length
-  ) {
-    timeSpanCandidate = timeSpanArg.data[timeSpanArg.data.length - 1]?.value;
-  } else if (timeSpanArg?.type === 'basic') {
-    timeSpanCandidate = timeSpanArg.data;
-  } else {
-    return defaultTimeSpanArg;
-  }
-
-  return (Number.isFinite(timeSpanCandidate) && timeSpanCandidate > 0) ? {
-    type: 'basic',
-    data: timeSpanCandidate,
-  } : defaultTimeSpanArg;
+  return context.evaluateSeriesFunction(context, {
+    functionName: 'rate',
+    functionArguments: {
+      inputDataProvider: {
+        functionName: 'literal',
+        functionArguments: inputDataDelta,
+      },
+      timeSpanProvider: args.timeSpanProvider,
+    },
+  });
 }

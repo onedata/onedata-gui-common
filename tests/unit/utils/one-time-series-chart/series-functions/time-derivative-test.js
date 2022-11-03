@@ -13,7 +13,7 @@ const casesToCheck = [{
   // typical case
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50), point(3, 150)],
+    data: [point(10, 100), point(15, 50), point(20, 150)],
   },
   timeSpan: {
     type: 'basic',
@@ -22,13 +22,13 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(2, -10), point(3, 20)],
+    data: [point(15, -10), point(20, 20)],
   },
 }, {
   // time span different than default
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50), point(3, 150)],
+    data: [point(10, 100), point(15, 50), point(20, 150)],
   },
   timeSpan: {
     type: 'basic',
@@ -37,25 +37,25 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(2, -50), point(3, 100)],
+    data: [point(15, -50), point(20, 100)],
   },
 }, {
   // null time span
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50), point(3, 150)],
+    data: [point(10, 100), point(15, 50), point(20, 150)],
   },
   timeSpan: null,
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(2, -10), point(3, 20)],
+    data: [point(15, -10), point(20, 20)],
   },
 }, {
   // time span == 0
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50), point(3, 150)],
+    data: [point(10, 100), point(15, 50), point(20, 150)],
   },
   timeSpan: {
     type: 'basic',
@@ -64,13 +64,13 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(2, -10), point(3, 20)],
+    data: [point(15, -10), point(20, 20)],
   },
 }, {
   // time span < 0
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50), point(3, 150)],
+    data: [point(10, 100), point(15, 50), point(20, 150)],
   },
   timeSpan: {
     type: 'basic',
@@ -79,29 +79,35 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(2, -10), point(3, 20)],
+    data: [point(15, -10), point(20, 20)],
   },
 }, {
   // points having null
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, null), point(3, null), point(4, 50), point(5, 100)],
+    data: [
+      point(10, 100),
+      point(15, null),
+      point(20, null),
+      point(25, 50),
+      point(30, 100),
+    ],
   },
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(2, null), point(3, null), point(4, null), point(5, 10)],
+    data: [point(15, null), point(20, null), point(25, null), point(30, 10)],
   },
 }, {
   // points having 0 and negative values
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 0), point(3, -150)],
+    data: [point(10, 100), point(15, 0), point(20, -150)],
   },
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(2, -20), point(3, -30)],
+    data: [point(15, -20), point(20, -30)],
   },
 }, {
   // values array instead of points
@@ -140,7 +146,7 @@ const casesToCheck = [{
   // time span larger than time resolution
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50), point(3, 150)],
+    data: [point(10, 100), point(15, 50), point(20, 150)],
   },
   timeSpan: {
     type: 'basic',
@@ -149,13 +155,13 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(2, -600), point(3, 1200)],
+    data: [point(15, -600), point(20, 1200)],
   },
 }, {
   // time resolution much larger than time span
   input: {
     type: 'points',
-    data: [point(1, 8640000), point(2, 2160000), point(3, 4320000)],
+    data: [point(10, 8640000), point(15, 2160000), point(20, 4320000)],
   },
   timeSpan: {
     type: 'basic',
@@ -164,13 +170,13 @@ const casesToCheck = [{
   timeResolution: 60 * 60 * 24,
   output: {
     type: 'points',
-    data: [point(2, -2250), point(3, 750)],
+    data: [point(15, -2250), point(20, 750)],
   },
 }, {
   // the additional point is the oldest one
   input: {
     type: 'points',
-    data: [point(1, 100, { oldest: true }), point(2, 50), point(3, 150)],
+    data: [point(10, 100, { oldest: true }), point(15, 50), point(20, 150)],
   },
   timeSpan: {
     type: 'basic',
@@ -179,17 +185,17 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(2, -10), point(3, 20)],
+    data: [point(15, -10), point(20, 20)],
   },
 }, {
   // the additional point is a point before the oldest
   input: {
     type: 'points',
     data: [
-      point(0, null, { oldest: true, fake: true }),
-      point(1, 100, { oldest: true }),
-      point(2, 50),
-      point(3, 150),
+      point(5, null, { oldest: true, fake: true }),
+      point(10, 100, { oldest: true }),
+      point(15, 50),
+      point(20, 150),
     ],
   },
   timeSpan: {
@@ -199,18 +205,18 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(1, 20, { oldest: true }), point(2, -10), point(3, 20)],
+    data: [point(10, 20, { oldest: true }), point(15, -10), point(20, 20)],
   },
 }, {
   // the additional point is a point far before the oldest
   input: {
     type: 'points',
     data: [
-      point(-1, null, { oldest: true, fake: true }),
       point(0, null, { oldest: true, fake: true }),
-      point(1, 100, { oldest: true }),
-      point(2, 50),
-      point(3, 150),
+      point(5, null, { oldest: true, fake: true }),
+      point(10, 100, { oldest: true }),
+      point(15, 50),
+      point(20, 150),
     ],
   },
   timeSpan: {
@@ -221,31 +227,53 @@ const casesToCheck = [{
   output: {
     type: 'points',
     data: [
-      point(0, null, { oldest: true, fake: true }),
-      point(1, 20, { oldest: true }),
-      point(2, -10),
-      point(3, 20),
+      point(5, null, { oldest: true, fake: true }),
+      point(10, 20, { oldest: true }),
+      point(15, -10),
+      point(20, 20),
     ],
+  },
+}, {
+  // partial last point
+  input: {
+    type: 'points',
+    data: [point(10, 100), point(15, 50), point(20, 150)],
+  },
+  timeSpan: {
+    type: 'basic',
+    data: 1,
+  },
+  timeResolution: 5,
+  newestEdgeTimestamp: 21,
+  output: {
+    type: 'points',
+    data: [point(15, -10), point(20, 50)],
   },
 }];
 
 describe('Unit | Utility | one time series chart/series functions/time derivative',
   function () {
-    casesToCheck.forEach(({ input, timeSpan, timeResolution, output }) =>
-      testTimeDerivative(input, timeSpan, timeResolution, output)
-    );
+    casesToCheck.forEach((spec) => testTimeDerivative(spec));
   }
 );
 
-function testTimeDerivative(input, timeSpan, timeResolution, output) {
+function testTimeDerivative({
+  input,
+  timeSpan,
+  timeResolution,
+  newestEdgeTimestamp,
+  output,
+}) {
   const stringifiedInput = stringifyArgumentData(input.data);
   const stringifiedTimeSpan = stringifyArgumentData(timeSpan?.data ?? null);
   const stringifiedOutput = stringifyArgumentData(output.data);
+  const newestEdgeTimestampDescription = newestEdgeTimestamp ? `, newest edge timestamp ${newestEdgeTimestamp}` : '';
 
-  it(`returns ${stringifiedOutput} for ${stringifiedInput}, time span ${stringifiedTimeSpan} and time resolution ${timeResolution}`,
+  it(`returns ${stringifiedOutput} for ${stringifiedInput}, time span ${stringifiedTimeSpan}${newestEdgeTimestampDescription} and time resolution ${timeResolution}`,
     async function () {
       const context = createContext();
       context.timeResolution = timeResolution;
+      context.newestEdgeTimestamp = newestEdgeTimestamp ?? 99999999;
       const inputDataProvider = createConstArgument(input);
       const timeSpanProvider = createConstArgument(timeSpan);
 

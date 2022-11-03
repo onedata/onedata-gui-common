@@ -13,7 +13,7 @@ const casesToCheck = [{
   // typical case
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50)],
+    data: [point(0, 100), point(5, 50)],
   },
   timeSpan: {
     type: 'basic',
@@ -22,13 +22,13 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(1, 20), point(2, 10)],
+    data: [point(0, 20), point(5, 10)],
   },
 }, {
   // time span different than default
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50)],
+    data: [point(0, 100), point(5, 50)],
   },
   timeSpan: {
     type: 'basic',
@@ -37,25 +37,25 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(1, 100), point(2, 50)],
+    data: [point(0, 100), point(5, 50)],
   },
 }, {
   // null time span
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50)],
+    data: [point(0, 100), point(5, 50)],
   },
   timeSpan: null,
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(1, 20), point(2, 10)],
+    data: [point(0, 20), point(5, 10)],
   },
 }, {
   // time span == 0
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50)],
+    data: [point(0, 100), point(5, 50)],
   },
   timeSpan: {
     type: 'basic',
@@ -64,13 +64,13 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(1, 20), point(2, 10)],
+    data: [point(0, 20), point(5, 10)],
   },
 }, {
   // time span < 0
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50)],
+    data: [point(0, 100), point(5, 50)],
   },
   timeSpan: {
     type: 'basic',
@@ -79,29 +79,29 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(1, 20), point(2, 10)],
+    data: [point(0, 20), point(5, 10)],
   },
 }, {
   // points having null
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, null), point(3, 50)],
+    data: [point(0, 100), point(5, null), point(10, 50)],
   },
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(1, 20), point(2, null), point(3, 10)],
+    data: [point(0, 20), point(5, null), point(10, 10)],
   },
 }, {
   // points having 0 and negative values
   input: {
     type: 'points',
-    data: [point(1, 0), point(2, -50)],
+    data: [point(0, 0), point(5, -50)],
   },
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(1, 0), point(2, -10)],
+    data: [point(0, 0), point(5, -10)],
   },
 }, {
   // values array instead of points
@@ -140,7 +140,7 @@ const casesToCheck = [{
   // time span larger than time resolution
   input: {
     type: 'points',
-    data: [point(1, 100), point(2, 50)],
+    data: [point(0, 100), point(5, 50)],
   },
   timeSpan: {
     type: 'basic',
@@ -149,13 +149,13 @@ const casesToCheck = [{
   timeResolution: 5,
   output: {
     type: 'points',
-    data: [point(1, 1200), point(2, 600)],
+    data: [point(0, 1200), point(5, 600)],
   },
 }, {
   // time resolution much larger than time span
   input: {
     type: 'points',
-    data: [point(1, 8640000), point(2, 2160000)],
+    data: [point(0, 8640000), point(5, 2160000)],
   },
   timeSpan: {
     type: 'basic',
@@ -164,27 +164,43 @@ const casesToCheck = [{
   timeResolution: 60 * 60 * 24,
   output: {
     type: 'points',
-    data: [point(1, 3000), point(2, 750)],
+    data: [point(0, 3000), point(5, 750)],
+  },
+}, {
+  // partial last point
+  input: {
+    type: 'points',
+    data: [point(0, 100), point(5, 50)],
+  },
+  timeSpan: {
+    type: 'basic',
+    data: 1,
+  },
+  timeResolution: 5,
+  newestEdgeTimestamp: 6,
+  output: {
+    type: 'points',
+    data: [point(0, 20), point(5, 25)],
   },
 }];
 
 describe('Unit | Utility | one time series chart/series functions/rate',
   function () {
-    casesToCheck.forEach(({ input, timeSpan, timeResolution, output }) =>
-      testRate(input, timeSpan, timeResolution, output)
-    );
+    casesToCheck.forEach((spec) => testRate(spec));
   }
 );
 
-function testRate(input, timeSpan, timeResolution, output) {
+function testRate({ input, timeSpan, timeResolution, newestEdgeTimestamp, output }) {
   const stringifiedInput = stringifyArgumentData(input.data);
   const stringifiedTimeSpan = stringifyArgumentData(timeSpan?.data ?? null);
   const stringifiedOutput = stringifyArgumentData(output.data);
+  const newestEdgeTimestampDescription = newestEdgeTimestamp ? `, newest edge timestamp ${newestEdgeTimestamp}` : '';
 
-  it(`returns ${stringifiedOutput} for ${stringifiedInput}, time span ${stringifiedTimeSpan} and time resolution ${timeResolution}`,
+  it(`returns ${stringifiedOutput} for ${stringifiedInput}, time span ${stringifiedTimeSpan}${newestEdgeTimestampDescription} and time resolution ${timeResolution}`,
     async function () {
       const context = createContext();
       context.timeResolution = timeResolution;
+      context.newestEdgeTimestamp = newestEdgeTimestamp ?? 99999999;
       const inputDataProvider = createConstArgument(input);
       const timeSpanProvider = createConstArgument(timeSpan);
 

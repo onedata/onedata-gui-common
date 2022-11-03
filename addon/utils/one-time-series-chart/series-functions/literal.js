@@ -9,6 +9,7 @@
 
 /**
  * @typedef {Object} OTSCLiteralSeriesFunctionArguments
+ * @property {'basic'|'points'} [type]
  * @property {unknown} data
  */
 
@@ -18,9 +19,10 @@
  * @returns {unknown}
  */
 export default function literal(context, args) {
+  const type = args?.type === 'points' ? 'points' : 'basic';
   const data = (args && 'data' in args) ? args.data : null;
   return {
-    type: 'basic',
+    type,
     data,
   };
 }

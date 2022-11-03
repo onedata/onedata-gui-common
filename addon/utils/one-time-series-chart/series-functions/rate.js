@@ -66,9 +66,33 @@ export default async function rate(context, args) {
   const inputDataAsArray = inputDataIsArray ? inputData.data : [inputData.data];
   const numericInputData = inputData?.type === 'points' ?
     inputDataAsArray.map((point) => point?.value ?? null) : inputDataAsArray;
-  const numericResultData = numericInputData.map((value) =>
-    Number.isFinite(value) ? (value / context.timeResolution) * timeSpan : null
-  );
+  const numericResultData = [];
+
+  for (let i = 0; i < numericInputData.length; i++) {
+    const value = numericInputData[i];
+
+    if (!Number.isFinite(value)) {
+      numericResultData.push(null);
+      continue;
+    }
+
+    let pointDuration = context.timeResolution;
+    if (
+      i === numericInputData.length - 1 &&
+      inputData?.type === 'points' &&
+      context.newestEdgeTimestamp
+    ) {
+      const pointDurationUntilNewest = Math.max(
+        context.newestEdgeTimestamp - inputDataAsArray[i].timestamp,
+        0
+      ) + 1;
+      if (pointDurationUntilNewest < pointDuration) {
+        pointDuration = pointDurationUntilNewest;
+      }
+    }
+
+    numericResultData.push((value / pointDuration) * timeSpan);
+  }
 
   if (inputData.type === 'points') {
     const result = _.cloneDeep(inputData);
