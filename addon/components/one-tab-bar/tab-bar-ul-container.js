@@ -71,14 +71,18 @@ export default Component.extend(ContentOverFlowdetector, {
     return $(this.element.querySelector('.container-inner-scroll-content'));
   }),
 
-  hasOverflowObserver: observer('hasOverflow', function hasOverflowObserver() {
-    (async () => {
-      await waitForRender();
-      if (this.$innerScrollContent) {
-        this.innerScrollContentScrolled(this.$innerScrollContent);
+  /**
+   * @param {WheelEvent} wheelEvent
+   * Intercept vertical scrolling and scroll content horizontally.
+   */
+  wheelEventHandler: computed(function wheelEventHandler() {
+    return (wheelEvent) => {
+      const { deltaX, deltaY } = wheelEvent;
+      if (deltaX === 0 && deltaY !== 0) {
+        wheelEvent.preventDefault();
+        this.scrollContainer(deltaY);
       }
-    })();
-    this.hasOverflowChanged(this.hasOverflow);
+    };
   }),
 
   didInsertElement() {
@@ -106,18 +110,17 @@ export default Component.extend(ContentOverFlowdetector, {
   },
 
   /**
-   * @param {WheelEvent} wheelEvent
-   * Intercept vertical scrolling and scroll content horizontally.
+   * @override
    */
-  wheelEventHandler: computed(function wheelEventHandler() {
-    return (wheelEvent) => {
-      const { deltaX, deltaY } = wheelEvent;
-      if (deltaX === 0 && deltaY !== 0) {
-        wheelEvent.preventDefault();
-        this.scrollContainer(deltaY);
+  onOverflowRecomputed(hasOverflow) {
+    (async () => {
+      await waitForRender();
+      if (this.$innerScrollContent) {
+        this.innerScrollContentScrolled(this.$innerScrollContent);
       }
-    };
-  }),
+    })();
+    this.hasOverflowChanged(hasOverflow);
+  },
 
   /**
    * Method to handle scroll event.

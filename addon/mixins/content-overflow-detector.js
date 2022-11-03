@@ -1,14 +1,14 @@
 /**
- * Mixin for element overflow detection. It checks, if there is enough 
- * place for a given element. Overflow status is available via hasOverflow field. 
+ * Mixin for element overflow detection. It checks, if there is enough
+ * place for a given element. Overflow status is available via hasOverflow field.
  * It works using algorithm (pseudo-code):
- * 
+ *
  * ```
  * if (window.width < minimumFullWindowSize) hasOverflow = true
- * else hasOverflow = overflowParentElement.width < 
+ * else hasOverflow = overflowParentElement.width <
  *    overflowElement.width + overflowSiblingsElements.widthSum + additionalOverflowMargin
  * ```
- * 
+ *
  * @module mixins/content-overflow-detector
  * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -23,6 +23,14 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Mixin.create({
   /**
+   * Invoked every time overflow is recomputed, no matter if it changes.
+   * If overflow is changed then `isChanged` is true.
+   * @virtual optional
+   * @type {(hasOverflow: boolean, isChanged: boolean) => void}
+   */
+  onOverflowRecomputed: undefined,
+
+  /**
    * Element, whose overflow is being checked
    * To inject.
    * @type {JQuery}
@@ -30,15 +38,15 @@ export default Mixin.create({
   overflowElement: null,
 
   /**
-   * Container element, whose width is taken as an available place for the 
+   * Container element, whose width is taken as an available place for the
    * checked element. Default is overflowElement.parent()
    * @type {JQuery}
    */
   overflowParentElement: null,
 
   /**
-   * Elements that takes space (width) in container 
-   * (parent) and must be taken into account while 
+   * Elements that takes space (width) in container
+   * (parent) and must be taken into account while
    * calculating space for checked element.
    * Default is overflowElement.siblings()
    * @type {JQuery}
@@ -52,7 +60,7 @@ export default Mixin.create({
   hasOverflow: false,
 
   /**
-   * Additional margin for checked element. 
+   * Additional margin for checked element.
    * If element.width + additionalOverflowMargin < available place, then
    * hasOverflow = true
    * @type {number}
@@ -152,7 +160,7 @@ export default Mixin.create({
     );
 
     if (minimumFullWindowSize && _window.innerWidth < minimumFullWindowSize) {
-      this.set('hasOverflow', true);
+      this.changeHasOverflow(true);
       return;
     }
 
@@ -173,7 +181,20 @@ export default Mixin.create({
       .get()
       .map(sibling => $(sibling).outerWidth(true))
       .reduce((prev, curr) => prev + curr, 0);
-    this.set('hasOverflow',
-      parentWidth - siblingsWidth < elementWidth + additionalOverflowMargin);
+    const newHasOverflow =
+      parentWidth - siblingsWidth < elementWidth + additionalOverflowMargin;
+    this.changeHasOverflow(newHasOverflow);
+  },
+
+  /**
+   * @param {boolean} newHasOverflow
+   * @return {void}
+   */
+  changeHasOverflow(newHasOverflow) {
+    const isChanged = this.hasOverflow !== newHasOverflow;
+    if (isChanged) {
+      this.set('hasOverflow', newHasOverflow);
+    }
+    this.onOverflowRecomputed(newHasOverflow, isChanged);
   },
 });

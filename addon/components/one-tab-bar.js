@@ -17,7 +17,7 @@ import { or, raw, conditional, and, eq, not } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 
 /**
- * @typedef {'always'|'overflowAndMobile'|'onlyMobile'|'onlyOverflow'|'never'} OneTabBarDropdownRenderMode
+ * @typedef {'always'|'overflowOrMobile'|'onlyMobile'|'onlyOverflow'|'never'} OneTabBarDropdownRenderMode
  */
 
 /**
@@ -55,7 +55,7 @@ export default Component.extend({
    * @virtual optional
    * @type {OneTabBarDropdownRenderMode}
    */
-  dropdownRenderMode: 'overflowAndMobile',
+  dropdownRenderMode: 'overflowOrMobile',
 
   /**
    * @virtual optional
@@ -106,7 +106,7 @@ export default Component.extend({
   isDropdownRendered: or(
     eq('dropdownRenderMode', raw('always')),
     and(
-      eq('dropdownRenderMode', raw('overflowAndMobile')),
+      eq('dropdownRenderMode', raw('overflowOrMobile')),
       or('tabsOverflow', 'media.isMobile'),
     ),
     and(
