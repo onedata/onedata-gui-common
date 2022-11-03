@@ -92,9 +92,9 @@ export default Component.extend(ContentOverFlowdetector, {
     this.addOverflowDetectionListener();
     this.get('_overflowDetectionListener')();
     $innerScrollContent.scroll(function onScrollContent() {
-      return self.innerScrollContentScrolled($(this));
+      return self.innerScrollContentScrolled(this);
     });
-    this.innerScrollContentScrolled($innerScrollContent);
+    this.innerScrollContentScrolled($innerScrollContent[0]);
     this.element.addEventListener(
       'wheel',
       this.get('wheelEventHandler'), {
@@ -112,25 +112,27 @@ export default Component.extend(ContentOverFlowdetector, {
   /**
    * @override
    */
-  onOverflowRecomputed(hasOverflow) {
+  onOverflowRecomputed(hasOverflow, isChanged) {
     (async () => {
       await waitForRender();
       if (this.$innerScrollContent) {
-        this.innerScrollContentScrolled(this.$innerScrollContent);
+        this.innerScrollContentScrolled(this.$innerScrollContent[0]);
       }
     })();
-    this.hasOverflowChanged(hasOverflow);
+    if (isChanged) {
+      this.hasOverflowChanged(hasOverflow);
+    }
   },
 
   /**
    * Method to handle scroll event.
    * Check if scroll reached left or right boundaries.
-   * @param {jQuery} jqElement
+   * @param {HTMLElement} element
    */
-  innerScrollContentScrolled(jqElement) {
-    const scrollLeftReached = (jqElement.scrollLeft() === 0);
+  innerScrollContentScrolled(element) {
+    const scrollLeftReached = (element.scrollLeft === 0);
     const scrollRightReached =
-      jqElement.scrollLeft() + jqElement.innerWidth() >= jqElement[0].scrollWidth;
+      element.scrollLeft + element.clientWidth >= element.scrollWidth;
     safeExec(this, 'setProperties', {
       scrollLeftReached,
       scrollRightReached,
