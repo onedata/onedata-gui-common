@@ -8,15 +8,25 @@
  */
 
 /**
- * @typedef {Object} OTSCLiteralSeriesFunctionArguments
- * @property {'basic'|'points'} [type]
+ * @typedef {OTSCLiteralSeriesFunctionBasicData|OTSCLiteralSeriesFunctionPointsData} OTSCLiteralSeriesFunctionArguments
+ */
+
+/**
+ * @typedef {Object} OTSCLiteralSeriesFunctionPointsData
+ * @property {'points'} type
+ * @property {Array<OTSCSeriesPoint>} data
+ */
+
+/**
+ * @typedef {Object} OTSCLiteralSeriesFunctionBasicData
+ * @property {'basic'} [type]
  * @property {unknown} data
  */
 
 /**
  * @param {OTSCSeriesFunctionContext} context
  * @param {OTSCLiteralSeriesFunctionArguments} args
- * @returns {unknown}
+ * @returns {OTSCSeriesFunctionGenericResult<unknown>}
  */
 export default function literal(context, args) {
   const type = args?.type === 'points' ? 'points' : 'basic';

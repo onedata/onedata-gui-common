@@ -12,7 +12,7 @@
  *   which should evaluate to a function returning a number.
  *
  * Example:
- * For input (after providers evaluation)
+ * Assuming `timeResolution = 5` for input (after providers evaluation)
  * ```
  * [{ timestamp: 0, value: 100 }, { timestamp: 5, value: 200 }]
  * ```
@@ -35,6 +35,9 @@ import _ from 'lodash';
  * @property {OTSCRawFunction} [timeSpanProvider]
  */
 
+/**
+ * @type {OTSCSeriesFunctionBasicResult<number>}
+ */
 const defaultTimeSpanArg = {
   type: 'basic',
   data: 1,
