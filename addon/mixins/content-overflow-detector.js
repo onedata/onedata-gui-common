@@ -195,6 +195,6 @@ export default Mixin.create({
     if (isChanged) {
       this.set('hasOverflow', newHasOverflow);
     }
-    this.onOverflowRecomputed(newHasOverflow, isChanged);
+    this.onOverflowRecomputed?.(newHasOverflow, isChanged);
   },
 });
