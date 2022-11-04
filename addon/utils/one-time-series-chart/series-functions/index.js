@@ -12,7 +12,9 @@ import getDynamicSeriesGroupConfig from './get-dynamic-series-group-config';
 import literal from './literal';
 import loadSeries from './load-series';
 import multiply from './multiply';
+import rate from './rate';
 import replaceEmpty from './replace-empty';
+import timeDerivative from './time-derivative';
 
 const seriesFunctionsIndex = {
   abs,
@@ -21,7 +23,9 @@ const seriesFunctionsIndex = {
   literal,
   loadSeries,
   multiply,
+  rate,
   replaceEmpty,
+  timeDerivative,
 };
 
 export default seriesFunctionsIndex;

@@ -701,7 +701,9 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @property {OTSCExternalDataSources} externalDataSources reference to data sources
  *   so all chart functions have an access to external data
  * @property {number} newestPointTimestamp timestamp (in seconds) of the globally newest
- *  possible point
+ *   possible point
+ * @property {number} newestEdgeTimestamp timestamp (in seconds) of the last second of
+ *   the globally newest possible point
  * @property {number} lastPointTimestamp timestamp of a point, that should be the
  *   newest point in the current view. It usually is at the right edge of the
  *   chart (edge of "newer" points) and corresponds to `lastPointTimestamp` in
@@ -833,6 +835,15 @@ export default class Configuration {
      * @type {number|null}
      */
     this.newestPointTimestamp = null;
+
+    /**
+     * In live mode - is always null as it changes over time.
+     * In non-live mode - contains timestamp of the globally last moment where
+     * data is available (last second of the newest point).
+     * @private
+     * @type {number|null}
+     */
+    this.newestEdgeTimestamp = null;
 
     /**
      * @private
@@ -1001,6 +1012,7 @@ export default class Configuration {
       }
     });
     this.newestPointTimestamp = foundGloballyNewestTimestamp;
+    this.newestEdgeTimestamp = lastSecondOfNewestPoint;
   }
 
   /**
@@ -1365,6 +1377,10 @@ export default class Configuration {
     if (!normalizedContext.newestPointTimestamp) {
       normalizedContext.newestPointTimestamp = this.live ?
         nowTimestamp : this.newestPointTimestamp;
+    }
+    if (!normalizedContext.newestEdgeTimestamp) {
+      normalizedContext.newestEdgeTimestamp = this.live ?
+        nowTimestamp : this.newestEdgeTimestamp;
     }
     if (!('lastPointTimestamp' in normalizedContext)) {
       normalizedContext.lastPointTimestamp =
