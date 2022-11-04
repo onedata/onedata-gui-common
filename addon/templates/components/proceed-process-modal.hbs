@@ -20,7 +20,7 @@
     {{#if (has-block)}}
       {{yield (hash proceed=(action "proceed") processing=processing)}}
     {{else}}
-      {{messageText}}
+      <p class="proceed-process-text">{{messageText}}</p>
     {{/if}}
   {{/modal.body}}
   {{#modal.footer class="btn-toolbar"}}
