@@ -15,7 +15,7 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/one-tab-bar/tab-bar-ul-container';
 import ContentOverFlowdetector from 'onedata-gui-common/mixins/content-overflow-detector';
-import { computed, observer } from '@ember/object';
+import { computed } from '@ember/object';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
