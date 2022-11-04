@@ -33,6 +33,18 @@ export default Component.extend(I18n, {
   apiSamples: undefined,
 
   /**
+   * @virtual
+   * @type {String}
+   */
+  apiSubject: undefined,
+
+  /**
+   * This should be fill in child component, with one of: 'onezone', 'oneprovider'
+   * @type {String}
+   */
+  product: undefined,
+
+  /**
    * @type {Object}
    */
   selectedApiCommand: null,
@@ -106,11 +118,6 @@ export default Component.extend(I18n, {
   accessTokenUrl: undefined,
 
   /**
-   * @type {String} One of: 'onezone', 'oneprovider'
-   */
-  product: undefined,
-
-  /**
    * @type {ComputedProperty<String>}
    */
   selectedApiCommandString: computed(
@@ -131,14 +138,14 @@ export default Component.extend(I18n, {
   ),
 
   apiCommandTipIntro: computed(
-    'previewMode',
+    'apiSubject',
     'type',
     function apiCommandTipIntro() {
       const {
-        previewMode,
+        apiSubject,
         type,
-      } = this.getProperties('previewMode', 'type');
-      const path = 'apiCommandTipIntro.' + type + '.' + (previewMode ? 'public' : 'private');
+      } = this.getProperties('apiSubject', 'type');
+      const path = 'apiCommandTipIntro.' + type + '.' + apiSubject;
       return this.t(path, {}, { defaultValue: '' });
     }
   ),

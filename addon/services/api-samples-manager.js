@@ -15,7 +15,7 @@ export default Service.extend({
   /**
    * @type {Array<String>}
    */
-  responseBlacklist: Object.freeze(['revision', 'gri']),
+  responseWhitelist: Object.freeze(['rest', 'xrootd']),
 
   /**
    * @param {String} entityId
@@ -36,30 +36,29 @@ export default Service.extend({
     });
     let availableApiSamples = [];
     for (const [key, value] of Object.entries(apiSamples)) {
-      if (this.responseBlacklist.includes(key)) {
-        continue;
-      }
-      if (value.samples) {
-        availableApiSamples = availableApiSamples.concat(
-          value.samples.map(sample => {
-            if (!('type' in sample)) {
-              sample.type = key;
-            }
-            if ('apiRoot' in value) {
-              sample.apiRoot = value.apiRoot;
-            }
-            return sample;
-          })
-        );
-      } else {
-        availableApiSamples = availableApiSamples.concat(
-          value.map(sample => {
-            if (!('type' in sample)) {
-              sample.type = key;
-            }
-            return sample;
-          })
-        );
+      if (this.responseWhitelist.includes(key)) {
+        if (value.samples) {
+          availableApiSamples = availableApiSamples.concat(
+            value.samples.map(sample => {
+              if (!('type' in sample)) {
+                sample.type = key;
+              }
+              if ('apiRoot' in value) {
+                sample.apiRoot = value.apiRoot;
+              }
+              return sample;
+            })
+          );
+        } else {
+          availableApiSamples = availableApiSamples.concat(
+            value.map(sample => {
+              if (!('type' in sample)) {
+                sample.type = key;
+              }
+              return sample;
+            })
+          );
+        }
       }
     }
     return availableApiSamples;

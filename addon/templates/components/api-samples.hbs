@@ -85,7 +85,7 @@
           href=(if (eq effSelectedApiCommand.type "xrootd")
             "https://xrootd.slac.stanford.edu/"
             (one-api-doc-url
-              product=(if previewMode "onezone" product)
+              product=product
               version="latest"
               anchor=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
             )
