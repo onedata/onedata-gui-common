@@ -1,4 +1,5 @@
 export default {
   defaultShort: 'error',
-  defaultTip: 'This data could not be loaded from the server.',
+  errorPrefix: 'Could not load data from server',
+  unknownError: 'Unknown error',
 };

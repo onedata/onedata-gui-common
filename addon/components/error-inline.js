@@ -11,6 +11,7 @@ import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from '../templates/components/error-inline';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import _ from 'lodash';
 
 export default Component.extend(I18n, {
   layout,
@@ -23,13 +24,29 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.errorInline',
 
   i18n: service(),
+  errorExtractor: service(),
+
+  /**
+   * @virtual optional
+   * @type {Object}
+   */
+  error: undefined,
 
   /**
    * Hint shown on hover
    * @virtual optional
    * @type {string}
    */
-  tip: computed('i18n', function tip() {
-    return this.t('defaultTip');
+  tip: computed('error', function tip() {
+    if (!this.error) {
+      return `${this.t('errorPrefix')}.`;
+    }
+    const errorMessage = this.errorExtractor.getMessage(this.error)?.message ||
+      this.t('unknownError');
+    let formattedErrorMessage = _.lowerFirst(String(errorMessage).trim());
+    if (!formattedErrorMessage.endsWith('.')) {
+      formattedErrorMessage = formattedErrorMessage + '.';
+    }
+    return `${this.t('errorPrefix')}: ${formattedErrorMessage}`;
   }),
 });
