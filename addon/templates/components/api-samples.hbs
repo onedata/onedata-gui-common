@@ -59,6 +59,7 @@
           padding=true
           open=apiCommandTypeInfoOpened
           triggerSelector=(concat "#" apiCommandInfoTriggerId)
+          placement=(if (media "isMobile") "bottom-right" "auto")
           as |popover|
         }}
           {{#click-outside
