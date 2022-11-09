@@ -1,0 +1,8 @@
+{{#unless hasBlock}}
+  <span class="label label-danger">{{tt this "defaultShort"}}</span>
+{{else}}
+  {{yield}}
+{{/unless}}
+{{#if tip}}
+  {{bs-tooltip placement="top" title=tip}}
+{{/if}}
