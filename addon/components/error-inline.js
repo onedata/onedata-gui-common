@@ -18,13 +18,13 @@ export default Component.extend(I18n, {
   tagName: 'span',
   classNames: ['error-inline'],
 
+  i18n: service(),
+  errorExtractor: service(),
+
   /**
    * @override
    */
   i18nPrefix: 'components.errorInline',
-
-  i18n: service(),
-  errorExtractor: service(),
 
   /**
    * @virtual optional
