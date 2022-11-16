@@ -1,15 +1,13 @@
-{{#render-later triggerRender=isOpened}}
-  {{#one-webui-popover
-    popoverStyle="record-info"
-    open=isOpened
-    triggerSelector=triggerSelector
-    as |popover|
+{{#one-webui-popover
+  popoverStyle="record-info"
+  open=isOpened
+  triggerSelector=triggerSelector
+  as |popover|
+}}
+  {{#click-outside
+    onClickOutside=(action (mut isOpened) false)
+    exceptSelector=triggerSelector
   }}
-    {{#click-outside
-      onClickOutside=(action (mut isOpened) false)
-      exceptSelector=triggerSelector
-    }}
-      {{yield}}
-    {{/click-outside}}
-  {{/one-webui-popover}}
-{{/render-later}}
+    {{yield}}
+  {{/click-outside}}
+{{/one-webui-popover}}

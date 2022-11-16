@@ -7,7 +7,10 @@
  */
 
 import Component from '@ember/component';
+import layout from '../templates/components/record-info-popover';
 
 export default Component.extend({
+  layout,
+
   classNames: ['record-info-popover'],
 });
