@@ -4,7 +4,7 @@
  *
  * There are use cases when there are multiple records (object) in given set that have:
  * - name - string non unique in given set,
- * - unique name - string unique for records in given set.
+ * - unique key - string unique for records in given set.
  *
  * The example is set of log entries with file names and file paths. Each file has unique
  * path (there are not two files with the same path), but has non-unique name (there can
@@ -13,13 +13,13 @@
  * don't have space to display a path for each entry. We can then assign a unique short
  * hash that is generated for a long path, and display it to distinguish each file.
  *
- * If there is only one pair of name - unique name (single occurence of name) in the set,
+ * If there is only one pair of name - unique key (single occurence of name) in the set,
  * a hash is not generated. If more than one name is added to the set, the hash is
- * generated for the unique name.
+ * generated for each unique key.
  *
- * Using instance of this class, you can add a pair of name and unique name (for above
+ * Using instance of this class, you can add a pair of name and unique key (for above
  * example: a pair of file name and its unique path) and use `hashMapping` property
- * to get a unique name (example: long path) -> hash (short identifier) and display
+ * to get a unique key (example: long path) -> hash (short identifier) and display
  * it in the logs table.
  *
  * @author Jakub Liput
@@ -37,10 +37,10 @@ export default EmberObject.extend({
   hashGenerator: undefined,
 
   /**
-   * Maps: name -> array of all known unique names used by records.
+   * Maps: name -> array of all known unique keys used by records.
    * @type {Object<string, Array<string>>}
    */
-  uniqueNamesMapping: undefined,
+  uniqueKeyMapping: undefined,
 
   /**
    * Maps: unique name -> hash.
@@ -51,37 +51,37 @@ export default EmberObject.extend({
 
   init() {
     this.setProperties({
-      uniqueNamesMapping: {},
+      uniqueKeyMapping: {},
       hashMapping: {},
       hashGenerator: new HashGenerator(),
     });
   },
 
   /**
-   * Adds name and unique name pair to the set (see header doc for glossary).
-   * Adding the pair can cause generation of hash for unique name if it's needed.
+   * Adds name and unique key pair to the set (see header doc for glossary).
+   * Adding the pair can cause generation of hash for unique key if it's needed.
    * If the pair is already in the set, do nothing.
    * @param {string} name
-   * @param {string} uniqueName
+   * @param {string} uniqueKey
    * @returns {void}
    */
-  addPair(name, uniqueName) {
-    if (!this.uniqueNamesMapping[name]) {
-      this.uniqueNamesMapping[name] = [];
+  addPair(name, uniqueKey) {
+    if (!this.uniqueKeyMapping[name]) {
+      this.uniqueKeyMapping[name] = [];
     }
-    const currentUniqueNames = this.uniqueNamesMapping[name];
-    if (this.uniqueNamesMapping[name].includes(uniqueName)) {
+    const currentUniqueKeys = this.uniqueKeyMapping[name];
+    if (this.uniqueKeyMapping[name].includes(uniqueKey)) {
       return;
     }
-    currentUniqueNames.push(uniqueName);
+    currentUniqueKeys.push(uniqueKey);
     let isNewHashValueAdded = false;
-    if (currentUniqueNames.length > 1) {
-      for (const knownValue of currentUniqueNames) {
-        if (this.hashMapping[knownValue]) {
+    if (currentUniqueKeys.length > 1) {
+      for (const key of currentUniqueKeys) {
+        if (this.hashMapping[key]) {
           continue;
         }
-        const hashValue = this.hashGenerator.getHash(knownValue);
-        this.hashMapping[knownValue] = hashValue;
+        const hashValue = this.hashGenerator.getHash(key);
+        this.hashMapping[key] = hashValue;
         isNewHashValueAdded = true;
       }
     }
