@@ -20,7 +20,6 @@ export default Component.extend(I18n, {
 
   apiStringGenerator: service(),
   restApiGenerator: service(),
-  isMobile: service(),
 
   /**
    * @override
