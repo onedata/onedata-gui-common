@@ -432,8 +432,11 @@ label {
         padding-bottom: $modal-content-bottom-padding;
 
         .modal-header {
-          .one-icon {
-            vertical-align: middle;
+          // FIXME: check if does not break modal styles
+          h1 {
+            .one-icon {
+              vertical-align: middle;
+            }
           }
           .close {
             display: none;
