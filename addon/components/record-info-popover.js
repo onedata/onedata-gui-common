@@ -11,7 +11,19 @@ import layout from '../templates/components/record-info-popover';
 
 export default Component.extend({
   layout,
-  tagName: 'span',
+  tagName: '',
 
   classNames: ['record-info-popover'],
+
+  /**
+   * @virtual
+   * @type {String}
+   */
+  triggerSelector: undefined,
+
+  /**
+   * @virtual
+   * @type {Boolean}
+   */
+  isOpened: false,
 });
