@@ -1,10 +1,18 @@
 .api-samples {
-  .table.table-info td.property-name {
-    width: 10em;
-    @media (max-width: $screen-xs-max) {
-      width: auto;
+  .table.table-info {
+    margin-bottom: 0;
+
+    td.property-name {
+      width: 10em;
+      padding-left: 0;
+      @media (max-width: $screen-xs-max) {
+        width: auto;
+      }
     }
-  }
+    td.property-value {
+      padding-right: 0;
+    }
+  } 
 
   .api-operation-row {
     display: flex;
