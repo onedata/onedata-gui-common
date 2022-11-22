@@ -8,6 +8,7 @@
 
 import _ from 'lodash';
 import { doesAtmDataSpecMatchFilters } from '../filters';
+import { typeDefinitionBase } from './commons';
 
 /**
  * @typedef {Object} AtmArrayDataSpec
@@ -28,21 +29,21 @@ import { doesAtmDataSpecMatchFilters } from '../filters';
 /**
  * @type {AtmDataSpecTypeDefinition<AtmArrayValueConstraints, AtmArrayValueConstraintsConditions>}
  */
-export const atmDataSpecTypeDefinition = {
-  supertype: null,
-  canValueConstraintsContain(
-    containerConstraints,
-    toContainConstraints,
+export const atmDataSpecTypeDefinition = Object.freeze({
+  ...typeDefinitionBase,
+  isValueConstraintsCompatible(
+    referenceConstraints,
+    typeOrSubtypeConstraints,
     ignoreEmpty,
     context
   ) {
-    if (!containerConstraints?.itemDataSpec || !toContainConstraints?.itemDataSpec) {
+    if (!referenceConstraints?.itemDataSpec || !typeOrSubtypeConstraints?.itemDataSpec) {
       return ignoreEmpty;
     }
 
-    return context.canAtmDataSpecContain(
-      containerConstraints.itemDataSpec,
-      toContainConstraints.itemDataSpec,
+    return context.isAtmDataSpecCompatible(
+      referenceConstraints.itemDataSpec,
+      typeOrSubtypeConstraints.itemDataSpec,
       ignoreEmpty
     );
   },
@@ -97,4 +98,4 @@ export const atmDataSpecTypeDefinition = {
     }
     return true;
   },
-};
+});

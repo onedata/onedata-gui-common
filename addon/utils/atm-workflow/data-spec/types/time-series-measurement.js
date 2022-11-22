@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { doesAtmDataSpecMatchFilters } from '../filters';
+import { typeDefinitionBase } from './commons';
 
 /**
  * @typedef {Object} AtmTimeSeriesMeasurementDataSpec
@@ -30,19 +30,11 @@ import { doesAtmDataSpecMatchFilters } from '../filters';
 /**
  * @type {AtmDataSpecTypeDefinition<AtmTimeSeriesMeasurementValueConstraints, AtmTimeSeriesMeasurementValueConstraintsConditions>}
  */
-export const atmDataSpecTypeDefinition = {
+export const atmDataSpecTypeDefinition = Object.freeze({
+  ...typeDefinitionBase,
   supertype: 'object',
-  canValueConstraintsContain() {
-    return true;
-  },
-  getValueConstraintsConditions() {
-    // TODO: VFS-10007 implement generating these conditions
-    return null;
-  },
-  isMatchingFilters(atmDataSpec, filters, context) {
-    return doesAtmDataSpecMatchFilters(atmDataSpec, filters, context);
-  },
-};
+  // TODO: VFS-10007 implement `getValueConstraintsConditions`
+});
 
 /**
  * @typedef {Object} AtmTimeSeriesMeasurementSpec
@@ -51,10 +43,10 @@ export const atmDataSpecTypeDefinition = {
  * @property {TimeSeriesUnit} unit
  */
 
-export const nameMatcherTypes = [
+export const nameMatcherTypes = Object.freeze([
   'exact',
   'hasPrefix',
-];
+]);
 
 /**
  * @param {Ember.Service} i18n

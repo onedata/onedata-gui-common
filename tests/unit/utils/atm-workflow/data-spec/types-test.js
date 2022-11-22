@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context } from 'mocha';
 import {
+  AtmDataSpecType,
   atmDataSpecTypesArray,
   isAtmDataSpecMatchingFilters,
   getMatchingAtmDataSpecTypes,
@@ -15,40 +16,40 @@ import {
 import _ from 'lodash';
 
 const inheritanceLeafTypes = [
-  'integer',
-  'string',
-  'array',
-  'file',
-  'dataset',
-  'range',
-  'timeSeriesMeasurement',
+  AtmDataSpecType.Integer,
+  AtmDataSpecType.String,
+  AtmDataSpecType.Array,
+  AtmDataSpecType.File,
+  AtmDataSpecType.Dataset,
+  AtmDataSpecType.Range,
+  AtmDataSpecType.TimeSeriesMeasurement,
 ];
 
 const inheritanceRootTypes = [
-  'integer',
-  'string',
-  'array',
-  'object',
+  AtmDataSpecType.Integer,
+  AtmDataSpecType.String,
+  AtmDataSpecType.Array,
+  AtmDataSpecType.Object,
 ];
 
 const fileSupertypes = [
-  'object',
+  AtmDataSpecType.Object,
 ];
 const datasetSupertypes = [
-  'object',
+  AtmDataSpecType.Object,
 ];
 const rangeSupertypes = [
-  'object',
+  AtmDataSpecType.Object,
 ];
 const timeSeriesMeasurementSupertypes = [
-  'object',
+  AtmDataSpecType.Object,
 ];
 
 const objectSubtypes = [
-  'file',
-  'dataset',
-  'range',
-  'timeSeriesMeasurement',
+  AtmDataSpecType.File,
+  AtmDataSpecType.Dataset,
+  AtmDataSpecType.Range,
+  AtmDataSpecType.TimeSeriesMeasurement,
 ];
 
 describe('Unit | Utility | atm workflow/data spec/types', function () {
@@ -80,7 +81,7 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
     it('returns true when there are no filters', function () {
       const filters = [];
       const atmDataSpec = {
-        type: 'file',
+        type: AtmDataSpecType.File,
       };
 
       expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.true;
@@ -89,13 +90,13 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
     it('returns true only when all filters are fulfilled', function () {
       const filters = [{
         filterType: 'typeOrSubtype',
-        types: [{ type: 'object' }],
+        types: [{ type: AtmDataSpecType.Object }],
       }, {
         filterType: 'forbiddenType',
-        types: [{ type: 'dataset' }],
+        types: [{ type: AtmDataSpecType.Dataset }],
       }];
       const atmDataSpec = {
-        type: 'file',
+        type: AtmDataSpecType.File,
       };
 
       expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.true;
@@ -104,13 +105,13 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
     it('returns false when one of filters is not fulfilled', function () {
       const filters = [{
         filterType: 'typeOrSubtype',
-        types: [{ type: 'object' }],
+        types: [{ type: AtmDataSpecType.Object }],
       }, {
         filterType: 'forbiddenType',
-        types: [{ type: 'dataset' }],
+        types: [{ type: AtmDataSpecType.Dataset }],
       }];
       const atmDataSpec = {
-        type: 'dataset',
+        type: AtmDataSpecType.Dataset,
       };
 
       expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.false;
@@ -123,7 +124,7 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
           types: [],
         }];
         const atmDataSpec = {
-          type: 'file',
+          type: AtmDataSpecType.File,
         };
 
         expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.true;
@@ -132,10 +133,10 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       it('returns true when at least one type matches', function () {
         const filters = [{
           filterType: 'typeOrSupertype',
-          types: [{ type: 'dataset' }, { type: 'file' }],
+          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.File }],
         }];
         const atmDataSpec = {
-          type: 'file',
+          type: AtmDataSpecType.File,
         };
 
         expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.true;
@@ -144,10 +145,10 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       it('returns false when none of types match', function () {
         const filters = [{
           filterType: 'typeOrSupertype',
-          types: [{ type: 'dataset' }, { type: 'integer' }],
+          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.Integer }],
         }];
         const atmDataSpec = {
-          type: 'file',
+          type: AtmDataSpecType.File,
         };
 
         expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.false;
@@ -171,24 +172,24 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
 
       atmFileTypesArray.forEach((atmFileType) => {
         testTypeOrSupertypeFilter({
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: atmFileType,
           },
         }, {
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: atmFileType,
           },
         }, true);
         atmFileTypeSupertypes[atmFileType].forEach((atmFileTypeSupertype) => {
           testTypeOrSupertypeFilter({
-            type: 'file',
+            type: AtmDataSpecType.File,
             valueConstraints: {
               fileType: atmFileTypeSupertype,
             },
           }, {
-            type: 'file',
+            type: AtmDataSpecType.File,
             valueConstraints: {
               fileType: atmFileType,
             },
@@ -197,12 +198,12 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
         _.difference(atmFileTypesArray, atmFileTypeSupertypes[atmFileType], [atmFileType])
           .forEach((invalidAtmFileTypeSupertype) => {
             testTypeOrSupertypeFilter({
-              type: 'file',
+              type: AtmDataSpecType.File,
               valueConstraints: {
                 fileType: invalidAtmFileTypeSupertype,
               },
             }, {
-              type: 'file',
+              type: AtmDataSpecType.File,
               valueConstraints: {
                 fileType: atmFileType,
               },
@@ -211,12 +212,12 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       });
 
       const objectTypeOrSubtypes = [
-        'object',
+        AtmDataSpecType.Object,
         ...objectSubtypes,
       ];
       objectTypeOrSubtypes.forEach((objectTypeOrSubtype) => {
         testTypeOrSupertypeFilter({
-          type: 'object',
+          type: AtmDataSpecType.Object,
         }, {
           type: objectTypeOrSubtype,
         }, true);
@@ -224,54 +225,54 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       _.difference(atmDataSpecTypesArray, objectTypeOrSubtypes)
         .forEach((typeNotInherited) => {
           testTypeOrSupertypeFilter({
-            type: 'object',
+            type: AtmDataSpecType.Object,
           }, {
             type: typeNotInherited,
           }, false);
         });
 
       testTypeOrSupertypeFilter({
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
             type: fileSupertypes[0],
           },
         },
       }, {
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'file',
+            type: AtmDataSpecType.File,
           },
         },
       }, true);
       testTypeOrSupertypeFilter({
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'file',
+            type: AtmDataSpecType.File,
           },
         },
       }, {
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'file',
+            type: AtmDataSpecType.File,
           },
         },
       }, true);
       testTypeOrSupertypeFilter({
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'dataset',
+            type: AtmDataSpecType.Dataset,
           },
         },
       }, {
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'file',
+            type: AtmDataSpecType.File,
           },
         },
       }, false);
@@ -284,7 +285,7 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
           types: [],
         }];
         const atmDataSpec = {
-          type: 'file',
+          type: AtmDataSpecType.File,
         };
 
         expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.true;
@@ -293,10 +294,10 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       it('returns true when at least one type matches', function () {
         const filters = [{
           filterType: 'typeOrSubtype',
-          types: [{ type: 'dataset' }, { type: 'file' }],
+          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.File }],
         }];
         const atmDataSpec = {
-          type: 'file',
+          type: AtmDataSpecType.File,
         };
 
         expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.true;
@@ -305,10 +306,10 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       it('returns false when none of types match', function () {
         const filters = [{
           filterType: 'typeOrSubtype',
-          types: [{ type: 'dataset' }, { type: 'integer' }],
+          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.Integer }],
         }];
         const atmDataSpec = {
-          type: 'file',
+          type: AtmDataSpecType.File,
         };
 
         expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.false;
@@ -331,12 +332,12 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       });
 
       const fileTypeOrSupertypes = [
-        'file',
+        AtmDataSpecType.File,
         ...fileSupertypes,
       ];
       fileTypeOrSupertypes.forEach((fileTypeOrSupertype) => {
         testTypeOrSubtypeFilter({
-          type: 'file',
+          type: AtmDataSpecType.File,
         }, {
           type: fileTypeOrSupertype,
         }, true);
@@ -344,31 +345,31 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       _.difference(atmDataSpecTypesArray, fileTypeOrSupertypes)
         .forEach((typeNotInheriting) => {
           testTypeOrSubtypeFilter({
-            type: 'file',
+            type: AtmDataSpecType.File,
           }, {
             type: typeNotInheriting,
           }, false);
         });
       atmFileTypesArray.forEach((atmFileType) => {
         testTypeOrSubtypeFilter({
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: atmFileType,
           },
         }, {
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: atmFileType,
           },
         }, true);
         atmFileTypeSubtypes[atmFileType].forEach((atmFileTypeSubtype) => {
           testTypeOrSubtypeFilter({
-            type: 'file',
+            type: AtmDataSpecType.File,
             valueConstraints: {
               fileType: atmFileTypeSubtype,
             },
           }, {
-            type: 'file',
+            type: AtmDataSpecType.File,
             valueConstraints: {
               fileType: atmFileType,
             },
@@ -377,12 +378,12 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
         _.difference(atmFileTypesArray, atmFileTypeSubtypes[atmFileType], [atmFileType])
           .forEach((invalidAtmFileTypeSubtype) => {
             testTypeOrSubtypeFilter({
-              type: 'file',
+              type: AtmDataSpecType.File,
               valueConstraints: {
                 fileType: invalidAtmFileTypeSubtype,
               },
             }, {
-              type: 'file',
+              type: AtmDataSpecType.File,
               valueConstraints: {
                 fileType: atmFileType,
               },
@@ -391,12 +392,12 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       });
 
       const datasetTypeOrSupertypes = [
-        'dataset',
+        AtmDataSpecType.Dataset,
         ...datasetSupertypes,
       ];
       datasetTypeOrSupertypes.forEach((datasetTypeOrSupertype) => {
         testTypeOrSubtypeFilter({
-          type: 'dataset',
+          type: AtmDataSpecType.Dataset,
         }, {
           type: datasetTypeOrSupertype,
         }, true);
@@ -404,19 +405,19 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       _.difference(atmDataSpecTypesArray, datasetTypeOrSupertypes)
         .forEach((typeNotInheriting) => {
           testTypeOrSubtypeFilter({
-            type: 'dataset',
+            type: AtmDataSpecType.Dataset,
           }, {
             type: typeNotInheriting,
           }, false);
         });
 
       const rangeTypeOrSupertypes = [
-        'range',
+        AtmDataSpecType.Range,
         ...rangeSupertypes,
       ];
       rangeTypeOrSupertypes.forEach((rangeTypeOrSupertype) => {
         testTypeOrSubtypeFilter({
-          type: 'range',
+          type: AtmDataSpecType.Range,
         }, {
           type: rangeTypeOrSupertype,
         }, true);
@@ -424,20 +425,20 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       _.difference(atmDataSpecTypesArray, rangeTypeOrSupertypes)
         .forEach((typeNotInheriting) => {
           testTypeOrSubtypeFilter({
-            type: 'range',
+            type: AtmDataSpecType.Range,
           }, {
             type: typeNotInheriting,
           }, false);
         });
 
       const timeSeriesMeasurementTypeOrSupertypes = [
-        'timeSeriesMeasurement',
+        AtmDataSpecType.TimeSeriesMeasurement,
         ...timeSeriesMeasurementSupertypes,
       ];
       timeSeriesMeasurementTypeOrSupertypes.forEach(
         (timeSeriesMeasurementTypeOrSupertype) => {
           testTypeOrSubtypeFilter({
-            type: 'timeSeriesMeasurement',
+            type: AtmDataSpecType.TimeSeriesMeasurement,
           }, {
             type: timeSeriesMeasurementTypeOrSupertype,
           }, true);
@@ -446,54 +447,54 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       _.difference(atmDataSpecTypesArray, timeSeriesMeasurementTypeOrSupertypes)
         .forEach((typeNotInheriting) => {
           testTypeOrSubtypeFilter({
-            type: 'timeSeriesMeasurement',
+            type: AtmDataSpecType.TimeSeriesMeasurement,
           }, {
             type: typeNotInheriting,
           }, false);
         });
 
       testTypeOrSubtypeFilter({
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
             type: objectSubtypes[0],
           },
         },
       }, {
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'object',
+            type: AtmDataSpecType.Object,
           },
         },
       }, true);
       testTypeOrSubtypeFilter({
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'object',
+            type: AtmDataSpecType.Object,
           },
         },
       }, {
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'object',
+            type: AtmDataSpecType.Object,
           },
         },
       }, true);
       testTypeOrSubtypeFilter({
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'integer',
+            type: AtmDataSpecType.Integer,
           },
         },
       }, {
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'object',
+            type: AtmDataSpecType.Object,
           },
         },
       }, false);
@@ -506,7 +507,7 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
           types: [],
         }];
         const atmDataSpec = {
-          type: 'file',
+          type: AtmDataSpecType.File,
         };
 
         expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.true;
@@ -515,10 +516,10 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       it('returns true when none of type match', function () {
         const filters = [{
           filterType: 'forbiddenType',
-          types: [{ type: 'dataset' }, { type: 'integer' }],
+          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.Integer }],
         }];
         const atmDataSpec = {
-          type: 'file',
+          type: AtmDataSpecType.File,
         };
 
         expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.true;
@@ -527,10 +528,10 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       it('returns false when at least one type matches', function () {
         const filters = [{
           filterType: 'forbiddenType',
-          types: [{ type: 'dataset' }, { type: 'file' }],
+          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.File }],
         }];
         const atmDataSpec = {
-          type: 'file',
+          type: AtmDataSpecType.File,
         };
 
         expect(isAtmDataSpecMatchingFilters(atmDataSpec, filters)).to.be.false;
@@ -553,12 +554,12 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       });
 
       const fileTypeOrSupertypes = [
-        'file',
+        AtmDataSpecType.File,
         ...fileSupertypes,
       ];
       fileTypeOrSupertypes.forEach((fileTypeOrSupertype) => {
         testForbiddenTypeFilter({
-          type: 'file',
+          type: AtmDataSpecType.File,
         }, {
           type: fileTypeOrSupertype,
         }, false);
@@ -566,19 +567,19 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       _.difference(atmDataSpecTypesArray, fileTypeOrSupertypes)
         .forEach((typeNotInheriting) => {
           testForbiddenTypeFilter({
-            type: 'file',
+            type: AtmDataSpecType.File,
           }, {
             type: typeNotInheriting,
           }, true);
         });
 
       const datasetTypeOrSupertypes = [
-        'dataset',
+        AtmDataSpecType.Dataset,
         ...datasetSupertypes,
       ];
       datasetTypeOrSupertypes.forEach((datasetTypeOrSupertype) => {
         testForbiddenTypeFilter({
-          type: 'dataset',
+          type: AtmDataSpecType.Dataset,
         }, {
           type: datasetTypeOrSupertype,
         }, false);
@@ -586,19 +587,19 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       _.difference(atmDataSpecTypesArray, datasetTypeOrSupertypes)
         .forEach((typeNotInheriting) => {
           testForbiddenTypeFilter({
-            type: 'dataset',
+            type: AtmDataSpecType.Dataset,
           }, {
             type: typeNotInheriting,
           }, true);
         });
 
       const rangeTypeOrSupertypes = [
-        'range',
+        AtmDataSpecType.Range,
         ...rangeSupertypes,
       ];
       rangeTypeOrSupertypes.forEach((rangeTypeOrSupertype) => {
         testForbiddenTypeFilter({
-          type: 'range',
+          type: AtmDataSpecType.Range,
         }, {
           type: rangeTypeOrSupertype,
         }, false);
@@ -606,20 +607,20 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       _.difference(atmDataSpecTypesArray, rangeTypeOrSupertypes)
         .forEach((typeNotInheriting) => {
           testForbiddenTypeFilter({
-            type: 'range',
+            type: AtmDataSpecType.Range,
           }, {
             type: typeNotInheriting,
           }, true);
         });
 
       const timeSeriesMeasurementTypeOrSupertypes = [
-        'timeSeriesMeasurement',
+        AtmDataSpecType.TimeSeriesMeasurement,
         ...timeSeriesMeasurementSupertypes,
       ];
       timeSeriesMeasurementTypeOrSupertypes.forEach(
         (timeSeriesMeasurementTypeOrSupertype) => {
           testForbiddenTypeFilter({
-            type: 'timeSeriesMeasurement',
+            type: AtmDataSpecType.TimeSeriesMeasurement,
           }, {
             type: timeSeriesMeasurementTypeOrSupertype,
           }, false);
@@ -628,66 +629,66 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       _.difference(atmDataSpecTypesArray, timeSeriesMeasurementTypeOrSupertypes)
         .forEach((typeNotInheriting) => {
           testForbiddenTypeFilter({
-            type: 'timeSeriesMeasurement',
+            type: AtmDataSpecType.TimeSeriesMeasurement,
           }, {
             type: typeNotInheriting,
           }, true);
         });
 
       testForbiddenTypeFilter({
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
             type: objectSubtypes[0],
           },
         },
       }, {
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'object',
+            type: AtmDataSpecType.Object,
           },
         },
       }, false);
       testForbiddenTypeFilter({
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'object',
+            type: AtmDataSpecType.Object,
           },
         },
       }, {
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'object',
+            type: AtmDataSpecType.Object,
           },
         },
       }, false);
       testForbiddenTypeFilter({
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'integer',
+            type: AtmDataSpecType.Integer,
           },
         },
       }, {
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'object',
+            type: AtmDataSpecType.Object,
           },
         },
       }, true);
       testForbiddenTypeFilter({
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'object',
+            type: AtmDataSpecType.Object,
           },
         },
       }, {
-        type: 'object',
+        type: AtmDataSpecType.Object,
       }, false);
     });
   });
@@ -698,14 +699,17 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
     });
 
     [
-      ['integer', ['integer']],
-      ['string', ['string']],
-      ['object', ['object']],
-      ['file', ['object', 'file']],
-      ['dataset', ['object', 'dataset']],
-      ['range', ['object', 'range']],
-      ['array', ['array']],
-      ['timeSeriesMeasurement', ['object', 'timeSeriesMeasurement']],
+      [AtmDataSpecType.Integer, [AtmDataSpecType.Integer]],
+      [AtmDataSpecType.String, [AtmDataSpecType.String]],
+      [AtmDataSpecType.Object, [AtmDataSpecType.Object]],
+      [AtmDataSpecType.File, [AtmDataSpecType.Object, AtmDataSpecType.File]],
+      [AtmDataSpecType.Dataset, [AtmDataSpecType.Object, AtmDataSpecType.Dataset]],
+      [AtmDataSpecType.Range, [AtmDataSpecType.Object, AtmDataSpecType.Range]],
+      [AtmDataSpecType.Array, [AtmDataSpecType.Array]],
+      [AtmDataSpecType.TimeSeriesMeasurement, [
+        AtmDataSpecType.Object,
+        AtmDataSpecType.TimeSeriesMeasurement,
+      ]],
     ].forEach(([type, typeOrSupertypes]) => {
       it(`returns types matching typeOrSupertype filter with type ${type}`, function () {
         expect(getMatchingAtmDataSpecTypes([{
@@ -718,19 +722,29 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
     it('returns types matching at least one type in typeOrSupertype filter', function () {
       expect(getMatchingAtmDataSpecTypes([{
         filterType: 'typeOrSupertype',
-        types: [{ type: 'dataset' }, { type: 'file' }],
-      }])).to.deep.equal(['object', 'file', 'dataset']);
+        types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.File }],
+      }])).to.deep.equal([
+        AtmDataSpecType.Object,
+        AtmDataSpecType.File,
+        AtmDataSpecType.Dataset,
+      ]);
     });
 
     [
-      ['integer', ['integer']],
-      ['string', ['string']],
-      ['object', ['object', 'file', 'dataset', 'range', 'timeSeriesMeasurement']],
-      ['file', ['file']],
-      ['dataset', ['dataset']],
-      ['range', ['range']],
-      ['array', ['array']],
-      ['timeSeriesMeasurement', ['timeSeriesMeasurement']],
+      [AtmDataSpecType.Integer, [AtmDataSpecType.Integer]],
+      [AtmDataSpecType.String, [AtmDataSpecType.String]],
+      [AtmDataSpecType.Object, [
+        AtmDataSpecType.Object,
+        AtmDataSpecType.File,
+        AtmDataSpecType.Dataset,
+        AtmDataSpecType.Range,
+        AtmDataSpecType.TimeSeriesMeasurement,
+      ]],
+      [AtmDataSpecType.File, [AtmDataSpecType.File]],
+      [AtmDataSpecType.Dataset, [AtmDataSpecType.Dataset]],
+      [AtmDataSpecType.Range, [AtmDataSpecType.Range]],
+      [AtmDataSpecType.Array, [AtmDataSpecType.Array]],
+      [AtmDataSpecType.TimeSeriesMeasurement, [AtmDataSpecType.TimeSeriesMeasurement]],
     ].forEach(([type, typeOrSubtypes]) => {
       it(`returns types matching typeOrSubtype filter with type ${type}`, function () {
         expect(getMatchingAtmDataSpecTypes([{
@@ -743,21 +757,39 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
     it('returns types matching at least one type in typeOrSubtype filter', function () {
       expect(getMatchingAtmDataSpecTypes([{
         filterType: 'typeOrSubtype',
-        types: [{ type: 'dataset' }, { type: 'file' }],
-      }])).to.deep.equal(['file', 'dataset']);
+        types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.File }],
+      }])).to.deep.equal([AtmDataSpecType.File, AtmDataSpecType.Dataset]);
     });
 
     [
-      ['integer', _.difference(atmDataSpecTypesArray, ['integer'])],
-      ['string', _.difference(atmDataSpecTypesArray, ['string'])],
-      ['object', _.difference(atmDataSpecTypesArray,
-        ['object', 'file', 'dataset', 'range', 'timeSeriesMeasurement']
-      )],
-      ['file', _.difference(atmDataSpecTypesArray, ['file'])],
-      ['dataset', _.difference(atmDataSpecTypesArray, ['dataset'])],
-      ['range', _.difference(atmDataSpecTypesArray, ['range'])],
-      ['array', _.difference(atmDataSpecTypesArray, ['array'])],
-      ['timeSeriesMeasurement', _.difference(atmDataSpecTypesArray, ['timeSeriesMeasurement'])],
+      [AtmDataSpecType.Integer, _.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.Integer,
+      ])],
+      [AtmDataSpecType.String, _.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.String,
+      ])],
+      [AtmDataSpecType.Object, _.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.Object,
+        AtmDataSpecType.File,
+        AtmDataSpecType.Dataset,
+        AtmDataSpecType.Range,
+        AtmDataSpecType.TimeSeriesMeasurement,
+      ])],
+      [AtmDataSpecType.File, _.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.File,
+      ])],
+      [AtmDataSpecType.Dataset, _.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.Dataset,
+      ])],
+      [AtmDataSpecType.Range, _.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.Range,
+      ])],
+      [AtmDataSpecType.Array, _.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.Array,
+      ])],
+      [AtmDataSpecType.TimeSeriesMeasurement, _.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.TimeSeriesMeasurement,
+      ])],
     ].forEach(([type, allowedTypes]) => {
       it(`returns types matching forbiddenType filter with type ${type}`, function () {
         expect(getMatchingAtmDataSpecTypes([{
@@ -770,37 +802,46 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
     it('returns types matching all types in forbiddenType filter', function () {
       expect(getMatchingAtmDataSpecTypes([{
         filterType: 'forbiddenType',
-        types: [{ type: 'dataset' }, { type: 'file' }],
-      }])).to.deep.equal(_.difference(atmDataSpecTypesArray, ['file', 'dataset']));
+        types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.File }],
+      }])).to.deep.equal(_.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.File,
+        AtmDataSpecType.Dataset,
+      ]));
     });
 
     it('returns conditions matching many different filters', function () {
       expect(getMatchingAtmDataSpecTypes([{
         filterType: 'typeOrSubtype',
-        types: [{ type: 'object' }],
+        types: [{ type: AtmDataSpecType.Object }],
       }, {
         filterType: 'forbiddenType',
-        types: [{ type: 'file' }],
-      }])).to.deep.equal(['object', ..._.difference(objectSubtypes, ['file'])]);
+        types: [{ type: AtmDataSpecType.File }],
+      }]), 'typeOrSubtype and forbiddenType').to.deep.equal(
+        [AtmDataSpecType.Object, ..._.difference(objectSubtypes, [
+          AtmDataSpecType.File,
+        ])]
+      );
       expect(getMatchingAtmDataSpecTypes([{
         filterType: 'typeOrSupertype',
-        types: [{ type: 'file' }],
+        types: [{ type: AtmDataSpecType.File }],
       }, {
         filterType: 'forbiddenType',
-        types: [{ type: 'file' }],
-      }])).to.deep.equal(['object']);
+        types: [{ type: AtmDataSpecType.File }],
+      }]), 'typeOrSupertype and forbiddenType').to.deep.equal([
+        AtmDataSpecType.Object,
+      ]);
     });
   });
 
   describe('getAtmValueConstraintsConditions', function () {
-    _.difference(atmDataSpecTypesArray, ['array', 'file'])
+    _.difference(atmDataSpecTypesArray, [AtmDataSpecType.Array, AtmDataSpecType.File])
       .forEach((atmDataSpecType) => {
         it(`returns null for type ${atmDataSpecType} regardless filters`, function () {
           [
             [],
-            [{ filterType: 'typeOrSupertype', types: [{ type: 'dataset' }] }],
-            [{ filterType: 'typeOrSubtype', types: [{ type: 'object' }] }],
-            [{ filterType: 'forbiddenType', types: [{ type: 'object' }] }],
+            [{ filterType: 'typeOrSupertype', types: [{ type: AtmDataSpecType.Dataset }] }],
+            [{ filterType: 'typeOrSubtype', types: [{ type: AtmDataSpecType.Object }] }],
+            [{ filterType: 'forbiddenType', types: [{ type: AtmDataSpecType.Object }] }],
           ].forEach((filters) => {
             expect(getAtmValueConstraintsConditions(atmDataSpecType, filters)).to.be.null;
           });
@@ -808,7 +849,7 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       });
 
     it('returns empty conditions for type array when filters are empty', function () {
-      expect(getAtmValueConstraintsConditions('array', [])).to.deep.equal({
+      expect(getAtmValueConstraintsConditions(AtmDataSpecType.Array, [])).to.deep.equal({
         itemDataSpecFilters: [],
       });
     });
@@ -817,87 +858,88 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       const filters = [{
         filterType: 'typeOrSupertype',
         types: [{
-          type: 'dataset',
+          type: AtmDataSpecType.Dataset,
         }, {
-          type: 'array',
+          type: AtmDataSpecType.Array,
           valueConstraints: {
             itemDataSpec: {
-              type: 'integer',
+              type: AtmDataSpecType.Integer,
             },
           },
         }],
       }, {
         filterType: 'typeOrSubtype',
         types: [{
-          type: 'file',
+          type: AtmDataSpecType.File,
         }, {
-          type: 'array',
+          type: AtmDataSpecType.Array,
           valueConstraints: {
             itemDataSpec: {
-              type: 'string',
+              type: AtmDataSpecType.String,
             },
           },
         }],
       }, {
         filterType: 'forbiddenType',
         types: [{
-          type: 'range',
+          type: AtmDataSpecType.Range,
         }, {
-          type: 'array',
+          type: AtmDataSpecType.Array,
           valueConstraints: {
             itemDataSpec: {
-              type: 'file',
+              type: AtmDataSpecType.File,
             },
           },
         }],
       }];
-      expect(getAtmValueConstraintsConditions('array', filters)).to.deep.equal({
-        itemDataSpecFilters: [{
-          filterType: 'typeOrSupertype',
-          types: [{
-            type: 'integer',
-          }],
-        }, {
-          filterType: 'typeOrSubtype',
-          types: [{
-            type: 'string',
-          }],
-        }, {
-          filterType: 'forbiddenType',
-          types: [{
-            type: 'range',
+      expect(getAtmValueConstraintsConditions(AtmDataSpecType.Array, filters))
+        .to.deep.equal({
+          itemDataSpecFilters: [{
+            filterType: 'typeOrSupertype',
+            types: [{
+              type: AtmDataSpecType.Integer,
+            }],
           }, {
-            type: 'array',
-            valueConstraints: {
-              itemDataSpec: {
-                type: 'file',
+            filterType: 'typeOrSubtype',
+            types: [{
+              type: AtmDataSpecType.String,
+            }],
+          }, {
+            filterType: 'forbiddenType',
+            types: [{
+              type: AtmDataSpecType.Range,
+            }, {
+              type: AtmDataSpecType.Array,
+              valueConstraints: {
+                itemDataSpec: {
+                  type: AtmDataSpecType.File,
+                },
               },
-            },
-          }, {
-            type: 'file',
+            }, {
+              type: AtmDataSpecType.File,
+            }],
           }],
-        }],
-      });
+        });
     });
 
     it('returns conditions containing all possible file types for type file when filters are empty',
       function () {
-        expect(getAtmValueConstraintsConditions('file', [])).to.deep.equal({
+        expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [])).to.deep.equal({
           allowedFileTypes: atmFileTypesArray,
         });
       }
     );
 
     it('returns conditions matching typeOrSupertype filter for type file', function () {
-      expect(getAtmValueConstraintsConditions('file', [{
+      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
         filterType: 'typeOrSupertype',
         types: [{
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: AtmFileType.Regular,
           },
         }, {
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: AtmFileType.Directory,
           },
@@ -912,121 +954,123 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
     });
 
     it('returns conditions matching typeOrSubtype filter for type file', function () {
-      expect(getAtmValueConstraintsConditions('file', [{
+      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
         filterType: 'typeOrSubtype',
         types: [{
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: AtmFileType.Regular,
           },
         }, {
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: AtmFileType.Directory,
           },
         }],
-      }])).to.deep.equal({
+      }]), 'mixed typeOrSubtype of regular and directory').to.deep.equal({
         allowedFileTypes: [
           AtmFileType.Regular,
           AtmFileType.Directory,
         ],
       });
-      expect(getAtmValueConstraintsConditions('file', [{
+      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
         filterType: 'typeOrSubtype',
         types: [{
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: AtmFileType.Any,
           },
         }, {
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: AtmFileType.Directory,
           },
         }],
-      }])).to.deep.equal({
+      }]), 'mixed typeOrSubtype of any and directory').to.deep.equal({
         allowedFileTypes: atmFileTypesArray,
       });
     });
 
     it('returns conditions matching forbiddenType filter for type file', function () {
-      expect(getAtmValueConstraintsConditions('file', [{
+      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
         filterType: 'forbiddenType',
         types: [{
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: AtmFileType.Regular,
           },
         }, {
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: AtmFileType.Directory,
           },
         }],
-      }])).to.deep.equal({
+      }]), 'mixed forbiddenType of regular and directory').to.deep.equal({
         allowedFileTypes: [
           AtmFileType.Any,
           AtmFileType.SymbolicLink,
         ],
       });
-      expect(getAtmValueConstraintsConditions('file', [{
+      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
         filterType: 'forbiddenType',
         types: [{
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: AtmFileType.Any,
           },
         }],
-      }])).to.deep.equal({
+      }]), 'forbiddenType of any').to.deep.equal({
         allowedFileTypes: [],
       });
     });
 
     it('returns conditions matching many different filters for type file', function () {
-      expect(getAtmValueConstraintsConditions('file', [{
-        filterType: 'typeOrSubtype',
-        types: [{
-          type: 'file',
-          valueConstraints: {
-            fileType: AtmFileType.Any,
-          },
-        }],
-      }, {
-        filterType: 'forbiddenType',
-        types: [{
-          type: 'file',
-          valueConstraints: {
-            fileType: AtmFileType.SymbolicLink,
-          },
-        }],
-      }])).to.deep.equal({
-        allowedFileTypes: [
-          AtmFileType.Any,
-          AtmFileType.Regular,
-          AtmFileType.Directory,
-        ],
-      });
-      expect(getAtmValueConstraintsConditions('file', [{
-        filterType: 'typeOrSupertype',
-        types: [{
-          type: 'file',
-          valueConstraints: {
-            fileType: AtmFileType.Regular,
-          },
-        }],
-      }, {
-        filterType: 'forbiddenType',
-        types: [{
-          type: 'file',
-          valueConstraints: {
-            fileType: AtmFileType.Regular,
-          },
-        }],
-      }])).to.deep.equal({
-        allowedFileTypes: [
-          AtmFileType.Any,
-        ],
-      });
+      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+          filterType: 'typeOrSubtype',
+          types: [{
+            type: AtmDataSpecType.File,
+            valueConstraints: {
+              fileType: AtmFileType.Any,
+            },
+          }],
+        }, {
+          filterType: 'forbiddenType',
+          types: [{
+            type: AtmDataSpecType.File,
+            valueConstraints: {
+              fileType: AtmFileType.SymbolicLink,
+            },
+          }],
+        }]), 'mixed typeOrSubtype if any and forbiddenType of symbolic link')
+        .to.deep.equal({
+          allowedFileTypes: [
+            AtmFileType.Any,
+            AtmFileType.Regular,
+            AtmFileType.Directory,
+          ],
+        });
+      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+          filterType: 'typeOrSupertype',
+          types: [{
+            type: AtmDataSpecType.File,
+            valueConstraints: {
+              fileType: AtmFileType.Regular,
+            },
+          }],
+        }, {
+          filterType: 'forbiddenType',
+          types: [{
+            type: AtmDataSpecType.File,
+            valueConstraints: {
+              fileType: AtmFileType.Regular,
+            },
+          }],
+        }]), 'mixed typeOrSupertype if regular and forbiddenType of regular')
+        .to.deep.equal({
+          allowedFileTypes: [
+            AtmFileType.Any,
+          ],
+        });
     });
   });
 });

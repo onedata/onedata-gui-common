@@ -10,12 +10,18 @@ import { atmDataSpecTypesArray, getAtmDataSpecTypeSubtypes } from '../types';
 
 /**
  * @typedef {Object} AtmDataSpecForbiddenFilter Only types which are different
- * than forbidden types fulfills this filter. Examples:
- * To check is integer and filter.types is [integer] -> not ok
- * To check is file and filter.types is [object] -> not ok (every file is also an object)
- * To check is object and filter.types is [range,object] -> not ok (object is present in
- * the forbidden list)
- * To check is object and filter.types if [file] -> ok (not every object is a file)
+ * than all of provided forbidden types (and it's subtypes) fulfills this filter.
+ * This also applies to any nested data type. Examples:
+ * - To check is integer and filter.types is [integer] -> not ok.
+ * - To check is file and filter.types is [object] -> not ok (every file is
+ * also an object).
+ * - To check is object and filter.types is [range,object] -> not ok (object is
+ * present in the forbidden list).
+ * - To check is object and filter.types is [file] -> ok (not every object
+ * is a file).
+ * - To check is an array of files and filter.types is [object] -> not ok(!)
+ * (file is an object. It doesn't matter that it is nested inside an array).
+ *
  * @property {'forbiddenType'} filterType
  * @property {Array<AtmDataSpec>} types
  */
@@ -23,10 +29,10 @@ import { atmDataSpecTypesArray, getAtmDataSpecTypeSubtypes } from '../types';
 /**
  * @type {AtmDataSpecFilterDefinition<AtmDataSpecForbiddenFilter>}
  */
-export default {
+export default Object.freeze({
   getMatchingAtmDataSpecTypes(filter) {
-    const types = filter?.types ?? [];
-    if (!types.length) {
+    const types = filter?.types;
+    if (!types?.length) {
       return atmDataSpecTypesArray;
     }
 
@@ -50,10 +56,10 @@ export default {
   doesAtmDataSpecMatchFilter(atmDataSpec, filter, context) {
     const filterTypes = filter?.types?.filter(Boolean) ?? [];
     for (const type of filterTypes) {
-      if (context.canAtmDataSpecContain(type, atmDataSpec, true)) {
+      if (context.isAtmDataSpecCompatible(type, atmDataSpec, true)) {
         return false;
       }
     }
     return true;
   },
-};
+});

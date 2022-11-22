@@ -23,19 +23,19 @@ import { atmDataSpecTypesArray } from '../types';
 /**
  * @typedef {Object} AtmDataSpecFilterDefinition<T>
  * @property {(filter: T) => Array<AtmDataSpecType>} getMatchingAtmDataSpecTypes
- * @property {(atmDataSpec: AtmDataSpec, filter: T, context: DoesAtmDataSpecMatchFilterFunctionContext)} doesAtmDataSpecMatchFilter
+ * @property {(atmDataSpec: AtmDataSpec, filter: T, context: DoesAtmDataSpecMatchFilterFuncCtx)} doesAtmDataSpecMatchFilter
  */
 
 /**
- * @typedef {Object} DoesAtmDataSpecMatchFilterFunctionContext
- * @property {(containerAtmDataSpec: AtmDataSpec, toContainAtmDataSpec: AtmDataSpec, ignoreEmpty: boolean) => boolean} canAtmDataSpecContain
+ * @typedef {Object} DoesAtmDataSpecMatchFilterFuncCtx
+ * @property {(containerAtmDataSpec: AtmDataSpec, toContainAtmDataSpec: AtmDataSpec, ignoreEmpty: boolean) => boolean} isAtmDataSpecCompatible
  */
 
-const atmDataSpecFilterDefinitionsMap = {
+const atmDataSpecFilterDefinitionsMap = Object.freeze({
   typeOrSupertype: typeOrSupertypeFilterDefinition,
   typeOrSubtype: typeOrSubtypeFilterDefinition,
   forbiddenType: forbiddenTypeFilterDefinition,
-};
+});
 
 /**
  * @param {Array<AtmDataSpecFilter>} filters
@@ -55,7 +55,7 @@ export function getMatchingAtmDataSpecTypes(filters) {
 /**
  * @param {AtmDataSpec} atmDataSpec
  * @param {Array<AtmDataSpecFilter>} filters
- * @param {DoesAtmDataSpecMatchFilterFunctionContext} context
+ * @param {DoesAtmDataSpecMatchFilterFuncCtx} context
  * @returns {boolean}
  */
 export function doesAtmDataSpecMatchFilters(atmDataSpec, filters, context) {

@@ -7,7 +7,7 @@
  */
 
 import _ from 'lodash';
-import { doesAtmDataSpecMatchFilters } from '../filters';
+import { typeDefinitionBase } from './commons';
 import { FileType } from 'onedata-gui-common/utils/file';
 
 /**
@@ -29,22 +29,23 @@ import { FileType } from 'onedata-gui-common/utils/file';
 /**
  * @type {AtmDataSpecTypeDefinition<AtmFileValueConstraints, AtmFileValueConstraintsConditions>}
  */
-export const atmDataSpecTypeDefinition = {
+export const atmDataSpecTypeDefinition = Object.freeze({
+  ...typeDefinitionBase,
   supertype: 'object',
-  canValueConstraintsContain(
-    containerConstraints,
-    toContainConstraints,
+  isValueConstraintsCompatible(
+    referenceConstraints,
+    typeOrSubtypeConstraints,
     ignoreEmpty = false,
   ) {
-    if (!containerConstraints?.fileType || !toContainConstraints?.fileType) {
+    if (!referenceConstraints?.fileType || !typeOrSubtypeConstraints?.fileType) {
       return ignoreEmpty;
     }
 
-    if (containerConstraints.fileType === toContainConstraints.fileType) {
+    if (referenceConstraints.fileType === typeOrSubtypeConstraints.fileType) {
       return true;
     } else {
-      return atmFileTypeSupertypes[toContainConstraints.fileType]
-        ?.includes(containerConstraints.fileType) || false;
+      return atmFileTypeSupertypes[typeOrSubtypeConstraints.fileType]
+        ?.includes(referenceConstraints.fileType) || false;
     }
   },
   getValueConstraintsConditions(filters) {
@@ -68,7 +69,8 @@ export const atmDataSpecTypeDefinition = {
           case 'forbiddenType': {
             const directlyForbiddenFileTypes = _.uniq(_.flatten(filterFileTypes));
             const indirectlyForbiddenFileTypes = _.uniq(_.flatten(
-              directlyForbiddenFileTypes.map((fileType) => atmFileTypeSubtypes[fileType])
+              directlyForbiddenFileTypes.map((fileType) =>
+                atmFileTypeSubtypes[fileType])
             ));
             const allForbiddenFileTypes = _.uniq([
               ...directlyForbiddenFileTypes,
@@ -91,10 +93,7 @@ export const atmDataSpecTypeDefinition = {
       allowedFileTypes: sortedAllowedFileTypes,
     };
   },
-  isMatchingFilters(atmDataSpec, filters, context) {
-    return doesAtmDataSpecMatchFilters(atmDataSpec, filters, context);
-  },
-};
+});
 
 /**
  * @typedef {'ANY'|FileType} AtmFileType

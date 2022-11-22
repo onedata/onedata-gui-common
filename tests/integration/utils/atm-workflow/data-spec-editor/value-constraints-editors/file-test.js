@@ -7,6 +7,7 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import fileEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/file';
 import { lookupService } from '../../../../../helpers/stub-service';
 import OneDrodopdownHelper from '../../../../../helpers/one-dropdown';
+import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { AtmFileType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 
 const fileTypeOptions = [{
@@ -103,7 +104,7 @@ describe('Integration | Utility | atm workflow/data spec editor/value constraint
     setFilters(this, [{
       filterType: 'typeOrSupertype',
       types: [{
-        type: 'file',
+        type: AtmDataSpecType.File,
         valueConstraints: {
           fileType: AtmFileType.Regular,
         },
@@ -119,7 +120,7 @@ describe('Integration | Utility | atm workflow/data spec editor/value constraint
     setFilters(this, [{
       filterType: 'typeOrSubtype',
       types: [{
-        type: 'file',
+        type: AtmDataSpecType.File,
         valueConstraints: {
           fileType: AtmFileType.Regular,
         },
@@ -134,7 +135,7 @@ describe('Integration | Utility | atm workflow/data spec editor/value constraint
     setFilters(this, [{
       filterType: 'forbiddenType',
       types: [{
-        type: 'file',
+        type: AtmDataSpecType.File,
         valueConstraints: {
           fileType: AtmFileType.Regular,
         },
@@ -150,7 +151,7 @@ describe('Integration | Utility | atm workflow/data spec editor/value constraint
     setFilters(this, [{
       filterType: 'typeOrSupertype',
       types: [{
-        type: 'file',
+        type: AtmDataSpecType.File,
         valueConstraints: {
           fileType: AtmFileType.Regular,
         },
@@ -158,7 +159,7 @@ describe('Integration | Utility | atm workflow/data spec editor/value constraint
     }, {
       filterType: 'forbiddenType',
       types: [{
-        type: 'file',
+        type: AtmDataSpecType.File,
         valueConstraints: {
           fileType: AtmFileType.Regular,
         },

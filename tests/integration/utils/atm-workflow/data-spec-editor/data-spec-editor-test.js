@@ -10,37 +10,39 @@ import {
   dataSpecToFormValues
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import OneDrodopdownHelper from '../../../../helpers/one-dropdown';
+import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { AtmFileType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 import { set } from '@ember/object';
 
 const atmDataSpecTypesInfo = [{
-  type: 'integer',
+  type: AtmDataSpecType.Integer,
   label: 'Integer',
 }, {
-  type: 'string',
+  type: AtmDataSpecType.String,
   label: 'String',
 }, {
-  type: 'object',
+  type: AtmDataSpecType.Object,
   label: 'Object',
 }, {
-  type: 'file',
+  type: AtmDataSpecType.File,
   label: 'File',
 }, {
-  type: 'dataset',
+  type: AtmDataSpecType.Dataset,
   label: 'Dataset',
 }, {
-  type: 'range',
+  type: AtmDataSpecType.Range,
   label: 'Range',
 }, {
-  type: 'array',
+  type: AtmDataSpecType.Array,
   label: 'Array',
 }, {
-  type: 'timeSeriesMeasurement',
+  type: AtmDataSpecType.TimeSeriesMeasurement,
   label: 'Time series measurement',
 }];
 
 const simpleAtmDataSpecTypesInfo = atmDataSpecTypesInfo.filter(({ type }) =>
-  !['file', 'array', 'timeSeriesMeasurement'].includes(type)
+  ![AtmDataSpecType.File, AtmDataSpecType.Array, AtmDataSpecType.TimeSeriesMeasurement]
+  .includes(type)
 );
 const atmDataSpecTypeHelper = new OneDrodopdownHelper('.data-type-selector');
 const fileTypeHelper = new OneDrodopdownHelper('.fileType-field');
@@ -96,7 +98,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       await click('.form-summary-toggle');
       await fileTypeHelper.selectOptionByText('Regular');
       expect(getCreatedAtmDataSpec(this)).to.deep.equal({
-        type: 'file',
+        type: AtmDataSpecType.File,
         valueConstraints: {
           fileType: AtmFileType.Regular,
         },
@@ -112,7 +114,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       await click('.add-field-button');
       await fillIn('.nameMatcher-field input', 'series1');
       expect(getCreatedAtmDataSpec(this)).to.deep.equal({
-        type: 'timeSeriesMeasurement',
+        type: AtmDataSpecType.TimeSeriesMeasurement,
         valueConstraints: {
           specs: [{
             nameMatcherType: 'exact',
@@ -131,13 +133,13 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       await atmDataSpecTypeHelper.selectOptionByText('String');
       expect(getCreatedAtmDataSpec(this)).to.deep.equal({
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'array',
+            type: AtmDataSpecType.Array,
             valueConstraints: {
               itemDataSpec: {
-                type: 'string',
+                type: AtmDataSpecType.String,
                 valueConstraints: {},
               },
             },
@@ -159,12 +161,12 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       const filters = [{
         filterType: 'typeOrSupertype',
         types: [{
-          type: 'integer',
+          type: AtmDataSpecType.Integer,
         }, {
-          type: 'array',
+          type: AtmDataSpecType.Array,
           valueConstraints: {
             itemDataSpec: {
-              type: 'dataset',
+              type: AtmDataSpecType.Dataset,
             },
           },
         }],
@@ -183,12 +185,12 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       const filters = [{
         filterType: 'typeOrSubtype',
         types: [{
-          type: 'integer',
+          type: AtmDataSpecType.Integer,
         }, {
-          type: 'array',
+          type: AtmDataSpecType.Array,
           valueConstraints: {
             itemDataSpec: {
-              type: 'object',
+              type: AtmDataSpecType.Object,
             },
           },
         }],
@@ -213,9 +215,9 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       const filters = [{
         filterType: 'forbiddenType',
         types: [{
-          type: 'object',
+          type: AtmDataSpecType.Object,
         }, {
-          type: 'integer',
+          type: AtmDataSpecType.Integer,
         }],
       }];
       setFilters(this, filters);
@@ -232,19 +234,19 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       const filters = [{
         filterType: 'typeOrSupertype',
         types: [{
-          type: 'integer',
+          type: AtmDataSpecType.Integer,
         }, {
-          type: 'array',
+          type: AtmDataSpecType.Array,
           valueConstraints: {
             itemDataSpec: {
-              type: 'dataset',
+              type: AtmDataSpecType.Dataset,
             },
           },
         }],
       }, {
         filterType: 'forbiddenType',
         types: [{
-          type: 'dataset',
+          type: AtmDataSpecType.Dataset,
         }],
       }];
       setFilters(this, filters);
@@ -261,12 +263,12 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       const filters = [{
         filterType: 'typeOrSubtype',
         types: [{
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: AtmFileType.Regular,
           },
         }, {
-          type: 'file',
+          type: AtmDataSpecType.File,
           valueConstraints: {
             fileType: AtmFileType.Directory,
           },
@@ -311,7 +313,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
 
     it('shows file type data spec', async function (done) {
       setVisibleAtmDataSpec(this, {
-        type: 'file',
+        type: AtmDataSpecType.File,
         valueConstraints: {
           fileType: AtmFileType.Regular,
         },
@@ -327,7 +329,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
 
     it('shows time series measurement type data spec', async function (done) {
       setVisibleAtmDataSpec(this, {
-        type: 'timeSeriesMeasurement',
+        type: AtmDataSpecType.TimeSeriesMeasurement,
         valueConstraints: {
           specs: [{
             nameMatcherType: 'exact',
@@ -347,13 +349,13 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
 
     it('shows array type data spec', async function (done) {
       setVisibleAtmDataSpec(this, {
-        type: 'array',
+        type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: 'array',
+            type: AtmDataSpecType.Array,
             valueConstraints: {
               itemDataSpec: {
-                type: 'string',
+                type: AtmDataSpecType.String,
                 valueConstraints: {},
               },
             },
