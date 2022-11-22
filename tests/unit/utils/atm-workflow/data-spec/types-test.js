@@ -930,6 +930,17 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
       }
     );
 
+    it('returns conditions containing all possible file types for typeOrSupertype filter with type file without value constraints',
+      function () {
+        expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+          filterType: 'typeOrSupertype',
+          types: [{ type: AtmDataSpecType.File }],
+        }])).to.deep.equal({
+          allowedFileTypes: [AtmFileType.Any],
+        });
+      }
+    );
+
     it('returns conditions matching typeOrSupertype filter for type file', function () {
       expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
         filterType: 'typeOrSupertype',
@@ -952,6 +963,17 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
         ],
       });
     });
+
+    it('returns conditions containing all possible file types for typeOrSubtype filter with type file without value constraints',
+      function () {
+        expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+          filterType: 'typeOrSubtype',
+          types: [{ type: AtmDataSpecType.File }],
+        }])).to.deep.equal({
+          allowedFileTypes: atmFileTypesArray,
+        });
+      }
+    );
 
     it('returns conditions matching typeOrSubtype filter for type file', function () {
       expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
@@ -990,6 +1012,17 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
         allowedFileTypes: atmFileTypesArray,
       });
     });
+
+    it('returns conditions containing no file types for forbiddenType filter with type file without value constraints',
+      function () {
+        expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+          filterType: 'forbiddenType',
+          types: [{ type: AtmDataSpecType.File }],
+        }])).to.deep.equal({
+          allowedFileTypes: [],
+        });
+      }
+    );
 
     it('returns conditions matching forbiddenType filter for type file', function () {
       expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{

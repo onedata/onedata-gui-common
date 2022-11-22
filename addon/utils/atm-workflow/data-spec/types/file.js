@@ -51,10 +51,13 @@ export const atmDataSpecTypeDefinition = Object.freeze({
   getValueConstraintsConditions(filters) {
     const allowedFileTypesPerFilter = filters
       ?.map((filter) => {
-        const filterFileTypes = filter
-          ?.types
-          ?.map((type) => type?.valueConstraints?.fileType)
-          ?.filter(Boolean);
+        const filterFileDataSpecs = filter?.types
+          ?.filter((type) => type?.type === 'file') ?? [];
+        if (!filterFileDataSpecs.length) {
+          return atmFileTypesArray;
+        }
+        const filterFileTypes = filterFileDataSpecs
+          .map((type) => type?.valueConstraints?.fileType ?? AtmFileType.Any);
         switch (filter?.filterType) {
           case 'typeOrSupertype':
             return _.uniq(_.flatten(filterFileTypes.map((fileType) => [
