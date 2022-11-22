@@ -8,17 +8,18 @@
  *
  * @module components/one-tab-bar/tab-bar-ul-container
  * @author Jakub Liput
- * @copyright (C) 2019-2020 ACK CYFRONET AGH
+ * @copyright (C) 2019-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 import layout from '../../templates/components/one-tab-bar/tab-bar-ul-container';
 import ContentOverFlowdetector from 'onedata-gui-common/mixins/content-overflow-detector';
-import { computed, observer } from '@ember/object';
+import { computed } from '@ember/object';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 export default Component.extend(ContentOverFlowdetector, {
   layout,
@@ -64,36 +65,11 @@ export default Component.extend(ContentOverFlowdetector, {
    * @type {jQuery}
    */
   $innerScrollContent: computed('element', function $innerScrollContent() {
-    return $(this.get('element').querySelector('.container-inner-scroll-content'));
+    if (!this.element) {
+      return null;
+    }
+    return $(this.element.querySelector('.container-inner-scroll-content'));
   }),
-
-  hasOverflowObserver: observer('hasOverflow', function hasOverflowObserver() {
-    this.get('hasOverflowChanged')(this.get('hasOverflow'));
-  }),
-
-  didInsertElement() {
-    this._super(...arguments);
-    const $innerScrollContent = this.get('$innerScrollContent');
-    const self = this;
-    this.addOverflowDetectionListener();
-    this.get('_overflowDetectionListener')();
-    $innerScrollContent.scroll(function onScrollContent() {
-      return self.innerScrollContentScrolled($(this));
-    });
-    this.innerScrollContentScrolled($innerScrollContent);
-    this.element.addEventListener(
-      'wheel',
-      this.get('wheelEventHandler'), {
-        passive: false,
-      }
-    );
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-    this.removeOverflowDetectionListener();
-    this.element.removeEventListener('wheel', this.get('wheelEventHandler'));
-  },
 
   /**
    * @param {WheelEvent} wheelEvent
@@ -109,15 +85,54 @@ export default Component.extend(ContentOverFlowdetector, {
     };
   }),
 
+  didInsertElement() {
+    this._super(...arguments);
+    const $innerScrollContent = this.get('$innerScrollContent');
+    const self = this;
+    this.addOverflowDetectionListener();
+    this.get('_overflowDetectionListener')();
+    $innerScrollContent.scroll(function onScrollContent() {
+      return self.innerScrollContentScrolled(this);
+    });
+    this.innerScrollContentScrolled($innerScrollContent[0]);
+    this.element.addEventListener(
+      'wheel',
+      this.get('wheelEventHandler'), {
+        passive: false,
+      }
+    );
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this.removeOverflowDetectionListener();
+    this.element.removeEventListener('wheel', this.get('wheelEventHandler'));
+  },
+
+  /**
+   * @override
+   */
+  onOverflowRecomputed(hasOverflow, isChanged) {
+    (async () => {
+      await waitForRender();
+      if (this.$innerScrollContent) {
+        this.innerScrollContentScrolled(this.$innerScrollContent[0]);
+      }
+    })();
+    if (isChanged) {
+      this.hasOverflowChanged(hasOverflow);
+    }
+  },
+
   /**
    * Method to handle scroll event.
    * Check if scroll reached left or right boundaries.
-   * @param {jQuery} jqElement
+   * @param {HTMLElement} element
    */
-  innerScrollContentScrolled(jqElement) {
-    const scrollLeftReached = (jqElement.scrollLeft() === 0);
+  innerScrollContentScrolled(element) {
+    const scrollLeftReached = (element.scrollLeft === 0);
     const scrollRightReached =
-      jqElement.scrollLeft() + jqElement.innerWidth() >= jqElement[0].scrollWidth;
+      element.scrollLeft + element.clientWidth >= element.scrollWidth;
     safeExec(this, 'setProperties', {
       scrollLeftReached,
       scrollRightReached,

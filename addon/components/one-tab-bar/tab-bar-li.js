@@ -1,7 +1,7 @@
 /**
- * Single tab used in one-tab-bar (it's parent component should be 
+ * Single tab used in one-tab-bar (it's parent component should be
  * `one-tab-bar/tab-bar-ul`).
- * 
+ *
  * @module components/one-tab-bar
  * @author Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
@@ -11,6 +11,13 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/one-tab-bar/tab-bar-li';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+
+/**
+ * @typedef {Object} OneTabBarItem
+ * @property {string} name
+ * @property {string|undefined} icon Name of oneicon displayed on the tab
+ * @property {boolean} disabled If true, apply special style and not send anchorClicked action
+ */
 
 export default Component.extend({
   layout,
@@ -34,10 +41,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Object}
-   * @property {string} name
-   * @property {string|undefined} icon Name of oneicon displayed on the tab 
-   * @property {boolean} disabled If true, apply special style and not send anchorClicked action
+   * @type {OneTabBarItem}
    */
   item: undefined,
 

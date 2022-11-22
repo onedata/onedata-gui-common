@@ -4,7 +4,7 @@
  *
  * @module components/one-tab-bar
  * @author Jakub Liput
- * @copyright (C) 2019-2020 ACK CYFRONET AGH
+ * @copyright (C) 2019-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -13,12 +13,26 @@ import layout from '../templates/components/one-tab-bar';
 import { sort } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
 import $ from 'jquery';
-import { or, raw, conditional } from 'ember-awesome-macros';
+import { or, raw, conditional, and, eq, not } from 'ember-awesome-macros';
+import { inject as service } from '@ember/service';
+
+/**
+ * @typedef {'always'|'overflowOrMobile'|'onlyMobile'|'onlyOverflow'|'never'} OneTabBarDropdownRenderMode
+ */
+
+/**
+ * @typedef {'always'|'nonMobile'} OneTabBarTabsRenderMode
+ */
 
 export default Component.extend({
   layout,
   classNames: ['one-tab-bar'],
-  classNameBindings: ['tabsOverflow:tabs-overflowing'],
+  classNameBindings: [
+    'tabsOverflow:tabs-overflowing',
+    'isDropdownRendered:with-dropdown',
+  ],
+
+  media: service(),
 
   /**
    * Array of items representing each tab. Properties of each:
@@ -26,18 +40,10 @@ export default Component.extend({
    * - name - displayed text in the tab
    * - icon - name of one-icon used in item (optional)
    * - class - CSS classes added to tab-bar-li component (optional)
+   * @virtual
    * @type {Array}
    */
   items: undefined,
-
-  /**
-   * Set item that will be active. Look at `selectDefaultOnInit` to see how
-   * first item can be set automatically.
-   * @type {any}
-   */
-  selectedItem: undefined,
-
-  tabsOverflow: undefined,
 
   /**
    * @virtual
@@ -46,12 +52,30 @@ export default Component.extend({
   tabBarLiComponentName: undefined,
 
   /**
-   * @type {ComputedProperty<string>}
+   * @virtual optional
+   * @type {OneTabBarDropdownRenderMode}
    */
-  effTabBarLiComponentName: or(
-    'tabBarLiComponentName',
-    raw('one-tab-bar/tab-bar-li')
-  ),
+  dropdownRenderMode: 'overflowOrMobile',
+
+  /**
+   * @virtual optional
+   * @type {OneTabBarTabsRenderMode}
+   */
+  tabsRenderMode: 'nonMobile',
+
+  /**
+   * Set item that will be active. Look at `selectDefaultOnInit` to see how
+   * first item can be set automatically.
+   * @virtual optional
+   * @type {any}
+   */
+  selectedItem: undefined,
+
+  /**
+   * If true, tabs overflow container, so additional navigation should be rendered.
+   * @type {boolean}
+   */
+  tabsOverflow: undefined,
 
   /**
    * If set to true, sets first tab as active if `selectedItem` is undefined
@@ -67,6 +91,44 @@ export default Component.extend({
    * @type {boolean}
    */
   isSorted: true,
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  effTabBarLiComponentName: or(
+    'tabBarLiComponentName',
+    raw('one-tab-bar/tab-bar-li')
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isDropdownRendered: or(
+    eq('dropdownRenderMode', raw('always')),
+    and(
+      eq('dropdownRenderMode', raw('overflowOrMobile')),
+      or('tabsOverflow', 'media.isMobile'),
+    ),
+    and(
+      eq('dropdownRenderMode', raw('onlyOverflow')),
+      'tabsOverflow',
+    ),
+    and(
+      eq('dropdownRenderMode', raw('onlyMobile')),
+      'media.isMobile',
+    ),
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isTabBarRendered: or(
+    eq('tabsRenderMode', raw('always')),
+    and(
+      eq('tabsRenderMode', raw('nonMobile')),
+      not('media.isMobile'),
+    ),
+  ),
 
   sortedItems: conditional(
     'isSorted',
