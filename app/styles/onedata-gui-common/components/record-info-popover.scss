@@ -1,0 +1,41 @@
+.webui-popover-record-info {
+  max-width: 30em;
+
+  h1 {
+    margin-bottom: 0;
+    border-bottom: 1px solid $main-border-color;
+    padding-bottom: 0.85em;
+    .one-label {
+      text-transform: uppercase;
+    }
+  }
+  .table {
+    margin-bottom: 0;
+    margin-top: 1em;
+    .row-with-text:first-child td {
+      padding-top: 0;
+    }
+    tr {
+      .property-name {
+        padding-left: 0;
+        width: 8em;
+      }
+      .property-value {
+        padding-right: 0;
+      }
+      td {
+        overflow-wrap: break-word;
+        padding: 0.4em;
+      }
+    }
+
+    tr:last-of-type {
+      td {
+        padding-bottom: 0;
+      }
+    }
+  }
+  .webui-popover-content {
+    padding: $padding-small-horizontal;
+  }
+}
