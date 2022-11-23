@@ -22,7 +22,7 @@ export default Component.extend({
   triggerSelector: undefined,
 
   /**
-   * @virtual
+   * @virtual optional
    * @type {Boolean}
    */
   isOpened: false,
