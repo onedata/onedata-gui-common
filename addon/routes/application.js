@@ -19,7 +19,6 @@ import smoothscroll from 'smoothscroll-polyfill';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
 export default Route.extend(ApplicationRouteMixin, {
-  browser: service(),
   guiUtils: service(),
   navigationState: service(),
 
@@ -79,11 +78,9 @@ export default Route.extend(ApplicationRouteMixin, {
   },
 
   smoothScrollPolyfill() {
-    if (this.get('browser.browserName') === 'firefox') {
-      // Firefox does not handle smooth scroll for perfect scrollbar. Enforce smooth scroll
-      // polyfill.
-      window.__forceSmoothScrollPolyfill__ = true;
-    }
+    // Both Firefox (any version) and Chrome (from version ~103) does not handle
+    // smooth scroll for perfect scrollbar. Enforce smooth scroll polyfill.
+    window.__forceSmoothScrollPolyfill__ = true;
     smoothscroll.polyfill();
   },
 
