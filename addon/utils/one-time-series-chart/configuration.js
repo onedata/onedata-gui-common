@@ -805,6 +805,15 @@ export default class Configuration {
     this.live = false;
 
     /**
+     * Number of seconds by which statistics fetching will be delayed in live
+     * mode. It gives backend some time to synchronize and recalculate
+     * live data.
+     * @private
+     * @type {number}
+     */
+    this.liveFetchDelay = 10;
+
+    /**
      * @private
      * @type {number|null}
      */
@@ -1360,7 +1369,11 @@ export default class Configuration {
    * @returns {number}
    */
   getNowTimestamp() {
-    return Math.floor(Date.now() / 1000) + this.nowTimestampOffset;
+    let timestampOffset = this.nowTimestampOffset;
+    if (this.live) {
+      timestampOffset -= this.liveFetchDelay;
+    }
+    return Math.floor(Date.now() / 1000) + timestampOffset;
   }
 
   /**

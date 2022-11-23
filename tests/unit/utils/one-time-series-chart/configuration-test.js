@@ -1319,9 +1319,11 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     it('calculates series and newestPointTimestamp state for null lastPointTimestamp',
       async function (done) {
         const nowTimestamp = Math.floor(Date.now() / 1000);
+        // There will be always 10 subtracted from `nowTimestamp` to take
+        // live fetch delay into account. See Configuration.liveFetchDelay docs.
         const dummySrc = dummyDataSource([
-          [nowTimestamp - 2, 1],
-          [nowTimestamp - 1, 2],
+          [nowTimestamp - 12, 1],
+          [nowTimestamp - 11, 2],
         ]);
         const config = new Configuration({
           chartDefinition: {
@@ -1343,16 +1345,16 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         const state = await config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledWith({
-          lastPointTimestamp: nowTimestamp,
+          lastPointTimestamp: nowTimestamp - 10,
           timeResolution: 1,
           pointsCount: 4,
         }, undefined);
 
         expect(state.series).to.deep.equal([
           dummyStaticSeriesFactoryState(1, [
-            point(nowTimestamp - 2, 1, { oldest: true }),
-            point(nowTimestamp - 1, 2, { newest: true }),
-            point(nowTimestamp, null, { newest: true, fake: true }),
+            point(nowTimestamp - 12, 1, { oldest: true }),
+            point(nowTimestamp - 11, 2, { newest: true }),
+            point(nowTimestamp - 10, null, { newest: true, fake: true }),
           ]),
         ]);
         expect(state.newestPointTimestamp).to.be.null;
