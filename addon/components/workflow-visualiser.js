@@ -210,6 +210,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
   cancelExecutionAction: undefined,
 
   /**
+   * @virtual optional
+   * @type {Utils.Action}
+   */
+  removeExecutionAction: undefined,
+
+  /**
    * @type {Utils.Looper}
    */
   executionStateUpdater: undefined,
@@ -396,6 +402,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     'lifecycleChangingActionHook',
     'pauseResumeExecutionAction',
     'cancelExecutionAction',
+    'removeExecutionAction',
     function executionActions() {
       const actions = [this.copyInstanceIdAction, this.viewAuditLogAction];
 
@@ -410,6 +417,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
           this.normalizeLifecycleChangingAction(this.cancelExecutionAction);
         if (cancelExecutionAction) {
           actions.push(cancelExecutionAction);
+        }
+      } else {
+        const removeExecutionAction =
+          this.normalizeLifecycleChangingAction(this.removeExecutionAction);
+        if (removeExecutionAction) {
+          actions.push(removeExecutionAction);
         }
       }
 
