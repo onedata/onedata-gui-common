@@ -357,8 +357,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<Function>}
    */
   lifecycleChangingActionHook: computed(function lifecycleChangingActionHook() {
-    return async result => {
-      if (!result || get(result, 'status') !== 'done') {
+    return async (result, action) => {
+      if (result?.status !== 'done' || action === this.removeExecutionAction) {
         return;
       }
       try {
