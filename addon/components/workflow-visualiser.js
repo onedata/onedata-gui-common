@@ -396,7 +396,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
   executionActions: computed(
-    'workflow.status',
+    'isExecutionEnded',
+    'isExecutionSuspended',
     'copyInstanceIdAction',
     'viewAuditLogAction',
     'lifecycleChangingActionHook',
@@ -418,7 +419,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
         if (cancelExecutionAction) {
           actions.push(cancelExecutionAction);
         }
-      } else {
+      }
+      if (this.isExecutionEnded || this.isExecutionSuspended) {
         const removeExecutionAction =
           this.normalizeLifecycleChangingAction(this.removeExecutionAction);
         if (removeExecutionAction) {
