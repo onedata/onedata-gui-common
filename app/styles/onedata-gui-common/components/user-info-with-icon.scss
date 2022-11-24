@@ -4,6 +4,7 @@
   perspective: 1px;
   background-color: transparent;
   .inline-icon-container {
+    cursor: grab;
     margin-left: -4px;
     width: 25px;
     transition: transform $transition-time;
