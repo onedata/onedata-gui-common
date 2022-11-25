@@ -1,0 +1,50 @@
+.one-markdown-to-html {
+  margin-top: $content-col-padding;
+  margin-bottom: $content-col-padding;
+  table {
+    @extend .table;
+    @extend .table-striped;
+  }
+  h1 {
+    font-size: 30px;
+    @include font-semibold;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+  h2 {
+    font-size: 24px;
+    @include font-semibold;
+    margin-top: 24px;
+    margin-bottom: 18px;
+  }
+  h3 {
+    font-size: 20px;
+    @include font-semibold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  h4 {
+    font-size: 18px;
+    @include font-semibold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  h5 {
+    font-size: 16px;
+    @include font-semibold;
+    margin-top: 18px;
+    margin-bottom: 10px;
+  }
+  h6 {
+    font-size: 14px;
+    @include font-semibold;
+    margin-top: 16px;
+    margin-bottom: 10px;
+  }
+  a {
+    @extend .azure;
+  }
+  p {
+    font-size: 14px;
+  }
+}
