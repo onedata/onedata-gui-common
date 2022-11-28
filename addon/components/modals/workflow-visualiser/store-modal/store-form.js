@@ -53,7 +53,7 @@ import {
   formValuesToDataSpec,
   dataSpecToFormValues,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
-import { dataSpecMatchesFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
+import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const storeTypes = Object.freeze([
@@ -378,7 +378,7 @@ export default Component.extend(I18n, {
           } = this.getProperties('value', 'component');
           const dataSpec = formValuesToDataSpec(value);
           const newDataSpecFilters = component.calculateEffDataSpecFilters(storeType);
-          if (!dataSpecMatchesFilters(dataSpec, newDataSpecFilters)) {
+          if (!isAtmDataSpecMatchingFilters(dataSpec, newDataSpecFilters)) {
             this.valueChanged(dataSpecToFormValues(null));
           }
         });
@@ -655,7 +655,7 @@ export default Component.extend(I18n, {
     if (storeType in storeSpecificForbiddenDataSpecTypes) {
       filters.push({
         filterType: 'forbiddenType',
-        forbiddenTypes: storeSpecificForbiddenDataSpecTypes[storeType]
+        types: storeSpecificForbiddenDataSpecTypes[storeType]
           .map((type) => ({ type })),
       });
     }

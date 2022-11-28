@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { typeDefinitionBase } from './commons';
+
 /**
  * @typedef {Object} AtmObjectDataSpec
  * @property {'object'} type
@@ -15,3 +17,8 @@
 /**
  * @typedef {Object} AtmObjectValueConstraints
  */
+
+/**
+ * @type {AtmDataSpecTypeDefinition<AtmObjectValueConstraints, null>}
+ */
+export const atmDataSpecTypeDefinition = typeDefinitionBase;

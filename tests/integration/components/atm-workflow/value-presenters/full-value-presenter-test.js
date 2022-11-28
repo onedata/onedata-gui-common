@@ -3,7 +3,7 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { render, find, findAll, click } from '@ember/test-helpers';
-import { dataSpecTypes } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+import { atmDataSpecTypesArray } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import {
   getRawValuePresenter,
   getVisualValuePresenter,
@@ -40,7 +40,7 @@ describe('Integration | Component | atm workflow/value presenters/full value pre
         .and.to.have.trimmed.text('Raw');
     });
 
-    dataSpecTypes.forEach((dataSpecType) => {
+    atmDataSpecTypesArray.forEach((dataSpecType) => {
       const dataSpec = {
         type: dataSpecType,
       };
