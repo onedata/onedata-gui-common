@@ -8,8 +8,10 @@ export default Route.extend({
   },
 
   smoothScrollPolyfill() {
-    // Both Firefox (any version) and Chrome (from version ~103) does not handle
-    // smooth scroll for perfect scrollbar. Enforce smooth scroll polyfill.
+    // Both Firefox (any version) and Chrome (from version ~103) don't handle
+    // smooth scroll for perfect scrollbar. As Firefox + Chrome cover most of
+    // the GUI users, we enforce smooth scroll polyfill in every browser
+    // for simplicity.
     window.__forceSmoothScrollPolyfill__ = true;
     smoothscroll.polyfill();
   },
