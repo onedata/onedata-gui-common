@@ -12,7 +12,7 @@ import Component from '@ember/component';
 import { computed, observer, set, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { translateDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+import { translateAtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/default-data-type-editor';
 
@@ -33,12 +33,6 @@ export default Component.extend({
    * @type {boolean}
    */
   isEnabled: undefined,
-
-  /**
-   * @virtual
-   * @type {AtmDataSpecPlacementContext}
-   */
-  placementContext: undefined,
 
   /**
    * @virtual
@@ -83,7 +77,7 @@ export default Component.extend({
       i18n,
     } = this.getProperties('dataType', 'i18n');
 
-    return translateDataSpecType(i18n, dataType);
+    return translateAtmDataSpecType(i18n, dataType);
   }),
 
   /**

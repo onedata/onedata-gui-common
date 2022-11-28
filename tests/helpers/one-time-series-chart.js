@@ -14,7 +14,7 @@ export function expectEchartDummyPoints(
   let normalizedLastPointTimestamp =
     lastPointTimestamp ?? Math.floor(Date.now() / 1000);
   if (live) {
-    // Delay last point timestamp in live mode to takie live data delay into account.
+    // Delay last point timestamp in live mode to take live data delay into account.
     // See Configuration.liveModeTimestampOffset docs.
     normalizedLastPointTimestamp -= 10;
   }
