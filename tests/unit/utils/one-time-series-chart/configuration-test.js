@@ -1320,7 +1320,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       async function (done) {
         const nowTimestamp = Math.floor(Date.now() / 1000);
         // There will be always 10 subtracted from `nowTimestamp` to take
-        // live fetch delay into account. See Configuration.liveFetchDelay docs.
+        // live data delay into account. See Configuration.liveModeTimestampOffset docs.
         const dummySrc = dummyDataSource([
           [nowTimestamp - 12, 1],
           [nowTimestamp - 11, 2],

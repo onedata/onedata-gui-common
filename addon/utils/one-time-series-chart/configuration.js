@@ -805,13 +805,14 @@ export default class Configuration {
     this.live = false;
 
     /**
-     * Number of seconds by which statistics fetching will be delayed in live
-     * mode. It gives backend some time to synchronize and recalculate
-     * live data.
+     * Number of seconds from now by which statistics aggregation is
+     * considered to be possibly incomplete in live mode. This offset will be
+     * used to move current timestamp to the past and show only these points,
+     * which are fully synchronized and recalculated based on live data.
      * @private
      * @type {number}
      */
-    this.liveFetchDelay = 10;
+    this.liveModeTimestampOffset = 10;
 
     /**
      * @private
@@ -1371,7 +1372,7 @@ export default class Configuration {
   getNowTimestamp() {
     let timestampOffset = this.nowTimestampOffset;
     if (this.live) {
-      timestampOffset -= this.liveFetchDelay;
+      timestampOffset -= this.liveModeTimestampOffset;
     }
     return Math.floor(Date.now() / 1000) + timestampOffset;
   }
