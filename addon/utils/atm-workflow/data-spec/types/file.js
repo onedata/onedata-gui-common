@@ -73,7 +73,8 @@ export const atmDataSpecTypeDefinition = Object.freeze({
             const directlyForbiddenFileTypes = _.uniq(_.flatten(filterFileTypes));
             const indirectlyForbiddenFileTypes = _.uniq(_.flatten(
               directlyForbiddenFileTypes.map((fileType) =>
-                atmFileTypeSubtypes[fileType])
+                atmFileTypeSubtypes[fileType]
+              )
             ));
             const allForbiddenFileTypes = _.uniq([
               ...directlyForbiddenFileTypes,
