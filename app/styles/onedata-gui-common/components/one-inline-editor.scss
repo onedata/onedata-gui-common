@@ -1,7 +1,7 @@
 .one-inline-editor {
   position: relative;
   &:hover {
-    .one-label {
+    .one-label, .tags-input.readonly {
       border: 1px solid $main-border-color;
     }
   }
@@ -46,13 +46,29 @@
   }
   .form-control {
     font-size: inherit;
+    &.tags-input {
+      display: flex;
+    }
   }
-  .one-label {
+  .one-label, .tags-input.readonly {
     border: 1px solid transparent;
     border-radius: $input-border-radius;
     padding: $padding-base-vertical $padding-base-horizontal;
     &:hover {
       cursor: pointer;
+    }
+  }
+  .tags-input {
+    &.readonly {
+      padding: $padding-base-vertical / 2 $padding-base-horizontal;
+      .input-element {
+        margin-bottom: 0;
+      }
+    }
+    &.creation-disabled {
+      &:hover {
+        cursor: pointer !important;
+      }
     }
   }
   .save-icon:hover, .edit-icon:hover {

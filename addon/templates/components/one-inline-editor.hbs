@@ -1,12 +1,24 @@
 {{#if _inEditionMode}}
-  {{one-way-input _inputValue
-    disabled=_whileSaving
-    class=(concat-classes "form-control" inputClasses)
-    update=(action (mut _inputValue))
-    onenter=(action "saveEdition")
-    onescape=(action "cancelEdition")
-    placeholder=inputPlaceholder
-    onblur=(action onLostFocus)}}
+  {{#if (eq editorType "tags")}}
+    {{!-- FIXME: placeholder in tags-input --}}
+    {{!-- FIXME: onblur in tags-input --}}
+    {{tags-input
+      tags=_inputValue
+      class=(concat-classes "form-control" inputClasses)
+      readonly=false
+      onChange=(action (mut _inputValue))
+    }}
+  {{else}}
+    {{one-way-input _inputValue
+      disabled=_whileSaving
+      class=(concat-classes "form-control" inputClasses)
+      update=(action (mut _inputValue))
+      onenter=(action "saveEdition")
+      onescape=(action "cancelEdition")
+      placeholder=inputPlaceholder
+      onblur=(action onLostFocus)
+    }}
+  {{/if}}
   <span class="action-icons">
     {{#if _whileSaving}}
       {{spin-spinner-block sizeClass="xs"}}
@@ -16,13 +28,28 @@
     {{/if}}
   </span>
 {{else}}
-  {{#truncated-string tagName="span" class="one-label" click=(action "startEdition")}}
-    {{#if value}}
-      {{value}}
-    {{else if showEmptyInfo}}
-      <span class="empty-value">{{staticPlaceholder}}</span>
+  {{#if (eq editorType "tags")}}
+    {{#if (and isValueEmpty showEmptyInfo)}}
+      <span class="one-label" onclick={{action "startEdition"}}>
+        <span class="empty-value">{{staticPlaceholder}}</span>
+      </span>
+    {{else}}
+      <div class="tags-input-container" onclick={{action "startEdition"}}>
+        {{tags-input
+          tags=value
+          readonly=true
+        }}
+      </div>
     {{/if}}
-  {{/truncated-string}}
+  {{else}}
+    {{#truncated-string tagName="span" class="one-label" click=(action "startEdition")}}
+      {{#if (and isValueEmpty showEmptyInfo)}}
+        <span class="empty-value">{{staticPlaceholder}}</span>
+      {{else}}
+        {{value}}
+      {{/if}}
+    {{/truncated-string}}
+  {{/if}}
   <span class="action-icons">
     {{#if (not hideViewIcons)}}
       {{one-icon icon="rename" class="edit-icon" click=(action "startEdition")}}

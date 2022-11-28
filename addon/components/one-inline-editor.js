@@ -20,6 +20,7 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import $ from 'jquery';
 import { Promise, resolve } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { isEmpty } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -169,6 +170,8 @@ export default Component.extend(I18n, {
     return this.t('notSet');
   }),
 
+  isValueEmpty: isEmpty('value'),
+
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
@@ -301,12 +304,16 @@ export default Component.extend(I18n, {
   },
 
   getEditedValue() {
-    const {
-      _inputValue,
-      trimString,
-    } = this.getProperties('_inputValue', 'trimString');
-    const stringValue = _inputValue || '';
-    return trimString ? stringValue.trim() : stringValue;
+    if (this.editorType === 'tags') {
+      return this._inputValue ?? [];
+    } else {
+      const {
+        _inputValue,
+        trimString,
+      } = this.getProperties('_inputValue', 'trimString');
+      const stringValue = _inputValue || '';
+      return trimString ? stringValue.trim() : stringValue;
+    }
   },
 
   actions: {
