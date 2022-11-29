@@ -1,5 +1,6 @@
 /**
- * Renders user info with icon
+ * Renders animated icon, which show popover with user info after click, 
+ * and username with fullname
  *
  * @author Agnieszka Warchoł
  * @copyright (C) 2022 ACK CYFRONET AGH
