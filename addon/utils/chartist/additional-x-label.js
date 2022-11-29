@@ -15,17 +15,18 @@
 /* global Chartist */
 import $ from 'jquery';
 
-export default function (options) {
+export default function additionalXLabel(options) {
   const defaultOptions = {
     xOffsetMultiply: 1,
     insertBefore: false,
   };
-  const chartistOptions = Chartist.extend({}, defaultOptions, options);
+  const normalizedOptions = Chartist.extend({}, defaultOptions, options);
   return (chart) => {
     chart.on('created', () => {
       const labelsNode = $(chart.svg._node).find('.ct-labels');
       const labels = labelsNode.find('.ct-label.ct-horizontal.ct-end');
-      const lastLabelNode = $(labelsNode.find('.ct-label.ct-horizontal.ct-end').last()[0].parentElement);
+      const lastLabelNode =
+        $(labelsNode.find('.ct-label.ct-horizontal.ct-end').last()[0].parentElement);
       let sourceLabelNode = lastLabelNode;
       if (labels.length > 1) {
         sourceLabelNode = $(labels[labels.length - 2].parentElement);
@@ -33,11 +34,11 @@ export default function (options) {
 
       const newLabelNode = sourceLabelNode.clone();
       newLabelNode.attr('x',
-        parseFloat(lastLabelNode.attr('x')) + chartistOptions.xOffsetMultiply * parseFloat(
-          sourceLabelNode.attr('width'))
+        parseFloat(lastLabelNode.attr('x')) +
+        normalizedOptions.xOffsetMultiply * parseFloat(sourceLabelNode.attr('width'))
       );
       newLabelNode.find('span').text(chart.data.lastLabel);
-      if (!chartistOptions.insertBefore) {
+      if (!normalizedOptions.insertBefore) {
         newLabelNode.insertAfter(lastLabelNode);
       } else {
         newLabelNode.insertBefore(lastLabelNode);

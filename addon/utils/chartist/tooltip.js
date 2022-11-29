@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * Plugin for Chartist which adds tooltip. For bar and line charts tooltip
  * creates description based on chartist legend and values. For pie chart data for tooltip is
@@ -36,8 +33,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import dynamicRound from 'onedata-gui-common/utils/dynamic-round';
 
-const TOOLTIP_HTML =
-  `
+const TOOLTIP_HTML = `
   <div class="chart-tooltip">
     <div class="chart-tooltip-title"></div>
     <ul class="ct-legend">
@@ -48,7 +44,7 @@ const TOOLTIP_HTML =
 
 let chartsIndex = [];
 
-export default function (options) {
+export default function tooltip(options) {
   const defaultOptions = {
     chartType: 'bar',
     rangeInTitle: false,
@@ -57,7 +53,7 @@ export default function (options) {
     valueSuffix: '',
     roundValues: true,
   };
-  options = Chartist.extend({}, defaultOptions, options);
+  const normalizedOptions = Chartist.extend({}, defaultOptions, options);
 
   return (chart) => {
     let tooltipNode;
@@ -81,10 +77,10 @@ export default function (options) {
       // data series and values
       const ul = tooltipNode.find('.ct-legend');
       ul.empty();
-      const suffix = options.valueSuffix ? ' ' + options.valueSuffix : '';
+      const suffix = normalizedOptions.valueSuffix ? ' ' + normalizedOptions.valueSuffix : '';
       tooltipData.forEach(d => {
         let value = d.value;
-        if (options.roundValues && typeof value === 'number') {
+        if (normalizedOptions.roundValues && typeof value === 'number') {
           value = dynamicRound(value);
         }
         ul.append(`<li class="${d.className}">${d.name}: ${value + suffix}</li>`);
@@ -130,13 +126,13 @@ export default function (options) {
       if (!isPluginEnabled(chart)) {
         return;
       }
-      const tooltipData = chart.data.series.map(s => ({
+      let tooltipData = chart.data.series.map(s => ({
         className: s.className,
         name: s.name,
         value: s.data[data.index],
       }));
 
-      if (data.type === 'bar' && options.chartType === 'bar') {
+      if (data.type === 'bar' && normalizedOptions.chartType === 'bar') {
         const groupNode = data.group._node;
         const barNode = $(data.element._node);
 
@@ -145,13 +141,17 @@ export default function (options) {
           const lastGroupBar = $(lastGroupNode.children('line')[data.index]);
 
           // top position
-          if (options.renderAboveBarDescription) {
+          if (normalizedOptions.renderAboveBarDescription) {
             const sumLabel = $(lastGroupNode.children('text')[data.index]);
-            tooltipNode.css('top', (sumLabel.offset().top - container.offset().top) +
-              'px');
+            tooltipNode.css(
+              'top',
+              (sumLabel.offset().top - container.offset().top) + 'px'
+            );
           } else {
-            tooltipNode.css('top', (lastGroupBar.offset().top - container.offset()
-              .top) + 'px');
+            tooltipNode.css(
+              'top',
+              (lastGroupBar.offset().top - container.offset().top) + 'px'
+            );
           }
           // left position
           const rect = lastGroupBar[0].getBoundingClientRect();
@@ -165,24 +165,30 @@ export default function (options) {
           tooltipNode.removeClass('active');
         });
       }
-      if (data.type === 'point' && options.chartType === 'line') {
+      if (data.type === 'point' && normalizedOptions.chartType === 'line') {
         const groupNode = $(data.group._node);
         const pointNode = $(data.element._node);
-
+        tooltipData = data.series?.tooltipElements?.[data.index] ?? tooltipData;
         pointNode.mouseover(() => {
           // top position
           const rect = pointNode[0].getBoundingClientRect();
-          if (options.renderAboveBarDescription) {
+          if (normalizedOptions.renderAboveBarDescription) {
             const sumLabel = $(groupNode.children('text')[data.index]);
-            tooltipNode.css('top', (sumLabel.offset().top - container.offset().top) +
-              'px');
+            tooltipNode.css(
+              'top',
+              (sumLabel.offset().top - container.offset().top) + 'px'
+            );
           } else {
-            tooltipNode.css('top', (rect.top - container.offset()
-              .top) + 'px');
+            tooltipNode.css(
+              'top',
+              (rect.top - container.offset().top) + 'px'
+            );
           }
           // left position
-          tooltipNode.css('left', (rect.left + rect.width / 2 - container.offset()
-            .left) + 'px');
+          tooltipNode.css(
+            'left',
+            (rect.left + rect.width / 2 - container.offset().left) + 'px'
+          );
 
           prepareTooltip(tooltipData, data);
 
@@ -191,16 +197,21 @@ export default function (options) {
           tooltipNode.removeClass('active');
         });
       }
-      if (data.type === 'slice' && options.chartType === 'pie') {
-        data.series.tooltipElements.forEach(element => element.className =
-          'no-padding');
-        const tooltipData = data.series.tooltipElements;
+      if (data.type === 'slice' && normalizedOptions.chartType === 'pie') {
+        data.series.tooltipElements.forEach((element) =>
+          element.className = 'no-padding'
+        );
+        tooltipData = data.series.tooltipElements;
         const sliceNode = $(data.element._node);
         const showTooltip = (x, y) => {
-          tooltipNode.css('top', (y - container.offset().top - 10) +
-            'px');
-          tooltipNode.css('left', (x - container.offset()
-            .left) + 'px');
+          tooltipNode.css(
+            'top',
+            (y - container.offset().top - 10) + 'px'
+          );
+          tooltipNode.css(
+            'left',
+            (x - container.offset().left) + 'px'
+          );
 
           prepareTooltip(tooltipData, data);
 
@@ -238,7 +249,7 @@ function getChartRenderEntry(chart) {
     };
     // remove not existing charts renders
     chartsIndex = chartsIndex.filter((existingChartRender) => {
-      return jQuery.contains(document.documentElement, existingChartRender.node);
+      return $.contains(document.documentElement, existingChartRender.node);
     });
     chartsIndex.push(chartRender);
   }

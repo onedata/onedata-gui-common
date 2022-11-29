@@ -13,7 +13,7 @@
 
 import $ from 'jquery';
 
-export default function (options) {
+export default function legendColors(options) {
   return (chart) => {
     chart.on('created', () => {
       const legend = $(chart.container).find('.ct-legend');
@@ -33,7 +33,7 @@ export default function (options) {
         }
         const series = legend.find('.ct-series-' + index);
         series.find('.custom-color').remove();
-        legend.find('.ct-series-' + index).prepend(colorRect);
+        series.prepend(colorRect);
       });
     });
   };

@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * A plugin for Chartist which adds pie chart labels.
  *
@@ -35,14 +32,14 @@ const DEFAULT_LINE_POINTER_LENGTH = '50%';
 
 let chartsIndex = [];
 
-export default function (options) {
+export default function pieLabels(options) {
   const defaultOptions = {
     lineTextMargin: 3,
     lineLength: DEFAULT_LINE_LENGTH,
     linePointerLength: DEFAULT_LINE_POINTER_LENGTH,
     hideLabelThresholdPercent: 15,
   };
-  options = Chartist.extend({}, defaultOptions, options);
+  const normalizedOptions = Chartist.extend({}, defaultOptions, options);
   return (chart) => {
     chart.on('draw', (data) => {
       if (!isPluginEnabled(chart)) {
@@ -65,14 +62,14 @@ export default function (options) {
         const y = data.center.y - distance * Math.cos(radiansAverage);
 
         const lineLength = normalizeLength(
-          options.lineLength,
+          normalizedOptions.lineLength,
           data.radius,
           DEFAULT_LINE_LENGTH
         );
         const horizDirection = x > data.center.x ? 1 : -1;
         const vertDirection = y > data.center.y ? 1 : -1;
         const pointerLineLength = normalizeLength(
-          options.linePointerLength,
+          normalizedOptions.linePointerLength,
           data.radius,
           DEFAULT_LINE_POINTER_LENGTH
         );
@@ -90,9 +87,9 @@ export default function (options) {
         const line = labelGroup.elem('path', lineAttributes, 'ct-pie-label-line');
         labelGroup.append(line);
 
-        addText(chart, data, options, labelGroup,
+        addText(chart, data, normalizedOptions, labelGroup,
           lineX3a, lineY3a, horizDirection, lineLength);
-        autohideLabel(data, options, labelGroup);
+        autohideLabel(data, normalizedOptions, labelGroup);
         chart.eventEmitter.emit('draw', {
           type: 'pie-label',
           element: labelGroup,
@@ -144,17 +141,18 @@ function getLabelsGroup(svg) {
 }
 
 function normalizeLength(length, relativeLength, defaultValue) {
+  let normalizedLength;
   if (typeof length === 'string') {
-    length = length.trim();
+    normalizedLength = length.trim();
   } else if (typeof length === 'number') {
-    length = String(length);
+    normalizedLength = String(length);
   } else {
-    length = String(defaultValue);
+    normalizedLength = String(defaultValue);
   }
-  if (length[length.length - 1] === '%') {
-    return relativeLength * (parseFloat(length) / 100);
+  if (normalizedLength[normalizedLength.length - 1] === '%') {
+    return relativeLength * (parseFloat(normalizedLength) / 100);
   } else {
-    return parseFloat(length);
+    return parseFloat(normalizedLength);
   }
 }
 
@@ -190,9 +188,9 @@ function addText(
 
 function clipText(textElement, text, width, chart) {
   // some padding for readability
-  width -= 5;
+  const normalizedWidth = width - 5;
   textElement.text(text);
-  if (textElement.width() <= width || text.length <= 1) {
+  if (textElement.width() <= normalizedWidth || text.length <= 1) {
     return;
   } else {
     // binary search of proper text length
@@ -203,7 +201,7 @@ function clipText(textElement, text, width, chart) {
       const newIndex = Math.ceil((upperIndex + lowerIndex) / 2);
       clippedText = text.substring(0, newIndex) + '...';
       textElement.empty().text(clippedText);
-      if (textElement.width() > width) {
+      if (textElement.width() > normalizedWidth) {
         upperIndex = newIndex - 1;
       } else {
         lowerIndex = newIndex;
