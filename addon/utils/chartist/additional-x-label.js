@@ -25,6 +25,9 @@ export default function additionalXLabel(options) {
     chart.on('created', () => {
       const labelsNode = $(chart.svg._node).find('.ct-labels');
       const labels = labelsNode.find('.ct-label.ct-horizontal.ct-end');
+      if (!labels.length) {
+        return;
+      }
       const lastLabelNode =
         $(labelsNode.find('.ct-label.ct-horizontal.ct-end').last()[0].parentElement);
       let sourceLabelNode = lastLabelNode;
