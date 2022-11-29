@@ -109,7 +109,7 @@ export default Mixin.create({
       );
 
       if (!overflowParentElement) {
-        this.set('overflowParentElement', overflowElement.parent());
+        this.set('overflowParentElement', $(overflowElement[0].parentElement));
       }
       if (!overflowSiblingsElements) {
         this.set('overflowSiblingsElements', overflowElement.siblings());

@@ -25,10 +25,10 @@ export default function (options) {
     chart.on('created', () => {
       const labelsNode = $(chart.svg._node).find('.ct-labels');
       const labels = labelsNode.find('.ct-label.ct-horizontal.ct-end');
-      const lastLabelNode = labelsNode.find('.ct-label.ct-horizontal.ct-end').last().parent();
+      const lastLabelNode = $(labelsNode.find('.ct-label.ct-horizontal.ct-end').last()[0].parentElement);
       let sourceLabelNode = lastLabelNode;
       if (labels.length > 1) {
-        sourceLabelNode = $(labels[labels.length - 2]).parent();
+        sourceLabelNode = $(labels[labels.length - 2].parentElement);
       }
 
       const newLabelNode = sourceLabelNode.clone();

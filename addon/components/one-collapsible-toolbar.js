@@ -153,11 +153,10 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       }
       this.addClickOutsideListener();
     });
-    const $element = $(this.get('element'));
     this.setProperties({
-      overflowElement: $element.find('.collapsible-toolbar-buttons'),
-      overflowParentElement: $element.parent(),
-      overflowSiblingsElements: $element.siblings(),
+      overflowElement: $(this.element.querySelector('.collapsible-toolbar-buttons')),
+      overflowParentElement: $(this.element.parentElement),
+      overflowSiblingsElements: $(this.element).siblings(),
     });
     this.overflowDetectorMounter();
     this.get('eventsBus').on(

@@ -137,11 +137,11 @@ export default function (options) {
       }));
 
       if (data.type === 'bar' && options.chartType === 'bar') {
-        const groupNode = $(data.group._node);
+        const groupNode = data.group._node;
         const barNode = $(data.element._node);
 
         barNode.mouseover(() => {
-          const lastGroupNode = groupNode.parent().children().last();
+          const lastGroupNode = $(groupNode.parentElement.lastElementChild);
           const lastGroupBar = $(lastGroupNode.children('line')[data.index]);
 
           // top position
