@@ -26,6 +26,7 @@ import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { resolve } from 'rsvp';
+import dom from 'onedata-gui-common/utils/dom';
 
 export default Component.extend({
   layout,
@@ -336,7 +337,7 @@ export default Component.extend({
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-    if ($triggerElement.is(':visible') && open !== false) {
+    if (dom.isVisible($triggerElement[0]) && open !== false) {
       this._popover('show');
     }
     this.set('_debounceTimerEnabled', false);

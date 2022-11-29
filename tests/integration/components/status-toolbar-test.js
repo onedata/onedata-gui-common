@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 describe('Integration | Component | status toolbar', function () {
   setupRenderingTest();
@@ -14,7 +14,7 @@ describe('Integration | Component | status toolbar', function () {
         {{toolbar.icon icon="space" enabled=false}}
       {{/status-toolbar}}
     `);
-    expect($(find('.status-toolbar-icon')).is(':hidden')).to.be.true;
+    expect(dom.isHidden(find('.status-toolbar-icon'))).to.be.true;
   });
 
   it('adds a class to icon based on status property', async function () {
