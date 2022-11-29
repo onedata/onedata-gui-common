@@ -230,19 +230,18 @@ export default Component.extend({
     $(window).on('resize', _windowResizeHandler);
     this._windowResized();
     $(element).mousemove((event) => {
-      let parentGroup = $(event.target).parents('.ct-series');
-      if (parentGroup.length) {
+      let parentGroup = event.target.closest('.ct-series');
+      if (parentGroup) {
         // extract series id from group class name `slice-id-[series.id]`
-        const sliceClass = _.find(
-          parentGroup.attr('class').split(' '),
+        const sliceClass = [...parentGroup.classList].find(
           (c) => c.startsWith('slice-id-')
         );
         const seriesId = sliceClass.substr('slice-id-'.length);
         this.set('activeSeriesId', seriesId);
       } else {
         // if label is hovered, ignore series hover change
-        parentGroup = $(event.target).parents('.ct-pie-label');
-        if (parentGroup.length === 0) {
+        parentGroup = event.target.closest('.ct-pie-label');
+        if (!parentGroup) {
           this.set('activeSeriesId', null);
         }
       }

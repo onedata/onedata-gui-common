@@ -188,9 +188,8 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       toggleSelector,
       elementId,
     } = this.getProperties('toggleSelector', 'elementId');
-    const clickTarget = $(event.target);
-    if (!clickTarget.is(toggleSelector) &&
-      clickTarget.parents(toggleSelector + ', .popover-' + elementId).length === 0) {
+
+    if (!event.target.closest(toggleSelector + ', .popover-' + elementId)) {
       this.set('dropdownOpened', false);
     }
   },

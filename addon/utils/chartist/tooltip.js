@@ -119,7 +119,7 @@ export default function (options) {
         }
       }
       $(chart.svg.getNode()).mousemove((event) => {
-        if (!$(event.target).parents('.ct-series').length) {
+        if (!event.target.closest('.ct-series')) {
           tooltipNode.removeClass('active');
           chartEntry.x = chartEntry.y = null;
         }
