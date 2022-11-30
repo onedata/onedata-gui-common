@@ -1,36 +1,34 @@
-{{#truncated-string}}
-  <span
-    class={{concat-classes
-      "inline-icon-container user-info-trigger"
-      (if userInfoOpened "not-animation" "animation")
-      (if hasUserInfoHovered "user-info-icon-container-hovered")
-    }}
-    {{action
-      (mut userInfoOpened)
-      (not userInfoOpened)
-      bubbles=false
-    }}
-    onmouseover={{action "userInfoHovered" true}}
-    onmouseleave={{action "userInfoHovered" false}}
-  >
-    {{one-icon icon="user" color=iconColor}}
-    {{one-icon icon="browser-info"}}
-  </span>
-  <span
-    onmouseover={{action "userInfoHovered" true}}
-    onmouseleave={{action "userInfoHovered" false}}
-  >
-    <span class="user-fullname">{{or user.fullName "—"}}</span>
-    {{#if user.username}}
-      <span class="user-username">({{user.username}})</span>
-    {{/if}}
-  </span>
-  {{#record-info-popover
-    isOpened=userInfoOpened
-    triggerSelector=(concat "#" elementId " .user-info-trigger")
+<span
+  class={{concat-classes
+    "inline-icon-container user-info-trigger"
+    (if userInfoOpened "not-animation" "animation")
+    (if hasUserInfoHovered "user-info-icon-container-hovered")
   }}
-    {{user-info-content
-      user=user
-    }}
-  {{/record-info-popover}}
-{{/truncated-string}}
+  {{action
+    (mut userInfoOpened)
+    (not userInfoOpened)
+    bubbles=false
+  }}
+  onmouseover={{action "userInfoHovered" true}}
+  onmouseleave={{action "userInfoHovered" false}}
+>
+  {{one-icon icon="user" color=iconColor}}
+  {{one-icon icon="browser-info"}}
+</span>
+<span
+  onmouseover={{action "userInfoHovered" true}}
+  onmouseleave={{action "userInfoHovered" false}}
+>
+  <span class="user-fullname">{{or user.fullName "—"}}</span>
+  {{#if user.username}}
+    <span class="user-username">({{user.username}})</span>
+  {{/if}}
+</span>
+{{#record-info-popover
+  isOpened=userInfoOpened
+  triggerSelector=(concat "#" elementId " .user-info-trigger")
+}}
+  {{user-info-content
+    user=user
+  }}
+{{/record-info-popover}}
