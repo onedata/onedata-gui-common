@@ -26,6 +26,7 @@
 
 import _ from 'lodash';
 import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 const DEFAULT_LINE_LENGTH = '100';
 const DEFAULT_LINE_POINTER_LENGTH = '50%';
@@ -222,13 +223,12 @@ function clipText(textElement, text, width, chart) {
 function autohideLabel(data, options, labelGroup) {
   const degreesDelta = data.endAngle - data.startAngle;
   if (degreesDelta < options.hideLabelThresholdPercent * 3.6) {
-    const $labelGroup = $(labelGroup.getNode());
-    const $slice = $(data.element.getNode());
-    const showLabel = () => $labelGroup.css('display', 'initial');
-    const hideLabel = () => $labelGroup.css('display', 'none');
+    const labelGroupNode = labelGroup.getNode();
+    const showLabel = () => dom.setStyle(labelGroupNode, 'display', 'initial');
+    const hideLabel = () => dom.setStyle(labelGroupNode, 'display', 'none');
     hideLabel();
-    $slice.mouseover(showLabel).mouseout(hideLabel);
-    $labelGroup.mouseover(showLabel).mouseout(hideLabel);
+    $(data.element.getNode()).mouseover(showLabel).mouseout(hideLabel);
+    $(labelGroupNode).mouseover(showLabel).mouseout(hideLabel);
   }
 }
 

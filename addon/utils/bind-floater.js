@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 /**
  * Makes an element fixed positioned, with coordinates (left, top) of its parent.
@@ -70,7 +71,7 @@ export default function bindFloater(
       top -= stackingOffset.top;
     }
 
-    element.css({
+    dom.setStyles(element[0], {
       left: `${left + options.offsetX - $(window).scrollLeft()}px`,
       top: `${top + options.offsetY + $(window).scrollTop()}px`,
     });

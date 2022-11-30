@@ -15,6 +15,7 @@ import identifyHoveredValuesColumn from 'onedata-gui-common/utils/chartist/ident
 import Mixin from '@ember/object/mixin';
 import { reads } from '@ember/object/computed';
 import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 import { run } from '@ember/runloop';
 
 export default Mixin.create({
@@ -163,16 +164,14 @@ export default Mixin.create({
       _ctHoveredPointsColumnIndex,
       chartTooltipSelector,
       chartTooltipVerticalAlign,
-      element,
     } = this.getProperties(
       '_ctHoveredPointsColumnIndex',
       'chartTooltipSelector',
       'chartTooltipVerticalAlign',
-      'element'
     );
-    const $element = $(element);
-    const tooltip = $element.find(chartTooltipSelector);
-    if (!tooltip.length) {
+
+    const tooltip = this.element?.querySelector(chartTooltipSelector);
+    if (!tooltip) {
       return;
     }
     if (_ctHoveredPointsColumnIndex !== -1) {
@@ -180,25 +179,29 @@ export default Mixin.create({
         _ctPointsColumnXPosition,
         _ctPointsColumnYPosition,
       } = this.getProperties('_ctPointsColumnXPosition', '_ctPointsColumnYPosition');
-      const chartContainer = $element.find('.ct-chart');
+      const chartContainer = $(this.element.querySelector('.ct-chart'));
       const chartXCenter = chartContainer.width() / 2;
-      tooltip.css({
+      dom.setStyles(tooltip, {
         top: _ctPointsColumnYPosition[_ctHoveredPointsColumnIndex] + 'px',
         left: _ctPointsColumnXPosition[_ctHoveredPointsColumnIndex] + 'px',
       });
       if (_ctPointsColumnXPosition[_ctHoveredPointsColumnIndex] < chartXCenter) {
-        tooltip.addClass('right').removeClass('left');
+        tooltip.classList.add('right');
+        tooltip.classList.remove('left');
       } else {
-        tooltip.addClass('left').removeClass('right');
+        tooltip.classList.add('left');
+        tooltip.classList.remove('right');
       }
       if (chartTooltipVerticalAlign === 'top') {
-        tooltip.addClass('top').removeClass('bottom');
+        tooltip.classList.add('top');
+        tooltip.classList.remove('bottom');
       } else {
-        tooltip.addClass('bottom').removeClass('top');
+        tooltip.classList.add('bottom');
+        tooltip.classList.remove('top');
       }
-      tooltip.show();
+      dom.setStyle(tooltip, 'display', 'block');
     } else {
-      tooltip.hide();
+      dom.setStyle(tooltip, 'display', 'none');
     }
   },
 });

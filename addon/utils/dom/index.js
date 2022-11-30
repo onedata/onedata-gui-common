@@ -13,7 +13,15 @@
 import isVisible from './is-visible';
 import isHidden from './is-hidden';
 
+import getStyle from './get-style';
+import setStyle from './set-style';
+import setStyles from './set-styles';
+
 export default {
   isVisible,
   isHidden,
+
+  getStyle,
+  setStyle,
+  setStyles,
 };

@@ -35,7 +35,7 @@
 
 /* global Chartist */
 
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 export default function customCss(options) {
   const defaultOptions = {
@@ -50,12 +50,12 @@ export default function customCss(options) {
       }
       const elementCss = css && css[data.index] && css[data.index][data.type];
       if (elementCss) {
-        const element = $(data.element.getNode());
+        const element = data.element.getNode();
         const transitionProperties = elementCss.transitionProperties;
         delete elementCss.transitionProperties;
-        element.css(elementCss);
+        dom.setStyles(element, elementCss);
         if (transitionProperties) {
-          setTimeout(() => element.css(transitionProperties), 0);
+          setTimeout(() => dom.setStyles(element, transitionProperties), 0);
         }
       }
     });

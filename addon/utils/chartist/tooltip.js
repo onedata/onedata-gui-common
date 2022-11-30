@@ -32,6 +32,7 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import dynamicRound from 'onedata-gui-common/utils/dynamic-round';
+import dom from 'onedata-gui-common/utils/dom';
 
 const TOOLTIP_HTML = `
   <div class="chart-tooltip">
@@ -63,7 +64,7 @@ export default function tooltip(options) {
 
     const prepareTooltip = function (tooltipData, data) {
       // title
-      const title = tooltipNode.find('.chart-tooltip-title');
+      const title = $(tooltipNode.querySelector('.chart-tooltip-title'));
       title.empty();
       title.append(chart.data.labels[data.index]);
       if (options.rangeInTitle) {
@@ -75,7 +76,7 @@ export default function tooltip(options) {
       }
 
       // data series and values
-      const ul = tooltipNode.find('.ct-legend');
+      const ul = $(tooltipNode.querySelector('.ct-legend'));
       ul.empty();
       const suffix = normalizedOptions.valueSuffix ? ' ' + normalizedOptions.valueSuffix : '';
       tooltipData.forEach(d => {
@@ -92,11 +93,11 @@ export default function tooltip(options) {
         chartEntry.x = chartEntry.y = null;
         return;
       }
-      tooltipNode = container.find('.chart-tooltip');
-      if (tooltipNode.length === 0) {
-        tooltipNode = $($.parseHTML(TOOLTIP_HTML));
+      tooltipNode = container.find('.chart-tooltip')[0];
+      if (!tooltipNode) {
+        tooltipNode = $.parseHTML(TOOLTIP_HTML.trim())[0];
         container.append(tooltipNode);
-        tooltipNode.css({
+        dom.setStyles(tooltipNode, {
           transform: 'translateY(-100%) translateX(-50%)',
           marginTop: `${options.topOffset}px`,
         });
@@ -108,15 +109,15 @@ export default function tooltip(options) {
             chartEntry.showCallbacks[elementIndex](chartEntry.x, chartEntry.y);
           } else {
             chartEntry.x = chartEntry.y = null;
-            tooltipNode.removeClass('active');
+            tooltipNode.classList.remove('active');
           }
         } else {
-          tooltipNode.removeClass('active');
+          tooltipNode.classList.remove('active');
         }
       }
       $(chart.svg.getNode()).mousemove((event) => {
         if (!event.target.closest('.ct-series')) {
-          tooltipNode.removeClass('active');
+          tooltipNode.classList.remove('active');
           chartEntry.x = chartEntry.y = null;
         }
       });
@@ -143,26 +144,31 @@ export default function tooltip(options) {
           // top position
           if (normalizedOptions.renderAboveBarDescription) {
             const sumLabel = $(lastGroupNode.children('text')[data.index]);
-            tooltipNode.css(
+            dom.setStyle(
+              tooltipNode,
               'top',
               (sumLabel.offset().top - container.offset().top) + 'px'
             );
           } else {
-            tooltipNode.css(
+            dom.setStyle(
+              tooltipNode,
               'top',
               (lastGroupBar.offset().top - container.offset().top) + 'px'
             );
           }
           // left position
           const rect = lastGroupBar[0].getBoundingClientRect();
-          tooltipNode.css('left', (rect.left + rect.width / 2 - container.offset()
-            .left) + 'px');
+          dom.setStyle(
+            tooltipNode,
+            'left',
+            (rect.left + rect.width / 2 - container.offset().left) + 'px'
+          );
 
           prepareTooltip(tooltipData, data);
 
-          tooltipNode.addClass('active');
+          tooltipNode.classList.add('active');
         }).mouseout(() => {
-          tooltipNode.removeClass('active');
+          tooltipNode.classList.remove('active');
         });
       }
       if (data.type === 'point' && normalizedOptions.chartType === 'line') {
@@ -174,27 +180,30 @@ export default function tooltip(options) {
           const rect = pointNode[0].getBoundingClientRect();
           if (normalizedOptions.renderAboveBarDescription) {
             const sumLabel = $(groupNode.children('text')[data.index]);
-            tooltipNode.css(
+            dom.setStyle(
+              tooltipNode,
               'top',
               (sumLabel.offset().top - container.offset().top) + 'px'
             );
           } else {
-            tooltipNode.css(
+            dom.setStyle(
+              tooltipNode,
               'top',
               (rect.top - container.offset().top) + 'px'
             );
           }
           // left position
-          tooltipNode.css(
+          dom.setStyle(
+            tooltipNode,
             'left',
             (rect.left + rect.width / 2 - container.offset().left) + 'px'
           );
 
           prepareTooltip(tooltipData, data);
 
-          tooltipNode.addClass('active');
+          tooltipNode.classList.add('active');
         }).mouseout(() => {
-          tooltipNode.removeClass('active');
+          tooltipNode.classList.remove('active');
         });
       }
       if (data.type === 'slice' && normalizedOptions.chartType === 'pie') {
@@ -204,24 +213,20 @@ export default function tooltip(options) {
         tooltipData = data.series.tooltipElements;
         const sliceNode = $(data.element._node);
         const showTooltip = (x, y) => {
-          tooltipNode.css(
-            'top',
-            (y - container.offset().top - 10) + 'px'
-          );
-          tooltipNode.css(
-            'left',
-            (x - container.offset().left) + 'px'
-          );
+          dom.setStyles(tooltipNode, {
+            top: (y - container.offset().top - 10) + 'px',
+            left: (x - container.offset().left) + 'px',
+          });
 
           prepareTooltip(tooltipData, data);
 
-          tooltipNode.addClass('active');
+          tooltipNode.classList.add('active');
           chartEntry.x = x;
           chartEntry.y = y;
         };
         sliceNode.mousemove((event) => showTooltip(event.pageX, event.pageY))
           .mouseout(() => {
-            tooltipNode.removeClass('active');
+            tooltipNode.classList.remove('active');
             chartEntry.x = chartEntry.y = null;
           });
         chartEntry.showCallbacksTargets.push(data.element.getNode());
