@@ -7,6 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { typeDefinitionBase } from './commons';
+
 /**
  * @typedef {Object} AtmTimeSeriesMeasurementDataSpec
  * @property {'timeSeriesMeasurement'} type
@@ -19,16 +21,32 @@
  */
 
 /**
+ * @typedef {Object} AtmTimeSeriesMeasurementValueConstraintsConditions
+ * TODO: VFS-10007 implement understanding these conditions
+ * @property {Array<AtmTimeSeriesMeasurementSpec>|null} allowedSpecs for subtype
+ * @property {Array<AtmTimeSeriesMeasurementSpec>|null} requiredSpecs for supertype
+ */
+
+/**
+ * @type {AtmDataSpecTypeDefinition<AtmTimeSeriesMeasurementValueConstraints, AtmTimeSeriesMeasurementValueConstraintsConditions>}
+ */
+export const atmDataSpecTypeDefinition = Object.freeze({
+  ...typeDefinitionBase,
+  supertype: 'object',
+  // TODO: VFS-10007 implement `getValueConstraintsConditions`
+});
+
+/**
  * @typedef {Object} AtmTimeSeriesMeasurementSpec
  * @property {'exact'|'hasPrefix'} nameMatcherType
  * @property {string} nameMatcher
  * @property {TimeSeriesUnit} unit
  */
 
-export const nameMatcherTypes = [
+export const nameMatcherTypes = Object.freeze([
   'exact',
   'hasPrefix',
-];
+]);
 
 /**
  * @param {Ember.Service} i18n

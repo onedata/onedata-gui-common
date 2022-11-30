@@ -9,9 +9,12 @@
  */
 
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { translateDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+import {
+  translateAtmDataSpecType,
+  getAtmValueConstraintsConditions,
+} from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/array-data-type-editor';
 
 export default Component.extend({
@@ -31,12 +34,6 @@ export default Component.extend({
    * @type {boolean}
    */
   isEnabled: undefined,
-
-  /**
-   * @virtual
-   * @type {AtmDataSpecPlacementContext}
-   */
-  placementContext: undefined,
 
   /**
    * @virtual
@@ -72,7 +69,7 @@ export default Component.extend({
    * @type {ComputedProperty<SafeString>}
    */
   dataTypeTranslation: computed(function dataTypeTranslation() {
-    return translateDataSpecType(this.get('i18n'), 'array');
+    return translateAtmDataSpecType(this.get('i18n'), 'array');
   }),
 
   /**
@@ -82,24 +79,8 @@ export default Component.extend({
   dataSpecFiltersForItems: computed(
     'dataSpecFilters',
     function dataSpecFiltersForItems() {
-      const dataSpecFilters = this.get('dataSpecFilters') || [];
-      return dataSpecFilters.map((dataSpecFilter) => {
-        switch (dataSpecFilter.filterType) {
-          case 'typeOrSupertype':
-          case 'typeOrSubtype': {
-            const itemTypes = dataSpecFilter.types.map((type) =>
-              extractItemTypeFromArrayDataSpec(type)
-            ).compact();
-            return itemTypes.length ? Object.assign({}, dataSpecFilter, {
-              types: itemTypes,
-            }) : null;
-          }
-          case 'forbiddenType':
-            return dataSpecFilter;
-          default:
-            return null;
-        }
-      }).filter(Boolean);
+      return getAtmValueConstraintsConditions('array', this.dataSpecFilters ?? [])
+        .itemDataSpecFilters;
     }
   ),
 
@@ -125,19 +106,3 @@ export default Component.extend({
     },
   },
 });
-
-/**
- * @param {unknown} arrayDataSpec
- * @returns {AtmDataSpec|undefined}
- */
-function extractItemTypeFromArrayDataSpec(arrayDataSpec) {
-  if (
-    !arrayDataSpec ||
-    arrayDataSpec.type !== 'array' ||
-    !get(arrayDataSpec, 'valueConstraints.itemDataSpec')
-  ) {
-    return null;
-  }
-
-  return arrayDataSpec.valueConstraints.itemDataSpec;
-}

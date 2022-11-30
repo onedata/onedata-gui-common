@@ -7,7 +7,7 @@
  */
 
 import { getProperties } from '@ember/object';
-import { dataSpecMatchesFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
+import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import auditLog from './audit-log';
 import list from './list';
 import range from './range';
@@ -43,7 +43,7 @@ export function doesDataSpecFitToStoreRead(readDataSpec, store) {
   } = getProperties(store, 'type', 'config');
   const dataSpecFilters = getStoreTypeReadDataSpecFilters(storeType, storeConfig);
 
-  return dataSpecMatchesFilters(readDataSpec, dataSpecFilters);
+  return isAtmDataSpecMatchingFilters(readDataSpec, dataSpecFilters);
 }
 
 /**
@@ -65,7 +65,7 @@ export function doesDataSpecFitToStoreWrite(writeDataSpec, store) {
   } = getProperties(store, 'type', 'config');
   const dataSpecFilters = getStoreTypeWriteDataSpecFilters(storeType, storeConfig);
 
-  return dataSpecMatchesFilters(writeDataSpec, dataSpecFilters);
+  return isAtmDataSpecMatchingFilters(writeDataSpec, dataSpecFilters);
 }
 
 /**

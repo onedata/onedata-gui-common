@@ -6,6 +6,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import _ from 'lodash';
+import { typeDefinitionBase } from './commons';
+import { FileType } from 'onedata-gui-common/utils/file';
+
 /**
  * @typedef {Object} AtmFileDataSpec
  * @property {'file'} type
@@ -18,61 +22,143 @@
  */
 
 /**
- * @typedef {string} AtmFileType for possible values see `fileTypes` array below
+ * @typedef {Object} AtmFileValueConstraintsConditions
+ * @property {Array<AtmFileType>} allowedFileTypes
  */
 
-export const fileTypes = Object.freeze([
-  'ANY',
-  'REG',
-  'DIR',
-  'SYMLNK',
-]);
+/**
+ * @type {AtmDataSpecTypeDefinition<AtmFileValueConstraints, AtmFileValueConstraintsConditions>}
+ */
+export const atmDataSpecTypeDefinition = Object.freeze({
+  ...typeDefinitionBase,
+  supertype: 'object',
+  isValueConstraintsCompatible(
+    referenceConstraints,
+    typeOrSubtypeConstraints,
+    ignoreEmpty = false,
+  ) {
+    if (!referenceConstraints?.fileType || !typeOrSubtypeConstraints?.fileType) {
+      return ignoreEmpty;
+    }
 
-export const fileSupertypes = Object.freeze({
-  ANY: [],
-  REG: ['ANY'],
-  DIR: ['ANY'],
-  SYMLNK: ['ANY'],
-});
+    if (referenceConstraints.fileType === typeOrSubtypeConstraints.fileType) {
+      return true;
+    } else {
+      return atmFileTypeSupertypes[typeOrSubtypeConstraints.fileType]
+        ?.includes(referenceConstraints.fileType) || false;
+    }
+  },
+  getValueConstraintsConditions(filters) {
+    const allowedFileTypesPerFilter = filters
+      ?.map((filter) => {
+        const filterFileDataSpecs = filter?.types
+          ?.filter((type) => type?.type === 'file') ?? [];
+        if (!filterFileDataSpecs.length) {
+          return atmFileTypesArray;
+        }
+        const filterFileTypes = filterFileDataSpecs
+          .map((type) => type?.valueConstraints?.fileType ?? AtmFileType.Any);
+        switch (filter?.filterType) {
+          case 'typeOrSupertype':
+            return _.uniq(_.flatten(filterFileTypes.map((fileType) => [
+              fileType,
+              ...atmFileTypeSupertypes[fileType],
+            ])));
+          case 'typeOrSubtype':
+            return _.uniq(_.flatten(filterFileTypes.map((fileType) => [
+              fileType,
+              ...atmFileTypeSubtypes[fileType],
+            ])));
+          case 'forbiddenType': {
+            const directlyForbiddenFileTypes = _.uniq(_.flatten(filterFileTypes));
+            const indirectlyForbiddenFileTypes = _.uniq(_.flatten(
+              directlyForbiddenFileTypes.map((fileType) =>
+                atmFileTypeSubtypes[fileType]
+              )
+            ));
+            const allForbiddenFileTypes = _.uniq([
+              ...directlyForbiddenFileTypes,
+              ...indirectlyForbiddenFileTypes,
+            ]);
+            return atmFileTypesArray
+              .filter((fileType) => !allForbiddenFileTypes.includes(fileType));
+          }
+          default:
+            return atmFileTypesArray;
+        }
+      }) ?? [];
 
-export const fileSubtypes = Object.freeze({
-  ANY: ['REG', 'DIR', 'SYMLNK'],
-  REG: [],
-  DIR: [],
-  SYMLNK: [],
+    const allowedFileTypes = allowedFileTypesPerFilter.length ?
+      _.intersection(...allowedFileTypesPerFilter) : atmFileTypesArray;
+    const sortedAllowedFileTypes = atmFileTypesArray
+      .filter((fileType) => allowedFileTypes.includes(fileType));
+
+    return {
+      allowedFileTypes: sortedAllowedFileTypes,
+    };
+  },
 });
 
 /**
- * Returns true, when data fulfilling `toContainConstraints` can be persisted
- * inside data container fulfilling `containerConstraints`.
- *
- * @param {AtmFileValueConstraints} containerConstraints
- * @param {AtmFileValueConstraints} toContainConstraints
- * @param {boolean} [ignoreEmpty]
- * @returns {boolean}
+ * @typedef {'ANY'|FileType} AtmFileType
  */
-export function canValueConstraintsContain(
-  containerConstraints,
-  toContainConstraints,
-  ignoreEmpty = false,
-) {
-  if (!containerConstraints?.fileType || !toContainConstraints?.fileType) {
-    return ignoreEmpty;
-  }
 
-  if (containerConstraints.fileType === toContainConstraints.fileType) {
-    return true;
-  } else {
-    return fileSupertypes[toContainConstraints.fileType]
-      ?.includes(containerConstraints.fileType) || false;
-  }
-}
+/**
+ * @type {Object<string, AtmFileType>}
+ */
+export const AtmFileType = Object.freeze({
+  Any: 'ANY',
+  Regular: FileType.Regular,
+  Directory: FileType.Directory,
+  SymbolicLink: FileType.SymbolicLink,
+});
+
+/**
+ * @type {Array<AtmFileType>}
+ */
+export const atmFileTypesArray = Object.freeze([
+  AtmFileType.Any,
+  AtmFileType.Regular,
+  AtmFileType.Directory,
+  AtmFileType.SymbolicLink,
+]);
+
+/**
+ * @type {Object<AtmFileType, Array<AtmFileType>>}
+ */
+export const atmFileTypeSupertypes = Object.freeze({
+  [AtmFileType.Any]: [],
+  [AtmFileType.Regular]: [AtmFileType.Any],
+  [AtmFileType.Directory]: [AtmFileType.Any],
+  [AtmFileType.SymbolicLink]: [AtmFileType.Any],
+});
+
+/**
+ * @type {Object<AtmFileType, Array<AtmFileType>>}
+ */
+export const atmFileTypeSubtypes = Object.freeze({
+  [AtmFileType.Any]: [
+    AtmFileType.Regular,
+    AtmFileType.Directory,
+    AtmFileType.SymbolicLink,
+  ],
+  [AtmFileType.Regular]: [],
+  [AtmFileType.Directory]: [],
+  [AtmFileType.SymbolicLink]: [],
+});
 
 /**
  * @param {Ember.Service} i18n
- * @param {AtmFileType} fileType
+ * @param {AtmFileType} atmFileType
+ * @param {{ upperFirst: boolean }} [options]
  * @returns {SafeString}
  */
-export function translateFileType(i18n, fileType) {
-  return i18n.t(`utils.atmWorkflow.dataSpec.file.fileTypes.${fileType}`);
+export function translateAtmFileType(i18n, atmFileType, { upperFirst = false } = {}) {
+  if (!i18n) {
+    console.error('translateAtmFileType: i18n is undefined');
+    return '';
+  }
+
+  const translation = i18n.t(`utils.atmWorkflow.dataSpec.file.fileTypes.${atmFileType}`);
+  return upperFirst ? _.upperFirst(translation) : translation;
 }

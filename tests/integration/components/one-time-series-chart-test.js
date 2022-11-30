@@ -187,7 +187,7 @@ describe('Integration | Component | one time series chart', function () {
 
     await renderComponent();
     await click('.show-newest-btn');
-    expectEchartDummyPoints(null, 60, 60);
+    expectEchartDummyPoints(null, 60, 60, true);
     expect(config.getViewParameters().lastPointTimestamp).to.be.null;
   });
 });

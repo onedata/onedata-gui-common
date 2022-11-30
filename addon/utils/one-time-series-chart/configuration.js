@@ -805,6 +805,16 @@ export default class Configuration {
     this.live = false;
 
     /**
+     * Number of seconds from now by which statistics aggregation is
+     * considered to be possibly incomplete in live mode. This offset will be
+     * used to move current timestamp to the past and show only these points,
+     * which are fully synchronized and recalculated based on live data.
+     * @private
+     * @type {number}
+     */
+    this.liveModeTimestampOffset = 10;
+
+    /**
      * @private
      * @type {number|null}
      */
@@ -1360,7 +1370,11 @@ export default class Configuration {
    * @returns {number}
    */
   getNowTimestamp() {
-    return Math.floor(Date.now() / 1000) + this.nowTimestampOffset;
+    let timestampOffset = this.nowTimestampOffset;
+    if (this.live) {
+      timestampOffset -= this.liveModeTimestampOffset;
+    }
+    return Math.floor(Date.now() / 1000) + timestampOffset;
   }
 
   /**
