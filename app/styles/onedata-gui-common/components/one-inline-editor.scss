@@ -60,7 +60,7 @@
   }
   .tags-input {
     &.readonly {
-      padding: $padding-base-vertical / 2 $padding-base-horizontal;
+      padding: $padding-base-vertical * 0.5 $padding-base-horizontal;
       .input-element {
         margin-bottom: 0;
       }
