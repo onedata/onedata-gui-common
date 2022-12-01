@@ -22,6 +22,14 @@
       visibility: visible;
     }
   }
+  &.save-disabled {
+    .save-icon {
+      color: $main-text-color-disabled;
+      &:hover {
+        color: $main-text-color-disabled;
+      }
+    }
+  }
   .action-icons {
     position: absolute;
     top: 50%;

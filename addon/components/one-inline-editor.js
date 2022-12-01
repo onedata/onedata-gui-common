@@ -31,6 +31,7 @@ export default Component.extend(I18n, {
     'controlledManually:manual',
     'hideEditIcons:without-edit-icons',
     'hideViewIcons:without-view-icons',
+    'saveButtonDisabled:save-disabled',
   ],
 
   i18n: service(),
@@ -353,7 +354,10 @@ export default Component.extend(I18n, {
         }
       }
     },
-    saveEdition() {
+    async saveEdition() {
+      if (this.saveButtonDisabled) {
+        return;
+      }
       const {
         onSave,
         controlledManually,
