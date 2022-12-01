@@ -25,7 +25,6 @@
     }
   
     .flippable-back {
-      color: inherit;
       opacity: 0;
       transition: opacity $transition-time;
       transform: rotateY(180deg) translate(4px, -5px);

@@ -5,7 +5,7 @@
     (if shouldAnimated "animation" "not-animation")
   }}
 >
-  {{#if iconTag}}
+  {{#if isTagIcon}}
     {{#one-icon-tagged
       class=(concat-classes "tag-right flippable-front" iconTaggedClass)
       icon=iconName

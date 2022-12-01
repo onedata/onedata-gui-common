@@ -29,4 +29,6 @@ export default Component.extend({
   isHovered: false,
 
   shouldAnimated: true,
+
+  isTagIcon: false,
 });
