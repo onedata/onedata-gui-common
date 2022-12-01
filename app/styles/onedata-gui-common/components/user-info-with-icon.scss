@@ -1,11 +1,19 @@
 .user-info-with-icon {
+  .user-info-trigger {
+    margin-left: -4px;
+  }
+  .user-fullname {
+    padding-left: 4px;
+  }
   .flippable-icons {
+    padding-left: 3px;
     .inline-icon-container {
+      cursor: pointer;
       width: 18px;
       height: 18px;
   
       .flippable-front, .flippable-back {
-        transform: translate(-4px, 0px);
+        transform: translate(-3px, 0px);
       }
   
       .flippable-back {

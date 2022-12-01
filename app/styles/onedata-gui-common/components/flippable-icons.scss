@@ -31,10 +31,12 @@
     }
   }
 
-  .inline-icon-container.info-icon-container-hovered.animation {
-    transform: rotateY(180deg);
-    .flippable-back {
-      opacity: 1;
+  .inline-icon-container {
+    &.info-icon-container-hovered.animation, &.not-animation {
+      transform: rotateY(180deg);
+      .flippable-back {
+        opacity: 1;
+      }
     }
   }
 }
