@@ -34,6 +34,7 @@ import customCss from 'onedata-gui-common/utils/chartist/custom-css';
 import legendColors from 'onedata-gui-common/utils/chartist/legend-colors';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 const INACTIVE_SERIES_OPACITY = 0.3;
 const SERIES_HOVER_TRANSITION_TIME = 0.3;
@@ -479,9 +480,8 @@ export default Component.extend({
    * @returns {string} stroke-opacity value
    */
   _getSliceOpacity(series) {
-    return $(
-      this.get('element').querySelector(`.slice-id-${series.get('id')} path`)
-    ).css('stroke-opacity');
+    const slicePath = this.element?.querySelector(`.slice-id-${series.get('id')} path`);
+    return slicePath ? dom.getStyle(slicePath, 'stroke-opacity') : '';
   },
 
   /**
@@ -490,9 +490,8 @@ export default Component.extend({
    * @returns {string} opacity value
    */
   _getLabelOpacity(series) {
-    return $(
-      this.get('element').querySelector('.label-id-' + series.get('id'))
-    ).css('opacity');
+    const label = this.element?.querySelector('.label-id-' + series.get('id'));
+    return label ? dom.getStyle(label, 'opacity') : '';
   },
 
   /**

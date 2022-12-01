@@ -44,6 +44,7 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import { inject as service } from '@ember/service';
 import { equal, raw } from 'ember-awesome-macros';
 import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 const initialEdgeScrollState = Object.freeze({
   top: true,
@@ -151,32 +152,37 @@ export default Component.extend(WindowResizeHandler, {
   },
 
   recalculateTableLayout() {
-    const {
-      element,
-      scrollPosition,
-    } = this.getProperties('element', 'scrollPosition');
-    if (!element) {
+    const table = this.element?.querySelector(':scope > .ps > table');
+    if (!table) {
       return;
     }
-    const $columnLabels = $(element).find('> .ps > table > tr > .column-label:not(.row-label)');
-    const $rowLabels = $(element).find('> .ps > table > tr > .row-label:not(.column-label)');
-    const $columnAndRowLabels = $(element).find('> .ps > table > tr > .row-label.column-label');
+    const columnLabels = table.querySelectorAll(':scope > tr > .column-label:not(.row-label)');
+    const rowLabels = table.querySelectorAll(':scope > tr > .row-label:not(.column-label)');
+    const columnAndRowLabels = table.querySelectorAll(':scope > tr > .row-label.column-label');
 
     // For the origin or translateZ property usage see comments in scrollable-table.scss.
-    $columnLabels.css({
-      transform: `translateZ(2px) translateY(${scrollPosition.top}px)`,
-    });
-    $rowLabels.css({
-      transform: `translateZ(1px) translateX(${scrollPosition.left}px)`,
-    });
-    $columnAndRowLabels.css({
-      transform: `translateZ(3px) translateY(${scrollPosition.top}px)`,
-    });
+    dom.setStyle(
+      columnLabels,
+      'transform',
+      `translateZ(2px) translateY(${this.scrollPosition.top}px)`
+    );
+    dom.setStyle(
+      rowLabels,
+      'transform',
+      `translateZ(1px) translateX(${this.scrollPosition.left}px)`
+    );
+    dom.setStyle(
+      columnAndRowLabels,
+      'transform',
+      `translateZ(3px) translateY(${this.scrollPosition.top}px)`
+    );
     // The content of row-column labels is positioned on X axis, because X axis
     // positioning of the table cell breaks down scroll shadows.
-    $columnAndRowLabels.find('> *').css({
-      transform: `translateX(${scrollPosition.left}px)`,
-    });
+    [...columnAndRowLabels].forEach((label) => dom.setStyle(
+      label.children,
+      'transform',
+      `translateX(${this.scrollPosition.left}px)`
+    ));
   },
 
   updateScrollPosition() {
