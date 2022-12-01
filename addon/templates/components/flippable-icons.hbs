@@ -1,0 +1,24 @@
+<span
+  class={{concat-classes 
+    "inline-icon-container" 
+    (if isHovered "info-icon-container-hovered")
+    (if shouldAnimated "animation" "not-animation")
+  }}
+>
+  {{#if iconTag}}
+    {{#one-icon-tagged
+      class=(concat-classes "tag-right flippable-front" iconTaggedClass)
+      icon=iconName
+      iconClass="file-icon"
+      tagIcon=iconTag
+      shadowType=(if iconTag "circle" "none")
+    }}
+      {{#if iconTip}}
+        {{one-tooltip title=iconTip}}
+      {{/if}}
+    {{/one-icon-tagged}}
+  {{else}}
+    {{one-icon icon=iconName class="flippable-front" color=iconColor}}
+  {{/if}}
+  {{one-icon icon="browser-info" class="flippable-back"}}
+</span>
