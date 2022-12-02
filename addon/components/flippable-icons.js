@@ -21,6 +21,9 @@ export default Component.extend({
    */
   iconName: undefined,
 
+  /**
+   * @type {String}
+   */
   iconColor: undefined,
 
   /**
@@ -28,7 +31,28 @@ export default Component.extend({
    */
   isHovered: false,
 
+  /**
+   * @type {boolean}
+   */
   shouldAnimated: true,
 
+  /**
+   * @type {boolean}
+   */
   isTagIcon: false,
+
+  /**
+   * @type {String}
+   */
+  iconTag: undefined,
+
+  /**
+   * @type {String}
+   */
+  iconTaggedClass: undefined,
+
+  /**
+   * @type {String}
+   */
+  iconTip: undefined,
 });
