@@ -50,6 +50,25 @@ export default FormFieldsGroup.extend({
   }),
 
   /**
+   * @virtual optional
+   * @type {ComputedProperty<HtmlSafe>}
+   */
+  emptyCollectionViewModeText: computed(
+    'translationPath',
+    'i18nPrefix',
+    function emptyCollectionViewModeText() {
+      return this.getTranslation('emptyCollectionViewModeText', {}, {
+        defaultValue: this.t(
+          'components.formComponent.formFieldsCollectionGroup.emptyCollectionViewModeText', {}, {
+            defaultValue: '',
+            usePrefix: false,
+          },
+        ),
+      });
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<Array<Utils.FormComponent.FormElement>>}
    */
   fieldsToAdd: computed(() => []),

@@ -204,5 +204,33 @@ describe(
         expect(get(collectionGroup, 'addButtonText')).to.equal('specificText');
       }
     );
+
+    it('provides default empty translation for "emptyCollectionViewModeText"',
+      function () {
+        const collectionGroup = FormFieldsCollectionGroup.create({
+          ownerSource: this.owner,
+          name: 'abc',
+        });
+
+        expect(String(get(collectionGroup, 'emptyCollectionViewModeText')))
+          .to.equal('');
+      }
+    );
+
+    it('provides specific translation for "emptyCollectionViewModeText" if exists',
+      function () {
+        sinon.stub(lookupService(this, 'i18n'), 't')
+          .withArgs('abc.emptyCollectionViewModeText')
+          .returns('specificText');
+
+        const collectionGroup = FormFieldsCollectionGroup.create({
+          ownerSource: this.owner,
+          name: 'abc',
+        });
+
+        expect(get(collectionGroup, 'emptyCollectionViewModeText'))
+          .to.equal('specificText');
+      }
+    );
   }
 );
