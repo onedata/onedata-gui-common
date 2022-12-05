@@ -62,6 +62,7 @@ import questionModal from './onedata-gui-common/components/modals/question-modal
 import unsavedChangesQuestionModal from './onedata-gui-common/components/modals/unsaved-changes-question-modal';
 import workflowVisualiserStoreModal from './onedata-gui-common/components/modals/workflow-visualiser/store-modal';
 import workflowVisualiserLaneModal from './onedata-gui-common/components/modals/workflow-visualiser/lane-modal';
+import toggleDirStatsQuestionModal from './onedata-gui-common/components/modals/toggle-dir-stats-question-modal';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
@@ -155,6 +156,7 @@ const translations = {
       recordSelectorModal,
       questionModal,
       unsavedChangesQuestionModal,
+      toggleDirStatsQuestionModal,
       workflowVisualiser: {
         storeModal: workflowVisualiserStoreModal,
         laneModal: workflowVisualiserLaneModal,
