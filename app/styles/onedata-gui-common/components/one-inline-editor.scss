@@ -22,14 +22,6 @@
       visibility: visible;
     }
   }
-  &.save-disabled {
-    .save-icon {
-      color: $main-text-color-disabled;
-      &:hover {
-        color: $main-text-color-disabled;
-      }
-    }
-  }
   .action-icons {
     position: absolute;
     top: 50%;
@@ -81,6 +73,11 @@
   }
   .save-icon:hover, .edit-icon:hover {
     color: $color-one-mint;
+  }
+  .save-icon {
+    &.disabled, &:hover.disabled {
+      color: $main-text-color-disabled;
+    }
   }
   .cancel-icon:hover {
     color: $color-one-red;

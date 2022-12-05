@@ -23,7 +23,11 @@
     {{#if _whileSaving}}
       {{spin-spinner-block sizeClass="xs"}}
     {{else if (not hideEditIcons)}}
-      {{#one-icon icon="checked" class="save-icon" click=(action "saveEdition")}}
+      {{#one-icon
+        icon="checked"
+        class=(concat-classes "save-icon" (if isSaveDisabled "disabled"))
+        click=(action "saveEdition")
+      }}
         {{#if saveButtonTip}}
           {{one-tooltip title=saveButtonTip}}
         {{/if}}
