@@ -166,7 +166,7 @@ export default Mixin.create({
     }
 
     let elementWidth = overflowElement.outerWidth(true);
-    if (dom.isHidden(overflowElement)) {
+    if (dom.isHidden(overflowElement[0])) {
       const previousCss = overflowElement.attr('style');
       const newCss = previousCss +
         ';position: absolute !important; visibility: hidden !important; display: block !important;';

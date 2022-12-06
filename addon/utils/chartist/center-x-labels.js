@@ -16,7 +16,7 @@ export default function centerXLabels() {
         '.ct-labels .ct-label.ct-horizontal.ct-end'
       )].forEach((element) => {
         const label = element.parentElement;
-        const width = Number(label.getAttribute('width'));
+        const width = parseFloat(label.getAttribute('width'));
         dom.setStyle(label, 'transform', `translateX(-${width / 2}px)`);
       });
     });
