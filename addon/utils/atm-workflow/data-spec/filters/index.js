@@ -10,7 +10,7 @@ import _ from 'lodash';
 import typeOrSupertypeFilterDefinition from './type-or-supertype';
 import typeOrSubtypeFilterDefinition from './type-or-subtype';
 import forbiddenTypeFilterDefinition from './forbidden-type';
-import { atmDataSpecTypesArray } from '../types';
+import { atmDataSpecTypesArray, isAtmDataSpecCompatible, atmDataSpecTypeDefinitions } from '../types';
 
 /**
  * @typedef {
@@ -53,12 +53,28 @@ export function getMatchingAtmDataSpecTypes(filters) {
 }
 
 /**
+ * @param {AtmDataSpecType} atmDataSpec
+ * @param {Array<AtmDataSpecFilter>} filters
+ * @returns {boolean}
+ */
+export function isAtmDataSpecMatchingFilters(atmDataSpec, filters) {
+  const context = {
+    doesAtmDataSpecMatchFilters: (...args) => doesAtmDataSpecMatchFilters(...args, {
+      isAtmDataSpecCompatible,
+      isAtmDataSpecMatchingFilters,
+    }),
+  };
+  return atmDataSpecTypeDefinitions[atmDataSpec?.type]
+    ?.isMatchingFilters?.(atmDataSpec, filters, context) ?? null;
+}
+
+/**
  * @param {AtmDataSpec} atmDataSpec
  * @param {Array<AtmDataSpecFilter>} filters
  * @param {DoesAtmDataSpecMatchFilterFuncCtx} context
  * @returns {boolean}
  */
-export function doesAtmDataSpecMatchFilters(atmDataSpec, filters, context) {
+function doesAtmDataSpecMatchFilters(atmDataSpec, filters, context) {
   // Absence of `atmDataSpec.type` means, that data spec is not complete (probably under
   // edition). It's emptiness does not directly violate any filter as there is still
   // posibbility that at some point this empty slot will be filled with a proper type.

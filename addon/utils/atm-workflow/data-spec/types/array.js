@@ -7,7 +7,6 @@
  */
 
 import _ from 'lodash';
-import { doesAtmDataSpecMatchFilters } from '../filters';
 import { typeDefinitionBase } from './commons';
 
 /**
@@ -81,7 +80,7 @@ export const atmDataSpecTypeDefinition = Object.freeze({
     };
   },
   isMatchingFilters(atmDataSpec, filters, context) {
-    if (!doesAtmDataSpecMatchFilters(atmDataSpec, filters, context)) {
+    if (!context.doesAtmDataSpecMatchFilters(atmDataSpec, filters)) {
       return false;
     }
 
@@ -92,7 +91,7 @@ export const atmDataSpecTypeDefinition = Object.freeze({
     );
     if (
       itemDataSpec &&
-      !doesAtmDataSpecMatchFilters(itemDataSpec, filtersToCheck, context)
+      !context.doesAtmDataSpecMatchFilters(itemDataSpec, filtersToCheck)
     ) {
       return false;
     }
