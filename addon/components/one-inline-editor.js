@@ -12,6 +12,7 @@
 import Component from '@ember/component';
 import { run, next } from '@ember/runloop';
 import { observer, computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import layout from '../templates/components/one-inline-editor';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -21,6 +22,18 @@ import $ from 'jquery';
 import { Promise, resolve } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { isEmpty } from 'ember-awesome-macros';
+
+/**
+ * @typedef {Object} OneInlineEditorSettings
+ * @param {'text'|'tags'} type
+ */
+
+/**
+ * @typedef {OneInlineEditorSettings} OneInlineTagsEditorSettings
+ * @param {'tags'} type
+ * @param {string} tagEditorComponentName See `tagEditorComponentName` in `tags-input`.
+ * @param {Object} tagEditorSettings See `tagEditorSettings` in `tags-input`.
+ */
 
 export default Component.extend(I18n, {
   layout,
@@ -59,6 +72,12 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   editHint: undefined,
+
+  /**
+   * @virtual optional
+   * @type {OneInlineEditorSettings}
+   */
+  editorSettings: undefined,
 
   /**
    * @type {boolean}
@@ -163,6 +182,8 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   inputPlaceholder: undefined,
+
+  editorType: reads('editorSettings.type'),
 
   /**
    * @type {Ember.ComputedProperty<string>}

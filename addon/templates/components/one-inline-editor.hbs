@@ -5,6 +5,11 @@
     {{tags-input
       tags=_inputValue
       class=(concat-classes "form-control" inputClasses)
+      tagEditorComponentName=(or
+        editorSettings.tagEditorComponentName
+        "tags-input/text-editor"
+      )
+      tagEditorSettings=editorSettings.tagEditorSettings
       readonly=false
       onChange=(action (mut _inputValue))
     }}

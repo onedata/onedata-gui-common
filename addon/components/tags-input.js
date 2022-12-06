@@ -105,7 +105,7 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual optional
-   * @type {Array<String>}
+   * @type {string}
    */
   tagEditorComponentName: 'tags-input/text-editor',
 
