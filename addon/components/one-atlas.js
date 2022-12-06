@@ -32,6 +32,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-atlas';
+import dom from 'onedata-gui-common/utils/dom';
 
 // Atlas image aspect ratio - needed when recomputing new atlas size
 const ATLAS_AR = 1.361111111112;
@@ -111,8 +112,10 @@ export default Component.extend({
       width: newWidth,
       height: newHeight,
     });
-    this.element.style.width = `${newWidth}px`;
-    this.element.style.height = `${newHeight}px`;
-    this.element.style.backgroundSize = `${newWidth}px ${newHeight}px`;
+    dom.setStyles(this.element, {
+      width: `${newWidth}px`,
+      height: `${newHeight}px`,
+      backgroundSize: `${newWidth}px ${newHeight}px`,
+    });
   },
 });

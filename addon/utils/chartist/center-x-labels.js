@@ -7,6 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import dom from 'onedata-gui-common/utils/dom';
+
 export default function centerXLabels() {
   return (chart) => {
     chart.on('created', () => {
@@ -15,7 +17,7 @@ export default function centerXLabels() {
       )].forEach((element) => {
         const label = element.parentElement;
         const width = Number(label.getAttribute('width'));
-        label.style.transform = `translateX(-${width / 2}px)`;
+        dom.setStyle(label, 'transform', `translateX(-${width / 2}px)`);
       });
     });
   };

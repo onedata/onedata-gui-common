@@ -14,8 +14,8 @@ export default function rotateHorizontalLabels() {
         '.ct-labels .ct-label.ct-horizontal.ct-end'
       )].forEach((element) => {
         const label = element.parentElement;
-        const width = Number(label.getAttribute('width'));
-        const rotateX = Number(label.getAttribute('x')) + width;
+        const width = parseFloat(label.getAttribute('width'));
+        const rotateX = parseFloat(label.getAttribute('x')) + width;
         const rotateParams = `-45 ${rotateX} ${label.getAttribute('y')}`;
         const translateParams = `-${width / Math.SQRT2} -${width / Math.SQRT2}`;
         label.setAttribute(

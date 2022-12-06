@@ -11,7 +11,7 @@ import setStyles from './set-styles';
 /**
  * @param {HTMLElement|Array<HTMLElement>|NodeList<HTMLElement>} elementOrElements
  * @param {keyof CSSStyleDeclaration} stylePropertyName CSS property name in
- * camelcase format.
+ *   camelcase format.
  * @param {string} stylePropertyValue Value for that CSS property.
  * @returns {void}
  */

@@ -11,7 +11,7 @@ import { normalizeElementsArray } from './commons';
 /**
  * @param {HTMLElement|Array<HTMLElement>|NodeList<HTMLElement>} elementOrElements
  * @param {Object<keyof CSSStyleDeclaration, string>} styles Object with CSS
- * property names (camelcased) and corresponding values.
+ *   property names (camelcased) and corresponding values.
  * @returns {void}
  */
 export default function setStyles(elementOrElements, styles) {

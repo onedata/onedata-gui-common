@@ -1,5 +1,5 @@
 /**
- * Returns a computed value of of a specific CSS property for given element.
+ * Returns a computed value of a specific CSS property for given element.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -9,7 +9,7 @@
 /**
  * @param {HTMLElement} element
  * @param {keyof CSSStyleDeclaration} stylePropertyName CSS property name in
- * camelcase format.
+ *   camelcase format.
  * @returns {string}
  */
 export default function getStyle(element, stylePropertyName) {

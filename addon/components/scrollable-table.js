@@ -156,9 +156,12 @@ export default Component.extend(WindowResizeHandler, {
     if (!table) {
       return;
     }
-    const columnLabels = table.querySelectorAll(':scope > tr > .column-label:not(.row-label)');
-    const rowLabels = table.querySelectorAll(':scope > tr > .row-label:not(.column-label)');
-    const columnAndRowLabels = table.querySelectorAll(':scope > tr > .row-label.column-label');
+    const columnLabels =
+      table.querySelectorAll(':scope > tr > .column-label:not(.row-label)');
+    const rowLabels =
+      table.querySelectorAll(':scope > tr > .row-label:not(.column-label)');
+    const columnAndRowLabels =
+      table.querySelectorAll(':scope > tr > .row-label.column-label');
 
     // For the origin or translateZ property usage see comments in scrollable-table.scss.
     dom.setStyle(
