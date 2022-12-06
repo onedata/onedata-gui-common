@@ -28,7 +28,6 @@ import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
 import { promise, array, raw, isEmpty } from 'ember-awesome-macros';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
-import $ from 'jquery';
 
 const supportedModels = [
   'user',
@@ -391,8 +390,10 @@ export default Component.extend(I18n, {
   didInsertElement() {
     this._super(...arguments);
 
-    const $parentTagsInput = $(this.get('element')).parents('.tags-input');
-    this.set('parentTagsInputSelector', `#${$parentTagsInput.attr('id')}`);
+    const parentTagsInput = this.element.closest('.tags-input');
+    if (parentTagsInput) {
+      this.set('parentTagsInputSelector', `#${parentTagsInput.id}`);
+    }
   },
 
   repositionPopover() {

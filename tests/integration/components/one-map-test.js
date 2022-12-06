@@ -5,6 +5,7 @@ import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import _ from 'lodash';
+import dom from 'onedata-gui-common/utils/dom';
 import $ from 'jquery';
 
 function getRelativePosition($parent, $child) {
@@ -115,9 +116,9 @@ describe('Integration | Component | one map', function () {
       </div>
     `);
 
-    const $position = $(find('.map-position-container'));
-    const left = parseFloat($position.css('left'));
-    const top = parseFloat($position.css('top'));
+    const position = find('.map-position-container');
+    const left = parseFloat(dom.getStyle(position, 'left'));
+    const top = parseFloat(dom.getStyle(position, 'top'));
     const mapObject = getMapObject();
     const coords = mapObject.pointToLatLng(left, top);
     expect(_.inRange(coords.lat, 49, 51)).to.be.true;

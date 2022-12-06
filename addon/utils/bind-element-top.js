@@ -7,6 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import dom from 'onedata-gui-common/utils/dom';
+
 /**
  * Makes `innerElement` fixed to be fully stretched below `topElement`
  * and fully streched to the right from `leftElement`.
@@ -34,16 +36,18 @@ export default function bindElementTop({
   if (!$topElement || !$topElement.length) {
     staticCss.top = 0;
   }
-  $innerElement.css(staticCss);
+  dom.setStyles($innerElement[0], staticCss);
   const __resizeFun = () => {
     if ($topElement && $topElement.length) {
-      $innerElement.css(
+      dom.setStyle(
+        $innerElement[0],
         'top',
         ($topElement.offset().top + Math.max($topElement.outerHeight(), 0)) + 'px'
       );
     }
     if ($leftElement && $leftElement.length) {
-      $innerElement.css(
+      dom.setStyle(
+        $innerElement[0],
         'left',
         ($leftElement.offset().left + Math.max($leftElement.outerWidth(), 0)) + 'px'
       );

@@ -7,18 +7,18 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
-export default function () {
+export default function centerXLabels() {
   return (chart) => {
     chart.on('created', () => {
-      $(chart.container).find('.ct-labels .ct-label.ct-horizontal.ct-end')
-        .parent()
-        .each((index, element) => {
-          const label = $(element);
-          const width = parseFloat(label.attr('width'));
-          label.css({ transform: `translateX(-${width / 2}px)` });
-        });
+      [...chart.container.querySelectorAll(
+        '.ct-labels .ct-label.ct-horizontal.ct-end'
+      )].forEach((element) => {
+        const label = element.parentElement;
+        const width = parseFloat(label.getAttribute('width'));
+        dom.setStyle(label, 'transform', `translateX(-${width / 2}px)`);
+      });
     });
   };
 }
