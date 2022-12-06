@@ -79,6 +79,7 @@ import utilsAtmWorkflow from './onedata-gui-common/utils/atm-workflow';
 import auditLog from './onedata-gui-common/utils/audit-log';
 import timeSeries from './onedata-gui-common/utils/time-series';
 import file from './onedata-gui-common/utils/file';
+import validators from './onedata-gui-common/utils/validators';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
 
@@ -182,6 +183,7 @@ const translations = {
     auditLog,
     timeSeries,
     file,
+    validators,
   },
   errors: {
     backendErrors,
