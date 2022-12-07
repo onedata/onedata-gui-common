@@ -3,7 +3,7 @@ import { describe, it, context } from 'mocha';
 import {
   isAtmDataSpecMatchingFilters,
   getMatchingAtmDataSpecTypes,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+} from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import {
   AtmDataSpecType,
   atmDataSpecTypesArray,

@@ -28,7 +28,7 @@ import { atmDataSpecTypesArray, isAtmDataSpecCompatible, atmDataSpecTypeDefiniti
 
 /**
  * @typedef {Object} DoesAtmDataSpecMatchFilterFuncCtx
- * @property {(containerAtmDataSpec: AtmDataSpec, toContainAtmDataSpec: AtmDataSpec, ignoreEmpty: boolean) => boolean} isAtmDataSpecCompatible
+ * @property {(referenceAtmDataSpec: AtmDataSpec, typeOrSubtypeAtmDataSpec: AtmDataSpec, ignoreEmpty: boolean) => boolean} isAtmDataSpecCompatible
  */
 
 const atmDataSpecFilterDefinitionsMap = Object.freeze({
@@ -58,40 +58,30 @@ export function getMatchingAtmDataSpecTypes(filters) {
  * @returns {boolean}
  */
 export function isAtmDataSpecMatchingFilters(atmDataSpec, filters) {
-  const context = {
-    doesAtmDataSpecMatchFilters: (...args) => doesAtmDataSpecMatchFilters(...args, {
-      isAtmDataSpecCompatible,
-      isAtmDataSpecMatchingFilters,
-    }),
-  };
-  return atmDataSpecTypeDefinitions[atmDataSpec?.type]
-    ?.isMatchingFilters?.(atmDataSpec, filters, context) ?? null;
-}
-
-/**
- * @param {AtmDataSpec} atmDataSpec
- * @param {Array<AtmDataSpecFilter>} filters
- * @param {DoesAtmDataSpecMatchFilterFuncCtx} context
- * @returns {boolean}
- */
-function doesAtmDataSpecMatchFilters(atmDataSpec, filters, context) {
   // Absence of `atmDataSpec.type` means, that data spec is not complete (probably under
   // edition). It's emptiness does not directly violate any filter as there is still
-  // posibbility that at some point this empty slot will be filled with a proper type.
+  // possibility that at some point this empty slot will be filled with a proper type.
   if (!atmDataSpec?.type || !filters?.length) {
     return true;
   }
 
   for (const filter of filters) {
     const checkFilterCallback = atmDataSpecFilterDefinitionsMap[filter?.filterType]
-      .doesAtmDataSpecMatchFilter;
+      ?.doesAtmDataSpecMatchFilter;
     if (!checkFilterCallback) {
       continue;
     }
-    if (!checkFilterCallback(atmDataSpec, filter, context)) {
+    if (!checkFilterCallback(atmDataSpec, filter, { isAtmDataSpecCompatible })) {
       return false;
     }
   }
 
-  return true;
+  const constraintsMatcher = atmDataSpecTypeDefinitions[atmDataSpec.type]
+    ?.isValueConstraintsMatchingFilters;
+  return constraintsMatcher?.(
+    atmDataSpec.valueConstraints,
+    filters, {
+      isAtmDataSpecMatchingFilters,
+    }
+  ) ?? true;
 }

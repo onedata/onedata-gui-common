@@ -79,19 +79,15 @@ export const atmDataSpecTypeDefinition = Object.freeze({
       itemDataSpecFilters,
     };
   },
-  isMatchingFilters(atmDataSpec, filters, context) {
-    if (!context.doesAtmDataSpecMatchFilters(atmDataSpec, filters)) {
-      return false;
-    }
-
-    const itemDataSpec = atmDataSpec?.valueConstraints?.itemDataSpec;
-    const filtersToCheck = filters?.filter((filter) =>
+  isValueConstraintsMatchingFilters(constraints, atmDataSpecFilters, context) {
+    const itemDataSpec = constraints?.itemDataSpec;
+    const filtersToCheck = atmDataSpecFilters?.filter((filter) =>
       filter?.filterType !== 'typeOrSupertype' &&
       filter?.filterType !== 'typeOrSubtype'
     );
     if (
       itemDataSpec &&
-      !context.doesAtmDataSpecMatchFilters(itemDataSpec, filtersToCheck)
+      !context.isAtmDataSpecMatchingFilters(itemDataSpec, filtersToCheck)
     ) {
       return false;
     }

@@ -100,8 +100,8 @@ export const atmDataSpecTypesArray = Object.freeze([
  * Converts passed filters to an object with possible values and/or limitations
  * for data spec value constraints properties. See more:
  * `AtmValueConstraintsConditions`
- * @property {(atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>, context: IsAtmDataSpecCompatibleFuncCtx) => boolean} isMatchingFilters
- * Returns `true` when specific data spec fulfills all provided filters.
+ * @property {(atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>, context: IsValueConstraintsMatchingFiltersFuncCtx) => boolean} isValueConstraintsMatchingFilters
+ * Returns `true` when specific data spec value constraints fulfill all provided filters.
  */
 
 /**
@@ -110,8 +110,8 @@ export const atmDataSpecTypesArray = Object.freeze([
  */
 
 /**
- * @typedef {Object} IsAtmDataSpecCompatibleFuncCtx
- * @property {atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>) => boolean} doesAtmDataSpecMatchFilter
+ * @typedef {Object} IsValueConstraintsMatchingFiltersFuncCtx
+ * @property {(atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>) => boolean} isAtmDataSpecMatchingFilters
  */
 
 /**

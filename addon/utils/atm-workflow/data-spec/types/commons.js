@@ -17,7 +17,7 @@ export const typeDefinitionBase = Object.freeze({
   getValueConstraintsConditions() {
     return null;
   },
-  isMatchingFilters(atmDataSpec, filters, context) {
-    return context.doesAtmDataSpecMatchFilters(atmDataSpec, filters);
+  isValueConstraintsMatchingFilters() {
+    return true;
   },
 });
