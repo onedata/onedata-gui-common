@@ -4,7 +4,7 @@ import { findInElementsByText } from './find';
 export default class OneDrodopdownHelper {
   /**
    * @public
-   * @param {HTMLElement|string} elementOrSelector Dropdown or it's parent
+   * @param {HTMLElement|string} elementOrSelector Dropdown's trigger or it's parent
    * element/selector
    */
   constructor(elementOrSelector) {

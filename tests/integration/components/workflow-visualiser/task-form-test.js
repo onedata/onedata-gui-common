@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import OneDrodopdownHelper from '../../../helpers/one-dropdown';
+import OneDropdownHelper from '../../../helpers/one-dropdown';
 import sinon from 'sinon';
 import _ from 'lodash';
 import { classify } from '@ember/string';
@@ -349,11 +349,11 @@ const exampleTask = {
   timeSeriesStoreConfig: null,
 };
 
-const atmLambdaRevisionNumberDropdown = new OneDrodopdownHelper('.atmLambdaRevisionNumber-field');
-const valueBuilderTypeDropdown = new OneDrodopdownHelper('.valueBuilderType-field');
-const valueBuilderStoreDropdown = new OneDrodopdownHelper('.valueBuilderStore-field');
-const targetStoreDropdown = new OneDrodopdownHelper('.targetStore-field');
-const dispatchFunctionDropdown = new OneDrodopdownHelper('.dispatchFunction-field');
+const atmLambdaRevisionNumberDropdown = new OneDropdownHelper('.atmLambdaRevisionNumber-field');
+const valueBuilderTypeDropdown = new OneDropdownHelper('.valueBuilderType-field');
+const valueBuilderStoreDropdown = new OneDropdownHelper('.valueBuilderStore-field');
+const targetStoreDropdown = new OneDropdownHelper('.targetStore-field');
+const dispatchFunctionDropdown = new OneDropdownHelper('.dispatchFunction-field');
 
 describe('Integration | Component | workflow visualiser/task form', function () {
   setupRenderingTest();
@@ -1353,7 +1353,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       const missingValueBuilderStoreDropdown =
         find('.collection-item:nth-child(3) .valueBuilderStore-field');
       expect(missingValueBuilderStoreDropdown).to.have.class('has-error');
-      await new OneDrodopdownHelper(missingValueBuilderStoreDropdown)
+      await new OneDropdownHelper(missingValueBuilderStoreDropdown)
         .selectOptionByText('singleValueStringStore');
 
       expect(this.get('changeSpy')).to.be.calledWith({
@@ -1634,7 +1634,7 @@ function itFillsFieldsWithDataOfPassedTask() {
     ].forEach((builderLabel, idx) => {
       const argumentValueBuilderType = argumentValueBuilderTypes[idx];
       if (inEditMode) {
-        expect(new OneDrodopdownHelper(argumentValueBuilderType).getSelectedOptionText())
+        expect(new OneDropdownHelper(argumentValueBuilderType).getSelectedOptionText())
           .to.equal(builderLabel);
       } else {
         expect(argumentValueBuilderType.querySelector('.field-component'))
@@ -1753,7 +1753,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuild
           .to.equal(`arg${idx}:`);
         if (inEditMode) {
           expect(
-            new OneDrodopdownHelper(args[idx].querySelector('.valueBuilderType-field'))
+            new OneDropdownHelper(args[idx].querySelector('.valueBuilderType-field'))
             .getSelectedOptionText()
           ).to.equal('Iterated item');
         } else {
@@ -1794,7 +1794,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
           .to.equal(`arg${idx}:`);
         if (inEditMode) {
           expect(
-            new OneDrodopdownHelper(args[idx].querySelector('.valueBuilderType-field'))
+            new OneDropdownHelper(args[idx].querySelector('.valueBuilderType-field'))
             .getSelectedOptionText()
           ).to.equal('Constant value');
         } else {
@@ -1860,7 +1860,7 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
               .to.equal(`res${idx}:`);
             if (inEditMode) {
               expect(
-                new OneDrodopdownHelper(results[idx].querySelector('.targetStore-field'))
+                new OneDropdownHelper(results[idx].querySelector('.targetStore-field'))
                 .getSelectedOptionText()
               ).to.equal(targetStore.name);
             } else {
@@ -1870,7 +1870,7 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
             if (dispatchFunction) {
               if (inEditMode) {
                 expect(
-                  new OneDrodopdownHelper(results[idx].querySelector('.dispatchFunction-field'))
+                  new OneDropdownHelper(results[idx].querySelector('.dispatchFunction-field'))
                   .getSelectedOptionText()
                 ).to.equal(dispatchFunctionLabels[dispatchFunction]);
               } else {
@@ -1904,7 +1904,7 @@ function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
       expect(results).to.have.length(1);
       if (inEditMode) {
         expect(
-          new OneDrodopdownHelper(results[0].querySelector('.targetStore-field'))
+          new OneDropdownHelper(results[0].querySelector('.targetStore-field'))
           .getSelectedOptionText()
         ).to.equal('Leave unassigned');
       } else {

@@ -3,7 +3,7 @@ import { describe, context, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import OneDrodopdownHelper from '../../helpers/one-dropdown';
+import OneDropdownHelper from '../../helpers/one-dropdown';
 import sinon from 'sinon';
 import { clickTrigger } from 'ember-power-select/test-support/helpers';
 
@@ -38,7 +38,7 @@ describe('Integration | Test helper | one dropdown', function () {
             async function () {
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               expect(helper.getTrigger()).to.have.class('trigger1');
             }
           );
@@ -52,7 +52,7 @@ describe('Integration | Test helper | one dropdown', function () {
               setDropdownsOption(this, 'selected', ['a', 'b', 'c']);
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               expect(helper.getSelectedOptionText()).to.equal('b');
             }
           );
@@ -63,7 +63,7 @@ describe('Integration | Test helper | one dropdown', function () {
             setDropdownsOption(this, 'selected', ['a', undefined, 'c']);
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             expect(helper.getSelectedOptionText()).to.be.null;
           }
         );
@@ -74,7 +74,7 @@ describe('Integration | Test helper | one dropdown', function () {
             setDropdownsOption(this, 'placeholder', [undefined, 'p', undefined]);
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             expect(helper.getSelectedOptionText()).to.be.null;
           }
         );
@@ -87,7 +87,7 @@ describe('Integration | Test helper | one dropdown', function () {
               setDropdownsOption(this, 'placeholder', ['o', 'p', 'q']);
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               expect(helper.getPlaceholder()).to.equal('p');
             }
           );
@@ -99,7 +99,7 @@ describe('Integration | Test helper | one dropdown', function () {
             setDropdownsOption(this, 'placeholder', [undefined, 'p', undefined]);
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             expect(helper.getPlaceholder()).to.be.null;
           }
         );
@@ -108,7 +108,7 @@ describe('Integration | Test helper | one dropdown', function () {
           async function () {
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             expect(helper.getPlaceholder()).to.be.null;
           }
         );
@@ -121,7 +121,7 @@ describe('Integration | Test helper | one dropdown', function () {
               setDropdownsOption(this, 'disabled', [true, false, true]);
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               expect(helper.isDisabled()).to.be.false;
             }
           );
@@ -132,7 +132,7 @@ describe('Integration | Test helper | one dropdown', function () {
             setDropdownsOption(this, 'disabled', [false, true, false]);
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             expect(helper.isDisabled()).to.be.true;
           }
         );
@@ -144,7 +144,7 @@ describe('Integration | Test helper | one dropdown', function () {
             async function () {
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               expect(helper.isOpened()).to.be.false;
             }
           );
@@ -154,7 +154,7 @@ describe('Integration | Test helper | one dropdown', function () {
           await renderOneDropdown();
           await clickTrigger('.testing-dropdowns');
 
-          const helper = new OneDrodopdownHelper('.testing-dropdowns');
+          const helper = new OneDropdownHelper('.testing-dropdowns');
           expect(helper.isOpened()).to.be.true;
         });
       });
@@ -165,7 +165,7 @@ describe('Integration | Test helper | one dropdown', function () {
             async function () {
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               await helper.open();
 
               expect(find('.trigger1'))
@@ -179,7 +179,7 @@ describe('Integration | Test helper | one dropdown', function () {
             await renderOneDropdown();
             await clickTrigger('.testing-dropdowns');
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             await helper.open();
 
             expect(find('.trigger1'))
@@ -195,7 +195,7 @@ describe('Integration | Test helper | one dropdown', function () {
               await renderOneDropdown();
               await clickTrigger('.testing-dropdowns');
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               await helper.close();
 
               expect(find('.trigger1')).to.not.have.attribute('aria-expanded');
@@ -207,7 +207,7 @@ describe('Integration | Test helper | one dropdown', function () {
           async function () {
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             await helper.close();
 
             expect(find('.trigger1')).to.not.have.attribute('aria-expanded');
@@ -221,7 +221,7 @@ describe('Integration | Test helper | one dropdown', function () {
             async function () {
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               const optionsContainer = await helper.getOptionsContainer();
 
               expect(optionsContainer)
@@ -240,7 +240,7 @@ describe('Integration | Test helper | one dropdown', function () {
               setDropdownsOption(this, 'searchEnabled', [true, false, true]);
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               expect(await helper.getSearchInput()).to.be.null;
             }
           );
@@ -251,7 +251,7 @@ describe('Integration | Test helper | one dropdown', function () {
             setDropdownsOption(this, 'searchEnabled', [false, true, false]);
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             expect(await helper.getSearchInput())
               .to.have.class('ember-power-select-search-input');
           }
@@ -265,7 +265,7 @@ describe('Integration | Test helper | one dropdown', function () {
               setDropdownsOption(this, 'searchEnabled', [false, true, false]);
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               await helper.fillInSearchInput('b');
 
               expect(find('.ember-power-select-search-input'))
@@ -288,7 +288,7 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               const options = await helper.getOptions();
 
               expect(options).to.have.length(2);
@@ -307,7 +307,7 @@ describe('Integration | Test helper | one dropdown', function () {
             ]);
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             const options = await helper.getOptions();
 
             expect(options).to.have.length(0);
@@ -326,7 +326,7 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               expect(await helper.getOptionsText()).to.deep.equal(['a', 'b']);
             }
           );
@@ -341,7 +341,7 @@ describe('Integration | Test helper | one dropdown', function () {
             ]);
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             expect(await helper.getOptionsText()).to.have.length(0);
           }
         );
@@ -350,7 +350,7 @@ describe('Integration | Test helper | one dropdown', function () {
           async function () {
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             await helper.getOptionsText();
             expect(find('.trigger1')).to.not.have.attribute('aria-expanded');
 
@@ -372,7 +372,7 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               expect(await helper.getOptionByText('b'))
                 .to.contain.trimmed.text('abc');
             }
@@ -388,7 +388,7 @@ describe('Integration | Test helper | one dropdown', function () {
             ]);
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             expect(await helper.getOptionByText('c')).to.be.null;
           }
         );
@@ -405,7 +405,7 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               expect(await helper.getOptionByIndex(1))
                 .to.contain.trimmed.text('def');
             }
@@ -421,7 +421,7 @@ describe('Integration | Test helper | one dropdown', function () {
             ]);
             await renderOneDropdown();
 
-            const helper = new OneDrodopdownHelper('.testing-dropdowns');
+            const helper = new OneDropdownHelper('.testing-dropdowns');
             expect(await helper.getOptionByIndex(2)).to.be.null;
           }
         );
@@ -438,7 +438,7 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               await helper.selectOptionByText('b');
 
               expect(this.onChange1).to.have.been.calledWith('abc', sinon.match.any);
@@ -458,7 +458,7 @@ describe('Integration | Test helper | one dropdown', function () {
               ]);
               await renderOneDropdown();
 
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               await helper.selectOptionByIndex(1);
 
               expect(this.onChange1)
@@ -481,7 +481,7 @@ describe('Integration | Test helper | one dropdown', function () {
 
               await clickTrigger('.testing-dropdowns');
               const option = find('.ember-power-select-dropdown li');
-              const helper = new OneDrodopdownHelper(getElementOrSelector());
+              const helper = new OneDropdownHelper(getElementOrSelector());
               expect(helper.isOptionDisabled(option)).to.be.false;
             });
         });
@@ -496,7 +496,7 @@ describe('Integration | Test helper | one dropdown', function () {
 
           await clickTrigger('.testing-dropdowns');
           const option = find('.ember-power-select-dropdown li');
-          const helper = new OneDrodopdownHelper('.testing-dropdowns');
+          const helper = new OneDropdownHelper('.testing-dropdowns');
           expect(helper.isOptionDisabled(option)).to.be.true;
         });
       });
@@ -508,7 +508,7 @@ describe('Integration | Test helper | one dropdown', function () {
             await clickTrigger('.testing-dropdowns');
             const option = find('.ember-power-select-dropdown li');
 
-            const helper = new OneDrodopdownHelper(getElementOrSelector());
+            const helper = new OneDropdownHelper(getElementOrSelector());
             await helper.selectOption(option);
 
             expect(this.onChange1).to.have.been.calledWith('a');
