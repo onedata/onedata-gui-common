@@ -26,6 +26,7 @@ import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { resolve } from 'rsvp';
+import dom from 'onedata-gui-common/utils/dom';
 
 export default Component.extend({
   layout,
@@ -286,19 +287,19 @@ export default Component.extend({
       if ($popover.is('.left-top, .right-top')) {
         const containerHeight = popoverInstance.options.container.innerHeight();
         const popoverHeight = $popover.outerHeight();
-        const popoverTop = parseFloat($popover.css('top'));
+        const popoverTop = parseFloat(dom.getStyle($popover[0], 'top'));
         const popoverBottom = containerHeight - popoverTop - popoverHeight;
-        $popover.css({
+        dom.setStyles($popover[0], {
           top: 'initial',
           bottom: `${popoverBottom}px`,
         });
         const $arrow = $popover.find('.webui-arrow');
-        let arrowTop = $arrow.css('top');
+        let arrowTop = dom.getStyle($arrow[0], 'top');
         if (arrowTop !== 'initial') {
           arrowTop = parseFloat(arrowTop);
           const arrowBottom =
             $popover.innerHeight() - arrowTop - $arrow.outerHeight() / 2;
-          $arrow.css({
+          dom.setStyles($arrow[0], {
             top: 'initial',
             bottom: `${arrowBottom}px`,
           });
@@ -318,9 +319,9 @@ export default Component.extend({
       if ($popover.is('.left-top, .right-top')) {
         const containerHeight = popoverInstance.options.container.innerHeight();
         const popoverHeight = $popover.outerHeight();
-        const popoverBottom = parseFloat($popover.css('bottom'));
+        const popoverBottom = parseFloat(dom.getStyle($popover[0], 'bottom'));
         const popoverTop = containerHeight - popoverBottom - popoverHeight;
-        $popover.css({
+        dom.setStyles($popover[0], {
           top: `${popoverTop}px`,
           bottom: 'initial',
         });
@@ -336,7 +337,7 @@ export default Component.extend({
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-    if ($triggerElement.is(':visible') && open !== false) {
+    if (dom.isVisible($triggerElement[0]) && open !== false) {
       this._popover('show');
     }
     this.set('_debounceTimerEnabled', false);

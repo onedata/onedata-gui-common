@@ -153,11 +153,10 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       }
       this.addClickOutsideListener();
     });
-    const $element = $(this.get('element'));
     this.setProperties({
-      overflowElement: $element.find('.collapsible-toolbar-buttons'),
-      overflowParentElement: $element.parent(),
-      overflowSiblingsElements: $element.siblings(),
+      overflowElement: $(this.element.querySelector('.collapsible-toolbar-buttons')),
+      overflowParentElement: $(this.element.parentElement),
+      overflowSiblingsElements: $(this.element).siblings(),
     });
     this.overflowDetectorMounter();
     this.get('eventsBus').on(
@@ -188,9 +187,8 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       toggleSelector,
       elementId,
     } = this.getProperties('toggleSelector', 'elementId');
-    const clickTarget = $(event.target);
-    if (!clickTarget.is(toggleSelector) &&
-      clickTarget.parents(toggleSelector + ', .popover-' + elementId).length === 0) {
+
+    if (!event.target.closest(toggleSelector + ', .popover-' + elementId)) {
       this.set('dropdownOpened', false);
     }
   },

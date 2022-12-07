@@ -14,7 +14,6 @@ import { computed, observer, get } from '@ember/object';
 import { or } from 'ember-awesome-macros';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { scheduleOnce } from '@ember/runloop';
-import $ from 'jquery';
 
 export default Component.extend({
   layout,
@@ -111,8 +110,10 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const $parentTagsInput = $(this.get('element')).parents('.tags-input');
-    this.set('parentTagsInputSelector', `#${$parentTagsInput.attr('id')}`);
+    const parentTagsInput = this.element.closest('.tags-input');
+    if (parentTagsInput) {
+      this.set('parentTagsInputSelector', `#${parentTagsInput.id}`);
+    }
   },
 
   repositionPopover() {

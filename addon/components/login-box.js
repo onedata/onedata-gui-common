@@ -109,7 +109,7 @@ export default Component.extend(AuthenticationErrorMessage, {
       const fatalBasicAuthErrors = this.get('fatalBasicAuthErrors');
       safeMethodExecution(this, 'set', 'isBusy', false);
       let reason;
-      const errorId = error && get(error, 'responseJSON.error.details.authError.id');
+      const errorId = error && get(error, 'details.authError.id');
       if (fatalBasicAuthErrors.includes(errorId)) {
         reason = underscore(errorId);
       } else if (errorId !== 'badBasicCredentials') {
