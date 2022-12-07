@@ -53,7 +53,7 @@ import {
   formValuesToDataSpec,
   dataSpecToFormValues,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
-import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const storeTypes = Object.freeze([

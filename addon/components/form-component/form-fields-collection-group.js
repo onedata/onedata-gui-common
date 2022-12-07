@@ -21,6 +21,11 @@ export default FormFieldsGroup.extend({
   addButtonText: reads('field.addButtonText'),
 
   /**
+   * @type {ComputedProperty<String>}
+   */
+  emptyCollectionViewModeText: reads('field.emptyCollectionViewModeText'),
+
+  /**
    * @type {ComputedProperty<Boolean>}
    */
   isCollectionManipulationAllowed: reads('field.isCollectionManipulationAllowed'),
