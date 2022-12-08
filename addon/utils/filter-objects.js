@@ -3,7 +3,28 @@
 
 import { get } from '@ember/object';
 
-export default function filterObjects(collection, searchValue) {
+/**
+ * @typedef {Object} FilterObjectsOptions
+ * @param {boolean} [searchInTags=true]
+ */
+
+const defaultFilterObjectsOptions = {
+  searchInTags: true,
+  stringProperties: ['name'],
+};
+
+/**
+ * @param {Array<Object>} collection
+ * @param {string} searchValue
+ * @param {FilterObjectsOptions} options
+ * @returns {Array<Object>}
+ */
+export default function filterObjects(
+  collection,
+  searchValue,
+  options,
+) {
+  const normOptions = { ...defaultFilterObjectsOptions, ...options };
   if (!searchValue) {
     return collection;
   }
@@ -11,17 +32,22 @@ export default function filterObjects(collection, searchValue) {
   const normSearchTags = normSearchValue.split(/\s+/);
 
   return collection.filter(record => {
-    const name = normalizeValue(get(record, 'name'));
-    if (name.includes(normSearchValue)) {
-      return true;
+    for (const stringProperty of normOptions.stringProperties) {
+      const propValue = normalizeValue(get(record, stringProperty));
+      if (propValue.includes(normSearchValue)) {
+        return true;
+      }
     }
-    const recordTags = get(record, 'tags');
-    if (Array.isArray(recordTags)) {
-      const tags = (get(record, 'tags') ?? [])
-        .map(tag => normalizeValue(tag));
-      for (const searchTag of normSearchTags) {
-        if (tags.find(tag => tag.includes(searchTag))) {
-          return true;
+
+    if (normOptions.searchInTags) {
+      const recordTags = get(record, 'tags');
+      if (Array.isArray(recordTags)) {
+        const tags = (get(record, 'tags') ?? [])
+          .map(tag => normalizeValue(tag));
+        for (const searchTag of normSearchTags) {
+          if (tags.find(tag => tag.includes(searchTag))) {
+            return true;
+          }
         }
       }
     }
