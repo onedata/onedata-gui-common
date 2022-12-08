@@ -13,6 +13,8 @@ import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields
 import { observer, set, get, computed } from '@ember/object';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 
+const defaultI18nPrefix = 'components.formComponent.formFieldsCollectionGroup';
+
 export default FormFieldsGroup.extend({
   /**
    * @override
@@ -41,13 +43,32 @@ export default FormFieldsGroup.extend({
   addButtonText: computed('translationPath', 'i18nPrefix', function addButtonText() {
     return this.getTranslation('addButtonText', {}, {
       defaultValue: this.t(
-        'components.formComponent.formFieldsCollectionGroup.addButtonText', {}, {
+        `${defaultI18nPrefix}.addButtonText`, {}, {
           defaultValue: '',
           usePrefix: false,
         },
       ),
     });
   }),
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<HtmlSafe>}
+   */
+  emptyCollectionViewModeText: computed(
+    'translationPath',
+    'i18nPrefix',
+    function emptyCollectionViewModeText() {
+      return this.getTranslation('emptyCollectionViewModeText', {}, {
+        defaultValue: this.t(
+          `${defaultI18nPrefix}.emptyCollectionViewModeText`, {}, {
+            defaultValue: '',
+            usePrefix: false,
+          },
+        ),
+      });
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Array<Utils.FormComponent.FormElement>>}

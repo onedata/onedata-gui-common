@@ -15,8 +15,6 @@ import { atmDataSpecTypeDefinition as rangeTypeDefinition } from './range';
 import { atmDataSpecTypeDefinition as arrayTypeDefinition } from './array';
 import { atmDataSpecTypeDefinition as timeSeriesMeasurementTypeDefinition } from './time-series-measurement';
 
-export { getMatchingAtmDataSpecTypes } from '../filters';
-
 /**
  * @typedef {
  *   AtmDatasetDataSpec |
@@ -102,8 +100,8 @@ export const atmDataSpecTypesArray = Object.freeze([
  * Converts passed filters to an object with possible values and/or limitations
  * for data spec value constraints properties. See more:
  * `AtmValueConstraintsConditions`
- * @property {(atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>, context: DoesAtmDataSpecMatchFilterFuncCtx) => boolean} isMatchingFilters
- * Returns `true` when specific data spec fulfills all provided filters.
+ * @property {(atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>, context: IsValueConstraintsMatchingFiltersFuncCtx) => boolean} isValueConstraintsMatchingFilters
+ * Returns `true` when specific data spec value constraints fulfill all provided filters.
  */
 
 /**
@@ -112,9 +110,14 @@ export const atmDataSpecTypesArray = Object.freeze([
  */
 
 /**
+ * @typedef {Object} IsValueConstraintsMatchingFiltersFuncCtx
+ * @property {(atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>) => boolean} isAtmDataSpecMatchingFilters
+ */
+
+/**
  * @type {Object<AtmDataSpecType, AtmDataSpecTypeDefinition>}
  */
-const atmDataSpecTypeDefinitions = Object.freeze({
+export const atmDataSpecTypeDefinitions = Object.freeze({
   integer: integerTypeDefinition,
   string: stringTypeDefinition,
   object: objectTypeDefinition,
@@ -170,20 +173,6 @@ export function getAtmDataSpecTypeSubtypes(atmDataSpecType) {
 export function getAtmValueConstraintsConditions(atmDataSpecType, filters) {
   return atmDataSpecTypeDefinitions[atmDataSpecType]
     ?.getValueConstraintsConditions?.(filters) ?? null;
-}
-
-/**
- * @param {AtmDataSpecType} atmDataSpec
- * @param {Array<AtmDataSpecFilter>} filters
- * @returns {boolean}
- */
-export function isAtmDataSpecMatchingFilters(atmDataSpec, filters) {
-  const context = {
-    isAtmDataSpecCompatible,
-    isAtmDataSpecMatchingFilters,
-  };
-  return atmDataSpecTypeDefinitions[atmDataSpec?.type]
-    ?.isMatchingFilters?.(atmDataSpec, filters, context) ?? null;
 }
 
 /**

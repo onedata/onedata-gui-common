@@ -23,7 +23,6 @@
 
 import EmberObject, {
   computed,
-  get,
   observer,
 } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -38,6 +37,7 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { assert } from '@ember/debug';
 import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 export default EmberObject.extend({
   guiUtils: service(),
@@ -341,13 +341,7 @@ export default EmberObject.extend({
    * @returns {undefined}
    */
   recalculatePosition() {
-    const {
-      iframeElement,
-      activeOwner,
-    } = this.getProperties('iframeElement', 'activeOwner');
-
-    const $iframeElement = $(iframeElement);
-    const hostElement = activeOwner && get(activeOwner, 'hostElement');
+    const hostElement = this.activeOwner?.hostElement;
     if (hostElement) {
       const $hostElement = $(hostElement);
       const {
@@ -356,18 +350,17 @@ export default EmberObject.extend({
       } = $hostElement.offset();
       const height = $hostElement.innerHeight();
       const width = $hostElement.innerWidth();
-      $iframeElement.css({
-        top,
-        left,
-        width,
-        height,
+      dom.setStyles(this.iframeElement, {
+        top: `${top}px`,
+        left: `${left}px`,
+        width: `${width}px`,
+        height: `${height}px`,
       });
     } else {
-      $iframeElement
-        .css({
-          top: 'initial',
-          left: 'initial',
-        });
+      dom.setStyles(this.iframeElement, {
+        top: 'initial',
+        left: 'initial',
+      });
     }
   },
 });

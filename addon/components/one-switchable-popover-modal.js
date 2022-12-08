@@ -396,13 +396,12 @@ export default Component.extend(ClickOutside, {
     );
 
     if (_activeTriggerConfiguration) {
-      const clickTarget = $(event.target);
+      const clickTarget = event.target;
       const triggerSelector = _activeTriggerConfiguration.selector;
       const excludeSelector =
         `${triggerSelector}, .${_popoverIdClass}, .${_modalIdClass}`;
       // close only if click is outside the trigger element and the popover
-      if (!clickTarget.is(excludeSelector) &&
-        clickTarget.parents(excludeSelector).length === 0) {
+      if (!clickTarget.closest(excludeSelector)) {
         this.send('close');
       }
     }

@@ -25,4 +25,7 @@
       {{one-icon icon="add-filled"}}{{addButtonText}}
     {{/bs-button}}
   {{/if}}
+  {{#if (and (not nestedFields.length) isInViewMode emptyCollectionViewModeText)}}
+    <em class="empty-collection-text">{{emptyCollectionViewModeText}}</em>
+  {{/if}}
 {{/one-collapse}}
