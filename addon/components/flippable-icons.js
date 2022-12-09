@@ -12,7 +12,7 @@ import layout from 'onedata-gui-common/templates/components/flippable-icons';
 
 export default Component.extend({
   layout,
-  classNames: ['flippable-icons'],
+  classNames: ['flippable-icons clickable'],
   tagName: 'span',
 
   /**
@@ -22,37 +22,50 @@ export default Component.extend({
   iconName: undefined,
 
   /**
+   * @virtual optional
    * @type {String}
    */
   iconColor: undefined,
 
   /**
+   * @virtual optional
    * @type {boolean}
    */
   isHovered: false,
 
   /**
+   * @virtual optional
    * @type {boolean}
    */
-  shouldAnimated: true,
+  suppressFlipping: false,
 
   /**
-   * @type {boolean}
-   */
-  isTagIcon: false,
-
-  /**
+   * @virtual optional
    * @type {String}
    */
   iconTag: undefined,
 
   /**
+   * @virtual optional
    * @type {String}
    */
   iconTaggedClass: undefined,
 
   /**
+   * @virtual optional
+   * @type {String}
+   */
+  iconClass: undefined,
+
+  /**
+   * @virtual optional
    * @type {String}
    */
   iconTip: undefined,
+
+  /**
+   * @virtual optional
+   * @type {String}
+   */
+  shadowType: 'circle',
 });
