@@ -12,12 +12,14 @@
 
 import { LayoutBox } from './enums';
 
-import isVisible from './is-visible';
-import isHidden from './is-hidden';
+import siblings from './siblings';
 
 import width from './width';
 import height from './height';
 import offset from './offset';
+
+import isVisible from './is-visible';
+import isHidden from './is-hidden';
 
 import getStyle from './get-style';
 import setStyle from './set-style';
@@ -26,12 +28,14 @@ import setStyles from './set-styles';
 export default {
   LayoutBox,
 
-  isVisible,
-  isHidden,
+  siblings,
 
   width,
   height,
   offset,
+
+  isVisible,
+  isHidden,
 
   getStyle,
   setStyle,

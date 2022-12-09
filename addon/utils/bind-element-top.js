@@ -15,41 +15,41 @@ import dom from 'onedata-gui-common/utils/dom';
  * Can be used without top or left element.
  *
  * @export
- * @param {JQuery} $topElement
- * @param {JQuery} $leftElement
- * @param {JQuery} $innerElement
+ * @param {HTMLElement} topElement
+ * @param {HTMLElement} leftElement
+ * @param {HTMLElement} innerElement
  * @returns {Function}
  */
 export default function bindElementTop({
-  $topElement,
-  $leftElement,
-  $innerElement,
+  topElement,
+  leftElement,
+  innerElement,
 }) {
   const staticCss = {
     position: 'fixed',
     right: 0,
     bottom: 0,
   };
-  if (!$leftElement || !$leftElement.length) {
+  if (!leftElement) {
     staticCss.left = 0;
   }
-  if (!$topElement || !$topElement.length) {
+  if (!topElement) {
     staticCss.top = 0;
   }
-  dom.setStyles($innerElement[0], staticCss);
+  dom.setStyles(innerElement, staticCss);
   const __resizeFun = () => {
-    if ($topElement && $topElement.length) {
+    if (topElement) {
       dom.setStyle(
-        $innerElement[0],
+        innerElement,
         'top',
-        ($topElement.offset().top + Math.max($topElement.outerHeight(), 0)) + 'px'
+        (dom.offset(topElement).top + Math.max(dom.height(topElement), 0)) + 'px'
       );
     }
-    if ($leftElement && $leftElement.length) {
+    if (leftElement) {
       dom.setStyle(
-        $innerElement[0],
+        innerElement,
         'left',
-        ($leftElement.offset().left + Math.max($leftElement.outerWidth(), 0)) + 'px'
+        (dom.offset(leftElement).left + Math.max(dom.width(leftElement), 0)) + 'px'
       );
     }
   };

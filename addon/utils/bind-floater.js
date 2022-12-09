@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import dom from 'onedata-gui-common/utils/dom';
 
 /**
@@ -6,8 +5,8 @@ import dom from 'onedata-gui-common/utils/dom';
  *
  * NOTE: ported from ember-cli-onedata-gui-common
  *
- * @param {jQuery} element A jQuery element which position will be computed in relation to "parent"
- * @param {object} [parent=element.parentElement] A jQuery element which will act as element position parent.
+ * @param {HTMLElement} element An element which position will be computed in relation to "parent"
+ * @param {object} [parent=element.parentElement] An element which will act as element position parent.
  *         If null or undefined - will use a element.parentElement.
  * @param {object} options Additional options to manipulate floater behaviour, properties:
  * @param {string} [options.posX=right] horizontal position of element relative to the parent, possible:
@@ -23,7 +22,7 @@ import dom from 'onedata-gui-common/utils/dom';
  *               (default: top)
  * @param {integer} [options.offsetX=0] X offset of computed position in px
  * @param {integer} [options.offsetY=0] Y offset of computed position in px
- * @param {jQuery} [options.stackingContext] A jQuery element which is a stacking context
+ * @param {HTMLElement} [options.stackingContext] An element which is a stacking context
  *   - effectively it will be a relative parent, see: https://stackoverflow.com/a/25828495
  *
  * @returns {function} Function which re-computes new fixed position of an element.
@@ -31,7 +30,7 @@ import dom from 'onedata-gui-common/utils/dom';
  */
 export default function bindFloater(
   element,
-  parent = $(element[0].parentElement),
+  parent = element.parentElement,
   options = {}
 ) {
   // default options
@@ -39,41 +38,41 @@ export default function bindFloater(
   options.posY = options.posY || 'top';
   options.offsetX = options.offsetX || 0;
   options.offsetY = options.offsetY || 0;
-  options.stackingContext = options.stackingContext || 0;
 
-  element.addClass('floater');
+  element.classList.add('floater');
   const changePos = function () {
-    const offset = parent.offset();
+    const offset = dom.offset(parent);
+    const parentWidth = dom.width(parent, dom.LayoutBox.ContentBox);
+    const parentHeight = dom.height(parent, dom.LayoutBox.ContentBox);
+    const elementWidth = dom.width(element, dom.LayoutBox.ContentBox);
+    const elementHeight = dom.height(element, dom.LayoutBox.ContentBox);
     let left;
     if (options.posX === 'right') {
-      left = parseInt(offset.left) + parent.width();
+      left = parseInt(offset.left) + parentWidth;
     } else if (options.posX === 'left') {
-      left = parseInt(offset.left) - element.width();
+      left = parseInt(offset.left) - elementWidth;
     } else if (options.posX === 'center') {
-      left = parseInt(offset.left) + parent.width() / 2 - element.width() / 2;
+      left = parseInt(offset.left) + parentWidth / 2 - elementWidth / 2;
     }
     let top;
     if (options.posY === 'top' || options.posY === 'top-above') {
       top = offset.top;
     } else if (options.posY === 'top-middle') {
-      top = parseInt(offset.top) - element.height() / 2;
+      top = parseInt(offset.top) - elementHeight / 2;
     } else if (options.posY === 'middle' || options.posY === 'middle-middle') {
-      top = parseInt(offset.top) + parent.height() / 2 - element.height() / 2;
+      top = parseInt(offset.top) + parentHeight / 2 - elementHeight / 2;
     }
 
-    let stackingContext = options.stackingContext;
+    const stackingContext = options.stackingContext;
     if (stackingContext) {
-      if (!(stackingContext instanceof $)) {
-        stackingContext = $(stackingContext);
-      }
-      const stackingOffset = stackingContext.offset();
+      const stackingOffset = dom.offset(stackingContext);
       left -= stackingOffset.left;
       top -= stackingOffset.top;
     }
 
-    dom.setStyles(element[0], {
-      left: `${left + options.offsetX - $(window).scrollLeft()}px`,
-      top: `${top + options.offsetY + $(window).scrollTop()}px`,
+    dom.setStyles(element, {
+      left: `${left + options.offsetX - document.scrollingElement.scrollLeft}px`,
+      top: `${top + options.offsetY + document.scrollingElement.scrollTop}px`,
     });
   };
 
