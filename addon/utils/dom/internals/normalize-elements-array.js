@@ -1,5 +1,5 @@
 /**
- * Contains common functions used by DOM utils.
+ * Converts any type of an HTML elements collection to an array of HTML elements.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -7,11 +7,10 @@
  */
 
 /**
- * Converts any type of an HTML elements collection to an array of HTML elements.
  * @param {HTMLElement|Array<HTMLElement>|NodeList<HTMLElement>} elementsArray
  * @returns {Array<HTMLElement>}
  */
-export function normalizeElementsArray(elementsArray) {
+export default function normalizeElementsArray(elementsArray) {
   if (!elementsArray) {
     return [];
   } else if (Array.isArray(elementsArray)) {
