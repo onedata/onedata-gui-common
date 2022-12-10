@@ -13,7 +13,6 @@ import layout from 'onedata-gui-common/templates/components/flippable-icons';
 export default Component.extend({
   layout,
   classNames: ['flippable-icons clickable'],
-  tagName: 'span',
 
   /**
    * @virtual

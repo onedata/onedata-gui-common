@@ -1,5 +1,5 @@
 {{#truncated-string}}
-  <span
+  <div
     class="user-info-trigger"
     {{action
       (mut userInfoOpened)
@@ -15,7 +15,7 @@
       isHovered=hasUserInfoHovered
       suppressFlipping=userInfoOpened
     }}
-  </span>
+  </div>
   <span
     onmouseover={{action "userInfoHovered" true}}
     onmouseleave={{action "userInfoHovered" false}}
