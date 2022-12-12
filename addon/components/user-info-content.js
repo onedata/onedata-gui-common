@@ -22,12 +22,13 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {ComputedProperty<PromiseObject<Models.User>>}
-   */
-  userProxy: undefined,
-
-  /**
    * @type {Models.User}
    */
   user: reads('userProxy.content'),
+
+  /**
+   * @virtual optional
+   * @type {Object}
+   */
+  errorReason: undefined,
 });

@@ -9,7 +9,6 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/user-info-with-icon';
-import { reads } from '@ember/object/computed';
 
 export default Component.extend({
   layout,
@@ -18,14 +17,15 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {ComputedProperty<PromiseObject<Models.User>>}
-   */
-  userProxy: undefined,
-
-  /**
    * @type {Models.User}
    */
-  user: reads('userProxy.content'),
+  user: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Object}
+   */
+  errorReason: undefined,
 
   /**
    * @type {Boolean}

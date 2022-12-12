@@ -3,7 +3,9 @@
     {{tt this "title"}}
   </span>
 </h1>
-{{#promise-proxy-container proxy=userProxy sizeClass="sm"}}
+{{#if errorReason}}
+  {{resource-load-error reason=errorReason}}
+{{else}}
   <table class="table table-condensed table-info">
     <tr class="row-with-text">
       <td class="property-name">{{tt this "fullName"}}</td>
@@ -24,4 +26,4 @@
       </td>
     </tr>
   </table>
-{{/promise-proxy-container}}
+{{/if}}
