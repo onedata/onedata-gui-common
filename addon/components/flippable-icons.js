@@ -24,6 +24,12 @@ export default Component.extend({
    * @virtual optional
    * @type {String}
    */
+  backIconName: 'browser-info',
+
+  /**
+   * @virtual optional
+   * @type {String}
+   */
   iconColor: undefined,
 
   /**
