@@ -9,6 +9,7 @@
 import Component from '@ember/component';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from '../templates/components/user-info-content';
+import { reads } from '@ember/object/computed';
 
 export default Component.extend(I18n, {
   layout,
@@ -21,7 +22,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {ComputedProperty<PromiseObject<Models.User>>}
+   */
+  userProxy: undefined,
+
+  /**
    * @type {Models.User}
    */
-  user: undefined,
+  user: reads('userProxy.content'),
 });
