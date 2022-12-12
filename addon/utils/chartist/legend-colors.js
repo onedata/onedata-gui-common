@@ -11,29 +11,41 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
-export default function (options) {
+export default function legendColors(options) {
   return (chart) => {
     chart.on('created', () => {
-      const legend = $(chart.container).find('.ct-legend');
+      const legend = chart.container.querySelector('.ct-legend');
+      if (!legend) {
+        return;
+      }
+
       options.colors.forEach((color, index) => {
-        const colorRect = $('<div class="custom-color"></div>').css({
-          'position': 'absolute',
-          'left': '0',
-          'top': '0.2em',
-          'width': '1em',
-          'height': '1em',
-          'border': '3px solid ' + color,
-          'border-radius': '3px',
-          'background-color': color,
+        const series = legend.querySelector('.ct-series-' + index);
+        if (!series) {
+          return;
+        }
+
+        const colorRect = document.createElement('div');
+        colorRect.classList.add('custom-color');
+        dom.setStyles(colorRect, {
+          position: 'absolute',
+          left: '0',
+          top: '0.2em',
+          width: '1em',
+          height: '1em',
+          border: '3px solid ' + color,
+          borderRadius: '3px',
+          backgroundColor: color,
         });
         if (options.styles) {
-          colorRect.css(options.styles);
+          dom.setStyles(colorRect, options.styles);
         }
-        const series = legend.find('.ct-series-' + index);
-        series.find('.custom-color').remove();
-        legend.find('.ct-series-' + index).prepend(colorRect);
+
+        [...series.querySelectorAll('.custom-color')]
+        .forEach((element) => element.remove());
+        series.prepend(colorRect);
       });
     });
   };

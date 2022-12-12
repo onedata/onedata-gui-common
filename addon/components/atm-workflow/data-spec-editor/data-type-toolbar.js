@@ -19,7 +19,7 @@ import {
   createDataTypeSelectorElement,
   createDataTypeElement,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/editor-element-creators';
-import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import { formValuesToDataSpec } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
 import I18n from 'onedata-gui-common/mixins/components/i18n';

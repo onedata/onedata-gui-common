@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 describe('Integration | Component | one collapsible toolbar', function () {
   setupRenderingTest();
@@ -19,9 +19,9 @@ describe('Integration | Component | one collapsible toolbar', function () {
       </div>
     `);
 
-    expect($(find('.collapsible-toolbar-buttons')).is(':visible'), 'buttons are visible')
+    expect(dom.isVisible(find('.collapsible-toolbar-buttons')), 'buttons are visible')
       .to.be.true;
-    expect($(find('.collapsible-toolbar-toggle')).is(':hidden'), 'toggle is hidden')
+    expect(dom.isHidden(find('.collapsible-toolbar-toggle')), 'toggle is hidden')
       .to.be.true;
   });
 
@@ -36,9 +36,9 @@ describe('Integration | Component | one collapsible toolbar', function () {
       </div>
     `);
 
-    expect($(find('.collapsible-toolbar-buttons')).is(':hidden'), 'buttons are hidden')
+    expect(dom.isHidden(find('.collapsible-toolbar-buttons')), 'buttons are hidden')
       .to.be.true;
-    expect($(find('.collapsible-toolbar-toggle')).is(':visible'), 'toggle is visible')
+    expect(dom.isVisible(find('.collapsible-toolbar-toggle')), 'toggle is visible')
       .to.be.true;
   });
 

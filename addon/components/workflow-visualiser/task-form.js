@@ -331,13 +331,17 @@ export default Component.extend(I18n, {
           name: 'atmLambdaRevisionNumber',
         }),
         StaticTextField.extend({
-          value: computed('valuesSource.atmLambda.atmLambdaRevisionNumber', function value() {
-            const atmLambda = component.atmLambda;
-            const atmLambdaRevisionNumber = this.valuesSource?.atmLambda?.atmLambdaRevisionNumber;
-            const atmLambdaRevision =
-              atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber];
-            return atmLambdaRevision?.summary;
-          }),
+          value: computed(
+            'valuesSource.atmLambda.atmLambdaRevisionNumber',
+            function value() {
+              const atmLambda = component.atmLambda;
+              const atmLambdaRevisionNumber =
+                this.valuesSource?.atmLambda?.atmLambdaRevisionNumber;
+              const atmLambdaRevision =
+                atmLambda?.revisionRegistry?.[atmLambdaRevisionNumber];
+              return atmLambdaRevision?.summary;
+            }
+          ),
           isVisible: reads('value'),
         }).create({
           name: 'atmLambdaSummary',
@@ -497,138 +501,23 @@ export default Component.extend(I18n, {
         isVisible: notEmpty('value.__fieldsValueNames'),
         fieldFactoryMethod(uniqueFieldValueName) {
           return FormFieldsGroup.extend({
-            label: reads('value.context.name'),
-            addColonToLabel: not('component.media.isMobile'),
-            selectedTargetStore: computed(
-              'value.targetStore',
-              'component.resultStores.@each.id',
-              function selectedTargetStore() {
-                const targetStoreId = this.get('value.targetStore');
-                return (this.get('component.resultStores') || [])
-                  .findBy('id', targetStoreId);
+            classes: computed(
+              'value.singleResultMappings.__fieldsValueNames.length',
+              function classes() {
+                return this.value.singleResultMappings?.__fieldsValueNames?.length ?
+                  'has-mappings' : '';
               }
             ),
           }).create({
-            name: 'resultMapping',
-            valueName: uniqueFieldValueName,
-            component,
             fields: [
               HiddenField.create({ name: 'context' }),
-              DropdownField.extend({
-                options: computed(
-                  'parent.value.context.dataSpec',
-                  'component.resultStores.@each.{name,config}',
-                  function options() {
-                    const resultStores = this.get('component.resultStores') || [];
-                    const dataSpec = this.get('parent.value.context.dataSpec');
-                    const opts =
-                      getTargetStoresForDataSpec(resultStores, dataSpec)
-                      .map(store => ({
-                        value: get(store, 'id'),
-                        label: get(store, 'name'),
-                      }))
-                      .sortBy('label');
-                    opts.unshift({
-                      value: createStoreDropdownOptionValue,
-                    }, {
-                      value: leaveUnassignedDropdownOptionValue,
-                    });
-                    return opts;
-                  }
-                ),
-                optionsObserver: observer('options.[]', function optionsObserver() {
-                  scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
-                }),
-                init() {
-                  this._super(...arguments);
-                  this.optionsObserver();
-                },
-                valueChanged(value) {
-                  if (value === createStoreDropdownOptionValue) {
-                    const dataSpec = this.get('parent.value.context.dataSpec');
-                    component.createTargetStore(this, dataSpec);
-                  } else {
-                    return this._super(...arguments);
-                  }
-                },
-                adjustValueForNewOptions() {
-                  safeExec(this, () => {
-                    if (!this.options.find(({ value }) => value === this.value)) {
-                      // options[1] is "leaveUnassigned"
-                      this.valueChanged(this.options[1]?.value);
-                    }
-                  });
-                },
-              }).create({
+              SingleResultMappingsCollectionGroup.extend({
+                context: reads('parent.value.context'),
                 component,
-                classes: 'floating-field-label',
-                name: 'targetStore',
-                customValidators: [
-                  validator(function (value, options, model) {
-                    const field = get(model, 'field');
-                    const notEnabledTsStoreSelected =
-                      value === taskTimeSeriesDropdownOptionValue &&
-                      !get(field, 'component.isTimeSeriesStoreEnabled');
-                    return notEnabledTsStoreSelected ?
-                      String(field.getTranslation('errors.notEnabledTsStoreSelected')) :
-                      true;
-                  }, {
-                    dependentKeys: [
-                      'model.field.component.isTimeSeriesStoreEnabled',
-                    ],
-                  }),
-                ],
-              }),
-              DropdownField.extend({
-                isVisible: notEmpty('options'),
-                options: computed(
-                  'parent.selectedTargetStore',
-                  function options() {
-                    const selectedTargetStore = this.get('parent.selectedTargetStore');
-                    return getDispatchFunctionsForStoreType(
-                      (selectedTargetStore || {}).type
-                    ).map(func => ({ value: func }));
-                  }
-                ),
-                optionsObserver: observer('options.[]', function optionsObserver() {
-                  scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
-                }),
-                init() {
-                  this._super(...arguments);
-                  this.optionsObserver();
-                },
-                adjustValueForNewOptions() {
-                  safeExec(this, () => {
-                    const {
-                      options,
-                      value,
-                    } = this.getProperties('options', 'value');
-                    if ((!value || !options.findBy('value', value)) && options.length) {
-                      this.valueChanged(get(options[0], 'value'));
-                    }
-                  });
-                },
-              }).create({
-                component,
-                classes: 'floating-field-label',
-                name: 'dispatchFunction',
-              }),
-              storeContentUpdateOptionsEditors.timeSeries.FormElement.extend({
-                contentUpdateDataSpec: reads('parent.value.context.dataSpec'),
-                storeConfig: reads('parent.selectedTargetStore.config'),
-                isVisible: computed('parent.selectedTargetStore', function isVisible() {
-                  const selectedTargetStore = this.get('parent.selectedTargetStore');
-                  return selectedTargetStore &&
-                    get(selectedTargetStore, 'type') === 'timeSeries';
-                }),
-                init() {
-                  this._super(...arguments);
-                  this.set('classes', `${this.get('classes')} floating-field-label`);
-                },
-              }).create({
-                name: 'timeSeriesEditor',
-              }),
+              }).create(),
             ],
+            name: 'singleResult',
+            valueName: uniqueFieldValueName,
           });
         },
         dumpDefaultValue() {
@@ -995,7 +884,7 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
   const formResultMappings = {
     __fieldsValueNames: [],
   };
-  (resultSpecs || []).forEach((resultSpec, idx) => {
+  (resultSpecs || []).forEach((resultSpec, resultSpecIdx) => {
     const {
       name,
       dataSpec,
@@ -1007,32 +896,37 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
     if (!name || !dataSpec) {
       return;
     }
-    const existingMapping = (resultMappings || []).findBy('resultName', name);
-    const {
-      storeSchemaId,
-      storeContentUpdateOptions,
-    } = getProperties(
-      existingMapping || {},
-      'storeSchemaId',
-      'storeContentUpdateOptions'
-    );
-    const dispatchFunction = get(storeContentUpdateOptions || {}, 'function');
 
-    const valueName = `result${idx}`;
+    const formSingleResultMappings = {
+      __fieldsValueNames: [],
+    };
+
+    const existingMappings = resultMappings
+      ?.filter((mapping) => mapping?.resultName === name && mapping?.storeSchemaId);
+    existingMappings?.forEach((mapping, mappingIdx) => {
+      const storeSchemaId = mapping.storeSchemaId;
+      const dispatchFunction = mapping.storeContentUpdateOptions?.function;
+      const valueName = `singleResultMapping${mappingIdx}`;
+      formSingleResultMappings.__fieldsValueNames.push(valueName);
+
+      const timeSeriesEditor = storeContentUpdateOptionsEditors.timeSeries
+        .storeContentUpdateOptionsToFormValues(mapping?.storeContentUpdateOptions);
+      formSingleResultMappings[valueName] = createValuesContainer({
+        targetStore: frontendStoreIdsMappings[storeSchemaId] ?? storeSchemaId,
+        dispatchFunction,
+        timeSeriesEditor,
+      });
+    });
+
+    const valueName = `singleResultMappings${resultSpecIdx}`;
     formResultMappings.__fieldsValueNames.push(valueName);
-    const timeSeriesEditor = storeContentUpdateOptionsEditors.timeSeries
-      .storeContentUpdateOptionsToFormValues(storeContentUpdateOptions);
 
     formResultMappings[valueName] = createValuesContainer({
       context: {
         name,
         dataSpec,
       },
-      targetStore: frontendStoreIdsMappings[storeSchemaId] ||
-        storeSchemaId ||
-        leaveUnassignedDropdownOptionValue,
-      dispatchFunction,
-      timeSeriesEditor,
+      singleResultMappings: formSingleResultMappings,
     });
   });
 
@@ -1175,51 +1069,54 @@ function formDataToTask(formData, atmLambda, stores) {
     });
   });
 
-  (get(resultMappings || {}, '__fieldsValueNames') || []).forEach((valueName, idx) => {
+  resultMappings?.__fieldsValueNames.forEach((singleResultKey, idx) => {
     const lambdaResultSpec = resultSpecs && resultSpecs[idx] || {};
     const resultName = get(lambdaResultSpec, 'name');
-    const {
-      targetStore: targetStoreId,
-      dispatchFunction,
-      timeSeriesEditor,
-    } = getProperties(
-      get(resultMappings, valueName) || {},
-      'targetStore',
-      'dispatchFunction',
-      'timeSeriesEditor'
-    );
+    const singleResultMappings = resultMappings[singleResultKey]?.singleResultMappings;
 
-    if (!targetStoreId || targetStoreId === leaveUnassignedDropdownOptionValue) {
-      return;
-    }
+    singleResultMappings?.__fieldsValueNames
+      .map((singleMappingKey) => singleResultMappings[singleMappingKey])
+      .forEach((mapping) => {
+        const {
+          targetStore: targetStoreId,
+          dispatchFunction,
+          timeSeriesEditor,
+        } = mapping;
 
-    const targetStore = stores.findBy('id', targetStoreId);
-    const targetStoreType = targetStore && get(targetStore, 'type');
-    const possibleDispatchFunctions = getDispatchFunctionsForStoreType(targetStoreType);
+        if (!targetStoreId) {
+          return;
+        }
 
-    if (!targetStoreType) {
-      return;
-    }
+        const targetStore = stores.findBy('id', targetStoreId);
+        const targetStoreType = targetStore && get(targetStore, 'type');
+        const possibleDispatchFunctions =
+          getDispatchFunctionsForStoreType(targetStoreType);
 
-    const storeContentUpdateOptions = {
-      type: getStoreContentUpdateOptionsType(targetStoreType),
-    };
-    if (targetStoreType === 'timeSeries') {
-      Object.assign(
-        storeContentUpdateOptions,
-        storeContentUpdateOptionsEditors.timeSeries.formValuesToStoreContentUpdateOptions(
-          timeSeriesEditor, { storeConfig: get(targetStore, 'config') }
-        )
-      );
-    } else if (possibleDispatchFunctions.includes(dispatchFunction)) {
-      storeContentUpdateOptions.function = dispatchFunction;
-    }
+        if (!targetStoreType) {
+          return;
+        }
 
-    task.resultMappings.push({
-      resultName,
-      storeSchemaId: backendStoreIdsMappings[targetStoreId] || targetStoreId,
-      storeContentUpdateOptions,
-    });
+        const storeContentUpdateOptions = {
+          type: getStoreContentUpdateOptionsType(targetStoreType),
+        };
+        if (targetStoreType === 'timeSeries') {
+          Object.assign(
+            storeContentUpdateOptions,
+            storeContentUpdateOptionsEditors.timeSeries
+            .formValuesToStoreContentUpdateOptions(
+              timeSeriesEditor, { storeConfig: get(targetStore, 'config') }
+            )
+          );
+        } else if (possibleDispatchFunctions.includes(dispatchFunction)) {
+          storeContentUpdateOptions.function = dispatchFunction;
+        }
+
+        task.resultMappings.push({
+          resultName,
+          storeSchemaId: backendStoreIdsMappings[targetStoreId] || targetStoreId,
+          storeContentUpdateOptions,
+        });
+      });
   });
 
   const {
@@ -1369,3 +1266,150 @@ function findArgResRevisionMigrationMapping(fromSpecs, toSpecs) {
   }
   return mapping;
 }
+
+const SingleResultMappingsCollectionGroup = FormFieldsCollectionGroup.extend({
+  /**
+   * @type {Components.WorkflowVisualiser.TaskForm}
+   * @virtual
+   */
+  component: undefined,
+
+  /**
+   * @type {Object}
+   * @virtual
+   */
+  context: undefined,
+
+  label: reads('context.name'),
+
+  addColonToLabel: not('component.media.isMobile'),
+
+  fieldFactoryMethod(uniqueFieldValueName) {
+    return FormFieldsGroup.extend({
+      selectedTargetStore: computed(
+        'value.targetStore',
+        'parent.component.resultStores.@each.id',
+        function selectedTargetStore() {
+          const targetStoreId = this.get('value.targetStore');
+          return (this.get('parent.component.resultStores') || [])
+            .findBy('id', targetStoreId);
+        }
+      ),
+    }).create({
+      name: 'singleResultMapping',
+      valueName: uniqueFieldValueName,
+      fields: [
+        DropdownField.extend({
+          options: computed(
+            'parent.parent.{context.dataSpec,component.resultStores.@each.name,component.resultStores.@each.config}',
+            function options() {
+              const resultStores = this.get('parent.parent.component.resultStores') || [];
+              const dataSpec = this.get('parent.parent.context.dataSpec');
+              const opts =
+                getTargetStoresForDataSpec(resultStores, dataSpec)
+                .map(store => ({
+                  value: get(store, 'id'),
+                  label: get(store, 'name'),
+                }))
+                .sortBy('label');
+              opts.unshift({
+                value: createStoreDropdownOptionValue,
+              });
+              return opts;
+            }
+          ),
+          optionsObserver: observer('options.[]', function optionsObserver() {
+            scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
+          }),
+          init() {
+            this._super(...arguments);
+            this.optionsObserver();
+          },
+          valueChanged(value) {
+            if (value === createStoreDropdownOptionValue) {
+              const dataSpec = this.get('parent.parent.context.dataSpec');
+              this.parent?.parent?.component.createTargetStore(this, dataSpec);
+            } else {
+              return this._super(...arguments);
+            }
+          },
+          adjustValueForNewOptions() {
+            safeExec(this, () => {
+              if (!this.options.find(({ value }) => value === this.value)) {
+                this.valueChanged(null);
+              }
+            });
+          },
+        }).create({
+          classes: 'floating-field-label',
+          name: 'targetStore',
+          customValidators: [
+            validator(function (value, options, model) {
+              const field = get(model, 'field');
+              const notEnabledTsStoreSelected =
+                value === taskTimeSeriesDropdownOptionValue &&
+                !get(field, 'parent.parent.component.isTimeSeriesStoreEnabled');
+              return notEnabledTsStoreSelected ?
+                String(field.getTranslation('errors.notEnabledTsStoreSelected')) :
+                true;
+            }, {
+              dependentKeys: [
+                'model.field.parent.parent.component.isTimeSeriesStoreEnabled',
+              ],
+            }),
+          ],
+        }),
+        DropdownField.extend({
+          isVisible: notEmpty('options'),
+          options: computed(
+            'parent.selectedTargetStore',
+            function options() {
+              const selectedTargetStore = this.get('parent.selectedTargetStore');
+              return getDispatchFunctionsForStoreType((selectedTargetStore || {}).type)
+                .map(func => ({ value: func }));
+            }
+          ),
+          optionsObserver: observer('options.[]', function optionsObserver() {
+            scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
+          }),
+          init() {
+            this._super(...arguments);
+            this.optionsObserver();
+          },
+          adjustValueForNewOptions() {
+            safeExec(this, () => {
+              const {
+                options,
+                value,
+              } = this.getProperties('options', 'value');
+              if ((!value || !options.findBy('value', value)) && options.length) {
+                this.valueChanged(get(options[0], 'value'));
+              }
+            });
+          },
+        }).create({
+          classes: 'floating-field-label',
+          name: 'dispatchFunction',
+        }),
+        storeContentUpdateOptionsEditors.timeSeries.FormElement.extend({
+          contentUpdateDataSpec: reads('parent.parent.context.dataSpec'),
+          storeConfig: reads('parent.selectedTargetStore.config'),
+          isVisible: computed('parent.selectedTargetStore',
+            function isVisible() {
+              const selectedTargetStore = this.get(
+                'parent.selectedTargetStore');
+              return selectedTargetStore &&
+                get(selectedTargetStore, 'type') === 'timeSeries';
+            }),
+          init() {
+            this._super(...arguments);
+            this.set('classes', `${this.get('classes')} floating-field-label`);
+          },
+        }).create({
+          name: 'timeSeriesEditor',
+        }),
+      ],
+    });
+  },
+  name: 'singleResultMappings',
+});

@@ -6,8 +6,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { doesAtmDataSpecMatchFilters } from '../filters';
-
 /**
  * @type {AtmDataSpecTypeDefinition<unknown, null>}
  */
@@ -19,7 +17,7 @@ export const typeDefinitionBase = Object.freeze({
   getValueConstraintsConditions() {
     return null;
   },
-  isMatchingFilters(atmDataSpec, filters, context) {
-    return doesAtmDataSpecMatchFilters(atmDataSpec, filters, context);
+  isValueConstraintsMatchingFilters() {
+    return true;
   },
 });

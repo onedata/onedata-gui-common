@@ -14,8 +14,13 @@ export default function () {
   return (chart) => {
     chart.on('created', function () {
       const series = $(chart.svg._node).find('.ct-series');
-      const points = series.first().find('.ct-point');
-      const deltaX = $(points[1]).attr('x1') - points.first().attr('x1');
+      let deltaX = 0;
+      series.each(function () {
+        const points = $(this).find('.ct-point');
+        if (points.length > 1) {
+          deltaX = $(points[1]).attr('x1') - points.first().attr('x1');
+        }
+      });
       series.attr('transform', `translate(${deltaX / 2})`);
     });
   };

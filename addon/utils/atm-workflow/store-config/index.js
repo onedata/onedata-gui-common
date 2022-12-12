@@ -7,7 +7,7 @@
  */
 
 import { getProperties } from '@ember/object';
-import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import auditLog from './audit-log';
 import list from './list';
 import range from './range';
