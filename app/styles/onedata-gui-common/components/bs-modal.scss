@@ -108,3 +108,12 @@ $modal-scroll-margin: 14px;
     }
   }
 }
+
+
+// support for modal-on-modal shadows
+.modal + div + .modal {
+  z-index: $zindex-modal + 2;
+}
+.modal + div + .modal + div > .modal-backdrop {
+  z-index: $zindex-modal + 1;
+}
