@@ -62,7 +62,8 @@
     &.readonly {
       padding: $padding-base-vertical * 0.5 $padding-base-horizontal;
       .input-element {
-        margin-bottom: 0;
+        margin-top: 3px;
+        margin-bottom: 3px;
       }
     }
     &.creation-disabled {
