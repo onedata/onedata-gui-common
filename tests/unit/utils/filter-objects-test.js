@@ -25,39 +25,45 @@ describe('Unit | Utility | filter-objects', function () {
     ]);
   });
 
-  it('ignores trailing and leading spaces when filtering name', function () {
+  it('ignores trailing and leading spaces when filtering "name"', function () {
     const collection = [
       { name: 'other' },
       { name: '   onetwothreefour   ' },
     ];
 
-    const result = filterObjects(collection, 'four');
+    const result = filterObjects(collection, 'four', {
+      stringProperties: ['name'],
+    });
 
     expect(result).to.deep.equal([
       { name: '   onetwothreefour   ' },
     ]);
   });
 
-  it('by default filters out records with tags that contains search value words', function () {
-    const collection = [
-      { name: '1', tags: ['hello'] },
-      { name: '2', tags: ['world'] },
-      { name: '3', tags: ['hello', 'world'] },
-      { name: '4', tags: ['first', 'hello', 'world', 'other'] },
-      { name: '5', tags: ['last', 'other'] },
-    ];
+  it('filters out records with tags that contains search value words when and "tags" property is specified',
+    function () {
+      const collection = [
+        { name: '1', tags: ['hello'] },
+        { name: '2', tags: ['world'] },
+        { name: '3', tags: ['hello', 'world'] },
+        { name: '4', tags: ['first', 'hello', 'world', 'other'] },
+        { name: '5', tags: ['last', 'other'] },
+      ];
 
-    const result = filterObjects(collection, 'hello world');
+      const result = filterObjects(collection, 'hello world', {
+        arrayProperties: ['tags'],
+      });
 
-    expect(result).to.deep.equal([
-      { name: '1', tags: ['hello'] },
-      { name: '2', tags: ['world'] },
-      { name: '3', tags: ['hello', 'world'] },
-      { name: '4', tags: ['first', 'hello', 'world', 'other'] },
-    ]);
-  });
+      expect(result).to.deep.equal([
+        { name: '1', tags: ['hello'] },
+        { name: '2', tags: ['world'] },
+        { name: '3', tags: ['hello', 'world'] },
+        { name: '4', tags: ['first', 'hello', 'world', 'other'] },
+      ]);
+    }
+  );
 
-  it('by default filters out records with matching name or tag', function () {
+  it('filters out records with matching name or tag when "name" and "tags" properties are specified', function () {
     const collection = [
       { name: 'one', tags: ['hello'] },
       { name: 'two', tags: ['world'] },
@@ -66,7 +72,10 @@ describe('Unit | Utility | filter-objects', function () {
       { name: 'five', tags: ['foo'] },
     ];
 
-    const result = filterObjects(collection, 'one');
+    const result = filterObjects(collection, 'one', {
+      stringProperties: ['name'],
+      arrayProperties: ['tags'],
+    });
 
     expect(result).to.deep.equal([
       { name: 'one', tags: ['hello'] },
@@ -74,13 +83,15 @@ describe('Unit | Utility | filter-objects', function () {
     ]);
   });
 
-  it('by default filters out records with matching part of tag', function () {
+  it('filters out records with matching part of tag when "tags" is in arrayProperties', function () {
     const collection = [
       { name: 'one', tags: ['hello'] },
       { name: 'two', tags: ['world'] },
     ];
 
-    const result = filterObjects(collection, 'he');
+    const result = filterObjects(collection, 'he', {
+      arrayProperties: ['tags'],
+    });
 
     expect(result).to.deep.equal([
       { name: 'one', tags: ['hello'] },
@@ -106,15 +117,13 @@ describe('Unit | Utility | filter-objects', function () {
     ]);
   });
 
-  it('does not filter out records with matching tag when searchInTags is false', function () {
+  it('does not filter out records with matching tag when arrayProperties is not specified', function () {
     const collection = [
       { name: 'hello', tags: ['world'] },
       { name: 'world', tags: ['hello'] },
     ];
 
-    const result = filterObjects(collection, 'hello', {
-      searchInTags: false,
-    });
+    const result = filterObjects(collection, 'hello');
 
     expect(result).to.deep.equal([
       { name: 'hello', tags: ['world'] },

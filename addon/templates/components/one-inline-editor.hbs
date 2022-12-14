@@ -1,7 +1,5 @@
 {{#if _inEditionMode}}
   {{#if (eq editorType "tags")}}
-    {{!-- FIXME: placeholder in tags-input --}}
-    {{!-- FIXME: onblur in tags-input --}}
     {{tags-input
       tags=_inputValue
       class=(concat-classes "form-control" inputClasses)
@@ -11,7 +9,9 @@
       )
       tagEditorSettings=editorSettings.tagEditorSettings
       readonly=false
+      startTagCreationOnInit=true
       onChange=(action (mut _inputValue))
+      onFocusLost=(action onLostFocus)
     }}
   {{else}}
     {{one-way-input _inputValue

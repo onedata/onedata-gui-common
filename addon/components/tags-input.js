@@ -110,6 +110,12 @@ export default Component.extend(I18n, {
   tagEditorComponentName: 'tags-input/text-editor',
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  startTagCreationOnInit: false,
+
+  /**
    * Value passed to the tag editor component through `settings` property.
    * @virtual optional
    * @type {any}
@@ -242,6 +248,14 @@ export default Component.extend(I18n, {
       this.endTagCreation();
     }
   }),
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (this.startTagCreationOnInit) {
+      this.startTagCreation();
+    }
+  },
 
   click(event) {
     this._super(...arguments);

@@ -1,4 +1,10 @@
-// FIXME: jsdoc
+/**
+ * Validator and utils for validating e-mail adresses.
+ *
+ * @author Jakub Liput
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
 
 import { validator } from 'ember-cp-validations';
 

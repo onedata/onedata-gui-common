@@ -179,6 +179,7 @@ export default Component.extend(I18n, {
   isAfterInitialRender: false,
 
   /**
+   * Placeholder used in text input.
    * @type {string}
    */
   inputPlaceholder: undefined,

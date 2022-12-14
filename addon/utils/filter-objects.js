@@ -1,16 +1,26 @@
-// FIXME: experimental util - maybe it should have different, more-precise name, jsdoc
-// FIXME: flexible properties to search in?
+/**
+ * Filters objects by searching provided `searchString` in values of specified properties.
+ *
+ * You can use either straightforward string-value properties or arrays of string.
+ * In both cases, the object matches if at least one string value (either straightforward
+ * in property or among strings in array) is a substring of search value.
+ *
+ * @author Jakub Liput
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
 
 import { get } from '@ember/object';
 
 /**
  * @typedef {Object} FilterObjectsOptions
- * @param {boolean} [searchInTags=true]
+ * @property {string} [stringProperties]
+ * @property {Array<string>} [arrayProperties]
  */
 
 const defaultFilterObjectsOptions = {
-  searchInTags: true,
   stringProperties: ['name'],
+  arrayProperties: [],
 };
 
 /**
@@ -39,13 +49,12 @@ export default function filterObjects(
       }
     }
 
-    if (normOptions.searchInTags) {
-      const recordTags = get(record, 'tags');
-      if (Array.isArray(recordTags)) {
-        const tags = (get(record, 'tags') ?? [])
-          .map(tag => normalizeValue(tag));
+    for (const arrayProperty of normOptions.arrayProperties) {
+      const propValue = get(record, arrayProperty);
+      if (Array.isArray(propValue)) {
+        const stringValues = propValue.map(tag => normalizeValue(tag));
         for (const searchTag of normSearchTags) {
-          if (tags.find(tag => tag.includes(searchTag))) {
+          if (stringValues.find(tag => tag.includes(searchTag))) {
             return true;
           }
         }
