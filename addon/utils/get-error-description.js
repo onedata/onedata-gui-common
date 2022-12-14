@@ -18,6 +18,7 @@ import moment from 'moment';
 const i18nPrefix = 'errors.backendErrors.';
 
 const detailsTranslateFunctions = {
+  internalServerError: internalServerErrorDetailsTranslator,
   posix: posixDetailsTranslator,
   badServiceToken: createNestedErrorDetailsTranslator('tokenError'),
   badConsumerToken: createNestedErrorDetailsTranslator('tokenError'),
@@ -156,6 +157,22 @@ function toFormattedJson(data) {
       return undefined;
     }
   }
+}
+
+function internalServerErrorDetailsTranslator(i18n, errorDetails) {
+  let reference = '';
+  if (errorDetails?.reference) {
+    reference = findTranslation(
+      i18n,
+      `${i18nPrefix}translationParts.whenReportingUseReference`, {
+        reference: errorDetails.reference,
+      }
+    );
+  }
+  if (reference) {
+    reference = ` ${reference}`;
+  }
+  return Object.assign({}, errorDetails, { reference });
 }
 
 function posixDetailsTranslator(i18n, errorDetails) {

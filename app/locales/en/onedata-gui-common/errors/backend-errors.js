@@ -8,7 +8,7 @@ export default {
   noConnectionToPeerOneprovider: 'Proxy error: no connection to peer Oneprovider.',
   noConnectionToClusterNode: 'No connection to cluster node.',
   unregisteredOneprovider: 'This Oneprovider is not registered.',
-  internalServerError: 'The server has encountered an error while processing this request.',
+  internalServerError: 'The server has encountered an error while processing this request.{{reference}}',
   notImplemented: 'This operation is not implemented.',
   notSupported: 'This operation is not supported.',
   serviceUnavailable: 'Service required for this operation is offline.',
@@ -353,5 +353,6 @@ export default {
       },
       otherCaveat: 'Provided token is not valid – unverified {{caveat.type}} caveat. More details below.',
     },
+    whenReportingUseReference: 'When reporting this error, cite the following reference: "{{reference}}".',
   },
 };
