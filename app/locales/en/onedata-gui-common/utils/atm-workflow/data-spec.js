@@ -4,6 +4,7 @@ import timeSeriesMeasurement from './data-spec/time-series-measurement';
 export default {
   types: {
     integer: 'Integer',
+    boolean: 'Boolean',
     string: 'String',
     object: 'Object',
     file: 'File',

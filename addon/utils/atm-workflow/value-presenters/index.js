@@ -8,6 +8,7 @@
 
 import { valuePresentersDefaultLocation } from './commons';
 import integerPresentersSpec from './integer';
+import booleanPresentersSpec from './boolean';
 import stringPresentersSpec from './string';
 import objectPresentersSpec from './object';
 import filePresentersSpec from './file';
@@ -74,6 +75,7 @@ import arrayPresentersSpec from './array';
  */
 const presenterSpecsPerType = {
   integer: integerPresentersSpec,
+  boolean: booleanPresentersSpec,
   string: stringPresentersSpec,
   object: objectPresentersSpec,
   file: filePresentersSpec,

@@ -11,6 +11,10 @@
  */
 
 /**
+ * @typedef {boolean} AtmBoolean
+ */
+
+/**
  * @typedef {string} AtmString
  */
 

@@ -18,6 +18,9 @@ const atmDataSpecTypesInfo = [{
   type: AtmDataSpecType.Integer,
   label: 'Integer',
 }, {
+  type: AtmDataSpecType.Boolean,
+  label: 'Boolean',
+}, {
   type: AtmDataSpecType.String,
   label: 'String',
 }, {
@@ -224,10 +227,10 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['String', 'Array']);
+        .to.deep.equal(['Boolean', 'String', 'Array']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['String', 'Array']);
+        .to.deep.equal(['Boolean', 'String', 'Array']);
     });
 
     it('allows to select only types matching combination of filters', async function () {

@@ -17,6 +17,7 @@ import _ from 'lodash';
 
 const inheritanceLeafTypes = [
   AtmDataSpecType.Integer,
+  AtmDataSpecType.Boolean,
   AtmDataSpecType.String,
   AtmDataSpecType.Array,
   AtmDataSpecType.File,
@@ -27,6 +28,7 @@ const inheritanceLeafTypes = [
 
 const inheritanceRootTypes = [
   AtmDataSpecType.Integer,
+  AtmDataSpecType.Boolean,
   AtmDataSpecType.String,
   AtmDataSpecType.Array,
   AtmDataSpecType.Object,
@@ -700,6 +702,7 @@ describe('Unit | Utility | atm workflow/data spec/filters', function () {
 
     [
       [AtmDataSpecType.Integer, [AtmDataSpecType.Integer]],
+      [AtmDataSpecType.Boolean, [AtmDataSpecType.Boolean]],
       [AtmDataSpecType.String, [AtmDataSpecType.String]],
       [AtmDataSpecType.Object, [AtmDataSpecType.Object]],
       [AtmDataSpecType.File, [AtmDataSpecType.Object, AtmDataSpecType.File]],
@@ -732,6 +735,7 @@ describe('Unit | Utility | atm workflow/data spec/filters', function () {
 
     [
       [AtmDataSpecType.Integer, [AtmDataSpecType.Integer]],
+      [AtmDataSpecType.Boolean, [AtmDataSpecType.Boolean]],
       [AtmDataSpecType.String, [AtmDataSpecType.String]],
       [AtmDataSpecType.Object, [
         AtmDataSpecType.Object,
@@ -764,6 +768,9 @@ describe('Unit | Utility | atm workflow/data spec/filters', function () {
     [
       [AtmDataSpecType.Integer, _.difference(atmDataSpecTypesArray, [
         AtmDataSpecType.Integer,
+      ])],
+      [AtmDataSpecType.Boolean, _.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.Boolean,
       ])],
       [AtmDataSpecType.String, _.difference(atmDataSpecTypesArray, [
         AtmDataSpecType.String,

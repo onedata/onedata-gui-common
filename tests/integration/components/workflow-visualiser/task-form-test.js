@@ -33,6 +33,14 @@ const dataSpecs = [{
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
 }, {
+  label: 'Boolean',
+  name: 'boolean',
+  dataSpec: {
+    type: 'boolean',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
+}, {
   label: 'String',
   name: 'string',
   dataSpec: {
@@ -136,6 +144,7 @@ const valueBuilderTypeLabels = {
 
 const allSimpleDataSpecNames = [
   'integer',
+  'boolean',
   'string',
   'object',
   'anyFile',
