@@ -2,12 +2,8 @@ import { expect } from 'chai';
 import {
   describe,
   it,
-  beforeEach,
-  afterEach,
 } from 'mocha';
 import filterObjects from 'onedata-gui-common/utils/filter-objects';
-import sinon from 'sinon';
-import { settled } from '@ember/test-helpers';
 
 describe('Unit | Utility | filter-objects', function () {
   it('by default filters out records with names that contains search value', function () {
