@@ -55,38 +55,41 @@ export default {
     },
     resultMappings: {
       label: 'Results',
-      resultMapping: {
-        targetStore: {
-          label: 'Target store',
-          options: {
-            __leaveUnassigned: {
-              label: 'Leave unassigned',
+      singleResult: {
+        singleResultMappings: {
+          addButtonText: 'Add mapping',
+          emptyCollectionViewModeText: 'Not assigned.',
+          singleResultMapping: {
+            targetStore: {
+              label: 'Target store',
+              options: {
+                __createStore: {
+                  label: 'Create store...',
+                },
+                __taskAuditLog: {
+                  label: 'Current task system audit log',
+                },
+                __workflowAuditLog: {
+                  label: 'Workflow system audit log',
+                },
+                __taskTimeSeries: {
+                  label: 'Current task time series store',
+                },
+              },
+              errors: {
+                notEnabledTsStoreSelected: 'This store is not enabled. See configuration below',
+              },
             },
-            __createStore: {
-              label: 'Create store...',
-            },
-            __taskAuditLog: {
-              label: 'Current task system audit log',
-            },
-            __workflowAuditLog: {
-              label: 'Workflow system audit log',
-            },
-            __taskTimeSeries: {
-              label: 'Current task time series store',
-            },
-          },
-          errors: {
-            notEnabledTsStoreSelected: 'This store is not enabled. See configuration below',
-          },
-        },
-        dispatchFunction: {
-          label: 'Dispatch function',
-          options: {
-            append: {
-              label: 'Append',
-            },
-            extend: {
-              label: 'Extend',
+            dispatchFunction: {
+              label: 'Dispatch function',
+              options: {
+                append: {
+                  label: 'Append',
+                },
+                extend: {
+                  label: 'Extend',
+                },
+              },
             },
           },
         },

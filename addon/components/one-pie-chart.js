@@ -34,6 +34,7 @@ import customCss from 'onedata-gui-common/utils/chartist/custom-css';
 import legendColors from 'onedata-gui-common/utils/chartist/legend-colors';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 const INACTIVE_SERIES_OPACITY = 0.3;
 const SERIES_HOVER_TRANSITION_TIME = 0.3;
@@ -230,19 +231,18 @@ export default Component.extend({
     $(window).on('resize', _windowResizeHandler);
     this._windowResized();
     $(element).mousemove((event) => {
-      let parentGroup = $(event.target).parents('.ct-series');
-      if (parentGroup.length) {
+      let parentGroup = event.target.closest('.ct-series');
+      if (parentGroup) {
         // extract series id from group class name `slice-id-[series.id]`
-        const sliceClass = _.find(
-          parentGroup.attr('class').split(' '),
+        const sliceClass = [...parentGroup.classList].find(
           (c) => c.startsWith('slice-id-')
         );
         const seriesId = sliceClass.substr('slice-id-'.length);
         this.set('activeSeriesId', seriesId);
       } else {
         // if label is hovered, ignore series hover change
-        parentGroup = $(event.target).parents('.ct-pie-label');
-        if (parentGroup.length === 0) {
+        parentGroup = event.target.closest('.ct-pie-label');
+        if (!parentGroup) {
           this.set('activeSeriesId', null);
         }
       }
@@ -480,9 +480,8 @@ export default Component.extend({
    * @returns {string} stroke-opacity value
    */
   _getSliceOpacity(series) {
-    return $(
-      this.get('element').querySelector(`.slice-id-${series.get('id')} path`)
-    ).css('stroke-opacity');
+    const slicePath = this.element?.querySelector(`.slice-id-${series.get('id')} path`);
+    return slicePath ? dom.getStyle(slicePath, 'stroke-opacity') : '';
   },
 
   /**
@@ -491,9 +490,8 @@ export default Component.extend({
    * @returns {string} opacity value
    */
   _getLabelOpacity(series) {
-    return $(
-      this.get('element').querySelector('.label-id-' + series.get('id'))
-    ).css('opacity');
+    const label = this.element?.querySelector('.label-id-' + series.get('id'));
+    return label ? dom.getStyle(label, 'opacity') : '';
   },
 
   /**

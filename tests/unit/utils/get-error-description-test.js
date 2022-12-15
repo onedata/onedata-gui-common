@@ -113,6 +113,46 @@ describe('Unit | Utility | get error description', function () {
     });
   });
 
+  it('handles errors in form { id, details } with id == "internalServerError"', function () {
+    sinon.stub(this.i18n, 't')
+      .withArgs('errors.backendErrors.internalServerError', { reference: '' })
+      .returns(correctTranslation);
+    const error = {
+      id: 'internalServerError',
+      details: {},
+    };
+
+    const result = getErrorDescription(error, this.i18n);
+
+    expect(result).to.deep.equal({
+      message: escapedHtmlSafe(correctTranslation),
+      errorJsonString: escapedJsonHtmlSafe(error),
+    });
+  });
+
+  it('handles errors in form { id, details } with id == "internalServerError" and non-empty details.reference',
+    function () {
+      sinon.stub(this.i18n, 't')
+        .withArgs('errors.backendErrors.internalServerError', { reference: ' See "abc".' })
+        .returns(correctTranslation)
+        .withArgs('errors.backendErrors.translationParts.whenReportingUseReference', { reference: 'abc' })
+        .returns('See "abc".');
+      const error = {
+        id: 'internalServerError',
+        details: {
+          reference: 'abc',
+        },
+      };
+
+      const result = getErrorDescription(error, this.i18n);
+
+      expect(result).to.deep.equal({
+        message: escapedHtmlSafe(correctTranslation),
+        errorJsonString: escapedJsonHtmlSafe(error),
+      });
+    }
+  );
+
   it('handles errors in form { id, details } with id == "posix"', function () {
     sinon.stub(this.i18n, 't')
       .withArgs('errors.backendErrors.posix', { errno: 'enoent error' })

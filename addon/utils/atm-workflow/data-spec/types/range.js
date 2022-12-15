@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { typeDefinitionBase } from './commons';
+
 /**
  * @typedef {Object} AtmRangeDataSpec
  * @property {'range'} type
@@ -15,3 +17,11 @@
 /**
  * @typedef {Object} AtmRangeValueConstraints
  */
+
+/**
+ * @type {AtmDataSpecTypeDefinition<AtmRangeValueConstraints, null>}
+ */
+export const atmDataSpecTypeDefinition = Object.freeze({
+  ...typeDefinitionBase,
+  supertype: 'object',
+});

@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { typeDefinitionBase } from './commons';
+
 /**
  * @typedef {Object} AtmDatasetDataSpec
  * @property {'dataset'} type
@@ -15,3 +17,11 @@
 /**
  * @typedef {Object} AtmDatasetValueConstraints
  */
+
+/**
+ * @type {AtmDataSpecTypeDefinition<AtmDatasetValueConstraints, null>}
+ */
+export const atmDataSpecTypeDefinition = Object.freeze({
+  ...typeDefinitionBase,
+  supertype: 'object',
+});

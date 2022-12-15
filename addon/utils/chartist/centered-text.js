@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * Plugin for Chartist which adds additional text in the center of the chart.
  *
@@ -18,26 +15,26 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-/* global Chartist */
+import _ from 'lodash';
 
 const DEFAULT_FONT_SIZE = '10%';
 const DEFAULT_MAX_WIDTH = '40%';
 
-export default function (options) {
+export default function centeredText(options) {
   const defaultOptions = {
     text: '',
     fontSize: DEFAULT_FONT_SIZE,
     maxWidth: DEFAULT_MAX_WIDTH,
     class: '',
   };
+  _.defaults(options, defaultOptions);
   return (chart) => {
     chart.on('created', () => {
-      const funOptions = Chartist.extend({}, defaultOptions, options);
       const svg = chart.svg;
       const relativeSize = Math.min(svg.width(), svg.height());
 
       const fontSize =
-        normalizeSize(funOptions.fontSize, relativeSize, DEFAULT_FONT_SIZE);
+        normalizeSize(options.fontSize, relativeSize, DEFAULT_FONT_SIZE);
 
       const textAttributes = {
         'dx': svg.width() / 2,
@@ -47,10 +44,10 @@ export default function (options) {
       };
 
       const textElement = svg.elem('text', textAttributes, 'ct-centered-text')
-        .text(funOptions.text);
+        .text(options.text);
       const textWidth = textElement.width();
       const maxTextWidth =
-        normalizeSize(funOptions.maxWidth, relativeSize, DEFAULT_MAX_WIDTH) - 10;
+        normalizeSize(options.maxWidth, relativeSize, DEFAULT_MAX_WIDTH) - 10;
       if (textWidth > maxTextWidth) {
         const scaleRatio = maxTextWidth / textWidth;
         textElement.getNode().style.fontSize = fontSize * scaleRatio + 'px';
@@ -61,20 +58,21 @@ export default function (options) {
 }
 
 function normalizeSize(size, relativeSize, defaultValue) {
+  let normalizedSize;
   if (typeof size === 'string') {
-    size = size.trim();
+    normalizedSize = size.trim();
   } else if (typeof size === 'number') {
     return size;
   } else {
     if (typeof defaultValue === 'number') {
       return defaultValue;
     } else {
-      size = String(defaultValue);
+      normalizedSize = String(defaultValue);
     }
   }
-  if (size[size.length - 1] === '%') {
-    return relativeSize * (parseFloat(size) / 100);
+  if (normalizedSize[normalizedSize.length - 1] === '%') {
+    return relativeSize * (parseFloat(normalizedSize) / 100);
   } else {
-    return parseFloat(size);
+    return parseFloat(normalizedSize);
   }
 }

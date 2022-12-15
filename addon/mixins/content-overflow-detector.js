@@ -22,6 +22,7 @@ import { run } from '@ember/runloop';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { camelize } from '@ember/string';
+import dom from 'onedata-gui-common/utils/dom';
 
 export default Mixin.create({
   /**
@@ -117,7 +118,7 @@ export default Mixin.create({
       );
 
       if (!overflowParentElement) {
-        this.set('overflowParentElement', overflowElement.parent());
+        this.set('overflowParentElement', $(overflowElement[0].parentElement));
       }
       if (!overflowSiblingsElements) {
         this.set('overflowSiblingsElements', overflowElement.siblings());
@@ -177,7 +178,7 @@ export default Mixin.create({
     }
 
     let elementSize = overflowElement[outerSizeProperty](true);
-    if (overflowElement.is(':hidden')) {
+    if (dom.isHidden(overflowElement[0])) {
       const previousCss = overflowElement.attr('style');
       const newCss = previousCss +
         ';position: absolute !important; visibility: hidden !important; display: block !important;';

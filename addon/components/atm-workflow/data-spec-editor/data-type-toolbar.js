@@ -19,7 +19,7 @@ import {
   createDataTypeSelectorElement,
   createDataTypeElement,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/editor-element-creators';
-import { dataSpecMatchesFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
+import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import { formValuesToDataSpec } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -42,12 +42,6 @@ export default Component.extend(I18n, {
    * @type {boolean}
    */
   isEnabled: undefined,
-
-  /**
-   * @virtual
-   * @type {AtmDataSpecPlacementContext}
-   */
-  placementContext: undefined,
 
   /**
    * @virtual
@@ -78,19 +72,13 @@ export default Component.extend(I18n, {
   canUnpackFromArray: computed(
     'editorElement.config.dataType',
     'dataSpecFilters',
-    'placementContext',
     function canUnpackFromArray() {
-      const {
-        dataSpecFilters,
-        placementContext,
-      } = this.getProperties('dataSpecFilters', 'placementContext');
-
       if (this.get('editorElement.config.dataType') !== 'array') {
         return false;
       }
 
       const itemDataSpec = formValuesToDataSpec(this.get('editorElement.config.item'));
-      return dataSpecMatchesFilters(itemDataSpec, dataSpecFilters, placementContext);
+      return isAtmDataSpecMatchingFilters(itemDataSpec, this.dataSpecFilters);
     }
   ),
 
@@ -100,16 +88,13 @@ export default Component.extend(I18n, {
   canPackIntoArray: computed(
     'editorElement',
     'dataSpecFilters',
-    'placementContext',
     function canPackIntoArray() {
       const {
         editorElement,
         dataSpecFilters,
-        placementContext,
       } = this.getProperties(
         'editorElement',
         'dataSpecFilters',
-        'placementContext',
       );
 
       const packedDataSpec = {
@@ -118,10 +103,9 @@ export default Component.extend(I18n, {
           itemDataSpec: formValuesToDataSpec(editorElement),
         },
       };
-      return dataSpecMatchesFilters(
+      return isAtmDataSpecMatchingFilters(
         packedDataSpec,
         dataSpecFilters,
-        placementContext,
       );
     }
   ),
