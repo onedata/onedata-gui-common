@@ -3,6 +3,13 @@ import taskForm from './workflow-visualiser/task-form';
 export default {
   status: 'Status',
   taskForm,
+  workflow: {
+    actions: {
+      modifyWorkflowChartsDashboard: {
+        title: 'Charts',
+      },
+    },
+  },
   lane: {
     iterator: 'Max. batch: {{maxBatchSize}}',
     runTiming: {
