@@ -1,6 +1,6 @@
 /**
  * Renders flippable icons, after hover on specific elements 
- * one icons change into info icons.
+ * front icon changes into back icon(info icon by default).
  *
  * @author Agnieszka Warchoł
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -12,7 +12,7 @@ import layout from 'onedata-gui-common/templates/components/flippable-icons';
 
 export default Component.extend({
   layout,
-  classNames: ['flippable-icons clickable'],
+  classNames: ['flippable-icons', 'clickable'],
 
   /**
    * @virtual
