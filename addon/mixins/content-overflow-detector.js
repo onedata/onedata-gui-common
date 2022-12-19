@@ -168,9 +168,9 @@ export default Mixin.create({
       '_window'
     );
 
-    const innerSizeProperty = camelize(`inner-${this.overflowDimension}`);
-    const outerSizeProperty = camelize(`outer-${this.overflowDimension}`);
     const sizeProperty = this.overflowDimension;
+    const innerSizeProperty = camelize(`inner-${sizeProperty}`);
+    const outerSizeProperty = camelize(`outer-${sizeProperty}`);
 
     if (minimumFullWindowSize && _window[innerSizeProperty] < minimumFullWindowSize) {
       this.changeHasOverflow(true);
