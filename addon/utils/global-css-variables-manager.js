@@ -30,18 +30,18 @@
 import config from 'ember-get-config';
 
 /**
- * @typedef {unknown} CSSVariableOwner It's an entity which asked manager to
+ * @typedef {unknown} CssVariableOwner It's an entity which asked manager to
  * set specific CSS variable. Each set variable has a list of associated owners.
  * When that list becomes empty, variable is removed.
  */
 
 /**
- * @typedef {`--${string}`} CSSVariableName CSS variable name including
+ * @typedef {`--${string}`} CssVariableName CSS variable name including
  * `--` prefix.
  */
 
 /**
- * @typedef {string} CSSVariableValue
+ * @typedef {string} CssVariableValue
  */
 
 export class GlobalCssVariablesManager {
@@ -52,14 +52,14 @@ export class GlobalCssVariablesManager {
     /**
      * Contains all variables set by each owner.
      * @private
-     * @type {Map<CSSVariableOwner, Set<CSSVariableName>>}
+     * @type {Map<CssVariableOwner, Set<CssVariableName>>}
      */
     this.variablesPerOwner = new Map();
 
     /**
      * Contains values and all owners associated to each variable.
      * @private
-     * @type {Map<CSSVariableName, { owners: Set<CSSVariableOwner>, value: CSSVariableValue }>}
+     * @type {Map<CssVariableName, { owners: Set<CssVariableOwner>, value: CssVariableValue }>}
      */
     this.variablesData = new Map();
 
@@ -74,8 +74,8 @@ export class GlobalCssVariablesManager {
   /**
    * Gets CSS variable value. If it's not set, `null` is returned;
    * @public
-   * @param {CSSVariableName} variableName
-   * @returns {CSSVariableValue|null}
+   * @param {CssVariableName} variableName
+   * @returns {CssVariableValue|null}
    */
   getVariable(variableName) {
     return this.variablesData.get(variableName)?.value ?? null;
@@ -86,10 +86,10 @@ export class GlobalCssVariablesManager {
    * different value by another owner, exception will by thrown (only
    * in non-production environments).
    * @public
-   * @param {CSSVariableOwner} variableOwner
-   * @param {CSSVariableName} variableName
-   * @param {CSSVariableValue} variableValue
-   * @returns {CSSVariableValue}
+   * @param {CssVariableOwner} variableOwner
+   * @param {CssVariableName} variableName
+   * @param {CssVariableValue} variableValue
+   * @returns {CssVariableValue}
    */
   setVariable(variableOwner, variableName, variableValue) {
     const currentValue = this.getVariable(variableName);
@@ -136,8 +136,8 @@ export class GlobalCssVariablesManager {
    * Removes CSS variable association to the specific owner. If variable
    * has only one owner, it is removed.
    * @public
-   * @param {CSSVariableOwner} variableOwner
-   * @param {CSSVariableName} variableName
+   * @param {CssVariableOwner} variableOwner
+   * @param {CssVariableName} variableName
    * @returns {void}
    */
   unsetVariable(variableOwner, variableName) {
@@ -166,7 +166,7 @@ export class GlobalCssVariablesManager {
    * Removes all CSS variable associations of the specific owner. If some of
    * owner's variables have only one owner, then these are removed.
    * @public
-   * @param {CSSVariableOwner} variableOwner
+   * @param {CssVariableOwner} variableOwner
    * @returns {void}
    */
   unsetOwnerVariables(variablesOwner) {
