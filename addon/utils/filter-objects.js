@@ -35,10 +35,10 @@ export default function filterObjects(
   options,
 ) {
   const normOptions = { ...defaultFilterObjectsOptions, ...options };
-  if (!searchValue) {
+  const normSearchValue = normalizeValue(searchValue);
+  if (!normSearchValue) {
     return collection;
   }
-  const normSearchValue = normalizeValue(searchValue);
   const normSearchTags = normSearchValue.split(/\s+/);
 
   return collection.filter(record => {
