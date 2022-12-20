@@ -35,10 +35,9 @@ export default function filterBySubstrings(
     if (!Array.isArray(recordStrings)) {
       return false;
     }
-    console.log(recordStrings);
-    return Boolean(
-      recordStrings.find(recordString => recordString?.includes?.(searchValue))
-    );
+    return Boolean(recordStrings.find(recordString =>
+      normalizeValue(recordString).includes?.(normSearchValue)
+    ));
   });
 }
 

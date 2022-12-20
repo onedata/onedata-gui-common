@@ -43,7 +43,7 @@ export default function filterSpaces(
   const getStringsCallback = (space) =>
     Object.values(getProperties(space, ...normOptions.stringProperties));
   const byStringsCollection =
-    filterBySubstrings(collection, searchValue, getStringsCallback);
+    filterBySubstrings(collection, normSearchValue, getStringsCallback);
 
   if (byStringsCollection.length === collection.length) {
     return byStringsCollection;

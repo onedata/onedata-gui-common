@@ -53,4 +53,18 @@ describe('Unit | Utility | filter-by-substrings', function () {
       { description: 'four', organizationName: 'seven' },
     ]);
   });
+
+  it('filters case-insensitive substring', function () {
+    const collection = [
+      { description: 'Zero' },
+      { description: 'zero' },
+      { description: 'four' },
+    ];
+
+    const result = filterBySubstring(collection, 'zero', (record) => [record.description]);
+
+    expect(result).to.deep.equal([
+      { description: 'Zero' }, { description: 'zero' },
+    ]);
+  });
 });
