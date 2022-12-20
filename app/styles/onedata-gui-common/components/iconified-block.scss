@@ -1,18 +1,18 @@
 $iconified-block-border-width: 2px;
-$iconified-block-border: $iconified-block-border-width solid var(--iconified-block-border-color);
 $iconified-block-border-radius: $border-radius-base;
 $iconified-block-padding: $padding-base-vertical;
 
 .iconified-block {
-  $leading-color: $color-one-light-blue;
-  --iconified-block-icon-color: #{$color-one-blue-gray};
-  --iconified-block-border-color: #{darken($leading-color, 10%)};
-  --iconified-block-icon-background-color: #{$leading-color};
-  --iconified-block-icon-background-color-hover: #{darken($leading-color, 3%)};
-  --iconified-block-background-color-hover: #{$main-content-hover-background};
+  $default-leading-color: $color-one-light-blue;
+  $default-iconified-block-icon-color: #{$color-one-blue-gray};
+  $default-iconified-block-border-color: #{darken($default-leading-color, 10%)};
+  $default-iconified-block-icon-background-color: #{$default-leading-color};
+  $default-iconified-block-icon-background-color-hover: #{darken($default-leading-color, 3%)};
+  $default-iconified-block-background-color-hover: #{$main-content-hover-background};
+  $default-iconified-block-icon-color: #{$color-one-blue-gray};
 
   display: flex;
-  border: $iconified-block-border;
+  border: $iconified-block-border-width solid var(--iconified-block-border-color, $default-iconified-block-border-color);
   border-radius: $iconified-block-border-radius;
 
   + .iconified-block {
@@ -26,12 +26,12 @@ $iconified-block-padding: $padding-base-vertical;
 
   .icon-section {
     text-align: center;
-    background-color: var(--iconified-block-icon-background-color);
-    border-right: $iconified-block-border;
+    background-color: var(--iconified-block-icon-background-color, $default-iconified-block-icon-background-color);
+    border-right: $iconified-block-border-width solid var(--iconified-block-border-color, $default-iconified-block-border-color);
 
     .one-icon {
       font-size: 2.5em;
-      color: var(--iconified-block-icon-color);
+      color: var(--iconified-block-icon-color, $default-iconified-block-icon-color);
       margin: -0.2em;
       display: block;
       width: 1em;
@@ -47,11 +47,11 @@ $iconified-block-padding: $padding-base-vertical;
     cursor: pointer;
 
     .icon-section {
-      background-color: var(--iconified-block-icon-background-color-hover);
+      background-color: var(--iconified-block-icon-background-color-hover, $default-iconified-block-icon-background-color-hover);
     }
 
     .content-section {
-      background-color: var(--iconified-block-background-color-hover);
+      background-color: var(--iconified-block-background-color-hover, $default-iconified-block-background-color-hover);
     }
   }
 }
