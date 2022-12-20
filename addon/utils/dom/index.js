@@ -10,6 +10,15 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { LayoutBox } from './enums';
+
+import siblings from './siblings';
+
+import width from './width';
+import height from './height';
+import offset from './offset';
+import position from './position';
+
 import isVisible from './is-visible';
 import isHidden from './is-hidden';
 
@@ -18,6 +27,15 @@ import setStyle from './set-style';
 import setStyles from './set-styles';
 
 export default {
+  LayoutBox,
+
+  siblings,
+
+  width,
+  height,
+  offset,
+  position,
+
   isVisible,
   isHidden,
 

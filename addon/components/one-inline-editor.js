@@ -21,6 +21,7 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import $ from 'jquery';
 import { Promise, resolve } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import dom from 'onedata-gui-common/utils/dom';
 import { isEmpty } from 'ember-awesome-macros';
 
 /**
@@ -262,18 +263,17 @@ export default Component.extend(I18n, {
       element,
       isInToolbar,
     } = this.getProperties('element', 'isInToolbar');
-    if (isInToolbar) {
-      const parentWidth = $(element.parentElement).width();
+    if (isInToolbar && element) {
+      const parentWidth = dom.width(element.parentElement, dom.LayoutBox.ContentBox);
       const toolbar = element.parentElement.querySelector(
         '.one-collapsible-toolbar:not(.minimized)'
       );
-      const toolbarWidth = toolbar && $(toolbar).width() || 0;
+      const toolbarWidth = toolbar && dom.width(toolbar, dom.LayoutBox.ContentBox) || 0;
       const paddingRight = parseFloat(
         window.getComputedStyle(element)['padding-right']
       );
-      $(element).width(
-        parentWidth - toolbarWidth - paddingRight - (toolbarWidth ? 50 : 0)
-      );
+      const width = parentWidth - toolbarWidth - paddingRight - (toolbarWidth ? 50 : 0);
+      dom.setStyle(element, 'width', `${width}px`);
     }
   },
 
@@ -283,8 +283,8 @@ export default Component.extend(I18n, {
       isInToolbar,
     } = this.getProperties('element', 'isInToolbar');
 
-    if (isInToolbar) {
-      $(element).width('auto');
+    if (isInToolbar && element) {
+      dom.setStyle(element, 'width', 'auto');
     }
   },
 

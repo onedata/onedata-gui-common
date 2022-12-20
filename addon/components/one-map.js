@@ -118,7 +118,7 @@ export default Component.extend({
     } = this.getProperties('_initialState', 'zoomOnScroll', 'element');
     const $mapContainer = $(element.querySelector('.one-map-container'));
     this.set('$mapContainer', $mapContainer);
-    this.set('_mapInstance',
+    const mapInstance = this.set('_mapInstance',
       $mapContainer.vectorMap({
         map: 'world_mill',
         backgroundColor: 'transparent',
@@ -128,6 +128,7 @@ export default Component.extend({
           safeExec(this, '_handleViewportChange', event, scale),
       }).vectorMap('get', 'mapObject')
     );
+    $mapContainer[0].mapInstance = mapInstance;
 
     this._delayViewportChangeTransform();
 

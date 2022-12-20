@@ -19,7 +19,6 @@
 import Mixin from '@ember/object/mixin';
 
 import { run } from '@ember/runloop';
-import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { camelize } from '@ember/string';
 import dom from 'onedata-gui-common/utils/dom';
@@ -41,14 +40,14 @@ export default Mixin.create({
   /**
    * Element, whose overflow is being checked
    * To inject.
-   * @type {JQuery}
+   * @type {HTMLElement}
    */
   overflowElement: null,
 
   /**
    * Container element, whose size is taken as an available place for the
-   * checked element. Default is overflowElement.parent()
-   * @type {JQuery}
+   * checked element. Default is overflowElement.parentElement
+   * @type {HTMLElement}
    */
   overflowParentElement: null,
 
@@ -56,8 +55,8 @@ export default Mixin.create({
    * Elements that takes space (in selected dimension) in container
    * (parent) and must be taken into account while
    * calculating space for checked element.
-   * Default is overflowElement.siblings()
-   * @type {JQuery}
+   * Default is overflowElement sibling elements.
+   * @type {Array<HTMLElement>}
    */
   overflowSiblingsElements: null,
 
@@ -118,10 +117,10 @@ export default Mixin.create({
       );
 
       if (!overflowParentElement) {
-        this.set('overflowParentElement', $(overflowElement[0].parentElement));
+        this.set('overflowParentElement', overflowElement.parentElement);
       }
       if (!overflowSiblingsElements) {
-        this.set('overflowSiblingsElements', overflowElement.siblings());
+        this.set('overflowSiblingsElements', dom.siblings(overflowElement));
       }
       const detectOverflowFunction = () => safeExec(this, 'detectOverflow');
       const overflowDetectionListener = () => {
@@ -148,7 +147,7 @@ export default Mixin.create({
   },
 
   detectOverflow() {
-    if (this.isDestroyed) {
+    if (this.isDestroyed || !this.overflowElement) {
       return;
     }
 
@@ -170,29 +169,28 @@ export default Mixin.create({
 
     const sizeProperty = this.overflowDimension;
     const innerSizeProperty = camelize(`inner-${sizeProperty}`);
-    const outerSizeProperty = camelize(`outer-${sizeProperty}`);
+    const sizeFunction = dom[sizeProperty];
 
     if (minimumFullWindowSize && _window[innerSizeProperty] < minimumFullWindowSize) {
       this.changeHasOverflow(true);
       return;
     }
 
-    let elementSize = overflowElement[outerSizeProperty](true);
-    if (dom.isHidden(overflowElement[0])) {
-      const previousCss = overflowElement.attr('style');
+    let elementSize = sizeFunction(overflowElement, dom.LayoutBox.MarginBox);
+    if (dom.isHidden(overflowElement)) {
+      const previousCss = overflowElement.getAttribute('style');
       const newCss = previousCss +
         ';position: absolute !important; visibility: hidden !important; display: block !important;';
       // shows element using standard display:block (but it is hidden from user)
       // after that we can measure its size as if it was visible and
       // then we fallback to previous styles
-      overflowElement.attr('style', newCss);
-      elementSize = overflowElement[outerSizeProperty](true);
-      overflowElement.attr('style', previousCss ? previousCss : '');
+      overflowElement.setAttribute('style', newCss);
+      elementSize = sizeFunction(overflowElement, dom.LayoutBox.MarginBox);
+      overflowElement.setAttribute('style', previousCss ? previousCss : '');
     }
-    const parentSize = overflowParentElement[sizeProperty]();
+    const parentSize = sizeFunction(overflowParentElement, dom.LayoutBox.ContentBox);
     const siblingsSize = overflowSiblingsElements
-      .get()
-      .map(sibling => $(sibling)[outerSizeProperty](true))
+      .map(sibling => sizeFunction(sibling, dom.LayoutBox.MarginBox))
       .reduce((prev, curr) => prev + curr, 0);
     const newHasOverflow =
       parentSize - siblingsSize < elementSize + additionalOverflowMargin;

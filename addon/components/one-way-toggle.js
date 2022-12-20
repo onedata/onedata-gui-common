@@ -16,7 +16,7 @@ import OneCheckboxBase from 'onedata-gui-common/components/one-checkbox-base';
 import { inject as service } from '@ember/service';
 import computedT from 'onedata-gui-common/utils/computed-t';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
   layout,
@@ -128,10 +128,14 @@ export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
 
     document.getSelection().removeAllRanges();
 
-    const $toggleElement = $(element.querySelector('.one-way-toggle-control'));
+    const toggleElement = element.querySelector('.one-way-toggle-control');
+    if (!toggleElement) {
+      return;
+    }
+
     const mouseX = event.originalEvent.gesture.center.x;
-    const moveRatio = (mouseX - $toggleElement.offset().left) /
-      $toggleElement.outerWidth();
+    const moveRatio = (mouseX - dom.offset(toggleElement).left) /
+      dom.width(toggleElement);
     let newValue;
     if (threeState && allowThreeStateToggle) {
       if (moveRatio < 0.33) {
