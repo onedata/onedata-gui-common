@@ -210,6 +210,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
   cancelExecutionAction: undefined,
 
   /**
+   * @virtual optional
+   * @type {Utils.Action}
+   */
+  removeExecutionAction: undefined,
+
+  /**
    * @type {Utils.Looper}
    */
   executionStateUpdater: undefined,
@@ -351,8 +357,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<Function>}
    */
   lifecycleChangingActionHook: computed(function lifecycleChangingActionHook() {
-    return async result => {
-      if (!result || get(result, 'status') !== 'done') {
+    return async (result, action) => {
+      if (result?.status !== 'done' || action === this.removeExecutionAction) {
         return;
       }
       try {
@@ -390,12 +396,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
   executionActions: computed(
-    'workflow.status',
+    'isExecutionEnded',
+    'isExecutionSuspended',
     'copyInstanceIdAction',
     'viewAuditLogAction',
     'lifecycleChangingActionHook',
     'pauseResumeExecutionAction',
     'cancelExecutionAction',
+    'removeExecutionAction',
     function executionActions() {
       const actions = [this.copyInstanceIdAction, this.viewAuditLogAction];
 
@@ -410,6 +418,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
           this.normalizeLifecycleChangingAction(this.cancelExecutionAction);
         if (cancelExecutionAction) {
           actions.push(cancelExecutionAction);
+        }
+      }
+      if (this.isExecutionEnded || this.isExecutionSuspended) {
+        const removeExecutionAction =
+          this.normalizeLifecycleChangingAction(this.removeExecutionAction);
+        if (removeExecutionAction) {
+          actions.push(removeExecutionAction);
         }
       }
 
