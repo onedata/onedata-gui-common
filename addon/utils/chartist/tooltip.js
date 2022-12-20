@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * Plugin for Chartist which adds tooltip. For bar and line charts tooltip
  * creates description based on chartist legend and values. For pie chart data for tooltip is
@@ -35,9 +32,9 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import dynamicRound from 'onedata-gui-common/utils/dynamic-round';
+import dom from 'onedata-gui-common/utils/dom';
 
-const TOOLTIP_HTML =
-  `
+const TOOLTIP_HTML = `
   <div class="chart-tooltip">
     <div class="chart-tooltip-title"></div>
     <ul class="ct-legend">
@@ -48,7 +45,7 @@ const TOOLTIP_HTML =
 
 let chartsIndex = [];
 
-export default function (options) {
+export default function tooltip(options) {
   const defaultOptions = {
     chartType: 'bar',
     rangeInTitle: false,
@@ -57,7 +54,7 @@ export default function (options) {
     valueSuffix: '',
     roundValues: true,
   };
-  options = Chartist.extend({}, defaultOptions, options);
+  const normalizedOptions = Chartist.extend({}, defaultOptions, options);
 
   return (chart) => {
     let tooltipNode;
@@ -67,7 +64,7 @@ export default function (options) {
 
     const prepareTooltip = function (tooltipData, data) {
       // title
-      const title = tooltipNode.find('.chart-tooltip-title');
+      const title = $(tooltipNode.querySelector('.chart-tooltip-title'));
       title.empty();
       title.append(chart.data.labels[data.index]);
       if (options.rangeInTitle) {
@@ -79,12 +76,12 @@ export default function (options) {
       }
 
       // data series and values
-      const ul = tooltipNode.find('.ct-legend');
+      const ul = $(tooltipNode.querySelector('.ct-legend'));
       ul.empty();
-      const suffix = options.valueSuffix ? ' ' + options.valueSuffix : '';
+      const suffix = normalizedOptions.valueSuffix ? ' ' + normalizedOptions.valueSuffix : '';
       tooltipData.forEach(d => {
         let value = d.value;
-        if (options.roundValues && typeof value === 'number') {
+        if (normalizedOptions.roundValues && typeof value === 'number') {
           value = dynamicRound(value);
         }
         ul.append(`<li class="${d.className}">${d.name}: ${value + suffix}</li>`);
@@ -96,11 +93,11 @@ export default function (options) {
         chartEntry.x = chartEntry.y = null;
         return;
       }
-      tooltipNode = container.find('.chart-tooltip');
-      if (tooltipNode.length === 0) {
-        tooltipNode = $($.parseHTML(TOOLTIP_HTML));
+      tooltipNode = container.find('.chart-tooltip')[0];
+      if (!tooltipNode) {
+        tooltipNode = $.parseHTML(TOOLTIP_HTML.trim())[0];
         container.append(tooltipNode);
-        tooltipNode.css({
+        dom.setStyles(tooltipNode, {
           transform: 'translateY(-100%) translateX(-50%)',
           marginTop: `${options.topOffset}px`,
         });
@@ -112,15 +109,15 @@ export default function (options) {
             chartEntry.showCallbacks[elementIndex](chartEntry.x, chartEntry.y);
           } else {
             chartEntry.x = chartEntry.y = null;
-            tooltipNode.removeClass('active');
+            tooltipNode.classList.remove('active');
           }
         } else {
-          tooltipNode.removeClass('active');
+          tooltipNode.classList.remove('active');
         }
       }
       $(chart.svg.getNode()).mousemove((event) => {
-        if (!$(event.target).parents('.ct-series').length) {
-          tooltipNode.removeClass('active');
+        if (!event.target.closest('.ct-series')) {
+          tooltipNode.classList.remove('active');
           chartEntry.x = chartEntry.y = null;
         }
       });
@@ -130,87 +127,110 @@ export default function (options) {
       if (!isPluginEnabled(chart)) {
         return;
       }
-      const tooltipData = chart.data.series.map(s => ({
+      let tooltipData = chart.data.series.map(s => ({
         className: s.className,
         name: s.name,
         value: s.data[data.index],
       }));
 
-      if (data.type === 'bar' && options.chartType === 'bar') {
-        const groupNode = $(data.group._node);
+      if (data.type === 'bar' && normalizedOptions.chartType === 'bar') {
+        const groupNode = data.group._node;
         const barNode = $(data.element._node);
 
         barNode.mouseover(() => {
-          const lastGroupNode = groupNode.parent().children().last();
-          const lastGroupBar = $(lastGroupNode.children('line')[data.index]);
+          const lastGroupNode = groupNode.parentElement.lastElementChild;
+          const lastGroupBar =
+            lastGroupNode.querySelectorAll(':scope > line')[data.index];
+          const containerOffset = dom.offset(container[0]);
 
           // top position
-          if (options.renderAboveBarDescription) {
-            const sumLabel = $(lastGroupNode.children('text')[data.index]);
-            tooltipNode.css('top', (sumLabel.offset().top - container.offset().top) +
-              'px');
+          if (normalizedOptions.renderAboveBarDescription) {
+            const sumLabel = lastGroupNode.querySelectorAll(':scope > text')[data.index];
+            dom.setStyle(
+              tooltipNode,
+              'top',
+              (dom.offset(sumLabel).top - containerOffset.top) + 'px'
+            );
           } else {
-            tooltipNode.css('top', (lastGroupBar.offset().top - container.offset()
-              .top) + 'px');
+            dom.setStyle(
+              tooltipNode,
+              'top',
+              (dom.offset(lastGroupBar).top - containerOffset.top) + 'px'
+            );
           }
           // left position
-          const rect = lastGroupBar[0].getBoundingClientRect();
-          tooltipNode.css('left', (rect.left + rect.width / 2 - container.offset()
-            .left) + 'px');
+          const rect = lastGroupBar.getBoundingClientRect();
+          dom.setStyle(
+            tooltipNode,
+            'left',
+            (rect.left + rect.width / 2 - containerOffset.left) + 'px'
+          );
 
           prepareTooltip(tooltipData, data);
 
-          tooltipNode.addClass('active');
+          tooltipNode.classList.add('active');
         }).mouseout(() => {
-          tooltipNode.removeClass('active');
+          tooltipNode.classList.remove('active');
         });
       }
-      if (data.type === 'point' && options.chartType === 'line') {
-        const groupNode = $(data.group._node);
-        const pointNode = $(data.element._node);
-
-        pointNode.mouseover(() => {
+      if (data.type === 'point' && normalizedOptions.chartType === 'line') {
+        const groupNode = data.group._node;
+        const pointNode = data.element._node;
+        tooltipData = data.series?.tooltipElements?.[data.index] ?? tooltipData;
+        $(pointNode).mouseover(() => {
           // top position
-          const rect = pointNode[0].getBoundingClientRect();
-          if (options.renderAboveBarDescription) {
-            const sumLabel = $(groupNode.children('text')[data.index]);
-            tooltipNode.css('top', (sumLabel.offset().top - container.offset().top) +
-              'px');
+          const rect = pointNode.getBoundingClientRect();
+          const containerOffset = dom.offset(container[0]);
+          if (normalizedOptions.renderAboveBarDescription) {
+            const sumLabel = groupNode.querySelectorAll(':scope > text')[data.index];
+            dom.setStyle(
+              tooltipNode,
+              'top',
+              (dom.offset(sumLabel).top - containerOffset.top) + 'px'
+            );
           } else {
-            tooltipNode.css('top', (rect.top - container.offset()
-              .top) + 'px');
+            dom.setStyle(
+              tooltipNode,
+              'top',
+              (rect.top - containerOffset.top) + 'px'
+            );
           }
           // left position
-          tooltipNode.css('left', (rect.left + rect.width / 2 - container.offset()
-            .left) + 'px');
+          dom.setStyle(
+            tooltipNode,
+            'left',
+            (rect.left + rect.width / 2 - containerOffset.left) + 'px'
+          );
 
           prepareTooltip(tooltipData, data);
 
-          tooltipNode.addClass('active');
+          tooltipNode.classList.add('active');
         }).mouseout(() => {
-          tooltipNode.removeClass('active');
+          tooltipNode.classList.remove('active');
         });
       }
-      if (data.type === 'slice' && options.chartType === 'pie') {
-        data.series.tooltipElements.forEach(element => element.className =
-          'no-padding');
-        const tooltipData = data.series.tooltipElements;
+      if (data.type === 'slice' && normalizedOptions.chartType === 'pie') {
+        data.series.tooltipElements.forEach((element) =>
+          element.className = 'no-padding'
+        );
+        tooltipData = data.series.tooltipElements;
         const sliceNode = $(data.element._node);
+        const containerOffset = dom.offset(container[0]);
         const showTooltip = (x, y) => {
-          tooltipNode.css('top', (y - container.offset().top - 10) +
-            'px');
-          tooltipNode.css('left', (x - container.offset()
-            .left) + 'px');
+          dom.setStyles(tooltipNode, {
+            top: (y - containerOffset.top - 10) + 'px',
+            left: (x - containerOffset.left) + 'px',
+          });
 
           prepareTooltip(tooltipData, data);
 
-          tooltipNode.addClass('active');
+          tooltipNode.classList.add('active');
           chartEntry.x = x;
           chartEntry.y = y;
         };
         sliceNode.mousemove((event) => showTooltip(event.pageX, event.pageY))
           .mouseout(() => {
-            tooltipNode.removeClass('active');
+            tooltipNode.classList.remove('active');
             chartEntry.x = chartEntry.y = null;
           });
         chartEntry.showCallbacksTargets.push(data.element.getNode());
@@ -238,7 +258,7 @@ function getChartRenderEntry(chart) {
     };
     // remove not existing charts renders
     chartsIndex = chartsIndex.filter((existingChartRender) => {
-      return jQuery.contains(document.documentElement, existingChartRender.node);
+      return $.contains(document.documentElement, existingChartRender.node);
     });
     chartsIndex.push(chartRender);
   }

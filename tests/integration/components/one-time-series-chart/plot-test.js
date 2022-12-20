@@ -162,12 +162,12 @@ describe('Integration | Component | one time series chart/plot', function () {
     });
 
     await renderComponent();
-    expectEchartDummyPoints(null, 60, 60);
+    expectEchartDummyPoints(null, 60, 60, true);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
 
     fakeClock.tick(60 * 1000 + 500);
     await settled();
-    expectEchartDummyPoints(null, 60, 60);
+    expectEchartDummyPoints(null, 60, 60, true);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
   });
 

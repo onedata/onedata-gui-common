@@ -735,7 +735,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect(resultMappings).to.exist;
       expect(resultMappings.querySelector('.control-label').textContent.trim())
         .to.equal('Results');
-      const results = resultMappings.querySelectorAll('.resultMapping-field');
+      const results = resultMappings.querySelectorAll('.singleResultMappings-field');
       expect(results).to.have.length(exampleAtmLambdaRevision.resultSpecs.length);
       exampleAtmLambdaRevision.resultSpecs.forEach(({ name }, idx) => {
         expect(results[idx].querySelector('.control-label').textContent.trim())
@@ -770,10 +770,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           });
 
           await renderComponent();
-          expect(targetStoreDropdown.getSelectedOptionText()).to.equal('Leave unassigned');
+          await click('.singleResultMappings-add-field-button');
+
+          expect(targetStoreDropdown.getSelectedOptionText()).to.null;
           const targetStoreExpectedOptions = [
             'Create store...',
-            'Leave unassigned',
             ...(allowSystemAuditLogStores ? [
               taskAuditLogStore.name,
               workflowAuditLogStore.name,
@@ -803,6 +804,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           });
 
           await renderComponent();
+          await click('.singleResultMappings-add-field-button');
           await targetStoreDropdown.selectOptionByText('Create store...');
 
           expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
@@ -827,7 +829,6 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         }]);
 
         await renderComponent();
-        await targetStoreDropdown.selectOptionByText('Leave unassigned');
 
         expect(this.get('changeSpy')).to.be.calledWith({
           data: {
@@ -850,6 +851,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       }]);
 
       await renderComponent();
+      await click('.singleResultMappings-add-field-button');
       await targetStoreDropdown.selectOptionByText(taskAuditLogStore.name);
 
       expect(this.get('changeSpy')).to.be.calledWith({
@@ -880,6 +882,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       }]);
 
       await renderComponent();
+      await click('.singleResultMappings-add-field-button');
       await targetStoreDropdown.selectOptionByText(workflowAuditLogStore.name);
 
       expect(this.get('changeSpy')).to.be.calledWith({
@@ -902,19 +905,6 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       });
       done();
     });
-
-    it('does not allow to choose dispatch function when result store is left unassigned',
-      async function (done) {
-        this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
-          name: 'res1',
-          dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
-        }]);
-
-        await renderComponent();
-
-        expect(find('.dispatchFunction-field')).to.not.exist;
-        done();
-      });
 
     allPossibleStoreSpecs
       .filterBy('allowedDataSpecNames.length')
@@ -973,6 +963,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         }]);
 
         await renderComponent();
+        await click('.singleResultMappings-add-field-button');
         await targetStoreDropdown.selectOptionByText('listIntegerStore');
         await targetStoreDropdown.selectOptionByText('singleValueIntegerStore');
 
@@ -1355,6 +1346,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect(missingValueBuilderStoreDropdown).to.have.class('has-error');
       await new OneDrodopdownHelper(missingValueBuilderStoreDropdown)
         .selectOptionByText('singleValueStringStore');
+      await click('.resultMappings-field .collection-item:nth-child(3) .remove-field-button');
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
@@ -1523,6 +1515,7 @@ function itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
       }]);
 
       await renderComponent();
+      await click('.singleResultMappings-add-field-button');
       await targetStoreDropdown.selectOptionByText(targetStore.name);
 
       expect(dispatchFunctionDropdown.getSelectedOptionText())
@@ -1547,6 +1540,7 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
       }]);
 
       await renderComponent();
+      await click('.singleResultMappings-add-field-button');
       await targetStoreDropdown.selectOptionByText(targetStore.name);
       await dispatchFunctionDropdown.selectOptionByText(
         dispatchFunctionLabels[dispatchFunction]
@@ -1586,6 +1580,7 @@ function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
       }]);
 
       await renderComponent();
+      await click('.singleResultMappings-add-field-button');
       await targetStoreDropdown.selectOptionByText(targetStore.name);
 
       expect(this.get('changeSpy')).to.be.calledWith({
@@ -1644,7 +1639,7 @@ function itFillsFieldsWithDataOfPassedTask() {
     // TODO: VFS-7816 uncomment or remove future code
     // expect(args[2].querySelector('.valueBuilderStore-field .field-component').textContent.trim())
     //   .to.equal('singleValueObjectStore');
-    const results = findAll('.resultMapping-field');
+    const results = findAll('.singleResultMappings-field');
     expect(results).to.have.length(exampleAtmLambdaRevision.resultSpecs.length);
     exampleAtmLambdaRevision.resultSpecs.forEach(({ name }, idx) => {
       expect(results[idx].querySelector('.control-label').textContent.trim())
@@ -1853,7 +1848,7 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
 
           await renderComponent();
 
-          const results = findAll('.resultMapping-field');
+          const results = findAll('.singleResultMappings-field');
           expect(results).to.have.length(dispatchFunctions.length);
           dispatchFunctions.forEach((dispatchFunction, idx) => {
             expect(results[idx].querySelector('.control-label').textContent.trim())
@@ -1900,21 +1895,15 @@ function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
 
       await renderComponent();
 
-      const results = findAll('.resultMapping-field');
-      expect(results).to.have.length(1);
+      const results = findAll('.singleResultMappings-field');
       if (inEditMode) {
-        expect(
-          new OneDrodopdownHelper(results[0].querySelector('.targetStore-field'))
-          .getSelectedOptionText()
-        ).to.equal('Leave unassigned');
+        expect(results).to.have.length(1);
+        expect(results[0].querySelector('.targetStore-field')).to.not.exist;
       } else {
-        expect(
-          results[0].querySelector('.targetStore-field .field-component')
-          .textContent.trim()
-        ).to.equal('Leave unassigned');
+        expect(results[0].querySelector('.field-component').textContent.trim())
+          .to.equal('Not assigned.');
       }
       expect(results[0].querySelector('.control-label').textContent.trim()).to.equal('res1:');
-      expect(results[0].querySelector('.dispatchFunction-field')).to.not.exist;
       done();
     });
 }

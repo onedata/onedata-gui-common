@@ -26,6 +26,7 @@ import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { resolve } from 'rsvp';
+import dom from 'onedata-gui-common/utils/dom';
 
 export default Component.extend({
   layout,
@@ -282,23 +283,25 @@ export default Component.extend({
       // if context-menu placement is active, popover with ...-top placement
       // needs to be positioned using bottom css property instead of top
       const popoverInstance = this.get('popoverInstance');
-      const $popover = popoverInstance.$target;
-      if ($popover.is('.left-top, .right-top')) {
-        const containerHeight = popoverInstance.options.container.innerHeight();
-        const popoverHeight = $popover.outerHeight();
-        const popoverTop = parseFloat($popover.css('top'));
+      const container = popoverInstance.options.container[0];
+      const popover = popoverInstance.$target[0];
+      if (popover.matches('.left-top, .right-top')) {
+        const containerHeight = container ?
+          dom.height(container, dom.LayoutBox.PaddingBox) : 0;
+        const popoverHeight = dom.height(popover);
+        const popoverTop = parseFloat(dom.getStyle(popover, 'top'));
         const popoverBottom = containerHeight - popoverTop - popoverHeight;
-        $popover.css({
+        dom.setStyles(popover, {
           top: 'initial',
           bottom: `${popoverBottom}px`,
         });
-        const $arrow = $popover.find('.webui-arrow');
-        let arrowTop = $arrow.css('top');
+        const arrow = popover.querySelector('.webui-arrow');
+        let arrowTop = dom.getStyle(arrow, 'top');
         if (arrowTop !== 'initial') {
           arrowTop = parseFloat(arrowTop);
-          const arrowBottom =
-            $popover.innerHeight() - arrowTop - $arrow.outerHeight() / 2;
-          $arrow.css({
+          const arrowBottom = dom.height(popover, dom.LayoutBox.PaddingBox) -
+            arrowTop - dom.height(arrow) / 2;
+          dom.setStyles(arrow, {
             top: 'initial',
             bottom: `${arrowBottom}px`,
           });
@@ -314,13 +317,15 @@ export default Component.extend({
   unfixPosition() {
     if (this.get('placement') === 'context-menu') {
       const popoverInstance = this.get('popoverInstance');
-      const $popover = popoverInstance.$target;
-      if ($popover.is('.left-top, .right-top')) {
-        const containerHeight = popoverInstance.options.container.innerHeight();
-        const popoverHeight = $popover.outerHeight();
-        const popoverBottom = parseFloat($popover.css('bottom'));
+      const popover = popoverInstance.$target[0];
+      const container = popoverInstance.options.container[0];
+      if (popover.matches('.left-top, .right-top')) {
+        const containerHeight = container ?
+          dom.height(container, dom.LayoutBox.PaddingBox) : 0;
+        const popoverHeight = dom.height(popover);
+        const popoverBottom = parseFloat(dom.getStyle(popover, 'bottom'));
         const popoverTop = containerHeight - popoverBottom - popoverHeight;
-        $popover.css({
+        dom.setStyles(popover, {
           top: `${popoverTop}px`,
           bottom: 'initial',
         });
@@ -336,7 +341,7 @@ export default Component.extend({
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-    if ($triggerElement.is(':visible') && open !== false) {
+    if (dom.isVisible($triggerElement[0]) && open !== false) {
       this._popover('show');
     }
     this.set('_debounceTimerEnabled', false);
@@ -397,11 +402,13 @@ export default Component.extend({
  */
 export function contextMenuPlacement() {
   const pos = this.getElementPosition();
-  const container = this.options.container;
-  const clientWidth = container.innerWidth();
-  const clientHeight = container.innerHeight();
-  const scrollTop = container.scrollTop();
-  const scrollLeft = container.scrollLeft();
+  const container = this.options.container[0];
+  const clientWidth = container ?
+    dom.width(container, dom.LayoutBox.PaddingBox) : 0;
+  const clientHeight = container ?
+    dom.height(container, dom.LayoutBox.PaddingBox) : 0;
+  const scrollTop = container?.scrollTop ?? 0;
+  const scrollLeft = container?.scrollLeft ?? 0;
   const pageX = Math.max(0, pos.left - scrollLeft);
   const pageY = Math.max(0, pos.top - scrollTop);
   const placement = pageX < clientWidth / 2 ? 'right-' : 'left-';

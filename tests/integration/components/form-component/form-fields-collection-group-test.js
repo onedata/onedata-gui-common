@@ -30,7 +30,7 @@ describe(
         name: 'abc',
       }));
 
-      await render(hbs `
+      await render(hbs`
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
@@ -64,7 +64,7 @@ describe(
       });
       this.set('collectionGroup', collectionGroup);
 
-      await render(hbs `
+      await render(hbs`
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
@@ -101,7 +101,7 @@ describe(
       });
       this.set('collectionGroup', collectionGroup);
 
-      await render(hbs `
+      await render(hbs`
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
@@ -139,7 +139,7 @@ describe(
       });
       this.set('collectionGroup', collectionGroup);
 
-      await render(hbs `
+      await render(hbs`
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
@@ -174,7 +174,7 @@ describe(
         valuesSource,
       });
       this.set('collectionGroup', collectionGroup);
-      await render(hbs `
+      await render(hbs`
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
@@ -211,7 +211,7 @@ describe(
         });
         this.set('collectionGroup', collectionGroup);
 
-        await render(hbs `
+        await render(hbs`
           {{form-component/form-fields-collection-group field=collectionGroup}}
         `);
 
@@ -222,5 +222,112 @@ describe(
         expect(find('.remove-field-button')).to.not.exist;
         expect(find('.add-field-button')).to.not.exist;
       });
+
+    it('shows "emptyCollectionViewModeText" text when the collection is empty in view mode',
+      async function () {
+        sinon.stub(lookupService(this, 'i18n'), 't')
+          .withArgs('abc.emptyCollectionViewModeText')
+          .returns('empty');
+        const valuesSource = createValuesContainer({
+          abc: createValuesContainer(),
+        });
+        const collectionGroup = FormFieldsCollectionGroup.create({
+          name: 'abc',
+          ownerSource: this.owner,
+          valuesSource,
+        });
+        this.set('collectionGroup', collectionGroup);
+        collectionGroup.changeMode('view');
+
+        await render(hbs`
+          {{form-component/form-fields-collection-group field=collectionGroup}}
+        `);
+
+        expect(find('.empty-collection-text')).to.have.trimmed.text('empty');
+      }
+    );
+
+    it('does not show "emptyCollectionViewModeText" text when the collection is empty in view mode but translation is not provided',
+      async function () {
+        const valuesSource = createValuesContainer({
+          abc: createValuesContainer(),
+        });
+        const collectionGroup = FormFieldsCollectionGroup.create({
+          name: 'abc',
+          ownerSource: this.owner,
+          valuesSource,
+        });
+        this.set('collectionGroup', collectionGroup);
+        collectionGroup.changeMode('view');
+
+        await render(hbs`
+          {{form-component/form-fields-collection-group field=collectionGroup}}
+        `);
+
+        expect(find('.empty-collection-text')).to.not.exist;
+      }
+    );
+
+    it('does not show "emptyCollectionViewModeText" text when the collection is not empty in view mode',
+      async function () {
+        sinon.stub(lookupService(this, 'i18n'), 't')
+          .withArgs('abc.emptyCollectionViewModeText')
+          .returns('empty');
+        const valuesSource = createValuesContainer({
+          abc: createValuesContainer(),
+        });
+        const collectionGroup = FormFieldsCollectionGroup.extend({
+          fieldFactoryMethod() {
+            return TextField.create({
+              name: 'textField',
+              valueName: `textField${this.get('fields.length')}`,
+            });
+          },
+        }).create({
+          name: 'abc',
+          ownerSource: this.owner,
+          parent: {
+            isEffectivelyEnabled: true,
+            onValueChange(value) {
+              set(valuesSource, 'abc', value);
+            },
+          },
+          valuesSource,
+        });
+        this.set('collectionGroup', collectionGroup);
+
+        await render(hbs`
+          {{form-component/form-fields-collection-group field=collectionGroup}}
+        `);
+        await click('.add-field-button');
+        collectionGroup.changeMode('view');
+        await settled();
+
+        expect(find('.empty-collection-text')).to.not.exist;
+      }
+    );
+
+    it('does not show "emptyCollectionViewModeText" text when the collection is empty in edit mode',
+      async function () {
+        sinon.stub(lookupService(this, 'i18n'), 't')
+          .withArgs('abc.emptyCollectionViewModeText')
+          .returns('empty');
+        const valuesSource = createValuesContainer({
+          abc: createValuesContainer(),
+        });
+        const collectionGroup = FormFieldsCollectionGroup.create({
+          name: 'abc',
+          ownerSource: this.owner,
+          valuesSource,
+        });
+        this.set('collectionGroup', collectionGroup);
+
+        await render(hbs`
+          {{form-component/form-fields-collection-group field=collectionGroup}}
+        `);
+
+        expect(find('.empty-collection-text')).to.not.exist;
+      }
+    );
   }
 );

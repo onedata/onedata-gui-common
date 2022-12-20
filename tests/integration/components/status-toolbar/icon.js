@@ -3,14 +3,14 @@ import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 describe('Integration | Component | status toolbar/icon', function () {
   setupRenderingTest();
 
   it('is hidden if enabled is set to false', async function () {
     await render(hbs `{{status-icon type="space" enabled=false}}`);
-    expect($(find('.status-icon')).is(':hidden')).to.be.true;
+    expect(dom.isHidden(find('.status-icon'))).to.be.true;
   });
 
   it('adds a class based on status property', async function () {

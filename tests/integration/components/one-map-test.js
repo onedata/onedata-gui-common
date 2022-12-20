@@ -5,11 +5,11 @@ import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import _ from 'lodash';
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
-function getRelativePosition($parent, $child) {
-  const pPosition = $parent.position();
-  const cPosition = $child.position();
+function getRelativePosition(parent, child) {
+  const pPosition = dom.offset(parent);
+  const cPosition = dom.offset(child);
   return {
     left: cPosition.left - pPosition.left,
     top: cPosition.top - pPosition.top,
@@ -17,17 +17,16 @@ function getRelativePosition($parent, $child) {
 }
 
 function isElementVisible(child) {
-  const $child = $(child);
-  const $parent = $(find('svg'));
-  const relativePosition = getRelativePosition($parent, $child);
+  const parent = find('svg');
+  const relativePosition = getRelativePosition(parent, child);
   // -1 because of some subpixel malfunctions
   return relativePosition.top > -1 && relativePosition.left > -1 &&
-    relativePosition.left + $child.width() <= $parent.width() &&
-    relativePosition.top + $child.height() < $parent.height();
+    relativePosition.left + dom.width(child) <= dom.width(parent) &&
+    relativePosition.top + dom.height(child) < dom.height(parent);
 }
 
 function getMapObject() {
-  return $(find('.one-map-container')).vectorMap('get', 'mapObject');
+  return find('.one-map-container').mapInstance;
 }
 
 describe('Integration | Component | one map', function () {
@@ -115,9 +114,9 @@ describe('Integration | Component | one map', function () {
       </div>
     `);
 
-    const $position = $(find('.map-position-container'));
-    const left = parseFloat($position.css('left'));
-    const top = parseFloat($position.css('top'));
+    const position = find('.map-position-container');
+    const left = parseFloat(dom.getStyle(position, 'left'));
+    const top = parseFloat(dom.getStyle(position, 'top'));
     const mapObject = getMapObject();
     const coords = mapObject.pointToLatLng(left, top);
     expect(_.inRange(coords.lat, 49, 51)).to.be.true;

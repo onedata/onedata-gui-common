@@ -46,20 +46,22 @@
       max-width: 11em;
     }
 
-    .argumentMappings-collapse,
-    .resultMappings-collapse {
-      > .collection-item + .collection-item {
-        margin-top: 0.5em;
-      }
+    .argumentMappings-collapse > .collection-item + .collection-item,
+    .resultMappings-collapse > .collection-item + .collection-item .singleResult-field.has-mappings {
+      margin-top: 1.5em;
+    }
+
+    .singleResultMappings-collapse > .collection-item + .collection-item {
+      margin-top: 0.5em;
     }
 
     .argumentMapping-field,
-    .resultMapping-field {
+    .singleResultMappings-field {
       flex-wrap: nowrap;
     }
 
     .argumentMapping-children,
-    .resultMapping-children {
+    .singleResultMapping-children {
       display: flex;
       align-items: flex-start;
     }

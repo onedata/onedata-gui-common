@@ -16,9 +16,9 @@
 import BsTooltip from 'ember-bootstrap/components/bs-tooltip';
 import { inject } from '@ember/service';
 import { observer } from '@ember/object';
-import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import config from 'ember-get-config';
+import dom from 'onedata-gui-common/utils/dom';
 
 export default BsTooltip.extend({
   scrollState: inject(),
@@ -121,14 +121,17 @@ export default BsTooltip.extend({
   replaceArrow(delta, dimension, isVertical) {
     this._super(delta, dimension, isVertical);
 
-    let {
+    const {
       arrowElement,
       arrowPlacement,
     } = this.getProperties(
       'arrowElement',
       'arrowPlacement'
     );
-    arrowElement = $(arrowElement);
+
+    if (!arrowElement) {
+      return;
+    }
 
     let offset = this._getArrowRelativeOffset();
     switch (arrowPlacement) {
@@ -136,11 +139,11 @@ export default BsTooltip.extend({
         offset += delta / 2;
         /* falls through */
       case 'right':
-        arrowElement.css('transform', `translateX(${offset}px)`);
+        dom.setStyle(arrowElement, 'transform', `translateX(${offset}px)`);
         break;
       case 'top':
       case 'bottom':
-        arrowElement.css('transform', `translateY(${offset}px)`);
+        dom.setStyle(arrowElement, 'transform', `translateY(${offset}px)`);
         break;
     }
   },
@@ -170,23 +173,17 @@ export default BsTooltip.extend({
   },
 
   _getArrowRelativeOffset() {
-    let {
-      overlayElement,
-      arrowPlacement,
-      arrowOffset,
-    } = this.getProperties(
-      'overlayElement',
-      'arrowPlacement',
-      'arrowOffset'
-    );
-    overlayElement = $(overlayElement);
-    let offset;
-    if (arrowPlacement === 'left' || arrowPlacement === 'right') {
-      offset = overlayElement.width() / 2 - arrowOffset;
-    } else {
-      offset = overlayElement.height() / 2 - arrowOffset;
+    if (!this.overlayElement) {
+      return 0;
     }
-    if (arrowPlacement === 'left' || arrowPlacement === 'top') {
+
+    let offset;
+    if (this.arrowPlacement === 'left' || this.arrowPlacement === 'right') {
+      offset = dom.width(this.overlayElement) / 2 - this.arrowOffset;
+    } else {
+      offset = dom.height(this.overlayElement) / 2 - this.arrowOffset;
+    }
+    if (this.arrowPlacement === 'left' || this.arrowPlacement === 'top') {
       offset *= -1;
     }
     return offset;
