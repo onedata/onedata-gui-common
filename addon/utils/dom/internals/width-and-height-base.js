@@ -5,6 +5,10 @@
  * It's a base implementation for `width` and `height` utils. You should not
  * use it directly.
  *
+ * NOTE: Measured values does not take into account any possible content
+ * overflow or scroll - the element is measured as if there was no overflow
+ * (overflow is "cropped").
+ *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -32,23 +36,23 @@ export default function widthAndHeightBase(
   if (whichBox === LayoutBox.BorderBox) {
     return borderBoxSize;
   } else if (whichBox === LayoutBox.MarginBox) {
-    const marginStart = Math.max(getStyleNumericValue(element, `margin${upperAxisStart}`), 0);
-    const marginEnd = Math.max(getStyleNumericValue(element, `margin${upperAxisEnd}`), 0);
-    const marginBoxSize = borderBoxSize + marginStart + marginEnd;
+    const startMargin = Math.max(getStyleNumericValue(element, `margin${upperAxisStart}`), 0);
+    const endMargin = Math.max(getStyleNumericValue(element, `margin${upperAxisEnd}`), 0);
+    const marginBoxSize = borderBoxSize + startMargin + endMargin;
     return marginBoxSize;
   } else if (
     whichBox === LayoutBox.PaddingBox ||
     whichBox === LayoutBox.ContentBox
   ) {
-    const borderStartWidth = getStyleNumericValue(element, `border${upperAxisStart}Width`);
-    const borderEndWidth = getStyleNumericValue(element, `border${upperAxisEnd}Width`);
-    const paddingBoxSize = borderBoxSize - borderStartWidth - borderEndWidth;
+    const startBorderWidth = getStyleNumericValue(element, `border${upperAxisStart}Width`);
+    const endBorderWidth = getStyleNumericValue(element, `border${upperAxisEnd}Width`);
+    const paddingBoxSize = borderBoxSize - startBorderWidth - endBorderWidth;
     if (whichBox === LayoutBox.PaddingBox) {
       return paddingBoxSize;
     } else {
-      const paddingStart = getStyleNumericValue(element, `padding${upperAxisStart}`);
-      const paddingEnd = getStyleNumericValue(element, `padding${upperAxisEnd}`);
-      const contentBoxSize = paddingBoxSize - paddingStart - paddingEnd;
+      const startPadding = getStyleNumericValue(element, `padding${upperAxisStart}`);
+      const endPadding = getStyleNumericValue(element, `padding${upperAxisEnd}`);
+      const contentBoxSize = paddingBoxSize - startPadding - endPadding;
       return contentBoxSize;
     }
   } else {

@@ -17,6 +17,7 @@ import siblings from './siblings';
 import width from './width';
 import height from './height';
 import offset from './offset';
+import position from './position';
 
 import isVisible from './is-visible';
 import isHidden from './is-hidden';
@@ -33,6 +34,7 @@ export default {
   width,
   height,
   offset,
+  position,
 
   isVisible,
   isHidden,

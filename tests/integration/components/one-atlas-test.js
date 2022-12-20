@@ -94,10 +94,9 @@ describe('Integration | Component | one atlas', function () {
       const sydney = find('.sydney');
       await settled();
 
-      const sydneyLeftPos = dom.offset(sydney).left - dom.offset(atlas).left;
-      const sydneyTopPos = dom.offset(sydney).top - dom.offset(atlas).top;
-      expect(sydneyLeftPos).to.be.gt((dom.width(atlas) / 4) * 3);
-      expect(sydneyTopPos).to.be.gt(dom.height(atlas) / 2);
+      const sydneyPos = dom.position(sydney);
+      expect(sydneyPos.left).to.be.gt((dom.width(atlas) / 4) * 3);
+      expect(sydneyPos.top).to.be.gt(dom.height(atlas) / 2);
     }
   );
 });

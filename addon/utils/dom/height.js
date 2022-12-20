@@ -2,6 +2,10 @@
  * Gets the current height of the element. You can choose which layout box
  * you want to measure (default is border box).
  *
+ * NOTE: Measured values does not take into account any possible content
+ * overflow or scroll - the element is measured as if there was no overflow
+ * (overflow is "cropped").
+ *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

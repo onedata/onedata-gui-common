@@ -10,110 +10,187 @@ describe('Integration | Utility | dom/height', function () {
   setupRenderingTest();
 
   it('returns element\'s height when box-sizing is content-box', async function () {
-    this.set('style', getDivStyles('content-box', 100, [1, 2], [3, 4], [5, 6]));
+    this.set('style', getDivStyles('content-box', {
+      height: 100,
+      paddingTop: 1,
+      paddingBottom: 2,
+      borderTop: 3,
+      borderBottom: 4,
+      marginTop: 5,
+      marginBottom: 6,
+    }));
     await render(hbs`<div class="div" style={{style}}></div>`);
     const div = find('.div');
 
-    expectWidth(div, [100, 103, 110, 121]);
+    expectHeight(div, {
+      [dom.LayoutBox.ContentBox]: 100,
+      [dom.LayoutBox.PaddingBox]: 103,
+      [dom.LayoutBox.BorderBox]: 110,
+      [dom.LayoutBox.MarginBox]: 121,
+    });
   });
 
   it('returns element\'s height when box-sizing is border-box', async function () {
-    this.set('style', getDivStyles('border-box', 100, [1, 2], [3, 4], [5, 6]));
+    this.set('style', getDivStyles('border-box', {
+      height: 100,
+      paddingTop: 1,
+      paddingBottom: 2,
+      borderTop: 3,
+      borderBottom: 4,
+      marginTop: 5,
+      marginBottom: 6,
+    }));
     await render(hbs`<div class="div" style={{style}}></div>`);
     const div = find('.div');
 
-    expectWidth(div, [90, 93, 100, 111]);
+    expectHeight(div, {
+      [dom.LayoutBox.ContentBox]: 90,
+      [dom.LayoutBox.PaddingBox]: 93,
+      [dom.LayoutBox.BorderBox]: 100,
+      [dom.LayoutBox.MarginBox]: 111,
+    });
   });
 
   it('returns element\'s height when only height is set', async function () {
-    this.set('style', getDivStyles('border-box', 100));
+    this.set('style', getDivStyles('border-box', { height: 100 }));
     await render(hbs`<div class="div" style={{style}}></div>`);
     const div = find('.div');
 
-    expectWidth(div, [100, 100, 100, 100]);
+    expectHeight(div, {
+      [dom.LayoutBox.ContentBox]: 100,
+      [dom.LayoutBox.PaddingBox]: 100,
+      [dom.LayoutBox.BorderBox]: 100,
+      [dom.LayoutBox.MarginBox]: 100,
+    });
   });
 
-  it('returns element\'s height when it\'s height was set if em unit', async function () {
+  it('returns element\'s height when it\'s height was set in em unit', async function () {
     this.set('style', htmlSafe(getDivStyles('border-box') + 'height: 1em;'));
     await render(hbs`<div class="div" style={{style}}></div>`);
     const div = find('.div');
 
     const emSize = parseFloat(window.getComputedStyle(div).fontSize);
 
-    expectWidth(div, [emSize, emSize, emSize, emSize]);
+    expectHeight(div, {
+      [dom.LayoutBox.ContentBox]: emSize,
+      [dom.LayoutBox.PaddingBox]: emSize,
+      [dom.LayoutBox.BorderBox]: emSize,
+      [dom.LayoutBox.MarginBox]: emSize,
+    });
   });
 
   it('returns element\'s height when padding is negative', async function () {
-    this.set('style', getDivStyles('border-box', 100, [-1, -2]));
+    this.set('style', getDivStyles('border-box', {
+      height: 100,
+      paddingTop: -1,
+      paddingBottom: -2,
+    }));
     await render(hbs`<div class="div" style={{style}}></div>`);
     const div = find('.div');
 
-    expectWidth(div, [100, 100, 100, 100]);
+    expectHeight(div, {
+      [dom.LayoutBox.ContentBox]: 100,
+      [dom.LayoutBox.PaddingBox]: 100,
+      [dom.LayoutBox.BorderBox]: 100,
+      [dom.LayoutBox.MarginBox]: 100,
+    });
   });
 
   it('returns element\'s height when border has negative height', async function () {
-    this.set('style', getDivStyles('border-box', 100, [null, null], [-3, -4]));
+    this.set('style', getDivStyles('border-box', {
+      height: 100,
+      borderTop: -3,
+      borderBottom: -4,
+    }));
     await render(hbs`<div class="div" style={{style}}></div>`);
     const div = find('.div');
 
-    expectWidth(div, [100, 100, 100, 100]);
+    expectHeight(div, {
+      [dom.LayoutBox.ContentBox]: 100,
+      [dom.LayoutBox.PaddingBox]: 100,
+      [dom.LayoutBox.BorderBox]: 100,
+      [dom.LayoutBox.MarginBox]: 100,
+    });
   });
 
   it('returns element\'s height when margin is negative', async function () {
-    this.set('style', getDivStyles('border-box', 100, [null, null], [null, null], [-5, -6]));
+    this.set('style', getDivStyles('border-box', {
+      height: 100,
+      marginTop: -5,
+      marginBottom: -6,
+    }));
     await render(hbs`<div class="div" style={{style}}></div>`);
     const div = find('.div');
 
-    expectWidth(div, [100, 100, 100, 100]);
+    expectHeight(div, {
+      [dom.LayoutBox.ContentBox]: 100,
+      [dom.LayoutBox.PaddingBox]: 100,
+      [dom.LayoutBox.BorderBox]: 100,
+      [dom.LayoutBox.MarginBox]: 100,
+    });
   });
 
-  it('returns element\'s height when absolute positioned child element is outside', async function () {
-    this.set('style', htmlSafe(getDivStyles('border-box', 100) + 'position: relative;'));
+  it('returns element\'s height when absolute positioned child element causes overflow', async function () {
+    this.set('style', htmlSafe(
+      getDivStyles('border-box', { height: 100 }) + 'position: relative;'
+    ));
     await render(hbs`<div class="div" style={{style}}>
       <div style="position: absolute; bottom: -150px;"></div>
     </div>`);
     const div = find('.div');
 
-    expectWidth(div, [100, 100, 100, 100]);
+    expectHeight(div, {
+      [dom.LayoutBox.ContentBox]: 100,
+      [dom.LayoutBox.PaddingBox]: 100,
+      [dom.LayoutBox.BorderBox]: 100,
+      [dom.LayoutBox.MarginBox]: 100,
+    });
   });
 
-  it('returns element\'s height when statically positioned child element is outside', async function () {
-    this.set('style', getDivStyles('border-box', 100));
+  it('returns element\'s height when statically positioned child element causes overflow', async function () {
+    this.set('style', getDivStyles('border-box', { height: 100 }));
     await render(hbs`<div class="div" style={{style}}>
       <div style="height: 200px;"></div>
     </div>`);
     const div = find('.div');
 
-    expectWidth(div, [100, 100, 100, 100]);
+    expectHeight(div, {
+      [dom.LayoutBox.ContentBox]: 100,
+      [dom.LayoutBox.PaddingBox]: 100,
+      [dom.LayoutBox.BorderBox]: 100,
+      [dom.LayoutBox.MarginBox]: 100,
+    });
   });
 });
 
-function expectWidth(element, boxWidths) {
+function expectHeight(element, boxWidths) {
   [
     dom.LayoutBox.ContentBox,
     dom.LayoutBox.PaddingBox,
     dom.LayoutBox.BorderBox,
     dom.LayoutBox.MarginBox,
-  ].forEach((layoutBox, idx) =>
-    expect(dom.height(element, layoutBox)).to.equal(boxWidths[idx])
+  ].forEach((layoutBox) =>
+    expect(dom.height(element, layoutBox)).to.equal(boxWidths[layoutBox])
   );
 }
 
-function getDivStyles(
-  boxSizing,
+function getDivStyles(boxSizing, {
   height = null,
-  [paddingLeft, paddingRight] = [null, null],
-  [borderLeft, borderRight] = [null, null],
-  [marginLeft, marginRight] = [null, null]
-) {
+  paddingTop = null,
+  paddingBottom = null,
+  borderTop = null,
+  borderBottom = null,
+  marginTop = null,
+  marginBottom = null,
+} = {}) {
   let style = boxSizing ? `box-sizing: ${boxSizing};` : '';
   style += height !== null ? `height: ${height}px;` : '';
-  style += paddingLeft !== null ? `padding-top: ${paddingLeft}px;` : '';
-  style += paddingRight !== null ? `padding-bottom: ${paddingRight}px;` : '';
-  style += borderLeft !== null ? `border-top: ${borderLeft}px solid;` : '';
-  style += borderRight !== null ? `border-bottom: ${borderRight}px solid;` : '';
-  style += marginLeft !== null ? `margin-top: ${marginLeft}px;` : '';
-  style += marginRight !== null ? `margin-bottom: ${marginRight}px;` : '';
+  style += paddingTop !== null ? `padding-top: ${paddingTop}px;` : '';
+  style += paddingBottom !== null ? `padding-bottom: ${paddingBottom}px;` : '';
+  style += borderTop !== null ? `border-top: ${borderTop}px solid;` : '';
+  style += borderBottom !== null ? `border-bottom: ${borderBottom}px solid;` : '';
+  style += marginTop !== null ? `margin-top: ${marginTop}px;` : '';
+  style += marginBottom !== null ? `margin-bottom: ${marginBottom}px;` : '';
   style = htmlSafe(style);
   return style;
 }

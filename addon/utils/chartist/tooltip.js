@@ -141,6 +141,7 @@ export default function tooltip(options) {
           const lastGroupNode = groupNode.parentElement.lastElementChild;
           const lastGroupBar =
             lastGroupNode.querySelectorAll(':scope > line')[data.index];
+          const containerOffset = dom.offset(container[0]);
 
           // top position
           if (normalizedOptions.renderAboveBarDescription) {
@@ -148,13 +149,13 @@ export default function tooltip(options) {
             dom.setStyle(
               tooltipNode,
               'top',
-              (dom.offset(sumLabel).top - dom.offset(container[0]).top) + 'px'
+              (dom.offset(sumLabel).top - containerOffset.top) + 'px'
             );
           } else {
             dom.setStyle(
               tooltipNode,
               'top',
-              (dom.offset(lastGroupBar).top - dom.offset(container[0]).top) + 'px'
+              (dom.offset(lastGroupBar).top - containerOffset.top) + 'px'
             );
           }
           // left position
@@ -162,7 +163,7 @@ export default function tooltip(options) {
           dom.setStyle(
             tooltipNode,
             'left',
-            (rect.left + rect.width / 2 - dom.offset(container[0]).left) + 'px'
+            (rect.left + rect.width / 2 - containerOffset.left) + 'px'
           );
 
           prepareTooltip(tooltipData, data);
@@ -179,25 +180,26 @@ export default function tooltip(options) {
         $(pointNode).mouseover(() => {
           // top position
           const rect = pointNode.getBoundingClientRect();
+          const containerOffset = dom.offset(container[0]);
           if (normalizedOptions.renderAboveBarDescription) {
             const sumLabel = groupNode.querySelectorAll(':scope > text')[data.index];
             dom.setStyle(
               tooltipNode,
               'top',
-              (dom.offset(sumLabel).top - dom.offset(container[0]).top) + 'px'
+              (dom.offset(sumLabel).top - containerOffset.top) + 'px'
             );
           } else {
             dom.setStyle(
               tooltipNode,
               'top',
-              (rect.top - dom.offset(container[0]).top) + 'px'
+              (rect.top - containerOffset.top) + 'px'
             );
           }
           // left position
           dom.setStyle(
             tooltipNode,
             'left',
-            (rect.left + rect.width / 2 - dom.offset(container[0]).left) + 'px'
+            (rect.left + rect.width / 2 - containerOffset.left) + 'px'
           );
 
           prepareTooltip(tooltipData, data);
@@ -213,10 +215,11 @@ export default function tooltip(options) {
         );
         tooltipData = data.series.tooltipElements;
         const sliceNode = $(data.element._node);
+        const containerOffset = dom.offset(container[0]);
         const showTooltip = (x, y) => {
           dom.setStyles(tooltipNode, {
-            top: (y - dom.offset(container[0]).top - 10) + 'px',
-            left: (x - dom.offset(container[0]).left) + 'px',
+            top: (y - containerOffset.top - 10) + 'px',
+            left: (x - containerOffset.left) + 'px',
           });
 
           prepareTooltip(tooltipData, data);

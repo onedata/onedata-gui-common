@@ -1,6 +1,6 @@
 /**
- * Retruns numeric value of specific CSS property for given element.
- * It will return meaningfull results only for CSS properties having measurable
+ * Returns numeric value of specific CSS property for given element.
+ * It will return meaningful results only for CSS properties having measurable
  * numeric values (like `width`, `paddingTop` etc.).
  *
  * @author Michał Borzęcki
