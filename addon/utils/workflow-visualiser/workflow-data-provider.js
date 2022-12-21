@@ -12,6 +12,30 @@
 import EmberObject, { get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { reject } from 'rsvp';
+import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
+
+/**
+ * @typedef {`store-${string}`} AtmStoreTimeSeriesCollectionReference
+ * Reference to a time series collection attached to specific time series store.
+ * String after the prefix is a store schema ID.
+ */
+
+/**
+ * @typedef {`task-${string}`} AtmTaskTimeSeriesCollectionReference
+ * Reference to a time series collection attached to specific task. String after
+ * the prefix is a task schema ID.
+ */
+
+/**
+ * @typedef {
+ *   AtmStoreTimeSeriesCollectionReference |
+ *   AtmTaskTimeSeriesCollectionReference
+ * } AtmTimeSeriesCollectionReference
+ */
+
+/**
+ * @typedef {Map<AtmTimeSeriesCollectionReference, Utils.WorkflowVisualiser.Store>} AtmTimeSeriesCollectionReferencesMap
+ */
 
 export default EmberObject.extend({
   /**
@@ -78,5 +102,35 @@ export default EmberObject.extend({
    */
   getStoreContentPresenterContext() {
     return this.executionDataFetcher?.getStoreContentPresenterContext();
+  },
+
+  /**
+   * @param {number|null} [runNumber]
+   * @returns {AtmTimeSeriesCollectionReferencesMap}
+   */
+  getTimeSeriesCollectionReferencesMap(runNumber = null) {
+    const referencesMap = new Map();
+
+    // Add references to defined time series stores (don't depend on run number).
+    this.definedStores
+      .filter((store) => store.type === 'timeSeries')
+      .forEach((store) => referencesMap.set(`store-${store.schemaId}`, store));
+
+    // Add references to task time series stores (depend on run number).
+    const tasks = this.get('visualiserComponent.elementsCache')?.task || [];
+    tasks.forEach((task) => {
+      let run;
+      if (runNumber !== null) {
+        run = task.runsRegistry?.[runNumber];
+      } else {
+        // When `runNumber` is not specified, take the latest run
+        const sortedRuns = runsRegistryToSortedArray(task.runsRegistry || {});
+        run = sortedRuns[sortedRuns.length - 1];
+      }
+      const timeSeriesStore = run?.timeSeriesStore;
+      if (timeSeriesStore) {
+        referencesMap.set(`task-${task.schemaId}`, timeSeriesStore);
+      }
+    });
   },
 });
