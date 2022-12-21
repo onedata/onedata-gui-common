@@ -132,5 +132,7 @@ export default EmberObject.extend({
         referencesMap.set(`task-${task.schemaId}`, timeSeriesStore);
       }
     });
+
+    return referencesMap;
   },
 });

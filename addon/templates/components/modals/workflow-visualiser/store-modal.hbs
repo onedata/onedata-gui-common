@@ -80,9 +80,12 @@
           actionsFactory=actionsFactory
         }}
       {{else if (eq store.type "timeSeries")}}
-        {{modals/workflow-visualiser/store-modal/time-series-presenter
-          store=store
-          getStoreContentCallback=getStoreContentCallback
+        {{workflow-visualiser/charts-presenter
+          dashboardSpec=store.config.dashboardSpec
+          defaultTimeSeriesCollectionRef=defaultTimeSeriesCollectionRef
+          onGetStoreContent=getStoreContentCallbackWithStoreArg
+          onGetTimeSeriesCollectionRefsMap=getTimeSeriesCollectionRefsMapCallback
+          live=store.contentMayChange
         }}
       {{else}}
         <p class="text-danger">{{tt this "noContentDueToUnknownStoreType"}}</p>

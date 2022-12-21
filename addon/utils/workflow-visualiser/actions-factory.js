@@ -342,6 +342,8 @@ export default EmberObject.extend(OwnerInjector, {
       context: Object.assign({
         getStoreContentCallback: (...args) =>
           this.workflowDataProvider.getStoreContent(...args),
+        getTimeSeriesCollectionRefsMapCallback: (...args) =>
+          this.workflowDataProvider.getTimeSeriesCollectionReferencesMap(...args),
         storeContentPresenterContext: this.workflowDataProvider
           .getStoreContentPresenterContext(),
       }, context),
@@ -409,6 +411,8 @@ export default EmberObject.extend(OwnerInjector, {
       context: Object.assign({
         getTimeSeriesContentCallback: (...args) =>
           this.get('workflowDataProvider').getStoreContent(...args),
+        getTimeSeriesCollectionRefsMapCallback: (...args) =>
+          this.workflowDataProvider.getTimeSeriesCollectionReferencesMap(...args),
       }, context),
     });
   },

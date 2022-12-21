@@ -42,6 +42,13 @@ export default Action.extend({
   getTimeSeriesContentCallback: reads('context.getTimeSeriesContentCallback'),
 
   /**
+   * @type {ComputedProperty<() => AtmTimeSeriesCollectionReferencesMap>}
+   */
+  getTimeSeriesCollectionRefsMapCallback: reads(
+    'context.getTimeSeriesCollectionRefsMapCallback'
+  ),
+
+  /**
    * @override
    */
   onExecute() {
@@ -60,11 +67,14 @@ export default Action.extend({
     return modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
+        storeOwner: task,
         viewModeLayout: 'timeSeries',
         subjectName: this.t('subjectName', { taskName: get(task, 'name') }),
         store: timeSeriesStore,
         getStoreContentCallback: (...args) =>
           getTimeSeriesContentCallback(timeSeriesStore, ...args),
+        getTimeSeriesCollectionRefsMapCallback: (...args) =>
+          this.getTimeSeriesCollectionRefsMapCallback(...args),
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');
