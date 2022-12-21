@@ -14,9 +14,9 @@ export default Service.extend({
   navigationState: service(),
 
   /**
-   * Static definition of classes that need to be added to main-content when displaying
+   * Static definition of options that are used by main-content when displaying
    * specific aspects.
-   * Maps: resource type -> aspect -> options object
+   * Maps: resource type -> aspect -> MainContentViewOptions
    * @virtual optional
    * @type {Object}
    */
