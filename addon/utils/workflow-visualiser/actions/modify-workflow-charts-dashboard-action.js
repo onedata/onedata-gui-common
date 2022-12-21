@@ -8,8 +8,8 @@
 
 import Action from 'onedata-gui-common/utils/action';
 import ActionResult from 'onedata-gui-common/utils/action-result';
-import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import { or } from 'ember-awesome-macros';
 
 export default Action.extend({
   modalManager: service(),
@@ -32,7 +32,7 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
    */
-  workflow: reads('context.workflow'),
+  workflow: or('context.workflow.content', 'context.workflow'),
 
   /**
    * @override
@@ -44,7 +44,7 @@ export default Action.extend({
       mode: 'edit',
       dashboardOwnerType: 'workflow',
       dashboardSpec: this.workflow.dashboardSpec,
-      onSubmit: newDashboardSpec =>
+      onSubmit: (newDashboardSpec) =>
         result.interceptPromise(this.modifyWorkflowChartsDashboard(newDashboardSpec)),
     }).hiddenPromise;
 

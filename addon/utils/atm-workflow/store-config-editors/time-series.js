@@ -23,7 +23,6 @@ import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/f
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
-import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import {
   timeSeriesNameGeneratorTypes,
   timeSeriesStandardUnits,
@@ -32,6 +31,11 @@ import {
   timeSeriesMetricAggregators,
   translateTimeSeriesNameGeneratorType,
 } from 'onedata-gui-common/utils/time-series';
+import {
+  default as ChartsDashboardEditor,
+  formValuesToChartsDashboardSpec,
+  chartsDashboardSpecToFormValue
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import { Tag as MetricTag } from 'onedata-gui-common/components/tags-input/time-series-metric-selector-editor';
 
@@ -178,9 +182,8 @@ const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
   },
 });
 
-const dashboardSpecField = JsonField.extend({
+const dashboardSpecField = ChartsDashboardEditor.extend({
   name: 'dashboardSpec',
-  defaultValue: 'null',
 });
 
 /**
@@ -233,19 +236,11 @@ function formValuesToStoreConfig(values) {
       return rawTimeSeriesSchema;
     });
 
-  let parsedDashboardSpec;
-  try {
-    parsedDashboardSpec = (typeof dashboardSpec === 'string') && dashboardSpec ?
-      JSON.parse(dashboardSpec) : null;
-  } catch (err) {
-    parsedDashboardSpec = null;
-  }
-
   return {
     timeSeriesCollectionSchema: {
       timeSeriesSchemas,
     },
-    dashboardSpec: parsedDashboardSpec,
+    dashboardSpec: formValuesToChartsDashboardSpec(dashboardSpec),
   };
 }
 
@@ -260,11 +255,7 @@ function storeConfigToFormValues(storeConfig) {
   });
   const values = createValuesContainer({
     timeSeriesSchemas,
-    dashboardSpec: JSON.stringify(
-      storeConfig && storeConfig.dashboardSpec || null,
-      null,
-      2
-    ),
+    dashboardSpec: chartsDashboardSpecToFormValue(storeConfig?.dashboardSpec),
   });
 
   const rawTimeseriesSchemas =

@@ -32,4 +32,17 @@ export default EmberObject.extend({
    * @type {String}
    */
   status: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Workflow} workflow
+   * @param {Object} modifiedProps
+   * @returns {Promise}
+   */
+  onModify: undefined,
+
+  async modify(modifiedProps) {
+    return this.onModify?.(this, modifiedProps);
+  },
 });

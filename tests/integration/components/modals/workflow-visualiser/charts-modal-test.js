@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find, fillIn } from '@ember/test-helpers';
 import { lookupService } from '../../../../helpers/stub-service';
 import {
   getModal,
@@ -10,6 +10,7 @@ import {
   getModalBody,
   getModalFooter,
 } from '../../../../helpers/modal';
+import sinon from 'sinon';
 
 describe('Integration | Component | modals/workflow-visualiser/charts-modal', function () {
   setupRenderingTest();
@@ -68,6 +69,48 @@ describe('Integration | Component | modals/workflow-visualiser/charts-modal', fu
       expect(getModalBody().querySelector('.charts-visualisation')).to.not.exist;
       expect(getModalBody().querySelector('.charts-definition')).to.exist;
     });
+
+    it('shows dashboard definition content', async function () {
+      const dashboardSpec = this.set('modalOptions.dashboardSpec', {
+        rootSection: {
+          charts: [],
+        },
+      });
+      const stringifiedDashboardSpec = JSON.stringify(dashboardSpec, null, 2);
+
+      await showModal(this);
+
+      expect(find('textarea')).to.have.value(stringifiedDashboardSpec);
+    });
+
+    it('does not allow to save dashboard definition when it is incorrect', async function () {
+      const stringifiedDashboardSpec = '{';
+      const submitSpy = this.set('modalOptions.onSubmit', sinon.spy());
+
+      await showModal(this);
+
+      await fillIn('textarea', stringifiedDashboardSpec);
+      expect(find('.btn-submit')).to.have.attr('disabled');
+      await click('.btn-submit');
+      expect(submitSpy).to.not.have.been.called;
+    });
+
+    it('allows to save dashboard definition', async function () {
+      const dashboardSpec = {
+        rootSection: {
+          charts: [],
+        },
+      };
+      const stringifiedDashboardSpec = JSON.stringify(dashboardSpec, null, 2);
+      const submitSpy = this.set('modalOptions.onSubmit', sinon.spy());
+
+      await showModal(this);
+
+      await fillIn('textarea', stringifiedDashboardSpec);
+      await click('.btn-submit');
+      expect(submitSpy).to.have.been.calledOnce
+        .and.to.have.been.calledWith(sinon.match(dashboardSpec));
+    });
   });
 
   context('in "view" mode', function () {
@@ -101,6 +144,23 @@ describe('Integration | Component | modals/workflow-visualiser/charts-modal', fu
       expect(definitionTab.parentElement).to.have.class('active');
       expect(getModalBody().querySelector('.charts-visualisation')).to.not.exist;
       expect(getModalBody().querySelector('.charts-definition')).to.exist;
+    });
+
+    it('shows dashboard definition content in readonly editor', async function () {
+      const dashboardSpec = this.set('modalOptions.dashboardSpec', {
+        rootSection: {
+          charts: [],
+        },
+      });
+      const stringifiedDashboardSpec = JSON.stringify(dashboardSpec, null, 2);
+
+      await showModal(this);
+      const definitionTab = getTabs()[1];
+      await click(definitionTab);
+
+      const textarea = find('textarea');
+      expect(textarea).to.have.value(stringifiedDashboardSpec);
+      expect(textarea).to.have.attr('readonly');
     });
   });
 });
