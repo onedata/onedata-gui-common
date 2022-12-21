@@ -938,4 +938,10 @@ p.text-separated {
   width: 0.7em;
   height: 0.7em;
   font-size: 180%;
+  align-self: center;
+}
+
+.flippable-icons-with-text {
+  display: inline-flex;
+  align-items: baseline;
 }
