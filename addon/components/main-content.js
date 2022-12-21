@@ -14,10 +14,6 @@ export default Component.extend({
   classNames: ['main-content'],
   classNameBindings: ['mainContentViewOptions.className'],
 
-  /**
-   * Implementation of this service is optional. See usage in this file for interface.
-   * @type {Ember.Service}
-   */
   globalViewOptions: service(),
 
   resource: null,
