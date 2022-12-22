@@ -4,7 +4,7 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 describe('Integration | Component | one atlas', function () {
   setupRenderingTest();
@@ -31,11 +31,11 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    const atlas = $(find('.one-atlas'));
-    expect(atlas.width()).to.be.equal(size);
-    expect(atlas.height()).to.be.gt(0);
+    const atlas = find('.one-atlas');
+    expect(dom.width(atlas)).to.be.equal(size);
+    expect(dom.height(atlas)).to.be.gt(0);
     // map has horizontal layout
-    expect(atlas.height()).to.be.lt(size);
+    expect(dom.height(atlas)).to.be.lt(size);
   });
 
   it('fits to parent with horizontal layout', async function () {
@@ -48,10 +48,10 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    const atlas = $(find('.one-atlas'));
-    expect(atlas.height()).to.be.equal(height);
-    expect(atlas.width()).to.be.gt(0);
-    expect(atlas.width()).to.be.lt(width);
+    const atlas = find('.one-atlas');
+    expect(dom.height(atlas)).to.be.equal(height);
+    expect(dom.width(atlas)).to.be.gt(0);
+    expect(dom.width(atlas)).to.be.lt(width);
   });
 
   it('reacts to window resize', async function () {
@@ -63,15 +63,15 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    const atlas = $(find('.one-atlas'));
+    const atlas = find('.one-atlas');
     size = size / 2;
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     this.get('_window.resizeListener').call(null);
     await settled();
 
-    expect(atlas.width()).to.be.equal(size);
-    expect(atlas.height()).to.be.gt(0);
-    expect(atlas.height()).to.be.lt(size);
+    expect(dom.width(atlas)).to.be.equal(size);
+    expect(dom.height(atlas)).to.be.gt(0);
+    expect(dom.height(atlas)).to.be.lt(size);
   });
 
   it('displays Sydney point in the right down corner of the map',
@@ -90,12 +90,13 @@ describe('Integration | Component | one atlas', function () {
         </div>
       `);
 
-      const atlas = $(find('.one-atlas'));
-      const sydney = $(find('.sydney'));
+      const atlas = find('.one-atlas');
+      const sydney = find('.sydney');
       await settled();
 
-      expect(sydney.position().left).to.be.gt((atlas.width() / 4) * 3);
-      expect(sydney.position().top).to.be.gt(atlas.height() / 2);
+      const sydneyPos = dom.position(sydney);
+      expect(sydneyPos.left).to.be.gt((dom.width(atlas) / 4) * 3);
+      expect(sydneyPos.top).to.be.gt(dom.height(atlas) / 2);
     }
   );
 });

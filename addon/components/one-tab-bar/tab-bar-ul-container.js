@@ -54,7 +54,7 @@ export default Component.extend(ContentOverFlowdetector, {
    * @override implements ContentOverFlowdetector
    */
   overflowElement: computed('element', function overflowElement() {
-    return $(this.get('element').querySelector('.tab-bar-ul'));
+    return this.element?.querySelector('.tab-bar-ul');
   }),
 
   /**

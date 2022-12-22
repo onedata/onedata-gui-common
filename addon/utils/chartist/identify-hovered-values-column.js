@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 /**
  * @param {MouseEvent} event
@@ -16,8 +16,8 @@ import $ from 'jquery';
  * @returns {number} positive index if column has been found, -1 otherwise
  */
 export default function identifyHoveredValuesColumn(event, chart, _pointsColumnXPos) {
-  const chartContainer = $(chart.container);
-  const mouseX = event.pageX - chartContainer.offset().left;
+  const chartContainer = chart.container;
+  const mouseX = event.pageX - dom.offset(chartContainer).left;
   if (mouseX < _pointsColumnXPos[0] ||
     mouseX > _pointsColumnXPos[_pointsColumnXPos.length - 1] ||
     _pointsColumnXPos.length === 0) {
