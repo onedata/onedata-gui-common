@@ -1,0 +1,31 @@
+<div
+  class={{concat-classes 
+    "icon-container" 
+    (if isHovered "info-icon-container-hovered")
+    (if suppressFlipping "not-animation" "animation")
+  }}
+>
+  {{#if iconTag}}
+    {{#one-icon-tagged
+      class=(concat-classes "tag-right flippable-front" iconTaggedClass)
+      icon=iconName
+      iconClass=iconClass
+      tagIcon=iconTag
+      shadowType=shadowType
+    }}
+      {{#if iconTip}}
+        {{one-tooltip title=iconTip}}
+      {{/if}}
+    {{/one-icon-tagged}}
+  {{else}}
+    {{one-icon 
+      icon=iconName 
+      class=(concat-classes "flippable-front" iconClass) 
+      color=iconColor
+    }}
+    {{#if iconTip}}
+      {{one-tooltip title=iconTip}}
+    {{/if}}
+  {{/if}}
+  {{one-icon icon=backIconName class="flippable-back"}}
+</div>
