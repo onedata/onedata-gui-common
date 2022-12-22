@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { normalizeElementsArray } from './commons';
+import normalizeElementsArray from './internals/normalize-elements-array';
 
 /**
  * @param {HTMLElement|Array<HTMLElement>|NodeList<HTMLElement>} elementOrElements

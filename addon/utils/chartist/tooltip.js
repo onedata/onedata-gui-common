@@ -138,30 +138,32 @@ export default function tooltip(options) {
         const barNode = $(data.element._node);
 
         barNode.mouseover(() => {
-          const lastGroupNode = $(groupNode.parentElement.lastElementChild);
-          const lastGroupBar = $(lastGroupNode.children('line')[data.index]);
+          const lastGroupNode = groupNode.parentElement.lastElementChild;
+          const lastGroupBar =
+            lastGroupNode.querySelectorAll(':scope > line')[data.index];
+          const containerOffset = dom.offset(container[0]);
 
           // top position
           if (normalizedOptions.renderAboveBarDescription) {
-            const sumLabel = $(lastGroupNode.children('text')[data.index]);
+            const sumLabel = lastGroupNode.querySelectorAll(':scope > text')[data.index];
             dom.setStyle(
               tooltipNode,
               'top',
-              (sumLabel.offset().top - container.offset().top) + 'px'
+              (dom.offset(sumLabel).top - containerOffset.top) + 'px'
             );
           } else {
             dom.setStyle(
               tooltipNode,
               'top',
-              (lastGroupBar.offset().top - container.offset().top) + 'px'
+              (dom.offset(lastGroupBar).top - containerOffset.top) + 'px'
             );
           }
           // left position
-          const rect = lastGroupBar[0].getBoundingClientRect();
+          const rect = lastGroupBar.getBoundingClientRect();
           dom.setStyle(
             tooltipNode,
             'left',
-            (rect.left + rect.width / 2 - container.offset().left) + 'px'
+            (rect.left + rect.width / 2 - containerOffset.left) + 'px'
           );
 
           prepareTooltip(tooltipData, data);
@@ -172,31 +174,32 @@ export default function tooltip(options) {
         });
       }
       if (data.type === 'point' && normalizedOptions.chartType === 'line') {
-        const groupNode = $(data.group._node);
-        const pointNode = $(data.element._node);
+        const groupNode = data.group._node;
+        const pointNode = data.element._node;
         tooltipData = data.series?.tooltipElements?.[data.index] ?? tooltipData;
-        pointNode.mouseover(() => {
+        $(pointNode).mouseover(() => {
           // top position
-          const rect = pointNode[0].getBoundingClientRect();
+          const rect = pointNode.getBoundingClientRect();
+          const containerOffset = dom.offset(container[0]);
           if (normalizedOptions.renderAboveBarDescription) {
-            const sumLabel = $(groupNode.children('text')[data.index]);
+            const sumLabel = groupNode.querySelectorAll(':scope > text')[data.index];
             dom.setStyle(
               tooltipNode,
               'top',
-              (sumLabel.offset().top - container.offset().top) + 'px'
+              (dom.offset(sumLabel).top - containerOffset.top) + 'px'
             );
           } else {
             dom.setStyle(
               tooltipNode,
               'top',
-              (rect.top - container.offset().top) + 'px'
+              (rect.top - containerOffset.top) + 'px'
             );
           }
           // left position
           dom.setStyle(
             tooltipNode,
             'left',
-            (rect.left + rect.width / 2 - container.offset().left) + 'px'
+            (rect.left + rect.width / 2 - containerOffset.left) + 'px'
           );
 
           prepareTooltip(tooltipData, data);
@@ -212,10 +215,11 @@ export default function tooltip(options) {
         );
         tooltipData = data.series.tooltipElements;
         const sliceNode = $(data.element._node);
+        const containerOffset = dom.offset(container[0]);
         const showTooltip = (x, y) => {
           dom.setStyles(tooltipNode, {
-            top: (y - container.offset().top - 10) + 'px',
-            left: (x - container.offset().left) + 'px',
+            top: (y - containerOffset.top - 10) + 'px',
+            left: (x - containerOffset.left) + 'px',
           });
 
           prepareTooltip(tooltipData, data);

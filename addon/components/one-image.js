@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/one-image';
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 /**
  * Inserts an image with optional - dynamicly sized - text.
@@ -64,16 +64,12 @@ export default Component.extend({
   },
 
   _recalculateImageFontSize() {
-    const {
-      element,
-      imageText,
-    } = this.getProperties('element', 'imageText');
-    if (imageText) {
+    if (this.imageText) {
       // 10% of image width
-      const $image = $(element.querySelector('.image'));
-      if ($image.length) {
-        const fontSize = $image.width() * 0.10;
-        element.style.fontSize = `${fontSize}px`;
+      const image = this.element.querySelector('.image');
+      if (image) {
+        const fontSize = dom.width(image) * 0.10;
+        dom.setStyle(this.element, 'fontSize', `${fontSize}px`);
       }
     }
   },
