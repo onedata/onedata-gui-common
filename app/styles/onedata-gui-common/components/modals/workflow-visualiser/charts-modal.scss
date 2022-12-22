@@ -1,0 +1,19 @@
+.charts-modal {
+  .representation-tabs {
+    margin-bottom: 1em;
+  }
+
+  .charts-definition {
+    &,
+    .fields-group-collapse,
+    .fields-group-children,
+    .field-component,
+    .json-editor {
+      @include fill-flex-using-column;
+    }
+
+    textarea {
+      height: 100%;
+    }
+  }
+}

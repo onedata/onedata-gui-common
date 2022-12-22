@@ -78,6 +78,23 @@ export default Component.extend(I18n, {
   dashboardSpec: reads('modalOptions.dashboardSpec'),
 
   /**
+   * @type {ComputedProperty<ObjectProxy<boolean>>}
+   */
+  isLiveProxy: reads('modalOptions.isLiveProxy'),
+
+  /**
+   * @type {ComputedProperty<(store: Utils.WorkflowVisualiser.Store, browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>>}
+   */
+  getStoreContentCallback: reads('modalOptions.getStoreContentCallback'),
+
+  /**
+   * @type {ComputedProperty<() => AtmTimeSeriesCollectionReferencesMap>}
+   */
+  getTimeSeriesCollectionRefsMapCallback: reads(
+    'modalOptions.getTimeSeriesCollectionRefsMapCallback'
+  ),
+
+  /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
   definitionFieldsRootGroup: computed(function definitionFieldsRootGroup() {

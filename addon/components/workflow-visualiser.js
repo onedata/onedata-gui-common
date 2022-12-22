@@ -257,7 +257,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
    */
-  workflow: computed('executionState', function workflow() {
+  workflow: computed('rawData', 'executionState', function workflow() {
     return this.getWorkflow();
   }),
 
@@ -385,6 +385,20 @@ export default Component.extend(I18n, WindowResizeHandler, {
   viewAuditLogAction: computed('actionsFactory', function viewAuditLogAction() {
     return this.get('actionsFactory').createViewWorkflowAuditLogAction();
   }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  openWorkflowChartsDashboardAction: computed(
+    'mode',
+    function openWorkflowChartsDashboardAction() {
+      if (this.mode === 'view') {
+        return this.actionsFactory.createViewWorkflowChartsDashboardAction();
+      } else {
+        return this.actionsFactory.createModifyWorkflowChartsDashboardAction();
+      }
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Array<Utils.Action>>}
@@ -650,6 +664,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         instanceId,
         systemAuditLogStore,
         status,
+        dashboardSpec: this.rawData?.dashboardSpec ?? null,
       });
       return existingWorkflow;
     } else {
@@ -657,6 +672,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
         instanceId,
         systemAuditLogStore,
         status,
+        dashboardSpec: this.rawData?.dashboardSpec ?? null,
+        onModify: (workflow, modifiedProps) =>
+          this.modifyElement(workflow, modifiedProps),
       });
       this.addElementToCache('workflow', newWorkflow);
 
@@ -1468,7 +1486,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     const elementType = get(element, '__modelType');
-    if (elementType === 'store') {
+    if (elementType === 'workflow') {
+      return rawDump;
+    } else if (elementType === 'store') {
       return (rawDump.stores || []).findBy('id', get(element, 'id'));
     } else {
       const elementPath = [];

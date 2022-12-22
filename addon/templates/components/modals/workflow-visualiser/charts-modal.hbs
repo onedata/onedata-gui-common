@@ -17,9 +17,12 @@
   {{/modal.header}}
 
   {{#modal.body}}
-    {{#bs-tab customTabs=true class="bs-tab-onedata bs-tab-modern" as |tab|}}
+    {{#bs-tab
+      customTabs=true
+      class="bs-tab-onedata bs-tab-modern fill-flex-using-column"
+    as |tab|}}
       {{#if (eq mode "view")}}
-        {{#bs-nav type="tabs" as |nav|}}
+        {{#bs-nav class="representation-tabs" type="tabs" as |nav|}}
           {{#nav.item active=(eq activeTab "visualisation")}}
             <a class="nav-link" role="tab" {{action (mut activeTab) "visualisation"}}>
               {{tt this "tabs.visualisation.title"}}
@@ -32,15 +35,20 @@
           {{/nav.item}}
         {{/bs-nav}}
       {{/if}}
-      {{#tab.pane}}
-        {{#if (eq activeTab "visualisation")}}
-          <div class="charts-visualisation"></div>
-        {{else}}
-          <form class="charts-definition form form-horizontal form-component">
-            {{form-component/field-renderer field=definitionFieldsRootGroup}}
-          </form>
-        {{/if}}
-      {{/tab.pane}}
+      {{#if (eq activeTab "visualisation")}}
+        {{workflow-visualiser/charts-presenter
+          class="charts-visualisation"
+          dashboardSpec=dashboardSpec
+          onGetStoreContent=getStoreContentCallback
+          onGetTimeSeriesCollectionRefsMap=getTimeSeriesCollectionRefsMapCallback
+          live=isLiveProxy.content
+        }}
+        <div class="charts-visualisation"></div>
+      {{else}}
+        <form class="charts-definition form form-horizontal form-component">
+          {{form-component/field-renderer field=definitionFieldsRootGroup}}
+        </form>
+      {{/if}}
     {{/bs-tab}}
   {{/modal.body}}
 

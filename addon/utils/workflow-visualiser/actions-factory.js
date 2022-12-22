@@ -46,6 +46,7 @@ import RetryLaneAction from 'onedata-gui-common/utils/workflow-visualiser/action
 import RerunLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/rerun-lane-action';
 import ViewTaskPodsActivityAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-task-pods-activity-action';
 import ModifyWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-workflow-charts-dashboard-action';
+import ViewWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-charts-dashboard-action';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default EmberObject.extend(OwnerInjector, {
@@ -476,15 +477,30 @@ export default EmberObject.extend(OwnerInjector, {
   },
 
   /**
-   * @param {Utils.WorkflowVisualiser.Workflow} context.workflow
    * @returns {Utils.WorkflowVisualiser.Actions.ModifyWorkflowChartsDashboardAction}
    */
-  createModifyWorkflowChartsDashboardAction(context) {
+  createModifyWorkflowChartsDashboardAction() {
     return ModifyWorkflowChartsDashboardAction.create({
       ownerSource: this,
-      context: Object.assign({
+      context: {
         workflow: this.getWorkflowProxy(),
-      }, context),
+      },
+    });
+  },
+
+  /**
+   * @returns {Utils.WorkflowVisualiser.Actions.ViewWorkflowChartsDashboardAction}
+   */
+  createViewWorkflowChartsDashboardAction() {
+    return ViewWorkflowChartsDashboardAction.create({
+      ownerSource: this,
+      context: {
+        workflow: this.getWorkflowProxy(),
+        getStoreContentCallback: (...args) =>
+          this.workflowDataProvider.getStoreContent(...args),
+        getTimeSeriesCollectionRefsMapCallback: (...args) =>
+          this.workflowDataProvider.getTimeSeriesCollectionReferencesMap(...args),
+      },
     });
   },
 

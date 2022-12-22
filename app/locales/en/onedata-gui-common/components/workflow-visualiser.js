@@ -8,6 +8,9 @@ export default {
       modifyWorkflowChartsDashboard: {
         title: 'Charts',
       },
+      viewWorkflowChartsDashboard: {
+        title: 'Charts',
+      },
     },
   },
   lane: {
