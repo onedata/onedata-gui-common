@@ -1,0 +1,49 @@
+.flippable-icons {
+  --width: 0.7em;
+  --height: 0.7em;
+
+  $transition-time: 0.5s;
+  // a hack to set a stacking context to fix issues in Safari/WebKit
+  perspective: 100px;
+  background-color: transparent;
+  width: inherit;
+  height: inherit;
+
+  .icon-container {
+    --transform-translate: calc((1em - var(--width)) * -0.5);
+    --transform-translate-y: calc((1em - var(--height)) * -0.6);
+    width: inherit;
+    height: inherit;
+    transition: transform $transition-time;
+    transform-style: preserve-3d;
+    // a hack to prevent visibility backface to fix issues in Firefox
+    -moz-backface-visibility: hidden;
+
+    .flippable-back, .flippable-front {
+      position: absolute;
+      top: 0;
+      transform: translate(var(--transform-translate), var(--transform-translate-y));
+    }
+  
+    .flippable-front {
+      // for Safari <= 15.3
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+  
+    .flippable-back {
+      opacity: 0;
+      transition: opacity $transition-time;
+      transform: rotateY(180deg) translate(calc(-1 * var(--transform-translate)), var(--transform-translate-y));
+    }
+  }
+
+  .icon-container {
+    &.info-icon-container-hovered.animation, &.not-animation {
+      transform: rotateY(180deg);
+      .flippable-back {
+        opacity: 1;
+      }
+    }
+  }
+}
