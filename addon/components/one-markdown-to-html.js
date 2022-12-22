@@ -24,7 +24,7 @@ export const defaultOptions = Object.freeze({
 
 export default Component.extend({
   layout,
-  classNames: ['one-markdown-to-html'],
+  classNames: ['one-markdown-to-html', 'rendered-markdown'],
 
   /**
    * A Markdown-formatted text to show converted to HTML
