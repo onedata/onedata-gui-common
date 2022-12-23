@@ -6,7 +6,7 @@ import { find, fillIn, render } from '@ember/test-helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import {
   default as ChartsDashboardEditor,
-  formValuesToChartsDashboardSpec,
+  formValueToChartsDashboardSpec,
   chartsDashboardSpecToFormValue
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import { set } from '@ember/object';
@@ -105,5 +105,5 @@ function getRenderedValue() {
 }
 
 function getJsValue(testCase) {
-  return formValuesToChartsDashboardSpec(testCase.rootGroup.dumpValue().dashboardSpec);
+  return formValueToChartsDashboardSpec(testCase.rootGroup.dumpValue().dashboardSpec);
 }

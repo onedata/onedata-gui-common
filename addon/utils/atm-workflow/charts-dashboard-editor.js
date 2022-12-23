@@ -19,7 +19,7 @@ export default JsonField.extend({
  * @param {string} formValue
  * @returns {AtmTimeSeriesDashboardSpec|null}
  */
-export function formValuesToChartsDashboardSpec(formValue) {
+export function formValueToChartsDashboardSpec(formValue) {
   try {
     return (typeof formValue === 'string') && formValue ? JSON.parse(formValue) : null;
   } catch (err) {

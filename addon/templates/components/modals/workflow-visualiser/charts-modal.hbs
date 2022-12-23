@@ -20,7 +20,8 @@
     {{#bs-tab
       customTabs=true
       class="bs-tab-onedata bs-tab-modern fill-flex-using-column"
-    as |tab|}}
+      as |tab|
+    }}
       {{#if (eq mode "view")}}
         {{#bs-nav class="representation-tabs" type="tabs" as |nav|}}
           {{#nav.item active=(eq activeTab "visualisation")}}

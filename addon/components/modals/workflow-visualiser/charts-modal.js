@@ -16,7 +16,7 @@ import { trySet, set, observer } from '@ember/object';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import {
   default as ChartsDashboardEditor,
-  formValuesToChartsDashboardSpec,
+  formValueToChartsDashboardSpec,
   chartsDashboardSpecToFormValue
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import { tag, not } from 'ember-awesome-macros';
@@ -26,6 +26,9 @@ import { tag, not } from 'ember-awesome-macros';
  * @property {'edit'|'view'} mode
  * @property {'lane'|'workflow'} dashboardOwnerType
  * @property {AtmTimeSeriesDashboardSpec|null} dashboardSpec
+ * @property {ObjectProxy<boolean>} isLiveProxy Needed only in `view` mode
+ * @property {(store: Utils.WorkflowVisualiser.Store, browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>} getStoreContentCallback Needed only in `view` mode
+ * @property {() => AtmTimeSeriesCollectionReferencesMap} getTimeSeriesCollectionRefsMapCallback Needed only in `view` mode
  */
 
 export default Component.extend(I18n, {
@@ -128,7 +131,7 @@ export default Component.extend(I18n, {
   actions: {
     async submit(submitCallback) {
       this.set('isSubmitting', true);
-      const newDashboardSpec = formValuesToChartsDashboardSpec(
+      const newDashboardSpec = formValueToChartsDashboardSpec(
         this.definitionFieldsRootGroup.dumpValue()?.dashboardSpec
       );
       try {

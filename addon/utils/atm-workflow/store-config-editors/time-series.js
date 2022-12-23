@@ -33,7 +33,7 @@ import {
 } from 'onedata-gui-common/utils/time-series';
 import {
   default as ChartsDashboardEditor,
-  formValuesToChartsDashboardSpec,
+  formValueToChartsDashboardSpec,
   chartsDashboardSpecToFormValue
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
@@ -240,7 +240,7 @@ function formValuesToStoreConfig(values) {
     timeSeriesCollectionSchema: {
       timeSeriesSchemas,
     },
-    dashboardSpec: formValuesToChartsDashboardSpec(dashboardSpec),
+    dashboardSpec: formValueToChartsDashboardSpec(dashboardSpec),
   };
 }
 

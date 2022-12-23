@@ -74,7 +74,7 @@ export default Action.extend({
         getStoreContentCallback: (...args) =>
           getTimeSeriesContentCallback(timeSeriesStore, ...args),
         getTimeSeriesCollectionRefsMapCallback: (...args) =>
-          this.getTimeSeriesCollectionRefsMapCallback(...args),
+          this.getTimeSeriesCollectionRefsMapCallback(task.visibleRunNumber, ...args),
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');
