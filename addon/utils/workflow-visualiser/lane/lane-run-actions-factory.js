@@ -37,6 +37,7 @@ export default EmberObject.extend({
 
     return [
       this.createViewFailedItemsAction(runNumber),
+      this.createViewLaneChartsDashboardAction(runNumber),
       this.createRetryAction(runNumber),
       this.createRerunAction(runNumber),
     ];
@@ -53,6 +54,18 @@ export default EmberObject.extend({
       lane,
     } = this.getProperties('actionsFactory', 'lane');
     return actionsFactory.createViewLaneFailedItemsAction({ lane, runNumber });
+  },
+
+  /**
+   * @private
+   * @param {AtmLaneRunNumber} runNumber
+   * @returns {Utils.Action}
+   */
+  createViewLaneChartsDashboardAction(runNumber) {
+    return this.actionsFactory.createViewLaneChartsDashboardAction({
+      lane: this.lane,
+      runNumber,
+    });
   },
 
   /**

@@ -47,6 +47,8 @@ import RerunLaneAction from 'onedata-gui-common/utils/workflow-visualiser/action
 import ViewTaskPodsActivityAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-task-pods-activity-action';
 import ModifyWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-workflow-charts-dashboard-action';
 import ViewWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-charts-dashboard-action';
+import ModifyLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-charts-dashboard-action';
+import ViewLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-charts-dashboard-action';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default EmberObject.extend(OwnerInjector, {
@@ -501,6 +503,34 @@ export default EmberObject.extend(OwnerInjector, {
         getTimeSeriesCollectionRefsMapCallback: (...args) =>
           this.workflowDataProvider.getTimeSeriesCollectionReferencesMap(...args),
       },
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} context.lane
+   * @returns {Utils.WorkflowVisualiser.Actions.ModifyLaneChartsDashboardAction}
+   */
+  createModifyLaneChartsDashboardAction(context) {
+    return ModifyLaneChartsDashboardAction.create({
+      ownerSource: this,
+      context,
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} context.lane
+   * @param {AtmLaneRunNumber} context.runNumber
+   * @returns {Utils.WorkflowVisualiser.Actions.ViewLaneChartsDashboardAction}
+   */
+  createViewLaneChartsDashboardAction(context) {
+    return ViewLaneChartsDashboardAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        getStoreContentCallback: (...args) =>
+          this.workflowDataProvider.getStoreContent(...args),
+        getTimeSeriesCollectionRefsMapCallback: (...args) =>
+          this.workflowDataProvider.getTimeSeriesCollectionReferencesMap(...args),
+      }, context),
     });
   },
 

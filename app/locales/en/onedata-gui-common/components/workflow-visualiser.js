@@ -75,6 +75,12 @@ export default {
           unknownReason: 'Rerun of this lane run is not possible.',
         },
       },
+      modifyLaneChartsDashboard: {
+        title: 'Define charts',
+      },
+      viewLaneChartsDashboard: {
+        title: 'View charts',
+      },
     },
     runIndicator: {
       runType: {

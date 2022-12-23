@@ -785,13 +785,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
       maxRetries,
       storeIteratorSpec,
       parallelBoxes: rawParallelBoxes,
+      dashboardSpec,
     } = getProperties(
       laneRawData,
       'id',
       'name',
       'maxRetries',
       'storeIteratorSpec',
-      'parallelBoxes'
+      'parallelBoxes',
+      'dashboardSpec'
     );
     const iteratedStoreSchemaId = get(storeIteratorSpec || {}, 'storeSchemaId');
     const normalizedRunsRegistry = {};
@@ -865,6 +867,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         maxRetries,
         storeIteratorSpec,
+        dashboardSpec,
         runsRegistry: normalizedRunsRegistry,
         visibleRunNumber,
         visibleRunsPosition,
@@ -883,6 +886,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         maxRetries,
         storeIteratorSpec,
+        dashboardSpec,
         runsRegistry: normalizedRunsRegistry,
         visibleRunNumber: newestRunNumber,
         visibleRunsPosition: {

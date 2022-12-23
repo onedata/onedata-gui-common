@@ -24,6 +24,10 @@ const editLaneActionsSpec = [{
   label: 'Modify',
   icon: 'rename',
 }, {
+  className: 'modify-lane-charts-dashboard-action-trigger',
+  label: 'Define charts',
+  icon: 'overview',
+}, {
   className: 'move-left-lane-action-trigger',
   label: 'Move left',
   icon: 'move-left',
