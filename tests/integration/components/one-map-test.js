@@ -6,11 +6,10 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import _ from 'lodash';
 import dom from 'onedata-gui-common/utils/dom';
-import $ from 'jquery';
 
-function getRelativePosition($parent, $child) {
-  const pPosition = $parent.position();
-  const cPosition = $child.position();
+function getRelativePosition(parent, child) {
+  const pPosition = dom.offset(parent);
+  const cPosition = dom.offset(child);
   return {
     left: cPosition.left - pPosition.left,
     top: cPosition.top - pPosition.top,
@@ -18,17 +17,16 @@ function getRelativePosition($parent, $child) {
 }
 
 function isElementVisible(child) {
-  const $child = $(child);
-  const $parent = $(find('svg'));
-  const relativePosition = getRelativePosition($parent, $child);
+  const parent = find('svg');
+  const relativePosition = getRelativePosition(parent, child);
   // -1 because of some subpixel malfunctions
   return relativePosition.top > -1 && relativePosition.left > -1 &&
-    relativePosition.left + $child.width() <= $parent.width() &&
-    relativePosition.top + $child.height() < $parent.height();
+    relativePosition.left + dom.width(child) <= dom.width(parent) &&
+    relativePosition.top + dom.height(child) < dom.height(parent);
 }
 
 function getMapObject() {
-  return $(find('.one-map-container')).vectorMap('get', 'mapObject');
+  return find('.one-map-container').mapInstance;
 }
 
 describe('Integration | Component | one map', function () {

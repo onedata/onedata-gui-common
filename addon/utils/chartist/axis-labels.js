@@ -14,7 +14,7 @@
  */
 
 /* global Chartist */
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 export default function axisLabels(options) {
   const defaultOptions = {
@@ -35,17 +35,19 @@ export default function axisLabels(options) {
         normalizedOptions.xLabel = dataAxisLabels.xLabel;
         normalizedOptions.yLabel = dataAxisLabels.yLabel;
       }
-      const svgNode = $(chart.svg._node);
+      const svgNode = chart.svg._node;
+      const svgWidth = dom.width(svgNode, dom.LayoutBox.PaddingBox);
+      const svgHeight = dom.height(svgNode, dom.LayoutBox.PaddingBox);
       const axisLabelsGroup = chart.svg.elem('g', {}, 'ct-axis-labels');
       axisLabelsGroup.elem('text', {
         x: (normalizedOptions.yAlignment === 'right' ? -1 : 1) *
-          (-svgNode.innerHeight() / 2 + normalizedOptions.yLabelYOffset),
-        y: normalizedOptions.yAlignment === 'right' ? -svgNode.innerWidth() -
+          (-svgHeight / 2 + normalizedOptions.yLabelYOffset),
+        y: normalizedOptions.yAlignment === 'right' ? -svgWidth -
           normalizedOptions.yLabelXOffset : normalizedOptions.yLabelXOffset,
       }, 'ct-axis-y-label ' + normalizedOptions.yAlignment).text(normalizedOptions.yLabel);
       axisLabelsGroup.elem('text', {
-        x: svgNode.innerWidth() / 2 + normalizedOptions.xLabelXOffset,
-        y: svgNode.innerHeight() + normalizedOptions.xLabelYOffset,
+        x: svgWidth / 2 + normalizedOptions.xLabelXOffset,
+        y: svgHeight + normalizedOptions.xLabelYOffset,
       }, 'ct-axis-x-label').text(normalizedOptions.xLabel);
     });
   };

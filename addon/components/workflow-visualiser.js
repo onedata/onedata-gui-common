@@ -118,7 +118,7 @@ import {
 } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 import { typeOf } from '@ember/utils';
-import $ from 'jquery';
+import dom from 'onedata-gui-common/utils/dom';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
@@ -208,6 +208,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {Utils.Action}
    */
   cancelExecutionAction: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Utils.Action}
+   */
+  removeExecutionAction: undefined,
 
   /**
    * @type {Utils.Looper}
@@ -351,8 +357,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<Function>}
    */
   lifecycleChangingActionHook: computed(function lifecycleChangingActionHook() {
-    return async result => {
-      if (!result || get(result, 'status') !== 'done') {
+    return async (result, action) => {
+      if (result?.status !== 'done' || action === this.removeExecutionAction) {
         return;
       }
       try {
@@ -404,12 +410,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
   executionActions: computed(
-    'workflow.status',
+    'isExecutionEnded',
+    'isExecutionSuspended',
     'copyInstanceIdAction',
     'viewAuditLogAction',
     'lifecycleChangingActionHook',
     'pauseResumeExecutionAction',
     'cancelExecutionAction',
+    'removeExecutionAction',
     function executionActions() {
       const actions = [this.copyInstanceIdAction, this.viewAuditLogAction];
 
@@ -424,6 +432,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
           this.normalizeLifecycleChangingAction(this.cancelExecutionAction);
         if (cancelExecutionAction) {
           actions.push(cancelExecutionAction);
+        }
+      }
+      if (this.isExecutionEnded || this.isExecutionSuspended) {
+        const removeExecutionAction =
+          this.normalizeLifecycleChangingAction(this.removeExecutionAction);
+        if (removeExecutionAction) {
+          actions.push(removeExecutionAction);
         }
       }
 
@@ -550,28 +565,22 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   detectHorizontalOverflow() {
-    const element = this.get('element');
-    if (!element) {
-      return;
-    }
-    const $element = $(element);
-
     // Scrolling is not pixel-perfect. Without that epsilon test cases break down.
     const checksPxEpsilon = 1;
 
-    const $lanesContainer = $element.find('.visualiser-elements');
-    if (!$lanesContainer.length) {
+    const lanesContainer = this.element?.querySelector('.visualiser-elements');
+    if (!lanesContainer) {
       return;
     }
-    const viewOffset = $lanesContainer.offset().left;
-    const viewWidth = $lanesContainer.width();
+    const viewOffset = dom.offset(lanesContainer).left;
+    const viewWidth = dom.width(lanesContainer);
 
-    const $lanes = $element.find('.workflow-visualiser-lane');
-    const lanesOffset = $lanes.map(idx => $lanes.eq(idx).offset().left);
-    const lanesWidth = $lanes.map(idx => $lanes.eq(idx).width());
+    const lanes = [...this.element.querySelectorAll('.workflow-visualiser-lane')];
+    const lanesOffset = lanes.map((lane) => dom.offset(lane).left);
+    const lanesWidth = lanes.map((lane) => dom.width(lane));
 
     let laneIdxForNextLeftScroll = null;
-    for (let i = 0; i < $lanes.length; i++) {
+    for (let i = 0; i < lanes.length; i++) {
       if (viewOffset - lanesOffset[i] <= checksPxEpsilon) {
         break;
       }
@@ -579,7 +588,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     let laneIdxForNextRightScroll = null;
-    for (let i = $lanes.length - 1; i >= 0; i--) {
+    for (let i = lanes.length - 1; i >= 0; i--) {
       if (lanesOffset[i] + lanesWidth[i] - (viewOffset + viewWidth) <= checksPxEpsilon) {
         break;
       }
@@ -600,24 +609,26 @@ export default Component.extend(I18n, WindowResizeHandler, {
     if (laneIdx === null) {
       return;
     }
-    const $element = $(this.get('element'));
 
-    const $lanesContainer = $element.find('.visualiser-elements');
-    const viewOffset = $lanesContainer.offset().left;
-    const viewWidth = $lanesContainer.width();
-    const viewScroll = $lanesContainer.scrollLeft();
+    const lanesContainer = this.element.querySelector('.visualiser-elements');
+    if (!lanesContainer) {
+      return;
+    }
+    const viewOffset = dom.offset(lanesContainer).left;
+    const viewWidth = dom.width(lanesContainer);
+    const viewScroll = lanesContainer.scrollLeft;
 
-    const $lanes = $element.find('.workflow-visualiser-lane');
+    const lanes = [...this.element.querySelectorAll('.workflow-visualiser-lane')];
 
     let scrollPosition;
     if (laneIdx <= 0) {
       scrollPosition = 0;
-    } else if (laneIdx >= $lanes.length - 1) {
-      scrollPosition = $lanesContainer.prop('scrollWidth');
+    } else if (laneIdx >= lanes.length - 1) {
+      scrollPosition = lanesContainer.scrollWidth;
     } else {
-      const $targetLane = $lanes.eq(laneIdx);
-      const targetLaneOffset = $targetLane.offset().left;
-      const targetLaneWidth = $targetLane.width();
+      const targetLane = lanes[laneIdx];
+      const targetLaneOffset = dom.offset(targetLane).left;
+      const targetLaneWidth = dom.width(targetLane);
       let pxToScroll;
       if (edge === 'left') {
         pxToScroll = targetLaneOffset - viewOffset;
@@ -627,7 +638,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       scrollPosition = viewScroll + pxToScroll;
     }
 
-    $lanesContainer[0].scroll({
+    lanesContainer.scroll({
       left: scrollPosition,
       behavior: isInTestingEnv ? 'auto' : 'smooth',
     });
