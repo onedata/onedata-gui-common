@@ -39,6 +39,7 @@ import HiddenField from 'onedata-gui-common/utils/form-component/hidden-field';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
+import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-field';
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
@@ -358,10 +359,12 @@ export default Component.extend(I18n, {
       classes: 'task-form-section',
       addColonToLabel: false,
       name: 'details',
-      fields: [TextField.create({
-        component: this,
-        name: 'name',
-      })],
+      fields: [
+        ClipboardField.extend({
+          isVisible: notEmpty('value'),
+        }).create({ name: 'schemaId' }),
+        TextField.create({ name: 'name' }),
+      ],
     });
   }),
 
@@ -796,6 +799,7 @@ export default Component.extend(I18n, {
 
 function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
   const {
+    schemaId,
     name,
     argumentMappings,
     resultMappings,
@@ -803,6 +807,7 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
     timeSeriesStoreConfig,
   } = getProperties(
     task || {},
+    'schemaId',
     'name',
     'argumentMappings',
     'resultMappings',
@@ -830,6 +835,7 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
     atmLambdaRevisionNumber: atmLambdaRevisionNumber,
   });
   const detailsSection = createValuesContainer({
+    schemaId,
     name: name || atmLambdaName,
   });
 
