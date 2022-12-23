@@ -829,11 +829,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const existingLane = this.getCachedElement('lane', { id });
 
     if (existingLane) {
-      const elements = this.getLaneElementsForRawData(
-        'parallelBox',
-        rawParallelBoxes,
-        existingLane
-      );
       const {
         runsRegistry: prevRunsRegistry,
         visibleRunNumber: prevVisibleRunNumber,
@@ -871,8 +866,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
         runsRegistry: normalizedRunsRegistry,
         visibleRunNumber,
         visibleRunsPosition,
-        elements,
       });
+      const elements = this.getLaneElementsForRawData(
+        'parallelBox',
+        rawParallelBoxes,
+        existingLane
+      );
+      this.updateElement(existingLane, { elements });
       return existingLane;
     } else {
       const {
@@ -980,17 +980,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     const existingParallelBox = this.getCachedElement('parallelBox', { id });
     if (existingParallelBox) {
+      this.updateElement(existingParallelBox, {
+        name,
+        parent,
+        runsRegistry: normalizedRunsRegistry,
+      });
       const elements = this.getLaneElementsForRawData(
         'task',
         rawTasks,
         existingParallelBox
       );
-      this.updateElement(existingParallelBox, {
-        name,
-        parent,
-        elements,
-        runsRegistry: normalizedRunsRegistry,
-      });
+      this.updateElement(existingParallelBox, { elements });
       return existingParallelBox;
     } else {
       const {
