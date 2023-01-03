@@ -782,8 +782,8 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       color: null,
       groupId: null,
       data: [
-        point(18, null, { oldest: true, fake: true }),
-        point(20, 2, { oldest: true, newest: true }),
+        point(18, null, { pointDuration: 2, oldest: true, fake: true }),
+        point(20, 2, { pointDuration: 2, oldest: true, newest: true }),
       ],
     }]);
   });
@@ -867,8 +867,8 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       color: null,
       groupId: null,
       data: [
-        point(18, null, { oldest: true, fake: true }),
-        point(20, 2, { oldest: true, newest: true }),
+        point(18, null, { pointDuration: 2, oldest: true, fake: true }),
+        point(20, 2, { pointDuration: 2, oldest: true, newest: true }),
       ],
     })));
   });
@@ -999,8 +999,8 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       color: '#ff0000',
       groupId: 'stack1',
       data: [
-        point(18, null, { oldest: true, fake: true }),
-        point(20, 2, { oldest: true, newest: true }),
+        point(18, null, { pointDuration: 2, oldest: true, fake: true }),
+        point(20, 2, { pointDuration: 2, oldest: true, newest: true }),
       ],
     }]);
   });
@@ -1055,8 +1055,8 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       color: null,
       groupId: null,
       data: [
-        point(18, null, { oldest: true, fake: true }),
-        point(20, 2, { oldest: true, newest: true }),
+        point(18, null, { pointDuration: 2, oldest: true, fake: true }),
+        point(20, 2, { pointDuration: 2, oldest: true, newest: true }),
       ],
     }]);
   });
@@ -1161,8 +1161,8 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       color: '#ff0000',
       groupId: 'stack1',
       data: [
-        point(18, null, { oldest: true, fake: true }),
-        point(20, 2, { oldest: true, newest: true }),
+        point(18, null, { pointDuration: 2, oldest: true, fake: true }),
+        point(20, 2, { pointDuration: 2, oldest: true, newest: true }),
       ],
     }]);
   });
@@ -1232,7 +1232,10 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       yAxisId: 'a1',
       color: null,
       groupId: null,
-      data: [point(18, 3, { oldest: true }), point(20, 6, { newest: true })],
+      data: [
+        point(18, 3, { pointDuration: 2, oldest: true }),
+        point(20, 6, { pointDuration: 2, newest: true }),
+      ],
     }]);
   });
 
@@ -1262,12 +1265,12 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
     expect(state.series).to.deep.equal([
       dummyStaticSeriesFactoryState(1, [
-        point(18, null, { oldest: true, fake: true }),
-        point(20, 2, { oldest: true, newest: true }),
+        point(18, null, { pointDuration: 2, oldest: true, fake: true }),
+        point(20, 2, { pointDuration: 2, oldest: true, newest: true }),
       ]),
       dummyStaticSeriesFactoryState(2, [
-        point(18, 1, { oldest: true, newest: true }),
-        point(20, null, { newest: true, fake: true }),
+        point(18, 1, { pointDuration: 2, oldest: true, newest: true }),
+        point(20, null, { pointDuration: 2, newest: true, fake: true }),
       ]),
     ]);
   });
@@ -1308,9 +1311,9 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
     expect(state.series).to.deep.equal([
       dummyStaticSeriesFactoryState(1, [
-        point(16, 0, { oldest: true }),
-        point(18, 1),
-        point(20, 2, { newest: true }),
+        point(16, 0, { pointDuration: 2, oldest: true }),
+        point(18, 1, { pointDuration: 2 }),
+        point(20, 2, { pointDuration: 2, lastMeasurementTimestamp: 20, newest: true }),
       ]),
     ]);
   });
@@ -1352,9 +1355,13 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
         expect(state.series).to.deep.equal([
           dummyStaticSeriesFactoryState(1, [
-            point(nowTimestamp - 12, 1, { oldest: true }),
-            point(nowTimestamp - 11, 2, { newest: true }),
-            point(nowTimestamp - 10, null, { newest: true, fake: true }),
+            point(nowTimestamp - 12, 1, { pointDuration: 1, oldest: true }),
+            point(nowTimestamp - 11, 2, { pointDuration: 1, newest: true }),
+            point(nowTimestamp - 10, null, {
+              pointDuration: 1,
+              newest: true,
+              fake: true,
+            }),
           ]),
         ]);
         expect(state.newestPointTimestamp).to.be.null;
@@ -1421,14 +1428,14 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
         expect(state.series).to.deep.equal([
           dummyStaticSeriesFactoryState(1, [
-            point(18, null, { oldest: true, fake: true }),
-            point(19, 1, { oldest: true }),
-            point(20, 2, { newest: true }),
+            point(18, null, { pointDuration: 1, oldest: true, fake: true }),
+            point(19, 1, { pointDuration: 1, oldest: true }),
+            point(20, 2, { pointDuration: 1, newest: true }),
           ]),
           dummyStaticSeriesFactoryState(2, [
-            point(18, 3, { oldest: true }),
-            point(19, 4, { newest: true }),
-            point(20, null, { newest: true, fake: true }),
+            point(18, 3, { pointDuration: 1, oldest: true }),
+            point(19, 4, { pointDuration: 1, newest: true }),
+            point(20, null, { pointDuration: 1, newest: true, fake: true }),
           ]),
         ]);
         expect(state.newestPointTimestamp).to.equal(20);
@@ -1480,9 +1487,9 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
         expect(state.series).to.deep.equal([
           dummyStaticSeriesFactoryState(1, [
-            point(17, null, { oldest: true, fake: true }),
-            point(18, null, { oldest: true, fake: true }),
-            point(19, 1, { oldest: true }),
+            point(17, null, { pointDuration: 1, oldest: true, fake: true }),
+            point(18, null, { pointDuration: 1, oldest: true, fake: true }),
+            point(19, 1, { pointDuration: 1, oldest: true }),
           ]),
         ]);
         expect(state.newestPointTimestamp).to.equal(20);
@@ -1538,9 +1545,9 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
         expect(state.series).to.deep.equal([
           dummyStaticSeriesFactoryState(1, [
-            point(14, null, { oldest: true, fake: true }),
-            point(16, null, { oldest: true, fake: true }),
-            point(18, 1, { oldest: true, newest: true }),
+            point(14, null, { pointDuration: 2, oldest: true, fake: true }),
+            point(16, null, { pointDuration: 2, oldest: true, fake: true }),
+            point(18, 1, { pointDuration: 2, oldest: true, newest: true }),
           ]),
         ]);
         expect(state.newestPointTimestamp).to.equal(19);
@@ -1592,9 +1599,9 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
         expect(state.series).to.deep.equal([
           dummyStaticSeriesFactoryState(1, [
-            point(12, null, { oldest: true, fake: true }),
-            point(18, null, { oldest: true, fake: true }),
-            point(24, 1, { oldest: true, newest: true }),
+            point(12, null, { pointDuration: 6, oldest: true, fake: true }),
+            point(18, null, { pointDuration: 6, oldest: true, fake: true }),
+            point(24, 1, { pointDuration: 6, oldest: true, newest: true }),
           ]),
         ]);
         expect(state.newestPointTimestamp).to.equal(28);
