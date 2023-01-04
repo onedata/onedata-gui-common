@@ -1,7 +1,8 @@
+{{!-- TODO: VFS-10331 unify modal layout in zone and provider --}}
 {{#global-modal
   classNames=(concat-classes
     "store-modal"
-    (if (eq mode "view") "modal-content-overlay with-close-button")
+    (if (eq mode "view") "without-footer modal-content-overlay with-close-button")
   )
   allowClose=(not isSubmitting)
   modalId=modalId

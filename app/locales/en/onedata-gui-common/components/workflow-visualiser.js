@@ -76,7 +76,7 @@ export default {
         },
       },
       modifyLaneChartsDashboard: {
-        title: 'Define charts',
+        title: 'Configure charts',
       },
       viewLaneChartsDashboard: {
         title: 'View charts',
@@ -163,5 +163,8 @@ export default {
         subjectName: 'Workflow',
       },
     },
+  },
+  storesList: {
+    label: 'Stores',
   },
 };

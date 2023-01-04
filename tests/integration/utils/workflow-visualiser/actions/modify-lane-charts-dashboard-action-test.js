@@ -32,7 +32,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane charts
     expect(this.action.className)
       .to.equal('modify-lane-charts-dashboard-action-trigger');
     expect(this.action.icon).to.equal('overview');
-    expect(String(this.action.title)).to.equal('Define charts');
+    expect(String(this.action.title)).to.equal('Configure charts');
   });
 
   it('shows modal with lane charts dashboard in edit mode on execute', async function () {

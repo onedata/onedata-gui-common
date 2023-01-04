@@ -16,9 +16,9 @@ import layout from 'onedata-gui-common/templates/components/workflow-visualiser/
 /**
  * @typedef {TsNamesForCollectionGeneratorsCache}
  * @property {PromiseObject<Object<string, Array<string>>>} proxy Maps generator
- * name to an array of time series names created by that generator
+ *   name to an array of time series names created by that generator
  * @property {number|null} lastUpdateTimestamp Null when periodic updating is
- * not necessary
+ *   not necessary
  */
 
 export default Component.extend({

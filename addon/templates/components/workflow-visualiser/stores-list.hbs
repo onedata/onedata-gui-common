@@ -1,4 +1,12 @@
 <div class="tags-input">
+  <span class="stores-label">{{tt this "label"}}:</span>
+  {{#each sortedStores as |store|}}
+    {{workflow-visualiser/stores-list/store
+      store=store
+      mode=mode
+      actionsFactory=actionsFactory
+    }}
+  {{/each}}
   {{#if (eq mode "edit")}}
     {{#bs-button
       class=(concat-classes createAction.className "input-element")
@@ -9,12 +17,5 @@
       {{createAction.title}}
     {{/bs-button}}
   {{/if}}
-  {{#each sortedStores as |store|}}
-    {{workflow-visualiser/stores-list/store
-      store=store
-      mode=mode
-      actionsFactory=actionsFactory
-    }}
-  {{/each}}
 </div>
 {{yield}}

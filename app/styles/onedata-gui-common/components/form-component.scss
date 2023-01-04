@@ -129,7 +129,8 @@ $form-component-view-margin: $padding-base-vertical;
       padding-top: 0;
     }
 
-    &.textarea-field-renderer:not(.view-as-static-text) {
+    &.textarea-field-renderer:not(.view-as-static-text),
+    &.json-field-renderer {
       .control-label {
         padding-top: $padding-base-vertical + 1;
       }

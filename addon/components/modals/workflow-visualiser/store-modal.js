@@ -5,7 +5,8 @@
  *   Needed when mode is `'view'`,
  * - `subjectName` - name of a subject described by data in store. Needed when
  *   `viewModeLayout` is `'auditLog'` or `'timeSeries'`,
- * - `storeOwner` - (optional) workflow entity which owns passed store,
+ * - `storeOwner` - (optional) workflow entity which owns passed store. It is a
+ *   workflow model object like Workflow or Lane,
  * - `store` - will be used to fill form data. Needed when mode is `'edit'` or `'view'`,
  * - `allowedStoreTypes` - is taken into account when `mode` is `'create'`,
  * - `allowedDataTypes` - is taken into account when `mode` is `'create'`,

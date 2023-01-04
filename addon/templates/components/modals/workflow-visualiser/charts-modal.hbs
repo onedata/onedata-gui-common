@@ -1,8 +1,9 @@
+{{!-- TODO: VFS-10331 unify modal layout in zone and provider --}}
 {{#global-modal
   classNames=(concat-classes
     "charts-modal"
     (concat "mode-" mode)
-    (if (eq mode "view") "modal-content-overlay with-close-button")
+    (if (eq mode "view") "without-footer modal-content-overlay with-close-button")
   )
   allowClose=(not isSubmitting)
   modalId=modalId
@@ -44,9 +45,9 @@
           onGetTimeSeriesCollectionRefsMap=getTimeSeriesCollectionRefsMapCallback
           live=isLiveProxy.content
         }}
-        <div class="charts-visualisation"></div>
       {{else}}
         <form class="charts-definition form form-horizontal form-component">
+          <p>{{tt this "tabs.definition.editorDisclaimer"}}</p>
           {{form-component/field-renderer field=definitionFieldsRootGroup}}
         </form>
       {{/if}}
