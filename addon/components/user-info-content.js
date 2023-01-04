@@ -24,4 +24,10 @@ export default Component.extend(I18n, {
    * @type {Models.User}
    */
   user: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Object}
+   */
+  errorReason: undefined,
 });

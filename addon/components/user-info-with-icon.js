@@ -22,6 +22,12 @@ export default Component.extend({
   user: undefined,
 
   /**
+   * @virtual optional
+   * @type {Object}
+   */
+  errorReason: undefined,
+
+  /**
    * @type {Boolean}
    */
   hasUserInfoHovered: false,
