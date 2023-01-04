@@ -189,7 +189,7 @@ export default Component.extend({
     const tsNamesPerGenerator = await this.getCachedTsNamesPerGenerator(collectionRef);
     const timeSeriesNames = tsNamesPerGenerator[timeSeriesNameGenerator] || [];
     return timeSeriesNames.map((timeSeriesName) => ({
-      id: timeSeriesName,
+      id: collectionRef ? `${collectionRef}-${timeSeriesName}` : timeSeriesName,
       name: timeSeriesName,
       loadSeriesSourceSpec: {
         externalSourceName: 'store',
