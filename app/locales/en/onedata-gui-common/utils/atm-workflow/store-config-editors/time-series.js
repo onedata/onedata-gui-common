@@ -30,7 +30,8 @@ export default {
       },
     },
     dashboardSpec: {
-      label: 'Charts dashboard',
+      label: 'Charts dashboard spec.',
+      tip: 'Charts dashboard is an experimental feature, which will evolve in the future releases. Current dashboard editor is limited to JSON format only.',
     },
   },
 };

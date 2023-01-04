@@ -10,7 +10,12 @@
 /**
  * @typedef {Object} AtmTimeSeriesStoreConfig
  * @property {TimeSeriesCollectionSchema} timeSeriesCollectionSchema
- * @property {{ rootSection: OneTimeSeriesChartsSectionSpec }} [dashboardSpec]
+ * @property {AtmTimeSeriesDashboardSpec} [dashboardSpec]
+ */
+
+/**
+ * @typedef {Object} AtmTimeSeriesDashboardSpec
+ * @property {OneTimeSeriesChartsSectionSpec} rootSection
  */
 
 /**

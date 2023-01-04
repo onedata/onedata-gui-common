@@ -263,7 +263,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
    */
-  workflow: computed('executionState', function workflow() {
+  workflow: computed('rawData', 'executionState', function workflow() {
     return this.getWorkflow();
   }),
 
@@ -391,6 +391,20 @@ export default Component.extend(I18n, WindowResizeHandler, {
   viewAuditLogAction: computed('actionsFactory', function viewAuditLogAction() {
     return this.get('actionsFactory').createViewWorkflowAuditLogAction();
   }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  openWorkflowChartsDashboardAction: computed(
+    'mode',
+    function openWorkflowChartsDashboardAction() {
+      if (this.mode === 'view') {
+        return this.actionsFactory.createViewWorkflowChartsDashboardAction();
+      } else {
+        return this.actionsFactory.createModifyWorkflowChartsDashboardAction();
+      }
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Array<Utils.Action>>}
@@ -661,6 +675,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         instanceId,
         systemAuditLogStore,
         status,
+        dashboardSpec: this.rawData?.dashboardSpec ?? null,
       });
       return existingWorkflow;
     } else {
@@ -668,6 +683,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
         instanceId,
         systemAuditLogStore,
         status,
+        dashboardSpec: this.rawData?.dashboardSpec ?? null,
+        onModify: (workflow, modifiedProps) =>
+          this.modifyElement(workflow, modifiedProps),
       });
       this.addElementToCache('workflow', newWorkflow);
 
@@ -778,13 +796,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
       maxRetries,
       storeIteratorSpec,
       parallelBoxes: rawParallelBoxes,
+      dashboardSpec,
     } = getProperties(
       laneRawData,
       'id',
       'name',
       'maxRetries',
       'storeIteratorSpec',
-      'parallelBoxes'
+      'parallelBoxes',
+      'dashboardSpec'
     );
     const iteratedStoreSchemaId = get(storeIteratorSpec || {}, 'storeSchemaId');
     const normalizedRunsRegistry = {};
@@ -820,11 +840,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const existingLane = this.getCachedElement('lane', { id });
 
     if (existingLane) {
-      const elements = this.getLaneElementsForRawData(
-        'parallelBox',
-        rawParallelBoxes,
-        existingLane
-      );
       const {
         runsRegistry: prevRunsRegistry,
         visibleRunNumber: prevVisibleRunNumber,
@@ -858,11 +873,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         maxRetries,
         storeIteratorSpec,
+        dashboardSpec,
         runsRegistry: normalizedRunsRegistry,
         visibleRunNumber,
         visibleRunsPosition,
-        elements,
       });
+      const elements = this.getLaneElementsForRawData(
+        'parallelBox',
+        rawParallelBoxes,
+        existingLane
+      );
+      this.updateElement(existingLane, { elements });
       return existingLane;
     } else {
       const {
@@ -876,6 +897,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         maxRetries,
         storeIteratorSpec,
+        dashboardSpec,
         runsRegistry: normalizedRunsRegistry,
         visibleRunNumber: newestRunNumber,
         visibleRunsPosition: {
@@ -969,17 +991,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     const existingParallelBox = this.getCachedElement('parallelBox', { id });
     if (existingParallelBox) {
+      this.updateElement(existingParallelBox, {
+        name,
+        parent,
+        runsRegistry: normalizedRunsRegistry,
+      });
       const elements = this.getLaneElementsForRawData(
         'task',
         rawTasks,
         existingParallelBox
       );
-      this.updateElement(existingParallelBox, {
-        name,
-        parent,
-        elements,
-        runsRegistry: normalizedRunsRegistry,
-      });
+      this.updateElement(existingParallelBox, { elements });
       return existingParallelBox;
     } else {
       const {
@@ -1479,7 +1501,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     const elementType = get(element, '__modelType');
-    if (elementType === 'store') {
+    if (elementType === 'workflow') {
+      return rawDump;
+    } else if (elementType === 'store') {
       return (rawDump.stores || []).findBy('id', get(element, 'id'));
     } else {
       const elementPath = [];

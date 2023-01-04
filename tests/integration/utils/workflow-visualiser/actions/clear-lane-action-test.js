@@ -41,7 +41,7 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
       title,
     } = getProperties(this.get('action'), 'className', 'icon', 'title');
     expect(className).to.equal('clear-lane-action-trigger');
-    expect(icon).to.equal('remove');
+    expect(icon).to.equal('checkbox-filled-x');
     expect(String(title)).to.equal('Clear');
   });
 

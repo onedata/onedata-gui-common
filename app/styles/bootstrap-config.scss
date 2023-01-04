@@ -7,6 +7,7 @@ $modal-xl: 1200px;
 $bs-modal-width-full-with-margins: calc(100% - #{$padding-small-horizontal});
 $control-padding-small-vertical: $padding-small-vertical;
 $control-padding-small-horizontal: $padding-small-horizontal * 0.75;
+$button-sm-font-size: 90%;
 
 @import "bootstrap/mixins";
 @import "bootstrap-mixins-config";
@@ -130,7 +131,7 @@ label {
 @import "bootstrap/buttons";
 
 @mixin btn-sm {
-  font-size: 90%;
+  font-size: $button-sm-font-size;
   padding: $padding-small-vertical $padding-base-horizontal;
 }
 
