@@ -16,17 +16,18 @@ import { timeSeriesMetricResolutionsMap } from 'onedata-gui-common/utils/time-se
  * For more info about arguments see `OTSCSeriesPoint` type.
  * @param {number} timestamp
  * @param {number|null} [value]
- * @param {{ pointDuration?: TimeSeriesMetricResolution, firstMeasurementTimestamp?: number|null, lastMeasurementTimestamp?: number|null, measurementDuration?: number, oldest?: boolean, newest?: boolean, fake?: boolean}} [params]
+ * @param {Partial<Omit<OTSCSeriesPoint, 'timestamp' | 'value'>>} [params]
  * @returns {OTSCSeriesPoint}
  */
 export default function point(timestamp, value = null, params = {}) {
   const newPoint = Object.assign({
     timestamp,
     value,
+    // Using 5s as a fallback value. 5s is the smallest possible time resolution
+    // in time series.
     pointDuration: timeSeriesMetricResolutionsMap.fiveSeconds,
     firstMeasurementTimestamp: null,
     lastMeasurementTimestamp: null,
-    measurementDuration: 1,
     oldest: false,
     newest: false,
     fake: false,
@@ -44,32 +45,28 @@ export function recalculatePointMeasurementDuration(point) {
   const firstMeasurementTimestamp = point.firstMeasurementTimestamp ?? point.timestamp;
   const lastMeasurementTimestamp = point.lastMeasurementTimestamp ??
     (point.timestamp + point.pointDuration - 1);
+
+  let measurementDuration;
   if (!point.oldest && !point.newest) {
     // All points in the middle of chart
-    point.measurementDuration = point.pointDuration;
+    measurementDuration = point.pointDuration;
   } else if (point.fake && (point.oldest || point.newest)) {
     // Fake points at oldest or newest edge
-    point.measurementDuration = 1;
+    measurementDuration = 1;
   } else if (point.oldest && !point.newest) {
     // Real points at oldest edge only
-    point.measurementDuration = Math.max(
-      point.timestamp + point.pointDuration - firstMeasurementTimestamp,
-      1
-    );
+    measurementDuration =
+      point.timestamp + point.pointDuration - firstMeasurementTimestamp;
   } else if (!point.oldest && point.newest) {
     // Real points at newest edge only
-    point.measurementDuration = Math.max(
-      lastMeasurementTimestamp - point.timestamp + 1,
-      1
-    );
+    measurementDuration = lastMeasurementTimestamp - point.timestamp + 1;
   } else if (point.oldest && point.newest) {
     // Real points at both oldest and newest edge
-    point.measurementDuration = Math.max(
-      lastMeasurementTimestamp - firstMeasurementTimestamp + 1,
-      1
-    );
+    measurementDuration = lastMeasurementTimestamp - firstMeasurementTimestamp + 1;
   } else {
     // This should newer happen. Left for safety.
-    point.measurementDuration = 1;
+    measurementDuration = 1;
   }
+
+  point.measurementDuration = Math.max(measurementDuration, 1);
 }

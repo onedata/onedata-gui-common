@@ -26,26 +26,26 @@ export default function mergePointsArrays(pointsArrays, newPointsValues) {
   );
   for (const pointsArray of pointsArrays.slice(1)) {
     for (let i = 0; i < mergedPointsArray.length; i++) {
-      if (
-        !pointsArray[i].fake &&
-        pointsArray[i].firstMeasurementTimestamp !== null &&
-        pointsArray[i].lastMeasurementTimestamp !== null
-      ) {
+      if (!pointsArray[i].fake) {
         if (
-          mergedPointsArray[i].fake ||
-          mergedPointsArray[i].firstMeasurementTimestamp === null ||
-          mergedPointsArray[i].firstMeasurementTimestamp >
-          pointsArray[i].firstMeasurementTimestamp
+          pointsArray[i].firstMeasurementTimestamp !== null && (
+            mergedPointsArray[i].fake ||
+            mergedPointsArray[i].firstMeasurementTimestamp === null ||
+            mergedPointsArray[i].firstMeasurementTimestamp >
+            pointsArray[i].firstMeasurementTimestamp
+          )
         ) {
           mergedPointsArray[i].firstMeasurementTimestamp =
             pointsArray[i].firstMeasurementTimestamp;
         }
 
         if (
-          mergedPointsArray[i].fake ||
-          mergedPointsArray[i].lastMeasurementTimestamp === null ||
-          mergedPointsArray[i].lastMeasurementTimestamp <
-          pointsArray[i].lastMeasurementTimestamp
+          pointsArray[i].lastMeasurementTimestamp !== null && (
+            mergedPointsArray[i].fake ||
+            mergedPointsArray[i].lastMeasurementTimestamp === null ||
+            mergedPointsArray[i].lastMeasurementTimestamp <
+            pointsArray[i].lastMeasurementTimestamp
+          )
         ) {
           mergedPointsArray[i].lastMeasurementTimestamp =
             pointsArray[i].lastMeasurementTimestamp;
