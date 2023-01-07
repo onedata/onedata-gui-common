@@ -6,7 +6,11 @@ import hbs from 'htmlbars-inline-precompile';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
-import { selectChoose, clickTrigger, typeInSearch } from 'ember-power-select/test-support/helpers';
+import {
+  selectChoose,
+  clickTrigger,
+  typeInSearch
+} from 'ember-power-select/test-support/helpers';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form component/dropdown field', function () {

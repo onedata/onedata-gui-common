@@ -859,7 +859,7 @@ export default class Configuration {
      * @private
      * @type {Utils.Looper}
      */
-    this.updater = new Looper({
+    this.updater = Looper.create({
       immediate: false,
     });
     this.updater.on('tick', () => {

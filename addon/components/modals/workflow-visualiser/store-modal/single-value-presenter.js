@@ -69,7 +69,7 @@ export default Component.extend(I18n, createDataProxyMixin('valueContainer'), {
    */
   init() {
     this._super(...arguments);
-    const updater = this.set('valueContainerUpdater', new Looper({
+    const updater = this.set('valueContainerUpdater', Looper.create({
       interval: this.valueContainerUpdateInterval,
     }));
     updater.on('tick', () => this.updateValueContainerProxy({

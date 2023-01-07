@@ -1,5 +1,10 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach, afterEach } from 'mocha';
+import {
+  describe,
+  it,
+  beforeEach,
+  afterEach
+} from 'mocha';
 import { GlobalCssVariablesManager } from 'onedata-gui-common/utils/global-css-variables-manager';
 
 describe('Unit | Utility | global css variables manager', function () {
