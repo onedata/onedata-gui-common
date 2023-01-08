@@ -1,0 +1,49 @@
+<h1>
+  <span class="one-label">
+    {{tt this "title"}}
+  </span>
+</h1>
+<table class="table table-condensed table-info">
+  <tr class="row-with-input">
+    <td class="property-name">{{tt this "name"}}</td>
+    <td class="property-value">
+      {{one-clipboard-line
+        size="sm"
+        value=space.name
+        showText=false
+        btnType="success"
+      }}
+    </td>
+  </tr>
+  <tr class="row-with-input">
+    <td class="property-name">{{tt this "id"}}</td>
+    <td class="property-value">
+      {{one-clipboard-line
+        size="sm"
+        value=space.entityId
+        showText=false
+        btnType="success"
+      }}
+      {{log space}}
+    </td>
+  </tr>
+  <tr class="row-with-text">
+    <td class="property-name">{{tt this "creator"}}</td>
+    <td class="property-value">
+      {{#truncated-string}}
+        <span class="user-fullname">{{or owner.fullName "—"}}</span>
+        {{#if owner.username}}
+          <span class="user-username">({{owner.username}})</span>
+        {{/if}}
+      {{/truncated-string}}
+    </td>
+  </tr>
+  <tr class="row-with-text">
+    <td class="property-name">{{tt this "creationTime"}}</td>
+    <td class="property-value">
+      {{creationTime}}
+    </td>
+  </tr>
+  {{!-- TODO link do rest api --}}
+  {{!-- TODO link do file browser --}}
+</table>

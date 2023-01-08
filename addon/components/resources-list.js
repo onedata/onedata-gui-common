@@ -27,6 +27,12 @@ export default Component.extend({
    * @type {ComputedProperty<Array<ResourceListItem>>}
    */
   sortedItems: array.sort('items', ['label']),
+
+  actions: {
+    itemInfoHovered(item, hasHover) {
+      item.set('hasItemInfoHovered', hasHover);
+    },
+  },
 });
 
 /**
@@ -71,6 +77,16 @@ export const ResourceListItem = EmberObject.extend({
    * @type {String}
    */
   link: undefined,
+
+  /**
+   * @type {boolean}
+   */
+  itemInfoOpened: false,
+
+  /**
+   * @type {Boolean}
+   */
+  hasItemInfoHovered: false,
 
   init() {
     this._super(...arguments);
