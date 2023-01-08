@@ -52,6 +52,7 @@ import auditLogBrowser from './onedata-gui-common/components/audit-log-browser';
 import infiniteScrollTable from './onedata-gui-common/components/infinite-scroll-table';
 import errorInline from './onedata-gui-common/components/error-inline';
 import userInfoContent from './onedata-gui-common/components/user-info-content';
+import spaceInfoContent from './onedata-gui-common/components/space-info-content';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -144,6 +145,7 @@ const translations = {
     infiniteScrollTable,
     errorInline,
     userInfoContent,
+    spaceInfoContent,
     alerts: {
       endpointError,
     },
