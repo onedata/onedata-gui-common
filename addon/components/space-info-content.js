@@ -17,6 +17,7 @@ export default Component.extend(I18n, {
   classNames: ['space-info-content'],
 
   userManager: service(),
+  modalManager: service(),
 
   /**
    * @override
@@ -43,4 +44,17 @@ export default Component.extend(I18n, {
     const timestamp = this.space.info.creationTime;
     return moment.unix(timestamp).format('D MMM YYYY H:mm:ss');
   }),
+
+  async onExecute() {
+    return await this.modalManager.show('api-samples-modal', {
+      record: this.space,
+      apiSubject: 'space',
+    }).hiddenPromise;
+  },
+
+  actions: {
+    openRestApiModal() {
+      this.onExecute();
+    },
+  },
 });

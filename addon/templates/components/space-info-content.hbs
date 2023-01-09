@@ -24,7 +24,6 @@
         showText=false
         btnType="success"
       }}
-      {{log space}}
     </td>
   </tr>
   <tr class="row-with-text">
@@ -44,6 +43,7 @@
       {{creationTime}}
     </td>
   </tr>
-  {{!-- TODO link do rest api --}}
-  {{!-- TODO link do file browser --}}
+  <a
+    {{action "openRestApiModal"}}
+  >Open REST API</a>
 </table>
