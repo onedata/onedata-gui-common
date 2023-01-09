@@ -1,0 +1,30 @@
+.editor-box {
+  border: 1px solid $main-border-color;
+  border-radius: $border-radius-base;
+
+  .editor-box-header {
+    padding: 0.3em;
+    border-bottom: 1px solid $main-border-color;
+
+    > * {
+      font-size: 70%;
+    }
+  }
+
+  .data-spec-type {
+    @include font-semibold();
+    text-transform: uppercase;
+  }
+
+  .editor-box-content {
+    padding: 0.3em;
+  }
+
+  &.integer-editor {
+    width: 10em;
+
+    .form-group {
+      margin: 0;
+    }
+  }
+}
