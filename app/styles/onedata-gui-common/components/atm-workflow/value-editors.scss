@@ -24,13 +24,6 @@
     width: 10em;
   }
 
-  &.integer-editor,
-  &.string-editor {
-    .form-group {
-      margin: 0;
-    }
-  }
-
   &.object-editor {
     .editor-box-content {
       height: 10em;
@@ -46,6 +39,35 @@
       .ace_editor {
         border-color: $color-one-danger;
       }
+    }
+  }
+
+  &.range-editor {
+    max-width: 25em;
+
+    .fields-group-children {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3em;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+      flex-grow: 1;
+      flex-basis: 6em;
+    }
+  }
+
+  .form-group {
+    .control-label {
+      width: 100%;
+      padding: 0;
+      margin-bottom: 5px;
+      text-align: left;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 }

@@ -18,6 +18,12 @@ export default Component.extend({
     });
   }),
 
+  rangeEditorStateManager: computed(() => {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.Range,
+    });
+  }),
+
   stringEditorStateManager: computed(() => {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.String,
