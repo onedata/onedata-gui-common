@@ -18,8 +18,6 @@ export default Component.extend(I18n, {
 
   userManager: service(),
   modalManager: service(),
-  router: service(),
-  guiUtils: service(),
 
   /**
    * @override
@@ -32,7 +30,7 @@ export default Component.extend(I18n, {
    */
   space: undefined,
 
-  showRestApiModalLink: true,
+  showRestApiModalLink: false,
 
   /**
    * @type {Models.User}
@@ -53,30 +51,5 @@ export default Component.extend(I18n, {
     }
   }),
 
-  link: computed('space', function link() {
-    const {
-      router,
-      space,
-      guiUtils,
-    } = this.getProperties('router', 'space', 'guiUtils');
-    return router.urlFor(
-      'onedata.sidebar.content.aspect',
-      'spaces',
-      guiUtils.getRoutableIdFor(space),
-      'data'
-    );
-  }),
-
-  async onExecute() {
-    return await this.modalManager.show('api-samples-modal', {
-      record: this.space,
-      apiSubject: 'space',
-    }).hiddenPromise;
-  },
-
-  actions: {
-    openRestApiModal() {
-      this.onExecute();
-    },
-  },
+  link: undefined,
 });
