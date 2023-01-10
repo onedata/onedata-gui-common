@@ -22,7 +22,10 @@
 
   &.integer-editor {
     width: 10em;
+  }
 
+  &.integer-editor,
+  &.string-editor {
     .form-group {
       margin: 0;
     }

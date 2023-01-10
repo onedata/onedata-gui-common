@@ -11,4 +11,10 @@ export default Component.extend({
       type: AtmDataSpecType.Integer,
     });
   }),
+
+  stringEditorStateManager: computed(() => {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.String,
+    });
+  }),
 });
