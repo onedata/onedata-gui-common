@@ -11,6 +11,15 @@
         padding-bottom: 2 * $table-condensed-cell-padding;
         border-top: 0;
         word-break: break-all;
+
+        .user-with-icon {
+          display: inline-block;
+          width: 100%;
+        }
+        .user-info-trigger {
+          display: inline-block;
+          padding-top: 0.1em;
+        }
       }
     }
   }
