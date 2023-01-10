@@ -89,6 +89,7 @@ export default Component.extend(I18n, {
     return A(data.map((series) => EmberObject.create({
       supporterName: series.get('label'),
       supportSize: series.get('value'),
+      supporterId: series.get('spaceId'),
     })));
   }),
 

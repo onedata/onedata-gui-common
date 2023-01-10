@@ -68,6 +68,7 @@ export default Component.extend({
       processedData.pushObject(EmberObject.create({
         supporterName: entry.get('supporterName'),
         supportSize: entry.get('supportSize'),
+        supporterId: entry.get('supporterId'),
         supportSizeStr: bytesToString(entry.get('supportSize'), { iecFormat: true }),
       }));
     });
@@ -87,7 +88,7 @@ export default Component.extend({
       propertyName: 'supporterName',
       title: supporterNameHeader,
       className: 'supporter-name-column',
-      component: 'support-size-info/table/truncated-cell',
+      component: 'support-size-info/table/supporter-info',
     }, {
       propertyName: 'supportSizeStr',
       title: supporterSizeHeader,

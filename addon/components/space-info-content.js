@@ -38,15 +38,19 @@ export default Component.extend(I18n, {
    * @type {Models.User}
    */
   owner: computed('space.info.creatorId', function owner() {
-    return this.userManager.getRecordById(this.space.info.creatorId);
+    if (this.space.info?.creatorId) {
+      return this.userManager.getRecordById(this.space.info.creatorId);
+    }
   }),
 
   /**
    * @type {Ember.ComputedProperty<string>}
    */
   creationTime: computed('space.info.creationTime', function creationTime() {
-    const timestamp = this.space.info.creationTime;
-    return moment.unix(timestamp).format('D MMM YYYY H:mm:ss');
+    const timestamp = this.space.info?.creationTime;
+    if (timestamp) {
+      return moment.unix(timestamp).format('D MMM YYYY H:mm:ss');
+    }
   }),
 
   link: computed('space', function link() {
