@@ -30,4 +30,22 @@
       margin: 0;
     }
   }
+
+  &.object-editor {
+    .editor-box-content {
+      height: 10em;
+      display: flex;
+      align-items: stretch;
+
+      > * {
+        flex-grow: 1;
+      }
+    }
+
+    &.invalid {
+      .ace_editor {
+        border-color: $color-one-danger;
+      }
+    }
+  }
 }

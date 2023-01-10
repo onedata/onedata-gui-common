@@ -1,0 +1,21 @@
+{{#atm-workflow/value-editors/commons/editor-box
+  editorState=editorState
+  class=(if (not isValid) "invalid")
+  as |editorBox|
+}}
+  {{#if (eq editorBox.section "content")}}
+    {{ember-ace
+      editorClass="full-height"
+      value=editableValue
+      worker="ace/mode/json_worker"
+      mode="ace/mode/json"
+      theme="ace/theme/textmate"
+      tabSize=2
+      useWrapMode=true
+      highlightActiveLine=true
+      showLineNumbers=true
+      showPrintMargin=false
+      update=(action "valueChanged")
+    }}
+  {{/if}}
+{{/atm-workflow/value-editors/commons/editor-box}}

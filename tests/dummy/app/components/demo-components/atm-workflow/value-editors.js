@@ -12,6 +12,12 @@ export default Component.extend({
     });
   }),
 
+  objectEditorStateManager: computed(() => {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.Object,
+    });
+  }),
+
   stringEditorStateManager: computed(() => {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.String,
