@@ -4,7 +4,10 @@
       {{#listItem.header tagName=(if item.link "a" "div") href=item.link isCollapsible=false}}
         {{#if item.icon}}
           <span 
-            class="item-icon-container icon-container popover-info-trigger"
+            class={{concat-classes 
+              "item-icon-container"
+              (if isResourceWithAdditionalInfo "icon-container popover-info-trigger")
+            }}
             {{action
               (mut item.itemInfoOpened)
               (not item.itemInfoOpened)
@@ -13,28 +16,31 @@
             onmouseover={{action "itemInfoHovered" item true}}
             onmouseleave={{action "itemInfoHovered" item false}}
           >
-            {{flippable-icons
-              iconName=item.icon
-              iconColor=iconColor
-              isHovered=item.hasItemInfoHovered
-              suppressFlipping=itemInfoOpened
-            }}
-            {{!-- {{one-icon 
-              class="item-icon tmp" 
-              icon=item.icon
-            }} --}}
+            {{#if isResourceWithAdditionalInfo}}
+              {{flippable-icons
+                iconName=item.icon
+                iconColor=iconColor
+                isHovered=item.hasItemInfoHovered
+                suppressFlipping=itemInfoOpened
+              }}
+            {{else}}
+              {{one-icon 
+                class="item-icon tmp" 
+                icon=item.icon
+              }}
+            {{/if}}
             {{#one-tooltip
               placement="top"
               arrowPlacement="left"
               triggerEvents="hover"
             }}
-            {{#if item.conflictingLabelSource}}
-              {{name-conflict
-                item=item.conflictingLabelSource
-              }}
-            {{else}}
-              {{item.label}}
-            {{/if}}
+              {{#if item.conflictingLabelSource}}
+                {{name-conflict
+                  item=item.conflictingLabelSource
+                }}
+              {{else}}
+                {{item.label}}
+              {{/if}}
             {{/one-tooltip}}
           </span>
         {{/if}}
@@ -60,7 +66,7 @@
       {{/listItem.header}}
     {{/list.item}}
     {{#record-info-popover
-      isOpened=item.itemInfoOpened
+      isOpened=(and isResourceWithAdditionalInfo item.itemInfoOpened)
       triggerSelector=(concat "#" elementId " .item-icon-container")
     }}
       {{space-info-content

@@ -18,6 +18,8 @@ export default Component.extend(I18n, {
 
   userManager: service(),
   modalManager: service(),
+  router: service(),
+  guiUtils: service(),
 
   /**
    * @override
@@ -29,6 +31,8 @@ export default Component.extend(I18n, {
    * @type {Models.Space}
    */
   space: undefined,
+
+  showRestApiModalLink: true,
 
   /**
    * @type {Models.User}
@@ -43,6 +47,20 @@ export default Component.extend(I18n, {
   creationTime: computed('space.info.creationTime', function creationTime() {
     const timestamp = this.space.info.creationTime;
     return moment.unix(timestamp).format('D MMM YYYY H:mm:ss');
+  }),
+
+  link: computed('space', function link() {
+    const {
+      router,
+      space,
+      guiUtils,
+    } = this.getProperties('router', 'space', 'guiUtils');
+    return router.urlFor(
+      'onedata.sidebar.content.aspect',
+      'spaces',
+      guiUtils.getRoutableIdFor(space),
+      'data'
+    );
   }),
 
   async onExecute() {

@@ -24,6 +24,12 @@ export default Component.extend({
   items: computed(() => []),
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isResourceWithAdditionalInfo: false,
+
+  /**
    * @type {ComputedProperty<Array<ResourceListItem>>}
    */
   sortedItems: array.sort('items', ['label']),

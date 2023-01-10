@@ -40,10 +40,21 @@
   <tr class="row-with-text">
     <td class="property-name">{{tt this "creationTime"}}</td>
     <td class="property-value">
-      {{creationTime}}
+      {{or creationTime "—"}}
     </td>
   </tr>
-  <a
-    {{action "openRestApiModal"}}
-  >Open REST API</a>
+  {{#if showRestApiModalLink}}
+    <tr class="row-with-text">
+      <td colspan="2">
+        <a {{action "openRestApiModal"}}>Open REST API</a>
+      </td>
+    </tr>
+  {{/if}}
+  {{#if link}}
+    <tr class="row-with-text">
+      <td colspan="2">
+        <a href={{link}}>Open file browser</a>
+      </td>
+    </tr>
+  {{/if}}
 </table>
