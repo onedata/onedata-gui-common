@@ -9,7 +9,7 @@ import sinon from 'sinon';
 import {
   selectChoose,
   clickTrigger,
-  typeInSearch
+  typeInSearch,
 } from 'ember-power-select/test-support/helpers';
 import { set } from '@ember/object';
 

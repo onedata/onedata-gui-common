@@ -6,7 +6,7 @@ import {
   settled,
   click,
   find,
-  findAll
+  findAll,
 } from '@ember/test-helpers';
 import { lookupService } from '../../../helpers/stub-service';
 import hbs from 'htmlbars-inline-precompile';

@@ -7,13 +7,13 @@ import {
   findAll,
   fillIn,
   render,
-  click
+  click,
 } from '@ember/test-helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import {
   FormElement,
   formValuesToDataSpec,
-  dataSpecToFormValues
+  dataSpecToFormValues,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import OneDrodopdownHelper from '../../../../helpers/one-dropdown';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';

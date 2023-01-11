@@ -7,7 +7,7 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import {
   default as ChartsDashboardEditor,
   formValueToChartsDashboardSpec,
-  chartsDashboardSpecToFormValue
+  chartsDashboardSpecToFormValue,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import { set } from '@ember/object';
 

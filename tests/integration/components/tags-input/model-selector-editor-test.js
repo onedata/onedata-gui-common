@@ -9,7 +9,7 @@ import {
   click,
   fillIn,
   find,
-  findAll
+  findAll,
 } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';

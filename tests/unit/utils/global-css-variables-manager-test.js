@@ -3,7 +3,7 @@ import {
   describe,
   it,
   beforeEach,
-  afterEach
+  afterEach,
 } from 'mocha';
 import { GlobalCssVariablesManager } from 'onedata-gui-common/utils/global-css-variables-manager';
 

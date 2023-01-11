@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import {
-  getTimeSeriesMetricNamesWithAggregator
+  getTimeSeriesMetricNamesWithAggregator,
 } from 'onedata-gui-common/utils/time-series';
 
 describe('Unit | Utility | time series', function () {

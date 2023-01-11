@@ -8,7 +8,7 @@
  */
 
 import getNumberMetricSuffix, {
-  suffixesSpec
+  suffixesSpec,
 } from 'onedata-gui-common/utils/get-number-metric-suffix';
 
 export const siUnits = [{
