@@ -4,4 +4,6 @@ export default {
   id: 'ID',
   creator: 'Creator',
   creationTime: 'Created at',
+  openRestApi: 'Open REST API',
+  openSpace: 'Open file browser',
 };

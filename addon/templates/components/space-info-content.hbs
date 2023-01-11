@@ -46,14 +46,14 @@
   {{#if showRestApiModalLink}}
     <tr class="row-with-text">
       <td colspan="2">
-        <a {{action "openRestApiModal"}}>Open REST API</a>
+        <a {{action "openRestApiModal"}}>{{tt this "openRestApi"}}</a>
       </td>
     </tr>
   {{/if}}
   {{#if link}}
     <tr class="row-with-text">
       <td colspan="2">
-        <a href={{link}}>Open file browser</a>
+        <a href={{link}}>{{tt this "openSpace"}}</a>
       </td>
     </tr>
   {{/if}}
