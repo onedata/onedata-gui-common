@@ -7,7 +7,7 @@ import {
   find,
   findAll,
   click,
-  settled
+  settled,
 } from '@ember/test-helpers';
 import _ from 'lodash';
 import { replaceEmberAceWithTextarea } from '../../../../../helpers/ember-ace';
