@@ -5,6 +5,7 @@
   <div class="editor-box-toolbar">
     {{yield (hash section="toolbar")}}
     {{#if onRemove}}
+      <span class="separator"></span>
       {{remove-icon onClick=onRemove}}
     {{/if}}
   </div>

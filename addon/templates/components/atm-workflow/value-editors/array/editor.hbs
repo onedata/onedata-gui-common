@@ -3,7 +3,15 @@
   onRemove=onRemove
   as |editorBox|
 }}
-  {{#if (eq editorBox.section "content")}}
+  {{#if (eq editorBox.section "toolbar")}}
+    <span class="items-count">{{itemsCountText}}</span>
+    {{#if itemEditorStates.length}}
+      <span class="separator"></span>
+      <a class="clear-trigger clickable action-link" {{action "clear"}}>
+        {{tt this "clear"}}
+      </a>
+    {{/if}}
+  {{else if (eq editorBox.section "content")}}
     {{#if itemEditorStates.length}}
       <ol class="array-items">
         {{#each itemEditorStates as |itemEditorState|}}
@@ -17,7 +25,7 @@
         {{/each}}
       </ol>
     {{/if}}
-    <a class="add-item-trigger clickable" {{action "addNewItem"}}>
+    <a class="add-item-trigger clickable action-link" {{action "addNewItem"}}>
       {{tt this "addNewItem"}}
     </a>
   {{/if}}

@@ -19,6 +19,20 @@
 
   .editor-box-toolbar {
     margin-left: auto;
+    display: flex;
+    gap: 0.5em;
+
+    .separator {
+      display: none;
+      align-self: center;
+      border-left: 1px solid $main-border-color;
+      height: 1em;
+    }
+
+    // Show separator only when it is after some non-separator element
+    & > *:not(.separator) + .separator {
+      display: block;
+    }
   }
 
   .data-spec-type {
@@ -87,7 +101,7 @@
       margin-bottom: 0.3em;
     }
 
-    .add-item-trigger {
+    .action-link {
       text-decoration: underline;
     }
   }

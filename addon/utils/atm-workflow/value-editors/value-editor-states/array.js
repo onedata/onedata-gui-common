@@ -51,7 +51,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
    * @public
    * @param {string} itemEditorStateId
    */
-  deleteItem(itemEditorStateId) {
+  removeItem(itemEditorStateId) {
     const currentLength = this.itemEditorStateIds.length;
     this.itemEditorStateIds = this.itemEditorStateIds
       .filter((id) => id !== itemEditorStateId);
@@ -59,6 +59,23 @@ export default class ArrayValueEditorState extends ValueEditorState {
       this.editorStateManager.destroyValueEditorStateById(itemEditorStateId);
     }
     this.notifyChange();
+  }
+
+  /**
+   * @public
+   * @returns {void}
+   */
+  clear() {
+    this.removeAllItemsWithoutNotification();
+    this.notifyChange();
+  }
+
+  /**
+   * @override
+   */
+  destroy() {
+    super.destroy(...arguments);
+    this.removeAllItemsWithoutNotification();
   }
 
   /**
@@ -72,12 +89,8 @@ export default class ArrayValueEditorState extends ValueEditorState {
    * @override
    */
   setValue(newValue) {
-    this.itemEditorStateIds.forEach((editorStateId) =>
-      this.editorStateManager.destroyValueEditorStateById(editorStateId)
-    );
-    if (!Array.isArray(newValue)) {
-      this.itemEditorStateIds = [];
-    } else {
+    this.removeAllItemsWithoutNotification();
+    if (Array.isArray(newValue)) {
       this.itemEditorStateIds = newValue.map((itemValue) =>
         this.editorStateManager.createValueEditorState(this.itemDataSpec, itemValue)
       );
@@ -89,5 +102,15 @@ export default class ArrayValueEditorState extends ValueEditorState {
    */
   getIsValid() {
     return this.itemEditorStates.every((state) => state.isValid);
+  }
+
+  /**
+   * @private
+   */
+  removeAllItemsWithoutNotification() {
+    this.itemEditorStateIds.forEach((editorStateId) =>
+      this.editorStateManager.destroyValueEditorStateById(editorStateId)
+    );
+    this.itemEditorStateIds = [];
   }
 }
