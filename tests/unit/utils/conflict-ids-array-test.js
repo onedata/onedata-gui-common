@@ -6,7 +6,7 @@ import { settled } from '@ember/test-helpers';
 import ConflictIdsArray from 'onedata-gui-common/utils/conflict-ids-array';
 
 function createMockArray() {
-  return new A([
+  return A([
     EmberObject.create({
       id: 'abcdef1',
       name: 'Some',

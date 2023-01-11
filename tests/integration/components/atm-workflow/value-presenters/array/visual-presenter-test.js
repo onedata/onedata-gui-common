@@ -2,7 +2,13 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import { render, find, findAll, click, settled } from '@ember/test-helpers';
+import {
+  render,
+  find,
+  findAll,
+  click,
+  settled,
+} from '@ember/test-helpers';
 import _ from 'lodash';
 import { replaceEmberAceWithTextarea } from '../../../../../helpers/ember-ace';
 import TestComponent from 'onedata-gui-common/components/test-component';

@@ -4,7 +4,13 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn, find, findAll } from '@ember/test-helpers';
+import {
+  render,
+  click,
+  fillIn,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
 import sinon from 'sinon';
