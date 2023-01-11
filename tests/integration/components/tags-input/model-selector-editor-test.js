@@ -11,7 +11,7 @@ import {
   find,
   findAll,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import $ from 'jquery';
 import sinon from 'sinon';
 import { selectChoose, clickTrigger } from 'ember-power-select/test-support/helpers';

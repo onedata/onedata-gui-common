@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, context, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
