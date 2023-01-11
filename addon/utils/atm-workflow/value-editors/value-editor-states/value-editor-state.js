@@ -8,9 +8,18 @@ import generateId from 'onedata-gui-common/utils/generate-id';
 export default class ValueEditorState {
   /**
    * @public
+   * @param {Utils.AtmWorkflow.ValueEditors.ValueEditorStateManager} editorStateManager
    * @param {AtmDataSpec} atmDataSpec
+   * @param {unknown} [initialValue]
    */
-  constructor(atmDataSpec) {
+  constructor(editorStateManager, atmDataSpec, initialValue = undefined) {
+    /**
+     * @private
+     * @readonly
+     * @type {Utils.AtmWorkflow.ValueEditors.ValueEditorStateManager}
+     */
+    this.editorStateManager = editorStateManager;
+
     /**
      * @public
      * @readonly
@@ -45,6 +54,10 @@ export default class ValueEditorState {
      * @type {Array<ValueEditorStateChangeListener>}
      */
     this.changeListeners = [];
+
+    if (initialValue !== undefined) {
+      this.value = initialValue;
+    }
   }
 
   /**

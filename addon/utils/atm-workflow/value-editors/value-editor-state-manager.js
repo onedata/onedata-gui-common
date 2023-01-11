@@ -135,14 +135,16 @@ export default class ValueEditorStateManager {
   /**
    * @public
    * @param {AtmDataSpec} atmDataSpec
+   * @param {unknown} initialValue
    * @returns {Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState}
    */
-  createValueEditorState(atmDataSpec) {
+  createValueEditorState(atmDataSpec, initialValue = undefined) {
     const ValueEditorStateClass = valueEditorStates[atmDataSpec.type];
     if (!ValueEditorStateClass) {
       return null;
     }
-    const valueEditorState = new ValueEditorStateClass(atmDataSpec);
+    const valueEditorState =
+      new ValueEditorStateClass(this, atmDataSpec, initialValue);
     valueEditorState.addChangeListener(this.nestedValueEditorStateChangeListener);
     this.editorStatesMap.set(valueEditorState.id, valueEditorState);
     return valueEditorState;
@@ -150,12 +152,15 @@ export default class ValueEditorStateManager {
 
   /**
    * @public
-   * @param {Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState} valueEditorState
+   * @param {string} valueEditorStateId
    * @returns {void}
    */
-  destroyValueEditorState(valueEditorState) {
-    this.editorStatesMap.delete(valueEditorState.id);
-    valueEditorState.destroy();
+  destroyValueEditorStateById(valueEditorStateId) {
+    const valueEditorState = this.getValueEditorStateById(valueEditorStateId);
+    if (valueEditorState) {
+      this.editorStatesMap.delete(valueEditorStateId);
+      valueEditorState.destroy();
+    }
   }
 
   /**

@@ -2,6 +2,8 @@ import Component from '@ember/component';
 import { observer, computed } from '@ember/object';
 
 export default Component.extend({
+  tagName: '',
+
   /**
    * @virtual
    * @type {Utils.AtmWorkflow.ValueEditors.ValueEditorStateManager}
@@ -13,6 +15,12 @@ export default Component.extend({
    * @type {string}
    */
   editorId: undefined,
+
+  /**
+   * @virtual optional
+   * @type {() => void | null}
+   */
+  onRemove: null,
 
   /**
    * @type {Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState | null}

@@ -1,0 +1,24 @@
+{{#atm-workflow/value-editors/commons/editor-box
+  editorState=editorState
+  onRemove=onRemove
+  as |editorBox|
+}}
+  {{#if (eq editorBox.section "content")}}
+    {{#if itemEditorStates.length}}
+      <ol class="array-items">
+        {{#each itemEditorStates as |itemEditorState|}}
+          <li>
+            {{component itemEditorState.editorComponentName
+              stateManager=stateManager
+              editorId=itemEditorState.id
+              onRemove=(action "removeItem" itemEditorState.id)
+            }}
+          </li>
+        {{/each}}
+      </ol>
+    {{/if}}
+    <a class="add-item-trigger clickable" {{action "addNewItem"}}>
+      {{tt this "addNewItem"}}
+    </a>
+  {{/if}}
+{{/atm-workflow/value-editors/commons/editor-box}}

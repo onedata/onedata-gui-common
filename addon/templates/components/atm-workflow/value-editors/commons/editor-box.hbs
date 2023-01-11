@@ -4,6 +4,9 @@
   </div>
   <div class="editor-box-toolbar">
     {{yield (hash section="toolbar")}}
+    {{#if onRemove}}
+      {{remove-icon onClick=onRemove}}
+    {{/if}}
   </div>
 </div>
 <div class="editor-box-content">

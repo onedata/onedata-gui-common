@@ -2,13 +2,23 @@
   border: 1px solid $main-border-color;
   border-radius: $border-radius-base;
 
+  .editor-box {
+    background-color: rgba(192, 192, 192, 0.1);
+  }
+
   .editor-box-header {
+    display: flex;
     padding: 0.3em;
     border-bottom: 1px solid $main-border-color;
+    background-color: rgba(192, 192, 192, 0.1);
 
     > * {
       font-size: 70%;
     }
+  }
+
+  .editor-box-toolbar {
+    margin-left: auto;
   }
 
   .data-spec-type {
@@ -21,7 +31,12 @@
   }
 
   &.integer-editor {
-    width: 10em;
+    max-width: 10em;
+  }
+
+  &.string-editor,
+  &.object-editor {
+    max-width: 40em;
   }
 
   &.object-editor {
@@ -60,6 +75,21 @@
 
   &.time-series-measurement-editor {
     max-width: 12em;
+  }
+
+  &.array-editor {
+    .array-items {
+      list-style-type: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3em;
+      padding-left: 0;
+      margin-bottom: 0.3em;
+    }
+
+    .add-item-trigger {
+      text-decoration: underline;
+    }
   }
 
   .form-group {

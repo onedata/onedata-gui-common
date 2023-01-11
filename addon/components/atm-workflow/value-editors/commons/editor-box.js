@@ -19,6 +19,12 @@ export default Component.extend({
   editorState: null,
 
   /**
+   * @virtual optional
+   * @type {() => void | null}
+   */
+  onRemove: null,
+
+  /**
    * @type {ComputedProperty<string>}
    */
   atmDataTypeClassName: computed(

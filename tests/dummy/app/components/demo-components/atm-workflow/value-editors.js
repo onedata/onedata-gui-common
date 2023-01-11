@@ -35,4 +35,31 @@ export default Component.extend({
       type: AtmDataSpecType.TimeSeriesMeasurement,
     });
   }),
+
+  arrayStringEditorStateManager: computed(() => {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.Array,
+      valueConstraints: {
+        itemDataSpec: {
+          type: AtmDataSpecType.String,
+        },
+      },
+    });
+  }),
+
+  arrayArrayRangeEditorStateManager: computed(() => {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.Array,
+      valueConstraints: {
+        itemDataSpec: {
+          type: AtmDataSpecType.Array,
+          valueConstraints: {
+            itemDataSpec: {
+              type: AtmDataSpecType.Range,
+            },
+          },
+        },
+      },
+    });
+  }),
 });
