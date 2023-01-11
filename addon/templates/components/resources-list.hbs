@@ -49,10 +49,15 @@
             item=item.conflictingLabelSource
             tagName="span"
             class="one-label"
-            onChange=(action "itemInfoHovered" item true)
+            mouseEnter=(action "itemInfoHovered" item true)
+            mouseLeave=(action "itemInfoHovered" item false)
           }}
         {{else}}
-          <span class="one-label">{{item.label}}</span>
+          <span 
+            class="one-label"
+            onmouseover={{action "itemInfoHovered" item true}}
+            onmouseleave={{action "itemInfoHovered" item false}}
+          >{{item.label}}</span>
         {{/if}}
         {{#if item.actions.length}}
           {{actions-toolbar
