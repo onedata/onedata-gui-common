@@ -1,0 +1,31 @@
+{{#truncated-string
+  mouseEnter=(action "itemInfoHovered" true)
+  mouseLeave=(action "itemInfoHovered" false)
+}}
+  <span 
+    class={{concat-classes "item-icon-container icon-container popover-info-trigger" spaceId}}
+    {{action
+      (mut itemInfoOpened)
+      (not itemInfoOpened)
+      bubbles=false
+    }}
+  >
+    {{flippable-icons
+      iconName="space"
+      iconColor=iconColor
+      isHovered=hasItemInfoHovered
+      suppressFlipping=itemInfoOpened
+    }}
+  </span>
+  <span>
+    {{get record column.propertyName}}
+  </span>
+{{/truncated-string}}
+{{#record-info-popover
+  isOpened=itemInfoOpened
+  triggerSelector=(concat ".item-icon-container." spaceId)
+}}
+  {{space-info-content
+    space=space
+  }}
+{{/record-info-popover}}
