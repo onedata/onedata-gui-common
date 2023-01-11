@@ -29,4 +29,10 @@ export default Component.extend({
       type: AtmDataSpecType.String,
     });
   }),
+
+  timeSeriesMeasurementEditorStateManager: computed(() => {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.TimeSeriesMeasurement,
+    });
+  }),
 });

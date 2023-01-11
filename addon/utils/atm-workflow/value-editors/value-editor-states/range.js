@@ -1,6 +1,6 @@
 import ValueEditorState from './value-editor-state';
 
-export default class StringValueEditorState extends ValueEditorState {
+export default class RangeValueEditorState extends ValueEditorState {
   /**
    * @override
    */

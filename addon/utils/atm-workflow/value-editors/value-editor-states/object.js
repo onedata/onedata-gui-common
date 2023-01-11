@@ -1,7 +1,7 @@
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import ValueEditorState from './value-editor-state';
 
-export default class StringValueEditorState extends ValueEditorState {
+export default class ObjectValueEditorState extends ValueEditorState {
   /**
    * @override
    */

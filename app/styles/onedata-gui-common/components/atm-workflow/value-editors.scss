@@ -58,6 +58,10 @@
     }
   }
 
+  &.time-series-measurement-editor {
+    max-width: 12em;
+  }
+
   .form-group {
     .control-label {
       width: 100%;

@@ -72,7 +72,7 @@ export default EditorBase.extend(I18n, {
 const FormRootGroup = FormFieldsRootGroup.extend({
   /**
    * @virtual
-   * @type {Components.AtmWorkflow.ValueEditors.Integer.Editor}
+   * @type {Components.AtmWorkflow.ValueEditors.Range.Editor}
    */
   component: undefined,
 

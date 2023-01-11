@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { dasherize } from '@ember/string';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/commons/editor-box';
 import { translateAtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 
@@ -24,7 +25,7 @@ export default Component.extend({
     'editorState.atmDataSpec.type',
     function atmDataTypeClassName() {
       const type = this.editorState?.atmDataSpec?.type;
-      return type ? `${type}-editor` : '';
+      return type ? `${dasherize(type)}-editor` : '';
     }
   ),
 
