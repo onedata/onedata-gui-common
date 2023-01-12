@@ -22,6 +22,10 @@
       }
       .property-value {
         padding-right: 0;
+
+        .user-username {
+          opacity: 0.6;
+        }
       }
       td {
         overflow-wrap: break-word;
@@ -37,5 +41,37 @@
   }
   .webui-popover-content {
     padding: $padding-small-horizontal;
+  }
+  .link-to-space {
+    padding-top: 15px;
+    // text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    
+
+    .one-icon {
+      font-size: 120%;
+      margin-left: 0.2em;
+    }
+
+    .space-link {
+      display: flex;
+      align-items: center;
+    }
+
+    .rest-api:hover {
+      cursor: pointer;
+    }
+  }
+  .col-separator {
+    margin-left: 1em;
+    margin-right: 1em;
+    &::after {
+      height: 32px;
+      content: ' ';
+      border-left: 1px solid;
+      border-color: $main-border-color;
+    }
   }
 }

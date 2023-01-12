@@ -43,18 +43,21 @@
       {{or creationTime "—"}}
     </td>
   </tr>
+</table>
+<div class="link-to-space">
   {{#if showRestApiModalLink}}
-    <tr class="row-with-text">
-      <td colspan="2">
-        <a {{action "openRestApiModal"}}>{{tt this "openRestApi"}}</a>
-      </td>
-    </tr>
+    <a {{action "openRestApiModal"}} class="space-link rest-api">
+      <span>{{tt this "openRestApi"}}</span>
+      {{one-icon icon="rest"}}
+    </a>
+  {{/if}}
+  {{#if (and showRestApiModalLink link)}} 
+    <span class="col-separator"></span>
   {{/if}}
   {{#if link}}
-    <tr class="row-with-text">
-      <td colspan="2">
-        <a href={{link}}>{{tt this "openSpace"}}</a>
-      </td>
-    </tr>
+    <a href={{link}} class="space-link">
+      <span>{{tt this "openSpace"}}</span>
+      {{one-icon icon="link-external"}}
+    </a>
   {{/if}}
-</table>
+</div>
