@@ -14,6 +14,7 @@ import config from 'ember-get-config';
 import _ from 'lodash';
 import { getOwner } from '@ember/application';
 import { camelize } from '@ember/string';
+import findRouteInfo from 'onedata-gui-common/utils/find-route-info';
 
 const notFoundAspect = 'not-found';
 
@@ -27,7 +28,8 @@ export default Route.extend({
   beforeModel(transition) {
     this.get('navigationState').updateQueryParams(transition);
     const contentModel = this.modelFor('onedata.sidebar.content');
-    const aspect = transition.params['onedata.sidebar.content.aspect'].aspect_id;
+    const aspect = findRouteInfo(transition, 'onedata.sidebar.content.aspect')
+      .params['aspect_id'];
     const resourceType = this.modelFor('onedata.sidebar').resourceType;
     if (!contentModel.resource) {
       if (contentModel.error && !isNotFoundError(contentModel.error)) {

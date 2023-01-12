@@ -56,7 +56,7 @@ describe('Unit | Service | url action runner', function () {
     return service.runFromTransition(transition)
       .then(result => {
         expect(result).to.equal('someResult');
-        expect(runner).to.be.calledOnce.and.to.be.calledWith(transition.queryParams);
+        expect(runner).to.be.calledOnce.and.to.be.calledWith(transition.to.queryParams);
       });
   });
 

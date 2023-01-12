@@ -69,7 +69,7 @@ export default Route.extend({
     } = this.modelFor('onedata.sidebar');
 
     const navigationState = this.get('navigationState');
-    const queryParams = get(transition, 'queryParams');
+    const queryParams = transition.to.queryParams;
 
     if (isSpecialResourceId(resourceId)) {
       setProperties(navigationState, {
