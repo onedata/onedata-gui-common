@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, fillIn, blur, find } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';

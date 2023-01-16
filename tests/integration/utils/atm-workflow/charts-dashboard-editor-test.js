@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import { find, fillIn, render } from '@ember/test-helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import {

@@ -9,7 +9,7 @@ import {
   findAll,
   find,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
 import ExceptOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/except-operator-query-block';

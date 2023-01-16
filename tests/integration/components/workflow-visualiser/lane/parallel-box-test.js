@@ -8,7 +8,7 @@ import {
   find,
   findAll,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';

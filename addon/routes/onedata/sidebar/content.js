@@ -116,13 +116,13 @@ export default Route.extend({
           .catch(error => ({ error }))
           .then(data => {
             const error = data && data.error;
-            return Promise.resolve({
+            return {
               resourceId: null,
               resource: null,
               collection,
               queryParams,
               error,
-            });
+            };
           });
       }
     }

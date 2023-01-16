@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, context, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';

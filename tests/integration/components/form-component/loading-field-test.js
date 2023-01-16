@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
 import { setProperties } from '@ember/object';
 import { Promise, resolve, reject } from 'rsvp';
