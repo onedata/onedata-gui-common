@@ -12,13 +12,21 @@
         border-top: 0;
         word-break: break-all;
 
+        &.user-info {
+          padding-bottom: 5px;
+        }
+
         .user-with-icon {
           display: inline-block;
           width: 100%;
+
+          .user-username {
+            opacity: 0.6;
+          }
         }
         .user-info-trigger {
           display: inline-block;
-          padding-top: 0.1em;
+          padding-top: 0.06em;
         }
       }
     }
