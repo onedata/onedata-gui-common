@@ -44,7 +44,8 @@ export default Route.extend(ApplicationRouteMixin, {
 
   beforeModel(transition) {
     this._super(...arguments);
-    this.set('navigationState.queryParams', get(transition, 'queryParams'));
+    const queryParams = transition.to.queryParams;
+    this.set('navigationState.queryParams', queryParams);
     this.smoothScrollPolyfill();
   },
 
