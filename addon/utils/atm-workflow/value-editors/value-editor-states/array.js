@@ -1,4 +1,9 @@
+import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import ValueEditorState from './value-editor-state';
+
+/**
+ * @typedef {'visual'|'raw'} ArrayValueEditorStateMode
+ */
 
 export default class ArrayValueEditorState extends ValueEditorState {
   /**
@@ -9,9 +14,30 @@ export default class ArrayValueEditorState extends ValueEditorState {
     this.editorComponentName = 'atm-workflow/value-editors/array/editor';
 
     /**
+     * @public
+     * @type {ArrayValueEditorStateMode}
+     */
+    this.internalMode = this.internalMode ?? 'visual';
+
+    /**
+     * @private
      * @type {Array<string>}
      */
-    this.itemEditorStateIds = [];
+    this.itemEditorStateIds = this.itemEditorStateIds ?? [];
+
+    /**
+     * @private
+     * @type {string}
+     */
+    this.internalStringifiedValue = this.internalStringifiedValue ?? '[]';
+  }
+
+  /**
+   * @public
+   * @returns {ArrayValueEditorStateMode}
+   */
+  get mode() {
+    return this.internalMode;
   }
 
   /**
@@ -30,6 +56,45 @@ export default class ArrayValueEditorState extends ValueEditorState {
     return (this.itemEditorStateIds ?? []).map((editorStateId) =>
       this.editorStateManager.getValueEditorStateById(editorStateId)
     ).filter(Boolean);
+  }
+
+  /**
+   * @public
+   * @returns {string}
+   */
+  get stringifiedValue() {
+    return this.internalStringifiedValue;
+  }
+
+  /**
+   * @public
+   * @param {string} newValue
+   * @returns {string}
+   */
+  set stringifiedValue(newValue) {
+    this.internalStringifiedValue = newValue;
+    this.notifyChange();
+  }
+
+  /**
+   * @public
+   * @param {ArrayValueEditorStateMode} newMode
+   * @returns {void}
+   */
+  changeMode(newMode) {
+    if (this.internalMode === newMode) {
+      return;
+    }
+
+    if (newMode === 'raw') {
+      this.resetStringifiedValue();
+    } else {
+      this.recreateItemEditorsForValue(
+        this.isValid ? JSON.parse(this.stringifiedValue) : []
+      );
+    }
+    this.internalMode = newMode;
+    this.notifyChange();
   }
 
   /**
@@ -66,8 +131,12 @@ export default class ArrayValueEditorState extends ValueEditorState {
    * @returns {void}
    */
   clear() {
-    this.removeAllItemsWithoutNotification();
-    this.notifyChange();
+    if (this.mode === 'raw') {
+      this.stringifiedValue = '[]';
+    } else {
+      this.removeAllItemsWithoutNotification();
+      this.notifyChange();
+    }
   }
 
   /**
@@ -82,18 +151,25 @@ export default class ArrayValueEditorState extends ValueEditorState {
    * @override
    */
   getValue() {
-    return this.itemEditorStates.map((state) => state.value);
+    if (this.mode === 'raw') {
+      try {
+        return JSON.parse(this.stringifiedValue);
+      } catch (e) {
+        return null;
+      }
+    } else {
+      return this.itemEditorStates.map((state) => state.value);
+    }
   }
 
   /**
    * @override
    */
   setValue(newValue) {
-    this.removeAllItemsWithoutNotification();
-    if (Array.isArray(newValue)) {
-      this.itemEditorStateIds = newValue.map((itemValue) =>
-        this.editorStateManager.createValueEditorState(this.itemDataSpec, itemValue)
-      );
+    if (this.mode === 'raw') {
+      this.resetStringifiedValue();
+    } else {
+      this.recreateItemEditorsForValue(newValue);
     }
   }
 
@@ -101,16 +177,40 @@ export default class ArrayValueEditorState extends ValueEditorState {
    * @override
    */
   getIsValid() {
-    return this.itemEditorStates.every((state) => state.isValid);
+    if (this.mode === 'raw') {
+      return (this.value === null && this.stringifiedValue.trim() === 'null') ||
+        (this.value !== null && validate(this.value, this.atmDataSpec));
+    } else {
+      return this.itemEditorStates.every((state) => state.isValid);
+    }
   }
 
   /**
    * @private
    */
   removeAllItemsWithoutNotification() {
-    this.itemEditorStateIds.forEach((editorStateId) =>
+    (this.itemEditorStateIds ?? []).forEach((editorStateId) =>
       this.editorStateManager.destroyValueEditorStateById(editorStateId)
     );
     this.itemEditorStateIds = [];
+  }
+
+  /**
+   * @private
+   */
+  recreateItemEditorsForValue(value) {
+    this.removeAllItemsWithoutNotification();
+    if (Array.isArray(value)) {
+      this.itemEditorStateIds = value.map((itemValue) =>
+        this.editorStateManager.createValueEditorState(this.itemDataSpec, itemValue).id
+      );
+    }
+  }
+
+  /**
+   * @private
+   */
+  resetStringifiedValue() {
+    this.internalStringifiedValue = JSON.stringify(this.value, null, 2);
   }
 }

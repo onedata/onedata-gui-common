@@ -49,7 +49,7 @@ export default EditorBase.extend({
    * @returns {string}
    */
   getFormValue() {
-    return this.formRootGroup.dumpValue().value;
+    return this.formRootGroup.dumpValue().value ?? '';
   },
 });
 
@@ -77,6 +77,8 @@ const FormRootGroup = FormFieldsRootGroup.extend({
     TextareaField.create({
       name: 'value',
       withValidationMessage: false,
+      // allows empty string
+      isOptional: true,
     }),
   ]),
 

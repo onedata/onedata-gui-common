@@ -5,4 +5,8 @@ export default {
     single: '1 item',
     multiple: '{{itemsCount}} items',
   },
+  modes: {
+    visual: 'Visual',
+    raw: 'Raw',
+  },
 };

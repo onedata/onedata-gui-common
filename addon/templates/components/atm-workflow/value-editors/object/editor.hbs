@@ -1,7 +1,7 @@
 {{#atm-workflow/value-editors/commons/editor-box
   editorState=editorState
   onRemove=onRemove
-  class=(if (not isValid) "invalid")
+  class=(concat-classes "editor-with-json" (if (not isValid) "invalid"))
   as |editorBox|
 }}
   {{#if (eq editorBox.section "content")}}

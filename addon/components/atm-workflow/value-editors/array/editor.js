@@ -13,9 +13,24 @@ export default EditorBase.extend(I18n, {
   i18nPrefix: 'components.atmWorkflow.valueEditors.array.editor',
 
   /**
+   * @type {ArrayValueEditorStateMode}
+   */
+  mode: 'visual',
+
+  /**
+   * @type {boolean}
+   */
+  isValid: true,
+
+  /**
    * @type {Array<Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState>}
    */
   itemEditorStates: undefined,
+
+  /**
+   * @type {string}
+   */
+  stringifiedValue: '',
 
   /**
    * @type {ComputedProperty<string>}
@@ -35,9 +50,12 @@ export default EditorBase.extend(I18n, {
       return;
     }
 
-    if (this.areItemEditorStatesIdsDifferent()) {
-      this.set('itemEditorStates', this.editorState.itemEditorStates);
-    }
+    this.setProperties({
+      itemEditorStates: this.editorState.itemEditorStates,
+      stringifiedValue: this.editorState.stringifiedValue,
+      mode: this.editorState.mode,
+      isValid: this.editorState.isValid,
+    });
   },
 
   /**
@@ -52,6 +70,9 @@ export default EditorBase.extend(I18n, {
   },
 
   actions: {
+    toggleMode() {
+      this.editorState.changeMode(this.mode === 'visual' ? 'raw' : 'visual');
+    },
     clear() {
       this.editorState.clear();
     },
@@ -60,6 +81,9 @@ export default EditorBase.extend(I18n, {
     },
     removeItem(editorStateId) {
       this.editorState.removeItem(editorStateId);
+    },
+    rawValueChanged(newValue) {
+      this.editorState.stringifiedValue = newValue;
     },
   },
 });

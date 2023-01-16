@@ -1,32 +1,55 @@
 {{#atm-workflow/value-editors/commons/editor-box
   editorState=editorState
   onRemove=onRemove
+  class=(if (eq mode "raw") (concat-classes "editor-with-json" (if (not isValid) "invalid")))
   as |editorBox|
 }}
   {{#if (eq editorBox.section "toolbar")}}
-    <span class="items-count">{{itemsCountText}}</span>
-    {{#if itemEditorStates.length}}
+    <a class="mode-trigger clickable action-link" {{action "toggleMode"}}>
+      {{tt this (concat "modes." (if (eq mode "visual") "raw" "visual"))}}
+    </a>
+    {{#if (eq mode "visual")}}
+      <span class="separator"></span>
+      <span class="items-count">{{itemsCountText}}</span>
+    {{/if}}
+    {{#if (or (eq mode "raw") itemEditorStates.length)}}
       <span class="separator"></span>
       <a class="clear-trigger clickable action-link" {{action "clear"}}>
         {{tt this "clear"}}
       </a>
     {{/if}}
   {{else if (eq editorBox.section "content")}}
-    {{#if itemEditorStates.length}}
-      <ol class="array-items">
-        {{#each itemEditorStates as |itemEditorState|}}
-          <li>
-            {{component itemEditorState.editorComponentName
-              stateManager=stateManager
-              editorId=itemEditorState.id
-              onRemove=(action "removeItem" itemEditorState.id)
-            }}
-          </li>
-        {{/each}}
-      </ol>
+    {{#if (eq mode "visual")}}
+      {{#if itemEditorStates.length}}
+        <ol class="array-items">
+          {{#each itemEditorStates as |itemEditorState|}}
+            <li>
+              {{component itemEditorState.editorComponentName
+                stateManager=stateManager
+                editorId=itemEditorState.id
+                onRemove=(action "removeItem" itemEditorState.id)
+              }}
+            </li>
+          {{/each}}
+        </ol>
+      {{/if}}
+      <a class="add-item-trigger clickable action-link" {{action "addNewItem"}}>
+        {{tt this "addNewItem"}}
+      </a>
+    {{else}}
+      {{ember-ace
+        editorClass="full-height"
+        value=stringifiedValue
+        worker="ace/mode/json_worker"
+        mode="ace/mode/json"
+        theme="ace/theme/textmate"
+        tabSize=2
+        useWrapMode=true
+        highlightActiveLine=true
+        showLineNumbers=true
+        showPrintMargin=false
+        update=(action "rawValueChanged")
+      }}
     {{/if}}
-    <a class="add-item-trigger clickable action-link" {{action "addNewItem"}}>
-      {{tt this "addNewItem"}}
-    </a>
   {{/if}}
 {{/atm-workflow/value-editors/commons/editor-box}}
