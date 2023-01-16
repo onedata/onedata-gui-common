@@ -49,6 +49,11 @@ export default Component.extend(WindowResizeHandler, {
   chart: undefined,
 
   /**
+   * @type {() => void}
+   */
+  setCanvasRawDataCallback: undefined,
+
+  /**
    * @type {ComputedProperty<PromiseObject<ECharts>>}
    */
   echartsLibraryProxy: computed(function echartsLibraryProxy() {
@@ -58,6 +63,14 @@ export default Component.extend(WindowResizeHandler, {
   optionApplyer: observer('option', function optionApplyer() {
     this.applyChartOption();
   }),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    this.set('setCanvasRawDataCallback', this.setCanvasRawData.bind(this));
+  },
 
   /**
    * @override
@@ -88,28 +101,22 @@ export default Component.extend(WindowResizeHandler, {
   },
 
   async setupChart() {
-    const echarts = await this.get('echartsLibraryProxy');
+    const echarts = await this.echartsLibraryProxy;
     next(() => window.requestAnimationFrame(() => safeExec(this, () => {
-      const {
-        element,
-        chart: existingChart,
-      } = this.getProperties('element', 'chart');
-      if (!element || !echarts || existingChart) {
+      if (!this.element || !echarts || this.chart) {
         return;
       }
 
-      this.set('chart', echarts.init(element.querySelector('.chart')));
+      const chart = echarts.init(this.element.querySelector('.chart'));
+      chart.on('rendered', this.setCanvasRawDataCallback);
+      this.set('chart', chart);
       this.applyChartOption();
     })));
   },
 
   applyChartOption() {
-    const {
-      chart,
-      option,
-    } = this.getProperties('chart', 'option');
-    if (chart && option) {
-      chart.setOption(option, { replaceMerge: ['series'] });
+    if (this.chart && this.option) {
+      this.chart.setOption(this.option, { replaceMerge: ['series'] });
     }
   },
 
@@ -121,9 +128,41 @@ export default Component.extend(WindowResizeHandler, {
   },
 
   destroyChart() {
-    const chart = this.get('chart');
-    if (chart) {
-      chart.dispose();
+    if (this.chart) {
+      this.chart.off('rendered', this.setCanvasRawDataCallback);
+      this.chart.dispose();
     }
+  },
+
+  setCanvasRawData() {
+    // Setting raw data works only for data specified inside each series (via
+    // `data` property). More advanced data-defining approaches (like via
+    // `dataset`) are not supported.
+
+    const canvas = this.element?.querySelector('canvas');
+    if (!canvas || !this.chart) {
+      return;
+    }
+
+    const echartSeriesArray = this.chart.getOption().series;
+    canvas.__onedata__ = {
+      series: echartSeriesArray.map(({ name, type, data = [] }) => ({
+        name,
+        type,
+        data: data.map((entry) => {
+          if (Array.isArray(entry)) {
+            // (x, y) coordinates. We need to use `Number()` because
+            // it'll be a very common case that the first element will be
+            // a stringified timestamp (from one-time-series-chart).
+            const x = String(Number(entry[0])) === entry[0] ? Number(entry[0]) : entry[0];
+            const y = entry[1];
+            return [x, y];
+          } else {
+            // Some custom point format - return as is.
+            return entry;
+          }
+        }),
+      })),
+    };
   },
 });
