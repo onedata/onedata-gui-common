@@ -3,7 +3,10 @@
   mouseLeave=(action "itemInfoHovered" false)
 }}
   <span 
-    class={{concat-classes "item-icon-container icon-container popover-info-trigger" spaceId}}
+    class={{concat-classes 
+      "item-icon-container icon-container popover-info-trigger" 
+      spaceId
+    }}
     {{action
       (mut itemInfoOpened)
       (not itemInfoOpened)

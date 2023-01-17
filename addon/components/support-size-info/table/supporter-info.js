@@ -1,5 +1,6 @@
 /**
- * A component that is used as a cell renderer flippable icon with additional info popover and supporter name.
+ * A component that is used as a cell renderer flippable icon 
+ * with additional info popover and supporter name.
  *
  * @author Angieszka Warchoł
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -25,14 +26,20 @@ export default Component.extend({
    */
   hasItemInfoHovered: false,
 
+  /**
+   * @type {object}
+   */
   space: computed('record', function space() {
     return {
-        name: this.record.supporterName, 
-        entityId: this.record.supporterId,
-        owner: null,
+      name: this.record.supporterName,
+      entityId: this.record.supporterId,
+      owner: null,
     };
   }),
 
+  /**
+   * @type {string}
+   */
   spaceId: reads('record.supporterId'),
 
   actions: {

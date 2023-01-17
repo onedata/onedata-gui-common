@@ -30,14 +30,29 @@ export default Component.extend(I18n, {
    */
   space: undefined,
 
-  showRestApiModalLink: false,
+  /**
+   * @type {boolean}
+   */
+  showLinkToRestApiModal: false,
 
+  /**
+   * @type {boolean}
+   */
   showLinkToFileBrowser: false,
 
+  /**
+   * @type {boolean}
+   */
   showLinkToSpace: false,
 
+  /**
+   * @type {string}
+   */
   linkToFileBrowser: undefined,
 
+  /**
+   * @type {string}
+   */
   linkToSpace: undefined,
 
   /**

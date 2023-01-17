@@ -24,7 +24,7 @@
         padding-right: 0;
 
         .user-username {
-          opacity: 0.6;
+          opacity: $disabled-opacity;
         }
       }
       td {
@@ -44,11 +44,9 @@
   }
   .link-to-space {
     padding-top: 15px;
-    // text-align: right;
     display: flex;
     align-items: center;
     justify-content: right;
-    
 
     .one-icon {
       font-size: 120%;
