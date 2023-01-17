@@ -3,7 +3,7 @@ import timeSeriesMeasurement from './data-spec/time-series-measurement';
 
 export default {
   types: {
-    integer: 'Integer',
+    number: 'Number',
     boolean: 'Boolean',
     string: 'String',
     object: 'Object',

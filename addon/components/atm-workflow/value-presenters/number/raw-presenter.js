@@ -1,5 +1,5 @@
 /**
- * A "raw" integer value presenter.
+ * A "raw" number value presenter.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -12,5 +12,5 @@ export default RawPresenterBase.extend({
   /**
    * @override
    */
-  dataSpecType: 'integer',
+  dataSpecType: 'number',
 });

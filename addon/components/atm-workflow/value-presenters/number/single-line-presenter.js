@@ -1,5 +1,5 @@
 /**
- * A "single line" integer value presenter.
+ * A "single line" number value presenter.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -12,5 +12,5 @@ export default SingleLinePresenterBase.extend({
   /**
    * @override
    */
-  dataSpecType: 'integer',
+  dataSpecType: 'number',
 });

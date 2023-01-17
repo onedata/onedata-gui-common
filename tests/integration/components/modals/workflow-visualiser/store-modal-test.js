@@ -22,7 +22,7 @@ const simplestStore = {
   type: 'list',
   config: {
     itemDataSpec: {
-      type: 'integer',
+      type: 'number',
       valueConstraints: {},
     },
   },
@@ -76,7 +76,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
         expect(submitBtn.disabled).to.be.true;
 
         await fillIn('.name-field .form-control', 'store1');
-        await selectChoose('.data-spec-editor', 'Integer');
+        await selectChoose('.data-spec-editor', 'Number');
         expect(submitBtn.disabled).to.be.false;
 
         await fillIn('.name-field .form-control', '');
@@ -90,7 +90,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
 
     const fillForm = async () => {
       await fillIn('.name-field .form-control', 'store1');
-      await selectChoose('.data-spec-editor', 'Integer');
+      await selectChoose('.data-spec-editor', 'Number');
     };
     itPassesStoreProvidedByFormOnSubmit(fillForm, simplestStore);
     itDisablesAllControlsWhileSubmitting(fillForm);

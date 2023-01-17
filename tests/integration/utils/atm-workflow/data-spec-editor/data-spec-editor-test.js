@@ -15,8 +15,8 @@ import { AtmFileType } from 'onedata-gui-common/utils/atm-workflow/data-spec/typ
 import { set } from '@ember/object';
 
 const atmDataSpecTypesInfo = [{
-  type: AtmDataSpecType.Integer,
-  label: 'Integer',
+  type: AtmDataSpecType.Number,
+  label: 'Number',
 }, {
   type: AtmDataSpecType.Boolean,
   label: 'Boolean',
@@ -164,7 +164,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       const filters = [{
         filterType: 'typeOrSupertype',
         types: [{
-          type: AtmDataSpecType.Integer,
+          type: AtmDataSpecType.Number,
         }, {
           type: AtmDataSpecType.Array,
           valueConstraints: {
@@ -178,7 +178,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Integer', 'Array']);
+        .to.deep.equal(['Number', 'Array']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
         .to.deep.equal(['Object', 'Dataset']);
@@ -188,7 +188,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       const filters = [{
         filterType: 'typeOrSubtype',
         types: [{
-          type: AtmDataSpecType.Integer,
+          type: AtmDataSpecType.Number,
         }, {
           type: AtmDataSpecType.Array,
           valueConstraints: {
@@ -202,7 +202,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Integer', 'Array']);
+        .to.deep.equal(['Number', 'Array']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
         .to.deep.equal([
@@ -220,7 +220,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
         types: [{
           type: AtmDataSpecType.Object,
         }, {
-          type: AtmDataSpecType.Integer,
+          type: AtmDataSpecType.Number,
         }],
       }];
       setFilters(this, filters);
@@ -237,7 +237,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       const filters = [{
         filterType: 'typeOrSupertype',
         types: [{
-          type: AtmDataSpecType.Integer,
+          type: AtmDataSpecType.Number,
         }, {
           type: AtmDataSpecType.Array,
           valueConstraints: {
@@ -256,7 +256,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Integer', 'Array']);
+        .to.deep.equal(['Number', 'Array']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
         .to.deep.equal(['Object']);

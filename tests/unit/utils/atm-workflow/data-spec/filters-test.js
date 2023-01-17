@@ -16,7 +16,7 @@ import {
 import _ from 'lodash';
 
 const inheritanceLeafTypes = [
-  AtmDataSpecType.Integer,
+  AtmDataSpecType.Number,
   AtmDataSpecType.Boolean,
   AtmDataSpecType.String,
   AtmDataSpecType.Array,
@@ -27,7 +27,7 @@ const inheritanceLeafTypes = [
 ];
 
 const inheritanceRootTypes = [
-  AtmDataSpecType.Integer,
+  AtmDataSpecType.Number,
   AtmDataSpecType.Boolean,
   AtmDataSpecType.String,
   AtmDataSpecType.Array,
@@ -147,7 +147,7 @@ describe('Unit | Utility | atm workflow/data spec/filters', function () {
       it('returns false when none of types match', function () {
         const filters = [{
           filterType: 'typeOrSupertype',
-          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.Integer }],
+          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.Number }],
         }];
         const atmDataSpec = {
           type: AtmDataSpecType.File,
@@ -308,7 +308,7 @@ describe('Unit | Utility | atm workflow/data spec/filters', function () {
       it('returns false when none of types match', function () {
         const filters = [{
           filterType: 'typeOrSubtype',
-          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.Integer }],
+          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.Number }],
         }];
         const atmDataSpec = {
           type: AtmDataSpecType.File,
@@ -489,7 +489,7 @@ describe('Unit | Utility | atm workflow/data spec/filters', function () {
         type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: AtmDataSpecType.Integer,
+            type: AtmDataSpecType.Number,
           },
         },
       }, {
@@ -518,7 +518,7 @@ describe('Unit | Utility | atm workflow/data spec/filters', function () {
       it('returns true when none of type match', function () {
         const filters = [{
           filterType: 'forbiddenType',
-          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.Integer }],
+          types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.Number }],
         }];
         const atmDataSpec = {
           type: AtmDataSpecType.File,
@@ -671,7 +671,7 @@ describe('Unit | Utility | atm workflow/data spec/filters', function () {
         type: AtmDataSpecType.Array,
         valueConstraints: {
           itemDataSpec: {
-            type: AtmDataSpecType.Integer,
+            type: AtmDataSpecType.Number,
           },
         },
       }, {
@@ -701,7 +701,7 @@ describe('Unit | Utility | atm workflow/data spec/filters', function () {
     });
 
     [
-      [AtmDataSpecType.Integer, [AtmDataSpecType.Integer]],
+      [AtmDataSpecType.Number, [AtmDataSpecType.Number]],
       [AtmDataSpecType.Boolean, [AtmDataSpecType.Boolean]],
       [AtmDataSpecType.String, [AtmDataSpecType.String]],
       [AtmDataSpecType.Object, [AtmDataSpecType.Object]],
@@ -734,7 +734,7 @@ describe('Unit | Utility | atm workflow/data spec/filters', function () {
     });
 
     [
-      [AtmDataSpecType.Integer, [AtmDataSpecType.Integer]],
+      [AtmDataSpecType.Number, [AtmDataSpecType.Number]],
       [AtmDataSpecType.Boolean, [AtmDataSpecType.Boolean]],
       [AtmDataSpecType.String, [AtmDataSpecType.String]],
       [AtmDataSpecType.Object, [
@@ -766,8 +766,8 @@ describe('Unit | Utility | atm workflow/data spec/filters', function () {
     });
 
     [
-      [AtmDataSpecType.Integer, _.difference(atmDataSpecTypesArray, [
-        AtmDataSpecType.Integer,
+      [AtmDataSpecType.Number, _.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.Number,
       ])],
       [AtmDataSpecType.Boolean, _.difference(atmDataSpecTypesArray, [
         AtmDataSpecType.Boolean,

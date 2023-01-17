@@ -4,19 +4,19 @@ import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { render, findAll } from '@ember/test-helpers';
 
-describe('Integration | Component | atm workflow/value presenters/integer/table body row presenter', function () {
+describe('Integration | Component | atm workflow/value presenters/number/table body row presenter', function () {
   setupRenderingTest();
 
-  it('has classes "table-body-row-presenter" and "integer-table-body-row-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/integer/table-body-row-presenter}}`);
+  it('has classes "table-body-row-presenter" and "number-table-body-row-presenter"', async function () {
+    await render(hbs`{{atm-workflow/value-presenters/number/table-body-row-presenter}}`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('table-body-row-presenter')
-      .and.to.have.class('integer-table-body-row-presenter');
+      .and.to.have.class('number-table-body-row-presenter');
   });
 
   it('shows single column - value', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/integer/table-body-row-presenter
+    await render(hbs`{{atm-workflow/value-presenters/number/table-body-row-presenter
       value=123
     }}`);
 
@@ -24,6 +24,6 @@ describe('Integration | Component | atm workflow/value presenters/integer/table 
     expect(tds).to.have.length(1);
     expect(tds[0]).to.have.class('column-value')
       .and.to.have.trimmed.text('123')
-      .and.to.contain('.integer-single-line-presenter');
+      .and.to.contain('.number-single-line-presenter');
   });
 });

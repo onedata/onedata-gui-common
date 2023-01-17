@@ -1,4 +1,4 @@
-import integer from './value-presenters/integer';
+import number from './value-presenters/number';
 import boolean from './value-presenters/boolean';
 import string from './value-presenters/string';
 import object from './value-presenters/object';
@@ -11,7 +11,7 @@ import fallback from './value-presenters/fallback';
 import fullValuePresenter from './value-presenters/full-value-presenter';
 
 export default {
-  integer,
+  number,
   boolean,
   string,
   object,

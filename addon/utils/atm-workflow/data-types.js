@@ -7,7 +7,7 @@
  */
 
 /**
- * @typedef {number} AtmInteger
+ * @typedef {number} AtmNumber
  */
 
 /**

@@ -1,5 +1,5 @@
 /**
- * A "table header row" integer value presenter.
+ * A "table header row" number value presenter.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -7,7 +7,7 @@
  */
 
 import TableHeaderRowPresenterBase from '../commons/table-header-row-presenter-base';
-import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/integer/table-header-row-presenter';
+import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/number/table-header-row-presenter';
 
 export default TableHeaderRowPresenterBase.extend({
   layout,
@@ -15,5 +15,5 @@ export default TableHeaderRowPresenterBase.extend({
   /**
    * @override
    */
-  dataSpecType: 'integer',
+  dataSpecType: 'number',
 });
