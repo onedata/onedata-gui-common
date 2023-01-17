@@ -5,5 +5,6 @@ export default {
   creator: 'Creator',
   creationTime: 'Created at',
   openRestApi: 'REST API',
-  openSpace: 'File browser',
+  openFileBrowser: 'File browser',
+  openSpace: 'Space',
 };

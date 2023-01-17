@@ -50,13 +50,26 @@
       <span>{{tt this "openRestApi"}}</span>
       {{one-icon icon="rest"}}
     </a>
+    {{#if showLinkToFileBrowser}} 
+      <span class="col-separator"></span>
+    {{/if}}
   {{/if}}
-  {{#if (and showRestApiModalLink link)}} 
-    <span class="col-separator"></span>
+  {{#if showLinkToFileBrowser}}
+    <a 
+      href={{linkToFileBrowser}} 
+      class="space-link file-browser-link"
+      {{action "openFileBrowser"}}
+    >
+      <span>{{tt this "openFileBrowser"}}</span>
+      {{one-icon icon="link-external"}}
+    </a>
+    {{#if showLinkToSpace}}
+      <span class="col-separator"></span>
+    {{/if}}
   {{/if}}
-  {{#if link}}
-    <a href={{link}} class="space-link">
-      <span>{{tt this "openSpace"}}</span>
+  {{#if showLinkToSpace}}
+    <a href={{linkToSpace}} class="space-link">
+      {{tt this "openSpace"}}
       {{one-icon icon="link-external"}}
     </a>
   {{/if}}

@@ -32,6 +32,14 @@ export default Component.extend(I18n, {
 
   showRestApiModalLink: false,
 
+  showLinkToFileBrowser: false,
+
+  showLinkToSpace: false,
+
+  linkToFileBrowser: undefined,
+
+  linkToSpace: undefined,
+
   /**
    * @type {Models.User}
    */
@@ -50,6 +58,4 @@ export default Component.extend(I18n, {
       return moment.unix(timestamp).format('D MMM YYYY H:mm:ss');
     }
   }),
-
-  link: undefined,
 });
