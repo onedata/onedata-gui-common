@@ -31,26 +31,31 @@ export default Component.extend(I18n, {
   space: undefined,
 
   /**
+   * @virtual optional
    * @type {boolean}
    */
   showLinkToRestApiModal: false,
 
   /**
+   * @virtual optional
    * @type {boolean}
    */
   showLinkToFileBrowser: false,
 
   /**
+   * @virtual optional
    * @type {boolean}
    */
   showLinkToSpace: false,
 
   /**
+   * @virtual optional
    * @type {string}
    */
   linkToFileBrowser: undefined,
 
   /**
+   * @virtual optional
    * @type {string}
    */
   linkToSpace: undefined,
