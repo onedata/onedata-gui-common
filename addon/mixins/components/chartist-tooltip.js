@@ -179,8 +179,8 @@ export default Mixin.create({
         _ctPointsColumnXPosition,
         _ctPointsColumnYPosition,
       } = this.getProperties('_ctPointsColumnXPosition', '_ctPointsColumnYPosition');
-      const chartContainer = $(this.element.querySelector('.ct-chart'));
-      const chartXCenter = chartContainer.width() / 2;
+      const chartContainer = this.element.querySelector('.ct-chart');
+      const chartXCenter = dom.width(chartContainer) / 2;
       dom.setStyles(tooltip, {
         top: _ctPointsColumnYPosition[_ctHoveredPointsColumnIndex] + 'px',
         left: _ctPointsColumnXPosition[_ctHoveredPointsColumnIndex] + 'px',

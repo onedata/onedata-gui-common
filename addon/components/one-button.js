@@ -11,7 +11,6 @@
 import BsButton from 'ember-bootstrap/components/bs-button';
 import layout from '../templates/components/one-button';
 import { or, eq, raw, and } from 'ember-awesome-macros';
-import { reads } from '@ember/object/computed';
 
 export default BsButton.extend({
   layout,
@@ -32,6 +31,12 @@ export default BsButton.extend({
   disableWhenPending: true,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  showSpinnerWhenPending: true,
+
+  /**
    * @type {ComputedProperty<boolean>}
    */
   isInPendingState: or('isPending', eq('state', raw('pending'))),
@@ -39,7 +44,7 @@ export default BsButton.extend({
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isSpinnerVisible: reads('isInPendingState'),
+  isSpinnerVisible: and('isInPendingState', 'showSpinnerWhenPending'),
 
   /**
    * @type {ComputedProperty<boolean>}

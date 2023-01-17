@@ -17,7 +17,6 @@ import hbs from 'htmlbars-inline-precompile';
 import { scrollTo } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import _ from 'lodash';
-import $ from 'jquery';
 import { htmlSafe } from '@ember/string';
 import { dasherize } from '@ember/string';
 import { getModalBody, getModalFooter } from '../../helpers/modal';
@@ -25,6 +24,7 @@ import { selectChoose } from 'ember-power-select/test-support/helpers';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import { resolve, Promise } from 'rsvp';
 import { schedule } from '@ember/runloop';
+import dom from 'onedata-gui-common/utils/dom';
 
 const laneWidth = 300;
 
@@ -359,9 +359,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
       await click('.workflow-visualiser-stores-list-store');
 
-      await click(
-        $(getModalBody()).find('.bs-tab-onedata .nav-link:contains("Details")')[0]
-      );
+      await click(getModalBody().querySelector('.bs-tab-onedata .nav-link'));
       expect(
         getModalBody().querySelector('.name-field .field-component').textContent.trim()
       ).to.equal('store0');
@@ -578,22 +576,25 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
       }
     }
 
-    const $lanesContainer = $(find('.visualiser-elements'));
-    const $lanes = $(findAll('.workflow-visualiser-lane'));
-    const $targetLane = $lanes.eq(laneToCheck);
+    const lanesContainer = find('.visualiser-elements');
+    const lanes = findAll('.workflow-visualiser-lane');
+    const targetLane = lanes[laneToCheck];
     if (edgeToCheck === 'left') {
       if (laneToCheck === 0) {
-        expect($lanesContainer.scrollLeft()).to.equal(0);
+        expect(lanesContainer.scrollLeft).to.equal(0);
       } else {
-        expect($targetLane.offset().left).to.be.closeTo($lanesContainer.offset().left, 2);
+        expect(dom.offset(targetLane).left).to.be.closeTo(dom.offset(lanesContainer).left, 2);
       }
     } else {
-      if (laneToCheck === $lanes.length - 1) {
-        expect($lanesContainer.scrollLeft())
-          .to.be.closeTo($lanesContainer.prop('scrollWidth') - $lanesContainer.width(), 2);
+      if (laneToCheck === lanes.length - 1) {
+        expect(lanesContainer.scrollLeft).to.be.closeTo(
+          lanesContainer.scrollWidth -
+          dom.width(lanesContainer, dom.LayoutBox.PaddingBox),
+          2
+        );
       } else {
-        expect($targetLane.offset().left + $targetLane.width())
-          .to.be.closeTo($lanesContainer.offset().left + $lanesContainer.width(), 2);
+        expect(dom.offset(targetLane).left + dom.width(targetLane))
+          .to.be.closeTo(dom.offset(lanesContainer).left + dom.width(lanesContainer), 2);
       }
     }
     done();
@@ -927,38 +928,38 @@ async function getActionTrigger(elementType, elementPath, actionName) {
   );
 }
 
-async function scrollToLane(overflowSide, targetLane, offsetPercent = 0) {
-  const $lanesContainer = $(find('.visualiser-elements'));
-  const $lanes = $(findAll('.workflow-visualiser-lane'));
-  const $targetLane = targetLane >= 0 ? $lanes.eq(targetLane) : null;
-  const laneWidth = $lanes.width();
+async function scrollToLane(overflowSide, targetLaneIdx, offsetPercent = 0) {
+  const lanesContainer = find('.visualiser-elements');
+  const lanes = findAll('.workflow-visualiser-lane');
+  const targetLane = targetLaneIdx >= 0 ? lanes[targetLaneIdx] : null;
+  const laneWidth = dom.width(lanes[0]);
   let scrollXPosition;
 
-  if (targetLane >= $lanes.length) {
-    scrollXPosition = $lanesContainer.prop('scrollWidth');
-  } else if (targetLane < 0) {
+  if (targetLaneIdx >= lanes.length) {
+    scrollXPosition = lanesContainer.scrollWidth;
+  } else if (targetLaneIdx < 0) {
     scrollXPosition = 0;
   } else {
     if (overflowSide === 'left') {
-      if (targetLane === 0 && !offsetPercent) {
+      if (targetLaneIdx === 0 && !offsetPercent) {
         scrollXPosition = 0;
       } else {
-        const targetLaneOffset = $targetLane.offset().left -
-          $lanesContainer.offset().left;
+        const targetLaneOffset = dom.offset(targetLane).left -
+          dom.offset(lanesContainer).left;
         scrollXPosition = targetLaneOffset + (offsetPercent / 100) * laneWidth;
       }
     } else {
-      if (targetLane === $lanes.length - 1 && !offsetPercent) {
-        scrollXPosition = $lanesContainer.prop('scrollWidth');
+      if (targetLaneIdx === lanes.length - 1 && !offsetPercent) {
+        scrollXPosition = lanesContainer.scrollWidth;
       } else {
-        const targetLaneOffset = $targetLane.offset().left + $targetLane.width() -
-          ($lanesContainer.offset().left + $lanesContainer.width());
+        const targetLaneOffset = dom.offset(targetLane).left + dom.width(targetLane) -
+          (dom.offset(lanesContainer).left + dom.width(lanesContainer));
 
         scrollXPosition = targetLaneOffset - (offsetPercent / 100) * laneWidth;
       }
     }
   }
-  await scrollTo($lanesContainer[0], scrollXPosition, 0);
+  await scrollTo(lanesContainer, scrollXPosition, 0);
 }
 
 function checkRenderedLanesStructure(rawData) {

@@ -36,7 +36,6 @@ import {
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { assert } from '@ember/debug';
-import $ from 'jquery';
 import dom from 'onedata-gui-common/utils/dom';
 
 export default EmberObject.extend({
@@ -343,13 +342,12 @@ export default EmberObject.extend({
   recalculatePosition() {
     const hostElement = this.activeOwner?.hostElement;
     if (hostElement) {
-      const $hostElement = $(hostElement);
       const {
         top,
         left,
-      } = $hostElement.offset();
-      const height = $hostElement.innerHeight();
-      const width = $hostElement.innerWidth();
+      } = dom.offset(hostElement);
+      const height = dom.height(hostElement, dom.LayoutBox.PaddingBox);
+      const width = dom.width(hostElement, dom.LayoutBox.PaddingBox);
       dom.setStyles(this.iframeElement, {
         top: `${top}px`,
         left: `${left}px`,

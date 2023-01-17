@@ -3,6 +3,16 @@ import taskForm from './workflow-visualiser/task-form';
 export default {
   status: 'Status',
   taskForm,
+  workflow: {
+    actions: {
+      modifyWorkflowChartsDashboard: {
+        title: 'Charts',
+      },
+      viewWorkflowChartsDashboard: {
+        title: 'Charts',
+      },
+    },
+  },
   lane: {
     iterator: 'Max. batch: {{maxBatchSize}}',
     runTiming: {
@@ -64,6 +74,12 @@ export default {
           preparedInAdvance: 'Rerun cannot be scheduled for runs prepared in advance.',
           unknownReason: 'Rerun of this lane run is not possible.',
         },
+      },
+      modifyLaneChartsDashboard: {
+        title: 'Configure charts',
+      },
+      viewLaneChartsDashboard: {
+        title: 'View charts',
       },
     },
     runIndicator: {
@@ -147,5 +163,8 @@ export default {
         subjectName: 'Workflow',
       },
     },
+  },
+  storesList: {
+    label: 'Stores',
   },
 };

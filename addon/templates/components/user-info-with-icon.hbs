@@ -1,10 +1,6 @@
-{{#truncated-string}}
-  <span
-    class={{concat-classes
-      "inline-icon-container user-info-trigger"
-      (if userInfoOpened "not-animation" "animation")
-      (if hasUserInfoHovered "user-info-icon-container-hovered")
-    }}
+{{#truncated-string class="user-with-icon flippable-icons-with-text"}}
+  <div
+    class="user-info-trigger popover-info-trigger"
     {{action
       (mut userInfoOpened)
       (not userInfoOpened)
@@ -13,9 +9,13 @@
     onmouseover={{action "userInfoHovered" true}}
     onmouseleave={{action "userInfoHovered" false}}
   >
-    {{one-icon icon="user" color=iconColor}}
-    {{one-icon icon="browser-info"}}
-  </span>
+    {{flippable-icons
+      iconName="user"
+      iconColor=iconColor
+      isHovered=hasUserInfoHovered
+      suppressFlipping=userInfoOpened
+    }}
+  </div>
   <span
     onmouseover={{action "userInfoHovered" true}}
     onmouseleave={{action "userInfoHovered" false}}
@@ -32,5 +32,6 @@
 }}
   {{user-info-content
     user=user
+    errorReason=errorReason
   }}
 {{/record-info-popover}}

@@ -31,7 +31,7 @@ export default Action.extend({
   /**
    * @override
    */
-  icon: 'x',
+  icon: 'remove',
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}

@@ -30,7 +30,7 @@ export default Action.extend({
   /**
    * @override
    */
-  icon: 'remove',
+  icon: 'checkbox-filled-x',
 
   /**
    * @override

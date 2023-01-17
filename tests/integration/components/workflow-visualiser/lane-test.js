@@ -24,6 +24,10 @@ const editLaneActionsSpec = [{
   label: 'Modify',
   icon: 'rename',
 }, {
+  className: 'modify-lane-charts-dashboard-action-trigger',
+  label: 'Configure charts',
+  icon: 'overview',
+}, {
   className: 'move-left-lane-action-trigger',
   label: 'Move left',
   icon: 'move-left',
@@ -34,11 +38,11 @@ const editLaneActionsSpec = [{
 }, {
   className: 'clear-lane-action-trigger',
   label: 'Clear',
-  icon: 'remove',
+  icon: 'checkbox-filled-x',
 }, {
   className: 'remove-lane-action-trigger',
   label: 'Remove',
-  icon: 'x',
+  icon: 'remove',
 }];
 
 const viewLaneActionsSpec = [{

@@ -41,10 +41,25 @@
       )
     }}
   </div>
-  {{workflow-visualiser/stores-list
-    mode=mode
-    actionsFactory=actionsFactory
-    definedStores=definedStores
-  }}
+  <div class="visualiser-footer">
+    {{workflow-visualiser/stores-list
+      mode=mode
+      actionsFactory=actionsFactory
+      definedStores=definedStores
+    }}
+    {{#one-button
+      class=(concat-classes
+        openWorkflowChartsDashboardAction.className
+        "open-workflow-charts-dashboard"
+      )
+      size="sm"
+      disableWhenPending=false
+      showSpinnerWhenPending=false
+      onClick=openWorkflowChartsDashboardAction.executeCallback
+    }}
+      {{one-icon icon=openWorkflowChartsDashboardAction.icon}}
+      <span class="text">{{openWorkflowChartsDashboardAction.title}}</span>
+    {{/one-button}}
+  </div>
 {{/promise-proxy-container}}
 {{yield}}

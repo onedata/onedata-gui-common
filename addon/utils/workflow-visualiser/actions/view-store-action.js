@@ -33,6 +33,13 @@ export default Action.extend({
   storeContentPresenterContext: reads('context.storeContentPresenterContext'),
 
   /**
+   * @type {ComputedProperty<() => AtmTimeSeriesCollectionReferencesMap>}
+   */
+  getTimeSeriesCollectionRefsMapCallback: reads(
+    'context.getTimeSeriesCollectionRefsMapCallback'
+  ),
+
+  /**
    * @override
    */
   onExecute() {
@@ -54,6 +61,8 @@ export default Action.extend({
         mode: 'view',
         store,
         getStoreContentCallback: (...args) => getStoreContentCallback(store, ...args),
+        getTimeSeriesCollectionRefsMapCallback: (...args) =>
+          this.getTimeSeriesCollectionRefsMapCallback(...args),
         storeContentPresenterContext,
       }).hiddenPromise
       .then(() => {
