@@ -13,7 +13,7 @@
         word-break: break-all;
 
         &.user-info {
-          padding-bottom: 5px;
+          padding-bottom: 0.36em;
         }
 
         .user-with-icon {
@@ -21,7 +21,7 @@
           width: 100%;
 
           .user-username {
-            opacity: 0.6;
+            opacity: $disabled-opacity;
           }
         }
         .user-info-trigger {
