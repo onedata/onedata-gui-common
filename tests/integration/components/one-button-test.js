@@ -84,4 +84,32 @@ describe('Integration | Component | one button', function () {
     expect(find('.spin-spinner')).to.exist;
     expect(find('.one-button').disabled).to.be.false;
   });
+
+  it('does not show spinner after click when handler returns promise and showSpinnerWhenPending is false',
+    async function () {
+      this.set('onClick', () => new Promise(() => {}));
+      await render(hbs `
+        {{#one-button onClick=onClick showSpinnerWhenPending=false}}
+          my button
+        {{/one-button}}
+      `);
+
+      await click('.one-button');
+
+      expect(find('.spin-spinner')).to.not.exist;
+      expect(find('.one-button').disabled).to.be.true;
+    });
+
+  it('does not show spinner when "isPending" is true and showSpinnerWhenPending is false', async function () {
+    await render(hbs `
+      {{#one-button isPending=true showSpinnerWhenPending=false}}
+        my button
+      {{/one-button}}
+    `);
+
+    await click('.one-button');
+
+    expect(find('.spin-spinner')).to.not.exist;
+    expect(find('.one-button').disabled).to.be.true;
+  });
 });

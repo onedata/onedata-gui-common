@@ -9,6 +9,7 @@
  *   message. May be used to implement "Are you sure?" mechanism
  * - isCheckboxBlocking - (optional) if false, then deselected checkbox will not block
  *   accepting button
+ * - isCheckboxInitiallyChecked - (optional) if true, the checkbox is checked on modal open
  * - yesButtonText - accepting button text
  * - yesButtonType - (optional) accepting button type
  * - noButtonText - (optional) declining button text
@@ -108,6 +109,11 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<boolean>}
    */
+  isCheckboxInitiallyChecked: reads('modalOptions.isCheckboxInitiallyChecked'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
   isCheckboxVisible: bool('checkboxMessage'),
 
   /**
@@ -118,6 +124,11 @@ export default Component.extend(I18n, {
     'isCheckboxBlocking',
     not('isCheckboxChecked')
   ),
+
+  init() {
+    this._super(...arguments);
+    this.set('isCheckboxChecked', Boolean(this.isCheckboxInitiallyChecked));
+  },
 
   actions: {
     submit(submitCallback) {

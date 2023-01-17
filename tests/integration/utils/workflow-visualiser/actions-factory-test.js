@@ -24,6 +24,10 @@ import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/acti
 import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-store-action';
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
+import ModifyWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-workflow-charts-dashboard-action';
+import ViewWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-charts-dashboard-action';
+import ModifyLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-charts-dashboard-action';
+import ViewLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-charts-dashboard-action';
 import { get } from '@ember/object';
 import sinon from 'sinon';
 
@@ -170,6 +174,77 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
 
   itCreatesStoreAction('ModifyStoreAction', ModifyStoreAction);
   itCreatesStoreAction('RemoveStoreAction', RemoveStoreAction);
+
+  it('creates action "ModifyWorkflowChartsDashboardAction"', function () {
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    const workflowDataProvider = {
+      workflow: {},
+    };
+    factory.setWorkflowDataProvider(workflowDataProvider);
+
+    const action = factory.createModifyWorkflowChartsDashboardAction();
+
+    expect(action).to.be.instanceOf(ModifyWorkflowChartsDashboardAction);
+    expect(get(action, 'workflow')).to.equal(workflowDataProvider.workflow);
+  });
+
+  it('creates action "ViewWorkflowChartsDashboardAction"', function () {
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    const workflow = {};
+    const workflowDataProvider = {
+      workflow,
+      getStoreContent: sinon.stub().resolves(),
+      getTimeSeriesCollectionReferencesMap: sinon.spy(),
+    };
+    factory.setWorkflowDataProvider(workflowDataProvider);
+
+    const action = factory.createViewWorkflowChartsDashboardAction();
+
+    expect(action).to.be.instanceOf(ViewWorkflowChartsDashboardAction);
+    expect(get(action, 'workflow')).to.equal(workflow);
+    expect(workflowDataProvider.getStoreContent).to.be.not.called;
+    expect(workflowDataProvider.getTimeSeriesCollectionReferencesMap).to.be.not.called;
+
+    get(action, 'getStoreContentCallback')();
+    expect(workflowDataProvider.getStoreContent).to.be.calledOnce;
+
+    get(action, 'getTimeSeriesCollectionRefsMapCallback')();
+    expect(workflowDataProvider.getTimeSeriesCollectionReferencesMap).to.be.calledOnce;
+  });
+
+  it('creates action "ModifyLaneChartsDashboardAction"', function () {
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    const lane = Lane.create();
+
+    const action = factory.createModifyLaneChartsDashboardAction({ lane });
+
+    expect(action).to.be.instanceOf(ModifyLaneChartsDashboardAction);
+    expect(action.lane).to.equal(lane);
+  });
+
+  it('creates action "ViewLaneChartsDashboardAction"', function () {
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    const lane = Lane.create();
+    const workflowDataProvider = {
+      getStoreContent: sinon.stub().resolves(),
+      getTimeSeriesCollectionReferencesMap: sinon.spy(),
+    };
+    factory.setWorkflowDataProvider(workflowDataProvider);
+
+    const action = factory.createViewLaneChartsDashboardAction({ lane, runNumber: 2 });
+
+    expect(action).to.be.instanceOf(ViewLaneChartsDashboardAction);
+    expect(action.lane).to.equal(lane);
+    expect(action.runNumber).to.equal(2);
+    expect(workflowDataProvider.getStoreContent).to.be.not.called;
+    expect(workflowDataProvider.getTimeSeriesCollectionReferencesMap).to.be.not.called;
+
+    get(action, 'getStoreContentCallback')();
+    expect(workflowDataProvider.getStoreContent).to.be.calledOnce;
+
+    get(action, 'getTimeSeriesCollectionRefsMapCallback')();
+    expect(workflowDataProvider.getTimeSeriesCollectionReferencesMap).to.be.calledOnce;
+  });
 });
 
 function itCreatesLaneAction(actionName, actionClass, includeStores = false) {

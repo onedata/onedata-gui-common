@@ -1,8 +1,14 @@
 .workflow-visualiser-stores-list {
-  border-top: 1px solid $main-border-color;
-
   .tags-input {
     min-height: initial;
+  }
+
+  .stores-label {
+    @include font-semibold();
+    text-transform: uppercase;
+    align-self: center;
+    margin-bottom: $padding-xs-horizontal;
+    margin-right: 1em;
   }
 
   .create-store-action-trigger .one-icon {
