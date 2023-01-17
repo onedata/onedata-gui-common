@@ -49,9 +49,11 @@ export default Component.extend(WindowResizeHandler, {
   chart: undefined,
 
   /**
+   * Binded version of `persistRawDataInCanvas` method. Needed for
+   * (de)registering event handlers.
    * @type {() => void}
    */
-  setCanvasRawDataCallback: undefined,
+  persistRawDataInCanvasFunction: undefined,
 
   /**
    * @type {ComputedProperty<PromiseObject<ECharts>>}
@@ -69,7 +71,7 @@ export default Component.extend(WindowResizeHandler, {
    */
   init() {
     this._super(...arguments);
-    this.set('setCanvasRawDataCallback', this.setCanvasRawData.bind(this));
+    this.set('persistRawDataInCanvasFunction', this.persistRawDataInCanvas.bind(this));
   },
 
   /**
@@ -108,7 +110,7 @@ export default Component.extend(WindowResizeHandler, {
       }
 
       const chart = echarts.init(this.element.querySelector('.chart'));
-      chart.on('rendered', this.setCanvasRawDataCallback);
+      chart.on('rendered', this.persistRawDataInCanvasFunction);
       this.set('chart', chart);
       this.applyChartOption();
     })));
@@ -129,12 +131,18 @@ export default Component.extend(WindowResizeHandler, {
 
   destroyChart() {
     if (this.chart) {
-      this.chart.off('rendered', this.setCanvasRawDataCallback);
+      this.chart.off('rendered', this.persistRawDataInCanvasFunction);
       this.chart.dispose();
     }
   },
 
-  setCanvasRawData() {
+  /**
+   * Extracts raw chart data (points, series name, etc.) from Echart instance
+   * and assigns it as JSON to canvas attribute. It allows to test rendered
+   * data without guessing from canvas pixels.
+   * @returns {void}
+   */
+  persistRawDataInCanvas() {
     // Setting raw data works only for data specified inside each series (via
     // `data` property). More advanced data-defining approaches (like via
     // `dataset`) are not supported.
