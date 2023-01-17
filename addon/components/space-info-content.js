@@ -58,4 +58,10 @@ export default Component.extend(I18n, {
       return moment.unix(timestamp).format('D MMM YYYY H:mm:ss');
     }
   }),
+
+  actions: {
+    openFileBrowser() {
+      return null;
+    },
+  },
 });

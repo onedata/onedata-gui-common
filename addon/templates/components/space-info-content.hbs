@@ -58,7 +58,7 @@
     <a 
       href={{linkToFileBrowser}} 
       class="space-link file-browser-link"
-      {{action "openFileBrowser"}}
+      onclick={{if (eq linkToFileBrowser undefined) (action "openFileBrowser")}}
     >
       <span>{{tt this "openFileBrowser"}}</span>
       {{one-icon icon="link-external"}}
