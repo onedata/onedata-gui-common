@@ -57,7 +57,7 @@ export default OnePieChart.extend({
   data: computed(
     'space.supportSizes',
     'providersColors',
-    'providers.@each.entityId',
+    'providers.@each.{entityId,name}',
     'providersProxyLoaded',
     function getData() {
       if (this.get('providersProxyLoaded')) {
