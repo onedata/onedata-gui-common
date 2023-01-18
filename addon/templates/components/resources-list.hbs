@@ -44,21 +44,23 @@
             {{/one-tooltip}}
           </span>
         {{/if}}
-        {{#if item.conflictingLabelSource}}
-          {{name-conflict
-            item=item.conflictingLabelSource
-            tagName="span"
-            class="one-label"
-            mouseEnter=(action "itemInfoHovered" item true)
-            mouseLeave=(action "itemInfoHovered" item false)
-          }}
-        {{else}}
-          <span 
-            class="one-label"
-            onmouseover={{action "itemInfoHovered" item true}}
-            onmouseleave={{action "itemInfoHovered" item false}}
-          >{{item.label}}</span>
-        {{/if}}
+        {{#truncated-string}}
+          {{#if item.conflictingLabelSource}}
+            {{name-conflict
+              item=item.conflictingLabelSource
+              tagName="span"
+              class="one-label"
+              mouseEnter=(action "itemInfoHovered" item true)
+              mouseLeave=(action "itemInfoHovered" item false)
+            }}
+          {{else}}
+            <span 
+              class="one-label"
+              onmouseover={{action "itemInfoHovered" item true}}
+              onmouseleave={{action "itemInfoHovered" item false}}
+            >{{item.label}}</span>
+          {{/if}}
+        {{/truncated-string}}
         {{#if item.actions.length}}
           {{actions-toolbar
             isMinimized=true
