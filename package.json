@@ -84,7 +84,7 @@
     "ember-math-helpers": "2.13.0",
     "ember-maybe-import-regenerator": "0.1.6",
     "ember-mocha": "0.16.2",
-    "ember-models-table": "2.7.0",
+    "ember-models-table": "2.14.0",
     "ember-moment": "8.0.1",
     "ember-native-dom-helpers": "0.7.0",
     "ember-notify": "git+https://github.com/adopted-ember-addons/ember-notify.git#ddfe9c139b12f1729b6895d68578d0446eb511e3",
