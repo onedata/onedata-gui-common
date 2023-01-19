@@ -1,0 +1,41 @@
+.charts-modal {
+  .representation-tabs {
+    margin-bottom: 1em;
+  }
+
+  .charts-definition {
+    &,
+    .fields-group-collapse,
+    .fields-group-children,
+    .field-component,
+    .json-editor {
+      @include fill-flex-using-column;
+    }
+
+    .dashboardSpec-field {
+      flex-direction: column;
+
+      .field-message {
+        flex-basis: initial;
+      }
+    }
+
+    textarea {
+      height: 100%;
+    }
+  }
+
+  &.mode-edit {
+    .modal-content {
+      height: min(40em, 100vh - 5em);
+    }
+
+    .modal-body {
+      flex-grow: 1;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 0;
+  }
+}

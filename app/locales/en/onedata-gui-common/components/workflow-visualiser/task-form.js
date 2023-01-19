@@ -16,6 +16,9 @@ export default {
     },
     details: {
       label: 'Task details',
+      schemaId: {
+        label: 'ID',
+      },
       name: {
         label: 'Name',
       },

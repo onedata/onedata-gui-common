@@ -36,7 +36,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove parallel bo
       title,
     } = getProperties(this.get('action'), 'className', 'icon', 'title');
     expect(className).to.equal('remove-parallel-box-action-trigger');
-    expect(icon).to.equal('x');
+    expect(icon).to.equal('remove');
     expect(String(title)).to.equal('Remove');
   });
 

@@ -31,7 +31,7 @@ const taskActionsSpec = [{
 }, {
   className: 'remove-task-action-trigger',
   label: 'Remove',
-  icon: 'x',
+  icon: 'remove',
 }];
 
 describe('Integration | Component | workflow visualiser/lane/task', function () {

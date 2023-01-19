@@ -36,7 +36,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove lane action
       title,
     } = getProperties(this.get('action'), 'className', 'icon', 'title');
     expect(className).to.equal('remove-lane-action-trigger');
-    expect(icon).to.equal('x');
+    expect(icon).to.equal('remove');
     expect(String(title)).to.equal('Remove');
   });
 
