@@ -155,7 +155,10 @@ const casesToCheck = [{
   // time resolution much larger than time span
   input: {
     type: 'points',
-    data: [point(0, 8640000), point(5, 2160000)],
+    data: [
+      point(0, 8640000, { pointDuration: 86400 }),
+      point(5, 2160000, { pointDuration: 86400 }),
+    ],
   },
   timeSpan: {
     type: 'basic',
@@ -164,23 +167,25 @@ const casesToCheck = [{
   timeResolution: 60 * 60 * 24,
   output: {
     type: 'points',
-    data: [point(0, 3000), point(5, 750)],
+    data: [
+      point(0, 3000, { pointDuration: 86400 }),
+      point(5, 750, { pointDuration: 86400 }),
+    ],
   },
 }, {
   // partial last point
   input: {
     type: 'points',
-    data: [point(0, 100), point(5, 50)],
+    data: [point(0, 100), point(5, 50, { lastMeasurementTimestamp: 6, newest: true })],
   },
   timeSpan: {
     type: 'basic',
     data: 1,
   },
   timeResolution: 5,
-  newestEdgeTimestamp: 6,
   output: {
     type: 'points',
-    data: [point(0, 20), point(5, 25)],
+    data: [point(0, 20), point(5, 25, { lastMeasurementTimestamp: 6, newest: true })],
   },
 }];
 
@@ -190,17 +195,15 @@ describe('Unit | Utility | one time series chart/series functions/rate',
   }
 );
 
-function testRate({ input, timeSpan, timeResolution, newestEdgeTimestamp, output }) {
+function testRate({ input, timeSpan, timeResolution, output }) {
   const stringifiedInput = stringifyArgumentData(input.data);
   const stringifiedTimeSpan = stringifyArgumentData(timeSpan?.data ?? null);
   const stringifiedOutput = stringifyArgumentData(output.data);
-  const newestEdgeTimestampDescription = newestEdgeTimestamp ? `, newest edge timestamp ${newestEdgeTimestamp}` : '';
 
-  it(`returns ${stringifiedOutput} for ${stringifiedInput}, time span ${stringifiedTimeSpan}${newestEdgeTimestampDescription} and time resolution ${timeResolution}`,
+  it(`returns ${stringifiedOutput} for ${stringifiedInput}, time span ${stringifiedTimeSpan} and time resolution ${timeResolution}`,
     async function () {
       const context = createContext();
       context.timeResolution = timeResolution;
-      context.newestEdgeTimestamp = newestEdgeTimestamp ?? 99999999;
       const inputDataProvider = createConstArgument(input);
       const timeSpanProvider = createConstArgument(timeSpan);
 
