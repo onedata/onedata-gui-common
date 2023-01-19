@@ -61,6 +61,7 @@ export default Component.extend({
   /**
    * @type {Ember.ComputedProperty<string>}
    */
+  // eslint-disable-next-line ember/no-string-prototype-extensions
   currentItemId: string.camelize('navigationState.activeResourceType'),
 
   itemsObserver: observer(
