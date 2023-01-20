@@ -1,5 +1,6 @@
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import ValueEditorState from './value-editor-state';
+import { editorComponentsPrefix } from '../commons';
 
 export default class ObjectValueEditorState extends ValueEditorState {
   /**
@@ -7,7 +8,7 @@ export default class ObjectValueEditorState extends ValueEditorState {
    */
   constructor() {
     super(...arguments);
-    this.editorComponentName = 'atm-workflow/value-editors/object/editor';
+    this.editorComponentName = `${editorComponentsPrefix}/object/editor`;
     if (!this.value) {
       this.value = null;
     }

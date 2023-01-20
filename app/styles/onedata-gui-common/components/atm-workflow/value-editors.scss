@@ -44,6 +44,10 @@
     padding: 0.3em;
   }
 
+  .action-link {
+    text-decoration: underline;
+  }
+
   &.integer-editor {
     max-width: 10em;
   }
@@ -91,6 +95,24 @@
     max-width: 12em;
   }
 
+  &.file-editor {
+    .id-form-buttons{
+      display: flex;
+      gap: 0.3em;
+      justify-content: flex-end;
+      margin-top: 0.3em;
+    }
+
+    &.mode-empty {
+      max-width: 8em;
+    }
+
+    &.mode-selected,
+    &.mode-idForm {
+      max-width: 20em;
+    }
+  }
+
   &.array-editor {
     .array-items {
       list-style-type: none;
@@ -99,10 +121,6 @@
       gap: 0.3em;
       padding-left: 0;
       margin-bottom: 0.3em;
-    }
-
-    .action-link {
-      text-decoration: underline;
     }
   }
 

@@ -1,4 +1,5 @@
 import ValueEditorState from './value-editor-state';
+import { editorComponentsPrefix } from '../commons';
 
 export default class TimeSeriesMeasurementValueEditorState extends ValueEditorState {
   /**
@@ -6,7 +7,7 @@ export default class TimeSeriesMeasurementValueEditorState extends ValueEditorSt
    */
   constructor() {
     super(...arguments);
-    this.editorComponentName = 'atm-workflow/value-editors/time-series-measurement/editor';
+    this.editorComponentName = `${editorComponentsPrefix}/time-series-measurement/editor`;
     if (!this.value) {
       this.value = {
         timestamp: Math.floor(Date.now() / 1000),

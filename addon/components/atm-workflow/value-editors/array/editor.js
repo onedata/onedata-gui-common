@@ -76,8 +76,8 @@ export default EditorBase.extend(I18n, {
     clear() {
       this.editorState.clear();
     },
-    addNewItem() {
-      this.editorState.addNewItem();
+    itemCreated(newItemEditorStates) {
+      this.editorState.addNewItems(newItemEditorStates);
     },
     removeItem(editorStateId) {
       this.editorState.removeItem(editorStateId);

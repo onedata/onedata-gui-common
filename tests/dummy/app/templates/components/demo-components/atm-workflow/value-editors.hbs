@@ -1,3 +1,4 @@
+
 <h3>Integer</h3>
 <p>
   {{atm-workflow/value-editors/full-value-editor stateManager=integerEditorStateManager}}
@@ -25,6 +26,20 @@
   }}
 </p>
 
+<h3>File</h3>
+<p>
+  Empty file
+  {{atm-workflow/value-editors/full-value-editor
+    stateManager=emptyFileEditorStateManager
+  }}
+</p>
+<p>
+  Selected file
+  {{atm-workflow/value-editors/full-value-editor
+    stateManager=selectedFileEditorStateManager
+  }}
+</p>
+
 <h3>Array of strings</h3>
 <p>
   {{atm-workflow/value-editors/full-value-editor
@@ -39,3 +54,9 @@
   }}
 </p>
 
+<h3>Array of files</h3>
+<p>
+  {{atm-workflow/value-editors/full-value-editor
+    stateManager=arrayFileEditorStateManager
+  }}
+</p>

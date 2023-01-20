@@ -1,5 +1,6 @@
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import ValueEditorState from './value-editor-state';
+import { editorComponentsPrefix, getArrayItemCreatorComponentName } from '../commons';
 
 /**
  * @typedef {'visual'|'raw'} ArrayValueEditorStateMode
@@ -11,7 +12,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
    */
   constructor() {
     super(...arguments);
-    this.editorComponentName = 'atm-workflow/value-editors/array/editor';
+    this.editorComponentName = `${editorComponentsPrefix}/array/editor`;
 
     /**
      * @public
@@ -41,11 +42,19 @@ export default class ArrayValueEditorState extends ValueEditorState {
   }
 
   /**
-   * @private
+   * @public
    * @returns {AtmDataSpec | null}
    */
-  get itemDataSpec() {
+  get itemAtmDataSpec() {
     return this.atmDataSpec?.valueConstraints?.itemDataSpec ?? null;
+  }
+
+  /**
+   * @public
+   * @returns {string}
+   */
+  get itemCreatorComponentName() {
+    return getArrayItemCreatorComponentName(this.itemAtmDataSpec);
   }
 
   /**
@@ -99,16 +108,11 @@ export default class ArrayValueEditorState extends ValueEditorState {
 
   /**
    * @public
+   * @param {Array<Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState>} newItemEditorStates
    * @returns {void}
    */
-  addNewItem() {
-    if (!this.itemDataSpec) {
-      return;
-    }
-
-    const newItemEditorState = this.editorStateManager
-      .createValueEditorState(this.itemDataSpec);
-    this.itemEditorStateIds.push(newItemEditorState.id);
+  addNewItems(newItemEditorStates) {
+    newItemEditorStates.forEach((state) => this.itemEditorStateIds.push(state.id));
     this.notifyChange();
   }
 
@@ -202,7 +206,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
     this.removeAllItemsWithoutNotification();
     if (Array.isArray(value)) {
       this.itemEditorStateIds = value.map((itemValue) =>
-        this.editorStateManager.createValueEditorState(this.itemDataSpec, itemValue).id
+        this.editorStateManager.createValueEditorState(this.itemAtmDataSpec, itemValue).id
       );
     }
   }

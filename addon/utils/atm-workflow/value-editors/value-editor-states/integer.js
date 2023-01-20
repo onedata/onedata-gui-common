@@ -1,4 +1,5 @@
 import ValueEditorState from './value-editor-state';
+import { editorComponentsPrefix } from '../commons';
 
 export default class IntegerValueEditorState extends ValueEditorState {
   /**
@@ -6,6 +7,6 @@ export default class IntegerValueEditorState extends ValueEditorState {
    */
   constructor() {
     super(...arguments);
-    this.editorComponentName = 'atm-workflow/value-editors/integer/editor';
+    this.editorComponentName = `${editorComponentsPrefix}/integer/editor`;
   }
 }

@@ -1,4 +1,5 @@
 import ValueEditorState from './value-editor-state';
+import { editorComponentsPrefix } from '../commons';
 
 export default class RangeValueEditorState extends ValueEditorState {
   /**
@@ -6,7 +7,7 @@ export default class RangeValueEditorState extends ValueEditorState {
    */
   constructor() {
     super(...arguments);
-    this.editorComponentName = 'atm-workflow/value-editors/range/editor';
+    this.editorComponentName = `${editorComponentsPrefix}/range/editor`;
     if (!this.value) {
       this.value = {
         start: 0,

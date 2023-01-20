@@ -10,9 +10,10 @@ export default class ValueEditorState {
    * @public
    * @param {Utils.AtmWorkflow.ValueEditors.ValueEditorStateManager} editorStateManager
    * @param {AtmDataSpec} atmDataSpec
+   * @param {ValueEditorContext | null} editorContext
    * @param {unknown} [initialValue]
    */
-  constructor(editorStateManager, atmDataSpec, initialValue = undefined) {
+  constructor(editorStateManager, atmDataSpec, editorContext, initialValue = undefined) {
     /**
      * @private
      * @readonly
@@ -33,6 +34,13 @@ export default class ValueEditorState {
      * @type {AtmDataSpec}
      */
     this.atmDataSpec = atmDataSpec;
+
+    /**
+     * @public
+     * @readonly
+     * @type {ValueEditorContext | null}
+     */
+    this.editorContext = editorContext ?? null;
 
     /**
      * @public

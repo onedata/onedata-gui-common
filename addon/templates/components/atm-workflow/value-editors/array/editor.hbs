@@ -33,9 +33,11 @@
           {{/each}}
         </ol>
       {{/if}}
-      <a class="add-item-trigger clickable action-link" {{action "addNewItem"}}>
-        {{tt this "addNewItem"}}
-      </a>
+      {{component editorState.itemCreatorComponentName
+        stateManager=stateManager
+        itemAtmDataSpec=editorState.itemAtmDataSpec
+        onItemsCreated=(action "itemCreated")
+      }}
     {{else}}
       {{ember-ace
         editorClass="full-height"

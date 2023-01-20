@@ -1,0 +1,60 @@
+{{#atm-workflow/value-editors/commons/editor-box
+  editorState=editorState
+  onRemove=onRemove
+  class=(concat "mode-" mode)
+  as |editorBox|
+}}
+  {{#if (eq editorBox.section "toolbar")}}
+    {{#if (eq mode "selected")}}
+      {{#atm-workflow/value-editors/file/selector
+        class="action-link"
+        atmDataSpec=editorState.atmDataSpec
+        editorContext=editorState.editorContext
+        onFilesSelected=(action "filesSelected")
+        onIdProvidingStarted=(action "idProvidingStarted")
+      }}
+        {{tt this "changeFile"}}
+      {{/atm-workflow/value-editors/file/selector}}
+    {{/if}}
+  {{else if (eq editorBox.section "content")}}
+    {{#if (eq mode "empty")}}
+      {{#atm-workflow/value-editors/file/selector
+        atmDataSpec=editorState.atmDataSpec
+        editorContext=editorState.editorContext
+        onFilesSelected=(action "filesSelected")
+        onIdProvidingStarted=(action "idProvidingStarted")
+      }}
+        {{tt this "selectFile"}}
+      {{/atm-workflow/value-editors/file/selector}}
+    {{else if (eq mode "idForm")}}
+      <form class="form form-horizontal form-component">
+        {{form-component/field-renderer field=idFormRootGroup}}
+        <div class="id-form-buttons">
+          {{#one-button
+            class="cancel-btn"
+            type="default"
+            size="sm"
+            onClick=(action "cancelIdForm")
+          }}
+            {{tt this "cancelIdForm"}}
+          {{/one-button}}
+          {{#one-button
+            class="accept-btn"
+            type="primary"
+            size="sm"
+            disabled=(not isValid)
+            onClick=(action "acceptIdForm")
+          }}
+            {{tt this "acceptIdForm"}}
+          {{/one-button}}
+        </div>
+      </form>
+    {{else}}
+      {{atm-workflow/value-presenters/file/visual-presenter
+        value=value
+        dataSpec=editorState.atmDataSpec
+        context=editorState.editorContext
+      }}
+    {{/if}}
+  {{/if}}
+{{/atm-workflow/value-editors/commons/editor-box}}

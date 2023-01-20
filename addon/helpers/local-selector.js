@@ -1,5 +1,5 @@
 /**
- * Helps generating selector for current component 
+ * Helps generating selector for current component
  *
  * @module helpers/local-selector
  * @author Jakub Liput
@@ -10,7 +10,11 @@
 import { helper } from '@ember/component/helper';
 
 export function localSelector([elementId, origSelector]) {
-  return `#${elementId} ${origSelector}`;
+  let selector = `#${elementId}`;
+  if (origSelector) {
+    selector += ` ${origSelector}`;
+  }
+  return selector;
 }
 
 export default helper(localSelector);

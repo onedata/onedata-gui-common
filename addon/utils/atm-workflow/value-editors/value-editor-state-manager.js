@@ -15,8 +15,17 @@ export default class ValueEditorStateManager {
   /**
    * @public
    * @param {AtmDataSpec} atmDataSpec
+   * @param {ValueEditorContext} [editorContext]
+   * @param {unknown} [initialValue]
    */
-  constructor(atmDataSpec) {
+  constructor(atmDataSpec, editorContext = undefined, initialValue = undefined) {
+    /**
+     * @public
+     * @readonly
+     * @type {ValueEditorContext}
+     */
+    this.editorContext = editorContext ?? {};
+
     /**
      * @private
      * @type {AtmDataSpec}
@@ -35,10 +44,12 @@ export default class ValueEditorStateManager {
      */
     this.nestedValueEditorStateChangeListener = () => this.notifyChange();
 
-    const rootValueEditorState = this.createValueEditorState(this.atmDataSpec);
+    const rootValueEditorState =
+      this.createValueEditorState(this.atmDataSpec, initialValue);
 
     /**
      * @public
+     * @readonly
      * @type {string}
      */
     this.rootValueEditorStateId = rootValueEditorState?.id;
@@ -144,7 +155,7 @@ export default class ValueEditorStateManager {
       return null;
     }
     const valueEditorState =
-      new ValueEditorStateClass(this, atmDataSpec, initialValue);
+      new ValueEditorStateClass(this, atmDataSpec, this.editorContext, initialValue);
     valueEditorState.addChangeListener(this.nestedValueEditorStateChangeListener);
     this.editorStatesMap.set(valueEditorState.id, valueEditorState);
     return valueEditorState;
