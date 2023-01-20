@@ -15,7 +15,5 @@ export default EmberRouter.extend({
 
   // Clear all query params on each transition
   // WARNING: This method belongs to a private Ember API. May change in next Ember versions
-  _hydrateUnsuppliedQueryParams() {
-    // FIXME: check it works in 3.8
-  },
+  _hydrateUnsuppliedQueryParams() {},
 });
