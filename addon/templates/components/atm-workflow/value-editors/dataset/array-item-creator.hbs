@@ -1,0 +1,18 @@
+{{#if idProvidingEditorState}}
+  {{component idProvidingEditorState.editorComponentName
+    stateManager=stateManager
+    editorId=idProvidingEditorState.id
+    onRemove=(action "idProvidingCancelled")
+  }}
+{{else}}
+  {{#atm-workflow/value-editors/dataset/selector
+    class="add-item-trigger action-link"
+    atmDataSpec=itemAtmDataSpec
+    editorContext=editorContext
+    allowManyDatasets=true
+    onDatasetsSelected=(action "datasetsSelected")
+    onIdProvidingStarted=(action "idProvidingStarted")
+  }}
+    {{tt this "label"}}
+  {{/atm-workflow/value-editors/dataset/selector}}
+{{/if}}

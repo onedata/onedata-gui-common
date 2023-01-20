@@ -40,6 +40,20 @@
   }}
 </p>
 
+<h3>Dataset</h3>
+<p>
+  Empty dataset
+  {{atm-workflow/value-editors/full-value-editor
+    stateManager=emptyDatasetEditorStateManager
+  }}
+</p>
+<p>
+  Selected dataset
+  {{atm-workflow/value-editors/full-value-editor
+    stateManager=selectedDatasetEditorStateManager
+  }}
+</p>
+
 <h3>Array of strings</h3>
 <p>
   {{atm-workflow/value-editors/full-value-editor
@@ -58,5 +72,12 @@
 <p>
   {{atm-workflow/value-editors/full-value-editor
     stateManager=arrayFileEditorStateManager
+  }}
+</p>
+
+<h3>Array of datasets</h3>
+<p>
+  {{atm-workflow/value-editors/full-value-editor
+    stateManager=arrayDatasetEditorStateManager
   }}
 </p>

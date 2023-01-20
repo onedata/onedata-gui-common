@@ -1,0 +1,22 @@
+{{yield}}
+{{#render-later triggerRender=areActionsOpened}}
+  {{#one-webui-popover
+    class="dataset-value-editor-selector-actions"
+    padding=false
+    popoverStyle="with-dropdown"
+    triggerSelector=(local-selector elementId)
+    open=areActionsOpened
+    onToggle=(action "toggleActionsOpen")
+    as |popover|
+  }}
+    {{#click-outside
+      onClickOutside=(action "toggleActionsOpen" false)
+      exceptSelector=(local-selector elementId)
+    }}
+      {{actions-popover-content
+        actionsArray=actionsArray
+        actionClicked=(action (mut areActionsOpened) false)
+      }}
+    {{/click-outside}}
+  {{/one-webui-popover}}
+{{/render-later}}

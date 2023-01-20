@@ -15,6 +15,7 @@ const defaultArrayItemCreatorComponentName = `${editorComponentsPrefix}/array/de
  */
 const customArrayItemCreatorComponentNames = Object.freeze({
   [AtmDataSpecType.File]: `${editorComponentsPrefix}/file/array-item-creator`,
+  [AtmDataSpecType.Dataset]: `${editorComponentsPrefix}/dataset/array-item-creator`,
 });
 
 /**

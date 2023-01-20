@@ -9,7 +9,7 @@
 import VisualPresenterBase from '../commons/visual-presenter-base';
 import EmberObject, { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { promise, conditional, eq, raw } from 'ember-awesome-macros';
+import { promise, conditional, eq, raw, or } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/dataset/visual-presenter';
 import { FileType } from 'onedata-gui-common/utils/file';
 import { getDatasetNameFromRootFilePath } from 'onedata-gui-common/utils/dataset';
@@ -32,6 +32,11 @@ export default VisualPresenterBase.extend({
       context: this.context,
     });
   }),
+
+  /**
+   * @type {ComputedProperty<string|null>}
+   */
+  rootFilePath: reads('datasetDetails.rootFilePath'),
 
   /**
    * @type {ComputedProperty<string|null>}
@@ -73,24 +78,63 @@ export const DatasetDetails = EmberObject.extend({
   context: undefined,
 
   /**
+   * @type {ComputedProperty<PromiseObject<AtmDataset>>}
+   */
+  datasetWithDetailsProxy: promise.object(
+    computed('dataset', 'context', async function datasetWithDetailsProxy() {
+      if (
+        this.dataset?.datasetId && (
+          !this.dataset?.rootFileId ||
+          !this.dataset?.rootFilePath ||
+          !this.dataset?.rootFileType
+        ) && this.context.getDatasetDetailsById
+      ) {
+        try {
+          return (await this.context.getDatasetDetailsById(this.dataset.datasetId)) ||
+            this.dataset;
+        } catch (e) {
+          return this.dataset;
+        }
+      } else {
+        return this.dataset;
+      }
+    })
+  ),
+
+  /**
    * @type {ComputedProperty<string|null>}
    */
-  name: computed('dataset', function name() {
-    return getDatasetNameFromRootFilePath(this.dataset?.rootFilePath);
+  rootFilePath: or(
+    'dataset.rootFilePath',
+    'datasetWithDetailsProxy.content.rootFilePath',
+    raw(null)
+  ),
+
+  /**
+   * @type {ComputedProperty<string|null>}
+   */
+  name: computed('rootFilePath', function name() {
+    return getDatasetNameFromRootFilePath(this.rootFilePath);
   }),
 
   /**
    * @type {ComputedProperty<FileType.Regular|FileType.Directory>}
    */
-  rootFileType: computed('dataset', function rootFileType() {
-    switch (this.dataset?.rootFileType) {
-      case FileType.Directory:
-      case FileType.Regular:
-        return this.dataset.rootFileType;
-      default:
-        return FileType.Regular;
+  rootFileType: computed(
+    'dataset.rootFileType',
+    'datasetWithDetailsProxy.content.rootFileType',
+    function rootFileType() {
+      const fileType = this.dataset?.rootFileType ??
+        this.datasetWithDetailsProxy.content?.rootFileType;
+      switch (fileType) {
+        case FileType.Directory:
+        case FileType.Regular:
+          return this.dataset.rootFileType;
+        default:
+          return FileType.Regular;
+      }
     }
-  }),
+  ),
 
   /**
    * @type {ComputedProperty<string>}
@@ -126,13 +170,18 @@ export const DatasetDetails = EmberObject.extend({
   /**
    * @type {ComputedProperty<PromiseObject<string|null>>}
    */
-  rootFileUrlProxy: promise.object(
-    computed('dataset', 'context', async function rootFileUrlProxy() {
-      if (!this.dataset?.rootFileId) {
+  rootFileUrlProxy: promise.object(computed(
+    'dataset.rootFileId',
+    'datasetWithDetailsProxy.content.rootFileId',
+    'context',
+    async function rootFileUrlProxy() {
+      const rootFileId = this.dataset?.rootFileId ??
+        this.datasetWithDetailsProxy.content?.rootFileId;
+      if (!rootFileId) {
         return null;
       }
 
-      return this.context?.getFileUrlById?.(this.dataset.rootFileId) ?? null;
-    })
-  ),
+      return this.context?.getFileUrlById?.(rootFileId) ?? null;
+    }
+  )),
 });

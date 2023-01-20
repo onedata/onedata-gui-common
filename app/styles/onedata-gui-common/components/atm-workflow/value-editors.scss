@@ -95,21 +95,30 @@
     max-width: 12em;
   }
 
-  &.file-editor {
-    .id-form-buttons{
+  &.file-editor,
+  &.dataset-editor {
+    .id-form-buttons {
       display: flex;
       gap: 0.3em;
       justify-content: flex-end;
       margin-top: 0.3em;
     }
 
-    &.mode-empty {
-      max-width: 8em;
-    }
-
     &.mode-selected,
     &.mode-idForm {
       max-width: 20em;
+    }
+  }
+
+  &.file-editor {
+    &.mode-empty {
+      max-width: 8em;
+    }
+  }
+
+  &.dataset-editor {
+    &.mode-empty {
+      max-width: 10em;
     }
   }
 

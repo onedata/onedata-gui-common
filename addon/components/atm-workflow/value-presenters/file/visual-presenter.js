@@ -78,10 +78,10 @@ export const FileDetails = EmberObject.extend({
   context: undefined,
 
   /**
-   * @type {AtmFile}
+   * @type {ComputedProperty<PromiseObject<AtmFile>>}
    */
   fileWithDetailsProxy: promise.object(
-    computed('file', 'context', async function fileProxy() {
+    computed('file', 'context', async function fileWithDetailsProxy() {
       if (
         this.file?.file_id &&
         (!this.file?.name || !this.file?.type) &&

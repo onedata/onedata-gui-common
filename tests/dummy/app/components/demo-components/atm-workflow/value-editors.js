@@ -25,8 +25,19 @@ export default Component.extend({
     async getDatasetUrlById() {
       return '#';
     },
+    async getDatasetDetailsById(datasetId) {
+      return {
+        datasetId,
+        rootFileId: '1234567890',
+        rootFilePath: 'abc/def/file1.txt',
+        rootFileType: FileType.Regular,
+      };
+    },
     selectFiles(params) {
       console.log('selecting files with params', params);
+    },
+    selectDatasets(params) {
+      console.log('selecting datasets with params', params);
     },
   }),
 
@@ -74,6 +85,22 @@ export default Component.extend({
     });
   }),
 
+  emptyDatasetEditorStateManager: computed(function emptyDatasetEditorStateManager() {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.Dataset,
+    }, this.context);
+  }),
+
+  selectedDatasetEditorStateManager: computed(
+    function selectedDatasetEditorStateManager() {
+      return new ValueEditorStateManager({
+        type: AtmDataSpecType.Dataset,
+      }, this.context, {
+        datasetId: '1234567890',
+      });
+    }
+  ),
+
   arrayStringEditorStateManager: computed(() => {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.Array,
@@ -107,6 +134,17 @@ export default Component.extend({
       valueConstraints: {
         itemDataSpec: {
           type: AtmDataSpecType.File,
+        },
+      },
+    }, this.context);
+  }),
+
+  arrayDatasetEditorStateManager: computed(function arrayDatasetEditorStateManager() {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.Array,
+      valueConstraints: {
+        itemDataSpec: {
+          type: AtmDataSpecType.Dataset,
         },
       },
     }, this.context);
