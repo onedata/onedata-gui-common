@@ -25,6 +25,18 @@ export default FormField.extend({
 
   /**
    * @virtual optional
+   * @type {number|null}
+   */
+  rows: null,
+
+  /**
+   * @virtual optional
+   * @type {number|null}
+   */
+  cols: null,
+
+  /**
+   * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
   placeholder: computed('i18nPrefix', 'translationPath', function placeholder() {

@@ -9,6 +9,7 @@ export default Component.extend({
   layout,
   classNames: ['editor-box'],
   classNameBindings: ['atmDataTypeClassName'],
+  attributeBindings: ['editorState.id:data-editor-id'],
 
   i18n: service(),
 

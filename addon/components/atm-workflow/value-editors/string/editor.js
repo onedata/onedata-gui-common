@@ -1,6 +1,7 @@
 import { computed, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
+import autosize from 'onedata-gui-common/utils/autosize';
 import EditorBase from '../commons/editor-base';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
@@ -15,6 +16,18 @@ export default EditorBase.extend({
   formRootGroup: computed(function formRootGroup() {
     return FormRootGroup.create({ component: this });
   }),
+
+  /**
+   * @override
+   */
+  didInsertElement() {
+    const textarea = document.querySelector(
+      `[data-editor-id="${this.editorState.id}"] textarea`
+    );
+    if (textarea) {
+      autosize(textarea);
+    }
+  },
 
   /**
    * @override
@@ -79,6 +92,7 @@ const FormRootGroup = FormFieldsRootGroup.extend({
       withValidationMessage: false,
       // allows empty string
       isOptional: true,
+      rows: 1,
     }),
   ]),
 
