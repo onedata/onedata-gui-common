@@ -61,7 +61,7 @@ describe('Integration | Component | form component/loading field', function () {
   );
 
   it(
-    'shows reasource load error when loadingProxy is rejected',
+    'shows resource load error when loadingProxy is rejected',
     async function () {
       suppressRejections();
       this.set('field.loadingProxy', PromiseObject.create({
