@@ -8,6 +8,7 @@
 
   .editor-box-header {
     display: flex;
+    align-items: center;
     padding: 0.3em;
     border-bottom: 1px solid $main-border-color;
     background-color: rgba(192, 192, 192, 0.1);
@@ -20,6 +21,7 @@
   .editor-box-toolbar {
     margin-left: auto;
     display: flex;
+    justify-content: center;
     gap: 0.5em;
 
     .separator {
@@ -38,6 +40,7 @@
   .data-spec-type {
     @include font-semibold();
     text-transform: uppercase;
+    margin-right: 1em;
   }
 
   .editor-box-content {
@@ -46,6 +49,14 @@
 
   .action-link {
     text-decoration: underline;
+
+    &.disabled {
+      cursor: not-allowed;
+      color: $main-text-color-disabled;
+      &:hover {
+        color: $main-text-color-disabled;
+      }
+    }
   }
 
   &.integer-editor {
@@ -131,6 +142,18 @@
       padding-left: 0;
       margin-bottom: 0.3em;
     }
+
+    .array-collapsed-item {
+      border: 1px dashed $main-border-color;
+      align-self: flex-start;
+      padding: 1em;
+      text-align: center;
+      border-radius: $border-radius-base;
+      background-color: rgba(192, 192, 192, 0.1);
+      p {
+        margin: 0;
+      }
+    }
   }
 
   .form-group {
@@ -144,5 +167,15 @@
     &:last-child {
       margin-bottom: 0;
     }
+  }
+}
+
+.clear-array-confirmation {
+  width: 12em;
+
+  .buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5em;
   }
 }

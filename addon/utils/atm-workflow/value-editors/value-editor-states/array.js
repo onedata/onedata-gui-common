@@ -6,6 +6,17 @@ import { editorComponentsPrefix, getArrayItemCreatorComponentName } from '../com
  * @typedef {'visual'|'raw'} ArrayValueEditorStateMode
  */
 
+/**
+ * @typedef {Object} ArrayValueEditorItemsVisibilityConfiguration
+ * @property {number} visibleAtTop
+ * @property {number} visibleAtBottom
+ * @property {number} changeVisibilityStep
+ */
+
+const minItemsVisibleAtTopCount = 4;
+const minItemsVisibleAtBottomCount = 1;
+const itemsVisibilityChangeStep = 10;
+
 export default class ArrayValueEditorState extends ValueEditorState {
   /**
    * @override
@@ -31,6 +42,11 @@ export default class ArrayValueEditorState extends ValueEditorState {
      * @type {string}
      */
     this.internalStringifiedValue = this.internalStringifiedValue ?? '[]';
+
+    /**
+     * @type {number}
+     */
+    this.itemsExpandedByUserCount = 0;
   }
 
   /**
@@ -86,6 +102,31 @@ export default class ArrayValueEditorState extends ValueEditorState {
   }
 
   /**
+   * @type {ArrayValueEditorItemsVisibilityConfiguration}
+   */
+  get itemsVisibilityConfiguration() {
+    let itemsCount = this.itemEditorStateIds.length;
+    let visibleAtTop = Math.min(
+      minItemsVisibleAtTopCount + this.itemsExpandedByUserCount,
+      itemsCount,
+    );
+    itemsCount -= visibleAtTop;
+    const visibleAtBottom = Math.min(minItemsVisibleAtBottomCount, itemsCount);
+    itemsCount -= visibleAtBottom;
+    if (itemsCount < itemsVisibilityChangeStep) {
+      visibleAtTop += itemsCount;
+      itemsCount = 0;
+    }
+    const changeVisibilityStep = itemsCount < 2 * itemsVisibilityChangeStep ?
+      itemsCount : itemsVisibilityChangeStep;
+    return {
+      visibleAtTop,
+      visibleAtBottom,
+      changeVisibilityStep,
+    };
+  }
+
+  /**
    * @public
    * @param {ArrayValueEditorStateMode} newMode
    * @returns {void}
@@ -113,6 +154,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
    */
   addNewItems(newItemEditorStates) {
     newItemEditorStates.forEach((state) => this.itemEditorStateIds.push(state.id));
+    this.recalculateItemsExpandedByUserCount();
     this.notifyChange();
   }
 
@@ -127,6 +169,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
     if (this.itemEditorStateIds.length !== currentLength) {
       this.editorStateManager.destroyValueEditorStateById(itemEditorStateId);
     }
+    this.recalculateItemsExpandedByUserCount();
     this.notifyChange();
   }
 
@@ -141,6 +184,34 @@ export default class ArrayValueEditorState extends ValueEditorState {
       this.removeAllItemsWithoutNotification();
       this.notifyChange();
     }
+  }
+
+  /**
+   * @public
+   * @returns {void}
+   */
+  showAllItems() {
+    if (this.itemsVisibilityConfiguration.changeVisibilityStep <= 0) {
+      return;
+    }
+    this.itemsExpandedByUserCount = this.itemEditorStateIds.length -
+      minItemsVisibleAtTopCount - minItemsVisibleAtBottomCount;
+    this.notifyChange();
+  }
+
+  /**
+   * @public
+   * @returns {void}
+   */
+  showNextItems() {
+    const changeVisibilityStep =
+      this.itemsVisibilityConfiguration.changeVisibilityStep;
+    if (changeVisibilityStep <= 0) {
+      return;
+    }
+
+    this.itemsExpandedByUserCount += changeVisibilityStep;
+    this.notifyChange();
   }
 
   /**
@@ -197,6 +268,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
       this.editorStateManager.destroyValueEditorStateById(editorStateId)
     );
     this.itemEditorStateIds = [];
+    this.recalculateItemsExpandedByUserCount();
   }
 
   /**
@@ -209,6 +281,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
         this.editorStateManager.createValueEditorState(this.itemAtmDataSpec, itemValue).id
       );
     }
+    this.recalculateItemsExpandedByUserCount();
   }
 
   /**
@@ -216,5 +289,23 @@ export default class ArrayValueEditorState extends ValueEditorState {
    */
   resetStringifiedValue() {
     this.internalStringifiedValue = JSON.stringify(this.value, null, 2);
+  }
+
+  /**
+   * @private
+   */
+  recalculateItemsExpandedByUserCount() {
+    const collapsibleItemsCount = this.itemEditorStateIds.length -
+      minItemsVisibleAtTopCount - minItemsVisibleAtBottomCount;
+    if (collapsibleItemsCount < itemsVisibilityChangeStep) {
+      // There should be no user-triggered expansion as there are too few
+      // items to have such.
+      this.itemsExpandedByUserCount = 0;
+    } else {
+      this.itemsExpandedByUserCount = Math.min(
+        this.itemsExpandedByUserCount,
+        collapsibleItemsCount
+      );
+    }
   }
 }

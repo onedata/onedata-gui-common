@@ -1,5 +1,7 @@
 import _ from 'lodash';
 import { computed } from '@ember/object';
+import { bool } from '@ember/object/computed';
+import { tag } from 'ember-awesome-macros';
 import EditorBase from '../commons/editor-base';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/array/editor';
@@ -23,6 +25,11 @@ export default EditorBase.extend(I18n, {
   isValid: true,
 
   /**
+   * @type {ArrayValueEditorItemsVisibilityConfiguration|null}
+   */
+  itemsVisibilityConfiguration: null,
+
+  /**
    * @type {Array<Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState>}
    */
   itemEditorStates: undefined,
@@ -31,6 +38,11 @@ export default EditorBase.extend(I18n, {
    * @type {string}
    */
   stringifiedValue: '',
+
+  /**
+   * @type {boolean}
+   */
+  isClearConfirmationOpened: false,
 
   /**
    * @type {ComputedProperty<string>}
@@ -43,6 +55,85 @@ export default EditorBase.extend(I18n, {
   }),
 
   /**
+   * @type {ComputedProperty<{
+   *   visibleAtTop: Array<Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState>,
+   *   hidden: Array<Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState>,
+   *   visibleAtBottom: Array<Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState>,
+   * }>}
+   */
+  sectionsOfItemEditorStates: computed(
+    'itemEditorStates.[]',
+    'itemsVisibilityConfiguration',
+    function sectionsOfItemEditorStates() {
+      if (!this.itemsVisibilityConfiguration || !this.itemEditorStates?.length) {
+        return {
+          visibleAtTop: [],
+          hidden: [],
+          visibleAtBottom: [],
+        };
+      }
+
+      return {
+        visibleAtTop: this.itemEditorStates?.slice(
+          0,
+          this.itemsVisibilityConfiguration.visibleAtTop
+        ),
+        hidden: this.itemEditorStates?.slice(
+          this.itemsVisibilityConfiguration.visibleAtTop,
+          -this.itemsVisibilityConfiguration.visibleAtBottom
+        ),
+        visibleAtBottom: this.itemsVisibilityConfiguration.visibleAtBottom ?
+          this.itemEditorStates?.slice(
+            -this.itemsVisibilityConfiguration.visibleAtBottom
+          ) : [],
+      };
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<SafeString|null>}
+   */
+  toggleModeDisabledTip: computed(
+    'mode',
+    'isValid',
+    function toggleModeDisabledTip() {
+      if (this.mode === 'raw' && !this.isValid) {
+        return this.t('changeModeDisabledTip.invalidJson');
+      }
+      return null;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isToggleModeDisabled: bool('toggleModeDisabledTip'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isThereSomethingToClear: computed(
+    'mode',
+    'itemEditorStates',
+    'stringifiedValue',
+    function shouldClearBeConfirmed() {
+      switch (this.mode) {
+        case 'visual':
+          return this.itemEditorStates.length > 0;
+        case 'raw':
+          return this.stringifiedValue.trim() !== '[]';
+        default:
+          return false;
+      }
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  clearTriggerId: tag `clear-trigger-${'editorState.id'}`,
+
+  /**
    * @override
    */
   handleStateChange() {
@@ -52,6 +143,7 @@ export default EditorBase.extend(I18n, {
 
     this.setProperties({
       itemEditorStates: this.editorState.itemEditorStates,
+      itemsVisibilityConfiguration: this.editorState.itemsVisibilityConfiguration,
       stringifiedValue: this.editorState.stringifiedValue,
       mode: this.editorState.mode,
       isValid: this.editorState.isValid,
@@ -71,10 +163,33 @@ export default EditorBase.extend(I18n, {
 
   actions: {
     toggleMode() {
+      if (this.isToggleModeDisabled) {
+        return;
+      }
       this.editorState.changeMode(this.mode === 'visual' ? 'raw' : 'visual');
     },
-    clear() {
+    showClearConfirmation() {
+      if (this.shouldClearBeConfirmed) {
+        this.set('isClearConfirmationOpened', !this.isClearConfirmationOpened);
+      } else {
+        this.editorState.clear();
+      }
+    },
+    confirmClear() {
+      this.set('isClearConfirmationOpened', false);
       this.editorState.clear();
+    },
+    toggleClearConfirmation(state) {
+      if (!this.isThereSomethingToClear && state) {
+        return;
+      }
+      this.set('isClearConfirmationOpened', state);
+    },
+    showNextItems() {
+      this.editorState?.showNextItems();
+    },
+    showAllItems() {
+      this.editorState?.showAllItems();
     },
     itemCreated(newItemEditorStates) {
       this.editorState.addNewItems(newItemEditorStates);

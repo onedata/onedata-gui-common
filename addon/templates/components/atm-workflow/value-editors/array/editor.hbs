@@ -5,8 +5,14 @@
   as |editorBox|
 }}
   {{#if (eq editorBox.section "toolbar")}}
-    <a class="mode-trigger clickable action-link" {{action "toggleMode"}}>
+    <a
+      class="mode-trigger action-link {{if isToggleModeDisabled "disabled" "clickable"}}"
+      {{action "toggleMode"}}
+    >
       {{tt this (concat "modes." (if (eq mode "visual") "raw" "visual"))}}
+      {{#if (and isToggleModeDisabled toggleModeDisabledTip)}}
+        {{one-tooltip title=toggleModeDisabledTip}}
+      {{/if}}
     </a>
     {{#if (eq mode "visual")}}
       <span class="separator"></span>
@@ -14,16 +20,91 @@
     {{/if}}
     {{#if (or (eq mode "raw") itemEditorStates.length)}}
       <span class="separator"></span>
-      <a class="clear-trigger clickable action-link" {{action "clear"}}>
+      <a
+        id={{clearTriggerId}}
+        class="clear-trigger action-link {{if isThereSomethingToClear "clickable" "disabled"}}"
+        {{action "toggleClearConfirmation" (not isClearConfirmationOpened)}}
+      >
         {{tt this "clear"}}
+        {{#render-later triggerRender=isClearConfirmationOpened}}
+          {{#one-webui-popover
+            class="clear-array-confirmation"
+            triggerSelector=(concat "#" clearTriggerId)
+            open=isClearConfirmationOpened
+            as |popover|
+          }}
+            {{#click-outside
+              onClickOutside=(action "toggleClearConfirmation" false)
+              exceptSelector=(concat "#" clearTriggerId)
+            }}
+              <p>{{tt this "clearConfirmation.question"}}</p>
+              <div class="buttons-container">
+                {{#one-button
+                  size="sm"
+                  type="default"
+                  onClick=(action "toggleClearConfirmation" false)
+                }}
+                  {{tt this "clearConfirmation.no"}}
+                {{/one-button}}
+                {{#one-button
+                  size="sm"
+                  type="danger"
+                  onClick=(action "confirmClear")
+                }}
+                  {{tt this "clearConfirmation.yes"}}
+                {{/one-button}}
+              </div>
+            {{/click-outside}}
+          {{/one-webui-popover}}
+        {{/render-later}}
       </a>
     {{/if}}
   {{else if (eq editorBox.section "content")}}
     {{#if (eq mode "visual")}}
       {{#if itemEditorStates.length}}
         <ol class="array-items">
-          {{#each itemEditorStates as |itemEditorState|}}
-            <li>
+          {{#each sectionsOfItemEditorStates.visibleAtTop as |itemEditorState|}}
+            <li class="array-item array-regular-item">
+              {{component itemEditorState.editorComponentName
+                stateManager=stateManager
+                editorId=itemEditorState.id
+                onRemove=(action "removeItem" itemEditorState.id)
+              }}
+            </li>
+          {{/each}}
+          {{#if sectionsOfItemEditorStates.hidden.length}}
+          <li class="array-item array-collapsed-item">
+            <p>
+              {{tt this "hiddenItems.counter"
+                hiddenItemsCount=sectionsOfItemEditorStates.hidden.length
+              }}
+            </p>
+            <div class="editor-box-toolbar">
+              {{#if (lt
+                itemsVisibilityConfiguration.changeVisibilityStep
+                sectionsOfItemEditorStates.hidden.length
+              )}}
+                <a
+                  class="action-link clickable show-next-items"
+                  {{action "showNextItems"}}
+                >
+                  {{tt this "hiddenItems.showNext"
+                    changeVisibilityStep=itemsVisibilityConfiguration.changeVisibilityStep
+                  }}
+                </a>
+                <span class="separator"></span>
+              {{/if}}
+              <a
+                class="action-link clickable show-all-items"
+                {{action "showAllItems"}}
+              >
+                {{tt this "hiddenItems.showAll"}}
+              </a>
+            </div>
+          </li>
+          {{/if}}
+          {{#each sectionsOfItemEditorStates.visibleAtBottom as |itemEditorState|}}
+            <li class="array-item array-regular-item">
               {{component itemEditorState.editorComponentName
                 stateManager=stateManager
                 editorId=itemEditorState.id
