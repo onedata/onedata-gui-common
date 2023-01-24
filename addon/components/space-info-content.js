@@ -11,6 +11,9 @@ import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import moment from 'moment';
 import layout from '../templates/components/space-info-content';
+import { promise } from 'ember-awesome-macros';
+import { reads } from '@ember/object/computed';
+import { reportFormatter } from 'onedata-gui-common/helpers/date-format';
 
 export default Component.extend(I18n, {
   layout,
@@ -61,13 +64,33 @@ export default Component.extend(I18n, {
   linkToSpace: undefined,
 
   /**
+   * @virtual optional
+   * @type {function}
+   */
+  openFileBrowser: undefined,
+
+  /**
+   * @virtual optional
+   * @type {function}
+   */
+  openRestApiModal: undefined,
+
+  /**
+   * @type {PromiseObject<Models.User>}
+   */
+  ownerProxy: promise.object(computed(
+    'space.info.creatorId',
+    async function ownerProxy() {
+      if (this.space.info?.creatorId) {
+        return this.userManager.getRecordById(this.space.info.creatorId);
+      }
+    }
+  )),
+
+  /**
    * @type {Models.User}
    */
-  owner: computed('space.info.creatorId', function owner() {
-    if (this.space.info?.creatorId) {
-      return this.userManager.getRecordById(this.space.info.creatorId);
-    }
-  }),
+  owner: reads('ownerProxy.content'),
 
   /**
    * @type {Ember.ComputedProperty<string>}
@@ -75,13 +98,16 @@ export default Component.extend(I18n, {
   creationTime: computed('space.info.creationTime', function creationTime() {
     const timestamp = this.space.info?.creationTime;
     if (timestamp) {
-      return moment.unix(timestamp).format('D MMM YYYY H:mm:ss');
+      return moment.unix(timestamp).format(reportFormatter);
     }
   }),
 
   actions: {
     openFileBrowser() {
-      return null;
+      this.onOpenFileBrowser?.();
+    },
+    openRestApiModal() {
+      this.onRestApiModal?.();
     },
   },
 });

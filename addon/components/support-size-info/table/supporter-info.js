@@ -1,5 +1,5 @@
 /**
- * A component that is used as a cell renderer flippable icon 
+ * A component that is used as a cell renderer with flippable icon 
  * with additional info popover and supporter name.
  *
  * @author Angieszka Warchoł
@@ -22,12 +22,12 @@ export default Component.extend({
   itemInfoOpened: false,
 
   /**
-   * @type {Boolean}
+   * @type {boolean}
    */
   hasItemInfoHovered: false,
 
   /**
-   * @type {object}
+   * @type {Object}
    */
   space: computed('record', function space() {
     return {

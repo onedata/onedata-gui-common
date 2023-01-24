@@ -5,7 +5,7 @@
   <span 
     class={{concat-classes 
       "item-icon-container icon-container popover-info-trigger" 
-      spaceId
+      space-{spaceId}
     }}
     {{action
       (mut itemInfoOpened)
@@ -15,7 +15,6 @@
   >
     {{flippable-icons
       iconName="space"
-      iconColor=iconColor
       isHovered=hasItemInfoHovered
       suppressFlipping=itemInfoOpened
     }}
@@ -26,7 +25,7 @@
 {{/truncated-string}}
 {{#record-info-popover
   isOpened=itemInfoOpened
-  triggerSelector=(concat ".item-icon-container." spaceId)
+  triggerSelector=(concat ".item-icon-container.space-" spaceId)
 }}
   {{space-info-content
     space=space
