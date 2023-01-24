@@ -101,6 +101,17 @@ describe('Integration | Component | audit log browser', function () {
     expect(find('.table-is-empty-row')).to.have.trimmed.text('some text');
   });
 
+  it('shows tooltip about no entries', async function () {
+    await render(hbs`{{audit-log-browser}}`);
+
+    const tooltipHelper = new OneTooltipHelper(
+      '.table-is-empty-row .no-entries-tip .one-icon'
+    );
+    expect(await tooltipHelper.getText()).to.equal(
+      'Empty log means that either no events were ever recorded or the recorded events have already expired, since all audit logs are subject to expiration.'
+    );
+  });
+
   it('shows fetched log entries from newest to oldest', async function () {
     await render(hbs`<div style="display: flex; height: 10em;">
       {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
@@ -243,7 +254,7 @@ describe('Integration | Component | audit log browser', function () {
     }}`);
 
     expect(find('.table-title')).to.have.trimmed.text('test');
-    const tooltipHelper = await new OneTooltipHelper(
+    const tooltipHelper = new OneTooltipHelper(
       '.table-title .title-tip .one-icon'
     );
     await tooltipHelper.open();
