@@ -14,7 +14,7 @@ describe('Integration | Component | name conflict', function () {
     });
 
     await render(hbs `{{name-conflict item=item}}`);
-    expect(this.element.textContent).to.contain('name#label');
+    expect(this.element.textContent).to.contain('name@label');
   });
 
   it('renders name with conflict label with custom separator', async function () {
