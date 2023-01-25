@@ -1,6 +1,6 @@
 /**
- * A generic component for showing resources list. For now it only shows names, without more
- * contextual content. To improve in more complicated use cases.
+ * A generic component for showing resources list. Show name and additional may also show 
+ * flippable icon with info popover with more contextual content.
  *
  * @module components/resources-list
  * @author Michał Borzęcki
@@ -90,7 +90,7 @@ export const ResourceListItem = EmberObject.extend({
   itemInfoOpened: false,
 
   /**
-   * @type {Boolean}
+   * @type {boolean}
    */
   hasItemInfoHovered: false,
 

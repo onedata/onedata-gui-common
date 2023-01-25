@@ -44,9 +44,9 @@
     </td>
   </tr>
 </table>
-<div class="link-to-space">
+<div class="space-links-container">
   {{#if showLinkToRestApiModal}}
-    <a {{action "openRestApiModal"}} class="space-link rest-api">
+    <a {{action "openRestApiModal"}} class="space-info-link rest-api-link clickable">
       <span>{{tt this "openRestApi"}}</span>
       {{one-icon icon="rest"}}
     </a>
@@ -57,8 +57,8 @@
   {{#if showLinkToFileBrowser}}
     <a 
       href={{linkToFileBrowser}} 
-      class="space-link file-browser-link"
-      onclick={{if (eq linkToFileBrowser undefined) (action "openFileBrowser")}}
+      class="space-info-link file-browser-link clickable"
+      onclick={{action "openFileBrowser"}}
     >
       <span>{{tt this "openFileBrowser"}}</span>
       {{one-icon icon="link-external"}}
@@ -68,7 +68,7 @@
     {{/if}}
   {{/if}}
   {{#if showLinkToSpace}}
-    <a href={{linkToSpace}} class="space-link">
+    <a href={{linkToSpace}} class="space-info-link space-link clickable">
       {{tt this "openSpace"}}
       {{one-icon icon="link-external"}}
     </a>
