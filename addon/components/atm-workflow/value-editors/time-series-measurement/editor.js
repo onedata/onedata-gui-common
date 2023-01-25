@@ -63,8 +63,8 @@ export default EditorBase.extend(I18n, {
     ['timestamp', 'tsName', 'value'].forEach((fieldName) => {
       const field = this.formRootGroup.getFieldByPath(fieldName);
       const fieldValue = field.dumpValue();
-      formValues[fieldName] = field.isValid && fieldName !== 'tsName' ?
-        Number(fieldValue) : fieldValue;
+      formValues[fieldName] = fieldName !== 'tsName' ?
+        Number.parseFloat(fieldValue) : fieldValue;
     });
     return formValues;
   },

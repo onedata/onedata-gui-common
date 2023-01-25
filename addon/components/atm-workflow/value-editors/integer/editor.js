@@ -34,7 +34,9 @@ export default EditorBase.extend({
    * @returns {void}
    */
   propagateValueChange() {
-    this.editorState.value = this.getFormValue();
+    if (this.editorState) {
+      this.editorState.value = this.getFormValue();
+    }
   },
 
   /**
@@ -42,14 +44,16 @@ export default EditorBase.extend({
    * @returns {boolean}
    */
   doesFormValueDiffer(referenceValue) {
-    return (this.getFormValue() ?? '') !== (referenceValue ?? '');
+    const formValue = this.getFormValue();
+    return this.getFormValue() !== referenceValue &&
+      !(Number.isNaN(formValue) && Number.isNaN(referenceValue));
   },
 
   /**
    * @returns {number}
    */
   getFormValue() {
-    return Number(this.formRootGroup.dumpValue().value);
+    return Number.parseFloat(this.formRootGroup.dumpValue().value);
   },
 });
 

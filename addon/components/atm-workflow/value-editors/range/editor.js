@@ -63,7 +63,7 @@ export default EditorBase.extend(I18n, {
     ['start', 'end', 'step'].forEach((fieldName) => {
       const field = this.formRootGroup.getFieldByPath(fieldName);
       const fieldValue = field.dumpValue();
-      formValues[fieldName] = field.isValid ? Number(fieldValue) : fieldValue;
+      formValues[fieldName] = Number.parseFloat(fieldValue);
     });
     return formValues;
   },

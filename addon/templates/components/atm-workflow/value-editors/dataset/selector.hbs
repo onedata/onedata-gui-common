@@ -15,7 +15,7 @@
     }}
       {{actions-popover-content
         actionsArray=actionsArray
-        actionClicked=(action (mut areActionsOpened) false)
+        actionClicked=(action "toggleActionsOpen" false)
       }}
     {{/click-outside}}
   {{/one-webui-popover}}

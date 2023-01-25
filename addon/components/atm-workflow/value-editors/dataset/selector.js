@@ -114,6 +114,11 @@ const SelectDatasetsAction = Action.extend({
   context: undefined,
 
   /**
+   * @override
+   */
+  className: 'select-datasets-action-trigger',
+
+  /**
    * @type {boolean}
    */
   isPending: false,
@@ -179,6 +184,11 @@ const ProvideDatasetIdAction = Action.extend({
    * @override
    */
   i18nPrefix: 'components.atmWorkflow.valueEditors.dataset.selector.actions.provideDatasetId',
+
+  /**
+   * @override
+   */
+  className: 'provide-dataset-id-action-trigger',
 
   /**
    * @override

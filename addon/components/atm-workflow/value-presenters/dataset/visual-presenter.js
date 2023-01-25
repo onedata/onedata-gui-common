@@ -129,7 +129,7 @@ export const DatasetDetails = EmberObject.extend({
       switch (fileType) {
         case FileType.Directory:
         case FileType.Regular:
-          return this.dataset.rootFileType;
+          return fileType;
         default:
           return FileType.Regular;
       }

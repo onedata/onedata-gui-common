@@ -40,6 +40,7 @@
               <p>{{tt this "clearConfirmation.question"}}</p>
               <div class="buttons-container">
                 {{#one-button
+                  class="btn-cancel"
                   size="sm"
                   type="default"
                   onClick=(action "toggleClearConfirmation" false)
@@ -47,6 +48,7 @@
                   {{tt this "clearConfirmation.no"}}
                 {{/one-button}}
                 {{#one-button
+                  class="btn-confirm"
                   size="sm"
                   type="danger"
                   onClick=(action "confirmClear")

@@ -124,6 +124,11 @@ const SelectUploadFilesAction = Action.extend({
   context: undefined,
 
   /**
+   * @override
+   */
+  className: 'select-upload-files-action-trigger',
+
+  /**
    * @type {boolean}
    */
   isPending: false,
@@ -195,6 +200,11 @@ const ProvideFileIdAction = Action.extend({
    * @override
    */
   i18nPrefix: 'components.atmWorkflow.valueEditors.file.selector.actions.provideFileId',
+
+  /**
+   * @override
+   */
+  className: 'provide-file-id-action-trigger',
 
   /**
    * @override
