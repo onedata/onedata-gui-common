@@ -5,7 +5,7 @@
   <span 
     class={{concat-classes 
       "item-icon-container icon-container popover-info-trigger" 
-      space-{spaceId}
+      (concat "space-" spaceId)
     }}
     {{action
       (mut itemInfoOpened)
