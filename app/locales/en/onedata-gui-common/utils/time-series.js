@@ -47,6 +47,7 @@ export default {
   timeSeriesMetricAggregators: {
     standard: {
       sum: 'Sum',
+      avg: 'Average',
       max: 'Maximum',
       min: 'Minimum',
       first: 'First',
@@ -54,6 +55,7 @@ export default {
     },
     short: {
       sum: 'Sum',
+      avg: 'Avg',
       max: 'Max',
       min: 'Min',
       first: 'First',
