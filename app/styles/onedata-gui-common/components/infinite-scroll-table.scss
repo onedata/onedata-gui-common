@@ -80,6 +80,10 @@ $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-paddin
     }
   }
 
+  .table-is-empty-row .no-entries-tip {
+    margin-left: 0.3em;
+  }
+
   .table-entry {
     &.clickable:hover > td {
       filter: brightness(95%);
