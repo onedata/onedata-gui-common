@@ -1,6 +1,6 @@
 /**
  * Content of popup with information about space
- * 
+ *
  * @author Agnieszka Warchoł
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -67,7 +67,7 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {function}
    */
-  onRestApiModal: undefined,
+  onOpenRestApiModal: undefined,
 
   /**
    * @type {PromiseObject<Models.User>}
@@ -98,7 +98,7 @@ export default Component.extend(I18n, {
 
   actions: {
     openRestApiModal() {
-      this.onRestApiModal?.();
+      this.onOpenRestApiModal?.();
     },
   },
 });
