@@ -28,20 +28,20 @@
                 class="item-icon tmp" 
                 icon=item.icon
               }}
+              {{#one-tooltip
+                placement="top"
+                arrowPlacement="left"
+                triggerEvents="hover"
+              }}
+                {{#if item.conflictingLabelSource}}
+                  {{name-conflict
+                    item=item.conflictingLabelSource
+                  }}
+                {{else}}
+                  {{item.label}}
+                {{/if}}
+              {{/one-tooltip}}
             {{/if}}
-            {{#one-tooltip
-              placement="top"
-              arrowPlacement="left"
-              triggerEvents="hover"
-            }}
-              {{#if item.conflictingLabelSource}}
-                {{name-conflict
-                  item=item.conflictingLabelSource
-                }}
-              {{else}}
-                {{item.label}}
-              {{/if}}
-            {{/one-tooltip}}
           </span>
         {{/if}}
         {{#truncated-string}}
