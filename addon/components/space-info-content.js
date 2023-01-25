@@ -67,13 +67,7 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {function}
    */
-  openFileBrowser: undefined,
-
-  /**
-   * @virtual optional
-   * @type {function}
-   */
-  openRestApiModal: undefined,
+  onRestApiModal: undefined,
 
   /**
    * @type {PromiseObject<Models.User>}
@@ -103,9 +97,6 @@ export default Component.extend(I18n, {
   }),
 
   actions: {
-    openFileBrowser() {
-      this.onOpenFileBrowser?.();
-    },
     openRestApiModal() {
       this.onRestApiModal?.();
     },

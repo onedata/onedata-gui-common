@@ -89,7 +89,8 @@ export default Component.extend({
       propertyName: 'supporterName',
       title: supporterNameHeader,
       className: 'supporter-name-column',
-      component: 'support-size-info/table/supporter-info',
+      component: supporterNameHeader.string === 'Space' ?
+        'support-size-info/table/supporter-info' : 'support-size-info/table/truncated-cell',
     }, {
       propertyName: 'supportSizeStr',
       title: supporterSizeHeader,
