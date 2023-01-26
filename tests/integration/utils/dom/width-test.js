@@ -183,7 +183,14 @@ function getDivStyles(boxSizing, {
   marginLeft = null,
   marginRight = null,
 } = {}) {
-  let style = boxSizing ? `box-sizing: ${boxSizing};` : '';
+  // Testing environment shows element scaled down to 50% of it's original
+  // dimensions. It disturbs element measurement by `getBoundingClientRect` -
+  // values are incorrect by +/- 1px.
+  // We need to scale the element up back to at least 100% of it's original size.
+  // Element now is scaled to 50%, so we have to scale it by 200% to go
+  // back to original 100%.
+  let style = 'zoom: 200%;';
+  style += boxSizing !== null ? `box-sizing: ${boxSizing};` : '';
   style += width !== null ? `width: ${width}px;` : '';
   style += paddingLeft !== null ? `padding-left: ${paddingLeft}px;` : '';
   style += paddingRight !== null ? `padding-right: ${paddingRight}px;` : '';

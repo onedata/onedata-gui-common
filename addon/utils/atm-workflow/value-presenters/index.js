@@ -7,7 +7,8 @@
  */
 
 import { valuePresentersDefaultLocation } from './commons';
-import integerPresentersSpec from './integer';
+import numberPresentersSpec from './number';
+import booleanPresentersSpec from './boolean';
 import stringPresentersSpec from './string';
 import objectPresentersSpec from './object';
 import filePresentersSpec from './file';
@@ -20,7 +21,7 @@ import arrayPresentersSpec from './array';
  * # WHAT ARE VALUE PRESENTERS
  *
  * Value presenters are components, which are able to visualise data processed
- * by automation workflows. These are integers, strings, object, files etc. (see
+ * by automation workflows. These are numbers, strings, object, files etc. (see
  * more in utils/atm-workflow/data-types.js). Each of that data type has it's own
  * set of presenter components.
  *
@@ -38,7 +39,7 @@ import arrayPresentersSpec from './array';
  *   "table header row" presenters.
  *
  * NOTE: "visual" presenter is optional and is not available for all data types.
- * It's due to a simplicity of some data types (like integers or strings) which
+ * It's due to a simplicity of some data types (like numbers or strings) which
  * have no better visual representation than a "single line"/"raw".
  *
  * # FALLBACK PRESENTERS
@@ -73,7 +74,8 @@ import arrayPresentersSpec from './array';
  * @type {Object<AtmDataSpecType, ValuePresentersSpecification>}
  */
 const presenterSpecsPerType = {
-  integer: integerPresentersSpec,
+  number: numberPresentersSpec,
+  boolean: booleanPresentersSpec,
   string: stringPresentersSpec,
   object: objectPresentersSpec,
   file: filePresentersSpec,
