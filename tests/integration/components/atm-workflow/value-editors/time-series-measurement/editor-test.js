@@ -141,6 +141,13 @@ describe('Integration | Component | atm-workflow/value-editors/time-series-measu
       expect(find('.value-field')).to.have.class('has-error');
     }
   );
+
+  it('can be disabled', async function () {
+    this.stateManager.isDisabled = true;
+    await renderComponent();
+
+    expect(findAll('input[disabled]')).to.have.length(3);
+  });
 });
 
 async function renderComponent() {

@@ -66,6 +66,13 @@ describe('Integration | Component | atm-workflow/value-editors/object/editor', f
       expect(find('.editor-box')).to.have.class('invalid');
     }
   });
+
+  it('can be disabled', async function () {
+    this.stateManager.isDisabled = true;
+    await renderComponent();
+
+    expect(find('textarea')).to.have.attr('disabled');
+  });
 });
 
 async function renderComponent() {

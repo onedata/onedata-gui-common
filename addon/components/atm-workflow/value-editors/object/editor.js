@@ -18,6 +18,7 @@ export default EditorBase.extend({
    * @override
    */
   handleStateChange() {
+    this._super(...arguments);
     if (!this.editorState) {
       return;
     }

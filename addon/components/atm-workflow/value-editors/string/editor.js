@@ -1,6 +1,7 @@
 import { computed, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
+import { not } from 'ember-awesome-macros';
 import autosize from 'onedata-gui-common/utils/autosize';
 import EditorBase from '../commons/editor-base';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
@@ -33,6 +34,7 @@ export default EditorBase.extend({
    * @override
    */
   handleStateChange() {
+    this._super(...arguments);
     if (!this.editorState) {
       return;
     }
@@ -82,6 +84,11 @@ const FormRootGroup = FormFieldsRootGroup.extend({
    * @override
    */
   size: 'sm',
+
+  /**
+   * @override
+   */
+  isEnabled: not('component.isDisabled'),
 
   /**
    * @override

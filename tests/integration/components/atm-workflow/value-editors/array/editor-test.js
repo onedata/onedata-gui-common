@@ -376,6 +376,38 @@ describe('Integration | Component | atm-workflow/value-editors/array/editor', fu
     await fillIn(findAll('textarea').slice(-1)[0], '35');
     expectVisibleStringItems([...numStringsArray(24), null, '35']);
   });
+
+  it('can be disabled when empty', async function () {
+    this.stateManager.isDisabled = true;
+
+    await renderComponent();
+
+    expect(find('.add-item-trigger')).to.have.class('disabled');
+  });
+
+  it('can be disabled when having items', async function () {
+    this.stateManager.value = numStringsArray(2);
+    this.stateManager.isDisabled = true;
+
+    await renderComponent();
+
+    expect(find('.remove-icon')).to.not.exist;
+    expect(find('input:not([disabled])')).to.not.exist;
+    expect(find('.clear-trigger')).to.not.exist;
+    expect(find('.add-item-trigger')).to.have.class('disabled');
+  });
+
+  it('can be disabled when having items in "raw" view', async function () {
+    this.stateManager.value = numStringsArray(2);
+    this.stateManager.isDisabled = true;
+
+    await renderComponent();
+    await click('.mode-trigger');
+
+    expect(find('.remove-icon')).to.not.exist;
+    expect(find('textarea:not([disabled])')).to.not.exist;
+    expect(find('.clear-trigger')).to.not.exist;
+  });
 });
 
 async function renderComponent() {

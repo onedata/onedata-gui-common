@@ -15,6 +15,11 @@ export default Component.extend({
   itemAtmDataSpec: undefined,
 
   /**
+   * @virtual optional
+   */
+  isDisabled: false,
+
+  /**
    * @virtual
    * @type {(newItemEditors: Array<Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState>) => void}
    */

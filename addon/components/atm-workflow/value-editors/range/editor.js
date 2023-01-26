@@ -1,6 +1,7 @@
 import { computed, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
+import { not } from 'ember-awesome-macros';
 import _ from 'lodash';
 import { validator } from 'ember-cp-validations';
 import EditorBase from '../commons/editor-base';
@@ -28,6 +29,7 @@ export default EditorBase.extend(I18n, {
    * @override
    */
   handleStateChange() {
+    this._super(...arguments);
     if (!this.editorState) {
       return;
     }
@@ -90,6 +92,11 @@ const FormRootGroup = FormFieldsRootGroup.extend({
    * @override
    */
   i18nPrefix: reads('component.i18nPrefix'),
+
+  /**
+   * @override
+   */
+  isEnabled: not('component.isDisabled'),
 
   /**
    * @override

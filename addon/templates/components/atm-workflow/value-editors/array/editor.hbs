@@ -18,7 +18,7 @@
       <span class="separator"></span>
       <span class="items-count">{{itemsCountText}}</span>
     {{/if}}
-    {{#if (or (eq mode "raw") itemEditorStates.length)}}
+    {{#if (and (not isDisabled) (or (eq mode "raw") itemEditorStates.length))}}
       <span class="separator"></span>
       <a
         id={{clearTriggerId}}
@@ -70,7 +70,7 @@
               {{component itemEditorState.editorComponentName
                 stateManager=stateManager
                 editorId=itemEditorState.id
-                onRemove=(action "removeItem" itemEditorState.id)
+                onRemove=(if isDisabled null (action "removeItem" itemEditorState.id))
               }}
             </li>
           {{/each}}
@@ -110,7 +110,7 @@
               {{component itemEditorState.editorComponentName
                 stateManager=stateManager
                 editorId=itemEditorState.id
-                onRemove=(action "removeItem" itemEditorState.id)
+                onRemove=(if isDisabled null (action "removeItem" itemEditorState.id))
               }}
             </li>
           {{/each}}
@@ -119,6 +119,7 @@
       {{component editorState.itemCreatorComponentName
         stateManager=stateManager
         itemAtmDataSpec=editorState.itemAtmDataSpec
+        isDisabled=isDisabled
         onItemsCreated=(action "itemCreated")
       }}
     {{else}}
@@ -134,6 +135,7 @@
         showLineNumbers=true
         showPrintMargin=false
         update=(action "rawValueChanged")
+        readOnly=isDisabled
       }}
     {{/if}}
   {{/if}}

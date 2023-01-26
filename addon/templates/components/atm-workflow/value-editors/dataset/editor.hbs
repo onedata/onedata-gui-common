@@ -5,7 +5,7 @@
   as |editorBox|
 }}
   {{#if (eq editorBox.section "toolbar")}}
-    {{#if (eq mode "selected")}}
+    {{#if (and (eq mode "selected") (not isDisabled))}}
       {{#atm-workflow/value-editors/dataset/selector
         class="action-link"
         atmDataSpec=editorState.atmDataSpec
@@ -21,6 +21,7 @@
       {{#atm-workflow/value-editors/dataset/selector
         atmDataSpec=editorState.atmDataSpec
         editorContext=editorState.editorContext
+        isDisabled=isDisabled
         onDatasetsSelected=(action "datasetsSelected")
         onIdProvidingStarted=(action "idProvidingStarted")
       }}
@@ -34,6 +35,7 @@
             class="cancel-btn"
             type="default"
             size="sm"
+            disabled=isDisabled
             onClick=(action "cancelIdForm")
           }}
             {{tt this "cancelIdForm"}}
@@ -42,7 +44,7 @@
             class="accept-btn"
             type="primary"
             size="sm"
-            disabled=(not isValid)
+            disabled=(or (not isValid) isDisabled)
             onClick=(action "acceptIdForm")
           }}
             {{tt this "acceptIdForm"}}

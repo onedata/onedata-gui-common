@@ -106,6 +106,24 @@ export default class ValueEditorStateManager {
 
   /**
    * @public
+   * @returns {string}
+   */
+  get isDisabled() {
+    return this.rootValueEditorState?.isDisabled ?? false;
+  }
+
+  /**
+   * @public
+   * @param {boolean} newValue
+   */
+  set isDisabled(newValue) {
+    if (this.rootValueEditorState) {
+      this.rootValueEditorState.isDisabled = newValue;
+    }
+  }
+
+  /**
+   * @public
    * @returns {void}
    */
   destroy() {

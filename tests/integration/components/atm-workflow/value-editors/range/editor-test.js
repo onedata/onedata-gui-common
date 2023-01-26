@@ -124,6 +124,13 @@ describe('Integration | Component | atm-workflow/value-editors/range/editor', fu
     expect(find('.end-field')).to.have.class('has-error');
     expect(find('.step-field')).to.have.class('has-error');
   });
+
+  it('can be disabled', async function () {
+    this.stateManager.isDisabled = true;
+    await renderComponent();
+
+    expect(findAll('input[disabled]')).to.have.length(3);
+  });
 });
 
 async function renderComponent() {

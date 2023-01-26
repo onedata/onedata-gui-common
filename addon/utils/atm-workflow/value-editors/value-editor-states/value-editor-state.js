@@ -59,6 +59,12 @@ export default class ValueEditorState {
 
     /**
      * @private
+     * @type {boolean}
+     */
+    this.internalIsDisabled = false;
+
+    /**
+     * @private
      * @type {Array<ValueEditorStateChangeListener>}
      */
     this.changeListeners = [];
@@ -86,10 +92,27 @@ export default class ValueEditorState {
 
   /**
    * @public
-   * @param {unknown} value
+   * @param {unknown} newValue
    */
   set value(newValue) {
     this.setValue(newValue);
+    this.notifyChange();
+  }
+
+  /**
+   * @public
+   * @returns {string}
+   */
+  get isDisabled() {
+    return this.internalIsDisabled;
+  }
+
+  /**
+   * @public
+   * @param {boolean} newValue
+   */
+  set isDisabled(newValue) {
+    this.internalIsDisabled = Boolean(newValue);
     this.notifyChange();
   }
 

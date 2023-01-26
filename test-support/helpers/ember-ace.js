@@ -6,6 +6,7 @@ export function replaceEmberAceWithTextarea(context) {
     layout: hbs`<textarea
       value={{value}}
       oninput={{action update value="target.value"}}
+      disabled={{readOnly}}
     ></textarea>`,
   }));
 }

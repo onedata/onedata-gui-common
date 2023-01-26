@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import { Promise } from 'rsvp';
 import Action from 'onedata-gui-common/utils/action';
@@ -8,7 +8,8 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/value-e
 export default Component.extend({
   layout,
   tagName: 'a',
-  classNames: ['dataset-value-editor-selector', 'action-link', 'clickable'],
+  classNames: ['dataset-value-editor-selector', 'action-link'],
+  classNameBindings: ['isDisabled:disabled:clickable'],
 
   /**
    * @virtual
@@ -33,6 +34,12 @@ export default Component.extend({
    * @type {() => void}
    */
   onIdProvidingStarted: undefined,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isDisabled: false,
 
   /**
    * @virtual optional
@@ -86,16 +93,28 @@ export default Component.extend({
    */
   actionsArray: collect('selectDatasetsAction', 'provideDatasetIdAction'),
 
+  isDisabledObserver: observer('isDisabled', function isDisabledObserver() {
+    if (this.areActionsOpened) {
+      this.set('areActionsOpened', false);
+    }
+  }),
+
   /**
    * @override
    */
   click() {
     this._super(...arguments);
+    if (this.isDisabled) {
+      return;
+    }
     this.toggleProperty('areActionsOpened');
   },
 
   actions: {
     toggleActionsOpen(state) {
+      if (this.isDisabled) {
+        return;
+      }
       this.set('areActionsOpened', state);
     },
   },

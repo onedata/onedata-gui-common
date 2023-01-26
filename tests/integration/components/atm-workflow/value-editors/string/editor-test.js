@@ -63,6 +63,13 @@ describe('Integration | Component | atm-workflow/value-editors/string/editor', f
     const heightAfter = dom.height(find('textarea'));
     expect(heightAfter).to.be.above(heightBefore);
   });
+
+  it('can be disabled', async function () {
+    this.stateManager.isDisabled = true;
+    await renderComponent();
+
+    expect(find('textarea')).to.have.attr('disabled');
+  });
 });
 
 async function renderComponent() {

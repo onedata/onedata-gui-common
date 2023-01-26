@@ -6,10 +6,11 @@
   }}
 {{else}}
   {{#atm-workflow/value-editors/file/selector
-    class="add-item-trigger action-link"
+    class="add-item-trigger"
     atmDataSpec=itemAtmDataSpec
     editorContext=editorContext
     allowManyFiles=true
+    isDisabled=isDisabled
     onFilesSelected=(action "filesSelected")
     onIdProvidingStarted=(action "idProvidingStarted")
   }}

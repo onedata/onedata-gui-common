@@ -5,7 +5,8 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/value-e
 export default ArrayItemCreatorBase.extend(I18n, {
   layout,
   tagName: 'a',
-  classNames: ['add-item-trigger', 'action-link', 'clickable'],
+  classNames: ['add-item-trigger', 'action-link'],
+  classNameBindings: ['isDisabled:disabled:clickable'],
 
   /**
    * @override
@@ -18,7 +19,7 @@ export default ArrayItemCreatorBase.extend(I18n, {
   click() {
     this._super(...arguments);
 
-    if (!this.stateManager || !this.itemAtmDataSpec) {
+    if (!this.stateManager || !this.itemAtmDataSpec || this.isDisabled) {
       return;
     }
 

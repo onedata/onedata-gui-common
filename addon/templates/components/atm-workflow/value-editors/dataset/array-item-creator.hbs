@@ -6,10 +6,11 @@
   }}
 {{else}}
   {{#atm-workflow/value-editors/dataset/selector
-    class="add-item-trigger action-link"
+    class="add-item-trigger"
     atmDataSpec=itemAtmDataSpec
     editorContext=editorContext
     allowManyDatasets=true
+    isDisabled=isDisabled
     onDatasetsSelected=(action "datasetsSelected")
     onIdProvidingStarted=(action "idProvidingStarted")
   }}

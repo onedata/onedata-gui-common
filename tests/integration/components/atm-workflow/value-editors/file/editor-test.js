@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, find, click, findAll, fillIn } from '@ember/test-helpers';
+import { render, find, click, findAll, fillIn, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
@@ -239,6 +239,33 @@ describe('Integration | Component | atm-workflow/value-editors/file/editor', fun
     await click('.cancel-btn');
 
     await expectShowingExampleFile(this);
+  });
+
+  it('can be disabled when empty', async function () {
+    this.stateManager.isDisabled = true;
+    await renderComponent();
+
+    expect(find('.file-value-editor-selector')).to.have.class('disabled');
+  });
+
+  it('can be disabled when showing a selected file', async function () {
+    this.stateManager.isDisabled = true;
+    this.stateManager.value = exampleFile;
+    await renderComponent();
+
+    expect(find('.file-value-editor-selector')).to.not.exist;
+  });
+
+  it('can be disabled when providing file ID', async function () {
+    await renderComponent();
+    await click('.file-value-editor-selector');
+    await click('.provide-file-id-action-trigger');
+
+    this.stateManager.isDisabled = true;
+    await settled();
+
+    expect(find('button:not([disabled]')).to.not.exist;
+    expect(find('input:not([disabled]')).to.not.exist;
   });
 });
 

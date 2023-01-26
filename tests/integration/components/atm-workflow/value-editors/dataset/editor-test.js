@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, find, click, findAll, fillIn } from '@ember/test-helpers';
+import { render, find, click, findAll, fillIn, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
@@ -232,6 +232,33 @@ describe('Integration | Component | atm-workflow/value-editors/dataset/editor', 
     await click('.cancel-btn');
 
     await expectShowingExampleDataset(this);
+  });
+
+  it('can be disabled when empty', async function () {
+    this.stateManager.isDisabled = true;
+    await renderComponent();
+
+    expect(find('.dataset-value-editor-selector')).to.have.class('disabled');
+  });
+
+  it('can be disabled when showing a selected dataset', async function () {
+    this.stateManager.isDisabled = true;
+    this.stateManager.value = exampleDataset;
+    await renderComponent();
+
+    expect(find('.dataset-value-editor-selector')).to.not.exist;
+  });
+
+  it('can be disabled when providing dataset ID', async function () {
+    await renderComponent();
+    await click('.dataset-value-editor-selector');
+    await click('.provide-dataset-id-action-trigger');
+
+    this.stateManager.isDisabled = true;
+    await settled();
+
+    expect(find('button:not([disabled]')).to.not.exist;
+    expect(find('input:not([disabled]')).to.not.exist;
   });
 });
 

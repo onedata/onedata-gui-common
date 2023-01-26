@@ -52,7 +52,8 @@
     text-decoration: underline;
 
     &.disabled {
-      cursor: not-allowed;
+      // Using !important to override inline styles added by click() Ember handler
+      cursor: not-allowed !important;
       color: $main-text-color-disabled;
       &:hover {
         color: $main-text-color-disabled;

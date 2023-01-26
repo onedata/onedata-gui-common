@@ -28,6 +28,11 @@ export default Component.extend({
   editorState: null,
 
   /**
+   * @type {boolean}
+   */
+  isDisabled: false,
+
+  /**
    * @type {ComputedProperty<ValueEditorStateChangeListener>}
    */
   stateChangeListener: computed(function stateChangeListener() {
@@ -65,8 +70,11 @@ export default Component.extend({
   },
 
   /**
-   * @virtual
    * @returns {void}
    */
-  handleStateChange() {},
+  handleStateChange() {
+    if (this.editorState && this.isDisabled !== this.editorState.isDisabled) {
+      this.set('isDisabled', this.editorState.isDisabled);
+    }
+  },
 });

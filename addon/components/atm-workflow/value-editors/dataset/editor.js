@@ -1,7 +1,7 @@
 import { computed, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
-import { tag } from 'ember-awesome-macros';
+import { tag, not } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
@@ -42,6 +42,7 @@ export default EditorBase.extend(I18n, {
    * @override
    */
   handleStateChange() {
+    this._super(...arguments);
     if (!this.editorState) {
       return;
     }
@@ -106,6 +107,11 @@ const IdFormRootGroup = FormFieldsRootGroup.extend({
    * @override
    */
   size: 'sm',
+
+  /**
+   * @override
+   */
+  isEnabled: not('component.isDisabled'),
 
   /**
    * @override

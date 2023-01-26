@@ -6,11 +6,13 @@ import hbs from 'htmlbars-inline-precompile';
 import { dasherize } from '@ember/string';
 import { AtmDataSpecType, atmDataSpecTypesArray } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { ValueEditorStateManager } from 'onedata-gui-common/utils/atm-workflow/value-editors';
+import { replaceEmberAceWithTextarea } from '../../../../helpers/ember-ace';
 
 describe('Integration | Component | atm-workflow/value-editors/full-value-editor', function () {
   setupRenderingTest();
 
   beforeEach(function () {
+    replaceEmberAceWithTextarea(this);
     this.setProperties({
       stateManager: undefined,
       setupStateManagerForItemType: (atmDataSpec) => {
@@ -126,6 +128,15 @@ describe('Integration | Component | atm-workflow/value-editors/full-value-editor
     expect(this.stateManager.isValid).to.be.true;
     expect(findAll('.array-editor .array-editor .integer-editor')).to.have.length(1);
     expect(find('input')).to.have.value('10');
+  });
+
+  it('can be disabled', async function () {
+    this.stateManager.value = 'abc';
+    this.stateManager.isDisabled = true;
+
+    await renderComponent();
+
+    expect(find('textarea:not([disabled])')).to.not.exist;
   });
 });
 

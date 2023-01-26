@@ -1,3 +1,4 @@
+import { observer } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/dataset/array-item-creator';
 import ArrayItemCreatorBase from '../commons/array-item-creator-base';
@@ -20,6 +21,12 @@ export default ArrayItemCreatorBase.extend(I18n, {
    * @type {() => void}
    */
   handleIdProvidingEditorChangeFunction: undefined,
+
+  isDisabledObserver: observer('isDisabled', function isDisabledObserver() {
+    if (this.idProvidingEditorState) {
+      this.idProvidingEditorState.isDisabled = this.isDisabled;
+    }
+  }),
 
   init() {
     this._super(...arguments);

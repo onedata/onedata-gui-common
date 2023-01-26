@@ -64,6 +64,13 @@ describe('Integration | Component | atm-workflow/value-editors/integer/editor', 
       expect(find('.value-field')).to.have.class('has-error');
     }
   });
+
+  it('can be disabled', async function () {
+    this.stateManager.isDisabled = true;
+    await renderComponent();
+
+    expect(find('input')).to.have.attr('disabled');
+  });
 });
 
 async function renderComponent() {
