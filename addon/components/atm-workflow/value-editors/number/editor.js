@@ -5,7 +5,7 @@ import { not } from 'ember-awesome-macros';
 import EditorBase from '../commons/editor-base';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
-import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/integer/editor';
+import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/number/editor';
 
 export default EditorBase.extend({
   layout,
@@ -47,7 +47,7 @@ export default EditorBase.extend({
    */
   doesFormValueDiffer(referenceValue) {
     const formValue = this.getFormValue();
-    return this.getFormValue() !== referenceValue &&
+    return formValue !== referenceValue &&
       !(Number.isNaN(formValue) && Number.isNaN(referenceValue));
   },
 
@@ -62,7 +62,7 @@ export default EditorBase.extend({
 const FormRootGroup = FormFieldsRootGroup.extend({
   /**
    * @virtual
-   * @type {Components.AtmWorkflow.ValueEditors.Integer.Editor}
+   * @type {Components.AtmWorkflow.ValueEditors.Number.Editor}
    */
   component: undefined,
 
@@ -87,7 +87,6 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   fields: computed(() => [
     NumberField.create({
       name: 'value',
-      integer: true,
       withValidationMessage: false,
     }),
   ]),

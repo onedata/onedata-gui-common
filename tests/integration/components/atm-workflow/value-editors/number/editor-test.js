@@ -7,27 +7,27 @@ import sinon from 'sinon';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { ValueEditorStateManager } from 'onedata-gui-common/utils/atm-workflow/value-editors';
 
-describe('Integration | Component | atm-workflow/value-editors/integer/editor', function () {
+describe('Integration | Component | atm-workflow/value-editors/number/editor', function () {
   setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
       stateManager: new ValueEditorStateManager({
-        type: AtmDataSpecType.Integer,
+        type: AtmDataSpecType.Number,
       }),
     });
   });
 
-  it('has class "integer-editor"', async function () {
+  it('has class "number-editor"', async function () {
     await renderComponent();
 
-    expect(find('.editor-box')).to.have.class('integer-editor');
+    expect(find('.editor-box')).to.have.class('number-editor');
   });
 
-  it('has only "Integer" text in the header', async function () {
+  it('has only "Number" text in the header', async function () {
     await renderComponent();
 
-    expect(find('.editor-box-header')).to.have.trimmed.text('Integer');
+    expect(find('.editor-box-header')).to.have.trimmed.text('Number');
     expect(find('.editor-box-toolbar')).to.be.empty;
   });
 
@@ -44,7 +44,7 @@ describe('Integration | Component | atm-workflow/value-editors/integer/editor', 
   it('allows to input a valid number', async function () {
     await renderComponent();
 
-    for (const value of [-3, 0, 123]) {
+    for (const value of [-3, 0, 123.5]) {
       await fillIn('input', String(value));
 
       expect(this.stateManager.value).to.equal(value);
@@ -74,7 +74,7 @@ describe('Integration | Component | atm-workflow/value-editors/integer/editor', 
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-editors/integer/editor
+  await render(hbs`{{atm-workflow/value-editors/number/editor
     stateManager=stateManager
     editorId=stateManager.rootValueEditorStateId
     onRemove=onRemove

@@ -12,7 +12,7 @@ import validateArray from './array';
 import validateBoolean from './boolean';
 import validateDataset from './dataset';
 import validateFile from './file';
-import validateInteger from './integer';
+import validateNumber from './number';
 import validateObject from './object';
 import validateRange from './range';
 import validateString from './string';
@@ -26,7 +26,7 @@ const validators = Object.freeze({
   [AtmDataSpecType.Boolean]: validateBoolean,
   [AtmDataSpecType.Dataset]: validateDataset,
   [AtmDataSpecType.File]: validateFile,
-  [AtmDataSpecType.Integer]: validateInteger,
+  [AtmDataSpecType.Number]: validateNumber,
   [AtmDataSpecType.Object]: validateObject,
   [AtmDataSpecType.Range]: validateRange,
   [AtmDataSpecType.String]: validateString,

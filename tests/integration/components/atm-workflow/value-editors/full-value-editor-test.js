@@ -67,7 +67,7 @@ describe('Integration | Component | atm-workflow/value-editors/full-value-editor
           type: AtmDataSpecType.Array,
           valueConstraints: {
             itemDataSpec: {
-              type: AtmDataSpecType.Integer,
+              type: AtmDataSpecType.Number,
             },
           },
         },
@@ -105,7 +105,7 @@ describe('Integration | Component | atm-workflow/value-editors/full-value-editor
           type: AtmDataSpecType.Array,
           valueConstraints: {
             itemDataSpec: {
-              type: AtmDataSpecType.Integer,
+              type: AtmDataSpecType.Number,
             },
           },
         },
@@ -126,7 +126,7 @@ describe('Integration | Component | atm-workflow/value-editors/full-value-editor
       [10],
     ]);
     expect(this.stateManager.isValid).to.be.true;
-    expect(findAll('.array-editor .array-editor .integer-editor')).to.have.length(1);
+    expect(findAll('.array-editor .array-editor .number-editor')).to.have.length(1);
     expect(find('input')).to.have.value('10');
   });
 

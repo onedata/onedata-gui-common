@@ -8,11 +8,11 @@ const arrayDataSpec = {
   type: AtmDataSpecType.Array,
   valueConstraints: {
     itemDataSpec: {
-      type: 'integer',
+      type: 'number',
     },
   },
 };
-// const booleanDataSpec = { type: AtmDataSpecType.Boolean };
+const booleanDataSpec = { type: AtmDataSpecType.Boolean };
 const datasetDataSpec = { type: AtmDataSpecType.Dataset };
 const fileDataSpec = {
   type: AtmDataSpecType.File,
@@ -20,7 +20,7 @@ const fileDataSpec = {
     fileType: AtmFileType.Regular,
   },
 };
-const integerDataSpec = { type: AtmDataSpecType.Integer };
+const numberDataSpec = { type: AtmDataSpecType.Number };
 const objectDataSpec = { type: AtmDataSpecType.Object };
 const rangeDataSpec = { type: AtmDataSpecType.Range };
 const stringDataSpec = { type: AtmDataSpecType.String };
@@ -30,24 +30,31 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   [
     [],
     [1],
-    [1, 2],
+    [1, 2.5],
   ].forEach((value) =>
     itRecognizesValueAsValid(value, arrayDataSpec)
   );
   [
     ['1'],
-    [1, '2'], 'abc',
+    [1, '2.5'], 'abc',
     132, NaN, true, null, undefined, {},
   ].forEach((value) =>
     itRecognizesValueAsInvalid(value, arrayDataSpec)
   );
 
-  // [true, false].forEach((value) =>
-  //   itRecognizesValueAsValid(value, booleanDataSpec)
-  // );
-  // ['', 123, null, undefined, {}, []].forEach((value) =>
-  //   itRecognizesValueAsInvalid(value, booleanDataSpec)
-  // );
+  [true, false].forEach((value) =>
+    itRecognizesValueAsValid(value, booleanDataSpec)
+  );
+  [
+    '',
+    123,
+    null,
+    undefined,
+    {},
+    [],
+  ].forEach((value) =>
+    itRecognizesValueAsInvalid(value, booleanDataSpec)
+  );
 
   [{
     datasetId: 'abc',
@@ -79,11 +86,11 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
     itRecognizesValueAsInvalid(value, fileDataSpec)
   );
 
-  [-10, 0, 10].forEach((value) =>
-    itRecognizesValueAsValid(value, integerDataSpec)
+  [-10, 0, 10, 1.25].forEach((value) =>
+    itRecognizesValueAsValid(value, numberDataSpec)
   );
-  ['', 0.5, NaN, true, null, undefined, {}].forEach((value) =>
-    itRecognizesValueAsInvalid(value, integerDataSpec)
+  ['', NaN, true, null, undefined, {}].forEach((value) =>
+    itRecognizesValueAsInvalid(value, numberDataSpec)
   );
 
   [{}, { someKey: 123 }].forEach((value) =>

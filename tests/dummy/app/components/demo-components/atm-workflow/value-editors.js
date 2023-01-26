@@ -41,9 +41,15 @@ export default Component.extend({
     },
   }),
 
-  integerEditorStateManager: computed(() => {
+  booleanEditorStateManager: computed(() => {
     return new ValueEditorStateManager({
-      type: AtmDataSpecType.Integer,
+      type: AtmDataSpecType.Boolean,
+    });
+  }),
+
+  numberEditorStateManager: computed(() => {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.Number,
     });
   }),
 

@@ -1,12 +1,12 @@
 import ValueEditorState from './value-editor-state';
 import { editorComponentsPrefix } from '../commons';
 
-export default class IntegerValueEditorState extends ValueEditorState {
+export default class NumberValueEditorState extends ValueEditorState {
   /**
    * @override
    */
   constructor() {
     super(...arguments);
-    this.editorComponentName = `${editorComponentsPrefix}/integer/editor`;
+    this.editorComponentName = `${editorComponentsPrefix}/number/editor`;
   }
 }

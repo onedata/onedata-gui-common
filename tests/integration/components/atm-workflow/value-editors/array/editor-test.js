@@ -149,7 +149,7 @@ describe('Integration | Component | atm-workflow/value-editors/array/editor', fu
 
   it('validates data in "visual" editor', async function () {
     this.setupStateManagerForItemType({
-      type: AtmDataSpecType.Integer,
+      type: AtmDataSpecType.Number,
     });
     await renderComponent();
 
@@ -167,7 +167,7 @@ describe('Integration | Component | atm-workflow/value-editors/array/editor', fu
 
   it('validates data in "raw" editor', async function () {
     this.setupStateManagerForItemType({
-      type: AtmDataSpecType.Integer,
+      type: AtmDataSpecType.Number,
     });
     await renderComponent();
     await click('.mode-trigger');

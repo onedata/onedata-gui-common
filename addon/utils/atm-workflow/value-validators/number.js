@@ -1,5 +1,5 @@
 /**
- * `integer` type value validator.
+ * `number` type value validator.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -11,5 +11,5 @@
  * @returns {boolean}
  */
 export default function validate(value) {
-  return Number.isInteger(value);
+  return Number.isFinite(value);
 }

@@ -61,7 +61,11 @@
     }
   }
 
-  &.integer-editor {
+  &.boolean-editor {
+    width: 6em;
+  }
+
+  &.number-editor {
     width: 10em;
   }
 

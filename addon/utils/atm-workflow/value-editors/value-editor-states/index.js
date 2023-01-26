@@ -1,8 +1,9 @@
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import ArrayValueEditorState from './array';
+import BooleanValueEditorState from './boolean';
 import DatasetValueEditorState from './dataset';
 import FileValueEditorState from './file';
-import IntegerValueEditorState from './integer';
+import NumberValueEditorState from './number';
 import ObjectValueEditorState from './object';
 import RangeValueEditorState from './range';
 import StringValueEditorState from './string';
@@ -10,9 +11,10 @@ import TimeSeriesMeasurementValueEditorState from './time-series-measurement';
 
 export default {
   [AtmDataSpecType.Array]: ArrayValueEditorState,
+  [AtmDataSpecType.Boolean]: BooleanValueEditorState,
   [AtmDataSpecType.Dataset]: DatasetValueEditorState,
   [AtmDataSpecType.File]: FileValueEditorState,
-  [AtmDataSpecType.Integer]: IntegerValueEditorState,
+  [AtmDataSpecType.Number]: NumberValueEditorState,
   [AtmDataSpecType.Object]: ObjectValueEditorState,
   [AtmDataSpecType.Range]: RangeValueEditorState,
   [AtmDataSpecType.String]: StringValueEditorState,
