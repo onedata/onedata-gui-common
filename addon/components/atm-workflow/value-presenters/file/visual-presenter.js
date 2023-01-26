@@ -85,7 +85,7 @@ export const FileDetails = EmberObject.extend({
       if (
         this.file?.file_id &&
         (!this.file?.name || !this.file?.type) &&
-        this.context.getFileDetailsById
+        this.context?.getFileDetailsById
       ) {
         try {
           return (await this.context.getFileDetailsById(this.file.file_id)) || this.file;

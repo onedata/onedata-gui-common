@@ -5,7 +5,7 @@ export function replaceEmberAceWithTextarea(context) {
   context.owner.register('component:ember-ace', TestComponent.extend({
     layout: hbs`<textarea
       value={{value}}
-      oninput={{action update value="target.value"}}
+      oninput={{action (or update (no-action)) value="target.value"}}
       disabled={{readOnly}}
     ></textarea>`,
   }));

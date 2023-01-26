@@ -87,7 +87,7 @@ export const DatasetDetails = EmberObject.extend({
           !this.dataset?.rootFileId ||
           !this.dataset?.rootFilePath ||
           !this.dataset?.rootFileType
-        ) && this.context.getDatasetDetailsById
+        ) && this.context?.getDatasetDetailsById
       ) {
         try {
           return (await this.context.getDatasetDetailsById(this.dataset.datasetId)) ||
