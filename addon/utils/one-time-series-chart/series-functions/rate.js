@@ -79,22 +79,13 @@ export default async function rate(context, args) {
       continue;
     }
 
-    let pointDuration = context.timeResolution;
-    if (
-      i === numericInputData.length - 1 &&
-      inputData?.type === 'points' &&
-      context.newestEdgeTimestamp
-    ) {
-      const pointDurationUntilNewest = Math.max(
-        context.newestEdgeTimestamp - inputDataAsArray[i].timestamp,
-        0
-      ) + 1;
-      if (pointDurationUntilNewest < pointDuration) {
-        pointDuration = pointDurationUntilNewest;
-      }
+    let measurementDuration = inputData?.type === 'points' &&
+      inputDataAsArray[i]?.measurementDuration;
+    if (!measurementDuration) {
+      measurementDuration = context.timeResolution;
     }
 
-    numericResultData.push((value / pointDuration) * timeSpan);
+    numericResultData.push((value / measurementDuration) * timeSpan);
   }
 
   if (inputData.type === 'points') {

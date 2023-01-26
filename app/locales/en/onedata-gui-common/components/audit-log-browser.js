@@ -7,4 +7,5 @@ export default {
     severity: 'Severity',
   },
   noLogEntries: 'No log entries.',
+  noLogEntriesTip: 'Empty log means that either no events were ever recorded or the recorded events have already expired, since all audit logs are subject to expiration.',
 };

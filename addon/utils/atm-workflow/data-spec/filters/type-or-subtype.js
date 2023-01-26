@@ -12,7 +12,7 @@ import { atmDataSpecTypesArray, getAtmDataSpecTypeSubtypes } from '../types';
  * @typedef {Object} AtmDataSpecSubtypeFilter Only types which are equal or are
  * subtypes (child type) of one of the types in `types` fulfills this filter.
  * Examples:
- * - To check is integer and filter.types is [integer] -> ok (the same type).
+ * - To check is number and filter.types is [number] -> ok (the same type).
  * - To check is file and filter.types is [object] -> ok (file is a subtype of
  * object).
  * - To check is object and filter.types is [range] -> not ok (object is not
