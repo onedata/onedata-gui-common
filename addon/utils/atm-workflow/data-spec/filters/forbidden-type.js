@@ -12,7 +12,7 @@ import { atmDataSpecTypesArray, getAtmDataSpecTypeSubtypes } from '../types';
  * @typedef {Object} AtmDataSpecForbiddenFilter Only types which are different
  * than all of provided forbidden types (and it's subtypes) fulfills this filter.
  * This also applies to any nested data type. Examples:
- * - To check is integer and filter.types is [integer] -> not ok.
+ * - To check is number and filter.types is [number] -> not ok.
  * - To check is file and filter.types is [object] -> not ok (every file is
  * also an object).
  * - To check is object and filter.types is [range,object] -> not ok (object is

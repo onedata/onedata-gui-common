@@ -12,7 +12,7 @@ import { atmDataSpecTypesArray, getAtmDataSpecTypeSupertypes } from '../types';
  * @typedef {Object} AtmDataSpecSupertypeFilter Only types which are equal or
  * are supertype (parent type) of one of the types in `types` fulfills this
  * filter. Examples:
- * - To check is integer and filter.types is [integer] -> ok (the same type).
+ * - To check is number and filter.types is [number] -> ok (the same type).
  * - To check is object and filter.types is [file] -> ok (object is a supertype
  * of file).
  * - To check is range and filter.types is [object] -> not ok (range is not

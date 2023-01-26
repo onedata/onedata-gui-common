@@ -1,5 +1,5 @@
 /**
- * A "table body row" integer value presenter.
+ * A "table body row" number value presenter.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -7,7 +7,7 @@
  */
 
 import TableBodyRowPresenterBase from '../commons/table-body-row-presenter-base';
-import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/integer/table-body-row-presenter';
+import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/number/table-body-row-presenter';
 
 export default TableBodyRowPresenterBase.extend({
   layout,
@@ -15,5 +15,5 @@ export default TableBodyRowPresenterBase.extend({
   /**
    * @override
    */
-  dataSpecType: 'integer',
+  dataSpecType: 'number',
 });

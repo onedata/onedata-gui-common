@@ -64,7 +64,7 @@ describe('Integration | Component | workflow visualiser/stores list', function (
 
       await click('.create-store-action-trigger');
       await fillIn(getModalBody().querySelector('.name-field .form-control'), 'store1');
-      await selectChoose(getModalBody().querySelector('.data-spec-editor'), 'Integer');
+      await selectChoose(getModalBody().querySelector('.data-spec-editor'), 'Number');
       await click(getModalFooter().querySelector('.btn-submit'));
 
       expect(this.get('createStoreStub')).to.be.calledOnce.and.to.be.calledWith({
@@ -73,7 +73,7 @@ describe('Integration | Component | workflow visualiser/stores list', function (
         type: 'list',
         config: {
           itemDataSpec: {
-            type: 'integer',
+            type: 'number',
             valueConstraints: {},
           },
         },
