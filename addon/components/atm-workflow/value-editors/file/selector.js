@@ -1,3 +1,12 @@
+/**
+ * A file selector component. Allows to trigger selecting files from some
+ * external source (taken from `editorContext`) or providing file ID.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed, observer } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
@@ -20,7 +29,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {ValueEditorContext}
+   * @type {AtmValueEditorContext}
    */
   editorContext: undefined,
 
@@ -122,7 +131,7 @@ export default Component.extend({
 
   actions: {
     toggleActionsOpen(state) {
-      if (this.isDisabled) {
+      if (this.isDisabled && state) {
         return;
       }
       this.set('areActionsOpened', state);

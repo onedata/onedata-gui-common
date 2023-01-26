@@ -1,3 +1,11 @@
+/**
+ * Common utilities for value editors.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 
 /**
@@ -28,7 +36,7 @@ export function getArrayItemCreatorComponentName(itemAtmDataSpec) {
 }
 
 /**
- * @typedef {AtmValuePresenterContext} ValueEditorContext
+ * @typedef {AtmValuePresenterContext} AtmValueEditorContext
  * @property {(selectorConfig: FilesSelectorConfig) => void} [selectFiles]
  * @property {(selectorConfig: DatasetsSelectorConfig) => void} [selectDatasets]
  */

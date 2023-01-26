@@ -1,3 +1,11 @@
+/**
+ * Single value editor state.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import generateId from 'onedata-gui-common/utils/generate-id';
 
@@ -10,17 +18,10 @@ export default class ValueEditorState {
    * @public
    * @param {Utils.AtmWorkflow.ValueEditors.ValueEditorStateManager} editorStateManager
    * @param {AtmDataSpec} atmDataSpec
-   * @param {ValueEditorContext | null} editorContext
+   * @param {AtmValueEditorContext | null} editorContext
    * @param {unknown} [initialValue]
    */
   constructor(editorStateManager, atmDataSpec, editorContext, initialValue = undefined) {
-    /**
-     * @private
-     * @readonly
-     * @type {Utils.AtmWorkflow.ValueEditors.ValueEditorStateManager}
-     */
-    this.editorStateManager = editorStateManager;
-
     /**
      * @public
      * @readonly
@@ -38,7 +39,7 @@ export default class ValueEditorState {
     /**
      * @public
      * @readonly
-     * @type {ValueEditorContext | null}
+     * @type {AtmValueEditorContext | null}
      */
     this.editorContext = editorContext ?? null;
 
@@ -48,6 +49,13 @@ export default class ValueEditorState {
      * @type {string}
      */
     this.editorComponentName = '';
+
+    /**
+     * @private
+     * @readonly
+     * @type {Utils.AtmWorkflow.ValueEditors.ValueEditorStateManager}
+     */
+    this.editorStateManager = editorStateManager;
 
     /**
      * Value managed internally by this class. To get and set it, use

@@ -1,3 +1,11 @@
+/**
+ * An object value editor component.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import EditorBase from '../commons/editor-base';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/object/editor';
 

@@ -1,3 +1,11 @@
+/**
+ * Array value editor state.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import ValueEditorState from './value-editor-state';
 import { editorComponentsPrefix, getArrayItemCreatorComponentName } from '../commons';
@@ -24,6 +32,13 @@ export default class ArrayValueEditorState extends ValueEditorState {
   constructor() {
     super(...arguments);
     this.editorComponentName = `${editorComponentsPrefix}/array/editor`;
+    if (!this.value) {
+      this.value = [];
+    }
+
+    // Using assignmenets with `??` below as already done operations in this
+    // constructor might have changed `this.value` which automatically changes
+    // values of the fields below. We don't want to override these changes.
 
     /**
      * @public
@@ -44,6 +59,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
     this.internalStringifiedValue = this.internalStringifiedValue ?? '[]';
 
     /**
+     * @private
      * @type {number}
      */
     this.itemsExpandedByUserCount = 0;
@@ -75,7 +91,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
 
   /**
    * @public
-   * @returns {Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState}
+   * @returns {Array<Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState>}
    */
   get itemEditorStates() {
     return (this.itemEditorStateIds ?? []).map((editorStateId) =>
@@ -161,6 +177,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
   /**
    * @public
    * @param {string} itemEditorStateId
+   * @returns {void}
    */
   removeItem(itemEditorStateId) {
     const currentLength = this.itemEditorStateIds.length;
@@ -168,9 +185,9 @@ export default class ArrayValueEditorState extends ValueEditorState {
       .filter((id) => id !== itemEditorStateId);
     if (this.itemEditorStateIds.length !== currentLength) {
       this.editorStateManager.destroyValueEditorStateById(itemEditorStateId);
+      this.recalculateItemsExpandedByUserCount();
+      this.notifyChange();
     }
-    this.recalculateItemsExpandedByUserCount();
-    this.notifyChange();
   }
 
   /**
@@ -194,8 +211,11 @@ export default class ArrayValueEditorState extends ValueEditorState {
     if (this.itemsVisibilityConfiguration.changeVisibilityStep <= 0) {
       return;
     }
-    this.itemsExpandedByUserCount = this.itemEditorStateIds.length -
-      minItemsVisibleAtTopCount - minItemsVisibleAtBottomCount;
+    this.itemsExpandedByUserCount = Math.max(
+      this.itemEditorStateIds.length - minItemsVisibleAtTopCount -
+      minItemsVisibleAtBottomCount,
+      0
+    );
     this.notifyChange();
   }
 
@@ -253,8 +273,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
    */
   getIsValid() {
     if (this.mode === 'raw') {
-      return (this.value === null && this.stringifiedValue.trim() === 'null') ||
-        (this.value !== null && validate(this.value, this.atmDataSpec));
+      return validate(this.value, this.atmDataSpec);
     } else {
       return this.itemEditorStates.every((state) => state.isValid);
     }
@@ -262,6 +281,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
 
   /**
    * @private
+   * @returns {void}
    */
   removeAllItemsWithoutNotification() {
     (this.itemEditorStateIds ?? []).forEach((editorStateId) =>
@@ -273,6 +293,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
 
   /**
    * @private
+   * @returns {void}
    */
   recreateItemEditorsForValue(value) {
     this.removeAllItemsWithoutNotification();
@@ -286,6 +307,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
 
   /**
    * @private
+   * @returns {void}
    */
   resetStringifiedValue() {
     this.internalStringifiedValue = JSON.stringify(this.value, null, 2);
@@ -293,6 +315,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
 
   /**
    * @private
+   * @returns {void}
    */
   recalculateItemsExpandedByUserCount() {
     const collapsibleItemsCount = this.itemEditorStateIds.length -

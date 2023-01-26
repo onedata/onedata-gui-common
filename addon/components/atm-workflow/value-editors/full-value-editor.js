@@ -1,3 +1,12 @@
+/**
+ * A "full" automation value editor component, which is able to edit any type of
+ * data using subeditors dedicated for each possible data type.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/full-value-editor';

@@ -1,3 +1,11 @@
+/**
+ * A string value editor component.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { computed, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
@@ -99,6 +107,7 @@ const FormRootGroup = FormFieldsRootGroup.extend({
       withValidationMessage: false,
       // allows empty string
       isOptional: true,
+      // autosize library will take care of a real textarea height
       rows: 1,
     }),
   ]),

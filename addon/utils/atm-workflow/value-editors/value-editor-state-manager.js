@@ -1,3 +1,11 @@
+/**
+ * State management utility class for automation value editor.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import _ from 'lodash';
 import valueEditorStates from './value-editor-states';
 
@@ -15,16 +23,23 @@ export default class ValueEditorStateManager {
   /**
    * @public
    * @param {AtmDataSpec} atmDataSpec
-   * @param {ValueEditorContext} [editorContext]
+   * @param {AtmValueEditorContext} [editorContext]
    * @param {unknown} [initialValue]
    */
   constructor(atmDataSpec, editorContext = undefined, initialValue = undefined) {
     /**
      * @public
      * @readonly
-     * @type {ValueEditorContext}
+     * @type {AtmValueEditorContext}
      */
     this.editorContext = editorContext ?? {};
+
+    /**
+     * @public
+     * @readonly
+     * @type {string|null}
+     */
+    this.rootValueEditorStateId = null;
 
     /**
      * @private
@@ -44,16 +59,6 @@ export default class ValueEditorStateManager {
      */
     this.nestedValueEditorStateChangeListener = () => this.notifyChange();
 
-    const rootValueEditorState =
-      this.createValueEditorState(this.atmDataSpec, initialValue);
-
-    /**
-     * @public
-     * @readonly
-     * @type {string}
-     */
-    this.rootValueEditorStateId = rootValueEditorState?.id;
-
     /**
      * @private
      * @type {Array<ValueEditorStateManagerChangeListener>}
@@ -68,6 +73,9 @@ export default class ValueEditorStateManager {
       value: null,
       isValid: false,
     };
+
+    this.rootValueEditorStateId =
+      this.createValueEditorState(this.atmDataSpec, initialValue)?.id ?? null;
   }
 
   /**
@@ -154,6 +162,7 @@ export default class ValueEditorStateManager {
   }
 
   /**
+   * @public
    * @param {string} editorId
    * @returns {Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState | null}
    */

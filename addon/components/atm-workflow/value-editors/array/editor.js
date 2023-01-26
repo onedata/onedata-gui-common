@@ -1,3 +1,11 @@
+/**
+ * An array value editor component.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import _ from 'lodash';
 import { computed } from '@ember/object';
 import { bool } from '@ember/object/computed';
@@ -170,18 +178,24 @@ export default EditorBase.extend(I18n, {
       this.editorState.changeMode(this.mode === 'visual' ? 'raw' : 'visual');
     },
     showClearConfirmation() {
+      if (this.isDisabled) {
+        return;
+      }
       if (this.shouldClearBeConfirmed) {
-        this.set('isClearConfirmationOpened', !this.isClearConfirmationOpened);
+        this.set('isClearConfirmationOpened', true);
       } else {
         this.editorState.clear();
       }
     },
     confirmClear() {
       this.set('isClearConfirmationOpened', false);
+      if (this.isDisabled) {
+        return;
+      }
       this.editorState.clear();
     },
     toggleClearConfirmation(state) {
-      if (!this.isThereSomethingToClear && state) {
+      if ((!this.isThereSomethingToClear || this.isDisabled) && state) {
         return;
       }
       this.set('isClearConfirmationOpened', state);

@@ -1,3 +1,11 @@
+/**
+ * An editor component base class.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { observer, computed } from '@ember/object';
 

@@ -1,3 +1,9 @@
+/**
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import ArrayValueEditorState from './array';
 import BooleanValueEditorState from './boolean';

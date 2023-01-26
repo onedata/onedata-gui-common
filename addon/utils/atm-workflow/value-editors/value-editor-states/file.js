@@ -1,3 +1,11 @@
+/**
+ * File value editor state.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import ValueEditorState from './value-editor-state';
 import { editorComponentsPrefix } from '../commons';
@@ -26,6 +34,7 @@ export default class FileValueEditorState extends ValueEditorState {
     this.internalMode = this.value?.file_id ? 'selected' : 'empty';
 
     /**
+     * File provided by user using ID form.
      * @private
      * @type {AtmFile}
      */
@@ -132,6 +141,8 @@ export default class FileValueEditorState extends ValueEditorState {
     super.setValue(newValue);
     if (this.mode === 'empty' && newValue?.file_id) {
       this.changeMode('selected');
+    } else if (this.mode === 'selected' && !newValue?.file_id) {
+      this.changeMode('empty');
     }
   }
 

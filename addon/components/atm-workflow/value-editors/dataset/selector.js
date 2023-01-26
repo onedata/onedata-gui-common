@@ -1,3 +1,12 @@
+/**
+ * A dataset selector component. Allows to trigger selecting datasets from some
+ * external source (taken from `editorContext`) or providing dataset ID.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed, observer } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
@@ -19,7 +28,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {ValueEditorContext}
+   * @type {AtmValueEditorContext}
    */
   editorContext: undefined,
 

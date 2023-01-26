@@ -1,3 +1,11 @@
+/**
+ * Dataset value editor state.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import ValueEditorState from './value-editor-state';
 import { editorComponentsPrefix } from '../commons';
@@ -26,6 +34,7 @@ export default class DatasetValueEditorState extends ValueEditorState {
     this.internalMode = this.value?.datasetId ? 'selected' : 'empty';
 
     /**
+     * Dataset provided by user using ID form.
      * @private
      * @type {AtmDataset}
      */
@@ -132,6 +141,8 @@ export default class DatasetValueEditorState extends ValueEditorState {
     super.setValue(newValue);
     if (this.mode === 'empty' && newValue?.datasetId) {
       this.changeMode('selected');
+    } else if (this.mode === 'selected' && !newValue?.datasetId) {
+      this.changeMode('empty');
     }
   }
 

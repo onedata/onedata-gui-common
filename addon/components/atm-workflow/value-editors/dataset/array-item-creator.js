@@ -1,3 +1,11 @@
+/**
+ * An array item creator dedicated for creating dataset items.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { observer } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/dataset/array-item-creator';
