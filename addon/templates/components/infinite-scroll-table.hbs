@@ -29,6 +29,9 @@
         <tr class="table-is-empty-row">
           <td class="table-is-empty-cell" colspan={{columnsCount}}>
             {{or noEntriesText (tt this "noEntries")}}
+            {{#if noEntriesTip}}
+              {{one-label-tip class="no-entries-tip" title=noEntriesTip}}
+            {{/if}}
           </td>
         </tr>
       {{else}}

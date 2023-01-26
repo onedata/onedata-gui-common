@@ -211,6 +211,7 @@ export const timeSeriesCustomUnitPrefix = 'custom:';
  */
 export const timeSeriesMetricAggregators = [
   'sum',
+  'avg',
   'max',
   'min',
   'first',

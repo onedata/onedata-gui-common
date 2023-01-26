@@ -10,6 +10,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { recalculatePointMeasurementDuration } from './point';
+
 /**
  * @param {Array<Array<OTSCSeriesPoint>>} pointsArrays
  * @param {Array<number|null>} newPointsValues
@@ -24,6 +26,32 @@ export default function mergePointsArrays(pointsArrays, newPointsValues) {
   );
   for (const pointsArray of pointsArrays.slice(1)) {
     for (let i = 0; i < mergedPointsArray.length; i++) {
+      if (!pointsArray[i].fake) {
+        if (
+          pointsArray[i].firstMeasurementTimestamp !== null && (
+            mergedPointsArray[i].fake ||
+            mergedPointsArray[i].firstMeasurementTimestamp === null ||
+            mergedPointsArray[i].firstMeasurementTimestamp >
+            pointsArray[i].firstMeasurementTimestamp
+          )
+        ) {
+          mergedPointsArray[i].firstMeasurementTimestamp =
+            pointsArray[i].firstMeasurementTimestamp;
+        }
+
+        if (
+          pointsArray[i].lastMeasurementTimestamp !== null && (
+            mergedPointsArray[i].fake ||
+            mergedPointsArray[i].lastMeasurementTimestamp === null ||
+            mergedPointsArray[i].lastMeasurementTimestamp <
+            pointsArray[i].lastMeasurementTimestamp
+          )
+        ) {
+          mergedPointsArray[i].lastMeasurementTimestamp =
+            pointsArray[i].lastMeasurementTimestamp;
+        }
+      }
+
       mergedPointsArray[i].oldest =
         mergedPointsArray[i].oldest && pointsArray[i].oldest;
       mergedPointsArray[i].newest =
@@ -32,5 +60,8 @@ export default function mergePointsArrays(pointsArrays, newPointsValues) {
         mergedPointsArray[i].fake && pointsArray[i].fake;
     }
   }
+  mergedPointsArray.forEach((point) =>
+    recalculatePointMeasurementDuration(point)
+  );
   return mergedPointsArray;
 }
