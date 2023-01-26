@@ -61,7 +61,7 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
       );
       await selectChoose(
         getModalBody().querySelector('.data-spec-editor'),
-        'Integer'
+        'Number'
       );
       await click(getModalFooter().querySelector('.btn-submit'));
       const actionResult = await resultPromise;
@@ -72,7 +72,7 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
         type: 'list',
         config: {
           itemDataSpec: {
-            type: 'integer',
+            type: 'number',
             valueConstraints: {},
           },
         },
@@ -97,7 +97,7 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
       );
       await selectChoose(
         getModalBody().querySelector('.data-spec-editor'),
-        'Integer'
+        'Number'
       );
       await click(getModalFooter().querySelector('.btn-submit'));
       rejectCreate();

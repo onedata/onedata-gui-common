@@ -47,7 +47,8 @@ import { validator } from 'ember-cp-validations';
 /**
  * @typedef {Object} DataSpecEditorDataTypeSimpleConfig
  * @property {
- *   'integer' |
+ *   'number' |
+ *   'boolean' |
  *   'string' |
  *   'object' |
  *   'dataset' |
