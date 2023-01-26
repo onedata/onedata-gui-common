@@ -1,5 +1,5 @@
 /**
- * A generic component for showing resources list. Show name and additional may also show 
+ * A generic component for showing resources list. Show name and additional may also show
  * flippable icon with info popover with more contextual content.
  *
  * @module components/resources-list
@@ -37,6 +37,9 @@ export default Component.extend({
   actions: {
     itemInfoHovered(item, hasHover) {
       item.set('hasItemInfoHovered', hasHover);
+    },
+    closeSpaceInfoPopover(item) {
+      item.set('itemInfoOpened', false);
     },
   },
 });

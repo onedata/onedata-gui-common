@@ -3,8 +3,8 @@
     {{#list.item class="resource-item" as |listItem|}}
       {{#listItem.header tagName=(if item.link "a" "div") href=item.link isCollapsible=false}}
         {{#if item.icon}}
-          <span 
-            class={{concat-classes 
+          <span
+            class={{concat-classes
               "item-icon-container"
               (if isResourceWithAdditionalInfo "icon-container popover-info-trigger")
             }}
@@ -24,8 +24,8 @@
                 suppressFlipping=item.itemInfoOpened
               }}
             {{else}}
-              {{one-icon 
-                class="item-icon" 
+              {{one-icon
+                class="item-icon"
                 icon=item.icon
               }}
               {{#one-tooltip
@@ -54,7 +54,7 @@
               mouseLeave=(action "itemInfoHovered" item false)
             }}
           {{else}}
-            <span 
+            <span
               class="one-label"
               onmouseover={{action "itemInfoHovered" item true}}
               onmouseleave={{action "itemInfoHovered" item false}}
@@ -78,6 +78,7 @@
     }}
       {{space-info-content
         space=item.space
+        closeSpaceInfoPopover=(action "closeSpaceInfoPopover" item)
       }}
     {{/record-info-popover}}
   {{/each}}

@@ -70,6 +70,12 @@ export default Component.extend(I18n, {
   onOpenRestApiModal: undefined,
 
   /**
+   * @virtual optional
+   * @type {function}
+   */
+  closeSpaceInfoPopover: undefined,
+
+  /**
    * @type {PromiseObject<Models.User>}
    */
   ownerProxy: promise.object(computed(
@@ -98,6 +104,7 @@ export default Component.extend(I18n, {
 
   actions: {
     openRestApiModal() {
+      this.closeSpaceInfoPopover?.();
       this.onOpenRestApiModal?.();
     },
   },
