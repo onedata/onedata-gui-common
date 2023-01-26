@@ -1,10 +1,11 @@
-{{#truncated-string
-  mouseEnter=(action "itemInfoHovered" true)
-  mouseLeave=(action "itemInfoHovered" false)
-}}
-  <span 
-    class={{concat-classes 
-      "item-icon-container icon-container popover-info-trigger" 
+<span
+  class="supporter-info-container"
+  onMouseEnter={{action "itemInfoHovered" true}}
+  onMouseLeave={{action "itemInfoHovered" false}}
+>
+  <span
+    class={{concat-classes
+      "item-icon-container icon-container popover-info-trigger"
       (concat "space-" spaceId)
     }}
     {{action
@@ -19,10 +20,10 @@
       suppressFlipping=itemInfoOpened
     }}
   </span>
-  <span class="space-name">
+  {{#truncated-string}}
     {{get record column.propertyName}}
-  </span>
-{{/truncated-string}}
+  {{/truncated-string}}
+</span>
 {{#record-info-popover
   isOpened=itemInfoOpened
   triggerSelector=(concat ".item-icon-container.space-" spaceId)

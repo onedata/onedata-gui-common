@@ -49,19 +49,22 @@
     margin: 15px auto;
   }
   .supporter-name-column {
+    .supporter-info-container {
+      display: flex;
+    }
     .popover-info-trigger {
       margin-top: -0.04em;
       margin-left: 0.15em;
       width: 0.9em;
       height: 0.9em;
     }
-  
+
     .flippable-icons {
       --width: 0.9em;
       --height: 0.9em;
     }
-    .space-name {
-      vertical-align: top;
+    .truncated-string {
+      display: inline-block;
     }
   }
 }
