@@ -34,5 +34,6 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
+  // eslint-disable-next-line ember/no-string-prototype-extensions
   state: string.dasherize(or(getBy('slidesState', 'slideId'), raw('hidden'))),
 });

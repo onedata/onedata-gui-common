@@ -137,6 +137,13 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
     }
   ),
 
+  _overflowDetectionListenerFun: computed(
+    '_overflowDetectionListener',
+    function __overflowDetectionListenerFun() {
+      return this._overflowDetectionListener?.bind(this) ?? (() => {});
+    }
+  ),
+
   overflowDetectorMounter: observer('isMinimized', function overflowDetectorMounter() {
     if (this.get('isMinimized')) {
       this.detachOverflowDetection();
@@ -159,9 +166,9 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       overflowSiblingsElements: dom.siblings(this.element),
     });
     this.overflowDetectorMounter();
-    this.get('eventsBus').on(
+    this.eventsBus.on(
       'one-inline-editor:resize',
-      () => this.get('_overflowDetectionListener')()
+      this._overflowDetectionListenerFun
     );
   },
 
@@ -169,7 +176,7 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
     this._super(...arguments);
     this.removeClickOutsideListener();
     this.detachOverflowDetection();
-    this.get('eventsBus').off('one-inline-editor:resize');
+    this.eventsBus.off('one-inline-editor:resize', this._overflowDetectionListenerFun);
   },
 
   attachOverflowDetection() {

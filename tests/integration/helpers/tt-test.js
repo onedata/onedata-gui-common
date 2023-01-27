@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import EmberObject from '@ember/object';
 import { registerService, lookupService } from '../../helpers/stub-service';

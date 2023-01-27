@@ -340,6 +340,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   duringDragDropClass: conditional(
     'typeOfDraggedElementModel',
+    // eslint-disable-next-line ember/no-string-prototype-extensions
     tag `during-${string.dasherize('typeOfDraggedElementModel')}-dragdrop`,
     raw('')
   ),

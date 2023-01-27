@@ -15,6 +15,7 @@ import _ from 'lodash';
 import config from 'ember-get-config';
 import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
 import { camelize } from '@ember/string';
+import findRouteInfo from 'onedata-gui-common/utils/find-route-info';
 
 const {
   onedataTabs,
@@ -32,7 +33,7 @@ export default Route.extend({
   },
 
   afterModel(model, transition) {
-    const tabId = camelize(transition.params['onedata.sidebar'].type);
+    const tabId = camelize(findRouteInfo(transition, 'onedata.sidebar').params['type']);
     const tab = _.find(onedataTabs, t => t.id === tabId);
     if (!this.get('media.isMobile')) {
       if (tab && tab.allowIndex) {

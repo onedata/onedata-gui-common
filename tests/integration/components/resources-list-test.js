@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find, findAll } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import Action from 'onedata-gui-common/utils/action';
 import sinon from 'sinon';
 import { ResourceListItem } from 'onedata-gui-common/components/resources-list';
