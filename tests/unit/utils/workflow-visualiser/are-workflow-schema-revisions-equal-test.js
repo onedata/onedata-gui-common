@@ -219,7 +219,7 @@ function getExampleWorkflowSchemaRevision() {
       config: {
         itemDataSpec: {
           valueConstraints: {},
-          type: 'integer',
+          type: 'number',
         },
       },
     }, {
@@ -232,7 +232,7 @@ function getExampleWorkflowSchemaRevision() {
       config: {
         itemDataSpec: {
           valueConstraints: {},
-          type: 'integer',
+          type: 'number',
         },
       },
     }],
