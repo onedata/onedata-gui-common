@@ -23,7 +23,7 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
       description: 'storeDesc',
       type: 'range',
       dataSpec: {
-        type: 'integer',
+        type: 'number',
         valueConstraints: {},
       },
       defaultInitialContent: {

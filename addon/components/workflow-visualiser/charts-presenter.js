@@ -169,6 +169,7 @@ export default Component.extend({
       layout: batchedQuery.layout,
       startTimestamp: batchedQuery.startTimestamp,
       windowLimit: batchedQuery.windowLimit,
+      extendedInfo: true,
     });
     return result?.slice;
   },

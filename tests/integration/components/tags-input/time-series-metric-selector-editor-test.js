@@ -86,6 +86,10 @@ const aggregators = [{
   name: 'Sum',
   tagLabelName: 'sum',
 }, {
+  aggregator: 'avg',
+  name: 'Average',
+  tagLabelName: 'avg',
+}, {
   aggregator: 'max',
   name: 'Maximum',
   tagLabelName: 'max',

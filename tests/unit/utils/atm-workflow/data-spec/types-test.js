@@ -42,7 +42,7 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
           type: AtmDataSpecType.Array,
           valueConstraints: {
             itemDataSpec: {
-              type: AtmDataSpecType.Integer,
+              type: AtmDataSpecType.Number,
             },
           },
         }],
@@ -76,7 +76,7 @@ describe('Unit | Utility | atm workflow/data spec/types', function () {
           itemDataSpecFilters: [{
             filterType: 'typeOrSupertype',
             types: [{
-              type: AtmDataSpecType.Integer,
+              type: AtmDataSpecType.Number,
             }],
           }, {
             filterType: 'typeOrSubtype',

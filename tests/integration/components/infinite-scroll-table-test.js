@@ -68,6 +68,21 @@ describe('Integration | Component | infinite scroll table', function () {
     expect(find('.table-is-empty-row')).to.have.trimmed.text('some text');
   });
 
+  it('does not render tooltip about no entries when "noEntriesTip" is not set', async function () {
+    await render(hbs`{{infinite-scroll-table}}`);
+
+    expect(find('.table-is-empty-row .no-entries-tip')).to.not.exist;
+  });
+
+  it('renders tip about no entries when "noEntriesTip" is set', async function () {
+    await render(hbs`{{infinite-scroll-table noEntriesTip="some tip"}}`);
+
+    const tipContent = await new OneTooltipHelper(
+      '.table-is-empty-row .no-entries-tip .one-icon'
+    ).getText();
+    expect(tipContent).to.equal('some tip');
+  });
+
   it('shows fetched entries', async function () {
     await render(hbs`<div style="display: grid; height: 10em;">
       {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
