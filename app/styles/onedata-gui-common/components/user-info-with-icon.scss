@@ -4,6 +4,10 @@
     height: 0.6em;
   }
   .user-fullname {
-    padding-left: 9px;
-  } 
+    padding-left: 0.6em;
+  }
+  .user-username {
+    opacity: $disabled-opacity;
+    margin-left: 0.5em;
+  }
 }

@@ -6,10 +6,12 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
+import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import DatetimeField from 'onedata-gui-common/utils/form-component/datetime-field';
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
+import StaticUserField from 'onedata-gui-common/utils/form-component/static-user-field';
 import {
   Tag as RecordTag,
   removeExcessiveTags,
@@ -27,7 +29,7 @@ const modelSelectorSource = {
 };
 
 export default Component.extend({
-  rootFieldsGroup: computed(function rootFieldsGroup() {
+  rootFieldsGroup: computed('staticUserField', function rootFieldsGroup() {
     const component = this;
     return FormFieldsRootGroup
       .extend({
@@ -120,8 +122,36 @@ export default Component.extend({
             tagEditorComponentName: 'tags-input/model-selector-editor',
             defaultValue: [],
           }),
+          StaticTextField.create({
+            name: 'staticText',
+            label: 'Static text',
+            text: 'Excepteur voluptate magna ad quis culpa anim do proident ullamco sint. Non exercitation non eu ipsum reprehenderit sunt. Enim cillum anim aute consectetur do laborum dolor consectetur veniam sunt.',
+          }),
+          this.staticUserField,
         ],
       });
+  }),
+
+  staticUserField: computed('user', function staticUserField() {
+    if (!this.user) {
+      return null;
+    }
+    return StaticUserField
+      .extend({
+        value: reads('ownerSource.user'),
+      })
+      .create({
+        name: 'user',
+        label: 'User',
+      });
+  }),
+
+  user: computed(function user() {
+    return {
+      entityId: 'dummy_user_id',
+      fullName: 'Jan Kowalski',
+      username: 'kowalski',
+    };
   }),
 
   isFormValid: reads('rootFieldsGroup.isValid'),
