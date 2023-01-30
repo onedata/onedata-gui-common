@@ -1,13 +1,19 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
-import { find, findAll, fillIn, render, click } from '@ember/test-helpers';
+import { hbs } from 'ember-cli-htmlbars';
+import {
+  find,
+  findAll,
+  fillIn,
+  render,
+  click,
+} from '@ember/test-helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import {
   FormElement,
   formValuesToDataSpec,
-  dataSpecToFormValues
+  dataSpecToFormValues,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import OneDrodopdownHelper from '../../../../helpers/one-dropdown';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
@@ -15,8 +21,11 @@ import { AtmFileType } from 'onedata-gui-common/utils/atm-workflow/data-spec/typ
 import { set } from '@ember/object';
 
 const atmDataSpecTypesInfo = [{
-  type: AtmDataSpecType.Integer,
-  label: 'Integer',
+  type: AtmDataSpecType.Number,
+  label: 'Number',
+}, {
+  type: AtmDataSpecType.Boolean,
+  label: 'Boolean',
 }, {
   type: AtmDataSpecType.String,
   label: 'String',
@@ -161,7 +170,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       const filters = [{
         filterType: 'typeOrSupertype',
         types: [{
-          type: AtmDataSpecType.Integer,
+          type: AtmDataSpecType.Number,
         }, {
           type: AtmDataSpecType.Array,
           valueConstraints: {
@@ -175,7 +184,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Integer', 'Array']);
+        .to.deep.equal(['Number', 'Array']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
         .to.deep.equal(['Object', 'Dataset']);
@@ -185,7 +194,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       const filters = [{
         filterType: 'typeOrSubtype',
         types: [{
-          type: AtmDataSpecType.Integer,
+          type: AtmDataSpecType.Number,
         }, {
           type: AtmDataSpecType.Array,
           valueConstraints: {
@@ -199,7 +208,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Integer', 'Array']);
+        .to.deep.equal(['Number', 'Array']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
         .to.deep.equal([
@@ -217,24 +226,24 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
         types: [{
           type: AtmDataSpecType.Object,
         }, {
-          type: AtmDataSpecType.Integer,
+          type: AtmDataSpecType.Number,
         }],
       }];
       setFilters(this, filters);
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['String', 'Array']);
+        .to.deep.equal(['Boolean', 'String', 'Array']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['String', 'Array']);
+        .to.deep.equal(['Boolean', 'String', 'Array']);
     });
 
     it('allows to select only types matching combination of filters', async function () {
       const filters = [{
         filterType: 'typeOrSupertype',
         types: [{
-          type: AtmDataSpecType.Integer,
+          type: AtmDataSpecType.Number,
         }, {
           type: AtmDataSpecType.Array,
           valueConstraints: {
@@ -253,7 +262,7 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Integer', 'Array']);
+        .to.deep.equal(['Number', 'Array']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
         .to.deep.equal(['Object']);

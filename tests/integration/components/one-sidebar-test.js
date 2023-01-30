@@ -13,7 +13,7 @@ import {
   find,
   findAll,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import { get } from '@ember/object';
 import sinon from 'sinon';
 import { lookupService } from '../../helpers/stub-service';

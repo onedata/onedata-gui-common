@@ -4,7 +4,7 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import OneDrodopdownHelper from '../../../helpers/one-dropdown';
 import sinon from 'sinon';
 import _ from 'lodash';
@@ -25,10 +25,18 @@ import {
 const componentClass = 'task-form';
 
 const dataSpecs = [{
-  label: 'Integer',
-  name: 'integer',
+  label: 'Number',
+  name: 'number',
   dataSpec: {
-    type: 'integer',
+    type: 'number',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
+}, {
+  label: 'Boolean',
+  name: 'boolean',
+  dataSpec: {
+    type: 'boolean',
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
@@ -135,7 +143,8 @@ const valueBuilderTypeLabels = {
 };
 
 const allSimpleDataSpecNames = [
-  'integer',
+  'number',
+  'boolean',
   'string',
   'object',
   'anyFile',
@@ -280,7 +289,7 @@ const exampleAtmLambdaRevision = {
   argumentSpecs: [{
     name: 'argint',
     dataSpec: {
-      type: 'integer',
+      type: 'number',
       valueConstraints: {},
     },
     isOptional: true,
@@ -825,7 +834,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       async function (done) {
         this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
           name: 'res1',
-          dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
+          dataSpec: dataSpecs.findBy('label', 'Number').dataSpec,
         }]);
 
         await renderComponent();
@@ -959,13 +968,13 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       async function (done) {
         this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
           name: 'res1',
-          dataSpec: dataSpecs.findBy('name', 'integer').dataSpec,
+          dataSpec: dataSpecs.findBy('name', 'number').dataSpec,
         }]);
 
         await renderComponent();
         await click('.singleResultMappings-add-field-button');
-        await targetStoreDropdown.selectOptionByText('listIntegerStore');
-        await targetStoreDropdown.selectOptionByText('singleValueIntegerStore');
+        await targetStoreDropdown.selectOptionByText('listNumberStore');
+        await targetStoreDropdown.selectOptionByText('singleValueNumberStore');
 
         expect(find('.dispatchFunction-field')).to.not.exist;
         done();
@@ -1170,7 +1179,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         argumentSpecs: [{
           name: 'arg1',
           dataSpec: {
-            type: 'integer',
+            type: 'number',
             valueConstraints: {},
           },
           isOptional: true,
@@ -1184,7 +1193,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         }, {
           name: 'arg3',
           dataSpec: {
-            type: 'integer',
+            type: 'number',
             valueConstraints: {},
           },
           isOptional: true,
@@ -1238,7 +1247,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       }, {
         name: 'arg1',
         dataSpec: {
-          type: 'integer',
+          type: 'number',
           valueConstraints: {},
         },
         isOptional: true,
@@ -1267,7 +1276,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       }, {
         name: 'res3',
         dataSpec: {
-          type: 'integer',
+          type: 'number',
           valueConstraints: {},
         },
       }, {
@@ -1303,7 +1312,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             argumentName: 'arg3',
             valueBuilder: {
               valueBuilderType: 'singleValueStoreContent',
-              valueBuilderRecipe: 'singleValueIntegerId',
+              valueBuilderRecipe: 'singleValueNumberId',
             },
           }],
           resultMappings: [{
@@ -1888,7 +1897,7 @@ function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
       const inEditMode = this.get('mode') !== 'view';
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
-        dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
+        dataSpec: dataSpecs.findBy('label', 'Number').dataSpec,
         isOptional: false,
       }]);
       this.set('task.resultMappings', []);

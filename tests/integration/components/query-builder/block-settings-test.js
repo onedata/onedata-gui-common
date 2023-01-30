@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, waitUntil } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import sinon from 'sinon';
@@ -121,7 +121,7 @@ describe('Integration | Component | query builder/block settings', function () {
         closeSpy: sinon.stub().callsFake(() => this.set('open', false)),
         isShown: true,
       });
-      const condition = new ConditionQueryBlock();
+      const condition = ConditionQueryBlock.create();
       queryBlock.addOperand(condition);
 
       await render(hbs `<div id="x">{{query-builder/block-settings

@@ -12,7 +12,7 @@ import {
   click,
   find,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 
 const errorMsg = 'error!';
 

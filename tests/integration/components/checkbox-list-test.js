@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, findAll, find } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
 describe('Integration | Component | checkbox list', function () {

@@ -7,7 +7,7 @@ import {
   click,
   triggerKeyEvent,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import { lookupService } from '../../helpers/stub-service';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';

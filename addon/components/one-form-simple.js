@@ -24,7 +24,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 
 import ObjectProxy from '@ember/object/proxy';
 import { assert } from '@ember/debug';
@@ -151,7 +151,7 @@ export default OneForm.extend({
   _getValuesClone() {
     const valuesProperty = ObjectProxy.detectInstance(this.get('values')) ?
       'values.content' : 'values';
-    return merge(EmberObject.create(), this.get(valuesProperty));
+    return assign(EmberObject.create(), this.get(valuesProperty));
   },
 
   updateValues() {

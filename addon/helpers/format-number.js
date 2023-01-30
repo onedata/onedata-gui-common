@@ -14,6 +14,9 @@
 
 import { helper } from '@ember/component/helper';
 import numberFormatter from 'number-formatter';
+// TODO: VFS-10113 ember-cli-number-formatter is obsolete and causes build warnings
+// change it to native npm lib or copy implementation
+// import numberFormatter from 'number-formatter';
 import { htmlSafe } from '@ember/string';
 import { isArray } from '@ember/array';
 

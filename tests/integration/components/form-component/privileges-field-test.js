@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find, findAll } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import PrivilegesField from 'onedata-gui-common/utils/form-component/privileges-field';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';

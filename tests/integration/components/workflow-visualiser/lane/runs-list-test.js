@@ -8,7 +8,7 @@ import {
   find,
   waitUntil,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
 const componentClassName = 'runs-list';

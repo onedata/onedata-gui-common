@@ -1,9 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import { render, find, findAll, click } from '@ember/test-helpers';
-import { EntrySeverity, translateEntrySeverity } from 'onedata-gui-common/utils/audit-log';
+import {
+  EntrySeverity,
+  translateEntrySeverity,
+} from 'onedata-gui-common/utils/audit-log';
 import { lookupService } from '../../helpers/stub-service';
 import OneTooltipHelper from '../../helpers/one-tooltip';
 import { replaceEmberAceWithTextarea } from '../../helpers/ember-ace';

@@ -30,6 +30,7 @@ export default VisualiserSpace.extend({
   /**
    * @type {ComputedProperty<String>}
    */
+  // eslint-disable-next-line ember/no-string-prototype-extensions
   siblingsTypeClass: tag `between-${string.dasherize('siblingsType')}-space`,
 
   /**
