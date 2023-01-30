@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import { render, find, findAll, settled } from '@ember/test-helpers';
 import OneTooltipHelper from '../../helpers/one-tooltip';
 import TestComponent from 'onedata-gui-common/components/test-component';

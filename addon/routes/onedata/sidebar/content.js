@@ -69,7 +69,7 @@ export default Route.extend({
     } = this.modelFor('onedata.sidebar');
 
     const navigationState = this.get('navigationState');
-    const queryParams = get(transition, 'queryParams');
+    const queryParams = transition.to.queryParams;
 
     if (isSpecialResourceId(resourceId)) {
       setProperties(navigationState, {
@@ -116,13 +116,13 @@ export default Route.extend({
           .catch(error => ({ error }))
           .then(data => {
             const error = data && data.error;
-            return Promise.resolve({
+            return {
               resourceId: null,
               resource: null,
               collection,
               queryParams,
               error,
-            });
+            };
           });
       }
     }

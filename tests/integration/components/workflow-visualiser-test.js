@@ -12,7 +12,7 @@ import {
   find,
   findAll,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 // TODO: VFS-9129 use scrollTo helper from @ember/test-helpers after upgrading it to 2.0
 import { scrollTo } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
