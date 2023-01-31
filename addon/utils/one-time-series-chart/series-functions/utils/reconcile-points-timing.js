@@ -9,17 +9,16 @@
  *
  * NOTE: this function modifies arrays in place!
  *
- * @module utils/one-time-series-chart/series-functions/utils/merge-points-arrays
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import point from './point';
+import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
 
 /**
- * @param {Array<Array<OTSCSeriesPoint>>} pointsArrays
- * @returns {Array<Array<OTSCSeriesPoint>>}
+ * @param {Array<Array<Utils.OneTimeSeriesChart.Point>>} pointsArrays
+ * @returns {Array<Array<Utils.OneTimeSeriesChart.Point>>}
  */
 export default function reconcilePointsTiming(pointsArrays) {
   if (!pointsArrays.length) {
@@ -64,7 +63,7 @@ export default function reconcilePointsTiming(pointsArrays) {
         fake: true,
       };
     for (let i = pointsArray.length; i < arrayWithNewestPoints.length; i++) {
-      pointsArray[i] = point(arrayWithNewestPoints[i].timestamp, null, {
+      pointsArray[i] = new Point(arrayWithNewestPoints[i].timestamp, null, {
         pointDuration,
         oldest: lastMeaningfulPoint.oldest && lastMeaningfulPoint.fake,
         newest: lastMeaningfulPoint.newest,

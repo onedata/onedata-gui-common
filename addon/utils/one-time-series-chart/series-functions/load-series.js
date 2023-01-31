@@ -50,7 +50,7 @@
  */
 
 import { all as allFulfilled } from 'rsvp';
-import point, { recalculatePointMeasurementDuration } from './utils/point';
+import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
 import mergePointsArrays from './utils/merge-points-arrays';
 
 /**
@@ -144,7 +144,7 @@ export default async function loadSeries(context, args) {
 /**
  * @param {OTSCSeriesFunctionContext} context
  * @param {OTSCLoadSeriesSeriesFunctionReplaceEmpty} replaceEmptyParameters
- * @param {OTSCSeriesPoint[]} points
+ * @param {Utils.OneTimeSeriesChart.Point[]} points
  */
 async function fitPointsToContext(context, replaceEmptyParameters, points) {
   if (!isRawPointsArray(points)) {
@@ -159,7 +159,7 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
       value,
       firstMeasurementTimestamp,
       lastMeasurementTimestamp,
-    }) => point(timestamp, value, {
+    }) => new Point(timestamp, value, {
       pointDuration: context.timeResolution,
       firstMeasurementTimestamp: firstMeasurementTimestamp ?? null,
       lastMeasurementTimestamp: lastMeasurementTimestamp ?? null,
@@ -216,7 +216,7 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
       nextFakePointTimestamp > normalizedPoints[0].timestamp &&
       pointsToUnshift.length < context.pointsCount
     ) {
-      pointsToUnshift.push(point(nextFakePointTimestamp, null, {
+      pointsToUnshift.push(new Point(nextFakePointTimestamp, null, {
         pointDuration: context.timeResolution,
         fake: true,
       }));
@@ -238,7 +238,7 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
       normalizedPoints.push(normalizedPointsWithGaps[originArrayIdx]);
       originArrayIdx++;
     } else {
-      normalizedPoints.push(point(nextPointTimestamp, null, {
+      normalizedPoints.push(new Point(nextPointTimestamp, null, {
         pointDuration: context.timeResolution,
         fake: true,
       }));
@@ -252,7 +252,7 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
   // point to `replaceEmpty` function to be able to calculate value for the oldest
   // point visible on the chart.
   const oldestNormalizedPoint = normalizedPoints[normalizedPoints.length - 1];
-  let nonEmptyPointBeforeOldestNormalized = { timestamp: 0, value: null };
+  let nonEmptyPointBeforeOldestNormalized = new Point(0, null);
   for (const point of normalizedPointsWithGaps) {
     if (
       point.timestamp < oldestNormalizedPoint.timestamp &&
@@ -308,8 +308,6 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
     }
   }
 
-  normalizedPoints.forEach((point) => recalculatePointMeasurementDuration(point));
-
   return normalizedPoints;
 }
 
@@ -330,11 +328,10 @@ async function generateFakePoints(
   const points = await fitPointsToContext(
     context,
     replaceEmptyParameters,
-    [point(normalizedLastPointTimestamp, null)]
+    [new Point(normalizedLastPointTimestamp, null)]
   );
   points.forEach((point) => {
     Object.assign(point, { fake: true }, pointParams);
-    recalculatePointMeasurementDuration(point);
   });
   return points;
 }
