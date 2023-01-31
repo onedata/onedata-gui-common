@@ -9,7 +9,7 @@ import {
   triggerKeyEvent,
   find,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import sinon from 'sinon';
 import { get } from '@ember/object';

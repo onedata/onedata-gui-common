@@ -7,7 +7,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import getNumberMetricSuffix, { suffixesSpec } from 'onedata-gui-common/utils/get-number-metric-suffix';
+import getNumberMetricSuffix, {
+  suffixesSpec,
+} from 'onedata-gui-common/utils/get-number-metric-suffix';
 
 export const siUnits = [{
   name: 'B',

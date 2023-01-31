@@ -1,7 +1,7 @@
 /**
  * Displays the human-readable amount of time elapse from the `date`
  * and updates it automatically
- * 
+ *
  * @module components/time-from-now
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
@@ -45,7 +45,7 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    const timeUpdater = this.set('timeUpdater', new Looper({
+    const timeUpdater = this.set('timeUpdater', Looper.create({
       immediate: false,
       interval: this.get('updateInterval'),
     }));

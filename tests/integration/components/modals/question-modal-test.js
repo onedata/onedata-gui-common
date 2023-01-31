@@ -3,7 +3,7 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click } from '@ember/test-helpers';
 import { lookupService } from '../../../helpers/stub-service';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import {
   getModal,
   getModalHeader,

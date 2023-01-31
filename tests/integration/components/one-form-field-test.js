@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, fillIn, find, findAll } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
 describe('Integration | Component | one form field', function () {

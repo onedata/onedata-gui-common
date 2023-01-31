@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, findAll, find } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 

@@ -45,8 +45,10 @@ describe('Unit | Service | url action runner', function () {
   it('runs an action according to passed Transition object', function () {
     const service = this.owner.lookup('service:url-action-runner');
     const transition = {
-      queryParams: {
-        action_name: 'myAction',
+      to: {
+        queryParams: {
+          action_name: 'myAction',
+        },
       },
     };
     const runner = sinon.stub().resolves('someResult');
@@ -56,7 +58,7 @@ describe('Unit | Service | url action runner', function () {
     return service.runFromTransition(transition)
       .then(result => {
         expect(result).to.equal('someResult');
-        expect(runner).to.be.calledOnce.and.to.be.calledWith(transition.queryParams);
+        expect(runner).to.be.calledOnce.and.to.be.calledWith(transition.to.queryParams);
       });
   });
 
@@ -70,8 +72,10 @@ describe('Unit | Service | url action runner', function () {
       function () {
         const service = this.owner.lookup('service:url-action-runner');
         const transition = {
-          queryParams: {
-            action_name: actionName,
+          to: {
+            queryParams: {
+              action_name: actionName,
+            },
           },
         };
         const runner = sinon.stub().resolves('someResult');

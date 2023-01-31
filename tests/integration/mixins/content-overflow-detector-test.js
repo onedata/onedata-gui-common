@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, find } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import ContentOverflowDetectorMixin from 'onedata-gui-common/mixins/content-overflow-detector';
 
 const PARENT_WIDTH = 1000;
