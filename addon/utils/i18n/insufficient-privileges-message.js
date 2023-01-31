@@ -22,6 +22,7 @@ export default function insufficientPrivilegesMessage({
   i18n,
   modelName,
   privilegeFlag,
+  endingTextInParentheses,
 }) {
   let modelNameTranslated = modelName && i18n.t(`common.modelNames.${modelName}`);
   modelNameTranslated =
@@ -32,6 +33,8 @@ export default function insufficientPrivilegesMessage({
   return i18n.t(i18nKey, {
     modelName: modelNameTranslated,
     privilegeExpression,
+    endingTextInParentheses: endingTextInParentheses ?
+      ` ${endingTextInParentheses}` : '',
   });
 }
 
