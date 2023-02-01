@@ -4,7 +4,7 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import OneDrodopdownHelper from '../../../helpers/one-dropdown';
 import sinon from 'sinon';
 import _ from 'lodash';

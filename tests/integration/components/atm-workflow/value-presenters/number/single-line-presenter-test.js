@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import { render, find } from '@ember/test-helpers';
 
 describe('Integration | Component | atm workflow/value presenters/number/single line presenter', function () {

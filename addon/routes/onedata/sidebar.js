@@ -13,6 +13,7 @@ import { inject as service } from '@ember/service';
 import config from 'ember-get-config';
 import { scheduleOnce } from '@ember/runloop';
 import { camelize } from '@ember/string';
+import findRouteInfo from 'onedata-gui-common/utils/find-route-info';
 
 const {
   onedataTabs,
@@ -28,7 +29,7 @@ export default Route.extend({
   navigationState: service(),
 
   beforeModel(transition) {
-    const resourceType = transition.params['onedata.sidebar'].type;
+    const resourceType = findRouteInfo(transition, 'onedata.sidebar').params['type'];
     if (!isValidTab(resourceType)) {
       console.warn(
         `Failed to render ${resourceType} resource type. ` +

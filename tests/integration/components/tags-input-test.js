@@ -10,7 +10,7 @@ import {
   find,
   findAll,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import { get, set } from '@ember/object';
 import OneTooltipHelper from '../../helpers/one-tooltip';

@@ -98,6 +98,7 @@ module.exports = function (defaults) {
     'webui-popover/dist/jquery.webui-popover.js',
     'jquery-datetimepicker/build/jquery.datetimepicker.min.css',
     'jquery-datetimepicker/build/jquery.datetimepicker.full.js',
+    'spin.js/spin.css',
   ];
 
   NODE_ASSETS.forEach(path => app.import(`node_modules/${path}`));

@@ -11,7 +11,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/string';
-import Spinner from 'spin.js';
+import { Spinner } from 'spin.js';
 
 export default Component.extend({
   classNames: ['spin-spinner'],

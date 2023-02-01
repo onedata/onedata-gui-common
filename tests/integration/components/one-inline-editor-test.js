@@ -8,7 +8,7 @@ import {
   settled,
   find,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import { Promise } from 'rsvp';
 import sinon from 'sinon';
 

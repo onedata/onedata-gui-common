@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupTest } from 'ember-mocha';
+import { lookupService } from '../../helpers/stub-service';
 
 describe('Unit | Service | rest api generator', function () {
   setupTest('service:rest-api-generator', {});
@@ -18,7 +19,7 @@ describe('Unit | Service | rest api generator', function () {
       followRedirects: true,
       headers: {},
     };
-    const service = this.subject();
+    const service = lookupService(this, 'restApiGenerator');
     expect(service.generateSample(apiSample))
       .to.equal(
         'curl -L -X GET "https://dev-onezone.default.svc.cluster.local/api/v3/onezone/test/path/to/data"'
