@@ -22,7 +22,7 @@ import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/support-size-info/table';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import Bootstrap3Theme from 'ember-models-table/themes/bootstrap3';
-import { or, raw, eq } from 'ember-awesome-macros';
+import { conditional, raw, eq } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -65,7 +65,10 @@ export default Component.extend({
     return this.get('i18n').t('components.supportSizeInfo.table.supportSizeHeader');
   }),
 
-  supporterInfoColumnComponent: or(eq('type', raw('space')),
+  /**
+   * @type {computed.string}
+   */
+  supporterInfoColumnComponent: conditional(eq('type', raw('space')),
     raw('support-size-info/table/supported-space-info'),
     raw('support-size-info/table/truncated-cell')
   ),
