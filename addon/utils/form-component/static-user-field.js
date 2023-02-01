@@ -22,7 +22,7 @@ export default FormField.extend({
   /**
    * Optionally, you can specify user record in this field instead of value.
    * @virtual optional
-   * @type {Models.User}
+   * @type {UserRecord}
    */
   user: undefined,
 });

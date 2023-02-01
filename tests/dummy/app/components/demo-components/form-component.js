@@ -29,7 +29,7 @@ const modelSelectorSource = {
 };
 
 export default Component.extend({
-  rootFieldsGroup: computed('staticUserField', function rootFieldsGroup() {
+  rootFieldsGroup: computed(function rootFieldsGroup() {
     const component = this;
     return FormFieldsRootGroup
       .extend({
@@ -132,10 +132,7 @@ export default Component.extend({
       });
   }),
 
-  staticUserField: computed('user', function staticUserField() {
-    if (!this.user) {
-      return null;
-    }
+  staticUserField: computed(function staticUserField() {
     return StaticUserField
       .extend({
         value: reads('ownerSource.user'),

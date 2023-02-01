@@ -6,17 +6,17 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Component from '@ember/component';
 import layout from '../../templates/components/form-component/static-user-field';
 import { or } from 'ember-awesome-macros';
+import FieldComponentBase from 'onedata-gui-common/components/form-component/field-component-base';
 
-export default Component.extend({
+export default FieldComponentBase.extend({
   classNames: ['static-user-field'],
 
   layout,
 
   /**
-   * @type {ComputedProperty<Models.User>}
+   * @type {ComputedProperty<UserRecord>}
    */
   user: or('field.value', 'field.user'),
 });
