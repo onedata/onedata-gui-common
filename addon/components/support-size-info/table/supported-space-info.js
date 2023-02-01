@@ -1,5 +1,5 @@
 /**
- * A component that is used as a cell renderer with flippable icon 
+ * A component that is used as a cell renderer with flippable icon
  * with additional info popover and supporter name.
  *
  * @author Angieszka Warchoł
@@ -8,13 +8,19 @@
  */
 
 import Component from '@ember/component';
-import layout from 'onedata-gui-common/templates/components/support-size-info/table/supporter-info';
+import layout from 'onedata-gui-common/templates/components/support-size-info/table/supported-space-info';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 
 export default Component.extend({
   layout,
   tagName: '',
+
+  /**
+   * @virtual
+   * @type {Object}
+   */
+  record: undefined,
 
   /**
    * @type {boolean}

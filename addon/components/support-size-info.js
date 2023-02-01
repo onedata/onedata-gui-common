@@ -56,6 +56,12 @@ export default Component.extend(I18n, {
   supporterNameHeader: '',
 
   /**
+   * @virtual optional
+   * @type {string}
+   */
+  type: '',
+
+  /**
    * Message, that is shown when there is no data
    * @type {string}
    */

@@ -20,7 +20,6 @@ export default Component.extend(I18n, {
   classNames: ['space-info-content'],
 
   userManager: service(),
-  modalManager: service(),
 
   /**
    * @override

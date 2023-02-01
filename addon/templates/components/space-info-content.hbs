@@ -10,8 +10,6 @@
       {{one-clipboard-line
         size="sm"
         value=space.name
-        showText=false
-        btnType="success"
       }}
     </td>
   </tr>
@@ -21,8 +19,6 @@
       {{one-clipboard-line
         size="sm"
         value=space.entityId
-        showText=false
-        btnType="success"
       }}
     </td>
   </tr>
@@ -50,13 +46,13 @@
       <span>{{tt this "openRestApi"}}</span>
       {{one-icon icon="rest"}}
     </a>
-    {{#if showLinkToFileBrowser}} 
+    {{#if (or showLinkToFileBrowser showLinkToSpace)}}
       <span class="col-separator"></span>
     {{/if}}
   {{/if}}
   {{#if showLinkToFileBrowser}}
-    <a 
-      href={{linkToFileBrowser}} 
+    <a
+      href={{linkToFileBrowser}}
       class="space-info-link file-browser-link clickable"
     >
       <span>{{tt this "openFileBrowser"}}</span>

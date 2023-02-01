@@ -22,6 +22,7 @@ import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/support-size-info/table';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import Bootstrap3Theme from 'ember-models-table/themes/bootstrap3';
+import { or, raw, eq } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -34,6 +35,12 @@ export default Component.extend({
    * @type {Ember.Array.SupportSizeEntry}
    */
   data: null,
+
+  /**
+   * @virtual optional
+   * @type {string}
+   */
+  type: '',
 
   /**
    * Message, that is shown when there is no data
@@ -57,6 +64,11 @@ export default Component.extend({
   supporterSizeHeader: computed(function () {
     return this.get('i18n').t('components.supportSizeInfo.table.supportSizeHeader');
   }),
+
+  supporterInfoColumnComponent: or(eq('type', raw('space')),
+    raw('support-size-info/table/supported-space-info'),
+    raw('support-size-info/table/truncated-cell')
+  ),
 
   /**
    * Support data prepared to display.
@@ -84,13 +96,17 @@ export default Component.extend({
     const {
       supporterNameHeader,
       supporterSizeHeader,
-    } = this.getProperties('supporterNameHeader', 'supporterSizeHeader');
+      supporterInfoColumnComponent,
+    } = this.getProperties(
+      'supporterNameHeader',
+      'supporterSizeHeader',
+      'supporterInfoColumnComponent'
+    );
     return [{
       propertyName: 'supporterName',
       title: supporterNameHeader,
       className: 'supporter-name-column',
-      component: supporterNameHeader.string === 'Space' ?
-        'support-size-info/table/supporter-info' : 'support-size-info/table/truncated-cell',
+      component: supporterInfoColumnComponent,
     }, {
       propertyName: 'supportSizeStr',
       title: supporterSizeHeader,

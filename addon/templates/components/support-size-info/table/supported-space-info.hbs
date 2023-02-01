@@ -1,13 +1,11 @@
 <span
-  class="supporter-info-container"
-  onMouseEnter={{action "itemInfoHovered" true}}
-  onMouseLeave={{action "itemInfoHovered" false}}
+  class="supported-space-info-container"
+  mouseover={{action "itemInfoHovered" true}}
+  mouseout={{action "itemInfoHovered" false}}
 >
   <span
-    class={{concat-classes
-      "item-icon-container icon-container popover-info-trigger"
-      (concat "space-" spaceId)
-    }}
+    data-space-id={{spaceId}}
+    class="item-icon-container icon-container popover-info-trigger"
     {{action
       (mut itemInfoOpened)
       (not itemInfoOpened)
@@ -26,7 +24,6 @@
 </span>
 {{#record-info-popover
   isOpened=itemInfoOpened
-  triggerSelector=(concat ".item-icon-container.space-" spaceId)
 }}
   {{space-info-content
     space=space
