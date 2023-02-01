@@ -48,6 +48,13 @@ export default Component.extend({
    */
   spaceId: reads('record.supporterId'),
 
+  /**
+   * @type {string}
+   */
+  triggerSelector: computed(function triggerSelector() {
+    return `.item-icon-container[data-space-id="${this.spaceId}"]`;
+  }),
+
   actions: {
     itemInfoHovered(hasHover) {
       this.set('hasItemInfoHovered', hasHover);

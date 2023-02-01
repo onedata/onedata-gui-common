@@ -1,7 +1,7 @@
 <span
   class="supported-space-info-container"
-  mouseover={{action "itemInfoHovered" true}}
-  mouseout={{action "itemInfoHovered" false}}
+  onmouseover={{action "itemInfoHovered" true}}
+  onmouseout={{action "itemInfoHovered" false}}
 >
   <span
     data-space-id={{spaceId}}
@@ -24,6 +24,7 @@
 </span>
 {{#record-info-popover
   isOpened=itemInfoOpened
+  triggerSelector=triggerSelector
 }}
   {{space-info-content
     space=space
