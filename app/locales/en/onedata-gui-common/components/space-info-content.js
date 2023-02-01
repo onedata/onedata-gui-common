@@ -6,5 +6,5 @@ export default {
   creationTime: 'Created at',
   openRestApi: 'REST API',
   openFileBrowser: 'File browser',
-  openSpace: 'Space',
+  openSpace: 'Support details',
 };
