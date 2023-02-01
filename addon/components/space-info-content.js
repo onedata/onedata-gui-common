@@ -77,9 +77,9 @@ export default Component.extend(I18n, {
   /**
    * @type {PromiseObject<Models.User>}
    */
-  ownerProxy: promise.object(computed(
+  creatorProxy: promise.object(computed(
     'space.info.creatorId',
-    async function ownerProxy() {
+    async function creatorProxy() {
       if (this.space.info?.creatorId) {
         return this.userManager.getRecordById(this.space.info.creatorId);
       }
@@ -89,7 +89,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Models.User}
    */
-  owner: reads('ownerProxy.content'),
+  creator: reads('creatorProxy.content'),
 
   /**
    * @type {Ember.ComputedProperty<string>}

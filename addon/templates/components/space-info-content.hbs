@@ -26,9 +26,9 @@
     <td class="property-name">{{tt this "creator"}}</td>
     <td class="property-value">
       {{#truncated-string}}
-        <span class="user-fullname">{{or owner.fullName "—"}}</span>
-        {{#if owner.username}}
-          <span class="user-username">({{owner.username}})</span>
+        <span class="user-fullname">{{or creator.fullName "—"}}</span>
+        {{#if creator.username}}
+          <span class="user-username">({{creator.username}})</span>
         {{/if}}
       {{/truncated-string}}
     </td>
