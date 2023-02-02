@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
 import { setProperties } from '@ember/object';
 import { Promise, resolve, reject } from 'rsvp';
@@ -61,7 +61,7 @@ describe('Integration | Component | form component/loading field', function () {
   );
 
   it(
-    'shows reasource load error when loadingProxy is rejected',
+    'shows resource load error when loadingProxy is rejected',
     async function () {
       suppressRejections();
       this.set('field.loadingProxy', PromiseObject.create({

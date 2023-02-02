@@ -312,8 +312,8 @@ export default Service.extend(I18n, {
           } else {
             return aspectActions;
           }
-          default:
-            return [];
+        default:
+          return [];
       }
     }
   ),
@@ -512,8 +512,8 @@ export default Service.extend(I18n, {
    * @param {Transition} transition
    */
   updateQueryParams(transition) {
-    const queryParams = get(transition, 'queryParams');
-    if (!_.isEqual(queryParams, this.get('queryParams'))) {
+    const queryParams = transition.to.queryParams;
+    if (!_.isEqual(queryParams, this.queryParams)) {
       this.set('queryParams', _.assign({}, queryParams));
     }
   },

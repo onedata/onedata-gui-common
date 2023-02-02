@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, fillIn, find } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';

@@ -1,4 +1,4 @@
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import TestComponent from 'onedata-gui-common/components/test-component';
 
 export function replaceEmberAceWithTextarea(context) {

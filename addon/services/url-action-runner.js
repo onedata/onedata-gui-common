@@ -28,8 +28,8 @@ export default Service.extend({
 
   /**
    * Adds new action runner. Only one runner can be registered for a specific action
-   * @param {String} actionName 
-   * @param {Function} actionRunner 
+   * @param {String} actionName
+   * @param {Function} actionRunner
    */
   registerActionRunner(actionName, actionRunner) {
     this.get('actionRunners').set(actionName, actionRunner || resolve);
@@ -37,7 +37,7 @@ export default Service.extend({
 
   /**
    * Removes registered action runner. If there was no runner, nothing happens.
-   * @param {String} actionName 
+   * @param {String} actionName
    */
   deregisterActionRunner(actionName) {
     this.get('actionRunners').delete(actionName);
@@ -46,7 +46,7 @@ export default Service.extend({
   /**
    * Returns registered action runner. If there is no runner registered for specified action,
    * then `undefined` is returned.
-   * @param {String} actionName 
+   * @param {String} actionName
    * @returns {Function|undefined}
    */
   getActionRunner(actionName) {
@@ -60,7 +60,7 @@ export default Service.extend({
    * @returns {Promise<Utils.ActionResult>}
    */
   runFromTransition(transition) {
-    const queryParams = get(transition, 'queryParams') || {};
+    const queryParams = transition?.to.queryParams ?? {};
     const actionName = get(queryParams, 'action_name');
     if (!actionName) {
       return resolve();

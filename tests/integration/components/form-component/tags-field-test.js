@@ -10,7 +10,7 @@ import {
   find,
   findAll,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import sinon from 'sinon';
 import { setProperties, get } from '@ember/object';
