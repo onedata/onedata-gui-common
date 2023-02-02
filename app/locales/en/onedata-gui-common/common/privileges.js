@@ -40,6 +40,7 @@ export default {
 
     space_view_archives: 'view archives',
     space_create_archives: 'create archives',
+    space_manage_archives: 'manage archives',
     space_remove_archives: 'remove archives',
     space_recall_archives: 'recall archives',
 
