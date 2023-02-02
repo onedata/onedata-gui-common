@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, click } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
 import { getProperties, get } from '@ember/object';
@@ -34,7 +34,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove store actio
       title,
     } = getProperties(this.get('action'), 'className', 'icon', 'title');
     expect(className).to.equal('remove-store-action-trigger');
-    expect(icon).to.equal('x');
+    expect(icon).to.equal('remove');
     expect(String(title)).to.equal('Remove');
   });
 

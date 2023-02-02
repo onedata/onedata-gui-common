@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import { render, find, findAll, settled, click } from '@ember/test-helpers';
 // TODO: VFS-9129 use scrollTo helper from @ember/test-helpers after upgrading it to 2.0
 import { scrollTo } from 'ember-native-dom-helpers';
@@ -66,6 +66,21 @@ describe('Integration | Component | infinite scroll table', function () {
     await render(hbs`{{infinite-scroll-table noEntriesText="some text"}}`);
 
     expect(find('.table-is-empty-row')).to.have.trimmed.text('some text');
+  });
+
+  it('does not render tooltip about no entries when "noEntriesTip" is not set', async function () {
+    await render(hbs`{{infinite-scroll-table}}`);
+
+    expect(find('.table-is-empty-row .no-entries-tip')).to.not.exist;
+  });
+
+  it('renders tip about no entries when "noEntriesTip" is set', async function () {
+    await render(hbs`{{infinite-scroll-table noEntriesTip="some tip"}}`);
+
+    const tipContent = await new OneTooltipHelper(
+      '.table-is-empty-row .no-entries-tip .one-icon'
+    ).getText();
+    expect(tipContent).to.equal('some tip');
   });
 
   it('shows fetched entries', async function () {

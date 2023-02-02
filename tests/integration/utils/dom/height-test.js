@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import { render, find } from '@ember/test-helpers';
 import { htmlSafe } from '@ember/template';
 import dom from 'onedata-gui-common/utils/dom';
@@ -183,7 +183,14 @@ function getDivStyles(boxSizing, {
   marginTop = null,
   marginBottom = null,
 } = {}) {
-  let style = boxSizing ? `box-sizing: ${boxSizing};` : '';
+  // Testing environment shows element scaled down to 50% of it's original
+  // dimensions. It disturbs element measurement by `getBoundingClientRect` -
+  // values are incorrect by +/- 1px.
+  // We need to scale the element up back to at least 100% of it's original size.
+  // Element now is scaled to 50%, so we have to scale it by 200% to go
+  // back to original 100%.
+  let style = 'zoom: 200%;';
+  style += boxSizing !== null ? `box-sizing: ${boxSizing};` : '';
   style += height !== null ? `height: ${height}px;` : '';
   style += paddingTop !== null ? `padding-top: ${paddingTop}px;` : '';
   style += paddingBottom !== null ? `padding-bottom: ${paddingBottom}px;` : '';

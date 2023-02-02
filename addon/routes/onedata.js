@@ -46,12 +46,13 @@ export default Route.extend(AuthenticatedRouteMixin, {
    * @param {Transition} transition
    */
   clearActionQueryParams(transition) {
-    const queryParamsNames = Object.keys(transition.queryParams);
+    const queryParams = transition.to.queryParams;
+    const queryParamsNames = Object.keys(queryParams);
     if (queryParamsNames.find(name => name.startsWith('action_'))) {
-      const queryParamsWithoutAction = Object.keys(transition.queryParams)
+      const queryParamsWithoutAction = Object.keys(queryParams)
         .reduce((params, key) => {
           params[key] = key.startsWith('action_') ?
-            undefined : transition.queryParams[key];
+            undefined : queryParams[key];
           return params;
         }, {});
       this.transitionTo({ queryParams: queryParamsWithoutAction });

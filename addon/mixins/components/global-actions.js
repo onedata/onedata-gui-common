@@ -33,8 +33,8 @@ export default Mixin.create({
       const {
         globalActionsTitle,
         globalActions,
-      } = this.getProperties('globalActions', 'globalActionsTitle');
-      const navigationState = this.get('navigationState');
+        navigationState,
+      } = this.getProperties('globalActions', 'globalActionsTitle', 'navigationState');
       if (!navigationState.isDestroyed) {
         navigationState.setProperties({
           aspectActions: globalActions,

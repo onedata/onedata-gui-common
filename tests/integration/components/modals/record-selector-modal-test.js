@@ -1,9 +1,15 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click, find, findAll } from '@ember/test-helpers';
+import {
+  render,
+  settled,
+  click,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 import { lookupService } from '../../../helpers/stub-service';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import {
   getModal,
   getModalHeader,

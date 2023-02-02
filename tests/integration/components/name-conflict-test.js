@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 
 describe('Integration | Component | name conflict', function () {
   setupRenderingTest();
@@ -14,7 +14,7 @@ describe('Integration | Component | name conflict', function () {
     });
 
     await render(hbs `{{name-conflict item=item}}`);
-    expect(this.element.textContent).to.contain('name#label');
+    expect(this.element.textContent).to.contain('name@label');
   });
 
   it('renders name with conflict label with custom separator', async function () {

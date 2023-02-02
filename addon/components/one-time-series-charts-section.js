@@ -206,7 +206,7 @@ export default Component.extend(I18n, {
     'globalTimeSecondsOffset',
     'normalizedExternalDataSources',
     async function chartConfigurationsProxy() {
-      const chartSpecs = this.sectionSpec.charts ?? [];
+      const chartSpecs = this.sectionSpec?.charts ?? [];
       return await allFulfilled(chartSpecs.map(async (chartSpec) => {
         const configuration = new OTSCConfiguration({
           nowTimestampOffset: this.globalTimeSecondsOffset ?? 0,

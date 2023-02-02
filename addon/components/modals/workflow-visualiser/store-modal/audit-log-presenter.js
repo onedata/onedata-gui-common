@@ -68,11 +68,19 @@ export default Component.extend(I18n, {
     function fetchLogEntriesCallback() {
       const getStoreContentCallback = this.get('getStoreContentCallback');
       return async (listingParams) => {
-        const results = await getStoreContentCallback({
-          type: 'auditLogStoreContentBrowseOptions',
-          ...listingParams,
-        });
-        return normalizeEntriesPage(results);
+        try {
+          const results = await getStoreContentCallback({
+            type: 'auditLogStoreContentBrowseOptions',
+            ...listingParams,
+          });
+          return normalizeEntriesPage(results);
+        } catch (error) {
+          if (error?.id === 'notFound') {
+            return { logEntries: [], isLast: true };
+          } else {
+            throw error;
+          }
+        }
       };
     }
   ),

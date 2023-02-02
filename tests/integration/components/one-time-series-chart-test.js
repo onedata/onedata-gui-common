@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import Configuration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import TestComponent from 'onedata-gui-common/components/test-component';
 import sinon from 'sinon';

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, click, fillIn } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-store-action';
 import { getProperties, get } from '@ember/object';
 import sinon from 'sinon';
@@ -61,7 +61,7 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
       );
       await selectChoose(
         getModalBody().querySelector('.data-spec-editor'),
-        'Integer'
+        'Number'
       );
       await click(getModalFooter().querySelector('.btn-submit'));
       const actionResult = await resultPromise;
@@ -72,7 +72,7 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
         type: 'list',
         config: {
           itemDataSpec: {
-            type: 'integer',
+            type: 'number',
             valueConstraints: {},
           },
         },
@@ -97,7 +97,7 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
       );
       await selectChoose(
         getModalBody().querySelector('.data-spec-editor'),
-        'Integer'
+        'Number'
       );
       await click(getModalFooter().querySelector('.btn-submit'));
       rejectCreate();

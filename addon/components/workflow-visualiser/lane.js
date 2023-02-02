@@ -127,6 +127,22 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
+  modifyLaneChartsDashboardAction: computed(
+    'actionsFactory',
+    'lane',
+    function modifyLaneChartsDashboardAction() {
+      const {
+        actionsFactory,
+        lane,
+      } = this.getProperties('actionsFactory', 'lane');
+
+      return actionsFactory.createModifyLaneChartsDashboardAction({ lane });
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
   moveLeftLaneAction: computed('actionsFactory', 'lane', function moveLeftLaneAction() {
     const {
       actionsFactory,
@@ -179,41 +195,25 @@ export default VisualiserElement.extend({
     'mode',
     'modifyLaneAction',
     'viewLaneAction',
+    'modifyLaneChartsDashboardAction',
     'moveLeftLaneAction',
     'moveRightLaneAction',
     'clearLaneAction',
     'removeLaneAction',
     'viewFailedItemsAction',
     function laneActions() {
-      const {
-        mode,
-        modifyLaneAction,
-        viewLaneAction,
-        moveLeftLaneAction,
-        moveRightLaneAction,
-        clearLaneAction,
-        removeLaneAction,
-      } = this.getProperties(
-        'mode',
-        'modifyLaneAction',
-        'viewLaneAction',
-        'moveLeftLaneAction',
-        'moveRightLaneAction',
-        'clearLaneAction',
-        'removeLaneAction',
-      );
-
-      if (mode === 'edit') {
+      if (this.mode === 'edit') {
         return [
-          modifyLaneAction,
-          moveLeftLaneAction,
-          moveRightLaneAction,
-          clearLaneAction,
-          removeLaneAction,
+          this.modifyLaneAction,
+          this.modifyLaneChartsDashboardAction,
+          this.moveLeftLaneAction,
+          this.moveRightLaneAction,
+          this.clearLaneAction,
+          this.removeLaneAction,
         ];
       } else {
         return [
-          viewLaneAction,
+          this.viewLaneAction,
         ];
       }
     }

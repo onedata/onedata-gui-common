@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, focus, blur, click, find } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import sinon from 'sinon';
 import OneTooltipHelper from '../../../helpers/one-tooltip';

@@ -10,10 +10,12 @@ import {
   afterEach,
 } from 'mocha';
 import loadSeries from 'onedata-gui-common/utils/one-time-series-chart/series-functions/load-series';
-import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
+import globalPoint from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
 import { createContext } from './helpers';
 import sinon from 'sinon';
 
+const point = (timestamp, value, options) =>
+  globalPoint(timestamp, value, { pointDuration: 2, ...(options || {}) });
 let fakeClock;
 
 describe('Unit | Utility | one time series chart/series functions/load series', function () {
@@ -499,7 +501,7 @@ function testFetchSeriesScenario({
   sourceData,
   expectedPoints,
 }) {
-  it(title, async function (done) {
+  it(title, async function () {
     this.customSourceData = sourceData;
     if (lastPointTimestamp !== undefined) {
       this.context.lastPointTimestamp = lastPointTimestamp;
@@ -514,17 +516,20 @@ function testFetchSeriesScenario({
       data: expectedPoints,
     });
     expectFetchSeriesToBeCalled(this);
-    done();
   });
 }
 
 function expectFetchSeriesToBeCalled(testCase) {
   expect(testCase.context.externalDataSources.customSource.fetchSeries).to.be.calledOnce
-    .and.to.be.calledWith(sinon.match({
-      lastPointTimestamp: testCase.context.lastPointTimestamp,
-      timeResolution: testCase.context.timeResolution,
-      pointsCount: testCase.context.pointsCount + 1,
-    }, testCase.functionArguments.sourceSpecProvider.functionArguments.data.externalSourceParameters));
+    .and.to.be.calledWith(
+      sinon.match({
+        lastPointTimestamp: testCase.context.lastPointTimestamp,
+        timeResolution: testCase.context.timeResolution,
+        pointsCount: testCase.context.pointsCount + 1,
+      }),
+      testCase.functionArguments.sourceSpecProvider.functionArguments.data
+      .externalSourceParameters
+    );
 }
 
 function rawPoint(timestamp, value) {

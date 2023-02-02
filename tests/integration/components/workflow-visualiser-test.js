@@ -12,7 +12,7 @@ import {
   find,
   findAll,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 // TODO: VFS-9129 use scrollTo helper from @ember/test-helpers after upgrading it to 2.0
 import { scrollTo } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
@@ -99,7 +99,7 @@ describe('Integration | Component | workflow visualiser', function () {
         );
         await selectChoose(
           getModalBody('store-modal').querySelector('.data-spec-editor'),
-          'Integer'
+          'Number'
         );
         await click(getModalFooter('store-modal').querySelector('.btn-submit'));
         await click(getModalFooter().querySelector('.btn-submit'));
@@ -113,7 +113,7 @@ describe('Integration | Component | workflow visualiser', function () {
           type: 'list',
           config: {
             itemDataSpec: {
-              type: 'integer',
+              type: 'number',
               valueConstraints: {},
             },
           },
@@ -200,7 +200,7 @@ describe('Integration | Component | workflow visualiser', function () {
         );
         await selectChoose(
           getModalBody('store-modal').querySelector('.data-spec-editor'),
-          'Integer'
+          'Number'
         );
         await click(getModalFooter('store-modal').querySelector('.btn-submit'));
         await click(getModalFooter().querySelector('.btn-submit'));
@@ -214,7 +214,7 @@ describe('Integration | Component | workflow visualiser', function () {
           type: 'list',
           config: {
             itemDataSpec: {
-              type: 'integer',
+              type: 'number',
               valueConstraints: {},
             },
           },
@@ -292,7 +292,7 @@ describe('Integration | Component | workflow visualiser', function () {
         );
         await selectChoose(
           getModalBody().querySelector('.data-spec-editor'),
-          'Integer'
+          'Number'
         );
         await click(getModalFooter().querySelector('.btn-submit'));
       },
@@ -303,7 +303,7 @@ describe('Integration | Component | workflow visualiser', function () {
         type: 'list',
         config: {
           itemDataSpec: {
-            type: 'integer',
+            type: 'number',
             valueConstraints: {},
           },
         },
@@ -1084,7 +1084,7 @@ function generateExample(
       type: 'list',
       config: {
         itemDataSpec: {
-          type: 'integer',
+          type: 'number',
           valueConstraints: {},
         },
       },

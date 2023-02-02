@@ -8,7 +8,7 @@ import {
   find,
   findAll,
 } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
@@ -24,6 +24,10 @@ const editLaneActionsSpec = [{
   label: 'Modify',
   icon: 'rename',
 }, {
+  className: 'modify-lane-charts-dashboard-action-trigger',
+  label: 'Configure charts',
+  icon: 'overview',
+}, {
   className: 'move-left-lane-action-trigger',
   label: 'Move left',
   icon: 'move-left',
@@ -34,11 +38,11 @@ const editLaneActionsSpec = [{
 }, {
   className: 'clear-lane-action-trigger',
   label: 'Clear',
-  icon: 'remove',
+  icon: 'checkbox-filled-x',
 }, {
   className: 'remove-lane-action-trigger',
   label: 'Remove',
-  icon: 'x',
+  icon: 'remove',
 }];
 
 const viewLaneActionsSpec = [{
