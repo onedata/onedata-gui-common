@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find, click, fillIn } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { AtmFileType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
