@@ -8,10 +8,15 @@
 
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import ValueEditorState from './value-editor-state';
-import { editorComponentsPrefix } from '../commons';
+import { editorComponentsPrefix } from '../common';
 
 /**
  * @typedef {'empty'|'idForm'|'selected'} FileValueEditorStateMode
+ * - `'empty` means no file selected,
+ * - `'idForm'` means showing form with ID input which allows user to reference
+ *   file,
+ * - `'selected'` means that user has selected some file and now it's info is
+ *   visible.
  */
 
 export default class FileValueEditorState extends ValueEditorState {

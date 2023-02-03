@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed, set } from '@ember/object';
+import { computed, setProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 import _ from 'lodash';
@@ -17,6 +17,8 @@ import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/time-series-measurement/editor';
+
+const formFieldNames = Object.freeze(['timestamp', 'tsName', 'value']);
 
 export default EditorBase.extend(I18n, {
   layout,
@@ -43,10 +45,11 @@ export default EditorBase.extend(I18n, {
     }
 
     if (this.doesFormValueDiffer(this.editorState.value)) {
-      ['timestamp', 'tsName', 'value'].forEach((fieldName) => {
-        const newValue = this.editorState.value?.[fieldName] ?? '';
-        set(this.formRootGroup.valuesSource, fieldName, String(newValue));
-      });
+      const newFormData = formFieldNames.reduce((acc, fieldName) => {
+        acc[fieldName] = String(this.editorState.value?.[fieldName] ?? '');
+        return acc;
+      }, {});
+      setProperties(this.formRootGroup.valuesSource, newFormData);
     }
   },
 
@@ -70,7 +73,7 @@ export default EditorBase.extend(I18n, {
    */
   getFormValues() {
     const formValues = {};
-    ['timestamp', 'tsName', 'value'].forEach((fieldName) => {
+    formFieldNames.forEach((fieldName) => {
       const field = this.formRootGroup.getFieldByPath(fieldName);
       const fieldValue = field.dumpValue();
       formValues[fieldName] = fieldName !== 'tsName' ?

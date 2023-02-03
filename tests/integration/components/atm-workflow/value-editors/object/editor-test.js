@@ -46,7 +46,7 @@ describe('Integration | Component | atm-workflow/value-editors/object/editor', f
   it('allows to input a valid object', async function () {
     await renderComponent();
 
-    for (const value of [null, {}, { a: 1 }]) {
+    for (const value of [{}, { a: 1 }]) {
       await fillIn('textarea', JSON.stringify(value));
 
       expect(this.stateManager.value).to.deep.equal(value);
@@ -58,7 +58,7 @@ describe('Integration | Component | atm-workflow/value-editors/object/editor', f
   it('allows to input an invalid object, but with validation error', async function () {
     await renderComponent();
 
-    for (const value of [false, ' ', 123, []]) {
+    for (const value of [false, ' ', 123, [], null]) {
       await fillIn('textarea', JSON.stringify(value));
 
       expect(this.stateManager.value).to.deep.equal(value);

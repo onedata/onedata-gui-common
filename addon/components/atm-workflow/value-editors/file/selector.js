@@ -11,6 +11,7 @@ import Component from '@ember/component';
 import { computed, observer } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import { Promise } from 'rsvp';
+import { or, not } from 'ember-awesome-macros';
 import Action from 'onedata-gui-common/utils/action';
 import { AtmFileType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/file/selector';
@@ -157,6 +158,11 @@ const SelectUploadFilesAction = Action.extend({
   className: 'select-upload-files-action-trigger',
 
   /**
+   * @override
+   */
+  icon: 'browser-file',
+
+  /**
    * @type {boolean}
    */
   isPending: false,
@@ -171,9 +177,7 @@ const SelectUploadFilesAction = Action.extend({
   /**
    * @override
    */
-  disabled: computed('selectFilesFunction', 'isPending', function disabled() {
-    return !this.selectFilesFunction || this.isPending;
-  }),
+  disabled: or(not('selectFilesFunction'), 'isPending'),
 
   /**
    * @override
@@ -233,6 +237,11 @@ const ProvideFileIdAction = Action.extend({
    * @override
    */
   className: 'provide-file-id-action-trigger',
+
+  /**
+   * @override
+   */
+  icon: 'circle-id',
 
   /**
    * @override

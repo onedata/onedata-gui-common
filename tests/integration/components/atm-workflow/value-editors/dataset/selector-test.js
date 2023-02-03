@@ -95,7 +95,10 @@ describe('Integration | Component | atm-workflow/value-editors/dataset/selector'
     async function () {
       const datasetsToSelect = [{ datasetId: '1' }];
       let onSelectedCallback;
-      this.set('editorContext.selectDatasets', ({ onSelected }) => onSelectedCallback = onSelected);
+      this.set(
+        'editorContext.selectDatasets',
+        ({ onSelected }) => onSelectedCallback = onSelected
+      );
       const onDatasetsSelected = this.set('onDatasetsSelected', sinon.spy());
       await renderComponent();
 

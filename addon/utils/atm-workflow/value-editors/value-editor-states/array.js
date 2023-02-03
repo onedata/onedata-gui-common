@@ -8,7 +8,7 @@
 
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import ValueEditorState from './value-editor-state';
-import { editorComponentsPrefix, getArrayItemCreatorComponentName } from '../commons';
+import { editorComponentsPrefix, getArrayItemCreatorComponentName } from '../common';
 
 /**
  * @typedef {'visual'|'raw'} ArrayValueEditorStateMode
@@ -169,7 +169,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
    * @returns {void}
    */
   addNewItems(newItemEditorStates) {
-    newItemEditorStates.forEach((state) => this.itemEditorStateIds.push(state.id));
+    this.itemEditorStateIds.push(...newItemEditorStates.map((state) => state.id));
     this.recalculateItemsExpandedByUserCount();
     this.notifyChange();
   }
@@ -249,7 +249,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
     if (this.mode === 'raw') {
       try {
         return JSON.parse(this.stringifiedValue);
-      } catch (e) {
+      } catch {
         return null;
       }
     } else {

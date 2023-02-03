@@ -6,9 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import ValueEditorState from './value-editor-state';
-import { editorComponentsPrefix } from '../commons';
+import { editorComponentsPrefix } from '../common';
 
 export default class ObjectValueEditorState extends ValueEditorState {
   /**
@@ -17,8 +16,8 @@ export default class ObjectValueEditorState extends ValueEditorState {
   constructor() {
     super(...arguments);
     this.editorComponentName = `${editorComponentsPrefix}/object/editor`;
-    if (!this.value) {
-      this.value = null;
+    if (this.internalValue === null) {
+      this.value = {};
     }
   }
 
@@ -43,19 +42,10 @@ export default class ObjectValueEditorState extends ValueEditorState {
   /**
    * @override
    */
-  getIsValid() {
-    const value = this.value;
-    return (value === null && this.editableValue.trim() === 'null') ||
-      (value !== null && validate(this.value, this.atmDataSpec));
-  }
-
-  /**
-   * @override
-   */
   getValue() {
     try {
       return JSON.parse(this.internalValue);
-    } catch (e) {
+    } catch {
       return null;
     }
   }

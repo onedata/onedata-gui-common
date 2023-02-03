@@ -11,6 +11,7 @@ import Component from '@ember/component';
 import { computed, observer } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import { Promise } from 'rsvp';
+import { or, not } from 'ember-awesome-macros';
 import Action from 'onedata-gui-common/utils/action';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/dataset/selector';
 
@@ -147,6 +148,11 @@ const SelectDatasetsAction = Action.extend({
   className: 'select-datasets-action-trigger',
 
   /**
+   * @override
+   */
+  icon: 'browser-dataset',
+
+  /**
    * @type {boolean}
    */
   isPending: false,
@@ -161,9 +167,7 @@ const SelectDatasetsAction = Action.extend({
   /**
    * @override
    */
-  disabled: computed('selectDatasetsFunction', 'isPending', function disabled() {
-    return !this.selectDatasetsFunction || this.isPending;
-  }),
+  disabled: or(not('selectDatasetsFunction'), 'isPending'),
 
   /**
    * @override
@@ -217,6 +221,11 @@ const ProvideDatasetIdAction = Action.extend({
    * @override
    */
   className: 'provide-dataset-id-action-trigger',
+
+  /**
+   * @override
+   */
+  icon: 'circle-id',
 
   /**
    * @override

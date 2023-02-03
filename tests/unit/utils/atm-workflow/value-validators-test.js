@@ -36,8 +36,14 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   );
   [
     ['1'],
-    [1, '2.5'], 'abc',
-    132, NaN, true, null, undefined, {},
+    [1, '2.5'],
+    'abc',
+    132,
+    NaN,
+    true,
+    null,
+    undefined,
+    {},
   ].forEach((value) =>
     itRecognizesValueAsInvalid(value, arrayDataSpec)
   );
@@ -64,8 +70,16 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   }].forEach((value) =>
     itRecognizesValueAsValid(value, datasetDataSpec)
   );
-  [{ datasetId: '' }, { datasetId: null }, 'abc',
-    132, NaN, true, null, undefined, {},
+  [
+    { datasetId: '' },
+    { datasetId: null },
+    'abc',
+    132,
+    NaN,
+    true,
+    null,
+    undefined,
+    {},
     [],
   ].forEach((value) =>
     itRecognizesValueAsInvalid(value, datasetDataSpec)
@@ -79,8 +93,16 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   }].forEach((value) =>
     itRecognizesValueAsValid(value, fileDataSpec)
   );
-  [{ file_id: '' }, { file_id: null }, 'abc',
-    132, NaN, true, null, undefined, {},
+  [
+    { file_id: '' },
+    { file_id: null },
+    'abc',
+    132,
+    NaN,
+    true,
+    null,
+    undefined,
+    {},
     [],
   ].forEach((value) =>
     itRecognizesValueAsInvalid(value, fileDataSpec)

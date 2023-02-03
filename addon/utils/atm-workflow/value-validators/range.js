@@ -29,11 +29,11 @@ export default function validate(value) {
 
   if (
     // check `start` type
-    (typeof start !== 'undefined' && !Number.isInteger(start)) ||
+    (start !== undefined && !Number.isInteger(start)) ||
     // check `end` type
     !Number.isInteger(end) ||
     // check `step` type
-    (typeof step !== 'undefined' && !isStepAnInteger) ||
+    (step !== undefined && !isStepAnInteger) ||
     // check `step` is not 0
     (isStepAnInteger && step === 0)
   ) {

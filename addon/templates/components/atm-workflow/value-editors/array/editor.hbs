@@ -1,7 +1,10 @@
 {{#atm-workflow/value-editors/commons/editor-box
   editorState=editorState
   onRemove=onRemove
-  class=(if (eq mode "raw") (concat-classes "editor-with-json" (if (not isValid) "invalid")))
+  class=(if (eq mode "raw") (concat-classes
+    "editor-with-json"
+    (if (not isValid) "invalid")
+  ))
   as |editorBox|
 }}
   {{#if (eq editorBox.section "toolbar")}}
@@ -29,13 +32,13 @@
         {{#render-later triggerRender=isClearConfirmationOpened}}
           {{#one-webui-popover
             class="clear-array-confirmation"
-            triggerSelector=(concat "#" clearTriggerId)
+            triggerSelector=clearTriggerSelector
             open=isClearConfirmationOpened
             as |popover|
           }}
             {{#click-outside
               onClickOutside=(action "toggleClearConfirmation" false)
-              exceptSelector=(concat "#" clearTriggerId)
+              exceptSelector=clearTriggerSelector
             }}
               <p>{{tt this "clearConfirmation.question"}}</p>
               <div class="buttons-container">

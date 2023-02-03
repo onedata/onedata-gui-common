@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed, set } from '@ember/object';
+import { computed, setProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 import { not } from 'ember-awesome-macros';
@@ -17,6 +17,8 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/range/editor';
+
+const formFieldNames = Object.freeze(['start', 'end', 'step']);
 
 export default EditorBase.extend(I18n, {
   layout,
@@ -43,10 +45,11 @@ export default EditorBase.extend(I18n, {
     }
 
     if (this.doesFormValueDiffer(this.editorState.value)) {
-      ['start', 'end', 'step'].forEach((fieldName) => {
-        const newValue = this.editorState.value?.[fieldName] ?? '';
-        set(this.formRootGroup.valuesSource, fieldName, String(newValue));
-      });
+      const newFormData = formFieldNames.reduce((acc, fieldName) => {
+        acc[fieldName] = String(this.editorState.value?.[fieldName] ?? '');
+        return acc;
+      }, {});
+      setProperties(this.formRootGroup.valuesSource, newFormData);
     }
   },
 
@@ -70,7 +73,7 @@ export default EditorBase.extend(I18n, {
    */
   getFormValues() {
     const formValues = {};
-    ['start', 'end', 'step'].forEach((fieldName) => {
+    formFieldNames.forEach((fieldName) => {
       const field = this.formRootGroup.getFieldByPath(fieldName);
       const fieldValue = field.dumpValue();
       formValues[fieldName] = Number.parseFloat(fieldValue);

@@ -20,7 +20,7 @@ export default SingleLinePresenterBase.extend({
    * @override
    */
   stringifiedValue: computed('fileDetails.name', function stringifiedValue() {
-    const fileName = this.fileDetails.name ?? '';
+    const fileName = this.fileDetails.name;
     const formattedFileName = fileName ? `"${fileName}"` : '–';
 
     return `[${this.t('typeLabel')} ${formattedFileName}]`;

@@ -8,10 +8,15 @@
 
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 import ValueEditorState from './value-editor-state';
-import { editorComponentsPrefix } from '../commons';
+import { editorComponentsPrefix } from '../common';
 
 /**
  * @typedef {'empty'|'idForm'|'selected'} DatasetValueEditorStateMode
+ * - `'empty` means no dataset selected,
+ * - `'idForm'` means showing form with ID input which allows user to reference
+ *   dataset,
+ * - `'selected'` means that user has selected some dataset and now it's info is
+ *   visible.
  */
 
 export default class DatasetValueEditorState extends ValueEditorState {

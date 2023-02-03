@@ -92,7 +92,7 @@ export const DatasetDetails = EmberObject.extend({
         try {
           return (await this.context.getDatasetDetailsById(this.dataset.datasetId)) ||
             this.dataset;
-        } catch (e) {
+        } catch {
           return this.dataset;
         }
       } else {

@@ -138,8 +138,8 @@ describe('Integration | Component | form component/textarea field', function () 
       await render(hbs `{{form-component/textarea-field field=field}}`);
 
       const textarea = find('textarea');
-      expect(textarea.getAttribute('rows')).to.be.null;
-      expect(textarea.getAttribute('cols')).to.be.null;
+      expect(textarea.hasAttribute('rows')).to.false;
+      expect(textarea.hasAttribute('cols')).to.false;
     }
   );
 

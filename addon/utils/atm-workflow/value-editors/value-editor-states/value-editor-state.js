@@ -129,7 +129,7 @@ export default class ValueEditorState {
    * @returns {void}
    */
   destroy() {
-    this.stateChangeListeners = [];
+    this.changeListeners = [];
   }
 
   /**

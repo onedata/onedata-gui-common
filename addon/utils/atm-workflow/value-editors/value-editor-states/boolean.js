@@ -7,7 +7,7 @@
  */
 
 import ValueEditorState from './value-editor-state';
-import { editorComponentsPrefix } from '../commons';
+import { editorComponentsPrefix } from '../common';
 
 export default class BooleanValueEditorState extends ValueEditorState {
   /**

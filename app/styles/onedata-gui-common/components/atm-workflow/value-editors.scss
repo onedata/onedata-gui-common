@@ -1,10 +1,12 @@
 .editor-box {
+  --editor-box-background-accent: rgba(192, 192, 192, 0.1);
+
   display: inline-block;
   border: 1px solid $main-border-color;
   border-radius: $border-radius-base;
 
   .editor-box {
-    background-color: rgba(192, 192, 192, 0.1);
+    background-color: var(--editor-box-background-accent);
   }
 
   .editor-box-header {
@@ -12,7 +14,7 @@
     align-items: center;
     padding: 0.3em;
     border-bottom: 1px solid $main-border-color;
-    background-color: rgba(192, 192, 192, 0.1);
+    background-color: var(--editor-box-background-accent);
 
     > * {
       font-size: 70%;
@@ -129,6 +131,10 @@
     &.mode-idForm {
       max-width: 25em;
     }
+
+    .details-icon {
+      font-size: 250%;
+    }
   }
 
   &.file-editor {
@@ -159,7 +165,7 @@
       padding: 1em;
       text-align: center;
       border-radius: $border-radius-base;
-      background-color: rgba(192, 192, 192, 0.1);
+      background-color: var(--editor-box-background-accent);
       p {
         margin: 0;
       }

@@ -1,3 +1,11 @@
+/**
+ * A default array item creator.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import ArrayItemCreatorBase from '../commons/array-item-creator-base';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/array/default-item-creator';

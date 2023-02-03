@@ -42,7 +42,7 @@ export default EditorBase.extend(I18n, {
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
-  idFormRootGroup: computed(function formRootGroup() {
+  idFormRootGroup: computed(function idFormRootGroup() {
     return IdFormRootGroup.create({ component: this });
   }),
 

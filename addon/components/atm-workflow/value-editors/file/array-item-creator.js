@@ -21,7 +21,7 @@ export default ArrayItemCreatorBase.extend(I18n, {
   i18nPrefix: 'components.atmWorkflow.valueEditors.file.arrayItemCreator',
 
   /**
-   * @type {Utils.AtmWorkflow.ValueEditors.ValueEditorStates.FileValueEditorState | null}
+   * @type {Utils.AtmWorkflow.ValueEditors.ValueEditorStates.File | null}
    */
   idProvidingEditorState: null,
 

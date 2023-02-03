@@ -139,7 +139,12 @@ export default EditorBase.extend(I18n, {
   /**
    * @type {ComputedProperty<string>}
    */
-  clearTriggerId: tag `clear-trigger-${'editorState.id'}`,
+  clearTriggerId: tag`clear-trigger-${'editorState.id'}`,
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  clearTriggerSelector: tag `#${'clearTriggerId'}`,
 
   /**
    * @override

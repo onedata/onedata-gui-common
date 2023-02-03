@@ -7,7 +7,7 @@
  */
 
 import ValueEditorState from './value-editor-state';
-import { editorComponentsPrefix } from '../commons';
+import { editorComponentsPrefix } from '../common';
 
 export default class RangeValueEditorState extends ValueEditorState {
   /**
@@ -23,5 +23,29 @@ export default class RangeValueEditorState extends ValueEditorState {
         step: 1,
       };
     }
+  }
+
+  /**
+   * @override
+   */
+  setValue(newValue) {
+    // Code below checks if passed value looks like an incomplete range (without
+    // "start" and/or "step" field) and in that case assigns default values to
+    // the missing fields.
+
+    if (typeof newValue !== 'object' || !newValue) {
+      super.setValue(newValue);
+      return;
+    }
+
+    const normalizedValue = { ...newValue };
+    if (normalizedValue.start === undefined) {
+      normalizedValue.start = 0;
+    }
+    if (normalizedValue.start === undefined) {
+      normalizedValue.step = 1;
+    }
+
+    super.setValue(normalizedValue);
   }
 }

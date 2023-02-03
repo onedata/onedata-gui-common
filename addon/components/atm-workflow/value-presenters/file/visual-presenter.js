@@ -89,7 +89,7 @@ export const FileDetails = EmberObject.extend({
       ) {
         try {
           return (await this.context.getFileDetailsById(this.file.file_id)) || this.file;
-        } catch (e) {
+        } catch {
           return this.file;
         }
       } else {
@@ -112,7 +112,7 @@ export const FileDetails = EmberObject.extend({
    * @type {ComputedProperty<PromiseObject<AtmFile|null>>}
    */
   symbolicLinkTargetProxy: promise.object(
-    computed('fileWithDetailsProxy', 'context', async function fileProxy() {
+    computed('fileWithDetailsProxy', 'context', async function symbolicLinkTargetProxy() {
       const fileWithDetails = await this.fileWithDetailsProxy;
       if (
         !this.context?.getSymbolicLinkTargetById ||
@@ -132,7 +132,7 @@ export const FileDetails = EmberObject.extend({
   symbolicLinkTargetType: computed(
     'symbolicLinkTargetProxy.isSettled',
     'context',
-    function sizeProxy() {
+    function symbolicLinkTargetType() {
       if (
         !this.context?.getSymbolicLinkTargetById ||
         !this.symbolicLinkTargetProxy.isSettled

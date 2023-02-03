@@ -103,6 +103,7 @@ const FormRootGroup = FormFieldsRootGroup.extend({
     DropdownField.create({
       name: 'value',
       withValidationMessage: false,
+      showSearch: false,
       options: [{
         value: true,
       }, {

@@ -20,7 +20,7 @@ export default function validate(value) {
     typeof value === 'object' &&
     !Array.isArray(value) &&
     // We don't have to check existence of any properties different than
-    // `datasetId` as these will be automatically removed by backend.
+    // `file_id` as these will be automatically removed by backend.
     typeof value.file_id === 'string' &&
     value.file_id.length > 0;
 }

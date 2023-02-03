@@ -7,7 +7,7 @@
  */
 
 import _ from 'lodash';
-import valueEditorStates from './value-editor-states';
+import valueEditorStateClasses from './value-editor-states';
 
 /**
  * @typedef {Object} ValueEditorStateManagerDump
@@ -135,7 +135,7 @@ export default class ValueEditorStateManager {
    * @returns {void}
    */
   destroy() {
-    this.stateChangeListeners = [];
+    this.changeListeners = [];
     [...this.editorStatesMap.values()].forEach((editorState) =>
       this.destroyValueEditorState(editorState)
     );
@@ -177,7 +177,7 @@ export default class ValueEditorStateManager {
    * @returns {Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState}
    */
   createValueEditorState(atmDataSpec, initialValue = undefined) {
-    const ValueEditorStateClass = valueEditorStates[atmDataSpec.type];
+    const ValueEditorStateClass = valueEditorStateClasses[atmDataSpec.type];
     if (!ValueEditorStateClass) {
       return null;
     }

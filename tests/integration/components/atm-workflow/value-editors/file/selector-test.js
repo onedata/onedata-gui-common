@@ -100,7 +100,10 @@ describe('Integration | Component | atm-workflow/value-editors/file/selector', f
     async function () {
       const filesToSelect = [{ file_id: '1' }];
       let onSelectedCallback;
-      this.set('editorContext.selectFiles', ({ onSelected }) => onSelectedCallback = onSelected);
+      this.set(
+        'editorContext.selectFiles',
+        ({ onSelected }) => onSelectedCallback = onSelected
+      );
       const onFilesSelected = this.set('onFilesSelected', sinon.spy());
       await renderComponent();
 
