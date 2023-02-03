@@ -34,6 +34,8 @@ import { isEmpty } from 'ember-awesome-macros';
  * @param {'tags'} type
  * @param {string} tagEditorComponentName See `tagEditorComponentName` in `tags-input`.
  * @param {Object} tagEditorSettings See `tagEditorSettings` in `tags-input`.
+ * @param {boolean} startTagCreationOnInit If true, tag editor (selector) will appear
+ *   right after the tags input goes into edit mode.
  */
 
 export default Component.extend(I18n, {
