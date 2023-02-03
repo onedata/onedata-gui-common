@@ -4,26 +4,25 @@
  * takes an array of values, which should be applied to the new points array
  * (as it is not obvious how to merge points values and it depends on a specific usage).
  *
- * @module utils/one-time-series-chart/series-functions/utils/merge-points-arrays
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { recalculatePointMeasurementDuration } from './point';
-
 /**
- * @param {Array<Array<OTSCSeriesPoint>>} pointsArrays
+ * @param {Array<Array<Utils.OneTimeSeriesChart.Point>>} pointsArrays
  * @param {Array<number|null>} newPointsValues
- * @returns {Array<OTSCSeriesPoint>}
+ * @returns {Array<Utils.OneTimeSeriesChart.Point>}
  */
 export default function mergePointsArrays(pointsArrays, newPointsValues) {
   if (!pointsArrays.length) {
     return [];
   }
-  const mergedPointsArray = pointsArrays[0].map((point, idx) =>
-    Object.assign({}, point, { value: newPointsValues[idx] })
-  );
+  const mergedPointsArray = pointsArrays[0].map((point, idx) => {
+    const mergedPoint = point.clone();
+    mergedPoint.value = newPointsValues[idx];
+    return mergedPoint;
+  });
   for (const pointsArray of pointsArrays.slice(1)) {
     for (let i = 0; i < mergedPointsArray.length; i++) {
       if (!pointsArray[i].fake) {
@@ -60,8 +59,6 @@ export default function mergePointsArrays(pointsArrays, newPointsValues) {
         mergedPointsArray[i].fake && pointsArray[i].fake;
     }
   }
-  mergedPointsArray.forEach((point) =>
-    recalculatePointMeasurementDuration(point)
-  );
+
   return mergedPointsArray;
 }

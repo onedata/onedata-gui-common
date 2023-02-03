@@ -45,6 +45,11 @@ export default TableBodyRowPresenterBase.extend({
   /**
    * @type {ComputedProperty<string|null>}
    */
+  rootFilePath: reads('datasetDetails.rootFilePath'),
+
+  /**
+   * @type {ComputedProperty<string|null>}
+   */
   name: reads('datasetDetails.name'),
 
   /**

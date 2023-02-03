@@ -10,12 +10,12 @@ import {
   afterEach,
 } from 'mocha';
 import loadSeries from 'onedata-gui-common/utils/one-time-series-chart/series-functions/load-series';
-import globalPoint from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
+import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
 import { createContext } from './helpers';
 import sinon from 'sinon';
 
 const point = (timestamp, value, options) =>
-  globalPoint(timestamp, value, { pointDuration: 2, ...(options || {}) });
+  new Point(timestamp, value, { pointDuration: 2, ...(options || {}) });
 let fakeClock;
 
 describe('Unit | Utility | one time series chart/series functions/load series', function () {

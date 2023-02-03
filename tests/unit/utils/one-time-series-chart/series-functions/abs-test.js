@@ -4,7 +4,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import abs from 'onedata-gui-common/utils/one-time-series-chart/series-functions/abs';
-import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
+import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
 import {
   createContext,
   createConstArgument,
@@ -29,38 +29,38 @@ const normalizedTransformCasesToCheck = transformCasesToCheck.map(({ input, outp
 const casesToCheck = [...normalizedTransformCasesToCheck, {
   input: {
     type: 'points',
-    data: [point(1, -10), point(2, -20)],
+    data: [new Point(1, -10), new Point(2, -20)],
   },
   output: {
     type: 'points',
-    data: [point(1, 10), point(2, 20)],
+    data: [new Point(1, 10), new Point(2, 20)],
   },
 }, {
   input: {
     type: 'points',
-    data: [point(1, 10), point(2, -20)],
+    data: [new Point(1, 10), new Point(2, -20)],
   },
   output: {
     type: 'points',
-    data: [point(1, 10), point(2, 20)],
+    data: [new Point(1, 10), new Point(2, 20)],
   },
 }, {
   input: {
     type: 'points',
-    data: [point(1, 10), point(2, null)],
+    data: [new Point(1, 10), new Point(2, null)],
   },
   output: {
     type: 'points',
-    data: [point(1, 10), point(2, null)],
+    data: [new Point(1, 10), new Point(2, null)],
   },
 }, {
   input: {
     type: 'points',
-    data: [point(1, {}), point(2, NaN)],
+    data: [new Point(1, {}), new Point(2, NaN)],
   },
   output: {
     type: 'points',
-    data: [point(1, null), point(2, null)],
+    data: [new Point(1, null), new Point(2, null)],
   },
 }];
 
