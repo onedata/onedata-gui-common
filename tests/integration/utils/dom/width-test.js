@@ -6,6 +6,8 @@ import { render, find } from '@ember/test-helpers';
 import { htmlSafe } from '@ember/template';
 import dom from 'onedata-gui-common/utils/dom';
 
+// WARNING: Tests below are fragile to zoom < 100%.
+
 describe('Integration | Utility | dom/width', function () {
   setupRenderingTest();
 
@@ -183,13 +185,7 @@ function getDivStyles(boxSizing, {
   marginLeft = null,
   marginRight = null,
 } = {}) {
-  // Testing environment shows element scaled down to 50% of it's original
-  // dimensions. It disturbs element measurement by `getBoundingClientRect` -
-  // values are incorrect by +/- 1px.
-  // We need to scale the element up back to at least 100% of it's original size.
-  // Element now is scaled to 50%, so we have to scale it by 200% to go
-  // back to original 100%.
-  let style = 'zoom: 200%;';
+  let style = '';
   style += boxSizing !== null ? `box-sizing: ${boxSizing};` : '';
   style += width !== null ? `width: ${width}px;` : '';
   style += paddingLeft !== null ? `padding-left: ${paddingLeft}px;` : '';
