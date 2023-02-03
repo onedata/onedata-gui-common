@@ -44,6 +44,16 @@ export default TableBodyRowPresenterBase.extend({
   }),
 
   /**
+   * @type {ComputedProperty<string|undefined>}
+   */
+  name: reads('fileDetails.name'),
+
+  /**
+   * @type {ComputedProperty<FileType|undefined>}
+   */
+  type: reads('fileDetails.type'),
+
+  /**
    * @type {ComputedProperty<SymbolicLinkTargetType>}
    */
   symbolicLinkTargetType: reads('fileDetails.symbolicLinkTargetType'),

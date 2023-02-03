@@ -1,0 +1,11 @@
+{{#atm-workflow/value-editors/commons/editor-box
+  editorState=editorState
+  onRemove=onRemove
+  as |editorBox|
+}}
+  {{#if (eq editorBox.section "content")}}
+    <form class="form form-horizontal form-component">
+      {{form-component/field-renderer field=formRootGroup}}
+    </form>
+  {{/if}}
+{{/atm-workflow/value-editors/commons/editor-box}}

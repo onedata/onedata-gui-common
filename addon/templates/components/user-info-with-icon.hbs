@@ -1,4 +1,8 @@
-{{#truncated-string class="user-with-icon flippable-icons-with-text"}}
+<div
+  class="user-with-icon flippable-icons-with-text"
+  onmouseenter={{action "userInfoHovered" true}}
+  onmouseleave={{action "userInfoHovered" false}}
+>
   <div
     class="user-info-trigger popover-info-trigger"
     {{action
@@ -6,8 +10,6 @@
       (not userInfoOpened)
       bubbles=false
     }}
-    onmouseover={{action "userInfoHovered" true}}
-    onmouseleave={{action "userInfoHovered" false}}
   >
     {{flippable-icons
       iconName="user"
@@ -16,16 +18,16 @@
       suppressFlipping=userInfoOpened
     }}
   </div>
-  <span
-    onmouseover={{action "userInfoHovered" true}}
-    onmouseleave={{action "userInfoHovered" false}}
-  >
+  {{#truncated-string
+    tagName="div"
+    class="user-text-container"
+  }}
     <span class="user-fullname">{{or user.fullName "—"}}</span>
     {{#if user.username}}
       <span class="user-username">({{user.username}})</span>
     {{/if}}
-  </span>
-{{/truncated-string}}
+  {{/truncated-string}}
+</div>
 {{#record-info-popover
   isOpened=userInfoOpened
   triggerSelector=(concat "#" elementId " .user-info-trigger")

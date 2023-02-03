@@ -21,6 +21,16 @@ export default FieldComponentBase.extend({
   placeholder: reads('field.placeholder'),
 
   /**
+   * @type {ComputedProperty<number|null>}
+   */
+  rows: reads('field.rows'),
+
+  /**
+   * @type {ComputedProperty<number|null>}
+   */
+  cols: reads('field.cols'),
+
+  /**
    * @type {ComputedProperty<Boolean>}
    */
   showsStaticTextInViewMode: reads('field.showsStaticTextInViewMode'),

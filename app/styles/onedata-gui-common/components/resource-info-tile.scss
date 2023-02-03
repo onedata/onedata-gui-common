@@ -11,23 +11,6 @@
         padding-bottom: 2 * $table-condensed-cell-padding;
         border-top: 0;
         word-break: break-all;
-
-        &.user-info {
-          padding-bottom: 0.36em;
-        }
-
-        .user-with-icon {
-          display: inline-block;
-          width: 100%;
-
-          .user-username {
-            opacity: $disabled-opacity;
-          }
-        }
-        .user-info-trigger {
-          display: inline-block;
-          padding-top: 0.06em;
-        }
       }
     }
   }

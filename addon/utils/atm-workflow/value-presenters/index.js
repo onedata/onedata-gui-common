@@ -66,7 +66,9 @@ import arrayPresentersSpec from './array';
  * @property {(fileId: string) => Promise<AtmFile|null>} [getSymbolicLinkTargetById]
  * @property {(fileId: string) => Promise<string|null>} [getFilePathById]
  * @property {(fileId: string) => Promise<string|null>} [getFileUrlById]
+ * @property {(fileId: string) => Promise<AtmFile|null>} [getFileDetailsById]
  * @property {(datasetId: string) => Promise<string|null>} [getDatasetUrlById]
+ * @property {(datasetId: string) => Promise<AtmDataset|null>} [getDatasetDetailsById]
  * @property {string} [linkTarget]
  */
 
