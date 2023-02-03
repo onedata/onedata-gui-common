@@ -132,4 +132,28 @@ describe('Integration | Component | form component/textarea field', function () 
       expect(this.element.textContent.trim()).to.equal('test value');
     }
   );
+
+  it('does not add "rows" and "cols" attributes when those have default value',
+    async function () {
+      await render(hbs `{{form-component/textarea-field field=field}}`);
+
+      const textarea = find('textarea');
+      expect(textarea.hasAttribute('rows')).to.false;
+      expect(textarea.hasAttribute('cols')).to.false;
+    }
+  );
+
+  it('adds "rows" and "cols" attributes when those have custom value',
+    async function () {
+      setProperties(this.get('field'), {
+        rows: 3,
+        cols: 9,
+      });
+      await render(hbs `{{form-component/textarea-field field=field}}`);
+
+      const textarea = find('textarea');
+      expect(textarea.getAttribute('rows')).to.equal('3');
+      expect(textarea.getAttribute('cols')).to.equal('9');
+    }
+  );
 });

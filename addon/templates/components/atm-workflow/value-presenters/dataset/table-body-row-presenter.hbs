@@ -18,17 +18,17 @@
 </td>
 <td class="column-root-file-path">
   {{#truncated-string class=(if rootFileUrlProxy.content "truncate-from-left")}}
-    {{#if value.rootFilePath}}
+    {{#if rootFilePath}}
       {{#if rootFileUrlProxy.content}}
         <a
           class="clickable navy value-container"
           href={{rootFileUrlProxy.content}}
           target={{or context.linkTarget "_top"}}
         >
-          {{value.rootFilePath}}
+          {{rootFilePath}}
         </a>
       {{else}}
-        <span class="value-container">{{value.rootFilePath}}</span>
+        <span class="value-container">{{rootFilePath}}</span>
       {{/if}}
     {{else}}
       <em>{{tt this "unknown"}}</em>

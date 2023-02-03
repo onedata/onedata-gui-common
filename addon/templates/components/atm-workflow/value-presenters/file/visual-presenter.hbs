@@ -1,6 +1,6 @@
 {{one-file-icon
   class="details-icon"
-  fileType=value.type
+  fileType=type
   symbolicLinkTargetType=symbolicLinkTargetType
 }}
 
@@ -11,11 +11,11 @@
       href={{urlProxy.content}}
       target={{or context.linkTarget "_top"}}
     >
-      {{#if value.name}}{{value.name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+      {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
     </a>
   {{else}}
     <span class="file-name details-title">
-      {{#if value.name}}{{value.name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+      {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
     </span>
   {{/if}}
 
