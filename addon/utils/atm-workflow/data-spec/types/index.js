@@ -6,7 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { atmDataSpecTypeDefinition as integerTypeDefinition } from './integer';
+import { atmDataSpecTypeDefinition as numberTypeDefinition } from './number';
+import { atmDataSpecTypeDefinition as booleanTypeDefinition } from './boolean';
 import { atmDataSpecTypeDefinition as stringTypeDefinition } from './string';
 import { atmDataSpecTypeDefinition as objectTypeDefinition } from './object';
 import { atmDataSpecTypeDefinition as fileTypeDefinition } from './file';
@@ -19,7 +20,8 @@ import { atmDataSpecTypeDefinition as timeSeriesMeasurementTypeDefinition } from
  * @typedef {
  *   AtmDatasetDataSpec |
  *   AtmFileDataSpec |
- *   AtmIntegerDataSpec |
+ *   AtmNumberDataSpec |
+ *   AtmBooleanDataSpec |
  *   AtmObjectDataSpec |
  *   AtmRangeDataSpec |
  *   AtmStringDataSpec |
@@ -39,14 +41,15 @@ import { atmDataSpecTypeDefinition as timeSeriesMeasurementTypeDefinition } from
  */
 
 /**
- * @typedef {'integer'|'string'|'object'|'file'|'dataset'|'range'|'array'|'timeSeriesMeasurement'} AtmDataSpecType
+ * @typedef {'number'|'boolean'|'string'|'object'|'file'|'dataset'|'range'|'array'|'timeSeriesMeasurement'} AtmDataSpecType
  */
 
 /**
  * @type {Object<string, AtmDataSpecType>}
  */
 export const AtmDataSpecType = Object.freeze({
-  Integer: 'integer',
+  Number: 'number',
+  Boolean: 'boolean',
   String: 'string',
   Object: 'object',
   File: 'file',
@@ -60,7 +63,8 @@ export const AtmDataSpecType = Object.freeze({
  * @type {Array<AtmDataSpecType>}
  */
 export const atmDataSpecTypesArray = Object.freeze([
-  AtmDataSpecType.Integer,
+  AtmDataSpecType.Number,
+  AtmDataSpecType.Boolean,
   AtmDataSpecType.String,
   AtmDataSpecType.Object,
   AtmDataSpecType.File,
@@ -118,7 +122,8 @@ export const atmDataSpecTypesArray = Object.freeze([
  * @type {Object<AtmDataSpecType, AtmDataSpecTypeDefinition>}
  */
 export const atmDataSpecTypeDefinitions = Object.freeze({
-  integer: integerTypeDefinition,
+  number: numberTypeDefinition,
+  boolean: booleanTypeDefinition,
   string: stringTypeDefinition,
   object: objectTypeDefinition,
   file: fileTypeDefinition,

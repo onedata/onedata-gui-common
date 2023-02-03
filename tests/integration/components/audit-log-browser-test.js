@@ -1,9 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import { render, find, findAll, click } from '@ember/test-helpers';
-import { EntrySeverity, translateEntrySeverity } from 'onedata-gui-common/utils/audit-log';
+import {
+  EntrySeverity,
+  translateEntrySeverity,
+} from 'onedata-gui-common/utils/audit-log';
 import { lookupService } from '../../helpers/stub-service';
 import OneTooltipHelper from '../../helpers/one-tooltip';
 import { replaceEmberAceWithTextarea } from '../../helpers/ember-ace';
@@ -99,6 +102,17 @@ describe('Integration | Component | audit log browser', function () {
     await render(hbs`{{audit-log-browser noLogEntriesText="some text"}}`);
 
     expect(find('.table-is-empty-row')).to.have.trimmed.text('some text');
+  });
+
+  it('shows tooltip about no entries', async function () {
+    await render(hbs`{{audit-log-browser}}`);
+
+    const tooltipHelper = new OneTooltipHelper(
+      '.table-is-empty-row .no-entries-tip .one-icon'
+    );
+    expect(await tooltipHelper.getText()).to.equal(
+      'Empty log means that either no events were ever recorded or the recorded events have already expired, since all audit logs are subject to expiration.'
+    );
   });
 
   it('shows fetched log entries from newest to oldest', async function () {
@@ -243,7 +257,7 @@ describe('Integration | Component | audit log browser', function () {
     }}`);
 
     expect(find('.table-title')).to.have.trimmed.text('test');
-    const tooltipHelper = await new OneTooltipHelper(
+    const tooltipHelper = new OneTooltipHelper(
       '.table-title .title-tip .one-icon'
     );
     await tooltipHelper.open();

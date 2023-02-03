@@ -50,7 +50,7 @@
  */
 
 import { all as allFulfilled } from 'rsvp';
-import point from './utils/point';
+import point, { recalculatePointMeasurementDuration } from './utils/point';
 import mergePointsArrays from './utils/merge-points-arrays';
 
 /**
@@ -154,7 +154,16 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
   let normalizedPoints = points
     .sortBy('timestamp')
     .reverse()
-    .map(({ timestamp, value }) => point(timestamp, value));
+    .map(({
+      timestamp,
+      value,
+      firstMeasurementTimestamp,
+      lastMeasurementTimestamp,
+    }) => point(timestamp, value, {
+      pointDuration: context.timeResolution,
+      firstMeasurementTimestamp: firstMeasurementTimestamp ?? null,
+      lastMeasurementTimestamp: lastMeasurementTimestamp ?? null,
+    }));
 
   // Remove points newer than context.lastPointTimestamp
   if (context.lastPointTimestamp) {
@@ -207,7 +216,10 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
       nextFakePointTimestamp > normalizedPoints[0].timestamp &&
       pointsToUnshift.length < context.pointsCount
     ) {
-      pointsToUnshift.push(point(nextFakePointTimestamp, null, { fake: true }));
+      pointsToUnshift.push(point(nextFakePointTimestamp, null, {
+        pointDuration: context.timeResolution,
+        fake: true,
+      }));
       nextFakePointTimestamp -= context.timeResolution;
     }
     normalizedPoints = [...pointsToUnshift, ...normalizedPoints];
@@ -226,7 +238,10 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
       normalizedPoints.push(normalizedPointsWithGaps[originArrayIdx]);
       originArrayIdx++;
     } else {
-      normalizedPoints.push(point(nextPointTimestamp, null, { fake: true }));
+      normalizedPoints.push(point(nextPointTimestamp, null, {
+        pointDuration: context.timeResolution,
+        fake: true,
+      }));
     }
     nextPointTimestamp -= context.timeResolution;
   }
@@ -263,6 +278,22 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
       normalizedPoints[i].newest = true;
     }
   }
+  // Change lastMeasurementTimestamp of the newest point to newestEdgeTimestamp
+  // (but only if needed).
+  if (
+    // There is newestEdgeTimestamp defined ...
+    context.newestEdgeTimestamp &&
+    // ... and in our case we have the latest point ...
+    isLastPointNewest && (
+      // ... but do it only if newestEdgeTimestamp is not a trivial one
+      context.newestEdgeTimestamp !==
+      normalizedPoints[0].timestamp + context.timeResolution - 1 ||
+      // ... or lastMeasurementTimestamp is already defined.
+      normalizedPoints[0].lastMeasurementTimestamp !== null
+    )
+  ) {
+    normalizedPoints[0].lastMeasurementTimestamp = context.newestEdgeTimestamp;
+  }
 
   // Sort by timestamp ascending
   normalizedPoints = normalizedPoints.reverse();
@@ -276,6 +307,8 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
       normalizedPoints[i].oldest = true;
     }
   }
+
+  normalizedPoints.forEach((point) => recalculatePointMeasurementDuration(point));
 
   return normalizedPoints;
 }
@@ -299,7 +332,10 @@ async function generateFakePoints(
     replaceEmptyParameters,
     [point(normalizedLastPointTimestamp, null)]
   );
-  points.forEach((point) => Object.assign(point, { fake: true }, pointParams));
+  points.forEach((point) => {
+    Object.assign(point, { fake: true }, pointParams);
+    recalculatePointMeasurementDuration(point);
+  });
   return points;
 }
 

@@ -313,7 +313,7 @@ export default Component.extend({
       type: 'list',
       config: {
         itemDataSpec: {
-          type: 'integer',
+          type: 'number',
           valueConstraints: {},
         },
       },

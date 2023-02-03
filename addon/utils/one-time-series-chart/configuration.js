@@ -753,6 +753,8 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @typedef {Object} OTSCRawSeriesPoint
  * @property {number} timestamp
  * @property {number} value
+ * @property {number|null} firstMeasurementTimestamp
+ * @property {number|null} lastMeasurementTimestamp
  */
 
 /** 3, 4, 6 or 8 hex characters prefixed by `#` */
@@ -859,7 +861,7 @@ export default class Configuration {
      * @private
      * @type {Utils.Looper}
      */
-    this.updater = new Looper({
+    this.updater = Looper.create({
       immediate: false,
     });
     this.updater.on('tick', () => {
@@ -996,33 +998,46 @@ export default class Configuration {
    * @returns {void}
    */
   async acquireNewestPointTimestamp(series, usedTimeResolution) {
-    let foundNewestTimestampInSeries = 0;
+    let foundNewestTimestampInSeries = null;
+    let foundNewestEdgeTimestampInSeries = null;
     if (series && series.length) {
       series.forEach((singleSeries) => {
         if (singleSeries.data && singleSeries.data.length) {
           const lastPoint = singleSeries.data[singleSeries.data.length - 1];
-          if (lastPoint.timestamp > foundNewestTimestampInSeries) {
+          if (
+            foundNewestTimestampInSeries === null ||
+            lastPoint.timestamp > foundNewestTimestampInSeries
+          ) {
             foundNewestTimestampInSeries = lastPoint.timestamp;
+          }
+          if (
+            foundNewestEdgeTimestampInSeries === null || (
+              Number.isFinite(lastPoint.lastMeasurementTimestamp) &&
+              lastPoint.lastMeasurementTimestamp > foundNewestEdgeTimestampInSeries
+            )
+          ) {
+            foundNewestEdgeTimestampInSeries = lastPoint.lastMeasurementTimestamp;
           }
         }
       });
     }
-    if (foundNewestTimestampInSeries === 0) {
-      this.newestPointTimestamp = this.getNowTimestamp();
+    if (foundNewestTimestampInSeries === null) {
+      this.newestPointTimestamp = this.newestEdgeTimestamp = this.getNowTimestamp();
       return;
     }
-
-    const lastSecondOfNewestPoint = foundNewestTimestampInSeries + usedTimeResolution - 1;
+    if (foundNewestEdgeTimestampInSeries === null) {
+      foundNewestEdgeTimestampInSeries = foundNewestTimestampInSeries + usedTimeResolution - 1;
+    }
     let foundGloballyNewestTimestamp = foundNewestTimestampInSeries;
     this.timeResolutionSpecs.forEach(({ timeResolution }) => {
       const thisResolutionNewestTimestamp =
-        lastSecondOfNewestPoint - (lastSecondOfNewestPoint % timeResolution);
+        foundNewestEdgeTimestampInSeries - (foundNewestEdgeTimestampInSeries % timeResolution);
       if (thisResolutionNewestTimestamp > foundGloballyNewestTimestamp) {
         foundGloballyNewestTimestamp = thisResolutionNewestTimestamp;
       }
     });
     this.newestPointTimestamp = foundGloballyNewestTimestamp;
-    this.newestEdgeTimestamp = lastSecondOfNewestPoint;
+    this.newestEdgeTimestamp = foundNewestEdgeTimestampInSeries;
   }
 
   /**

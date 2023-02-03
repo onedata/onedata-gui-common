@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import CapacityField from 'onedata-gui-common/utils/form-component/capacity-field';
 import sinon from 'sinon';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';

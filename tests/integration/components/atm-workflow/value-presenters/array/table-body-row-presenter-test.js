@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import { render, findAll } from '@ember/test-helpers';
 
 describe('Integration | Component | atm workflow/value presenters/array/table body row presenter', function () {

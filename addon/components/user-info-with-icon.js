@@ -1,5 +1,5 @@
 /**
- * Renders animated icon, which show popover with user info after click, 
+ * Renders animated icon, which show popover with user info after click,
  * and username with fullname
  *
  * @author Agnieszka Warchoł
@@ -17,9 +17,15 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Models.User}
+   * @type {UserRecord}
    */
   user: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Object}
+   */
+  errorReason: undefined,
 
   /**
    * @type {Boolean}

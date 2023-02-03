@@ -68,6 +68,17 @@ import stateToEchart from './state-converters/to-echart';
 /**
  * @typedef {OTSCRawSeriesPoint} OTSCSeriesPoint
  * @property {number|null} value null means, that value in this point is unknown
+ * @property {TimeSeriesMetricResolution} pointDuration time (in seconds) which
+ *   this point takes on the X (time) axis of the chart. It's the same for all
+ *   points in the chart and does not depend on any real processing time. For
+ *   real duration, use `measurementDuration`.
+ * @property {number} measurementDuration real time (in seconds) in which
+ *   data was aggregated in this particular point. If point is in the middle
+ *   of series points, then `measurementDuration` equals `pointDuration`.
+ *   If it is at it's edge, values of `firstMeasurementTimestamp` and
+ *   `lastMeasurementTimestamp` are taken into account when calculating
+ *   `measurementDuration`. See more about how this values changes for each point
+ *   in `recalculatePointMeasurementDuration` util function.
  * @property {boolean} fake when set to true, it means that this point has been
  *   generated on-the-fly because data source did not mention it. It may happen
  *   when there are time gaps in incoming data or there is a need to provide

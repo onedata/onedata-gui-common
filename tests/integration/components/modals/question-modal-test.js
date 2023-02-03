@@ -3,7 +3,7 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click } from '@ember/test-helpers';
 import { lookupService } from '../../../helpers/stub-service';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import {
   getModal,
   getModalHeader,
@@ -12,6 +12,7 @@ import {
 } from '../../../helpers/modal';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
+import { setProperties } from '@ember/object';
 
 describe('Integration | Component | modals/question modal', function () {
   setupRenderingTest();
@@ -153,7 +154,7 @@ describe('Integration | Component | modals/question modal', function () {
   );
 
   it(
-    'shows "understand notice" when checkboxMessage is specified',
+    'shows "understand notice" and unchecked checkbox by default when checkboxMessage is specified',
     function () {
       this.set('modalOptions.checkboxMessage', 'understand?');
 
@@ -181,6 +182,20 @@ describe('Integration | Component | modals/question modal', function () {
           expect(getModalBody().querySelector('.one-checkbox'))
           .to.have.class('checked')
         );
+    }
+  );
+
+  it('renders checked checkbox on open when isCheckboxInitiallyChecked option is true',
+    async function () {
+      setProperties(this.modalOptions, {
+        checkboxMessage: 'understand?',
+        isCheckboxInitiallyChecked: true,
+      });
+
+      await showModal(this);
+
+      expect(getModalBody().querySelector('.one-checkbox'))
+        .to.have.class('checked');
     }
   );
 

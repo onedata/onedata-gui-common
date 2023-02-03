@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
@@ -167,7 +167,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       changeSpy.resetHistory();
 
       await fillIn('.name-field .form-control', 'someName');
-      await selectChoose('.data-spec-editor', 'Integer');
+      await selectChoose('.data-spec-editor', 'Number');
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
@@ -176,7 +176,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           type: 'list',
           config: {
             itemDataSpec: {
-              type: 'integer',
+              type: 'number',
               valueConstraints: {},
             },
           },

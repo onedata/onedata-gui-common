@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, context, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import OneDropdownHelper from '../../helpers/one-dropdown';
 import sinon from 'sinon';
 import { clickTrigger } from 'ember-power-select/test-support/helpers';

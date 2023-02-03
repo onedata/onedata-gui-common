@@ -27,6 +27,7 @@ export default function reconcilePointsTiming(pointsArrays) {
   }
 
   let arrayWithNewestPoints = pointsArrays[0];
+  let pointDuration = arrayWithNewestPoints[0]?.pointDuration;
   for (let i = 1; i < pointsArrays.length; i++) {
     if (pointsArrays[i].length) {
       if (
@@ -34,6 +35,9 @@ export default function reconcilePointsTiming(pointsArrays) {
         arrayWithNewestPoints[0].timestamp < pointsArrays[i][0].timestamp
       ) {
         arrayWithNewestPoints = pointsArrays[i];
+      }
+      if (!pointDuration) {
+        pointDuration = pointsArrays[i][0].pointDuration;
       }
     }
   }
@@ -54,12 +58,14 @@ export default function reconcilePointsTiming(pointsArrays) {
 
     const lastMeaningfulPoint = pointsArray[pointsArray.length - 1] ||
       removedPoints[removedPoints.length - 1] || {
+        pointDuration,
         oldest: true,
         newest: true,
         fake: true,
       };
     for (let i = pointsArray.length; i < arrayWithNewestPoints.length; i++) {
       pointsArray[i] = point(arrayWithNewestPoints[i].timestamp, null, {
+        pointDuration,
         oldest: lastMeaningfulPoint.oldest && lastMeaningfulPoint.fake,
         newest: lastMeaningfulPoint.newest,
         fake: true,

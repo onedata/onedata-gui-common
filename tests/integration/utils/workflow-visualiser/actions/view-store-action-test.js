@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, click } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-store-action';
 import { get } from '@ember/object';
 import {
@@ -23,7 +23,7 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
       description: 'storeDesc',
       type: 'range',
       dataSpec: {
-        type: 'integer',
+        type: 'number',
         valueConstraints: {},
       },
       defaultInitialContent: {

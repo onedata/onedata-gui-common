@@ -1,12 +1,10 @@
 import storeForm from './store-modal/store-form';
-import timeSeriesPresenter from './store-modal/time-series-presenter';
 import auditLogPresenter from './store-modal/audit-log-presenter';
 import listPresenter from './store-modal/list-presenter';
 import singleValuePresenter from './store-modal/single-value-presenter';
 
 export default {
   storeForm,
-  timeSeriesPresenter,
   auditLogPresenter,
   listPresenter,
   singleValuePresenter,

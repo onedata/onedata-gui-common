@@ -168,6 +168,14 @@ export default Component.extend(I18n, {
   noEntriesText: undefined,
 
   /**
+   * A custom tooltip visible when there are no entries to show, placed next to
+   * the "no entries" text. When not provided, no tooltip will be shown.
+   * @virtual optional
+   * @type {SafeString}
+   */
+  noEntriesTip: undefined,
+
+  /**
    * A text shown above the table and working as a title.
    * @virtual optional
    * @type {SafeString}
