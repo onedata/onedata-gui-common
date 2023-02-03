@@ -109,7 +109,7 @@ export default class Point {
    * `measurementDuration` equals `pointDuration`. If it is at it's edge, values
    * of `firstMeasurementTimestamp` and `lastMeasurementTimestamp` are taken
    * into account when calculating `measurementDuration`. See more about how
-   * this values changes for each point in `measurementDuration` getter
+   * this value changes for each point in `measurementDuration` getter
    * function.
    * @public
    * @type {number}
@@ -137,7 +137,7 @@ export default class Point {
       // Real points at both oldest and newest edge
       measurementDuration = lastMeasurementTimestamp - firstMeasurementTimestamp + 1;
     } else {
-      // This should newer happen. Left for safety.
+      // This should never happen. Left for safety.
       measurementDuration = 1;
     }
 
