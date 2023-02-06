@@ -26,11 +26,6 @@ export default class FileValueEditorState extends ValueEditorState {
   constructor() {
     super(...arguments);
     this.editorComponentName = `${editorComponentsPrefix}/file/editor`;
-    if (!this.value) {
-      this.value = {
-        file_id: '',
-      };
-    }
 
     /**
      * @private
@@ -164,5 +159,14 @@ export default class FileValueEditorState extends ValueEditorState {
       default:
         return false;
     }
+  }
+
+  /**
+   * @override
+   */
+  getDefaultValue() {
+    return {
+      file_id: '',
+    };
   }
 }

@@ -32,9 +32,6 @@ export default class ArrayValueEditorState extends ValueEditorState {
   constructor() {
     super(...arguments);
     this.editorComponentName = `${editorComponentsPrefix}/array/editor`;
-    if (!this.value) {
-      this.value = [];
-    }
 
     // Using assignmenets with `??` below as already done operations in this
     // constructor might have changed `this.value` which automatically changes
@@ -153,7 +150,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
     }
 
     if (newMode === 'raw') {
-      this.resetStringifiedValue();
+      this.setStringifiedValue(this.value);
     } else {
       this.recreateItemEditorsForValue(
         this.isValid ? JSON.parse(this.stringifiedValue) : []
@@ -262,7 +259,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
    */
   setValue(newValue) {
     if (this.mode === 'raw') {
-      this.resetStringifiedValue();
+      this.setStringifiedValue(newValue);
     } else {
       this.recreateItemEditorsForValue(newValue);
     }
@@ -309,8 +306,8 @@ export default class ArrayValueEditorState extends ValueEditorState {
    * @private
    * @returns {void}
    */
-  resetStringifiedValue() {
-    this.internalStringifiedValue = JSON.stringify(this.value, null, 2);
+  setStringifiedValue(value) {
+    this.internalStringifiedValue = JSON.stringify(value, null, 2);
   }
 
   /**
@@ -330,5 +327,12 @@ export default class ArrayValueEditorState extends ValueEditorState {
         collapsibleItemsCount
       );
     }
+  }
+
+  /**
+   * @override
+   */
+  getDefaultValue() {
+    return [];
   }
 }

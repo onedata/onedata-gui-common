@@ -79,6 +79,8 @@ export default class ValueEditorState {
 
     if (initialValue !== undefined) {
       this.value = initialValue;
+    } else {
+      this.value = this.defaultValue;
     }
   }
 
@@ -105,6 +107,14 @@ export default class ValueEditorState {
   set value(newValue) {
     this.setValue(newValue);
     this.notifyChange();
+  }
+
+  /**
+   * @public
+   * @type {unknown}
+   */
+  get defaultValue() {
+    return this.getDefaultValue();
   }
 
   /**
@@ -183,5 +193,13 @@ export default class ValueEditorState {
    */
   setValue(newValue) {
     this.internalValue = newValue;
+  }
+
+  /**
+   * @private
+   * @returns {unknown}
+   */
+  getDefaultValue() {
+    return null;
   }
 }

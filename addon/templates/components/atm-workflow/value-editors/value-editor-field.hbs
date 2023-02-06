@@ -1,0 +1,16 @@
+{{#if isValueCreatorButtonVisible}}
+  {{#one-button
+    type="default"
+    size="sm"
+    class="create-value-btn"
+    disabled=(not isEffectivelyEnabled)
+    onClick=(action "createValue")
+  }}
+    {{valueCreatorButtonLabel}}
+  {{/one-button}}
+{{else}}
+  {{atm-workflow/value-editors/full-value-editor
+    stateManager=editorStateManager
+    onRemove=(if isClearable (action "removeValue") null)
+  }}
+{{/if}}

@@ -132,12 +132,20 @@ export default class ValueEditorStateManager {
 
   /**
    * @public
+   * @returns {unknown}
+   */
+  get defaultValue() {
+    return this.rootValueEditorState?.defaultValue ?? null;
+  }
+
+  /**
+   * @public
    * @returns {void}
    */
   destroy() {
     this.changeListeners = [];
-    [...this.editorStatesMap.values()].forEach((editorState) =>
-      this.destroyValueEditorState(editorState)
+    [...this.editorStatesMap.keys()].forEach((editorStateId) =>
+      this.destroyValueEditorStateById(editorStateId)
     );
   }
 
@@ -177,7 +185,7 @@ export default class ValueEditorStateManager {
    * @returns {Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState}
    */
   createValueEditorState(atmDataSpec, initialValue = undefined) {
-    const ValueEditorStateClass = valueEditorStateClasses[atmDataSpec.type];
+    const ValueEditorStateClass = valueEditorStateClasses[atmDataSpec?.type];
     if (!ValueEditorStateClass) {
       return null;
     }
