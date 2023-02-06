@@ -383,7 +383,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await renderComponent();
 
         await selectChoose('.type-field', 'Range');
-        await fillIn('.rangeStep-field .form-control', '     0 ');
+        await fillIn('.rangeStep-field .form-control', '0');
 
         expect(find('.rangeStep-field')).to.have.class('has-error');
         done();

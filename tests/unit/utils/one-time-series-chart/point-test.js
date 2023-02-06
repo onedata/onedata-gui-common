@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
+import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
 
 const pointBase = Object.freeze({
   value: null,
@@ -13,29 +13,29 @@ const pointBase = Object.freeze({
   fake: false,
 });
 
-describe('Unit | Utility | one time series chart/series functions/utils/point', function () {
+describe('Unit | Utility | one time series chart/point', function () {
   it('creates a point', function () {
-    expect(point(1, 2)).to.deep.equal(Object.assign({}, pointBase, {
+    expect(new Point(1, 2)).to.include(Object.assign({}, pointBase, {
       timestamp: 1,
       value: 2,
     }));
   });
 
   it('creates a point without value', function () {
-    expect(point(1)).to.deep.equal(Object.assign({}, pointBase, {
+    expect(new Point(1)).to.include(Object.assign({}, pointBase, {
       timestamp: 1,
     }));
   });
 
   it('creates a fake point', function () {
-    expect(point(1, null, { fake: true })).to.deep.equal(Object.assign({}, pointBase, {
+    expect(new Point(1, null, { fake: true })).to.include(Object.assign({}, pointBase, {
       timestamp: 1,
       fake: true,
     }));
   });
 
   it('creates a newest point', function () {
-    expect(point(1, 2, { newest: true })).to.deep.equal(Object.assign({}, pointBase, {
+    expect(new Point(1, 2, { newest: true })).to.include(Object.assign({}, pointBase, {
       timestamp: 1,
       value: 2,
       newest: true,
@@ -43,7 +43,7 @@ describe('Unit | Utility | one time series chart/series functions/utils/point', 
   });
 
   it('creates an oldest point', function () {
-    expect(point(1, 2, { oldest: true })).to.deep.equal(Object.assign({}, pointBase, {
+    expect(new Point(1, 2, { oldest: true })).to.include(Object.assign({}, pointBase, {
       timestamp: 1,
       value: 2,
       oldest: true,
@@ -51,8 +51,8 @@ describe('Unit | Utility | one time series chart/series functions/utils/point', 
   });
 
   it('correctly calculates measurementDuration for point in the middle', function () {
-    expect(point(1, 2, { pointDuration: 60 }))
-      .to.deep.equal(Object.assign({}, pointBase, {
+    expect(new Point(1, 2, { pointDuration: 60 }))
+      .to.include(Object.assign({}, pointBase, {
         timestamp: 1,
         value: 2,
         pointDuration: 60,
@@ -61,8 +61,8 @@ describe('Unit | Utility | one time series chart/series functions/utils/point', 
   });
 
   it('correctly calculates measurementDuration for fake point in the middle', function () {
-    expect(point(1, 2, { pointDuration: 60, fake: true }))
-      .to.deep.equal(Object.assign({}, pointBase, {
+    expect(new Point(1, 2, { pointDuration: 60, fake: true }))
+      .to.include(Object.assign({}, pointBase, {
         timestamp: 1,
         value: 2,
         pointDuration: 60,
@@ -72,11 +72,11 @@ describe('Unit | Utility | one time series chart/series functions/utils/point', 
   });
 
   it('correctly calculates measurementDuration for point in the middle with measurement timestamps', function () {
-    expect(point(1, 2, {
+    expect(new Point(1, 2, {
       pointDuration: 60,
       firstMeasurementTimestamp: 5,
       lastMeasurementTimestamp: 15,
-    })).to.deep.equal(Object.assign({}, pointBase, {
+    })).to.include(Object.assign({}, pointBase, {
       timestamp: 1,
       value: 2,
       pointDuration: 60,
@@ -87,8 +87,8 @@ describe('Unit | Utility | one time series chart/series functions/utils/point', 
   });
 
   it('correctly calculates measurementDuration for newest point', function () {
-    expect(point(1, 2, { pointDuration: 60, newest: true }))
-      .to.deep.equal(Object.assign({}, pointBase, {
+    expect(new Point(1, 2, { pointDuration: 60, newest: true }))
+      .to.include(Object.assign({}, pointBase, {
         timestamp: 1,
         value: 2,
         pointDuration: 60,
@@ -98,8 +98,8 @@ describe('Unit | Utility | one time series chart/series functions/utils/point', 
   });
 
   it('correctly calculates measurementDuration for fake newest point', function () {
-    expect(point(1, 2, { pointDuration: 60, fake: true, newest: true }))
-      .to.deep.equal(Object.assign({}, pointBase, {
+    expect(new Point(1, 2, { pointDuration: 60, fake: true, newest: true }))
+      .to.include(Object.assign({}, pointBase, {
         timestamp: 1,
         value: 2,
         pointDuration: 60,
@@ -110,12 +110,12 @@ describe('Unit | Utility | one time series chart/series functions/utils/point', 
   });
 
   it('correctly calculates measurementDuration for newest point with measurement timestamps', function () {
-    expect(point(3, 2, {
+    expect(new Point(3, 2, {
       pointDuration: 60,
       firstMeasurementTimestamp: 5,
       lastMeasurementTimestamp: 20,
       newest: true,
-    })).to.deep.equal(Object.assign({}, pointBase, {
+    })).to.include(Object.assign({}, pointBase, {
       timestamp: 3,
       value: 2,
       pointDuration: 60,
@@ -127,8 +127,8 @@ describe('Unit | Utility | one time series chart/series functions/utils/point', 
   });
 
   it('correctly calculates measurementDuration for oldest point', function () {
-    expect(point(1, 2, { pointDuration: 60, oldest: true }))
-      .to.deep.equal(Object.assign({}, pointBase, {
+    expect(new Point(1, 2, { pointDuration: 60, oldest: true }))
+      .to.include(Object.assign({}, pointBase, {
         timestamp: 1,
         value: 2,
         pointDuration: 60,
@@ -138,8 +138,8 @@ describe('Unit | Utility | one time series chart/series functions/utils/point', 
   });
 
   it('correctly calculates measurementDuration for fake oldest point', function () {
-    expect(point(1, 2, { pointDuration: 60, fake: true, oldest: true }))
-      .to.deep.equal(Object.assign({}, pointBase, {
+    expect(new Point(1, 2, { pointDuration: 60, fake: true, oldest: true }))
+      .to.include(Object.assign({}, pointBase, {
         timestamp: 1,
         value: 2,
         pointDuration: 60,
@@ -150,12 +150,12 @@ describe('Unit | Utility | one time series chart/series functions/utils/point', 
   });
 
   it('correctly calculates measurementDuration for oldest point with measurement timestamps', function () {
-    expect(point(3, 2, {
+    expect(new Point(3, 2, {
       pointDuration: 60,
       firstMeasurementTimestamp: 5,
       lastMeasurementTimestamp: 20,
       oldest: true,
-    })).to.deep.equal(Object.assign({}, pointBase, {
+    })).to.include(Object.assign({}, pointBase, {
       timestamp: 3,
       value: 2,
       pointDuration: 60,
@@ -164,5 +164,21 @@ describe('Unit | Utility | one time series chart/series functions/utils/point', 
       measurementDuration: 58,
       oldest: true,
     }));
+  });
+
+  it('can be cloned', function () {
+    const point = new Point(1, 2, {
+      pointDuration: 3,
+      firstMeasurementTimestamp: 4,
+      lastMeasurementTimestamp: 5,
+      oldest: true,
+      newest: true,
+      fake: true,
+    });
+    const pointClone = point.clone();
+
+    expect(pointClone).to.be.instanceOf(Point);
+    expect(pointClone).to.not.equal(point);
+    expect(pointClone).to.deep.equal(point);
   });
 });

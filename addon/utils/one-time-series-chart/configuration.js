@@ -635,7 +635,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @typedef {Object} OTSCSeriesFunctionPointsResult Represents data possible to
  *   render as points.
  * @property {'points'} type
- * @property {Array<OTSCSeriesPoint>} data
+ * @property {Array<Utils.OneTimeSeriesChart.Point>} data
  */
 
 /**
@@ -1293,7 +1293,7 @@ export default class Configuration {
    *   a local setup (environment) of function execution - it may change between
    *   different function evaluations depending on needs.
    * @param {OTSCRawFunction|unknown} seriesFunctionOrValue
-   * @returns {Promise<OTSCSeriesPoint[]>}
+   * @returns {Promise<Utils.OneTimeSeriesChart.Point[]>}
    */
   async evaluateSeriesFunction(context, seriesFunctionOrValue) {
     if (!this.isRawFunction(seriesFunctionOrValue)) {

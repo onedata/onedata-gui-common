@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import replaceEmpty from 'onedata-gui-common/utils/one-time-series-chart/series-functions/replace-empty';
-import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
+import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
 import {
   createContext,
   expectFunctionsEvaluation,
@@ -33,85 +33,85 @@ const normalizedTransformCasesToCheck =
   }));
 
 const casesToCheck = [...normalizedTransformCasesToCheck, {
-  data: { type: 'points', data: [point(1, 2), point(3, 4)] },
+  data: { type: 'points', data: [new Point(1, 2), new Point(3, 4)] },
   strategy: { type: 'basic', data: 'useFallback' },
-  fallbackValue: { type: 'points', data: [point(1, 5), point(3, 6)] },
-  output: { type: 'points', data: [point(1, 2), point(3, 4)] },
+  fallbackValue: { type: 'points', data: [new Point(1, 5), new Point(3, 6)] },
+  output: { type: 'points', data: [new Point(1, 2), new Point(3, 4)] },
 }, {
-  data: { type: 'points', data: [point(1, 2), point(3, 4)] },
+  data: { type: 'points', data: [new Point(1, 2), new Point(3, 4)] },
   strategy: { type: 'basic', data: 'usePrevious' },
-  fallbackValue: { type: 'points', data: [point(1, 5), point(3, 6)] },
-  output: { type: 'points', data: [point(1, 2), point(3, 4)] },
+  fallbackValue: { type: 'points', data: [new Point(1, 5), new Point(3, 6)] },
+  output: { type: 'points', data: [new Point(1, 2), new Point(3, 4)] },
 }, {
-  data: { type: 'points', data: [point(1, null), point(3, 4)] },
+  data: { type: 'points', data: [new Point(1, null), new Point(3, 4)] },
   strategy: { type: 'basic', data: 'useFallback' },
-  fallbackValue: { type: 'points', data: [point(1, 5), point(3, 6)] },
-  output: { type: 'points', data: [point(1, 5), point(3, 4)] },
+  fallbackValue: { type: 'points', data: [new Point(1, 5), new Point(3, 6)] },
+  output: { type: 'points', data: [new Point(1, 5), new Point(3, 4)] },
 }, {
-  data: { type: 'points', data: [point(1, null), point(3, 4)] },
+  data: { type: 'points', data: [new Point(1, null), new Point(3, 4)] },
   strategy: { type: 'basic', data: 'usePrevious' },
-  fallbackValue: { type: 'points', data: [point(1, 5), point(3, 6)] },
-  output: { type: 'points', data: [point(1, 5), point(3, 4)] },
+  fallbackValue: { type: 'points', data: [new Point(1, 5), new Point(3, 6)] },
+  output: { type: 'points', data: [new Point(1, 5), new Point(3, 4)] },
 }, {
-  data: { type: 'points', data: [point(1, null), point(3, null)] },
+  data: { type: 'points', data: [new Point(1, null), new Point(3, null)] },
   strategy: { type: 'basic', data: 'useFallback' },
-  fallbackValue: { type: 'points', data: [point(3, 6), point(4, 7)] },
-  output: { type: 'points', data: [point(1, null), point(3, 6)] },
+  fallbackValue: { type: 'points', data: [new Point(3, 6), new Point(4, 7)] },
+  output: { type: 'points', data: [new Point(1, null), new Point(3, 6)] },
 }, {
-  data: { type: 'points', data: [point(1, null), point(3, null)] },
+  data: { type: 'points', data: [new Point(1, null), new Point(3, null)] },
   strategy: { type: 'basic', data: 'usePrevious' },
-  fallbackValue: { type: 'points', data: [point(3, 6), point(4, 7)] },
-  output: { type: 'points', data: [point(1, null), point(3, 6)] },
+  fallbackValue: { type: 'points', data: [new Point(3, 6), new Point(4, 7)] },
+  output: { type: 'points', data: [new Point(1, null), new Point(3, 6)] },
 }, {
-  data: { type: 'points', data: [point(1, 2), point(3, 4)] },
+  data: { type: 'points', data: [new Point(1, 2), new Point(3, 4)] },
   strategy: { type: 'basic', data: 'useFallback' },
   fallbackValue: { type: 'basic', data: [2] },
   output: { type: 'basic', data: null },
 }, {
-  data: { type: 'points', data: [point(1, 2), point(3, 4)] },
+  data: { type: 'points', data: [new Point(1, 2), new Point(3, 4)] },
   strategy: { type: 'basic', data: 'usePrevious' },
   fallbackValue: { type: 'basic', data: [2] },
   output: { type: 'basic', data: null },
 }, {
-  data: { type: 'points', data: [point(1, null), point(3, null)] },
+  data: { type: 'points', data: [new Point(1, null), new Point(3, null)] },
   strategy: { type: 'basic', data: 'useFallback' },
   fallbackValue: { type: 'basic', data: [2, 3] },
-  output: { type: 'points', data: [point(1, 2), point(3, 3)] },
+  output: { type: 'points', data: [new Point(1, 2), new Point(3, 3)] },
 }, {
-  data: { type: 'points', data: [point(1, null), point(3, null)] },
+  data: { type: 'points', data: [new Point(1, null), new Point(3, null)] },
   strategy: { type: 'basic', data: 'usePrevious' },
   fallbackValue: { type: 'basic', data: [2, 3] },
-  output: { type: 'points', data: [point(1, 2), point(3, 2)] },
+  output: { type: 'points', data: [new Point(1, 2), new Point(3, 2)] },
 }, {
   data: { type: 'basic', data: [null, null] },
   strategy: { type: 'basic', data: 'useFallback' },
-  fallbackValue: { type: 'points', data: [point(3, 6), point(4, 7)] },
+  fallbackValue: { type: 'points', data: [new Point(3, 6), new Point(4, 7)] },
   output: { type: 'basic', data: [6, 7] },
 }, {
   data: { type: 'basic', data: [null, null] },
   strategy: { type: 'basic', data: 'usePrevious' },
-  fallbackValue: { type: 'points', data: [point(3, 6), point(4, 7)] },
+  fallbackValue: { type: 'points', data: [new Point(3, 6), new Point(4, 7)] },
   output: { type: 'basic', data: [6, 6] },
 }, {
   data: { type: 'basic', data: [1, 2] },
   strategy: { type: 'basic', data: 'useFallback' },
-  fallbackValue: { type: 'points', data: [point(3, 6)] },
+  fallbackValue: { type: 'points', data: [new Point(3, 6)] },
   output: { type: 'basic', data: null },
 }, {
   data: { type: 'basic', data: [1, 2] },
   strategy: { type: 'basic', data: 'usePrevious' },
-  fallbackValue: { type: 'points', data: [point(3, 6)] },
+  fallbackValue: { type: 'points', data: [new Point(3, 6)] },
   output: { type: 'basic', data: null },
 }, {
-  data: { type: 'points', data: [point(1, 2), point(3, null)] },
+  data: { type: 'points', data: [new Point(1, 2), new Point(3, null)] },
   strategy: { type: 'basic', data: 'useFallback' },
   fallbackValue: { type: 'basic', data: 3 },
-  output: { type: 'points', data: [point(1, 2), point(3, 3)] },
+  output: { type: 'points', data: [new Point(1, 2), new Point(3, 3)] },
 }, {
-  data: { type: 'points', data: [point(1, 2), point(3, null)] },
+  data: { type: 'points', data: [new Point(1, 2), new Point(3, null)] },
   strategy: { type: 'basic', data: 'usePrevious' },
   fallbackValue: { type: 'basic', data: 3 },
-  output: { type: 'points', data: [point(1, 2), point(3, 2)] },
+  output: { type: 'points', data: [new Point(1, 2), new Point(3, 2)] },
 }];
 
 describe('Unit | Utility | one time series chart/series functions/replace empty', function () {

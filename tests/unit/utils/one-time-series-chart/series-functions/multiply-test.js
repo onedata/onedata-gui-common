@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import multiply from 'onedata-gui-common/utils/one-time-series-chart/series-functions/multiply';
-import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
+import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
 import {
   createContext,
   expectFunctionsEvaluation,
@@ -24,44 +24,44 @@ const normalizedTransformCasesToCheck =
 
 const casesToCheck = [...normalizedTransformCasesToCheck, {
   input: [
-    { type: 'points', data: [point(1, 2), point(2, 3)] },
-    { type: 'points', data: [point(1, 4), point(2, 5)] },
+    { type: 'points', data: [new Point(1, 2), new Point(2, 3)] },
+    { type: 'points', data: [new Point(1, 4), new Point(2, 5)] },
   ],
-  output: { type: 'points', data: [point(1, 8), point(2, 15)] },
+  output: { type: 'points', data: [new Point(1, 8), new Point(2, 15)] },
 }, {
   input: [
-    { type: 'points', data: [point(1, 2), point(2, null)] },
-    { type: 'points', data: [point(1, 4), point(2, 5)] },
+    { type: 'points', data: [new Point(1, 2), new Point(2, null)] },
+    { type: 'points', data: [new Point(1, 4), new Point(2, 5)] },
   ],
-  output: { type: 'points', data: [point(1, 8), point(2, null)] },
+  output: { type: 'points', data: [new Point(1, 8), new Point(2, null)] },
 }, {
   input: [
-    { type: 'points', data: [point(1, 2), point(2, 3)] },
+    { type: 'points', data: [new Point(1, 2), new Point(2, 3)] },
     { type: 'basic', data: 2 },
-    { type: 'points', data: [point(1, 4), point(2, 5)] },
+    { type: 'points', data: [new Point(1, 4), new Point(2, 5)] },
   ],
-  output: { type: 'points', data: [point(1, 16), point(2, 30)] },
+  output: { type: 'points', data: [new Point(1, 16), new Point(2, 30)] },
 }, {
   input: [
-    { type: 'points', data: [point(1, 2), point(2, 3)] },
+    { type: 'points', data: [new Point(1, 2), new Point(2, 3)] },
     { type: 'basic', data: [1, 2] },
-    { type: 'points', data: [point(1, 4), point(2, 5)] },
+    { type: 'points', data: [new Point(1, 4), new Point(2, 5)] },
   ],
-  output: { type: 'points', data: [point(1, 8), point(2, 30)] },
+  output: { type: 'points', data: [new Point(1, 8), new Point(2, 30)] },
 }, {
   input: [
-    { type: 'points', data: [point(1, 2), point(2, 3)] },
+    { type: 'points', data: [new Point(1, 2), new Point(2, 3)] },
     { type: 'basic', data: null },
-    { type: 'points', data: [point(1, 4), point(2, 5)] },
+    { type: 'points', data: [new Point(1, 4), new Point(2, 5)] },
   ],
-  output: { type: 'points', data: [point(1, null), point(2, null)] },
+  output: { type: 'points', data: [new Point(1, null), new Point(2, null)] },
 }, {
   input: [
-    { type: 'points', data: [point(1, 2), point(2, 3)] },
+    { type: 'points', data: [new Point(1, 2), new Point(2, 3)] },
     { type: 'basic', data: 5 },
-    { type: 'points', data: [point(2, 4), point(3, 5)] },
+    { type: 'points', data: [new Point(2, 4), new Point(3, 5)] },
   ],
-  output: { type: 'points', data: [point(2, 60), point(3, null)] },
+  output: { type: 'points', data: [new Point(2, 60), new Point(3, null)] },
 }];
 
 describe('Unit | Utility | one time series chart/series functions/multiply', function () {
