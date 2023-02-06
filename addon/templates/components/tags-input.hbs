@@ -1,11 +1,18 @@
 {{#each tags as |tag|}}
-  <li class="tag-item input-element {{if (contains tag currentTagsToHighlight) "animated fadeIn"}}">
+  <li class={{concat-classes
+    "tag-item input-element"
+    (if (contains tag currentTagsToHighlight) "animated fadeIn")
+    tag.className
+  }}>
     {{#if tag.icon}}
       {{one-icon icon=tag.icon class="tag-icon"}}
     {{/if}}
     {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
     {{#if allowModification}}
       {{one-icon icon="close" class="tag-remove" click=(action "removeTag" tag)}}
+    {{/if}}
+    {{#if tag.tip}}
+      {{one-tooltip title=tag.tip}}
     {{/if}}
   </li>
 {{/each}}

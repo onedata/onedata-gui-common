@@ -36,6 +36,8 @@ import $ from 'jquery';
  * @typedef {Object} Tag
  * @property {string} label
  * @property {string} [icon]
+ * @property {string} [className]
+ * @property {string} [tip]
  */
 
 export default Component.extend(I18n, {
