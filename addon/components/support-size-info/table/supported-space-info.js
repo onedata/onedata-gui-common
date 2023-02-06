@@ -51,7 +51,7 @@ export default Component.extend({
   /**
    * @type {string}
    */
-  triggerSelector: computed(function triggerSelector() {
+  infoPopoverTriggerSelector: computed(function infoPopoverTriggerSelector() {
     return `.item-icon-container[data-space-id="${this.spaceId}"]`;
   }),
 

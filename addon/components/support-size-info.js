@@ -56,8 +56,9 @@ export default Component.extend(I18n, {
   supporterNameHeader: '',
 
   /**
+   * Type of record in first column
    * @virtual optional
-   * @type {string}
+   * @type {'space'|'provider'}
    */
   type: '',
 

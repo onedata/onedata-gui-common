@@ -37,8 +37,9 @@ export default Component.extend({
   data: null,
 
   /**
+   * Type of record in first column
    * @virtual optional
-   * @type {string}
+   * @type {'space'|'provider'}
    */
   type: '',
 
@@ -68,7 +69,8 @@ export default Component.extend({
   /**
    * @type {computed.string}
    */
-  supporterInfoColumnComponent: conditional(eq('type', raw('space')),
+  supporterInfoColumnComponent: conditional(
+    eq('type', raw('space')),
     raw('support-size-info/table/supported-space-info'),
     raw('support-size-info/table/truncated-cell')
   ),
