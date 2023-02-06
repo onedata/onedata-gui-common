@@ -16,6 +16,7 @@
  * @property {string} label A label for the series.
  * @property {number} value A value to display.
  * @property {string} color A color for series.
+ * @property {string} spaceId A id of space, optional.
  */
 
 /* global Chartist */

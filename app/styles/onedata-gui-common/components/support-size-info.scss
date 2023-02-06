@@ -48,4 +48,23 @@
     padding: 0 2em;
     margin: 15px auto;
   }
+  .supporter-name-column {
+    .supported-space-info-container {
+      display: flex;
+    }
+    .popover-info-trigger {
+      margin-top: -0.04em;
+      margin-left: 0.15em;
+      width: 0.9em;
+      height: 0.9em;
+    }
+
+    .flippable-icons {
+      --width: 0.9em;
+      --height: 0.9em;
+    }
+    .truncated-string {
+      display: inline-block;
+    }
+  }
 }

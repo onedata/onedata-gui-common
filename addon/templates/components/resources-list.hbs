@@ -3,32 +3,64 @@
     {{#list.item class="resource-item" as |listItem|}}
       {{#listItem.header tagName=(if item.link "a" "div") href=item.link isCollapsible=false}}
         {{#if item.icon}}
-          <span class="item-icon-container">
-            {{one-icon class="item-icon" icon=item.icon}}
-            {{#one-tooltip
-              placement="top"
-              arrowPlacement="left"
-              triggerEvents="hover"
+          <span
+            class={{concat-classes
+              "item-icon-container"
+              (if isResourceWithAdditionalInfo "icon-container popover-info-trigger")
             }}
-            {{#if item.conflictingLabelSource}}
-              {{name-conflict
-                item=item.conflictingLabelSource
+            {{action
+              (mut item.itemInfoOpened)
+              (not item.itemInfoOpened)
+              bubbles=false
+            }}
+            onmouseover={{action "itemInfoHovered" item true}}
+            onmouseleave={{action "itemInfoHovered" item false}}
+          >
+            {{#if isResourceWithAdditionalInfo}}
+              {{flippable-icons
+                iconName=item.icon
+                iconColor=iconColor
+                isHovered=item.hasItemInfoHovered
+                suppressFlipping=item.itemInfoOpened
               }}
             {{else}}
-              {{item.label}}
+              {{one-icon
+                class="item-icon"
+                icon=item.icon
+              }}
+              {{#one-tooltip
+                placement="top"
+                arrowPlacement="left"
+                triggerEvents="hover"
+              }}
+                {{#if item.conflictingLabelSource}}
+                  {{name-conflict
+                    item=item.conflictingLabelSource
+                  }}
+                {{else}}
+                  {{item.label}}
+                {{/if}}
+              {{/one-tooltip}}
             {{/if}}
-            {{/one-tooltip}}
           </span>
         {{/if}}
-        {{#if item.conflictingLabelSource}}
-          {{name-conflict
-            item=item.conflictingLabelSource
-            tagName="span"
-            class="one-label"
-          }}
-        {{else}}
-          <span class="one-label">{{item.label}}</span>
-        {{/if}}
+        {{#truncated-string}}
+          {{#if item.conflictingLabelSource}}
+            {{name-conflict
+              item=item.conflictingLabelSource
+              tagName="span"
+              class="one-label"
+              mouseEnter=(action "itemInfoHovered" item true)
+              mouseLeave=(action "itemInfoHovered" item false)
+            }}
+          {{else}}
+            <span
+              class="one-label"
+              onmouseover={{action "itemInfoHovered" item true}}
+              onmouseleave={{action "itemInfoHovered" item false}}
+            >{{item.label}}</span>
+          {{/if}}
+        {{/truncated-string}}
         {{#if item.actions.length}}
           {{actions-toolbar
             isMinimized=true
@@ -40,6 +72,15 @@
         {{/if}}
       {{/listItem.header}}
     {{/list.item}}
+    {{#record-info-popover
+      isOpened=(and isResourceWithAdditionalInfo item.itemInfoOpened)
+      triggerSelector=(concat "#" elementId " .item-icon-container")
+    }}
+      {{space-info-content
+        space=item.space
+        closeSpaceInfoPopover=(action "closeSpaceInfoPopover" item)
+      }}
+    {{/record-info-popover}}
   {{/each}}
 {{/one-collapsible-list}}
 {{yield}}
