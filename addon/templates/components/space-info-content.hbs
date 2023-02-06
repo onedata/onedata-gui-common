@@ -22,23 +22,27 @@
       }}
     </td>
   </tr>
-  <tr class="row-with-text">
-    <td class="property-name">{{tt this "creator"}}</td>
-    <td class="property-value">
-      {{#truncated-string}}
-        <span class="user-fullname">{{or creator.fullName "—"}}</span>
-        {{#if creator.username}}
-          <span class="user-username">({{creator.username}})</span>
-        {{/if}}
-      {{/truncated-string}}
-    </td>
-  </tr>
-  <tr class="row-with-text">
-    <td class="property-name">{{tt this "creationTime"}}</td>
-    <td class="property-value">
-      {{or creationTime "—"}}
-    </td>
-  </tr>
+  {{#if creator.fullName}}
+    <tr class="row-with-text">
+      <td class="property-name">{{tt this "creator"}}</td>
+      <td class="property-value">
+        {{#truncated-string}}
+          <span class="user-fullname">{{creator.fullName}}</span>
+          {{#if creator.username}}
+            <span class="user-username">({{creator.username}})</span>
+          {{/if}}
+        {{/truncated-string}}
+      </td>
+    </tr>
+  {{/if}}
+  {{#if creationTime}}
+    <tr class="row-with-text">
+      <td class="property-name">{{tt this "creationTime"}}</td>
+      <td class="property-value">
+        {{creationTime}}
+      </td>
+    </tr>
+  {{/if}}
 </table>
 <div class="space-links-container">
   {{#if showLinkToRestApiModal}}
