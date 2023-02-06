@@ -505,6 +505,7 @@ describe('Integration | Component | workflow visualiser', function () {
       expect(find('.right-edge-scroll-step-trigger')).to.not.have.class('visible');
       done();
     });
+    // WARNING: Test below is fragile to zoom < 100%.
     itScrollsToLane(
       'scrolls via button to the end, when overflow is on the last lane',
       ['right', 4],
