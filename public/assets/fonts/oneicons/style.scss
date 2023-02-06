@@ -352,6 +352,11 @@
     content: $oneicon-copy;
   }
 }
+.oneicon-create-time {
+  &:before {
+    content: $oneicon-create-time;
+  }
+}
 .oneicon-cut {
   &:before {
     content: $oneicon-cut;
