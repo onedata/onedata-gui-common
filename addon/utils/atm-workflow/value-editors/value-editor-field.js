@@ -20,6 +20,7 @@ import { computed, observer } from '@ember/object';
 import _ from 'lodash';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { ValueEditorStateManager } from 'onedata-gui-common/utils/atm-workflow/value-editors';
+import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 
 /**
  * @typedef {Object} ValueEditorFieldValue
@@ -120,6 +121,24 @@ export const ValueEditorField = FormField.extend({
   ),
 
   /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  invalidAtmDataSpecMessage: computed(
+    'i18nPrefix',
+    'translationPath',
+    function invalidAtmDataSpecMessage() {
+      return this.getTranslation('invalidAtmDataSpecMessage', {}, {
+        defaultValue: this.t(
+          `${defaultI18nPrefix}.invalidAtmDataSpecMessage`, {}, {
+            defaultValue: '',
+            usePrefix: false,
+          },
+        ),
+      });
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<ValueEditorStateManagerChangeListener>}
    */
   editorStateManagerChangeListener: computed(
@@ -131,33 +150,14 @@ export const ValueEditorField = FormField.extend({
   editorStateManagerSetter: observer(
     'atmDataSpec',
     function editorStateManagerSetter() {
-      const hasToRecreateStateManager = Boolean(this.editorStateManager);
-      if (hasToRecreateStateManager) {
-        this.editorStateManager.removeChangeListener(
-          this.editorStateManagerChangeListener
-        );
-        this.editorStateManager.destroy();
-      }
+      const previousEditorStateManager = this.editorStateManager;
+      this.setupEditorStateManager();
 
-      const editorStateManager = new ValueEditorStateManager(
-        this.atmDataSpec,
-        this.editorContext,
-        this.getValueForEditorStateManager()
-      );
-      editorStateManager.isDisabled = this.shouldEditorStateManagerBeDisabled();
-      editorStateManager.addChangeListener(
-        this.editorStateManagerChangeListener
-      );
-
-      this.set('editorStateManager', editorStateManager);
-      const editorStateManagerDump = {
-        value: editorStateManager.value,
-        isValid: editorStateManager.isValid,
-      };
-      if (hasToRecreateStateManager) {
-        this.handleEditorStateManagerChange(editorStateManagerDump);
-      } else {
-        this.set('lastEditorStateManagerDump', editorStateManagerDump);
+      if (previousEditorStateManager !== this.editorStateManager) {
+        this.handleEditorStateManagerChange({
+          value: this.editorStateManager ? this.editorStateManager.value : null,
+          isValid: this.editorStateManager ? this.editorStateManager.isValid : false,
+        });
       }
     }
   ),
@@ -166,7 +166,10 @@ export const ValueEditorField = FormField.extend({
     'value',
     function editorStateManagerValueUpdater() {
       const value = this.getValueForEditorStateManager();
-      if (!_.isEqual(this.editorStateManager.value, value)) {
+      if (
+        this.editorStateManager &&
+        !_.isEqual(this.editorStateManager.value, value)
+      ) {
         this.editorStateManager.value = value;
       }
     }
@@ -176,7 +179,10 @@ export const ValueEditorField = FormField.extend({
     'isEffectivelyEnabled',
     'isInViewMode',
     function editorStateManagerDisabler() {
-      this.editorStateManager.isDisabled = this.shouldEditorStateManagerBeDisabled();
+      if (this.editorStateManager) {
+        this.editorStateManager.isDisabled =
+          this.shouldEditorStateManagerBeDisabled();
+      }
     }
   ),
 
@@ -185,7 +191,7 @@ export const ValueEditorField = FormField.extend({
    */
   init() {
     this._super(...arguments);
-    this.editorStateManagerSetter();
+    this.setupEditorStateManager();
   },
 
   /**
@@ -210,15 +216,54 @@ export const ValueEditorField = FormField.extend({
    * @returns {void}
    */
   handleEditorStateManagerChange(dump) {
-    if (!this.value?.hasValue || _.isEqual(this.lastEditorStateManagerDump, dump)) {
+    this.set('lastEditorStateManagerDump', dump);
+    if (!this.value?.hasValue || _.isEqual(this.value?.value, dump.value)) {
+      return;
+    }
+    this.valueChanged({
+      hasValue: Boolean(this.atmDataSpec),
+      value: this.atmDataSpec ? dump.value : null,
+    });
+  },
+
+  /**
+   * @returns {void}
+   */
+  setupEditorStateManager() {
+    if (
+      this.atmDataSpec ?
+      _.isEqual(this.editorStateManager?.atmDataSpec, this.atmDataSpec) :
+      !this.editorStateManager
+    ) {
+      // Nothing do to.
       return;
     }
 
-    this.set('lastEditorStateManagerDump', dump);
-    this.valueChanged({
-      hasValue: true,
-      value: dump.value,
-    });
+    if (this.editorStateManager) {
+      this.editorStateManager.removeChangeListener(
+        this.editorStateManagerChangeListener
+      );
+      this.editorStateManager.destroy();
+    }
+
+    let editorStateManager = null;
+    if (this.atmDataSpec) {
+      let value = this.getValueForEditorStateManager();
+      if (!validate(value, this.atmDataSpec)) {
+        value = undefined;
+      }
+      editorStateManager = new ValueEditorStateManager(
+        this.atmDataSpec,
+        this.editorContext,
+        value
+      );
+      editorStateManager.isDisabled = this.shouldEditorStateManagerBeDisabled();
+      editorStateManager.addChangeListener(
+        this.editorStateManagerChangeListener
+      );
+    }
+
+    this.set('editorStateManager', editorStateManager);
   },
 });
 

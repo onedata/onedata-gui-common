@@ -8,7 +8,7 @@
  */
 
 import { reads } from '@ember/object/computed';
-import { and, not } from 'ember-awesome-macros';
+import { and, not, or } from 'ember-awesome-macros';
 import FieldComponentBase from 'onedata-gui-common/components/form-component/field-component-base';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/value-editor-field';
 
@@ -32,14 +32,27 @@ export default FieldComponentBase.extend({
   isClearable: reads('isOptional'),
 
   /**
-   * @type {ComputedProperty<boolean>}
-   */
-  isValueCreatorButtonVisible: and('isClearable', not('value.hasValue')),
-
-  /**
    * @type {ComputedProperty<SafeString>}
    */
   valueCreatorButtonLabel: reads('field.valueCreatorButtonLabel'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  hasInvalidAtmDataSpec: not('field.atmDataSpec'),
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  invalidAtmDataSpecMessage: reads('field.invalidAtmDataSpecMessage'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isValueCreatorButtonVisible: or(
+    and('isClearable', not('value.hasValue')),
+    'hasInvalidAtmDataSpec'
+  ),
 
   actions: {
     createValue() {

@@ -294,10 +294,11 @@ export default class ArrayValueEditorState extends ValueEditorState {
    */
   recreateItemEditorsForValue(value) {
     this.removeAllItemsWithoutNotification();
-    if (Array.isArray(value)) {
+    if (Array.isArray(value) && this.itemAtmDataSpec) {
       this.itemEditorStateIds = value.map((itemValue) =>
-        this.editorStateManager.createValueEditorState(this.itemAtmDataSpec, itemValue).id
-      );
+        this.editorStateManager
+        .createValueEditorState(this.itemAtmDataSpec, itemValue)?.id
+      ).filter(Boolean);
     }
     this.recalculateItemsExpandedByUserCount();
   }
