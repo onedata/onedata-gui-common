@@ -69,9 +69,6 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
         margin-left: -$padding-xs-horizontal * 0.5;
       }
     }
-    + .tag-item-plaintext {
-      margin-left: -$padding-xs-horizontal;
-    }
   }
 
   .tag-icon {
@@ -369,6 +366,11 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
       }
       .tag-label {
         display: inline;
+      }
+      .tag-icon {
+        &::before {
+          vertical-align: -0.25em;
+        }
       }
     }
   }
