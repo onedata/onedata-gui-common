@@ -83,17 +83,17 @@ describe('Integration | Component | atm-workflow/value-editors/full-value-editor
     await click('.add-item-trigger');
     await click('.add-item-trigger');
     await click('.add-item-trigger');
-    await fillIn('input', '2');
+    await fillIn('input', '');
 
     expect(this.stateManager.value).to.deep.equal([
-      [2, NaN],
+      [NaN, 0],
     ]);
     expect(this.stateManager.isValid).to.be.false;
 
-    await fillIn('.array-item:nth-child(2) input', '3');
+    await fillIn('input', '3');
 
     expect(this.stateManager.value).to.deep.equal([
-      [2, 3],
+      [3, 0],
     ]);
     expect(this.stateManager.isValid).to.be.true;
   });

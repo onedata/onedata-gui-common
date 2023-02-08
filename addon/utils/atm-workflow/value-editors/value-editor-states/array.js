@@ -167,6 +167,11 @@ export default class ArrayValueEditorState extends ValueEditorState {
    */
   addNewItems(newItemEditorStates) {
     this.itemEditorStateIds.push(...newItemEditorStates.map((state) => state.id));
+    newItemEditorStates.forEach((itemEditorState) => {
+      if (itemEditorState.isDisabled !== this.isDisabled) {
+        itemEditorState.isDisabled = this.isDisabled;
+      }
+    });
     this.recalculateItemsExpandedByUserCount();
     this.notifyChange();
   }
@@ -295,10 +300,14 @@ export default class ArrayValueEditorState extends ValueEditorState {
   recreateItemEditorsForValue(value) {
     this.removeAllItemsWithoutNotification();
     if (Array.isArray(value) && this.itemAtmDataSpec) {
-      this.itemEditorStateIds = value.map((itemValue) =>
-        this.editorStateManager
-        .createValueEditorState(this.itemAtmDataSpec, itemValue)?.id
-      ).filter(Boolean);
+      this.itemEditorStateIds = value.map((itemValue) => {
+        const itemEditorState = this.editorStateManager
+          .createValueEditorState(this.itemAtmDataSpec, itemValue);
+        if (itemEditorState && itemEditorState.isDisabled !== this.isDisabled) {
+          itemEditorState.isDisabled = this.isDisabled;
+        }
+        return itemEditorState?.id;
+      }).filter(Boolean);
     }
     this.recalculateItemsExpandedByUserCount();
   }
@@ -335,5 +344,15 @@ export default class ArrayValueEditorState extends ValueEditorState {
    */
   getDefaultValue() {
     return [];
+  }
+
+  /**
+   * @override
+   */
+  setIsDisabled() {
+    super.setIsDisabled(...arguments);
+    this.itemEditorStates.forEach((itemEditorState) =>
+      itemEditorState.isDisabled = this.isDisabled
+    );
   }
 }

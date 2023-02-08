@@ -16,6 +16,10 @@
 {{else}}
   {{atm-workflow/value-editors/full-value-editor
     stateManager=editorStateManager
-    onRemove=(if isClearable (action "removeValue") null)
+    onRemove=(if
+      (and isInEditMode isEffectivelyEnabled isClearable)
+      (action "removeValue")
+      null
+    )
   }}
 {{/if}}

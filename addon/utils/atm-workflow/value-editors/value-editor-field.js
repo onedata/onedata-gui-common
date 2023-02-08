@@ -39,6 +39,11 @@ export const ValueEditorField = FormField.extend({
   fieldComponentName: 'atm-workflow/value-editors/value-editor-field',
 
   /**
+   * @override
+   */
+  areValidationClassesEnabled: false,
+
+  /**
    * @virtual
    * @type {AtmDataSpec}
    */

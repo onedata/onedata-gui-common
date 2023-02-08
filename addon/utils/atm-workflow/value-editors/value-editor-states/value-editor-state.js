@@ -130,7 +130,7 @@ export default class ValueEditorState {
    * @param {boolean} newValue
    */
   set isDisabled(newValue) {
-    this.internalIsDisabled = Boolean(newValue);
+    this.setIsDisabled(newValue);
     this.notifyChange();
   }
 
@@ -201,5 +201,14 @@ export default class ValueEditorState {
    */
   getDefaultValue() {
     return null;
+  }
+
+  /**
+   * @private
+   * @param {boolean} newValue
+   * @returns {unknown}
+   */
+  setIsDisabled(newValue) {
+    this.internalIsDisabled = Boolean(newValue);
   }
 }

@@ -34,6 +34,17 @@ export default Component.extend({
   onRemove: null,
 
   /**
+   * @virtual optional
+   * @type {string | null}
+   */
+  removeConfirmationQuestion: null,
+
+  /**
+   * @type {boolean}
+   */
+  isRemoveConfirmationOpened: false,
+
+  /**
    * @type {ComputedProperty<string>}
    */
   atmDataTypeClassName: computed(
@@ -53,4 +64,23 @@ export default Component.extend({
       return translateAtmDataSpecType(this.i18n, this.editorState?.atmDataSpec?.type);
     }
   ),
+
+  actions: {
+    remove() {
+      if (this.isRemoveConfirmationOpened) {
+        this.set('isRemoveConfirmationOpened', false);
+      } else if (this.removeConfirmationQuestion) {
+        this.set('isRemoveConfirmationOpened', true);
+      } else {
+        this.onRemove?.();
+      }
+    },
+    confirmRemove() {
+      this.set('isRemoveConfirmationOpened', false);
+      this.onRemove?.();
+    },
+    closeRemoveConfirmation() {
+      this.set('isRemoveConfirmationOpened', false);
+    },
+  },
 });
