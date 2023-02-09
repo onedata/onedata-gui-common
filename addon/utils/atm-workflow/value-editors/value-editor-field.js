@@ -17,6 +17,7 @@
  */
 
 import { computed, observer } from '@ember/object';
+import { scheduleOnce } from '@ember/runloop';
 import _ from 'lodash';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { ValueEditorStateManager } from 'onedata-gui-common/utils/atm-workflow/value-editors';
@@ -170,41 +171,12 @@ export const ValueEditorField = FormField.extend({
     }
   ),
 
-  editorStateManagerSetter: observer(
+  editorStateManagerUpdater: observer(
     'atmDataSpec',
-    function editorStateManagerSetter() {
-      const previousEditorStateManager = this.editorStateManager;
-      this.setupEditorStateManager();
-
-      if (previousEditorStateManager !== this.editorStateManager) {
-        this.handleEditorStateManagerChange({
-          value: this.editorStateManager ? this.editorStateManager.value : null,
-          isValid: this.editorStateManager ? this.editorStateManager.isValid : false,
-        });
-      }
-    }
-  ),
-
-  editorStateManagerValueUpdater: observer(
     'value',
-    function editorStateManagerValueUpdater() {
-      const value = this.getValueForEditorStateManager();
-      if (
-        this.editorStateManager &&
-        !_.isEqual(this.editorStateManager.value, value)
-      ) {
-        this.editorStateManager.value = value;
-      }
-    }
-  ),
-
-  editorStateManagerDisabler: observer(
-    'shouldEditorStateManagerBeDisabled',
-    function editorStateManagerDisabler() {
-      if (this.editorStateManager) {
-        this.editorStateManager.isDisabled =
-          this.shouldEditorStateManagerBeDisabled;
-      }
+    'isDisabled',
+    function editorStateManagerUpdater() {
+      scheduleOnce('afterRender', this, 'setupEditorStateManager');
     }
   ),
 
@@ -250,40 +222,50 @@ export const ValueEditorField = FormField.extend({
    * @returns {void}
    */
   setupEditorStateManager() {
+    const previousEditorStateManager = this.editorStateManager;
+    const value = this.getValueForEditorStateManager();
     if (
       this.atmDataSpec ?
-      _.isEqual(this.editorStateManager?.atmDataSpec, this.atmDataSpec) :
-      !this.editorStateManager
+      !_.isEqual(this.editorStateManager?.atmDataSpec, this.atmDataSpec) :
+      this.editorStateManager
     ) {
-      // Nothing do to.
-      return;
+      if (this.editorStateManager) {
+        this.editorStateManager.removeChangeListener(
+          this.editorStateManagerChangeListener
+        );
+        this.editorStateManager.destroy();
+      }
+
+      let editorStateManager = null;
+      if (this.atmDataSpec) {
+        editorStateManager = new ValueEditorStateManager(
+          this.atmDataSpec,
+          this.editorContext,
+          validate(value, this.atmDataSpec) ? value : undefined
+        );
+      }
+      this.set('editorStateManager', editorStateManager);
     }
 
     if (this.editorStateManager) {
-      this.editorStateManager.removeChangeListener(
-        this.editorStateManagerChangeListener
-      );
-      this.editorStateManager.destroy();
-    }
-
-    let editorStateManager = null;
-    if (this.atmDataSpec) {
-      let value = this.getValueForEditorStateManager();
-      if (!validate(value, this.atmDataSpec)) {
-        value = undefined;
+      if (
+        this.editorStateManager.isDisabled !== this.shouldEditorStateManagerBeDisabled
+      ) {
+        this.editorStateManager.isDisabled = this.shouldEditorStateManagerBeDisabled;
       }
-      editorStateManager = new ValueEditorStateManager(
-        this.atmDataSpec,
-        this.editorContext,
-        value
-      );
-      editorStateManager.isDisabled = this.shouldEditorStateManagerBeDisabled;
-      editorStateManager.addChangeListener(
-        this.editorStateManagerChangeListener
-      );
-    }
 
-    this.set('editorStateManager', editorStateManager);
+      if (previousEditorStateManager !== this.editorStateManager) {
+        this.editorStateManager.addChangeListener(
+          this.editorStateManagerChangeListener
+        );
+        this.handleEditorStateManagerChange({
+          value: this.editorStateManager.value,
+          isValid: this.editorStateManager.isValid,
+        });
+      } else if (!_.isEqual(this.editorStateManager.value, value)) {
+        this.editorStateManager.value = value;
+      }
+    }
   },
 });
 
