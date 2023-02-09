@@ -39,7 +39,7 @@ export default EmberObject.extend({
   listContainerElement: undefined,
 
   /**
-   * @virtual
+   * @virtual optional
    * @type {({ headerVisible: boolean }) => void}
    */
   onScroll: undefined,
@@ -121,7 +121,7 @@ export default EmberObject.extend({
       setProperties(entries, { startIndex, endIndex });
     }
     safeExec(this, 'set', 'headerVisible', headerVisible);
-    onScroll({ headerVisible });
+    onScroll?.({ headerVisible });
   },
 
   entriesLoadedObserver: observer(

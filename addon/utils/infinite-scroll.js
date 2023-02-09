@@ -20,7 +20,7 @@ import { reads } from '@ember/object/computed';
 export default EmberObject.extend({
   /**
    * @virtual
-   * @type {ReplacingChunksArray<RecallLogEntry>}
+   * @type {ReplacingChunksArray<Object>}
    */
   entries: undefined,
 

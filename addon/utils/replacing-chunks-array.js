@@ -205,11 +205,10 @@ export default ArraySlice.extend(Evented, {
   /**
    * @returns {{ arrayUpdate: Array, endReached: Boolean }}
    */
-  fetchWrapper(index, size, offset) {
+  async fetchWrapper(index, size, offset) {
     const effOffset = (index == null && (!offset || offset < 0)) ? 0 : offset;
-    return this.get('fetch')(index, size, effOffset, this).then(result =>
-      this.handleFetchDataFetchResult(result)
-    );
+    const result = await this.fetch(index, size, effOffset, this);
+    return this.handleFetchDataFetchResult(result);
   },
 
   getIndex(record) {
