@@ -22,6 +22,10 @@
       }
       .property-value {
         padding-right: 0;
+
+        .user-username {
+          opacity: $disabled-opacity;
+        }
       }
       td {
         overflow-wrap: break-word;
@@ -37,5 +41,32 @@
   }
   .webui-popover-content {
     padding: $padding-small-horizontal;
+  }
+  .space-links-container {
+    padding-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+
+    .one-icon {
+      font-size: 120%;
+      margin-left: 0.2em;
+      margin-top: 0.1em;
+    }
+
+    .space-info-link {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .col-separator {
+    margin-left: 1em;
+    margin-right: 1em;
+    &::after {
+      height: 32px;
+      content: ' ';
+      border-left: 1px solid;
+      border-color: $main-border-color;
+    }
   }
 }

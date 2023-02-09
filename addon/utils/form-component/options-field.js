@@ -16,6 +16,7 @@ import { computed, get } from '@ember/object';
  * @property {any} value
  * @property {String|HtmlSafe} [label]
  * @property {String} [icon]
+ * @property {boolean} [disabled]
  */
 
 export default FormField.extend({
@@ -35,7 +36,6 @@ export default FormField.extend({
    * @type {ComputedProperty<Array<FieldOption>>}
    */
   preparedOptions: computed('options.[]', 'translationPath', function preparedOptions() {
-
     return (this.get('options') || []).map(option => {
       const name = get(option, 'name') || String(get(option, 'value'));
       const label = get(option, 'label') ||

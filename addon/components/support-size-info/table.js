@@ -11,6 +11,7 @@
  * @typedef {Ember.Object} SupportSizeEntry An entry with support size info
  * @property {string} supporterName A supporter name.
  * @property {number} supportSize A support size (in bytes).
+ * @property {string} supporterId A supporter id.
  */
 
 import Component from '@ember/component';
@@ -21,6 +22,7 @@ import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/support-size-info/table';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import Bootstrap3Theme from 'ember-models-table/themes/bootstrap3';
+import { conditional, raw, eq } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -33,6 +35,13 @@ export default Component.extend({
    * @type {Ember.Array.SupportSizeEntry}
    */
   data: null,
+
+  /**
+   * Type of record in first column
+   * @virtual optional
+   * @type {'space'|'provider'}
+   */
+  type: '',
 
   /**
    * Message, that is shown when there is no data
@@ -58,6 +67,15 @@ export default Component.extend({
   }),
 
   /**
+   * @type {computed.string}
+   */
+  supporterInfoColumnComponent: conditional(
+    eq('type', raw('space')),
+    raw('support-size-info/table/supported-space-info'),
+    raw('support-size-info/table/truncated-cell')
+  ),
+
+  /**
    * Support data prepared to display.
    * @type {computed.Ember.Array.SupportSizeEntry}
    */
@@ -68,6 +86,7 @@ export default Component.extend({
       processedData.pushObject(EmberObject.create({
         supporterName: entry.get('supporterName'),
         supportSize: entry.get('supportSize'),
+        supporterId: entry.get('supporterId'),
         supportSizeStr: bytesToString(entry.get('supportSize'), { iecFormat: true }),
       }));
     });
@@ -82,12 +101,17 @@ export default Component.extend({
     const {
       supporterNameHeader,
       supporterSizeHeader,
-    } = this.getProperties('supporterNameHeader', 'supporterSizeHeader');
+      supporterInfoColumnComponent,
+    } = this.getProperties(
+      'supporterNameHeader',
+      'supporterSizeHeader',
+      'supporterInfoColumnComponent'
+    );
     return [{
       propertyName: 'supporterName',
       title: supporterNameHeader,
       className: 'supporter-name-column',
-      component: 'support-size-info/table/truncated-cell',
+      component: supporterInfoColumnComponent,
     }, {
       propertyName: 'supportSizeStr',
       title: supporterSizeHeader,
