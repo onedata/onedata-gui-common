@@ -93,6 +93,10 @@
             </li>
           {{/each}}
         </ol>
+      {{else}}
+        <p class="no-items-info">
+          <em>Empty</em>
+        </p>
       {{/if}}
       {{component editorState.itemCreatorComponentName
         stateManager=stateManager
@@ -115,6 +119,9 @@
         update=(action "rawValueChanged")
         readOnly=isDisabled
       }}
+      {{#if rawEditorValidationError}}
+        <div class="form-message text-danger">{{rawEditorValidationError}}</div>
+      {{/if}}
     {{/if}}
   {{/if}}
 {{/atm-workflow/value-editors/commons/editor-box}}

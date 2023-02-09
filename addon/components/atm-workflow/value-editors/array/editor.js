@@ -144,7 +144,28 @@ export default EditorBase.extend(I18n, {
   /**
    * @type {ComputedProperty<string>}
    */
-  clearTriggerSelector: tag `#${'clearTriggerId'}`,
+  clearTriggerSelector: tag`#${'clearTriggerId'}`,
+
+  /**
+   * @type {ComputedProperty<string | null>}
+   */
+  rawEditorValidationError: computed(
+    'mode',
+    'stringifiedValue',
+    'isValid',
+    function rawEditorValidationError() {
+      if (this.mode !== 'raw' || this.isValid) {
+        return null;
+      }
+
+      try {
+        JSON.parse(this.stringifiedValue);
+        return this.t('rawError.jsonNotCompatibleWithDataSpec');
+      } catch {
+        return this.t('rawError.unparseableJson');
+      }
+    }
+  ),
 
   /**
    * @override

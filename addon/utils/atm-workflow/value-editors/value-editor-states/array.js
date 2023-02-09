@@ -166,10 +166,12 @@ export default class ArrayValueEditorState extends ValueEditorState {
    * @returns {void}
    */
   addNewItems(newItemEditorStates) {
-    this.itemEditorStateIds.push(...newItemEditorStates.map((state) => state.id));
+    this.itemEditorStateIds.push(
+      ...newItemEditorStates.filter(Boolean).map((state) => state.id)
+    );
     newItemEditorStates.forEach((itemEditorState) => {
-      if (itemEditorState.isDisabled !== this.isDisabled) {
-        itemEditorState.isDisabled = this.isDisabled;
+      if (itemEditorState) {
+        this.prepareNewItemStateForUse(itemEditorState);
       }
     });
     this.recalculateItemsExpandedByUserCount();
@@ -303,8 +305,8 @@ export default class ArrayValueEditorState extends ValueEditorState {
       this.itemEditorStateIds = value.map((itemValue) => {
         const itemEditorState = this.editorStateManager
           .createValueEditorState(this.itemAtmDataSpec, itemValue);
-        if (itemEditorState && itemEditorState.isDisabled !== this.isDisabled) {
-          itemEditorState.isDisabled = this.isDisabled;
+        if (itemEditorState) {
+          this.prepareNewItemStateForUse(itemEditorState);
         }
         return itemEditorState?.id;
       }).filter(Boolean);
@@ -336,6 +338,20 @@ export default class ArrayValueEditorState extends ValueEditorState {
         this.itemsExpandedByUserCount,
         collapsibleItemsCount
       );
+    }
+  }
+
+  /**
+   * @private
+   * @param {Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState} newItemEditorState
+   * @returns {void}
+   */
+  prepareNewItemStateForUse(newItemEditorState) {
+    if (!newItemEditorState) {
+      return;
+    }
+    if (newItemEditorState.isDisabled !== this.isDisabled) {
+      newItemEditorState.isDisabled = this.isDisabled;
     }
   }
 

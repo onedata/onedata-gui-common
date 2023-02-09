@@ -13,7 +13,7 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/value-e
 export default ArrayItemCreatorBase.extend(I18n, {
   layout,
   tagName: 'a',
-  classNames: ['add-item-trigger', 'action-link'],
+  classNames: ['add-item-trigger', 'action-link', 'default-array-item-creator'],
   classNameBindings: ['isDisabled:hidden:clickable'],
 
   /**

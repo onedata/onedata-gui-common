@@ -19,4 +19,8 @@ export default {
     showNext: 'Show next {{changeVisibilityStep}}',
     showAll: 'Show all',
   },
+  rawError: {
+    unparseableJson: 'JSON is not valid',
+    jsonNotCompatibleWithDataSpec: 'JSON is not suitable for expected data type',
+  },
 };

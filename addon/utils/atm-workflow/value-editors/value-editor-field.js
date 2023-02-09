@@ -1,5 +1,5 @@
 /**
- * A form field model adopting automatino value editor for forms framework.
+ * A form field model adopting automation value editor for forms framework.
  *
  * It works in two modes depending on `isOptional` value:
  * - `isOptional` is true - then value of that field is not required and
@@ -24,10 +24,13 @@ import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
 
 /**
  * @typedef {Object} ValueEditorFieldValue
- * @property {boolean} hasValue Flag which allows to differentiate beetween
- * a real empty state and a state when editor is present, but it has a value of
- * null.
- * @property {unknown} value
+ * @property {boolean} hasValue `true` value means, that editor has a real,
+ *   existing value provided by a user or backend and editor should be rendered.
+ *   `false` value means, that value was not provided and editor (when value is
+ *   allowed to be optional) should not be rendered. `false` value should
+ *   never occur when editor field is not optional - in that case `hasValue`
+ *   has to be true with value is just `null`.
+ * @property {unknown} [value] Present only, when `hasValue` is `true`.
  */
 
 const defaultI18nPrefix = 'utils.atmWorkflow.valueEditors.valueEditorField';
@@ -94,14 +97,18 @@ export const ValueEditorField = FormField.extend({
     'isOptional',
     'lastEditorStateManagerDump.isValid',
     function fieldValidationChecker() {
-      const isValidWhenOptional = Boolean(
-        !this.value?.hasValue || this.lastEditorStateManagerDump?.isValid
-      );
-      const isValidWhenNotOptional = Boolean(
-        this.value?.hasValue && this.lastEditorStateManagerDump?.isValid
-      );
+      let isValid;
+      if (this.isOptional) {
+        isValid = Boolean(
+          !this.value?.hasValue || this.lastEditorStateManagerDump?.isValid
+        );
+      } else {
+        isValid = Boolean(
+          this.value?.hasValue && this.lastEditorStateManagerDump?.isValid
+        );
+      }
       return {
-        isValid: this.isOptional ? isValidWhenOptional : isValidWhenNotOptional,
+        isValid,
         errors: [],
       };
     }
@@ -152,6 +159,17 @@ export const ValueEditorField = FormField.extend({
     }
   ),
 
+  /**
+   * @returns {ComputedProperty<boolean>}
+   */
+  shouldEditorStateManagerBeDisabled: computed(
+    'isEffectivelyEnabled',
+    'isInViewMode',
+    function shouldEditorStateManagerBeDisabled() {
+      return !this.isEffectivelyEnabled || this.isInViewMode;
+    }
+  ),
+
   editorStateManagerSetter: observer(
     'atmDataSpec',
     function editorStateManagerSetter() {
@@ -181,12 +199,11 @@ export const ValueEditorField = FormField.extend({
   ),
 
   editorStateManagerDisabler: observer(
-    'isEffectivelyEnabled',
-    'isInViewMode',
+    'shouldEditorStateManagerBeDisabled',
     function editorStateManagerDisabler() {
       if (this.editorStateManager) {
         this.editorStateManager.isDisabled =
-          this.shouldEditorStateManagerBeDisabled();
+          this.shouldEditorStateManagerBeDisabled;
       }
     }
   ),
@@ -210,18 +227,16 @@ export const ValueEditorField = FormField.extend({
   },
 
   /**
-   * @returns {boolean}
-   */
-  shouldEditorStateManagerBeDisabled() {
-    return !this.isEffectivelyEnabled || this.isInViewMode;
-  },
-
-  /**
    * @param {ValueEditorStateManagerDump} dump
    * @returns {void}
    */
   handleEditorStateManagerChange(dump) {
     this.set('lastEditorStateManagerDump', dump);
+    // if `hasValue` is false, then it should not be possible to receive any
+    // change notifications from inside the editor. It's because editor should
+    // not be rendered at all when `hasValue` is not true. Checking for
+    // `!this.value?.hasValue` condition is here only to catch any logical
+    // error in editor code (delayed notifications etc.).
     if (!this.value?.hasValue || _.isEqual(this.value?.value, dump.value)) {
       return;
     }
@@ -262,7 +277,7 @@ export const ValueEditorField = FormField.extend({
         this.editorContext,
         value
       );
-      editorStateManager.isDisabled = this.shouldEditorStateManagerBeDisabled();
+      editorStateManager.isDisabled = this.shouldEditorStateManagerBeDisabled;
       editorStateManager.addChangeListener(
         this.editorStateManagerChangeListener
       );
