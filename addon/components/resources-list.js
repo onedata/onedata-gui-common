@@ -88,6 +88,12 @@ export const ResourceListItem = EmberObject.extend({
   link: undefined,
 
   /**
+   * @virtual optional
+   * @type {String}
+   */
+  triggerSelector: undefined,
+
+  /**
    * @type {boolean}
    */
   itemInfoOpened: false,

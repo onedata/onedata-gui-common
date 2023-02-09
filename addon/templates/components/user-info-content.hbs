@@ -7,23 +7,29 @@
   {{resource-load-error reason=errorReason}}
 {{else}}
   <table class="table table-condensed table-info">
-    <tr class="row-with-text">
-      <td class="property-name">{{tt this "fullName"}}</td>
-      <td class="property-value">{{or user.fullName "—"}}</td>
-    </tr>
-    <tr class="row-with-text">
-      <td class="property-name">{{tt this "username"}}</td>
-      <td class="property-value">{{or user.username "—"}}</td>
-    </tr>
-    <tr class="row-with-input">
-      <td class="property-name">{{tt this "userId"}}</td>
-      <td class="property-value">
-        {{one-clipboard-line
-          size="sm"
-          value=user.entityId
-          showText=false
-        }}
-      </td>
-    </tr>
+    <tbody>
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "fullName"}}</td>
+        <td class="property-value">{{or user.fullName "—"}}</td>
+      </tr>
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "username"}}</td>
+        <td class="property-value">{{or user.username "—"}}</td>
+      </tr>
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "userId"}}</td>
+        <td class="property-value">
+          {{#one-clipboard-line
+            size="sm"
+            value=user.entityId
+            type="html"
+          }}
+            {{#truncated-string}}
+              {{user.entityId}}
+            {{/truncated-string}}
+          {{/one-clipboard-line}}
+        </td>
+      </tr>
+    </tbody>
   </table>
 {{/if}}
