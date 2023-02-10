@@ -174,7 +174,7 @@ export const ValueEditorField = FormField.extend({
   editorStateManagerUpdater: observer(
     'atmDataSpec',
     'value',
-    'isDisabled',
+    'shouldEditorStateManagerBeDisabled',
     function editorStateManagerUpdater() {
       scheduleOnce('afterRender', this, 'setupEditorStateManager');
     }
