@@ -345,14 +345,9 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   }
   .tags-input {
     display: inline-block;
-    padding-inline-start: 0;
-    margin-block-start: 0;
-    margin-block-end: 0;
+    padding: 0;
     line-height: 2.4;
     min-height: auto;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-right: 0;
     .tag-item {
       display: inline;
       margin-right: $margin-base * 0.5;
