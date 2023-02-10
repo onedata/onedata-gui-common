@@ -10,6 +10,8 @@ import Component from '@ember/component';
 import { reads } from '@ember/object/computed';
 
 export default Component.extend({
+  classNames: ['array-item-creator'],
+
   /**
    * @virtual
    * @type {Utils.AtmWorkflow.ValueEditors.ValueEditorStateManager}

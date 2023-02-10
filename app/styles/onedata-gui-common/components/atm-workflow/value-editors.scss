@@ -4,6 +4,7 @@
   display: inline-block;
   border: 1px solid $main-border-color;
   border-radius: $border-radius-base;
+  max-width: 100%;
 
   .editor-box {
     background-color: var(--editor-box-background-accent);
@@ -51,8 +52,6 @@
   }
 
   .action-link {
-    text-decoration: underline;
-
     &.disabled {
       // Using !important to override inline styles added by click() Ember handler
       cursor: not-allowed !important;
@@ -72,8 +71,6 @@
   }
 
   &.string-editor {
-    width: 20em;
-
     textarea {
       max-height: 8em;
     }
@@ -156,7 +153,11 @@
       flex-wrap: wrap;
       gap: 0.3em;
       padding-left: 0;
-      margin-bottom: 0.3em;
+      margin-bottom: 0;
+    }
+
+    .array-item {
+      min-width: 0;
     }
 
     .array-collapsed-item {
@@ -166,8 +167,41 @@
       text-align: center;
       border-radius: $border-radius-base;
       background-color: var(--editor-box-background-accent);
+      font-size: 90%;
       p {
         margin: 0;
+      }
+    }
+
+    .no-items-info {
+      margin: 0;
+      color: $main-text-color-disabled;
+    }
+
+    .default-array-item-creator {
+      display: inline-block;
+    }
+
+    .array-item-creator:not(:first-child) {
+      margin-top: 0.5em;
+    }
+
+    .no-items-info,
+    .add-item-trigger {
+      padding: 0 0.3em;
+      font-size: 90%;
+    }
+
+    &.editor-with-json {
+      .editor-box-content {
+        flex-direction: column;
+      }
+
+      .form-message {
+        flex-grow: 0;
+        text-align: right;
+        font-size: 90%;
+        padding-top: 0.3em;
       }
     }
   }
@@ -186,7 +220,18 @@
   }
 }
 
-.clear-array-confirmation {
+.full-value-editor {
+  display: flex;
+
+  > .array-editor,
+  > .object-editor,
+  > .string-editor {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+}
+
+.remove-atm-value-ack-popover {
   width: 12em;
 
   .buttons-container {

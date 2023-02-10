@@ -26,11 +26,6 @@ export default class DatasetValueEditorState extends ValueEditorState {
   constructor() {
     super(...arguments);
     this.editorComponentName = `${editorComponentsPrefix}/dataset/editor`;
-    if (!this.value) {
-      this.value = {
-        datasetId: '',
-      };
-    }
 
     /**
      * @private
@@ -164,5 +159,14 @@ export default class DatasetValueEditorState extends ValueEditorState {
       default:
         return false;
     }
+  }
+
+  /**
+   * @override
+   */
+  getDefaultValue() {
+    return {
+      datasetId: '',
+    };
   }
 }

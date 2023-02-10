@@ -79,6 +79,8 @@ export default class ValueEditorState {
 
     if (initialValue !== undefined) {
       this.value = initialValue;
+    } else {
+      this.value = this.defaultValue;
     }
   }
 
@@ -109,6 +111,14 @@ export default class ValueEditorState {
 
   /**
    * @public
+   * @type {unknown}
+   */
+  get defaultValue() {
+    return this.getDefaultValue();
+  }
+
+  /**
+   * @public
    * @returns {string}
    */
   get isDisabled() {
@@ -120,7 +130,7 @@ export default class ValueEditorState {
    * @param {boolean} newValue
    */
   set isDisabled(newValue) {
-    this.internalIsDisabled = Boolean(newValue);
+    this.setIsDisabled(newValue);
     this.notifyChange();
   }
 
@@ -183,5 +193,22 @@ export default class ValueEditorState {
    */
   setValue(newValue) {
     this.internalValue = newValue;
+  }
+
+  /**
+   * @private
+   * @returns {unknown}
+   */
+  getDefaultValue() {
+    return null;
+  }
+
+  /**
+   * @private
+   * @param {boolean} newValue
+   * @returns {unknown}
+   */
+  setIsDisabled(newValue) {
+    this.internalIsDisabled = Boolean(newValue);
   }
 }

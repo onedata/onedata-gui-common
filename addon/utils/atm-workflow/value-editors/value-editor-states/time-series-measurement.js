@@ -16,12 +16,16 @@ export default class TimeSeriesMeasurementValueEditorState extends ValueEditorSt
   constructor() {
     super(...arguments);
     this.editorComponentName = `${editorComponentsPrefix}/time-series-measurement/editor`;
-    if (!this.value) {
-      this.value = {
-        timestamp: Math.floor(Date.now() / 1000),
-        tsName: '',
-        value: 0,
-      };
-    }
+  }
+
+  /**
+   * @override
+   */
+  getDefaultValue() {
+    return {
+      timestamp: Math.floor(Date.now() / 1000),
+      tsName: '',
+      value: 0,
+    };
   }
 }

@@ -56,15 +56,43 @@ describe('Integration | Component | atm-workflow/value-editors/array/editor', fu
     }
   );
 
-  it('has working "remove" button when "onRemove" callback is provided', async function () {
-    const onRemove = this.set('onRemove', sinon.spy());
-    await renderComponent();
-    expect(onRemove).to.be.not.called;
+  it('has working "remove" button when "onRemove" callback is provided and array is empty',
+    async function () {
+      const onRemove = this.set('onRemove', sinon.spy());
+      await renderComponent();
+      expect(onRemove).to.be.not.called;
 
-    await click('.editor-box-toolbar .remove-icon');
+      await click('.editor-box-toolbar .remove-icon');
 
-    expect(onRemove).to.be.calledOnce;
-  });
+      expect(onRemove).to.be.calledOnce;
+    }
+  );
+
+  it('has working "remove" button when "onRemove" callback is provided and array is not empty',
+    async function () {
+      const onRemove = this.set('onRemove', sinon.spy());
+      this.stateManager.value = ['abc'];
+      await renderComponent();
+
+      await click('.editor-box-toolbar .remove-icon');
+
+      expect(onRemove).to.be.not.called;
+      const popoverContent = find('.webui-popover-content');
+      expect(popoverContent.querySelector('p')).to.have.trimmed.text(
+        'Are you sure you want to remove the array and all its contents?'
+      );
+      const cancelBtn = find('.btn-cancel');
+      expect(cancelBtn).to.have.class('btn-default');
+      expect(cancelBtn).to.have.trimmed.text('No');
+      const acceptBtn = find('.btn-confirm');
+      expect(acceptBtn).to.have.class('btn-danger');
+      expect(acceptBtn).to.have.trimmed.text('Yes');
+
+      await click('.btn-confirm');
+
+      expect(onRemove).to.be.calledOnce;
+    }
+  );
 
   atmDataSpecTypesArray.forEach((atmDataSpecType) => {
     const customItemCreatorClass = customItemCreatorClasses[atmDataSpecType];
@@ -382,7 +410,7 @@ describe('Integration | Component | atm-workflow/value-editors/array/editor', fu
 
     await renderComponent();
 
-    expect(find('.add-item-trigger')).to.have.class('disabled');
+    expect(find('.add-item-trigger')).to.have.class('hidden');
   });
 
   it('can be disabled when having items', async function () {
@@ -394,7 +422,7 @@ describe('Integration | Component | atm-workflow/value-editors/array/editor', fu
     expect(find('.remove-icon')).to.not.exist;
     expect(find('input:not([disabled])')).to.not.exist;
     expect(find('.clear-trigger')).to.not.exist;
-    expect(find('.add-item-trigger')).to.have.class('disabled');
+    expect(find('.add-item-trigger')).to.have.class('hidden');
   });
 
   it('can be disabled when having items in "raw" view', async function () {

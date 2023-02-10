@@ -7,6 +7,7 @@
  */
 
 import { observer } from '@ember/object';
+import { and, not } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/dataset/array-item-creator';
 import ArrayItemCreatorBase from '../commons/array-item-creator-base';
@@ -14,6 +15,7 @@ import ArrayItemCreatorBase from '../commons/array-item-creator-base';
 export default ArrayItemCreatorBase.extend(I18n, {
   layout,
   classNames: ['dataset-array-item-creator'],
+  classNameBindings: ['isHiddenDueToDisabled:hidden'],
 
   /**
    * @override
@@ -29,6 +31,11 @@ export default ArrayItemCreatorBase.extend(I18n, {
    * @type {() => void}
    */
   handleIdProvidingEditorChangeFunction: undefined,
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isHiddenDueToDisabled: and('isDisabled', not('idProvidingEditorState')),
 
   isDisabledObserver: observer('isDisabled', function isDisabledObserver() {
     if (this.idProvidingEditorState) {
