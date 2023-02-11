@@ -25,6 +25,21 @@ export const stores = {
 };
 
 /**
+ * Returns data spec describing type of store default value.
+ *
+ * @param {Object} store
+ * @returns {AtmDataSpec|null}
+ */
+export function getDataSpecForStoreDefaultValue(store) {
+  const storeType = store?.type;
+  if (!stores[storeType]?.getDefaultValueDataSpec) {
+    return null;
+  }
+
+  return stores[storeType].getDefaultValueDataSpec(store?.config);
+}
+
+/**
  * Returns true when values read from the passed `store` are compatbile with
  * `readDataSpec`.
  *

@@ -12,6 +12,14 @@
  */
 
 /**
+ * @returns {null}
+ */
+export function getDefaultValueDataSpec() {
+  // Audit log cannot have a default value
+  return null;
+}
+
+/**
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getReadDataSpecFilters() {
@@ -45,6 +53,7 @@ export function getWriteDataSpecFilters(storeConfig) {
 }
 
 export default {
+  getDefaultValueDataSpec,
   getReadDataSpecFilters,
   getWriteDataSpecFilters,
 };

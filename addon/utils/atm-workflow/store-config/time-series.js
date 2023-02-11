@@ -19,6 +19,14 @@
  */
 
 /**
+ * @returns {null}
+ */
+export function getDefaultValueDataSpec() {
+  // Time series cannot have a default value
+  return null;
+}
+
+/**
  * @returns {Array<AtmDataSpecFilter>}
  */
 export function getReadDataSpecFilters() {
@@ -48,6 +56,7 @@ export function getWriteDataSpecFilters() {
 }
 
 export default {
+  getDefaultValueDataSpec,
   getReadDataSpecFilters,
   getWriteDataSpecFilters,
 };

@@ -1089,7 +1089,7 @@ function generateExample(
           valueConstraints: {},
         },
       },
-      defaultInitialContent: '',
+      defaultInitialContent: null,
       requiresInitialContent: false,
     })),
   };

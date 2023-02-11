@@ -30,10 +30,8 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-field';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
-import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
-import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import {
   computed,
@@ -46,7 +44,6 @@ import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import { validator } from 'ember-cp-validations';
 import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editors';
 import {
   FormElement as DataSpecEditor,
@@ -55,6 +52,12 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import {
+  ValueEditorField as AtmValueEditorField,
+  rawValueToFormValue as atmRawValueToFormValue,
+  formValueToRawValue as atmFormValueToRawValue,
+} from 'onedata-gui-common/utils/atm-workflow/value-editors';
+import { getDataSpecForStoreDefaultValue } from 'onedata-gui-common/utils/atm-workflow/store-config';
 
 const storeTypes = Object.freeze([
   'list',
@@ -76,9 +79,6 @@ const storeSpecificForbiddenDataSpecTypes = Object.freeze({
 });
 
 const storeTypesExpandingArrays = ['list', 'treeForest', 'auditLog', 'timeSeries'];
-
-const defaultRangeStart = 0;
-const defaultRangeStep = 1;
 
 export default Component.extend(I18n, {
   layout,
@@ -208,28 +208,6 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
   fields: computed(function fields() {
-    const {
-      idField,
-      instanceIdField,
-      nameField,
-      descriptionField,
-      typeField,
-      genericStoreConfigFieldsGroup,
-      rangeStoreConfigFieldsGroup,
-      timeSeriesStoreConfigFieldsGroup,
-      needsUserInputField,
-    } = this.getProperties(
-      'idField',
-      'instanceIdField',
-      'nameField',
-      'descriptionField',
-      'typeField',
-      'genericStoreConfigFieldsGroup',
-      'rangeStoreConfigFieldsGroup',
-      'timeSeriesStoreConfigFieldsGroup',
-      'needsUserInputField'
-    );
-
     return FormFieldsRootGroup.extend({
       i18nPrefix: tag`${'component.i18nPrefix'}.fields`,
       ownerSource: reads('component'),
@@ -241,15 +219,15 @@ export default Component.extend(I18n, {
     }).create({
       component: this,
       fields: [
-        idField,
-        instanceIdField,
-        nameField,
-        descriptionField,
-        typeField,
-        genericStoreConfigFieldsGroup,
-        rangeStoreConfigFieldsGroup,
-        timeSeriesStoreConfigFieldsGroup,
-        needsUserInputField,
+        this.idField,
+        this.instanceIdField,
+        this.nameField,
+        this.descriptionField,
+        this.typeField,
+        this.dataSpecField,
+        this.defaultValueField,
+        this.timeSeriesStoreConfigFieldsGroup,
+        this.needsUserInputField,
       ],
     });
   }),
@@ -328,36 +306,14 @@ export default Component.extend(I18n, {
   }),
 
   /**
-   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
-   */
-  genericStoreConfigFieldsGroup: computed(function genericStoreConfigFieldsGroup() {
-    const {
-      dataSpecField,
-      defaultValueField,
-    } = this.getProperties(
-      'dataSpecField',
-      'defaultValueField'
-    );
-    return FormFieldsGroup.extend({
-      isExpanded: and(
-        neq('valuesSource.type', raw('range')),
-        neq('valuesSource.type', raw('timeSeries'))
-      ),
-      isVisible: or(eq('mode', raw('edit')), 'isExpanded'),
-    }).create({
-      name: 'genericStoreConfig',
-      fields: [
-        dataSpecField,
-        defaultValueField,
-      ],
-    });
-  }),
-
-  /**
    * @type {ComputedProperty<Utils.FormComponent.FormElement>}
    */
   dataSpecField: computed(function dataSpecField() {
     const field = DataSpecEditor.extend({
+      isVisible: and(
+        neq('valuesSource.type', raw('range')),
+        neq('valuesSource.type', raw('timeSeries'))
+      ),
       dataSpecFilters: computed(
         'valuesSource.type',
         function dataSpecFilters() {
@@ -394,136 +350,33 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.TextField>}
    */
   defaultValueField: computed(function defaultValueField() {
-    return JsonField.extend({
-      isVisible: not(and('isInViewMode', isEmpty('value'))),
+    return AtmValueEditorField.extend({
+      isVisible: and(
+        not(and('isInViewMode', not('value.hasValue'))),
+        neq('valuesSource.type', raw('timeSeries')),
+        neq('valuesSource.type', raw('auditLog'))
+      ),
+      atmDataSpecField: computed('parent.fields.[]', function atmDataSpecField() {
+        return this.parent?.fields.find((field) => field.name === 'dataSpec') ?? null;
+      }),
+      atmDataSpec: computed(
+        'valuesSource.type',
+        'atmDataSpecField.{isValid,value,isVisible}',
+        function atmDataSpec() {
+          if (
+            !this.atmDataSpecField ||
+            (!this.atmDataSpecField?.isValid && this.atmDataSpecField?.isVisible)
+          ) {
+            return null;
+          }
+          const storeFromCurrentForm = formDataToStore(this.parent.dumpValue());
+          return getDataSpecForStoreDefaultValue(storeFromCurrentForm);
+        }
+      ),
     }).create({
       name: 'defaultValue',
+      classes: 'nowrap-on-desktop',
       isOptional: true,
-    });
-  }),
-
-  rangeStoreConfigFieldsGroup: computed(function rangeStoreConfigFieldsGroup() {
-    const {
-      rangeStartField,
-      rangeEndField,
-      rangeStepField,
-    } = this.getProperties(
-      'rangeStartField',
-      'rangeEndField',
-      'rangeStepField'
-    );
-    return FormFieldsGroup.extend({
-      isExpanded: eq('valuesSource.type', raw('range')),
-      isVisible: or(eq('mode', raw('edit')), 'isExpanded'),
-    }).create({
-      name: 'rangeStoreConfig',
-      fields: [
-        rangeStartField,
-        rangeEndField,
-        rangeStepField,
-      ],
-    });
-  }),
-
-  /**
-   * @type {ComputedProperty<Utils.FormComponent.NumberField>}
-   */
-  rangeStartField: computed(function rangeStartField() {
-    return NumberField.create({
-      name: 'rangeStart',
-      integer: true,
-      customValidators: [
-        validator(function (value, options, model) {
-          const field = get(model, 'field');
-          const fieldPath = get(field, 'path');
-          const parsedValue = parseRangeNumberString(value);
-          const rangeEnd = parseRangeNumberString(
-            get(model, 'valuesSource.rangeStoreConfig.rangeEnd')
-          );
-          const rangeStep = parseRangeNumberString(
-            get(model, 'valuesSource.rangeStoreConfig.rangeStep')
-          );
-          if (
-            Number.isNaN(parsedValue) ||
-            Number.isNaN(rangeEnd) ||
-            Number.isNaN(rangeStep) ||
-            rangeStep === 0
-          ) {
-            return true;
-          }
-
-          if (rangeStep > 0 && parsedValue > rangeEnd) {
-            return String(field.t(`${fieldPath}.errors.gtEndForPositiveStep`));
-          } else if (rangeStep < 0 && parsedValue < rangeEnd) {
-            return String(field.t(`${fieldPath}.errors.ltEndForNegativeStep`));
-          }
-          return true;
-        }, {
-          dependentKeys: [
-            'model.valuesSource.rangeStoreConfig.rangeEnd',
-            'model.valuesSource.rangeStoreConfig.rangeStep',
-          ],
-        }),
-      ],
-    });
-  }),
-
-  /**
-   * @type {ComputedProperty<Utils.FormComponent.NumberField>}
-   */
-  rangeEndField: computed(function rangeEndField() {
-    return NumberField.create({
-      name: 'rangeEnd',
-      integer: true,
-      customValidators: [
-        validator(function (value, options, model) {
-          const field = get(model, 'field');
-          const fieldPath = get(field, 'path');
-          const parsedValue = parseRangeNumberString(value);
-          const rangeStart = parseRangeNumberString(
-            get(model, 'valuesSource.rangeStoreConfig.rangeStart')
-          );
-          const rangeStep = parseRangeNumberString(
-            get(model, 'valuesSource.rangeStoreConfig.rangeStep')
-          );
-          if (
-            Number.isNaN(parsedValue) ||
-            Number.isNaN(rangeStart) ||
-            Number.isNaN(rangeStep) ||
-            rangeStep === 0
-          ) {
-            return true;
-          }
-
-          if (rangeStep > 0 && parsedValue < rangeStart) {
-            return String(field.t(`${fieldPath}.errors.ltStartForPositiveStep`));
-          } else if (rangeStep < 0 && parsedValue > rangeStart) {
-            return String(field.t(`${fieldPath}.errors.gtStartForPositiveStep`));
-          }
-          return true;
-        }, {
-          dependentKeys: [
-            'model.valuesSource.rangeStoreConfig.rangeStart',
-            'model.valuesSource.rangeStoreConfig.rangeStep',
-          ],
-        }),
-      ],
-    });
-  }),
-
-  /**
-   * @type {ComputedProperty<Utils.FormComponent.NumberField>}
-   */
-  rangeStepField: computed(function rangeEndField() {
-    return NumberField.create({
-      name: 'rangeStep',
-      integer: true,
-      customValidators: [
-        validator('exclusion', {
-          allowBlank: true,
-          in: ['0'],
-        }),
-      ],
     });
   }),
 
@@ -670,15 +523,8 @@ function storeToFormData(store, { defaultType }) {
       name: '',
       description: '',
       type: defaultType,
-      genericStoreConfig: createValuesContainer({
-        dataSpec: dataSpecToFormValues(null),
-        defaultValue: '',
-      }),
-      rangeStoreConfig: createValuesContainer({
-        rangeStart: String(defaultRangeStart),
-        rangeEnd: '',
-        rangeStep: String(defaultRangeStep),
-      }),
+      dataSpec: dataSpecToFormValues(null),
+      defaultValue: atmRawValueToFormValue(null, true),
       timeSeriesStoreConfig: createValuesContainer({
         configEditor: storeConfigEditors.timeSeries.storeConfigToFormValues(null),
       }),
@@ -713,38 +559,15 @@ function storeToFormData(store, { defaultType }) {
     name,
     description,
     type,
+    defaultValue: atmRawValueToFormValue(defaultInitialContent, true),
     needsUserInput: Boolean(requiresInitialContent),
   };
 
-  switch (type) {
-    case 'range': {
-      const {
-        start,
-        end,
-        step,
-      } = getProperties(
-        defaultInitialContent || {},
-        'start',
-        'end',
-        'step'
-      );
-
-      formData.rangeStoreConfig = createValuesContainer({
-        rangeStart: String(typeof start === 'number' ? start : defaultRangeStart),
-        rangeEnd: String(end),
-        rangeStep: String(typeof step === 'number' ? step : defaultRangeStep),
-      });
-      break;
-    }
-    default:
-      formData.genericStoreConfig = createValuesContainer({
-        dataSpec: dataSpecToFormValues(
-          config && (config.logContentDataSpec || config.itemDataSpec)
-        ),
-        defaultValue: [undefined, null].includes(defaultInitialContent) ?
-          '' : JSON.stringify(defaultInitialContent, null, 2),
-      });
-      break;
+  // Time series and range stores don't have data spec
+  if (type !== 'range' && type !== 'timeSeries') {
+    formData.dataSpec = dataSpecToFormValues(
+      config?.logContentDataSpec || config?.itemDataSpec
+    );
   }
 
   formData.timeSeriesStoreConfig = createValuesContainer({
@@ -761,8 +584,8 @@ function formDataToStore(formData) {
     name,
     description,
     type,
-    genericStoreConfig,
-    rangeStoreConfig,
+    dataSpec: formDataSpec,
+    defaultValue: formDefaultValue,
     timeSeriesStoreConfig,
     needsUserInput,
   } = getProperties(
@@ -770,8 +593,8 @@ function formDataToStore(formData) {
     'name',
     'description',
     'type',
-    'genericStoreConfig',
-    'rangeStoreConfig',
+    'dataSpec',
+    'defaultValue',
     'timeSeriesStoreConfig',
     'needsUserInput'
   );
@@ -783,74 +606,29 @@ function formDataToStore(formData) {
     requiresInitialContent: Boolean(needsUserInput),
   };
 
-  switch (type) {
-    case 'range': {
-      const {
-        rangeStart,
-        rangeEnd,
-        rangeStep,
-      } = getProperties(
-        rangeStoreConfig || {},
-        'rangeStart',
-        'rangeEnd',
-        'rangeStep'
-      );
-
-      store.defaultInitialContent = {
-        start: Number(rangeStart),
-        end: Number(rangeEnd),
-        step: Number(rangeStep),
-      };
-      break;
-    }
-    case 'timeSeries':
-      store.config = storeConfigEditors.timeSeries.formValuesToStoreConfig(
-        get(timeSeriesStoreConfig, 'configEditor')
-      );
-      break;
-    default: {
-      const {
-        dataSpec: formDataSpec,
-        defaultValue,
-      } = getProperties(
-        genericStoreConfig || {},
-        'dataSpec',
-        'defaultValue'
-      );
-
-      const dataSpec = formValuesToDataSpec(formDataSpec);
-      let defaultInitialContent = null;
-      if (defaultValue && defaultValue.trim()) {
-        try {
-          defaultInitialContent = JSON.parse(defaultValue);
-        } catch (e) {
-          defaultInitialContent = null;
-        }
-      }
-
-      const config = type === 'auditLog' ? {
-        logContentDataSpec: dataSpec,
-      } : {
-        itemDataSpec: dataSpec,
-      };
-
-      Object.assign(store, {
-        config,
-        defaultInitialContent,
-      });
-      break;
-    }
+  // Time series store has its own custom configuration field
+  if (type === 'timeSeries') {
+    store.config = storeConfigEditors.timeSeries.formValuesToStoreConfig(
+      get(timeSeriesStoreConfig, 'configEditor')
+    );
+  }
+  // Time series and audit log stores don't have default value
+  if (type === 'auditLog' || type === 'timeSeries') {
+    store.defaultInitialContent = null;
+  } else {
+    store.defaultInitialContent = atmFormValueToRawValue(formDefaultValue);
+  }
+  // Time series and range stores don't have data spec
+  if (type !== 'timeSeries' && type !== 'range') {
+    const dataSpec = formValuesToDataSpec(formDataSpec);
+    store.config = type === 'auditLog' ? {
+      logContentDataSpec: dataSpec,
+    } : {
+      itemDataSpec: dataSpec,
+    };
   }
 
   return store;
-}
-
-function parseRangeNumberString(rangeNumberString) {
-  const stringAsNumber = Number(rangeNumberString);
-  return Number.isInteger(stringAsNumber) &&
-    rangeNumberString &&
-    rangeNumberString.trim().length ?
-    stringAsNumber : NaN;
 }
 
 function isDataSpecValidForStoreConfig(dataSpec, storeType) {

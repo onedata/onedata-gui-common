@@ -12,6 +12,14 @@
  */
 
 /**
+ * @param {AtmSingleValueStoreConfig} storeConfig
+ * @returns {AtmDataSpec | null}
+ */
+export function getDefaultValueDataSpec(storeConfig) {
+  return storeConfig?.itemDataSpec ?? null;
+}
+
+/**
  * @param {AtmSingleValueStoreConfig} [storeConfig]
  * @returns {Array<AtmDataSpecFilter>}
  */
@@ -48,6 +56,7 @@ export function getWriteDataSpecFilters(storeConfig) {
 }
 
 export default {
+  getDefaultValueDataSpec,
   getReadDataSpecFilters,
   getWriteDataSpecFilters,
 };
