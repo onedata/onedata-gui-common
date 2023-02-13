@@ -8,33 +8,21 @@
     <tr class="row-with-input">
       <td class="property-name">{{tt this "name"}}</td>
       <td class="property-value">
-        {{#one-clipboard-line
+        {{one-clipboard-line
           size="sm"
-          value=space.name
-          showText=false
-          btnType="success"
-          type="html"
+          value=record.name
+          type="text"
         }}
-          {{#truncated-string}}
-            {{space.name}}
-          {{/truncated-string}}
-        {{/one-clipboard-line}}
       </td>
     </tr>
     <tr class="row-with-input">
       <td class="property-name">{{tt this "id"}}</td>
       <td class="property-value">
-        {{#one-clipboard-line
+        {{one-clipboard-line
           size="sm"
-          value=space.entityId
-          showText=false
-          btnType="success"
-          type="html"
+          value=record.entityId
+          type="text"
         }}
-          {{#truncated-string}}
-            {{space.entityId}}
-          {{/truncated-string}}
-        {{/one-clipboard-line}}
       </td>
     </tr>
     {{#if creator.fullName}}

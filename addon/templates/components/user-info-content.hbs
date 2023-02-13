@@ -19,15 +19,11 @@
       <tr class="row-with-text">
         <td class="property-name">{{tt this "userId"}}</td>
         <td class="property-value">
-          {{#one-clipboard-line
+          {{one-clipboard-line
             size="sm"
             value=user.entityId
-            type="html"
+            type="text"
           }}
-            {{#truncated-string}}
-              {{user.entityId}}
-            {{/truncated-string}}
-          {{/one-clipboard-line}}
         </td>
       </tr>
     </tbody>

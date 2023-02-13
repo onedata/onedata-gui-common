@@ -8,7 +8,7 @@
               "item-icon-container"
               (if isResourceWithAdditionalInfo "icon-container popover-info-trigger")
             }}
-            data-record-id={{item.space.entityId}}
+            data-record-id={{item.record.entityId}}
             {{action
               (mut item.itemInfoOpened)
               (not item.itemInfoOpened)
@@ -72,15 +72,16 @@
           }}
         {{/if}}
       {{/listItem.header}}
-      {{#record-info-popover
-        isOpened=(and isResourceWithAdditionalInfo item.itemInfoOpened)
-        triggerSelector=item.triggerSelector
-      }}
-        {{space-info-content
-          space=item.space
-          closeSpaceInfoPopover=(action "closeSpaceInfoPopover" item)
+      {{#if isResourceWithAdditionalInfo}}
+        {{#record-info-popover
+          isOpened=item.itemInfoOpened
+          triggerSelector=item.triggerSelector
         }}
-      {{/record-info-popover}}
+          {{component (concat item.record.constructor.modelName "-info-content")
+            record=item.record
+          }}
+        {{/record-info-popover}}
+      {{/if}}
     {{/list.item}}
   {{/each}}
 {{/one-collapsible-list}}

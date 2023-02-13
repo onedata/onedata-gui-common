@@ -38,9 +38,6 @@ export default Component.extend({
     itemInfoHovered(item, hasHover) {
       item.set('hasItemInfoHovered', hasHover);
     },
-    closeSpaceInfoPopover(item) {
-      item.set('itemInfoOpened', false);
-    },
   },
 });
 
@@ -74,6 +71,12 @@ export const ResourceListItem = EmberObject.extend({
   icon: undefined,
 
   /**
+   * @virtual
+   * @type {Object}
+   */
+  record: undefined,
+
+  /**
    * Default value is set on init.
    * @virtual optional
    * @type {Array<Utils.Action>}
@@ -88,10 +91,11 @@ export const ResourceListItem = EmberObject.extend({
   link: undefined,
 
   /**
-   * @virtual optional
    * @type {String}
    */
-  triggerSelector: undefined,
+  triggerSelector: computed('record', function triggerSelector() {
+    return `.item-icon-container[data-record-id="${this.record.entityId}"]`;
+  }),
 
   /**
    * @type {boolean}

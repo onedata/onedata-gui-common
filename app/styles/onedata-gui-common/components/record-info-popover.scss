@@ -22,31 +22,9 @@
       }
       .property-value {
         padding-right: 0;
-        .clipboard-line  {
-          display: flex;
-        }
 
         .user-username {
           opacity: $disabled-opacity;
-        }
-
-        .clipboard-btn {
-          position: relative;
-          transform: none;
-        }
-
-        .clipboard-btn-html {
-          margin-top: -7px;
-        }
-
-        .clipboard-input {
-          max-width: 90%;
-
-          .form-control {
-            border: none;
-            box-shadow: none;
-            padding: 0;
-          }
         }
       }
       td {
