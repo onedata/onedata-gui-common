@@ -402,10 +402,16 @@ export default Component.extend(I18n, {
    */
   needsUserInputField: computed(function needsUserInputField() {
     return ToggleField.extend({
-      isEnabled: neq('valuesSource.type', raw('timeSeries')),
+      isEnabled: and(
+        neq('valuesSource.type', raw('auditLog')),
+        neq('valuesSource.type', raw('timeSeries'))
+      ),
       storeTypeObserver: observer('valuesSource.type', function storeTypeObserver() {
-        // For time series store change value to `false`
-        if (this.get('valuesSource.type') === 'timeSeries' && this.get('value')) {
+        // For time series and audit log stores change value to `false`
+        if ((
+            this.valuesSource?.type === 'timeSeries' ||
+            this.valuesSource?.type === 'auditLog'
+          ) && this.value) {
           this.valueChanged(false);
         }
       }),
