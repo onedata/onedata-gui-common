@@ -5,6 +5,7 @@
     "editor-with-json"
     (if (not isValid) "invalid")
   ))
+  removeConfirmationQuestion=(if isThereSomethingToClear (tt this "removeConfirmationQuestion") null)
   as |editorBox|
 }}
   {{#if (eq editorBox.section "toolbar")}}
@@ -29,39 +30,13 @@
         {{action "toggleClearConfirmation" (not isClearConfirmationOpened)}}
       >
         {{tt this "clear"}}
-        {{#render-later triggerRender=isClearConfirmationOpened}}
-          {{#one-webui-popover
-            class="clear-array-confirmation"
-            triggerSelector=clearTriggerSelector
-            open=isClearConfirmationOpened
-            as |popover|
-          }}
-            {{#click-outside
-              onClickOutside=(action "toggleClearConfirmation" false)
-              exceptSelector=clearTriggerSelector
-            }}
-              <p>{{tt this "clearConfirmation.question"}}</p>
-              <div class="buttons-container">
-                {{#one-button
-                  class="btn-cancel"
-                  size="sm"
-                  type="default"
-                  onClick=(action "toggleClearConfirmation" false)
-                }}
-                  {{tt this "clearConfirmation.no"}}
-                {{/one-button}}
-                {{#one-button
-                  class="btn-confirm"
-                  size="sm"
-                  type="danger"
-                  onClick=(action "confirmClear")
-                }}
-                  {{tt this "clearConfirmation.yes"}}
-                {{/one-button}}
-              </div>
-            {{/click-outside}}
-          {{/one-webui-popover}}
-        {{/render-later}}
+        {{atm-workflow/value-editors/commons/remove-ack-popover
+          triggerSelector=clearTriggerSelector
+          isOpened=isClearConfirmationOpened
+          question=(tt this "clearConfirmationQuestion")
+          onConfirm=(action "confirmClear")
+          onClose=(action "toggleClearConfirmation" false)
+        }}
       </a>
     {{/if}}
   {{else if (eq editorBox.section "content")}}
@@ -118,6 +93,10 @@
             </li>
           {{/each}}
         </ol>
+      {{else}}
+        <p class="no-items-info">
+          <em>Empty</em>
+        </p>
       {{/if}}
       {{component editorState.itemCreatorComponentName
         stateManager=stateManager
@@ -140,6 +119,9 @@
         update=(action "rawValueChanged")
         readOnly=isDisabled
       }}
+      {{#if rawEditorValidationError}}
+        <div class="form-message text-danger">{{rawEditorValidationError}}</div>
+      {{/if}}
     {{/if}}
   {{/if}}
 {{/atm-workflow/value-editors/commons/editor-box}}

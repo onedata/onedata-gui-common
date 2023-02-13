@@ -64,7 +64,11 @@ export default Component.extend({
       if (newEditorState) {
         newEditorState.addChangeListener(this.stateChangeListener);
       }
+
       this.set('editorState', newEditorState);
+      if (newEditorState) {
+        this.handleStateChange();
+      }
     }
   ),
 
@@ -74,7 +78,17 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     this.editorStateSetter();
-    this.handleStateChange();
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.editorState?.removeChangeListener(this.stateChangeListener);
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   /**

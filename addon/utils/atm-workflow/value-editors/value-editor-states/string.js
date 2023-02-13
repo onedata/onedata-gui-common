@@ -16,8 +16,12 @@ export default class StringValueEditorState extends ValueEditorState {
   constructor() {
     super(...arguments);
     this.editorComponentName = `${editorComponentsPrefix}/string/editor`;
-    if (!this.value) {
-      this.value = '';
-    }
+  }
+
+  /**
+   * @override
+   */
+  getDefaultValue() {
+    return '';
   }
 }

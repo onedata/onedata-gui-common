@@ -6,7 +6,20 @@
     {{yield (hash section="toolbar")}}
     {{#if onRemove}}
       <span class="separator"></span>
-      {{remove-icon onClick=onRemove}}
+      {{#remove-icon onClick=(action "remove")}}
+        {{#if removeConfirmationQuestion}}
+          {{atm-workflow/value-editors/commons/remove-ack-popover
+            triggerSelector=(local-selector
+              elementId
+              (concat "> .editor-box-header .remove-icon")
+            )
+            isOpened=isRemoveConfirmationOpened
+            question=removeConfirmationQuestion
+            onConfirm=(action "confirmRemove")
+            onClose=(action "closeRemoveConfirmation")
+          }}
+        {{/if}}
+      {{/remove-icon}}
     {{/if}}
   </div>
 </div>

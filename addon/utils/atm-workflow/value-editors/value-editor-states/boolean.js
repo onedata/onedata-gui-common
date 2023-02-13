@@ -16,8 +16,12 @@ export default class BooleanValueEditorState extends ValueEditorState {
   constructor() {
     super(...arguments);
     this.editorComponentName = `${editorComponentsPrefix}/boolean/editor`;
-    if (typeof this.value !== 'boolean') {
-      this.value = false;
-    }
+  }
+
+  /**
+   * @override
+   */
+  getDefaultValue() {
+    return false;
   }
 }

@@ -32,9 +32,6 @@ export default class ArrayValueEditorState extends ValueEditorState {
   constructor() {
     super(...arguments);
     this.editorComponentName = `${editorComponentsPrefix}/array/editor`;
-    if (!this.value) {
-      this.value = [];
-    }
 
     // Using assignmenets with `??` below as already done operations in this
     // constructor might have changed `this.value` which automatically changes
@@ -153,7 +150,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
     }
 
     if (newMode === 'raw') {
-      this.resetStringifiedValue();
+      this.setStringifiedValue(this.value);
     } else {
       this.recreateItemEditorsForValue(
         this.isValid ? JSON.parse(this.stringifiedValue) : []
@@ -169,7 +166,14 @@ export default class ArrayValueEditorState extends ValueEditorState {
    * @returns {void}
    */
   addNewItems(newItemEditorStates) {
-    this.itemEditorStateIds.push(...newItemEditorStates.map((state) => state.id));
+    this.itemEditorStateIds.push(
+      ...newItemEditorStates.filter(Boolean).map((state) => state.id)
+    );
+    newItemEditorStates.forEach((itemEditorState) => {
+      if (itemEditorState) {
+        this.prepareNewItemStateForUse(itemEditorState);
+      }
+    });
     this.recalculateItemsExpandedByUserCount();
     this.notifyChange();
   }
@@ -262,7 +266,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
    */
   setValue(newValue) {
     if (this.mode === 'raw') {
-      this.resetStringifiedValue();
+      this.setStringifiedValue(newValue);
     } else {
       this.recreateItemEditorsForValue(newValue);
     }
@@ -297,10 +301,15 @@ export default class ArrayValueEditorState extends ValueEditorState {
    */
   recreateItemEditorsForValue(value) {
     this.removeAllItemsWithoutNotification();
-    if (Array.isArray(value)) {
-      this.itemEditorStateIds = value.map((itemValue) =>
-        this.editorStateManager.createValueEditorState(this.itemAtmDataSpec, itemValue).id
-      );
+    if (Array.isArray(value) && this.itemAtmDataSpec) {
+      this.itemEditorStateIds = value.map((itemValue) => {
+        const itemEditorState = this.editorStateManager
+          .createValueEditorState(this.itemAtmDataSpec, itemValue);
+        if (itemEditorState) {
+          this.prepareNewItemStateForUse(itemEditorState);
+        }
+        return itemEditorState?.id;
+      }).filter(Boolean);
     }
     this.recalculateItemsExpandedByUserCount();
   }
@@ -309,8 +318,8 @@ export default class ArrayValueEditorState extends ValueEditorState {
    * @private
    * @returns {void}
    */
-  resetStringifiedValue() {
-    this.internalStringifiedValue = JSON.stringify(this.value, null, 2);
+  setStringifiedValue(value) {
+    this.internalStringifiedValue = JSON.stringify(value, null, 2);
   }
 
   /**
@@ -330,5 +339,36 @@ export default class ArrayValueEditorState extends ValueEditorState {
         collapsibleItemsCount
       );
     }
+  }
+
+  /**
+   * @private
+   * @param {Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState} newItemEditorState
+   * @returns {void}
+   */
+  prepareNewItemStateForUse(newItemEditorState) {
+    if (!newItemEditorState) {
+      return;
+    }
+    if (newItemEditorState.isDisabled !== this.isDisabled) {
+      newItemEditorState.isDisabled = this.isDisabled;
+    }
+  }
+
+  /**
+   * @override
+   */
+  getDefaultValue() {
+    return [];
+  }
+
+  /**
+   * @override
+   */
+  setIsDisabled() {
+    super.setIsDisabled(...arguments);
+    this.itemEditorStates.forEach((itemEditorState) =>
+      itemEditorState.isDisabled = this.isDisabled
+    );
   }
 }

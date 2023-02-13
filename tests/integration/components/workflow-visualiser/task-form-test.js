@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
@@ -21,6 +18,7 @@ import {
   find,
   findAll,
 } from '@ember/test-helpers';
+import { replaceEmberAceWithTextarea } from '../../../helpers/ember-ace';
 
 const componentClass = 'task-form';
 
@@ -32,6 +30,13 @@ const dataSpecs = [{
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
+  exampleConstValue: 10,
+  inputExampleConstValue: async (fieldSelector) => {
+    await fillIn(`${fieldSelector} input`, '10');
+  },
+  checkExampleConstValue: (fieldSelector) => {
+    expect(find(`${fieldSelector} input`)).to.have.value('10');
+  },
 }, {
   label: 'Boolean',
   name: 'boolean',
@@ -40,6 +45,15 @@ const dataSpecs = [{
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
+  exampleConstValue: true,
+  inputExampleConstValue: async (fieldSelector) => {
+    await (new OneDrodopdownHelper(fieldSelector))
+    .selectOptionByText('true');
+  },
+  checkExampleConstValue: (fieldSelector) => {
+    expect(new OneDrodopdownHelper(fieldSelector).getSelectedOptionText())
+      .to.equal('true');
+  },
 }, {
   label: 'String',
   name: 'string',
@@ -48,6 +62,13 @@ const dataSpecs = [{
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
+  exampleConstValue: 'abc',
+  inputExampleConstValue: async (fieldSelector) => {
+    await fillIn(`${fieldSelector} textarea`, 'abc');
+  },
+  checkExampleConstValue: (fieldSelector) => {
+    expect(find(`${fieldSelector} textarea`)).to.have.value('abc');
+  },
 }, {
   label: 'Object',
   name: 'object',
@@ -61,17 +82,22 @@ const dataSpecs = [{
     'const',
   ],
   canContain: [
-    'anyFile',
-    'regularFile',
-    'directory',
-    'symlink',
+    'file',
     'dataset',
     'range',
     'timeSeriesMeasurement',
   ],
+  exampleConstValue: { a: 1 },
+  inputExampleConstValue: async (fieldSelector) => {
+    await fillIn(`${fieldSelector} textarea`, '{ "a": 1 }');
+  },
+  checkExampleConstValue: (fieldSelector) => {
+    expect(find(`${fieldSelector} textarea`))
+      .to.have.value(JSON.stringify({ a: 1 }, null, 2));
+  },
 }, {
-  label: 'Any file',
-  name: 'anyFile',
+  label: 'File',
+  name: 'file',
   dataSpec: {
     type: 'file',
     valueConstraints: {
@@ -79,37 +105,17 @@ const dataSpecs = [{
     },
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
-  canContain: ['regularFile', 'directory', 'symlink'],
-}, {
-  label: 'Regular file',
-  name: 'regularFile',
-  dataSpec: {
-    type: 'file',
-    valueConstraints: {
-      fileType: 'REG',
-    },
+  exampleConstValue: { file_id: 'someid' },
+  inputExampleConstValue: async (fieldSelector) => {
+    await click(`${fieldSelector} .file-value-editor-selector`);
+    await click('.provide-file-id-action-trigger');
+    await fillIn(`${fieldSelector} .fileId-field input`, 'someid');
+    await click(`${fieldSelector} .accept-btn`);
   },
-  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
-}, {
-  label: 'Directory',
-  name: 'directory',
-  dataSpec: {
-    type: 'file',
-    valueConstraints: {
-      fileType: 'DIR',
-    },
+  checkExampleConstValue: (fieldSelector) => {
+    expect(find(`${fieldSelector} .file-editor`))
+      .to.have.class('mode-selected');
   },
-  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
-}, {
-  label: 'Symbolic link',
-  name: 'symlink',
-  dataSpec: {
-    type: 'file',
-    valueConstraints: {
-      fileType: 'SYMLNK',
-    },
-  },
-  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
 }, {
   label: 'Dataset',
   name: 'dataset',
@@ -118,6 +124,16 @@ const dataSpecs = [{
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
+  exampleConstValue: { datasetId: 'someid' },
+  inputExampleConstValue: async (fieldSelector) => {
+    await click(`${fieldSelector} .dataset-value-editor-selector`);
+    await click('.provide-dataset-id-action-trigger');
+    await fillIn(`${fieldSelector} .datasetId-field input`, 'someid');
+    await click(`${fieldSelector} .accept-btn`);
+  },
+  checkExampleConstValue: (fieldSelector) => {
+    expect(find(`${fieldSelector} .dataset-editor`)).to.have.class('mode-selected');
+  },
 }, {
   label: 'Range',
   name: 'range',
@@ -126,6 +142,21 @@ const dataSpecs = [{
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
+  exampleConstValue: {
+    start: 2,
+    end: 10,
+    step: 3,
+  },
+  inputExampleConstValue: async (fieldSelector) => {
+    await fillIn(`${fieldSelector} .start-field input`, '2');
+    await fillIn(`${fieldSelector} .end-field input`, '10');
+    await fillIn(`${fieldSelector} .step-field input`, '3');
+  },
+  checkExampleConstValue: (fieldSelector) => {
+    expect(find(`${fieldSelector} .start-field input`)).to.have.value('2');
+    expect(find(`${fieldSelector} .end-field input`)).to.have.value('10');
+    expect(find(`${fieldSelector} .step-field input`)).to.have.value('3');
+  },
 }, {
   label: 'Time series measurement',
   name: 'timeSeriesMeasurement',
@@ -134,6 +165,21 @@ const dataSpecs = [{
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
+  exampleConstValue: {
+    timestamp: 123,
+    tsName: 'abc',
+    value: 1,
+  },
+  inputExampleConstValue: async (fieldSelector) => {
+    await fillIn(`${fieldSelector} .timestamp-field input`, '123');
+    await fillIn(`${fieldSelector} .tsName-field input`, 'abc');
+    await fillIn(`${fieldSelector} .value-field input`, '1');
+  },
+  checkExampleConstValue: (fieldSelector) => {
+    expect(find(`${fieldSelector} .timestamp-field input`)).to.have.value('123');
+    expect(find(`${fieldSelector} .tsName-field input`)).to.have.value('abc');
+    expect(find(`${fieldSelector} .value-field input`)).to.have.value('1');
+  },
 }];
 
 const valueBuilderTypeLabels = {
@@ -147,10 +193,7 @@ const allSimpleDataSpecNames = [
   'boolean',
   'string',
   'object',
-  'anyFile',
-  'regularFile',
-  'directory',
-  'symlink',
+  'file',
   'dataset',
   'range',
   'timeSeriesMeasurement',
@@ -169,10 +212,7 @@ const allPossibleStoreSpecs = [{
 }, {
   type: 'treeForest',
   allowedDataSpecNames: [
-    'anyFile',
-    'regularFile',
-    'directory',
-    'symlink',
+    'file',
     'dataset',
   ],
   dataSpecConfigKey: 'itemDataSpec',
@@ -308,7 +348,7 @@ const exampleAtmLambdaRevision = {
       valueConstraints: {},
     },
   }, {
-    name: 'resanyfile',
+    name: 'resfile',
     dataSpec: {
       type: 'file',
       valueConstraints: {
@@ -348,8 +388,8 @@ const exampleTask = {
       type: 'singleValueStoreContentUpdateOptions',
     },
   }, {
-    resultName: 'resanyfile',
-    storeSchemaId: 'treeForestAnyFileId',
+    resultName: 'resfile',
+    storeSchemaId: 'treeForestFileId',
     storeContentUpdateOptions: {
       type: 'treeForestStoreContentUpdateOptions',
       function: 'append',
@@ -358,7 +398,9 @@ const exampleTask = {
   timeSeriesStoreConfig: null,
 };
 
-const atmLambdaRevisionNumberDropdown = new OneDrodopdownHelper('.atmLambdaRevisionNumber-field');
+const atmLambdaRevisionNumberDropdown = new OneDrodopdownHelper(
+  '.atmLambdaRevisionNumber-field'
+);
 const valueBuilderTypeDropdown = new OneDrodopdownHelper('.valueBuilderType-field');
 const valueBuilderStoreDropdown = new OneDrodopdownHelper('.valueBuilderStore-field');
 const targetStoreDropdown = new OneDrodopdownHelper('.targetStore-field');
@@ -368,6 +410,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
   setupRenderingTest();
 
   beforeEach(function () {
+    replaceEmberAceWithTextarea(this);
     const createCreateStoreActionStub = sinon.stub().returns({
       execute: () => {
         if (this.get('createStoreSucceeds')) {
@@ -512,7 +555,15 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       done();
     });
 
-    dataSpecs.forEach(({ name, label, dataSpec, valueBuilderTypes, canContain }) => {
+    dataSpecs.forEach(({
+      name,
+      label,
+      dataSpec,
+      valueBuilderTypes,
+      canContain,
+      inputExampleConstValue,
+      exampleConstValue,
+    }) => {
       it(`provides available value builder types for argument of type "${label}"`,
         async function (done) {
           this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
@@ -703,7 +754,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
             await renderComponent();
             await valueBuilderTypeDropdown.selectOptionByText('Constant value');
-            await fillIn('.valueBuilderConstValue-field .form-control', '123');
+            await inputExampleConstValue('.valueBuilderConstValue-field');
 
             expect(this.get('changeSpy')).to.be.calledWith({
               data: {
@@ -714,7 +765,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   argumentName: 'arg1',
                   valueBuilder: {
                     valueBuilderType: 'const',
-                    valueBuilderRecipe: 123,
+                    valueBuilderRecipe: exampleConstValue,
                   },
                 }],
                 resultMappings: [],
@@ -980,17 +1031,19 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         done();
       });
 
-    it('renders "override resources" toggle, which is unchecked by default', async function (done) {
-      await renderComponent();
+    it('renders "override resources" toggle, which is unchecked by default',
+      async function (done) {
+        await renderComponent();
 
-      const overrideField = find('.overrideResources-field');
-      expect(overrideField).to.have.class('toggle-field-renderer');
-      expect(overrideField.querySelector('.control-label').textContent.trim())
-        .to.equal('Override default resources:');
-      expect(overrideField.querySelector('.one-way-toggle'))
-        .to.not.have.class('checked');
-      done();
-    });
+        const overrideField = find('.overrideResources-field');
+        expect(overrideField).to.have.class('toggle-field-renderer');
+        expect(overrideField.querySelector('.control-label').textContent.trim())
+          .to.equal('Override default resources:');
+        expect(overrideField.querySelector('.one-way-toggle'))
+          .to.not.have.class('checked');
+        done();
+      }
+    );
 
     it('renders "resources" section with cpu, memory and storage fields groups',
       async function (done) {
@@ -1048,44 +1101,50 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         done();
       });
 
-    it('disables "resources" section when "override resources" toggle is unchecked', async function (done) {
-      await renderComponent();
+    it('disables "resources" section when "override resources" toggle is unchecked',
+      async function (done) {
+        await renderComponent();
 
-      await toggleOverrideResources(false);
+        await toggleOverrideResources(false);
 
-      expect(find('.resourcesSections-field .field-enabled')).to.not.exist;
-      done();
-    });
+        expect(find('.resourcesSections-field .field-enabled')).to.not.exist;
+        done();
+      }
+    );
 
-    it('enables "resources" section when "override resources" toggle is checked', async function (done) {
-      await renderComponent();
+    it('enables "resources" section when "override resources" toggle is checked',
+      async function (done) {
+        await renderComponent();
 
-      await toggleOverrideResources(true);
+        await toggleOverrideResources(true);
 
-      expect(find('.resourcesSections-field .field-disabled')).to.not.exist;
-      done();
-    });
+        expect(find('.resourcesSections-field .field-disabled')).to.not.exist;
+        done();
+      }
+    );
 
-    it('allows to setup resources override (minimal values provided)', async function (done) {
-      const changeSpy = this.get('changeSpy');
-      await renderComponent();
+    it('allows to setup resources override (minimal values provided)',
+      async function (done) {
+        const changeSpy = this.get('changeSpy');
+        await renderComponent();
 
-      await toggleOverrideResources(true);
+        await toggleOverrideResources(true);
 
-      expect(changeSpy).to.be.calledWith(sinon.match({
-        data: sinon.match({
-          resourceSpecOverride: {
-            cpuRequested: 0.1,
-            cpuLimit: null,
-            memoryRequested: 128 * 1024 * 1024,
-            memoryLimit: null,
-            ephemeralStorageRequested: 0,
-            ephemeralStorageLimit: null,
-          },
-        }),
-      }));
-      done();
-    });
+        expect(changeSpy).to.be.calledWith(sinon.match({
+          data: sinon.match({
+            resourceSpecOverride: {
+              cpuRequested: 0.1,
+              cpuLimit: null,
+              memoryRequested: 128 * 1024 * 1024,
+              memoryLimit: null,
+              ephemeralStorageRequested: 0,
+              ephemeralStorageLimit: null,
+            },
+          }),
+        }));
+        done();
+      }
+    );
 
     it('allows to setup resources override (all values provided)', async function (done) {
       const changeSpy = this.get('changeSpy');
@@ -1114,31 +1173,33 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       done();
     });
 
-    it('resets changes in "resources" section when it becomes disabled', async function (done) {
-      const changeSpy = this.get('changeSpy');
-      await renderComponent();
+    it('resets changes in "resources" section when it becomes disabled',
+      async function (done) {
+        const changeSpy = this.get('changeSpy');
+        await renderComponent();
 
-      await toggleOverrideResources(true);
-      await fillIn('.cpuRequested-field input', '2');
-      await fillIn('.cpuLimit-field input', '10');
-      await fillIn('.memoryRequested-field input', '100');
-      await fillIn('.memoryLimit-field input', '200');
-      await fillIn('.ephemeralStorageRequested-field input', '100');
-      await fillIn('.ephemeralStorageLimit-field input', '200');
-      changeSpy.resetHistory();
-      await toggleOverrideResources(false);
+        await toggleOverrideResources(true);
+        await fillIn('.cpuRequested-field input', '2');
+        await fillIn('.cpuLimit-field input', '10');
+        await fillIn('.memoryRequested-field input', '100');
+        await fillIn('.memoryLimit-field input', '200');
+        await fillIn('.ephemeralStorageRequested-field input', '100');
+        await fillIn('.ephemeralStorageLimit-field input', '200');
+        changeSpy.resetHistory();
+        await toggleOverrideResources(false);
 
-      expect(find('.cpuRequested-field input').value).to.equal('0.1');
-      expect(find('.cpuLimit-field input').value).to.equal('');
-      expect(find('.memoryRequested-field input').value).to.equal('128');
-      expect(find('.memoryLimit-field input').value).to.equal('');
-      expect(find('.ephemeralStorageRequested-field input').value).to.equal('0');
-      expect(find('.ephemeralStorageLimit-field input').value).to.equal('');
-      expect(changeSpy).to.be.calledWith(
-        sinon.match((val) => !('resourceSpecOverride' in val))
-      );
-      done();
-    });
+        expect(find('.cpuRequested-field input').value).to.equal('0.1');
+        expect(find('.cpuLimit-field input').value).to.equal('');
+        expect(find('.memoryRequested-field input').value).to.equal('128');
+        expect(find('.memoryLimit-field input').value).to.equal('');
+        expect(find('.ephemeralStorageRequested-field input').value).to.equal('0');
+        expect(find('.ephemeralStorageLimit-field input').value).to.equal('');
+        expect(changeSpy).to.be.calledWith(
+          sinon.match((val) => !('resourceSpecOverride' in val))
+        );
+        done();
+      }
+    );
   });
 
   context('in "edit" mode', function () {
@@ -1323,7 +1384,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             },
           }, {
             resultName: 'res2',
-            storeSchemaId: 'treeForestAnyFileId',
+            storeSchemaId: 'treeForestFileId',
             storeContentUpdateOptions: {
               type: 'treeForestStoreContentUpdateOptions',
               function: 'append',
@@ -1355,7 +1416,9 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect(missingValueBuilderStoreDropdown).to.have.class('has-error');
       await new OneDrodopdownHelper(missingValueBuilderStoreDropdown)
         .selectOptionByText('singleValueStringStore');
-      await click('.resultMappings-field .collection-item:nth-child(3) .remove-field-button');
+      await click(
+        '.resultMappings-field .collection-item:nth-child(3) .remove-field-button'
+      );
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
@@ -1382,7 +1445,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           }],
           resultMappings: [{
             resultName: 'res2',
-            storeSchemaId: 'treeForestAnyFileId',
+            storeSchemaId: 'treeForestFileId',
             storeContentUpdateOptions: {
               type: 'treeForestStoreContentUpdateOptions',
               function: 'append',
@@ -1645,9 +1708,6 @@ function itFillsFieldsWithDataOfPassedTask() {
           .to.have.trimmed.text(builderLabel);
       }
     });
-    // TODO: VFS-7816 uncomment or remove future code
-    // expect(args[2].querySelector('.valueBuilderStore-field .field-component').textContent.trim())
-    //   .to.equal('singleValueObjectStore');
     const results = findAll('.singleResultMappings-field');
     expect(results).to.have.length(exampleAtmLambdaRevision.resultSpecs.length);
     exampleAtmLambdaRevision.resultSpecs.forEach(({ name }, idx) => {
@@ -1736,11 +1796,14 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuild
       const possibleDataSpecs = dataSpecs
         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('iteratedItem'))
         .mapBy('dataSpec');
-      this.set('atmLambda.revisionRegistry.1.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
-        name: `arg${idx}`,
-        dataSpec,
-        isOptional: false,
-      })));
+      this.set(
+        'atmLambda.revisionRegistry.1.argumentSpecs',
+        possibleDataSpecs.map((dataSpec, idx) => ({
+          name: `arg${idx}`,
+          dataSpec,
+          isOptional: false,
+        }))
+      );
       this.set('task.argumentMappings', possibleDataSpecs.map((dataSpec, idx) => ({
         argumentName: `arg${idx}`,
         valueBuilder: {
@@ -1774,26 +1837,31 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
     async function (done) {
       const inEditMode = this.get('mode') !== 'view';
       const possibleDataSpecs = dataSpecs
-        .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('const'))
-        .mapBy('dataSpec');
-      this.set('atmLambda.revisionRegistry.1.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
-        name: `arg${idx}`,
-        dataSpec,
-        isOptional: false,
-      })));
-      this.set('task.argumentMappings', possibleDataSpecs.map((dataSpec, idx) => ({
-        argumentName: `arg${idx}`,
-        valueBuilder: {
-          valueBuilderType: 'const',
-          valueBuilderRecipe: String(idx),
-        },
-      })));
+        .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('const'));
+      this.set(
+        'atmLambda.revisionRegistry.1.argumentSpecs',
+        possibleDataSpecs.map(({ dataSpec }, idx) => ({
+          name: `arg${idx}`,
+          dataSpec,
+          isOptional: false,
+        }))
+      );
+      this.set(
+        'task.argumentMappings',
+        possibleDataSpecs.map(({ exampleConstValue }, idx) => ({
+          argumentName: `arg${idx}`,
+          valueBuilder: {
+            valueBuilderType: 'const',
+            valueBuilderRecipe: exampleConstValue,
+          },
+        }))
+      );
 
       await renderComponent();
 
       const args = findAll('.argumentMapping-field');
       expect(args).to.have.length(possibleDataSpecs.length);
-      possibleDataSpecs.forEach((dataSpec, idx) => {
+      possibleDataSpecs.forEach(({ checkExampleConstValue }, idx) => {
         expect(args[idx].querySelector('.control-label').textContent.trim())
           .to.equal(`arg${idx}:`);
         if (inEditMode) {
@@ -1805,9 +1873,9 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
           expect(args[idx].querySelector('.valueBuilderType-field .field-component'))
             .to.have.trimmed.text('Constant value');
         }
-        expect(
-          args[idx].querySelector('.valueBuilderConstValue-field .form-control').value
-        ).to.equal(`"${idx}"`);
+        checkExampleConstValue(
+          `.argumentMappings-field .collection-item:nth-child(${idx + 1}) .valueBuilderConstValue-field`
+        );
       });
       done();
     });
@@ -1862,6 +1930,8 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
           dispatchFunctions.forEach((dispatchFunction, idx) => {
             expect(results[idx].querySelector('.control-label').textContent.trim())
               .to.equal(`res${idx}:`);
+            const dispatchFunctionField = results[idx]
+              .querySelector('.dispatchFunction-field');
             if (inEditMode) {
               expect(
                 new OneDrodopdownHelper(results[idx].querySelector('.targetStore-field'))
@@ -1874,16 +1944,14 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
             if (dispatchFunction) {
               if (inEditMode) {
                 expect(
-                  new OneDrodopdownHelper(results[idx].querySelector('.dispatchFunction-field'))
-                  .getSelectedOptionText()
+                  new OneDrodopdownHelper(dispatchFunctionField).getSelectedOptionText()
                 ).to.equal(dispatchFunctionLabels[dispatchFunction]);
               } else {
-                expect(results[idx].querySelector('.dispatchFunction-field .field-component'))
+                expect(dispatchFunctionField.querySelector('.field-component'))
                   .to.have.trimmed.text(dispatchFunctionLabels[dispatchFunction]);
               }
             } else {
-              expect(results[idx].querySelector('.dispatchFunction-field'))
-                .to.not.exist;
+              expect(dispatchFunctionField).to.not.exist;
             }
           });
           done();
@@ -1912,7 +1980,8 @@ function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
         expect(results[0].querySelector('.field-component').textContent.trim())
           .to.equal('Not assigned.');
       }
-      expect(results[0].querySelector('.control-label').textContent.trim()).to.equal('res1:');
+      expect(results[0].querySelector('.control-label').textContent.trim())
+        .to.equal('res1:');
       done();
     });
 }
