@@ -19,17 +19,17 @@
     <li class="property-row root-file-path-property">
       <span class="property-label">{{tt this "rootFilePath"}}:</span>
       <span class="property-value">
-        {{#if value.rootFilePath}}
+        {{#if rootFilePath}}
           {{#if rootFileUrlProxy.content}}
             <a
               class="clickable navy"
               href={{rootFileUrlProxy.content}}
               target={{or context.linkTarget "_top"}}
             >
-              {{value.rootFilePath}}
+              {{rootFilePath}}
             </a>
           {{else}}
-            {{value.rootFilePath}}
+            {{rootFilePath}}
           {{/if}}
         {{else}}
           <em>{{tt this "unknown"}}</em>

@@ -1,0 +1,33 @@
+{{#render-later triggerRender=isOpened}}
+  {{#one-webui-popover
+    class="remove-atm-value-ack-popover"
+    triggerSelector=triggerSelector
+    open=isOpened
+    as |popover|
+  }}
+    {{#click-outside
+      onClickOutside=(action "close")
+      exceptSelector=triggerSelector
+    }}
+      <p>{{question}}</p>
+      <div class="buttons-container">
+        {{#one-button
+          class="btn-cancel"
+          size="sm"
+          type="default"
+          onClick=(action "close")
+        }}
+          {{tt this "no"}}
+        {{/one-button}}
+        {{#one-button
+          class="btn-confirm"
+          size="sm"
+          type="danger"
+          onClick=(action "confirm")
+        }}
+          {{tt this "yes"}}
+        {{/one-button}}
+      </div>
+    {{/click-outside}}
+  {{/one-webui-popover}}
+{{/render-later}}

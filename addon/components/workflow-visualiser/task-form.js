@@ -36,7 +36,6 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import HiddenField from 'onedata-gui-common/utils/form-component/hidden-field';
-import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-field';
@@ -62,6 +61,11 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/store-config';
 import sortRevisionNumbers from 'onedata-gui-common/utils/revisions/sort-revision-numbers';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
+import {
+  ValueEditorField as AtmValueEditorField,
+  rawValueToFormValue as atmRawValueToFormValue,
+  formValueToRawValue as atmFormValueToRawValue,
+} from 'onedata-gui-common/utils/atm-workflow/value-editors';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -419,8 +423,9 @@ export default Component.extend(I18n, {
                 classes: 'floating-field-label',
                 name: 'valueBuilderType',
               }),
-              JsonField.extend({
+              AtmValueEditorField.extend({
                 isVisible: eq('parent.value.valueBuilderType', raw('const')),
+                atmDataSpec: reads('parent.value.context.dataSpec'),
               }).create({
                 classes: 'floating-field-label',
                 name: 'valueBuilderConstValue',
@@ -871,8 +876,9 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
     }
     const valueBuilderRecipe =
       get(existingMapping || {}, 'valueBuilder.valueBuilderRecipe');
-    const valueBuilderConstValue = valueBuilderType === 'const' ?
-      JSON.stringify(valueBuilderRecipe, null, 2) : undefined;
+    const valueBuilderConstValue = atmRawValueToFormValue(
+      valueBuilderType === 'const' ? valueBuilderRecipe : null
+    );
     const valueBuilderStore = valueBuilderType === 'singleValueStoreContent' ?
       valueBuilderRecipe : undefined;
     formArgumentMappings[valueName] = createValuesContainer({
@@ -1060,11 +1066,7 @@ function formDataToTask(formData, atmLambda, stores) {
       valueBuilderType,
     };
     if (valueBuilderType === 'const') {
-      try {
-        valueBuilder.valueBuilderRecipe = JSON.parse(valueBuilderConstValue);
-      } catch (e) {
-        valueBuilder.valueBuilderRecipe = null;
-      }
+      valueBuilder.valueBuilderRecipe = atmFormValueToRawValue(valueBuilderConstValue);
     } else if (valueBuilderType === 'singleValueStoreContent') {
       valueBuilder.valueBuilderRecipe = valueBuilderStore;
     }

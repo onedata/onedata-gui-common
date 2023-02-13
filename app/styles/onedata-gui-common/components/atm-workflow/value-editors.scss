@@ -1,0 +1,242 @@
+.editor-box {
+  --editor-box-background-accent: rgba(192, 192, 192, 0.1);
+
+  display: inline-block;
+  border: 1px solid $main-border-color;
+  border-radius: $border-radius-base;
+  max-width: 100%;
+
+  .editor-box {
+    background-color: var(--editor-box-background-accent);
+  }
+
+  .editor-box-header {
+    display: flex;
+    align-items: center;
+    padding: 0.3em;
+    border-bottom: 1px solid $main-border-color;
+    background-color: var(--editor-box-background-accent);
+
+    > * {
+      font-size: 70%;
+    }
+  }
+
+  .editor-box-toolbar {
+    margin-left: auto;
+    display: flex;
+    justify-content: center;
+    gap: 0.5em;
+
+    .separator {
+      display: none;
+      align-self: center;
+      border-left: 1px solid $main-border-color;
+      height: 1em;
+    }
+
+    // Show separator only when it is after some non-separator element
+    & > *:not(.separator) + .separator {
+      display: block;
+    }
+  }
+
+  .data-spec-type {
+    @include font-semibold();
+    text-transform: uppercase;
+    margin-right: 1em;
+  }
+
+  .editor-box-content {
+    padding: 0.3em;
+  }
+
+  .action-link {
+    &.disabled {
+      // Using !important to override inline styles added by click() Ember handler
+      cursor: not-allowed !important;
+      color: $main-text-color-disabled;
+      &:hover {
+        color: $main-text-color-disabled;
+      }
+    }
+  }
+
+  &.boolean-editor {
+    width: 6em;
+  }
+
+  &.number-editor {
+    width: 10em;
+  }
+
+  &.string-editor {
+    textarea {
+      max-height: 8em;
+    }
+  }
+
+  &.editor-with-json {
+    width: 30em;
+    .editor-box-content {
+      height: 10em;
+      display: flex;
+      align-items: stretch;
+
+      > * {
+        flex-grow: 1;
+      }
+    }
+
+    &.invalid {
+      .ace_editor {
+        border-color: $color-one-danger;
+      }
+    }
+  }
+
+  &.range-editor {
+    max-width: 25em;
+
+    .fields-group-children {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3em;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+      flex-grow: 1;
+      flex-basis: 6em;
+    }
+  }
+
+  &.time-series-measurement-editor {
+    max-width: 12em;
+  }
+
+  &.file-editor,
+  &.dataset-editor {
+    .id-form-buttons {
+      display: flex;
+      gap: 0.3em;
+      justify-content: flex-end;
+      margin-top: 0.3em;
+    }
+
+    &.mode-selected,
+    &.mode-idForm {
+      max-width: 25em;
+    }
+
+    .details-icon {
+      font-size: 250%;
+    }
+  }
+
+  &.file-editor {
+    &.mode-empty {
+      max-width: 8em;
+    }
+  }
+
+  &.dataset-editor {
+    &.mode-empty {
+      max-width: 10em;
+    }
+  }
+
+  &.array-editor {
+    .array-items {
+      list-style-type: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3em;
+      padding-left: 0;
+      margin-bottom: 0;
+    }
+
+    .array-item {
+      min-width: 0;
+    }
+
+    .array-collapsed-item {
+      border: 1px dashed $main-border-color;
+      align-self: flex-start;
+      padding: 1em;
+      text-align: center;
+      border-radius: $border-radius-base;
+      background-color: var(--editor-box-background-accent);
+      font-size: 90%;
+      p {
+        margin: 0;
+      }
+    }
+
+    .no-items-info {
+      margin: 0;
+      color: $main-text-color-disabled;
+    }
+
+    .default-array-item-creator {
+      display: inline-block;
+    }
+
+    .array-item-creator:not(:first-child) {
+      margin-top: 0.5em;
+    }
+
+    .no-items-info,
+    .add-item-trigger {
+      padding: 0 0.3em;
+      font-size: 90%;
+    }
+
+    &.editor-with-json {
+      .editor-box-content {
+        flex-direction: column;
+      }
+
+      .form-message {
+        flex-grow: 0;
+        text-align: right;
+        font-size: 90%;
+        padding-top: 0.3em;
+      }
+    }
+  }
+
+  .form-group {
+    .control-label {
+      width: 100%;
+      padding: 0;
+      margin-bottom: 5px;
+      text-align: left;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.full-value-editor {
+  display: flex;
+
+  > .array-editor,
+  > .object-editor,
+  > .string-editor {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+}
+
+.remove-atm-value-ack-popover {
+  width: 12em;
+
+  .buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5em;
+  }
+}

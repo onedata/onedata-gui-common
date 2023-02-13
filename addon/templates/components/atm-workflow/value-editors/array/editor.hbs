@@ -1,0 +1,127 @@
+{{#atm-workflow/value-editors/commons/editor-box
+  editorState=editorState
+  onRemove=onRemove
+  class=(if (eq mode "raw") (concat-classes
+    "editor-with-json"
+    (if (not isValid) "invalid")
+  ))
+  removeConfirmationQuestion=(if isThereSomethingToClear (tt this "removeConfirmationQuestion") null)
+  as |editorBox|
+}}
+  {{#if (eq editorBox.section "toolbar")}}
+    <a
+      class="mode-trigger action-link {{if isToggleModeDisabled "disabled" "clickable"}}"
+      {{action "toggleMode"}}
+    >
+      {{tt this (concat "modes." (if (eq mode "visual") "raw" "visual"))}}
+      {{#if (and isToggleModeDisabled toggleModeDisabledTip)}}
+        {{one-tooltip title=toggleModeDisabledTip}}
+      {{/if}}
+    </a>
+    {{#if (eq mode "visual")}}
+      <span class="separator"></span>
+      <span class="items-count">{{itemsCountText}}</span>
+    {{/if}}
+    {{#if (and (not isDisabled) (or (eq mode "raw") itemEditorStates.length))}}
+      <span class="separator"></span>
+      <a
+        id={{clearTriggerId}}
+        class="clear-trigger action-link {{if isThereSomethingToClear "clickable" "disabled"}}"
+        {{action "toggleClearConfirmation" (not isClearConfirmationOpened)}}
+      >
+        {{tt this "clear"}}
+        {{atm-workflow/value-editors/commons/remove-ack-popover
+          triggerSelector=clearTriggerSelector
+          isOpened=isClearConfirmationOpened
+          question=(tt this "clearConfirmationQuestion")
+          onConfirm=(action "confirmClear")
+          onClose=(action "toggleClearConfirmation" false)
+        }}
+      </a>
+    {{/if}}
+  {{else if (eq editorBox.section "content")}}
+    {{#if (eq mode "visual")}}
+      {{#if itemEditorStates.length}}
+        <ol class="array-items">
+          {{#each sectionsOfItemEditorStates.visibleAtTop as |itemEditorState|}}
+            <li class="array-item array-regular-item">
+              {{component itemEditorState.editorComponentName
+                stateManager=stateManager
+                editorId=itemEditorState.id
+                onRemove=(if isDisabled null (action "removeItem" itemEditorState.id))
+              }}
+            </li>
+          {{/each}}
+          {{#if sectionsOfItemEditorStates.hidden.length}}
+          <li class="array-item array-collapsed-item">
+            <p>
+              {{tt this "hiddenItems.counter"
+                hiddenItemsCount=sectionsOfItemEditorStates.hidden.length
+              }}
+            </p>
+            <div class="editor-box-toolbar">
+              {{#if (lt
+                itemsVisibilityConfiguration.changeVisibilityStep
+                sectionsOfItemEditorStates.hidden.length
+              )}}
+                <a
+                  class="action-link clickable show-next-items"
+                  {{action "showNextItems"}}
+                >
+                  {{tt this "hiddenItems.showNext"
+                    changeVisibilityStep=itemsVisibilityConfiguration.changeVisibilityStep
+                  }}
+                </a>
+                <span class="separator"></span>
+              {{/if}}
+              <a
+                class="action-link clickable show-all-items"
+                {{action "showAllItems"}}
+              >
+                {{tt this "hiddenItems.showAll"}}
+              </a>
+            </div>
+          </li>
+          {{/if}}
+          {{#each sectionsOfItemEditorStates.visibleAtBottom as |itemEditorState|}}
+            <li class="array-item array-regular-item">
+              {{component itemEditorState.editorComponentName
+                stateManager=stateManager
+                editorId=itemEditorState.id
+                onRemove=(if isDisabled null (action "removeItem" itemEditorState.id))
+              }}
+            </li>
+          {{/each}}
+        </ol>
+      {{else}}
+        <p class="no-items-info">
+          <em>Empty</em>
+        </p>
+      {{/if}}
+      {{component editorState.itemCreatorComponentName
+        stateManager=stateManager
+        itemAtmDataSpec=editorState.itemAtmDataSpec
+        isDisabled=isDisabled
+        onItemsCreated=(action "itemCreated")
+      }}
+    {{else}}
+      {{ember-ace
+        editorClass="full-height"
+        value=stringifiedValue
+        worker="ace/mode/json_worker"
+        mode="ace/mode/json"
+        theme="ace/theme/textmate"
+        tabSize=2
+        useWrapMode=true
+        highlightActiveLine=true
+        showLineNumbers=true
+        showPrintMargin=false
+        update=(action "rawValueChanged")
+        readOnly=isDisabled
+      }}
+      {{#if rawEditorValidationError}}
+        <div class="form-message text-danger">{{rawEditorValidationError}}</div>
+      {{/if}}
+    {{/if}}
+  {{/if}}
+{{/atm-workflow/value-editors/commons/editor-box}}

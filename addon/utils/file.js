@@ -142,7 +142,7 @@ export function translateFileCount(i18n, fileType, count) {
  * @param {FileType|LegacyFileType} fileType
  * @returns {FileType}
  */
-function convertFromLegacyFileTypeIfNeeded(fileType) {
+export function convertFromLegacyFileTypeIfNeeded(fileType) {
   switch (fileType) {
     case LegacyFileType.Regular:
       return FileType.Regular;

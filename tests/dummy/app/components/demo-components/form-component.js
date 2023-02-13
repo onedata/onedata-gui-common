@@ -23,7 +23,7 @@ const modelSelectorSource = {
   group: _.times(10, i => ({
     name: `Group ${i}`,
   })),
-  oneprovider: _.times(10, i => ({
+  provider: _.times(10, i => ({
     name: `Oneprovider ${i}`,
   })),
 };
@@ -114,9 +114,9 @@ export default Component.extend({
                 name: 'group',
                 getRecords: () => resolve(modelSelectorSource['group']),
               }, {
-                name: 'oneprovider',
+                name: 'provider',
                 getRecords: () =>
-                  resolve(modelSelectorSource['oneprovider']),
+                  resolve(modelSelectorSource['provider']),
               }],
             },
             tagEditorComponentName: 'tags-input/model-selector-editor',

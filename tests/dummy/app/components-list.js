@@ -1,6 +1,7 @@
 export default [
   'animations',
   'atm-workflow/data-spec-editor',
+  'atm-workflow/value-editors',
   'atm-workflow/value-presenters',
   'audit-log-browser',
   'bezier-curve',

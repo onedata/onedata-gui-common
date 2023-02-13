@@ -32,6 +32,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual optional
+   * @type {AtmValuePresenterContext}
+   */
+  context: undefined,
+
+  /**
+   * @virtual optional
    * @type {AtmDataSpecType}
    */
   dataSpecType: undefined,
