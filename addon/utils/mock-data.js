@@ -10,17 +10,7 @@
 export const exampleMarkdownShort = `
 # Hello world
 
-Test description with **bold**.
-
-## Foo
-
-* Baz
-* Bar
-
-## Lorem
-
-* Ipsum
-* Dolor
+Exercitation **culpa** consectetur _Lorem_ commodo officia qui. Consequat elit aliquip laboris cillum eiusmod Lorem. Qui non sit laboris in. Nulla do laborum deserunt commodo aliqua in non. Esse labore tempor sint sit ea. Aute qui do in duis ipsum Lorem enim officia quis laborum nulla ut eiusmod nisi. Esse est reprehenderit exercitation duis.
 `;
 
 export const exampleMarkdownLong = `/BTau/Run2010B - Apr21ReReco - v1 / AOD, CMS collaboration

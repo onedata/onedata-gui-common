@@ -47,6 +47,15 @@ $modal-scroll-margin: 14px;
 }
 
 .modal.in .modal-dialog {
+  .modal-header {
+    h2 {
+      &.normal-case {
+        margin-top: -0.5em;
+        line-height: normal;
+        text-transform: none;
+      }
+    }
+  }
   .modal-body {
     .bs-modal-body-scroll {
       @include fill-flex-using-column;

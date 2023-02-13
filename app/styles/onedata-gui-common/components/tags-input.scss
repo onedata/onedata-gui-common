@@ -3,7 +3,8 @@ $tags-input-tag-line-height: $line-height-computed * $tags-input-font-scale;
 $tags-input-tag-vertical-padding: 4px;
 $tags-input-tag-height: $tags-input-tag-line-height + 2 * $tags-input-tag-vertical-padding + 2px;
 $tags-input-input-padding-top: ($input-height-base - $tags-input-tag-height - 2px) * 0.5;
-$tags-input-tag-border: 1px solid $color-token-border;
+$tags-input-tag-border-size: 1px;
+$tags-input-tag-border: $tags-input-tag-border-size solid $color-token-border;
 $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-horizontal;
 
 @mixin tag-type($type, $color) {
@@ -60,20 +61,13 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     min-width: 0;
 
     &.tag-item-plaintext {
-      // @include font-semibold();
       border: none;
       background-color: transparent;
-      font-size: 130%;
-      padding-top: 0;
-      padding-bottom: 0;
-      margin-left: 0;
-      margin-right: 0;
+      padding-top: $tags-input-tag-vertical-padding + $tags-input-tag-border-size;
+      padding-bottom: $tags-input-tag-vertical-padding + $tags-input-tag-border-size;
       + .tag-item-plaintext {
-        margin-left: -$padding-xs-horizontal*0.5;
+        margin-left: -$padding-xs-horizontal * 0.5;
       }
-    }
-    + .tag-item-plaintext {
-      margin-left: -$padding-xs-horizontal;
     }
   }
 
@@ -329,5 +323,50 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     margin-top: 0;
     border-top: 1px solid $main-border-color;
     margin-bottom: $padding-small-vertical;
+  }
+}
+
+// Add this class to one-tooltip when using `.tags-input` inside.
+// Note, that tags style inside tooltips are more compact and currently do not support
+// color-styles like danger.
+.tooltip-with-tags {
+  $margin-base: 0.4em;
+  .tooltip-inner {
+    // flexible panel width on desktop
+    @media (max-width: 1250px) {
+      max-width: calc(100vw - 200px);
+    }
+    @media (max-width: $screen-xs-max) {
+      max-width: calc(100vw - 60px);
+    }
+    max-width: 1075px;
+    padding-top: $margin-base;
+    padding-bottom: $margin-base;
+  }
+  .tags-input {
+    display: inline-block;
+    padding: 0;
+    line-height: 2.4;
+    min-height: auto;
+    .tag-item {
+      display: inline;
+      margin-right: $margin-base * 0.5;
+      padding: $margin-base * 0.5 $margin-base;
+      border-radius: $border-radius-base;
+      border: $tags-input-tag-border-size solid #ffffff33;
+      background: #ffffff22;
+      white-space: nowrap;
+      &:last-of-type {
+        margin-right: 0;
+      }
+      .tag-label {
+        display: inline;
+      }
+      .tag-icon {
+        &::before {
+          vertical-align: -0.25em;
+        }
+      }
+    }
   }
 }
