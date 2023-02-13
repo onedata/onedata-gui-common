@@ -14,7 +14,7 @@
 /**
  * @typedef {Object} OTSCLiteralSeriesFunctionPointsData
  * @property {'points'} type
- * @property {Array<OTSCSeriesPoint>} data
+ * @property {Array<Utils.OneTimeSeriesChart.Point>} data
  */
 
 /**

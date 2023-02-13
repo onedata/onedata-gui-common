@@ -1,0 +1,32 @@
+<span
+  class="supported-space-info-container"
+  onmouseover={{action "itemInfoHovered" true}}
+  onmouseout={{action "itemInfoHovered" false}}
+>
+  <span
+    data-space-id={{spaceId}}
+    class="item-icon-container icon-container popover-info-trigger"
+    {{action
+      (mut itemInfoOpened)
+      (not itemInfoOpened)
+      bubbles=false
+    }}
+  >
+    {{flippable-icons
+      iconName="space"
+      isHovered=hasItemInfoHovered
+      suppressFlipping=itemInfoOpened
+    }}
+  </span>
+  {{#truncated-string}}
+    {{get record column.propertyName}}
+  {{/truncated-string}}
+</span>
+{{#record-info-popover
+  isOpened=itemInfoOpened
+  triggerSelector=infoPopoverTriggerSelector
+}}
+  {{space-info-content
+    space=space
+  }}
+{{/record-info-popover}}

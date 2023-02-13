@@ -56,6 +56,13 @@ export default Component.extend(I18n, {
   supporterNameHeader: '',
 
   /**
+   * Type of record in first column
+   * @virtual optional
+   * @type {'space'|'provider'}
+   */
+  type: '',
+
+  /**
    * Message, that is shown when there is no data
    * @type {string}
    */
@@ -89,6 +96,7 @@ export default Component.extend(I18n, {
     return A(data.map((series) => EmberObject.create({
       supporterName: series.get('label'),
       supportSize: series.get('value'),
+      supporterId: series.get('spaceId'),
     })));
   }),
 

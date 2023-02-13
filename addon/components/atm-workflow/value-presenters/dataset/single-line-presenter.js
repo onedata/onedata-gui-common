@@ -8,7 +8,7 @@
 
 import SingleLinePresenterBase from '../commons/single-line-presenter-base';
 import { computed } from '@ember/object';
-import { getDatasetNameFromRootFilePath } from 'onedata-gui-common/utils/dataset';
+import { DatasetDetails } from './visual-presenter';
 
 export default SingleLinePresenterBase.extend({
   /**
@@ -19,13 +19,20 @@ export default SingleLinePresenterBase.extend({
   /**
    * @override
    */
-  stringifiedValue: computed('value', function stringifiedValue() {
-    const rootFilePath = typeof this.value?.rootFilePath === 'string' ?
-      this.value.rootFilePath : '';
-
-    const datasetName = getDatasetNameFromRootFilePath(rootFilePath);
+  stringifiedValue: computed('datasetDetails.name', function stringifiedValue() {
+    const datasetName = this.datasetDetails.name;
     const formattedDatasetName = datasetName ? `"${datasetName}"` : '–';
 
     return `[${this.t('typeLabel')} ${formattedDatasetName}]`;
+  }),
+
+  /**
+   * @type {ComputedProperty<DatasetDetails>}
+   */
+  datasetDetails: computed('value', 'context', function datasetDetails() {
+    return DatasetDetails.create({
+      dataset: this.value,
+      context: this.context,
+    });
   }),
 });

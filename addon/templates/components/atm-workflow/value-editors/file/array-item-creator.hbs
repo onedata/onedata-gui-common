@@ -1,0 +1,19 @@
+{{#if idProvidingEditorState}}
+  {{component idProvidingEditorState.editorComponentName
+    stateManager=stateManager
+    editorId=idProvidingEditorState.id
+    onRemove=(action "idProvidingCancelled")
+  }}
+{{else}}
+  {{#atm-workflow/value-editors/file/selector
+    class="add-item-trigger"
+    atmDataSpec=itemAtmDataSpec
+    editorContext=editorContext
+    allowManyFiles=true
+    isDisabled=isDisabled
+    onFilesSelected=(action "filesSelected")
+    onIdProvidingStarted=(action "idProvidingStarted")
+  }}
+    {{tt this "label"}}
+  {{/atm-workflow/value-editors/file/selector}}
+{{/if}}

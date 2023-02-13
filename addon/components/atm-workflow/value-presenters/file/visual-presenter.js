@@ -9,7 +9,7 @@
 import VisualPresenterBase from '../commons/visual-presenter-base';
 import EmberObject, { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { promise } from 'ember-awesome-macros';
+import { promise, or } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/file/visual-presenter';
 import { FileType, SymbolicLinkTargetType } from 'onedata-gui-common/utils/file';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
@@ -32,6 +32,16 @@ export default VisualPresenterBase.extend({
       context: this.context,
     });
   }),
+
+  /**
+   * @type {ComputedProperty<string|undefined>}
+   */
+  name: reads('fileDetails.name'),
+
+  /**
+   * @type {ComputedProperty<FileType|undefined>}
+   */
+  type: reads('fileDetails.type'),
 
   /**
    * @type {ComputedProperty<SymbolicLinkTargetType>}
@@ -68,19 +78,51 @@ export const FileDetails = EmberObject.extend({
   context: undefined,
 
   /**
+   * @type {ComputedProperty<PromiseObject<AtmFile>>}
+   */
+  fileWithDetailsProxy: promise.object(
+    computed('file', 'context', async function fileWithDetailsProxy() {
+      if (
+        this.file?.file_id &&
+        (!this.file?.name || !this.file?.type) &&
+        this.context?.getFileDetailsById
+      ) {
+        try {
+          return (await this.context.getFileDetailsById(this.file.file_id)) || this.file;
+        } catch {
+          return this.file;
+        }
+      } else {
+        return this.file;
+      }
+    })
+  ),
+
+  /**
+   * @type {ComputedProperty<string|undefined>}
+   */
+  name: or('file.name', 'fileWithDetailsProxy.content.name'),
+
+  /**
+   * @type {ComputedProperty<FileType|undefined>}
+   */
+  type: or('file.type', 'fileWithDetailsProxy.content.type'),
+
+  /**
    * @type {ComputedProperty<PromiseObject<AtmFile|null>>}
    */
   symbolicLinkTargetProxy: promise.object(
-    computed('file', 'context', async function fileProxy() {
+    computed('fileWithDetailsProxy', 'context', async function symbolicLinkTargetProxy() {
+      const fileWithDetails = await this.fileWithDetailsProxy;
       if (
         !this.context?.getSymbolicLinkTargetById ||
-        this.file?.type !== FileType.SymbolicLink ||
-        !this.file?.file_id
+        fileWithDetails?.type !== FileType.SymbolicLink ||
+        !fileWithDetails?.file_id
       ) {
         return null;
       }
 
-      return this.context.getSymbolicLinkTargetById(this.file.file_id);
+      return this.context.getSymbolicLinkTargetById(fileWithDetails.file_id);
     })
   ),
 
@@ -90,7 +132,7 @@ export const FileDetails = EmberObject.extend({
   symbolicLinkTargetType: computed(
     'symbolicLinkTargetProxy.isSettled',
     'context',
-    function sizeProxy() {
+    function symbolicLinkTargetType() {
       if (
         !this.context?.getSymbolicLinkTargetById ||
         !this.symbolicLinkTargetProxy.isSettled
@@ -134,9 +176,10 @@ export const FileDetails = EmberObject.extend({
    */
   sizeProxy: promise.object(
     computed('file', 'symbolicLinkTargetProxy', async function sizeProxy() {
+      const fileWithDetails = await this.fileWithDetailsProxy;
       let size;
-      if (this.file?.type !== FileType.SymbolicLink) {
-        size = this.file?.size;
+      if (fileWithDetails?.type !== FileType.SymbolicLink) {
+        size = fileWithDetails?.size;
       } else {
         const target = await this.symbolicLinkTargetProxy;
         size = target?.size;
@@ -145,4 +188,13 @@ export const FileDetails = EmberObject.extend({
       return typeof size === 'number' ? bytesToString(size) : null;
     })
   ),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    // Initialize details proxy as soon as possible
+    this.get('fileWithDetailsProxy');
+  },
 });

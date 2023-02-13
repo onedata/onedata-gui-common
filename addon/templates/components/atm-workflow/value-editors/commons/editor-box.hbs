@@ -1,0 +1,28 @@
+<div class="editor-box-header">
+  <div class="data-spec-type">
+    {{translatedAtmDataSpecType}}
+  </div>
+  <div class="editor-box-toolbar">
+    {{yield (hash section="toolbar")}}
+    {{#if onRemove}}
+      <span class="separator"></span>
+      {{#remove-icon onClick=(action "remove")}}
+        {{#if removeConfirmationQuestion}}
+          {{atm-workflow/value-editors/commons/remove-ack-popover
+            triggerSelector=(local-selector
+              elementId
+              (concat "> .editor-box-header .remove-icon")
+            )
+            isOpened=isRemoveConfirmationOpened
+            question=removeConfirmationQuestion
+            onConfirm=(action "confirmRemove")
+            onClose=(action "closeRemoveConfirmation")
+          }}
+        {{/if}}
+      {{/remove-icon}}
+    {{/if}}
+  </div>
+</div>
+<div class="editor-box-content">
+  {{yield (hash section="content")}}
+</div>

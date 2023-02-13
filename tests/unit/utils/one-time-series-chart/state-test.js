@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context } from 'mocha';
 import State from 'onedata-gui-common/utils/one-time-series-chart/state';
+import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
 
 describe('Unit | Utility | one time series chart/state', function () {
   testStateContainsCopiedProperty({
@@ -42,9 +43,15 @@ describe('Unit | Utility | one time series chart/state', function () {
     function () {
       const state = new State({
         series: [{
-          data: [{ oldest: true }, { oldest: false }],
+          data: [
+            new Point(0, null, { oldest: true }),
+            new Point(0, null, { oldest: false }),
+          ],
         }, {
-          data: [{ oldest: true }, { oldest: false }],
+          data: [
+            new Point(0, null, { oldest: true }),
+            new Point(0, null, { oldest: false }),
+          ],
         }],
       });
 
@@ -55,9 +62,15 @@ describe('Unit | Utility | one time series chart/state', function () {
     function () {
       const state = new State({
         series: [{
-          data: [{ oldest: true }, { oldest: false }],
+          data: [
+            new Point(0, null, { oldest: true }),
+            new Point(0, null, { oldest: false }),
+          ],
         }, {
-          data: [{ oldest: false }, { oldest: false }],
+          data: [
+            new Point(0, null, { oldest: false }),
+            new Point(0, null, { oldest: false }),
+          ],
         }],
       });
 
@@ -68,9 +81,15 @@ describe('Unit | Utility | one time series chart/state', function () {
     function () {
       const state = new State({
         series: [{
-          data: [{ newest: false }, { newest: true }],
+          data: [
+            new Point(0, null, { newest: false }),
+            new Point(0, null, { newest: true }),
+          ],
         }, {
-          data: [{ newest: false }, { newest: true }],
+          data: [
+            new Point(0, null, { newest: false }),
+            new Point(0, null, { newest: true }),
+          ],
         }],
       });
 
@@ -81,9 +100,15 @@ describe('Unit | Utility | one time series chart/state', function () {
     function () {
       const state = new State({
         series: [{
-          data: [{ newest: false }, { newest: true }],
+          data: [
+            new Point(0, null, { newest: false }),
+            new Point(0, null, { newest: true }),
+          ],
         }, {
-          data: [{ newest: false }, { newest: false }],
+          data: [
+            new Point(0, null, { newest: false }),
+            new Point(0, null, { newest: false }),
+          ],
         }],
       });
 
@@ -114,9 +139,9 @@ describe('Unit | Utility | one time series chart/state', function () {
     function () {
       const state = new State({
         series: [{
-          data: [{ timestamp: 10 }, { timestamp: 20 }],
+          data: [new Point(10, null), new Point(20, null)],
         }, {
-          data: [{ timestamp: 10 }, { timestamp: 20 }],
+          data: [new Point(10, null), new Point(20, null)],
         }],
       });
 
@@ -207,13 +232,7 @@ describe('Unit | Utility | one time series chart/state', function () {
           yAxisId: 'a2',
           color: '#ff0000',
           groupId: 'group1',
-          data: [{
-            timestamp: 10,
-            value: 1,
-          }, {
-            timestamp: 20,
-            value: 2,
-          }],
+          data: [new Point(10, 1), new Point(20, 2)],
         }, {
           id: 's2',
           name: 'series 2',
@@ -221,13 +240,7 @@ describe('Unit | Utility | one time series chart/state', function () {
           yAxisId: 'a1',
           color: null,
           groupId: 'group2',
-          data: [{
-            timestamp: 10,
-            value: null,
-          }, {
-            timestamp: 20,
-            value: 3,
-          }],
+          data: [new Point(10, null), new Point(20, 3)],
         }],
       });
       const echartState = state.asEchartState();
