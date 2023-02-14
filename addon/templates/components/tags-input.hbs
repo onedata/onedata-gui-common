@@ -29,6 +29,11 @@
   </li>
 {{/if}}
 {{#if allowModification}}
+  {{#if isPlaceholderEffectivelyVisible}}
+    <li class="input-element tags-input-placeholder" {{action "startTagCreation"}}>
+      {{editPlaceholder}}
+    </li>
+  {{/if}}
   <li
     class="tag-creator-trigger input-element {{if (not allowCreation) "disabled"}}"
     {{action "startTagCreation"}}

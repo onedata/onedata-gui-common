@@ -67,6 +67,12 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.tagsInput',
 
   /**
+   * @virtual
+   * @type {Array<Tag>}
+   */
+  tags: computed(() => []),
+
+  /**
    * @virtual optional
    * @type {ComputedProperty<number>}
    */
@@ -91,10 +97,10 @@ export default Component.extend(I18n, {
   isClearButtonVisible: false,
 
   /**
-   * @virtual
-   * @type {Array<Tag>}
+   * @virtual optional
+   * @type {SafeString|string}
    */
-  tags: computed(() => []),
+  editPlaceholder: undefined,
 
   /**
    * If provided, limits number of tags. When the number of existing tags
@@ -189,6 +195,13 @@ export default Component.extend(I18n, {
     'isClearButtonVisible',
     'tags.length',
     'allowModification'
+  ),
+
+  isPlaceholderEffectivelyVisible: and(
+    'allowModification',
+    'editPlaceholder',
+    not('tags.length'),
+    not('isCreatingTag'),
   ),
 
   /**
