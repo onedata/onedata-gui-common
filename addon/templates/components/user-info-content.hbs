@@ -9,18 +9,18 @@
   <table class="table table-condensed table-info">
     <tr class="row-with-text">
       <td class="property-name">{{tt this "fullName"}}</td>
-      <td class="property-value">{{or user.fullName "—"}}</td>
+      <td class="property-value">{{or record.fullName "—"}}</td>
     </tr>
     <tr class="row-with-text">
       <td class="property-name">{{tt this "username"}}</td>
-      <td class="property-value">{{or user.username "—"}}</td>
+      <td class="property-value">{{or record.username "—"}}</td>
     </tr>
     <tr class="row-with-input">
       <td class="property-name">{{tt this "userId"}}</td>
       <td class="property-value">
         {{one-clipboard-line
           size="sm"
-          value=user.entityId
+          value=record.entityId
           showText=false
         }}
       </td>

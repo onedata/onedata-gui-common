@@ -1,0 +1,43 @@
+<div
+  class="record-with-icon flippable-icons-with-text"
+  onmouseenter={{action "recordInfoHovered" true}}
+  onmouseleave={{action "recordInfoHovered" false}}
+>
+  <div
+    class="record-info-trigger popover-info-trigger"
+    {{action
+      (mut recordInfoOpened)
+      (not recordInfoOpened)
+      bubbles=false
+    }}
+  >
+    {{flippable-icons
+      iconName=icon
+      iconColor=iconColor
+      isHovered=hasRecordInfoHovered
+      suppressFlipping=recordInfoOpened
+    }}
+  </div>
+  {{#truncated-string
+    tagName="div"
+    class="record-text-container"
+  }}
+    {{#if (eq recordType "user")}}
+      <span class="record-name user-fullname">{{or record.fullName "—"}}</span>
+      {{#if record.username}}
+        <span class="user-username">({{record.username}})</span>
+      {{/if}}
+    {{else}}
+      <span class="record-name">{{record.name}}</span>
+    {{/if}}
+  {{/truncated-string}}
+</div>
+{{#record-info-popover
+  isOpened=recordInfoOpened
+  triggerSelector=(concat "#" elementId " .record-info-trigger")
+}}
+  {{component (concat recordType "-info-content")
+    record=record
+    errorReason=errorReason
+  }}
+{{/record-info-popover}}

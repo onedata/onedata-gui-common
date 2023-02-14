@@ -1,0 +1,52 @@
+<h1>
+  <span class="one-label">
+    {{tt this "title"}}
+  </span>
+</h1>
+{{#if errorReason}}
+  {{resource-load-error reason=errorReason}}
+{{else}}
+  <table class="table table-condensed table-info">
+    <tbody>
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "name"}}</td>
+        <td class="property-value">{{or record.name "—"}}</td>
+      </tr>
+      <tr class="row-with-input">
+        <td class="property-name">{{tt this "id"}}</td>
+        <td class="property-value">
+          {{one-clipboard-line
+            size="sm"
+            value=record.entityId
+            type="text"
+          }}
+        </td>
+      </tr>
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "type"}}</td>
+        <td class="property-value">{{or record.type "—"}}</td>
+      </tr>
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "userMembers"}}</td>
+        <td class="property-value">
+          {{record.userList.length}} (effective {{record.effUserList.length}})
+        </td>
+      </tr>
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "groupMembers"}}</td>
+        <td class="property-value">
+          {{record.groupList.length}} (effective {{record.effGroupList.length}})
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="group-links-container">
+    <a
+      href={{linkToGroup}}
+      class="group-info-link clickable"
+    >
+      <span>{{tt this "openGroup"}}</span>
+      {{one-icon icon="link-external"}}
+    </a>
+  </div>
+{{/if}}
