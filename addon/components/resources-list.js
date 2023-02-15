@@ -93,7 +93,7 @@ export const ResourceListItem = EmberObject.extend({
   /**
    * @type {String}
    */
-  triggerSelector: computed('record', function triggerSelector() {
+  itemInfoTriggerSelector: computed('record', function itemInfoTriggerSelector() {
     return `.item-icon-container[data-record-id="${this.record.entityId}"]`;
   }),
 

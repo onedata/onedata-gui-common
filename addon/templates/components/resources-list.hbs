@@ -75,7 +75,7 @@
       {{#if isResourceWithAdditionalInfo}}
         {{#record-info-popover
           isOpened=item.itemInfoOpened
-          triggerSelector=item.triggerSelector
+          triggerSelector=item.itemInfoTriggerSelector
         }}
           {{component (concat item.record.constructor.modelName "-info-content")
             record=item.record

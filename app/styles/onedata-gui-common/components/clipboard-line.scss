@@ -12,11 +12,11 @@
     .clipboard-btn-text {
       position: relative;
       transform: none;
-      margin-top: -7px;
+      margin-top: -0.5em;
     }
 
     .clipboard-input {
-      max-width: 90%;
+      min-width: 0;
 
       .truncated-string {
         line-height: normal;
