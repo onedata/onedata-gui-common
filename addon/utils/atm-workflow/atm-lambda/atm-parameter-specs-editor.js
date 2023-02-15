@@ -37,11 +37,11 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/value-editors';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
-export const AtmParametersSpecEditor = FormFieldsCollectionGroup.extend({
+export const AtmParameterSpecsEditor = FormFieldsCollectionGroup.extend({
   /**
    * @override
    */
-  i18nPrefix: 'utils.atmWorkflow.atmLambda.atmParametersSpecEditor',
+  i18nPrefix: 'utils.atmWorkflow.atmLambda.atmParameterSpecsEditor',
 
   /**
    * Do not take parent fields group translation path into account.
@@ -105,7 +105,7 @@ export const AtmParametersSpecEditor = FormFieldsCollectionGroup.extend({
  * @param {Array<AtmLambdaParameterSpec>} rawValue
  * @returns {Utils.FormComponent.ValuesContainer}
  */
-export function rawValueToAtmParametersSpecEditorValue(rawValue) {
+export function rawValueToAtmParameterSpecsEditorValue(rawValue) {
   const formData = createValuesContainer({
     __fieldsValueNames: [],
   });
@@ -130,7 +130,7 @@ export function rawValueToAtmParametersSpecEditorValue(rawValue) {
  * @param {Utils.FormComponent.ValuesContainer} formValue
  * @returns {Array<AtmLambdaParameterSpec>}
  */
-export function atmParametersSpecEditorValueToRawValue(formValue) {
+export function atmParameterSpecsEditorValueToRawValue(formValue) {
   return (formValue?.__fieldsValueNames ?? [])
     .map((valueName) => formValue[valueName])
     .filter(Boolean)

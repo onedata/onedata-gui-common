@@ -5,7 +5,7 @@ export {
   AtmLambdaResultRelayMethod,
 } from './types';
 export {
-  AtmParametersSpecEditor,
-  rawValueToAtmParametersSpecEditorValue,
-  atmParametersSpecEditorValueToRawValue
-} from './atm-parameters-spec-editor';
+  AtmParameterSpecsEditor,
+  rawValueToAtmParameterSpecsEditorValue,
+  atmParameterSpecsEditorValueToRawValue
+} from './atm-parameter-specs-editor';

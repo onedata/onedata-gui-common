@@ -1,5 +1,5 @@
-import atmParametersSpecEditor from './atm-lambda/atm-parameters-spec-editor';
+import atmParameterSpecsEditor from './atm-lambda/atm-parameter-specs-editor';
 
 export default {
-  atmParametersSpecEditor,
+  atmParameterSpecsEditor,
 };
