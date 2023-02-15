@@ -78,6 +78,9 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     color: $input-color-placeholder;
     font-size: $font-size-base;
     padding-left: 0;
+    // fix positioning because of tags-input form-control paddings
+    margin-bottom: 0;
+    margin-top: -$padding-xs-horizontal;
   }
 
   .tag-icon {
