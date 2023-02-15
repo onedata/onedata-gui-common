@@ -12,6 +12,8 @@ import Component from '@ember/component';
 import EmberObject, { computed } from '@ember/object';
 import { array } from 'ember-awesome-macros';
 import layout from '../templates/components/resources-list';
+import recordIcon from 'onedata-gui-common/utils/record-icon';
+import { reads } from '@ember/object/computed';
 
 export default Component.extend({
   layout,
@@ -47,30 +49,6 @@ export default Component.extend({
  */
 export const ResourceListItem = EmberObject.extend({
   /**
-   * Item label. Used to render item label when `conflictingLabelSource` is not defined.
-   * Always used for sorting (hence must be set even when
-   * `conflictingLabelSource` is defined).
-   * @virtual
-   * @type {String}
-   */
-  label: undefined,
-
-  /**
-   * If set, it takes precedence over label property in label rendering. Should be an
-   * object with properties needed to show conflicting labels (a model instance
-   * in most cases).
-   * @virtual
-   * @type {Object}
-   */
-  conflictingLabelSource: undefined,
-
-  /**
-   * @virtual
-   * @type {String}
-   */
-  icon: undefined,
-
-  /**
    * @virtual
    * @type {Object}
    */
@@ -89,6 +67,29 @@ export const ResourceListItem = EmberObject.extend({
    * @type {String}
    */
   link: undefined,
+
+  /**
+   * Item label. Used to render item label when `conflictingLabelSource` is not defined.
+   * Always used for sorting (hence must be set even when
+   * `conflictingLabelSource` is defined).
+   * @type {String}
+   */
+  label: reads('record.name'),
+
+  /**
+   * If set, it takes precedence over label property in label rendering. Should be an
+   * object with properties needed to show conflicting labels (a model instance
+   * in most cases).
+   * @type {Object}
+   */
+  conflictingLabelSource: reads('record'),
+
+  /**
+   * @type {String}
+   */
+  icon: computed('record', function icon() {
+    return recordIcon(this.record);
+  }),
 
   /**
    * @type {String}
