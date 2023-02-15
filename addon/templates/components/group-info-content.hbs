@@ -24,18 +24,31 @@
       </tr>
       <tr class="row-with-text">
         <td class="property-name">{{tt this "type"}}</td>
-        <td class="property-value">{{or record.type "—"}}</td>
+        <td class="property-value">
+          {{record-icon record=record useSubtypeIcon=true}}
+          <span class="type-name">{{or record.type "—"}}</span>
+        </td>
       </tr>
       <tr class="row-with-text">
         <td class="property-name">{{tt this "userMembers"}}</td>
         <td class="property-value">
-          {{record.userList.length}} (effective {{record.effUserList.length}})
+          <span class="effective-members-number">
+            {{record.effUserList.length}}
+          </span>
+          <span class="direct-members-number">
+            ({{tt this "ofWhich"}} {{record.userList.length}} {{tt this "direct"}})
+          </span>
         </td>
       </tr>
       <tr class="row-with-text">
         <td class="property-name">{{tt this "groupMembers"}}</td>
         <td class="property-value">
-          {{record.groupList.length}} (effective {{record.effGroupList.length}})
+          <span class="effective-members-number">
+            {{record.effGroupList.length}}
+          </span>
+          <span class="direct-members-number">
+            ({{tt this "ofWhich"}} {{record.groupList.length}} {{tt this "direct"}})
+          </span>
         </td>
       </tr>
     </tbody>

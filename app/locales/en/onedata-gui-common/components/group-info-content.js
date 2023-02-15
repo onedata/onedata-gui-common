@@ -3,7 +3,10 @@ export default {
   name: 'Name',
   id: 'ID',
   type: 'Type',
-  userMembers: 'Users members',
-  groupMembers: 'Groups members',
+  userMembers: 'Users',
+  groupMembers: 'Groups',
   openGroup: 'Group details',
+  effective: 'effective',
+  direct: 'direct',
+  ofWhich: 'of which',
 };
