@@ -365,7 +365,7 @@ export default Component.extend(I18n, {
         function atmDataSpec() {
           if (
             !this.atmDataSpecField ||
-            (!this.atmDataSpecField?.isValid && this.atmDataSpecField?.isVisible)
+            (!this.atmDataSpecField.isValid && this.atmDataSpecField.isVisible)
           ) {
             return null;
           }
@@ -612,12 +612,6 @@ function formDataToStore(formData) {
     requiresInitialContent: Boolean(needsUserInput),
   };
 
-  // Time series store has its own custom configuration field
-  if (type === 'timeSeries') {
-    store.config = storeConfigEditors.timeSeries.formValuesToStoreConfig(
-      get(timeSeriesStoreConfig, 'configEditor')
-    );
-  }
   // Time series and audit log stores don't have default value
   if (type === 'auditLog' || type === 'timeSeries') {
     store.defaultInitialContent = null;
@@ -632,6 +626,11 @@ function formDataToStore(formData) {
     } : {
       itemDataSpec: dataSpec,
     };
+  } else if (type === 'timeSeries') {
+    // Time series store has its own custom configuration field
+    store.config = storeConfigEditors.timeSeries.formValuesToStoreConfig(
+      get(timeSeriesStoreConfig, 'configEditor')
+    );
   }
 
   return store;
