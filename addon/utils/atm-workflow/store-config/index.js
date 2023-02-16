@@ -32,11 +32,17 @@ export const stores = {
  */
 export function getDataSpecForStoreDefaultValue(store) {
   const storeType = store?.type;
-  if (!stores[storeType]?.getDefaultValueDataSpec) {
-    return null;
-  }
+  return stores[storeType]?.getDefaultValueDataSpec?.(store?.config) ?? null;
+}
 
-  return stores[storeType].getDefaultValueDataSpec(store?.config);
+/**
+ * Returns true when given store type can have a default value.
+ *
+ * @param {string} storeType
+ * @returns {boolean}
+ */
+export function canStoreTypeHaveDefaultValue(storeType) {
+  return Boolean(stores[storeType]?.getDefaultValueDataSpec);
 }
 
 /**

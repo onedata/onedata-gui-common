@@ -252,7 +252,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             .and.to.contain('.data-spec-editor')
             .and.to.contain.text('Data type');
         }
-        if (defaultValueForTests) {
+        if (defaultValueForTests !== undefined) {
           const defaultValueField = find('.defaultValue-field');
           expect(defaultValueField.querySelector('.control-label').textContent.trim())
             .to.equal('Default value:');
@@ -275,7 +275,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             _.upperFirst(defaultDataType) || 'Dataset'
           );
         }
-        if (defaultValueForTests) {
+        if (defaultValueForTests !== undefined) {
           await click('.defaultValue-field .create-value-btn');
           await createDefaultValueForTests();
           await click('.needsUserInput-field .one-way-toggle');
@@ -288,7 +288,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             description: 'someDescription',
             type,
             defaultInitialContent: defaultValueForTests ?? null,
-            requiresInitialContent: Boolean(defaultValueForTests),
+            requiresInitialContent: defaultValueForTests !== undefined,
           },
           isValid: true,
         };
@@ -410,7 +410,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             },
           },
           defaultInitialContent: defaultValueForTests ?? null,
-          requiresInitialContent: Boolean(defaultValueForTests),
+          requiresInitialContent: defaultValueForTests !== undefined,
         }));
 
         await renderComponent();
@@ -428,7 +428,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         }
         expectDefaultValueForTests?.();
         const needsUserInputToggle = find('.needsUserInput-field .one-way-toggle');
-        if (defaultValueForTests) {
+        if (defaultValueForTests !== undefined) {
           expect(needsUserInputToggle).to.have.class('checked');
         } else {
           expect(needsUserInputToggle).to.not.have.class('checked');
@@ -536,7 +536,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             },
           } : undefined,
           defaultInitialContent: defaultValueForTests ?? null,
-          requiresInitialContent: Boolean(defaultValueForTests),
+          requiresInitialContent: defaultValueForTests !== undefined,
         }));
 
         await renderComponent();
@@ -559,7 +559,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         }
         expectDefaultValueForTests?.();
         const needsUserInputToggle = find('.needsUserInput-field .one-way-toggle');
-        if (defaultValueForTests) {
+        if (defaultValueForTests !== undefined) {
           expect(needsUserInputToggle).to.have.class('checked');
         } else {
           expect(needsUserInputToggle).to.not.have.class('checked');

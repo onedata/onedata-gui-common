@@ -57,7 +57,10 @@ import {
   rawValueToFormValue as atmRawValueToFormValue,
   formValueToRawValue as atmFormValueToRawValue,
 } from 'onedata-gui-common/utils/atm-workflow/value-editors';
-import { getDataSpecForStoreDefaultValue } from 'onedata-gui-common/utils/atm-workflow/store-config';
+import {
+  getDataSpecForStoreDefaultValue,
+  canStoreTypeHaveDefaultValue,
+} from 'onedata-gui-common/utils/atm-workflow/store-config';
 
 const storeTypes = Object.freeze([
   'list',
@@ -353,8 +356,9 @@ export default Component.extend(I18n, {
     return AtmValueEditorField.extend({
       isVisible: and(
         not(and('isInViewMode', not('value.hasValue'))),
-        neq('valuesSource.type', raw('timeSeries')),
-        neq('valuesSource.type', raw('auditLog'))
+        computed('valuesSource.type', function canHaveDefaultValue() {
+          return canStoreTypeHaveDefaultValue(this.valuesSource?.type);
+        }),
       ),
       atmDataSpecField: computed('parent.fields.[]', function atmDataSpecField() {
         return this.parent?.fields.find((field) => field.name === 'dataSpec') ?? null;
@@ -402,16 +406,12 @@ export default Component.extend(I18n, {
    */
   needsUserInputField: computed(function needsUserInputField() {
     return ToggleField.extend({
-      isEnabled: and(
-        neq('valuesSource.type', raw('auditLog')),
-        neq('valuesSource.type', raw('timeSeries'))
-      ),
+      isEnabled: computed('valuesSource.type', function isEnabled() {
+        return canStoreTypeHaveDefaultValue(this.valuesSource?.type);
+      }),
       storeTypeObserver: observer('valuesSource.type', function storeTypeObserver() {
-        // For time series and audit log stores change value to `false`
-        if ((
-            this.valuesSource?.type === 'timeSeries' ||
-            this.valuesSource?.type === 'auditLog'
-          ) && this.value) {
+        // For stores incapable of having default value, change field value to `false`.
+        if (!canStoreTypeHaveDefaultValue(this.valuesSource?.type) && this.value) {
           this.valueChanged(false);
         }
       }),
@@ -612,8 +612,7 @@ function formDataToStore(formData) {
     requiresInitialContent: Boolean(needsUserInput),
   };
 
-  // Time series and audit log stores don't have default value
-  if (type === 'auditLog' || type === 'timeSeries') {
+  if (!canStoreTypeHaveDefaultValue(type)) {
     store.defaultInitialContent = null;
   } else {
     store.defaultInitialContent = atmFormValueToRawValue(formDefaultValue);
