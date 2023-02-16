@@ -6,9 +6,20 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+
 /**
  * @typedef {Object} AtmRangeStoreConfig
  */
+
+/**
+ * @returns {AtmDataSpec}
+ */
+export function getDefaultValueDataSpec() {
+  return {
+    type: AtmDataSpecType.Range,
+  };
+}
 
 /**
  * @returns {Array<AtmDataSpecFilter>}
@@ -31,6 +42,7 @@ export function getWriteDataSpecFilters() {
 }
 
 export default {
+  getDefaultValueDataSpec,
   getReadDataSpecFilters,
   getWriteDataSpecFilters,
 };
