@@ -2,19 +2,41 @@
   <h3>tab-bar with few items</h3>
   {{one-tab-bar items=fewItems}}
 </div>
+
 <div class="row row-content" style="padding-bottom: 20px;">
   <h3>tab-bar with few items with long names</h3>
   {{one-tab-bar items=fewItemsLong}}
 </div>
+
 <div class="row row-content" style="padding-bottom: 20px;">
   <h3>tab-bar with few items with long long names</h3>
   {{one-tab-bar items=fewItemsLongLong}}
 </div>
+
 <div class="row row-content">
   <h3>tab-bar with scrollers</h3>
   {{one-tab-bar items=items tabsRenderMode="always" dropdownRenderMode="never"}}
 </div>
+
 <div class="row row-content">
   <h3>tab-bar with scrollers and dropdown</h3>
   {{one-tab-bar items=items}}
+</div>
+
+<div class="row row-content">
+  <h3>tab-bar with not-truncated items and jump</h3>
+  <div class="form-group">
+    <input
+      type="text"
+      class="form-control"
+      value={{selectedItemIndex}}
+      oninput={{action (mut selectedItemIndex) value="target.value"}}
+    >
+  </div>
+  {{one-tab-bar
+    items=manyShortItems
+    tabsRenderMode="always"
+    dropdownRenderMode="never"
+    selectedItem=(get items selectedItemIndex)
+  }}
 </div>
