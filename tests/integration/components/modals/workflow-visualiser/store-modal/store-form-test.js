@@ -19,19 +19,64 @@ import _ from 'lodash';
 
 const componentClass = 'store-form';
 
+const rangeDefaultValueSetup = {
+  defaultValueForTests: {
+    start: 2,
+    end: 10,
+    step: 3,
+  },
+  async createDefaultValueForTests() {
+    await fillIn('.defaultValue-field .start-field input', '2');
+    await fillIn('.defaultValue-field .end-field input', '10');
+    await fillIn('.defaultValue-field .step-field input', '3');
+  },
+  expectDefaultValueForTests() {
+    expect(find('.defaultValue-field .start-field input')).to.have.value('2');
+    expect(find('.defaultValue-field .end-field input')).to.have.value('10');
+    expect(find('.defaultValue-field .step-field input')).to.have.value('3');
+  },
+};
+const datasetDefaultValueSetup = {
+  defaultValueForTests: {
+    datasetId: 'someId',
+  },
+  async createDefaultValueForTests() {
+    await click('.defaultValue-field .dataset-value-editor-selector');
+    await click('.provide-dataset-id-action-trigger');
+    await fillIn('.defaultValue-field .datasetId-field input', 'someId');
+    await click('.defaultValue-field .accept-btn');
+  },
+  expectDefaultValueForTests() {
+    expect(find('.defaultValue-field .dataset-editor'))
+      .to.have.class('mode-selected');
+  },
+};
+const arrayOfDatasetsDefaultValueSetup = {
+  defaultValueForTests: [datasetDefaultValueSetup.defaultValueForTests],
+  createDefaultValueForTests: datasetDefaultValueSetup.createDefaultValueForTests,
+  expectDefaultValueForTests() {
+    expect('.defaultValue-field .array-editor').to.exist;
+    datasetDefaultValueSetup.expectDefaultValueForTests();
+  },
+};
+
 const storeTypes = [{
+  ...arrayOfDatasetsDefaultValueSetup,
   label: 'List',
   type: 'list',
   dataSpecConfigKey: 'itemDataSpec',
 }, {
+  ...arrayOfDatasetsDefaultValueSetup,
   label: 'Tree forest',
   type: 'treeForest',
   dataSpecConfigKey: 'itemDataSpec',
 }, {
+  ...datasetDefaultValueSetup,
   label: 'Single value',
   type: 'singleValue',
   dataSpecConfigKey: 'itemDataSpec',
 }, {
+  ...rangeDefaultValueSetup,
   label: 'Range',
   type: 'range',
 }, {
@@ -45,7 +90,7 @@ const storeTypes = [{
 }];
 
 const storeTypesWithGenericConfig = storeTypes
-  .filter(({ type }) => type !== 'range' && type !== 'timeSeries');
+  .filter(({ type }) => type !== 'timeSeries');
 
 describe('Integration | Component | modals/workflow visualiser/store modal/store form', function () {
   setupRenderingTest();
@@ -193,18 +238,26 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       type,
       dataSpecConfigKey,
       defaultDataType,
+      defaultValueForTests,
+      createDefaultValueForTests,
     }) => {
       it(`shows generic configuration fields for store "${label}"`, async function (done) {
         await renderComponent();
 
         await selectChoose('.type-field', label);
 
-        expectExpandedConfig('generic');
-
-        const defaultValueField = find('.defaultValue-field');
-        expect(defaultValueField.querySelector('.control-label').textContent.trim())
-          .to.equal('Default value:');
-        expect(defaultValueField.querySelector('.form-control').value).to.equal('');
+        expectTimeSeriesConfigExpandState(false);
+        if (dataSpecConfigKey) {
+          expect(find('.dataSpec-field')).to.exist
+            .and.to.contain('.data-spec-editor')
+            .and.to.contain.text('Data type');
+        }
+        if (defaultValueForTests !== undefined) {
+          const defaultValueField = find('.defaultValue-field');
+          expect(defaultValueField.querySelector('.control-label').textContent.trim())
+            .to.equal('Default value:');
+          expect(defaultValueField.querySelector('.create-value-btn')).to.exist;
+        }
         done();
       });
 
@@ -216,185 +269,48 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.name-field .form-control', 'someName');
         await fillIn('.description-field .form-control', 'someDescription');
         await selectChoose('.type-field', label);
-        await selectChoose(
-          '.data-spec-editor',
-          _.upperFirst(defaultDataType) || 'Dataset'
-        );
-        await fillIn('.defaultValue-field .form-control', '"someDefault"');
-        await click('.needsUserInput-field .one-way-toggle');
+        if (dataSpecConfigKey) {
+          await selectChoose(
+            '.data-spec-editor',
+            _.upperFirst(defaultDataType) || 'Dataset'
+          );
+        }
+        if (defaultValueForTests !== undefined) {
+          await click('.defaultValue-field .create-value-btn');
+          await createDefaultValueForTests();
+          await click('.needsUserInput-field .one-way-toggle');
+        }
 
         expect(find('.has-error')).to.not.exist;
-        expect(changeSpy).to.be.calledWith({
+        const expectedJson = {
           data: {
             name: 'someName',
             description: 'someDescription',
             type,
-            config: {
-              [dataSpecConfigKey]: {
-                type: defaultDataType || 'dataset',
-                valueConstraints: {},
-              },
-            },
-            defaultInitialContent: 'someDefault',
-            requiresInitialContent: true,
+            defaultInitialContent: defaultValueForTests ?? null,
+            requiresInitialContent: defaultValueForTests !== undefined,
           },
           isValid: true,
-        });
+        };
+        if (dataSpecConfigKey) {
+          expectedJson.data.config = {
+            [dataSpecConfigKey]: {
+              type: defaultDataType || 'dataset',
+              valueConstraints: {},
+            },
+          };
+        }
+        expect(changeSpy).to.be.calledWith(expectedJson);
         done();
       });
     });
-
-    it('shows range configuration fields for store "Range"', async function (done) {
-      await renderComponent();
-
-      await selectChoose('.type-field', 'Range');
-
-      expectExpandedConfig('range');
-
-      const rangeStartField = find('.rangeStart-field');
-      const rangeEndField = find('.rangeEnd-field');
-      const rangeStepField = find('.rangeStep-field');
-      expect(rangeStartField.querySelector('.control-label').textContent.trim())
-        .to.equal('Range start:');
-      expect(rangeStartField.querySelector('.form-control').value).to.equal('0');
-      expect(rangeEndField.querySelector('.control-label').textContent.trim())
-        .to.equal('Range end:');
-      expect(rangeEndField.querySelector('.form-control').value).to.equal('');
-      expect(rangeStepField.querySelector('.control-label').textContent.trim())
-        .to.equal('Range step:');
-      expect(rangeStepField.querySelector('.form-control').value).to.equal('1');
-      done();
-    });
-
-    it('allows to configure new "Range" store', async function (done) {
-      const changeSpy = this.get('changeSpy');
-
-      await renderComponent();
-
-      await fillIn('.name-field .form-control', 'someName');
-      await fillIn('.description-field .form-control', 'someDescription');
-      await selectChoose('.type-field', 'Range');
-      await fillIn('.rangeStart-field .form-control', '1');
-      await fillIn('.rangeEnd-field .form-control', '10');
-      await fillIn('.rangeStep-field .form-control', '2');
-
-      expect(find('.has-error')).to.not.exist;
-      expect(changeSpy).to.be.calledWith({
-        data: {
-          name: 'someName',
-          description: 'someDescription',
-          type: 'range',
-          defaultInitialContent: {
-            start: 1,
-            end: 10,
-            step: 2,
-          },
-          requiresInitialContent: false,
-        },
-        isValid: true,
-      });
-      done();
-    });
-
-    it('has invalid start, end and step fields in "Range" store, when are empty',
-      async function (done) {
-        await renderComponent();
-
-        await selectChoose('.type-field', 'Range');
-        await fillIn('.rangeStart-field .form-control', '');
-        await fillIn('.rangeEnd-field .form-control', '');
-        await fillIn('.rangeStep-field .form-control', '');
-
-        ['rangeStart', 'rangeEnd', 'rangeStep'].forEach(fieldName =>
-          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
-        );
-        done();
-      });
-
-    it('has invalid start, end and step fields in "Range" store, when are floats',
-      async function (done) {
-        await renderComponent();
-
-        await selectChoose('.type-field', 'Range');
-        await fillIn('.rangeStart-field .form-control', '0.5');
-        await fillIn('.rangeEnd-field .form-control', '10.5');
-        await fillIn('.rangeStep-field .form-control', '1.5');
-
-        ['rangeStart', 'rangeEnd', 'rangeStep'].forEach(fieldName =>
-          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
-        );
-        done();
-      });
-
-    it('has valid start and end fields in "Range" store, when are equal',
-      async function (done) {
-        await renderComponent();
-
-        await selectChoose('.type-field', 'Range');
-        await fillIn('.rangeStart-field .form-control', '2');
-        await fillIn('.rangeEnd-field .form-control', '2');
-
-        ['rangeStart', 'rangeEnd', 'rangeStep'].forEach(fieldName =>
-          expect(find(`.${fieldName}-field`)).to.not.have.class('has-error')
-        );
-        done();
-      });
-
-    it('has invalid start and end fields in "Range" store, when start > end and step > 0',
-      async function (done) {
-        await renderComponent();
-
-        await selectChoose('.type-field', 'Range');
-        await fillIn('.rangeStart-field .form-control', '3');
-        await fillIn('.rangeEnd-field .form-control', '2');
-        await fillIn('.rangeStep-field .form-control', '1');
-
-        expect(find('.rangeStart-field .field-message').textContent.trim()).to.equal(
-          'This field must be less than or equal to the range end when the range step is positive'
-        );
-        expect(find('.rangeEnd-field .field-message').textContent.trim()).to.equal(
-          'This field must be greater than or equal to the range start when the range step is positive'
-        );
-        expect(find('.rangeStep-field')).to.not.have.class('has-error');
-        done();
-      });
-
-    it('has invalid start and end fields in "Range" store, when start < end and step < 0',
-      async function (done) {
-        await renderComponent();
-
-        await selectChoose('.type-field', 'Range');
-        await fillIn('.rangeStart-field .form-control', '2');
-        await fillIn('.rangeEnd-field .form-control', '3');
-        await fillIn('.rangeStep-field .form-control', '-1');
-
-        expect(find('.rangeStart-field .field-message').textContent.trim()).to.equal(
-          'This field must be greater than or equal to the range end when the range step is negative'
-        );
-        expect(find('.rangeEnd-field .field-message').textContent.trim()).to.equal(
-          'This field must be less than or equal to the range start when the range step is negative'
-        );
-        expect(find('.rangeStep-field')).to.not.have.class('has-error');
-        done();
-      });
-
-    it('has invalid step field in "Range" store, when step is 0',
-      async function (done) {
-        await renderComponent();
-
-        await selectChoose('.type-field', 'Range');
-        await fillIn('.rangeStep-field .form-control', '0');
-
-        expect(find('.rangeStep-field')).to.have.class('has-error');
-        done();
-      });
 
     it('shows time series configuration fields for store "Time series"', async function (done) {
       await renderComponent();
 
       await selectChoose('.type-field', 'Time series');
 
-      expectExpandedConfig('timeSeries');
+      expectTimeSeriesConfigExpandState(true);
 
       expect(find('.timeSeriesSchema-field')).to.not.exist;
       done();
@@ -438,6 +354,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             },
             dashboardSpec: null,
           },
+          defaultInitialContent: null,
           requiresInitialContent: false,
         },
         isValid: true,
@@ -476,6 +393,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       type,
       dataSpecConfigKey,
       defaultDataType,
+      defaultValueForTests,
+      expectDefaultValueForTests,
     }) => {
       it(`fills fields with data of passed "${label}" store on init`, async function (done) {
         this.set('store', Store.create({
@@ -490,54 +409,32 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
               valueConstraints: {},
             },
           },
-          defaultInitialContent: 'someDefault',
-          requiresInitialContent: true,
+          defaultInitialContent: defaultValueForTests ?? null,
+          requiresInitialContent: defaultValueForTests !== undefined,
         }));
 
         await renderComponent();
 
-        expectExpandedConfig('generic');
+        expectTimeSeriesConfigExpandState(false);
         expect(find('.id-field .form-control').value).to.equal('store1id');
         expect(find('.instanceId-field')).to.not.exist;
         expect(find('.name-field .form-control').value).to.equal('store1');
         expect(find('.description-field .form-control').value).to.equal('desc');
         expect(find('.type-field .dropdown-field-trigger').textContent.trim())
           .to.equal(label);
-        expect(find('.data-spec-editor').textContent.trim())
-          .to.equal(_.upperFirst(defaultDataType) || 'Dataset');
-        expect(find('.defaultValue-field .form-control').value).to.equal('"someDefault"');
-        expect(find('.needsUserInput-field .one-way-toggle')).to.have.class('checked');
+        if (defaultDataType) {
+          expect(find('.data-spec-editor').textContent.trim())
+            .to.equal(_.upperFirst(defaultDataType) || 'Dataset');
+        }
+        expectDefaultValueForTests?.();
+        const needsUserInputToggle = find('.needsUserInput-field .one-way-toggle');
+        if (defaultValueForTests !== undefined) {
+          expect(needsUserInputToggle).to.have.class('checked');
+        } else {
+          expect(needsUserInputToggle).to.not.have.class('checked');
+        }
         done();
       });
-    });
-
-    it('fills fields with data of passed "Range" store on init', async function (done) {
-      this.set('store', Store.create({
-        schemaId: 'store1id',
-        instanceId: 'incorrect value that should not exist',
-        name: 'store1',
-        description: 'desc',
-        type: 'range',
-        defaultInitialContent: {
-          start: 2,
-          end: 6,
-          step: 3,
-        },
-      }));
-
-      await renderComponent();
-
-      expectExpandedConfig('range');
-      expect(find('.id-field .form-control').value).to.equal('store1id');
-      expect(find('.instanceId-field')).to.not.exist;
-      expect(find('.name-field .form-control').value).to.equal('store1');
-      expect(find('.description-field .form-control').value).to.equal('desc');
-      expect(find('.type-field .dropdown-field-trigger').textContent.trim())
-        .to.equal('Range');
-      expect(find('.rangeStart-field .form-control').value).to.equal('2');
-      expect(find('.rangeEnd-field .form-control').value).to.equal('6');
-      expect(find('.rangeStep-field .form-control').value).to.equal('3');
-      done();
     });
 
     it('fills fields with data of passed "Time series" store on init', async function (done) {
@@ -568,7 +465,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await renderComponent();
 
-      expectExpandedConfig('timeSeries');
+      expectTimeSeriesConfigExpandState(true);
       expect(find('.id-field .form-control').value).to.equal('store1id');
       expect(find('.instanceId-field')).to.not.exist;
       expect(find('.name-field .form-control').value).to.equal('store1');
@@ -622,6 +519,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       type,
       dataSpecConfigKey,
       defaultDataType,
+      defaultValueForTests,
+      expectDefaultValueForTests,
     }) => {
       it(`fills fields with data of passed "${label}" store`, async function (done) {
         this.set('store', Store.create({
@@ -630,20 +529,20 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           name: 'store1',
           description: 'desc',
           type: type,
-          config: {
+          config: dataSpecConfigKey ? {
             [dataSpecConfigKey]: {
               type: defaultDataType || 'dataset',
               valueConstraints: {},
             },
-          },
-          defaultInitialContent: 'someDefault',
-          requiresInitialContent: true,
+          } : undefined,
+          defaultInitialContent: defaultValueForTests ?? null,
+          requiresInitialContent: defaultValueForTests !== undefined,
         }));
 
         await renderComponent();
 
-        expect(find('.field-edit-mode')).to.not.exist;
-        expectExpandedConfig('generic');
+        expect(find('.field-edit-mode:not(.field-disabled')).to.not.exist;
+        expectTimeSeriesConfigExpandState(false);
         expect(find('.id-field .form-control').value).to.equal('store1id');
         expect(find('.instanceId-field .form-control').value)
           .to.equal('store1instanceId');
@@ -653,48 +552,20 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           .to.equal('desc');
         expect(find('.type-field .field-component').textContent.trim())
           .to.equal(label);
-        expect(find('.data-spec-editor').textContent.trim()).to.equal(
-          _.upperFirst(defaultDataType) || 'Dataset'
-        );
-        expect(find('.defaultValue-field .form-control').value)
-          .to.equal('"someDefault"');
-        expect(find('.needsUserInput-field .one-way-toggle'))
-          .to.have.class('checked');
+        if (defaultDataType) {
+          expect(find('.data-spec-editor').textContent.trim()).to.equal(
+            _.upperFirst(defaultDataType) || 'Dataset'
+          );
+        }
+        expectDefaultValueForTests?.();
+        const needsUserInputToggle = find('.needsUserInput-field .one-way-toggle');
+        if (defaultValueForTests !== undefined) {
+          expect(needsUserInputToggle).to.have.class('checked');
+        } else {
+          expect(needsUserInputToggle).to.not.have.class('checked');
+        }
         done();
       });
-    });
-
-    it('fills fields with data of passed "Range" store on init', async function (done) {
-      this.set('store', Store.create({
-        schemaId: 'store1id',
-        instanceId: 'store1instanceId',
-        name: 'store1',
-        description: 'desc',
-        type: 'range',
-        defaultInitialContent: {
-          start: 2,
-          end: 6,
-          step: 3,
-        },
-      }));
-
-      await renderComponent();
-
-      expect(find('.field-edit-mode')).to.not.exist;
-      expectExpandedConfig('range');
-      expect(find('.id-field .form-control').value).to.equal('store1id');
-      expect(find('.instanceId-field .form-control').value)
-        .to.equal('store1instanceId');
-      expect(find('.name-field .field-component').textContent.trim())
-        .to.equal('store1');
-      expect(find('.description-field .field-component').textContent.trim())
-        .to.equal('desc');
-      expect(find('.type-field .field-component').textContent.trim())
-        .to.equal('Range');
-      expect(find('.rangeStart-field .field-component').textContent.trim()).to.equal('2');
-      expect(find('.rangeEnd-field .field-component').textContent.trim()).to.equal('6');
-      expect(find('.rangeStep-field .field-component').textContent.trim()).to.equal('3');
-      done();
     });
 
     it('fills fields with data of passed "Time series" store on init', async function (done) {
@@ -726,7 +597,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await renderComponent();
 
       expect(find('.field-edit-mode')).to.not.exist;
-      expectExpandedConfig('timeSeries');
+      expectTimeSeriesConfigExpandState(true);
       expect(find('.id-field .form-control').value).to.equal('store1id');
       expect(find('.instanceId-field .form-control').value).to.equal('store1instanceId');
       expect(find('.name-field .field-component').textContent).to.contain('store1');
@@ -810,13 +681,13 @@ function itAllowsToDisableAllFields() {
   });
 }
 
-function expectExpandedConfig(configName) {
-  ['generic', 'range', 'timeSeries'].filter((name) => name !== configName)
-    .forEach((name) => {
-      const collapse = find(`.${name}StoreConfig-collapse`);
-      if (collapse) {
-        expect(collapse).to.not.have.class('in');
-      }
-    });
-  expect(find(`.${configName}StoreConfig-collapse`)).to.have.class('in');
+function expectTimeSeriesConfigExpandState(isExpanded) {
+  const collapse = find('.timeSeriesStoreConfig-collapse');
+  if (isExpanded) {
+    expect(collapse).to.have.class('in');
+  } else {
+    if (collapse) {
+      expect(collapse).to.not.have.class('in');
+    }
+  }
 }
