@@ -22,6 +22,12 @@
       </div>
     </div>
   </div>
+{{else if (eq type "text")}}
+  <div class="clipboard-input">
+    {{#truncated-string}}
+      {{value}}
+    {{/truncated-string}}
+  </div>
 {{else}}
   <span class="clipboard-container">
     <input
