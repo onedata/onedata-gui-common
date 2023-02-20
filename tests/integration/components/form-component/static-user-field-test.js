@@ -10,6 +10,9 @@ const defaultMockUser = Object.freeze({
   fullName: 'Joe Smith',
   username: 'joe',
   entityId: 'dummy_user_id',
+  constructor: {
+    modelName: 'user',
+  },
 });
 
 describe('Integration | Component | form component/static user field', function () {
@@ -26,6 +29,13 @@ describe('Integration | Component | form component/static user field', function 
   });
 
   it('renders only user icon and dash when user and field value are empty', async function () {
+    const noNameMockUser = Object.freeze({
+      constructor: {
+        modelName: 'user',
+      },
+    });
+    this.set('field.user', noNameMockUser);
+
     await render(hbs `{{form-component/static-user-field field=field}}`);
 
     expect(this.element.querySelector('.oneicon-user')).to.exist;
