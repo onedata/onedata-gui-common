@@ -170,11 +170,8 @@ export default Component.extend({
      * @type {HTMLElement}
      */
     const content = this.element.querySelector('.container-inner-scroll-content');
-    if (!content?.scrollTo) {
-      // do not support scroll on very old browsers (pre-2017)
-      return;
-    }
-    content.scrollTo({ left: item.offsetLeft, behavior: 'smooth' });
+    // scrollTo on very old browsers (pre-2017) is not supported and ignored
+    content?.scrollTo?.({ left: item.offsetLeft, behavior: 'smooth' });
   },
 
   actions: {
