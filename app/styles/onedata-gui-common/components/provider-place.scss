@@ -49,8 +49,17 @@ $super-circle-animation-duration: 2s;
   0% {
     @include min-super-circle();
   }
-  100% {
+  // A hack to fix a strange bug in animation in Safari 15.1+.
+  // When using `opacity: 0;` in 100% animation keyframe, the super-circle gains
+  // `opacity: 1;` for last keyframes unexpectedly. When opacity is set to 0 in 95%
+  // keyframe and opacity is maintained as 0 to 100% then this glitch does not occur.
+  // 95% is the empirical value - when setting 96%+, no matter what is an animation
+  // duration, the glitch occurs.
+  95% {
     @include max-super-circle();
+  }
+  100% {
+    opacity: 0;
   }
 }
 
