@@ -22,6 +22,12 @@ export default Component.extend({
   stateManager: undefined,
 
   /**
+   * @virtual optional
+   * @type {() => void | null}
+   */
+  onRemove: null,
+
+  /**
    * @type {ComputedProperty<Utils.AtmWorkflow.ValueEditors.ValueEditorStates.ValueEditorState | null>}
    */
   rootValueEditorState: computed('stateManager', function rootValueEditorState() {

@@ -5,3 +5,8 @@
  */
 
 export { default as ValueEditorStateManager } from './value-editor-state-manager';
+export {
+  ValueEditorField,
+  rawValueToFormValue,
+  formValueToRawValue,
+} from './value-editor-field';

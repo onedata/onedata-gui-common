@@ -6,10 +6,29 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+
 /**
  * @typedef {Object} AtmTreeForestStoreConfig
  * @property {AtmDataSpec} itemDataSpec
  */
+
+/**
+ * @param {AtmTreeForestStoreConfig} storeConfig
+ * @returns {AtmDataSpec | null}
+ */
+export function getDefaultValueDataSpec(storeConfig) {
+  if (!storeConfig?.itemDataSpec) {
+    return null;
+  }
+
+  return {
+    type: AtmDataSpecType.Array,
+    valueConstraints: {
+      itemDataSpec: storeConfig.itemDataSpec,
+    },
+  };
+}
 
 /**
  * @param {AtmTreeForestStoreConfig} [storeConfig]
@@ -88,6 +107,7 @@ export function getWriteDataSpecFilters(storeConfig) {
 }
 
 export default {
+  getDefaultValueDataSpec,
   getReadDataSpecFilters,
   getWriteDataSpecFilters,
 };

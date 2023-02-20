@@ -35,29 +35,8 @@ export default {
         },
       },
     },
-    genericStoreConfig: {
-      defaultValue: {
-        label: 'Default value',
-      },
-    },
-    rangeStoreConfig: {
-      rangeStart: {
-        label: 'Range start',
-        errors: {
-          gtEndForPositiveStep: 'This field must be less than or equal to the range end when the range step is positive',
-          ltEndForNegativeStep: 'This field must be greater than or equal to the range end when the range step is negative',
-        },
-      },
-      rangeEnd: {
-        label: 'Range end',
-        errors: {
-          ltStartForPositiveStep: 'This field must be greater than or equal to the range start when the range step is positive',
-          gtStartForPositiveStep: 'This field must be less than or equal to the range start when the range step is negative',
-        },
-      },
-      rangeStep: {
-        label: 'Range step',
-      },
+    defaultValue: {
+      label: 'Default value',
     },
     needsUserInput: {
       label: 'Needs user input',
