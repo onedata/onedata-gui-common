@@ -358,13 +358,6 @@ export default class ArrayValueEditorState extends ValueEditorState {
   /**
    * @override
    */
-  getDefaultValue() {
-    return [];
-  }
-
-  /**
-   * @override
-   */
   setIsDisabled() {
     super.setIsDisabled(...arguments);
     this.itemEditorStates.forEach((itemEditorState) =>

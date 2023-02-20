@@ -53,11 +53,4 @@ export default class ObjectValueEditorState extends ValueEditorState {
   setValue(newValue) {
     this.internalValue = JSON.stringify(newValue, null, 2);
   }
-
-  /**
-   * @override
-   */
-  getDefaultValue() {
-    return {};
-  }
 }

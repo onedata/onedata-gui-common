@@ -7,6 +7,7 @@
  */
 
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators';
+import { getDefaultValueForAtmDataSpec } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import generateId from 'onedata-gui-common/utils/generate-id';
 
 /**
@@ -200,7 +201,7 @@ export default class ValueEditorState {
    * @returns {unknown}
    */
   getDefaultValue() {
-    return null;
+    return getDefaultValueForAtmDataSpec(this.atmDataSpec);
   }
 
   /**

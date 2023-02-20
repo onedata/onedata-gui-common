@@ -153,7 +153,7 @@ const EntryFieldsGroup = FormFieldsGroup.extend({
    */
   fields: computed(() => [
     EntryNameField.create(),
-    EntryDataSpec.create(),
+    EntryDataSpecField.create(),
     EntryIsOptionalField.create(),
     EntryDefaultValueField.create(),
   ]),
@@ -198,7 +198,7 @@ const EntryNameField = TextField.extend({
   usedNames: reads('parent.parent.usedNames'),
 });
 
-const EntryDataSpec = DataSpecEditor.extend({
+const EntryDataSpecField = DataSpecEditor.extend({
   /**
    * @override
    */
