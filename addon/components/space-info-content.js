@@ -30,7 +30,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {Models.Space}
    */
-  space: undefined,
+  record: undefined,
 
   /**
    * @virtual optional
@@ -78,10 +78,10 @@ export default Component.extend(I18n, {
    * @type {PromiseObject<Models.User>}
    */
   creatorProxy: promise.object(computed(
-    'space.info.creatorId',
+    'record.info.creatorId',
     async function creatorProxy() {
-      if (this.space.info?.creatorId) {
-        return this.userManager.getRecordById(this.space.info.creatorId);
+      if (this.record.info?.creatorId) {
+        return this.userManager.getRecordById(this.record.info.creatorId);
       }
     }
   )),
@@ -94,8 +94,8 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  creationTime: computed('space.info.creationTime', function creationTime() {
-    const timestamp = this.space.info?.creationTime;
+  creationTime: computed('record.info.creationTime', function creationTime() {
+    const timestamp = this.record.info?.creationTime;
     if (timestamp) {
       return moment.unix(timestamp).format(reportFormatter);
     }
