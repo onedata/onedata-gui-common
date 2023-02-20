@@ -24,10 +24,6 @@ export default Component.extend({
    */
   record: undefined,
 
-  icon: computed('recordType', function icon() {
-    return recordIcon(this.recordType);
-  }),
-
   /**
    * @virtual optional
    * @type {Object}
@@ -35,14 +31,21 @@ export default Component.extend({
   errorReason: undefined,
 
   /**
+   * @type {Boolean}
+   */
+  hasRecordInfoHovered: false,
+
+  /**
    * @type {Ember.ComputedProperty<string>}
    */
   recordType: reads('record.constructor.modelName'),
 
   /**
-   * @type {Boolean}
+   * @type {Ember.ComputerProperty<string>}
    */
-  hasRecordInfoHovered: false,
+  icon: computed('recordType', function icon() {
+    return recordIcon(this.recordType);
+  }),
 
   actions: {
     recordInfoHovered(hasHover) {

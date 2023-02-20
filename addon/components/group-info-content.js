@@ -17,7 +17,6 @@ export default Component.extend(I18n, {
 
   router: service(),
   guiUtils: service(),
-  modalManager: service(),
 
   /**
    * @override
