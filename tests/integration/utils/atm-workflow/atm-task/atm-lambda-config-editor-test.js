@@ -107,13 +107,13 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       expect(this.helper.getFieldLabel('paramValueBuilder'))
         .to.contain.trimmed.text('Value builder');
       expect(await this.helper.getField('paramValueBuilder', 0).getOptionsText())
-        .to.deep.equal(['Use custom value']);
+        .to.deep.equal(['Custom value']);
       expect(await this.helper.getField('paramValueBuilder', 1).getOptionsText())
-        .to.deep.equal(['Use default value', 'Use custom value']);
+        .to.deep.equal(['Default value', 'Custom value']);
       expect(await this.helper.getField('paramValueBuilder', 2).getOptionsText())
-        .to.deep.equal(['Use custom value', 'Leave unassigned']);
+        .to.deep.equal(['Custom value', 'Leave unassigned']);
       expect(await this.helper.getField('paramValueBuilder', 3).getOptionsText())
-        .to.deep.equal(['Use default value', 'Use custom value']);
+        .to.deep.equal(['Default value', 'Custom value']);
     }
   );
 
@@ -129,7 +129,7 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       await this.helper.render();
 
       await this.helper.getField('paramValueBuilder')
-        .selectOptionByText('Use custom value');
+        .selectOptionByText('Custom value');
 
       expect(this.helper.getFieldLabel('paramValue'))
         .to.contain.trimmed.text('Value');
@@ -154,7 +154,7 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       await this.helper.render();
 
       await this.helper.getField('paramValueBuilder')
-        .selectOptionByText('Use custom value');
+        .selectOptionByText('Custom value');
 
       expect(find('.number-editor input')).to.have.value('10');
       expect(this.helper.isValid()).to.be.true;
@@ -175,7 +175,7 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       await this.helper.render();
 
       await this.helper.getField('paramValueBuilder')
-        .selectOptionByText('Use default value');
+        .selectOptionByText('Default value');
 
       expect(this.helper.getFieldLabel('paramValue'))
         .to.contain.trimmed.text('Value');
@@ -216,7 +216,7 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
     await this.helper.render();
 
     await this.helper.getField('paramValueBuilder')
-      .selectOptionByText('Use custom value');
+      .selectOptionByText('Custom value');
     await fillIn('input', '');
 
     expect(this.helper.isValid()).to.be.false;
@@ -235,7 +235,7 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       await this.helper.render();
 
       await this.helper.getField('paramValueBuilder')
-        .selectOptionByText('Use custom value');
+        .selectOptionByText('Custom value');
       await fillIn('input', '10');
 
       expect(this.helper.getValue()).to.deep.equal({ param1: 10 });
@@ -246,7 +246,7 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       expect(this.helper.getValue()).to.deep.equal({});
 
       await this.helper.getField('paramValueBuilder')
-        .selectOptionByText('Use custom value');
+        .selectOptionByText('Custom value');
 
       expect(find('input')).to.have.value('10');
       expect(this.helper.getValue()).to.deep.equal({ param1: 10 });
@@ -266,19 +266,19 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       await this.helper.render();
 
       await this.helper.getField('paramValueBuilder')
-        .selectOptionByText('Use custom value');
+        .selectOptionByText('Custom value');
       await fillIn('input', '10');
 
       expect(this.helper.getValue()).to.deep.equal({ param1: 10 });
 
       await this.helper.getField('paramValueBuilder')
-        .selectOptionByText('Use default value');
+        .selectOptionByText('Default value');
 
       expect(this.helper.getValue()).to.deep.equal({});
       expect(find('input[disabled]')).to.have.value('2');
 
       await this.helper.getField('paramValueBuilder')
-        .selectOptionByText('Use custom value');
+        .selectOptionByText('Custom value');
 
       expect(find('input:not([disabled])')).to.have.value('2');
       expect(this.helper.getValue()).to.deep.equal({ param1: 2 });
@@ -292,18 +292,18 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       await this.helper.render();
 
       expect(this.helper.getField('paramValueBuilder', 0).getSelectedOptionText())
-        .to.equal('Use custom value');
+        .to.equal('Custom value');
       expect(this.helper.getField('paramValue', 0).querySelector('input'))
         .to.have.value('0');
       expect(this.helper.getField('paramValueBuilder', 1).getSelectedOptionText())
-        .to.equal('Use default value');
+        .to.equal('Default value');
       expect(this.helper.getField('paramValue', 1).querySelector('input'))
         .to.have.value('1000');
       expect(this.helper.getField('paramValueBuilder', 2).getSelectedOptionText())
         .to.equal('Leave unassigned');
       expect(this.helper.getField('paramValue', 2)).to.not.exist;
       expect(this.helper.getField('paramValueBuilder', 3).getSelectedOptionText())
-        .to.equal('Use default value');
+        .to.equal('Default value');
       expect(this.helper.getField('paramValue', 3).querySelector('input'))
         .to.have.value('1000');
       expect(this.helper.isValid()).to.be.true;
@@ -324,7 +324,7 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
 
       for (const i of [0, 1, 2, 3]) {
         expect(this.helper.getField('paramValueBuilder', i).getSelectedOptionText())
-          .to.equal('Use custom value');
+          .to.equal('Custom value');
         expect(this.helper.getField('paramValue', i).querySelector('input'))
           .to.have.value(String(i + 1));
       }
@@ -352,13 +352,13 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       specsForMigrationTests,
     ));
 
-    expectParamFieldsState(this, 'Use custom value', '1', 0);
-    expectParamFieldsState(this, 'Use custom value', '2', 1);
-    expectParamFieldsState(this, 'Use custom value', '3', 2);
-    expectParamFieldsState(this, 'Use custom value', '4', 3);
-    expectParamFieldsState(this, 'Use default value', '1000', 4);
+    expectParamFieldsState(this, 'Custom value', '1', 0);
+    expectParamFieldsState(this, 'Custom value', '2', 1);
+    expectParamFieldsState(this, 'Custom value', '3', 2);
+    expectParamFieldsState(this, 'Custom value', '4', 3);
+    expectParamFieldsState(this, 'Default value', '1000', 4);
     expectParamFieldsState(this, 'Leave unassigned', null, 5);
-    expectParamFieldsState(this, 'Use default value', '1000', 6);
+    expectParamFieldsState(this, 'Default value', '1000', 6);
     expect(this.helper.isValid()).to.be.true;
     expect(this.helper.getValue()).to.deep.equal({
       param1: 1,
@@ -389,13 +389,13 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       specsAfterMigration,
     ));
 
-    expectParamFieldsState(this, 'Use custom value', '', 0);
-    expectParamFieldsState(this, 'Use default value', 'abc', 1);
+    expectParamFieldsState(this, 'Custom value', '', 0);
+    expectParamFieldsState(this, 'Default value', 'abc', 1);
     expectParamFieldsState(this, 'Leave unassigned', null, 2);
-    expectParamFieldsState(this, 'Use default value', 'abc', 3);
-    expectParamFieldsState(this, 'Use default value', 'abc', 4);
+    expectParamFieldsState(this, 'Default value', 'abc', 3);
+    expectParamFieldsState(this, 'Default value', 'abc', 4);
     expectParamFieldsState(this, 'Leave unassigned', null, 5);
-    expectParamFieldsState(this, 'Use default value', 'abc', 6);
+    expectParamFieldsState(this, 'Default value', 'abc', 6);
     expect(this.helper.isValid()).to.be.true;
     expect(this.helper.getValue()).to.deep.equal({ param1: '' });
   });
@@ -415,13 +415,13 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       specsAfterMigration,
     ));
 
-    expectParamFieldsState(this, 'Use default value', '1000', 0);
+    expectParamFieldsState(this, 'Default value', '1000', 0);
     expectParamFieldsState(this, 'Leave unassigned', null, 1);
-    expectParamFieldsState(this, 'Use default value', '1000', 2);
-    expectParamFieldsState(this, 'Use custom value', '4', 3);
-    expectParamFieldsState(this, 'Use custom value', '3', 4);
-    expectParamFieldsState(this, 'Use custom value', '2', 5);
-    expectParamFieldsState(this, 'Use custom value', '1', 6);
+    expectParamFieldsState(this, 'Default value', '1000', 2);
+    expectParamFieldsState(this, 'Custom value', '4', 3);
+    expectParamFieldsState(this, 'Custom value', '3', 4);
+    expectParamFieldsState(this, 'Custom value', '2', 5);
+    expectParamFieldsState(this, 'Custom value', '1', 6);
     expect(this.helper.isValid()).to.be.true;
     expect(this.helper.getValue()).to.deep.equal({
       param1: 1,
@@ -450,13 +450,13 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       specsAfterMigration,
     ));
 
-    expectParamFieldsState(this, 'Use custom value', '1', 0);
-    expectParamFieldsState(this, 'Use custom value', '2', 1);
-    expectParamFieldsState(this, 'Use custom value', '3', 2);
-    expectParamFieldsState(this, 'Use custom value', '4', 3);
-    expectParamFieldsState(this, 'Use custom value', '0', 4);
-    expectParamFieldsState(this, 'Use custom value', '0', 5);
-    expectParamFieldsState(this, 'Use custom value', '0', 6);
+    expectParamFieldsState(this, 'Custom value', '1', 0);
+    expectParamFieldsState(this, 'Custom value', '2', 1);
+    expectParamFieldsState(this, 'Custom value', '3', 2);
+    expectParamFieldsState(this, 'Custom value', '4', 3);
+    expectParamFieldsState(this, 'Custom value', '0', 4);
+    expectParamFieldsState(this, 'Custom value', '0', 5);
+    expectParamFieldsState(this, 'Custom value', '0', 6);
     expect(this.helper.isValid()).to.be.true;
     expect(this.helper.getValue()).to.deep.equal({
       param1: 1,
@@ -488,13 +488,13 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       specsAfterMigration,
     ));
 
-    expectParamFieldsState(this, 'Use custom value', '1', 0);
-    expectParamFieldsState(this, 'Use custom value', '2', 1);
-    expectParamFieldsState(this, 'Use custom value', '3', 2);
-    expectParamFieldsState(this, 'Use custom value', '4', 3);
-    expectParamFieldsState(this, 'Use default value', '1000', 4);
-    expectParamFieldsState(this, 'Use default value', '1000', 5);
-    expectParamFieldsState(this, 'Use default value', '1000', 6);
+    expectParamFieldsState(this, 'Custom value', '1', 0);
+    expectParamFieldsState(this, 'Custom value', '2', 1);
+    expectParamFieldsState(this, 'Custom value', '3', 2);
+    expectParamFieldsState(this, 'Custom value', '4', 3);
+    expectParamFieldsState(this, 'Default value', '1000', 4);
+    expectParamFieldsState(this, 'Default value', '1000', 5);
+    expectParamFieldsState(this, 'Default value', '1000', 6);
     expect(this.helper.isValid()).to.be.true;
     expect(this.helper.getValue()).to.deep.equal({
       param1: 1,
@@ -523,10 +523,10 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       specsAfterMigration,
     ));
 
-    expectParamFieldsState(this, 'Use custom value', '1', 0);
-    expectParamFieldsState(this, 'Use custom value', '2', 1);
-    expectParamFieldsState(this, 'Use custom value', '3', 2);
-    expectParamFieldsState(this, 'Use custom value', '4', 3);
+    expectParamFieldsState(this, 'Custom value', '1', 0);
+    expectParamFieldsState(this, 'Custom value', '2', 1);
+    expectParamFieldsState(this, 'Custom value', '3', 2);
+    expectParamFieldsState(this, 'Custom value', '4', 3);
     expectParamFieldsState(this, 'Leave unassigned', null, 4);
     expectParamFieldsState(this, 'Leave unassigned', null, 5);
     expectParamFieldsState(this, 'Leave unassigned', null, 6);
@@ -558,13 +558,13 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       specsAfterMigration,
     ));
 
-    expectParamFieldsState(this, 'Use custom value', '1', 0);
-    expectParamFieldsState(this, 'Use custom value', '2', 1);
-    expectParamFieldsState(this, 'Use custom value', '3', 2);
-    expectParamFieldsState(this, 'Use custom value', '4', 3);
-    expectParamFieldsState(this, 'Use default value', '1000', 4);
-    expectParamFieldsState(this, 'Use default value', '1000', 5);
-    expectParamFieldsState(this, 'Use default value', '1000', 6);
+    expectParamFieldsState(this, 'Custom value', '1', 0);
+    expectParamFieldsState(this, 'Custom value', '2', 1);
+    expectParamFieldsState(this, 'Custom value', '3', 2);
+    expectParamFieldsState(this, 'Custom value', '4', 3);
+    expectParamFieldsState(this, 'Default value', '1000', 4);
+    expectParamFieldsState(this, 'Default value', '1000', 5);
+    expectParamFieldsState(this, 'Default value', '1000', 6);
     expect(this.helper.isValid()).to.be.true;
     expect(this.helper.getValue()).to.deep.equal({
       param1: 1,
@@ -592,13 +592,13 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       specsAfterMigration,
     ));
 
-    expectParamFieldsState(this, 'Use custom value', '2', 0);
-    expectParamFieldsState(this, 'Use custom value', '3', 1);
-    expectParamFieldsState(this, 'Use custom value', '4', 2);
-    expectParamFieldsState(this, 'Use default value', '1000', 3);
+    expectParamFieldsState(this, 'Custom value', '2', 0);
+    expectParamFieldsState(this, 'Custom value', '3', 1);
+    expectParamFieldsState(this, 'Custom value', '4', 2);
+    expectParamFieldsState(this, 'Default value', '1000', 3);
     expectParamFieldsState(this, 'Leave unassigned', null, 4);
-    expectParamFieldsState(this, 'Use default value', '1000', 5);
-    expectParamFieldsState(this, 'Use custom value', '1', 6);
+    expectParamFieldsState(this, 'Default value', '1000', 5);
+    expectParamFieldsState(this, 'Custom value', '1', 6);
     expect(this.helper.isValid()).to.be.true;
     expect(this.helper.getValue()).to.deep.equal({
       param2: 2,
@@ -630,14 +630,14 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
         specsAfterMigration,
       ));
 
-      expectParamFieldsState(this, 'Use custom value', '2', 0);
-      expectParamFieldsState(this, 'Use custom value', '3', 1);
-      expectParamFieldsState(this, 'Use custom value', '4', 2);
-      expectParamFieldsState(this, 'Use default value', '1000', 3);
+      expectParamFieldsState(this, 'Custom value', '2', 0);
+      expectParamFieldsState(this, 'Custom value', '3', 1);
+      expectParamFieldsState(this, 'Custom value', '4', 2);
+      expectParamFieldsState(this, 'Default value', '1000', 3);
       expectParamFieldsState(this, 'Leave unassigned', null, 4);
-      expectParamFieldsState(this, 'Use default value', '1000', 5);
-      expectParamFieldsState(this, 'Use custom value', '0', 6);
-      expectParamFieldsState(this, 'Use custom value', '0', 7);
+      expectParamFieldsState(this, 'Default value', '1000', 5);
+      expectParamFieldsState(this, 'Custom value', '0', 6);
+      expectParamFieldsState(this, 'Custom value', '0', 7);
       expect(this.helper.isValid()).to.be.true;
       expect(this.helper.getValue()).to.deep.equal({
         param2: 2,
@@ -669,12 +669,12 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
         specsAfterMigration,
       ));
 
-      expectParamFieldsState(this, 'Use custom value', '3', 0);
-      expectParamFieldsState(this, 'Use custom value', '4', 1);
-      expectParamFieldsState(this, 'Use default value', '1000', 2);
+      expectParamFieldsState(this, 'Custom value', '3', 0);
+      expectParamFieldsState(this, 'Custom value', '4', 1);
+      expectParamFieldsState(this, 'Default value', '1000', 2);
       expectParamFieldsState(this, 'Leave unassigned', null, 3);
-      expectParamFieldsState(this, 'Use default value', '1000', 4);
-      expectParamFieldsState(this, 'Use custom value', '0', 5);
+      expectParamFieldsState(this, 'Default value', '1000', 4);
+      expectParamFieldsState(this, 'Custom value', '0', 5);
       expect(this.helper.isValid()).to.be.true;
       expect(this.helper.getValue()).to.deep.equal({
         param3: 3,
@@ -706,13 +706,13 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
         specsAfterMigration,
       ));
 
-      expectParamFieldsState(this, 'Use custom value', '3', 0);
-      expectParamFieldsState(this, 'Use custom value', '4', 1);
-      expectParamFieldsState(this, 'Use default value', '1000', 2);
+      expectParamFieldsState(this, 'Custom value', '3', 0);
+      expectParamFieldsState(this, 'Custom value', '4', 1);
+      expectParamFieldsState(this, 'Default value', '1000', 2);
       expectParamFieldsState(this, 'Leave unassigned', null, 3);
-      expectParamFieldsState(this, 'Use default value', '1000', 4);
-      expectParamFieldsState(this, 'Use custom value', '0', 5);
-      expectParamFieldsState(this, 'Use default value', '1000', 6);
+      expectParamFieldsState(this, 'Default value', '1000', 4);
+      expectParamFieldsState(this, 'Custom value', '0', 5);
+      expectParamFieldsState(this, 'Default value', '1000', 6);
       expect(this.helper.isValid()).to.be.true;
       expect(this.helper.getValue()).to.deep.equal({
         param3: 3,
@@ -746,13 +746,13 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
         specsAfterMigration,
       ));
 
-      expectParamFieldsState(this, 'Use custom value', '3', 0);
-      expectParamFieldsState(this, 'Use custom value', '4', 1);
-      expectParamFieldsState(this, 'Use default value', '1000', 2);
+      expectParamFieldsState(this, 'Custom value', '3', 0);
+      expectParamFieldsState(this, 'Custom value', '4', 1);
+      expectParamFieldsState(this, 'Default value', '1000', 2);
       expectParamFieldsState(this, 'Leave unassigned', null, 3);
-      expectParamFieldsState(this, 'Use default value', '1000', 4);
-      expectParamFieldsState(this, 'Use custom value', 'abc', 5);
-      expectParamFieldsState(this, 'Use custom value', '2', 6);
+      expectParamFieldsState(this, 'Default value', '1000', 4);
+      expectParamFieldsState(this, 'Custom value', 'abc', 5);
+      expectParamFieldsState(this, 'Custom value', '2', 6);
       expect(this.helper.isValid()).to.be.true;
       expect(this.helper.getValue()).to.deep.equal({
         param3: 3,

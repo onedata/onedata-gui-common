@@ -66,6 +66,12 @@ import {
   rawValueToFormValue as atmRawValueToFormValue,
   formValueToRawValue as atmFormValueToRawValue,
 } from 'onedata-gui-common/utils/atm-workflow/value-editors';
+import {
+  AtmLambdaConfigEditor,
+  rawValueToAtmLambdaConfigEditorValue,
+  atmLambdaConfigEditorValueToRawValue,
+  migrateAtmLambdaConfigEditorValueToNewSpecs,
+} from 'onedata-gui-common/utils/atm-workflow/atm-task';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -290,6 +296,7 @@ export default Component.extend(I18n, {
         this.detailsFieldsGroup,
         this.argumentMappingsFieldsCollectionGroup,
         this.resultMappingsFieldsCollectionGroup,
+        this.lambdaConfigFields,
         this.timeSeriesStoreSectionFields,
         this.resourcesFieldsGroup,
       ],
@@ -545,6 +552,20 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
    */
+  lambdaConfigFields: computed(function lambdaConfigFields() {
+    return AtmLambdaConfigEditor.extend({
+      isVisible: notEmpty('value.__fieldsValueNames'),
+    }).create({
+      classes: 'task-form-section',
+      name: 'lambdaConfigSection',
+      addColonToLabel: false,
+      label: this.t('fields.lambdaConfigSection.label'),
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
+   */
   timeSeriesStoreSectionFields: computed(function timeSeriesStoreSectionFields() {
     return FormFieldsGroup.create({
       classes: 'task-form-section',
@@ -784,6 +805,12 @@ export default Component.extend(I18n, {
     );
     propsToUpdateInCurrentRevision.resultMappings = newResultMappings;
 
+    propsToUpdateInCurrentRevision.lambdaConfigSection =
+      migrateAtmLambdaConfigEditorValueToNewSpecs(
+        currentRevValues.lambdaConfigSection,
+        newRevision.configParameterSpecs
+      );
+
     if (!currentRevValues.resources.overrideResources) {
       set(
         currentRevValues.resources,
@@ -954,6 +981,10 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
     details: detailsSection,
     argumentMappings: createValuesContainer(formArgumentMappings),
     resultMappings: createValuesContainer(formResultMappings),
+    lambdaConfigSection: rawValueToAtmLambdaConfigEditorValue(
+      task?.lambdaConfig,
+      atmLambdaRevision?.configParameterSpecs
+    ),
     timeSeriesStoreSection,
     resources: generateResourcesFormData(resourceSpec, resourceSpecOverride),
   };
@@ -1035,6 +1066,7 @@ function formDataToTask(formData, atmLambda, stores) {
   const task = {
     lambdaId: atmLambdaId,
     lambdaRevisionNumber: atmLambdaRevisionNumber,
+    lambdaConfig: atmLambdaConfigEditorValueToRawValue(formData?.lambdaConfigSection),
     name: details.name,
     argumentMappings: [],
     resultMappings: [],

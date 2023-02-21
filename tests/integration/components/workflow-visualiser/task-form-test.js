@@ -19,6 +19,7 @@ import {
   findAll,
 } from '@ember/test-helpers';
 import { replaceEmberAceWithTextarea } from '../../../helpers/ember-ace';
+import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 
 const componentClass = 'task-form';
 
@@ -504,6 +505,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         data: {
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
+          lambdaConfig: {},
           name: exampleAtmLambdaRevision.name,
           argumentMappings: [],
           resultMappings: [],
@@ -519,6 +521,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         data: {
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
+          lambdaConfig: {},
           name: 'someName',
           argumentMappings: [],
           resultMappings: [],
@@ -614,6 +617,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             data: {
               lambdaId: 'id1',
               lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
+              lambdaConfig: {},
               name: 'function1',
               argumentMappings: [],
               resultMappings: [],
@@ -640,6 +644,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               data: {
                 lambdaId: 'id1',
                 lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
+                lambdaConfig: {},
                 name: 'function1',
                 argumentMappings: [{
                   argumentName: 'arg1',
@@ -691,6 +696,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               data: {
                 lambdaId: 'id1',
                 lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
+                lambdaConfig: {},
                 name: 'function1',
                 argumentMappings: [{
                   argumentName: 'arg1',
@@ -760,6 +766,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               data: {
                 lambdaId: 'id1',
                 lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
+                lambdaConfig: {},
                 name: 'function1',
                 argumentMappings: [{
                   argumentName: 'arg1',
@@ -894,6 +901,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           data: {
             lambdaId: 'id1',
             lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
+            lambdaConfig: {},
             name: 'function1',
             argumentMappings: [],
             resultMappings: [],
@@ -918,6 +926,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         data: {
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
+          lambdaConfig: {},
           name: 'function1',
           argumentMappings: [],
           resultMappings: [{
@@ -949,6 +958,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         data: {
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
+          lambdaConfig: {},
           name: 'function1',
           argumentMappings: [],
           resultMappings: [{
@@ -1030,6 +1040,93 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         expect(find('.dispatchFunction-field')).to.not.exist;
         done();
       });
+
+    it('does not render config parameters section when lambda has no parameters',
+      async function (done) {
+        this.set('atmLambda.revisionRegistry.1.configParameterSpecs', []);
+
+        await renderComponent();
+
+        expect(find('.lambdaConfigSection-field')).to.not.exist;
+        done();
+      }
+    );
+
+    it('renders config parameters section when lambda has parameters',
+      async function (done) {
+        this.set('atmLambda.revisionRegistry.1.configParameterSpecs', [{
+          name: 'param1',
+          dataSpec: {
+            type: AtmDataSpecType.Number,
+          },
+          isOptional: false,
+          defaultValue: 10,
+        }]);
+
+        await renderComponent();
+
+        expect(find('.lambdaConfigSection-field')).to.exist
+          .and.to.contain.text('Configuration parameters')
+          .and.to.contain.text('param1')
+          .and.to.contain('.number-editor');
+        expect(
+          new OneDrodopdownHelper('.lambdaConfigSection-field .paramValueBuilder-field')
+          .getSelectedOptionText()
+        ).to.equal('Default value');
+        expect(find('.lambdaConfigSection-field input')).to.have.value('10');
+        done();
+      }
+    );
+
+    it('allows to setup lambda parameters with its defaults',
+      async function (done) {
+        this.set('atmLambda.revisionRegistry.1.configParameterSpecs', [{
+          name: 'param1',
+          dataSpec: {
+            type: AtmDataSpecType.Number,
+          },
+          isOptional: false,
+          defaultValue: 10,
+        }]);
+
+        await renderComponent();
+
+        expect(this.changeSpy).to.be.calledWith(sinon.match({
+          data: sinon.match({
+            lambdaConfig: {},
+          }),
+        }));
+        done();
+      }
+    );
+
+    it('allows to setup lambda parameters with custom values',
+      async function (done) {
+        this.set('atmLambda.revisionRegistry.1.configParameterSpecs', [{
+          name: 'param1',
+          dataSpec: {
+            type: AtmDataSpecType.Number,
+          },
+          isOptional: false,
+          defaultValue: 10,
+        }]);
+        await renderComponent();
+
+        await new OneDrodopdownHelper(
+          '.lambdaConfigSection-field .paramValueBuilder-field'
+        ).selectOptionByText('Custom value');
+        await fillIn('.lambdaConfigSection-field input', '15');
+
+        expect(this.changeSpy).to.be.calledWith(sinon.match({
+          data: sinon.match({
+            lambdaConfig: {
+              param1: 15,
+            },
+          }),
+        }));
+        done();
+      }
+    );
 
     it('renders "override resources" toggle, which is unchecked by default',
       async function (done) {
@@ -1222,6 +1319,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned();
     itFillsFieldsWithDataAboutNoResourceOverride();
     itFillsFieldsWithDataAboutResourceOverride();
+    itFillsFieldsWithDataAboutLambdaConfig();
 
     it('does not update form values on passed task change', async function (done) {
       await renderComponent();
@@ -1286,6 +1384,21 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             valueConstraints: {},
           },
         }],
+        configParameterSpecs: [{
+          name: 'param1',
+          dataSpec: {
+            type: AtmDataSpecType.Number,
+          },
+          isOptional: false,
+          defaultValue: 10,
+        }, {
+          name: 'param2',
+          dataSpec: {
+            type: AtmDataSpecType.String,
+          },
+          isOptional: false,
+          defaultValue: null,
+        }],
         resourceSpec: {
           cpuRequested: 0.1,
           cpuLimit: null,
@@ -1347,6 +1460,21 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           valueConstraints: {},
         },
       }];
+      revision2.configParameterSpecs = [{
+        name: 'param3',
+        dataSpec: {
+          type: AtmDataSpecType.String,
+        },
+        isOptional: false,
+        defaultValue: 'abc',
+      }, {
+        name: 'param4',
+        dataSpec: {
+          type: AtmDataSpecType.Number,
+        },
+        isOptional: true,
+        defaultValue: null,
+      }];
       this.setProperties({
         atmLambda: {
           entityId: 'id1',
@@ -1358,6 +1486,10 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         task: {
           id: 't1',
           name: 't1',
+          lambdaConfig: {
+            param1: 123,
+            param2: 'str',
+          },
           argumentMappings: [{
             argumentName: 'arg1',
             valueBuilder: {
@@ -1424,6 +1556,10 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         data: {
           lambdaId: 'id1',
           lambdaRevisionNumber: 2,
+          lambdaConfig: {
+            param3: 'str',
+            param4: 123,
+          },
           name: 't1',
           argumentMappings: [{
             argumentName: 'arg2',
@@ -1489,6 +1625,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned();
     itFillsFieldsWithDataAboutNoResourceOverride();
     itFillsFieldsWithDataAboutResourceOverride();
+    itFillsFieldsWithDataAboutLambdaConfig();
 
     it('updates form values on passed task change', async function (done) {
       await renderComponent();
@@ -1622,6 +1759,7 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
         data: {
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
+          lambdaConfig: {},
           name: 'function1',
           argumentMappings: [],
           resultMappings: [{
@@ -1659,6 +1797,7 @@ function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
         data: {
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
+          lambdaConfig: {},
           name: 'function1',
           argumentMappings: [],
           resultMappings: [{
@@ -1787,6 +1926,29 @@ function itFillsFieldsWithDataAboutResourceOverride() {
       }
       done();
     });
+}
+
+function itFillsFieldsWithDataAboutLambdaConfig() {
+  it('fills fields with data about lambda config', async function (done) {
+    this.set('atmLambda.revisionRegistry.1.configParameterSpecs', [{
+      name: 'param1',
+      dataSpec: {
+        type: AtmDataSpecType.Number,
+      },
+      isOptional: false,
+      defaultValue: 10,
+    }]);
+    this.set('task.lambdaConfig', {
+      param1: 15,
+    });
+
+    await renderComponent();
+    expect(find('.lambdaConfigSection-field')).to.exist
+      .and.to.contain.text('param1')
+      .and.to.contain.text('Custom value');
+    expect(find('.lambdaConfigSection-field input')).to.have.value('15');
+    done();
+  });
 }
 
 function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuilder() {

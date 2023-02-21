@@ -1,13 +1,13 @@
 export default {
-  entry: {
+  configMapping: {
     paramValueBuilder: {
       label: 'Value builder',
       options: {
-        useDefaultValue: {
-          label: 'Use default value',
+        defaultValue: {
+          label: 'Default value',
         },
-        useCustomValue: {
-          label: 'Use custom value',
+        customValue: {
+          label: 'Custom value',
         },
         leaveUnassigned: {
           label: 'Leave unassigned',

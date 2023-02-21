@@ -29,11 +29,9 @@
 
   .argumentMapping-field,
   .resultMapping-field,
-  .timeSeriesEditor-field {
-    min-width: 0;
-  }
-
-  .valueBuilderConstValue-field {
+  .timeSeriesEditor-field,
+  .valueBuilderConstValue-field,
+  .paramValue-field {
     min-width: 0;
   }
 
@@ -51,23 +49,27 @@
       margin-top: 1.5em;
     }
 
-    .singleResultMappings-collapse > .collection-item + .collection-item {
+    .singleResultMappings-collapse > .collection-item + .collection-item,
+    .lambdaConfigSection-collapse > .collection-item + .collection-item {
       margin-top: 0.5em;
     }
 
     .argumentMapping-field,
-    .singleResultMappings-field {
+    .singleResultMappings-field,
+    .configMapping-field {
       flex-wrap: nowrap;
     }
 
     .argumentMapping-children,
-    .singleResultMapping-children {
+    .singleResultMapping-children,
+    .configMapping-children {
       display: flex;
       align-items: flex-start;
     }
 
     .valueBuilderType-field,
-    .targetStore-field {
+    .targetStore-field,
+    .paramValueBuilder-field {
       flex: 0 0 50%;
       min-width: 0;
       margin-right: $padding-base-horizontal;
@@ -80,8 +82,21 @@
       width: 100%;
     }
 
+    // Make place for upper-floating labels of config entries. That style is
+    // not needed for argsuments and results sections because their labels are
+    // much shorter and don't leak on nested fields labels.
+    .lambdaConfigSection-field > .control-label {
+      margin-bottom: 2em;
+    }
+
     .resourcesSections-field {
       margin-top: 2.5em;
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .configMapping-field > .control-label .label-colon {
+      display: none;
     }
   }
 }

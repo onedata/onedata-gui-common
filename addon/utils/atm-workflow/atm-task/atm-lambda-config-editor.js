@@ -31,7 +31,7 @@ import { getDefaultValueForAtmDataSpec } from 'onedata-gui-common/utils/atm-work
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 /**
- * @typedef {'useDefaultValue' | 'useCustomValue' | 'leaveUnassigned'} ParamValueBuilder
+ * @typedef {'defaultValue' | 'customValue' | 'leaveUnassigned'} ParamValueBuilder
  *   Describes how parameter value will be constructed. This enum is only for
  *   GUI purposes and is not saved inside model.
  */
@@ -40,8 +40,8 @@ import { createValuesContainer } from 'onedata-gui-common/utils/form-component/v
  * @type {Object<string, ParamValueBuilder>}
  */
 const ParamValueBuilder = Object.freeze({
-  UseDefaultValue: 'useDefaultValue',
-  UseCustomValue: 'useCustomValue',
+  DefaultValue: 'defaultValue',
+  CustomValue: 'customValue',
   LeaveUnassigned: 'leaveUnassigned',
 });
 
@@ -49,8 +49,8 @@ const ParamValueBuilder = Object.freeze({
  * @type {Array<ParamValueBuilder>}
  */
 const paramValueBuilderArray = Object.freeze([
-  ParamValueBuilder.UseDefaultValue,
-  ParamValueBuilder.UseCustomValue,
+  ParamValueBuilder.DefaultValue,
+  ParamValueBuilder.CustomValue,
   ParamValueBuilder.LeaveUnassigned,
 ]);
 
@@ -112,10 +112,10 @@ export function rawValueToAtmLambdaConfigEditorValue(rawValue, configParameterSp
       paramSpec.defaultValue !== undefined;
     const hasExistingValue = rawValue && (paramSpec.name in rawValue);
 
-    let paramValueBuilder = ParamValueBuilder.UseCustomValue;
+    let paramValueBuilder = ParamValueBuilder.CustomValue;
     if (!hasExistingValue) {
       if (hasDefaultValue) {
-        paramValueBuilder = ParamValueBuilder.UseDefaultValue;
+        paramValueBuilder = ParamValueBuilder.DefaultValue;
       } else if (isOptional) {
         paramValueBuilder = ParamValueBuilder.LeaveUnassigned;
       }
@@ -156,7 +156,7 @@ export function atmLambdaConfigEditorValueToRawValue(formValue) {
       const paramName = entry.context?.name;
       if (
         paramName &&
-        entry.paramValueBuilder === ParamValueBuilder.UseCustomValue
+        entry.paramValueBuilder === ParamValueBuilder.CustomValue
       ) {
         atmLambdaConfig[paramName] = atmFormValueToRawValue(entry.paramValue);
       }
@@ -196,13 +196,13 @@ export function migrateAtmLambdaConfigEditorValueToNewSpecs(
     // and - if custom value was assigned - data specs matches.
     if (
       targetBuilderOptions.includes(selectedBuilder) && (
-        selectedBuilder !== ParamValueBuilder.UseCustomValue ||
+        selectedBuilder !== ParamValueBuilder.CustomValue ||
         hasTheSameAtmDataSpec
       )
     ) {
       targetFormValue[fieldNameToOverride].paramValueBuilder =
         formValue[fieldNameToMigrate].paramValueBuilder;
-      if (selectedBuilder === ParamValueBuilder.UseCustomValue) {
+      if (selectedBuilder === ParamValueBuilder.CustomValue) {
         targetFormValue[fieldNameToOverride].paramValue =
           formValue[fieldNameToMigrate].paramValue;
       } else {
@@ -269,7 +269,12 @@ const EntryFieldsGroup = FormFieldsGroup.extend({
   /**
    * @override
    */
-  name: 'entry',
+  name: 'configMapping',
+
+  /**
+   * @override
+   */
+  label: reads('context.name'),
 
   /**
    * @override
@@ -302,6 +307,11 @@ const ParamValueBuilderField = DropdownField.extend({
   /**
    * @override
    */
+  classes: 'floating-field-label',
+
+  /**
+   * @override
+   */
   options: computed('parent.context', function options() {
     return getParamValueBuilderTypesForParamSpec(this.parent?.context)
       .map((builder) => ({ value: builder }));
@@ -317,12 +327,17 @@ const ParamValueField = AtmValueEditorField.extend({
   /**
    * @override
    */
+  classes: 'floating-field-label',
+
+  /**
+   * @override
+   */
   isVisible: neq('parent.value.paramValueBuilder', raw(ParamValueBuilder.LeaveUnassigned)),
 
   /**
    * @override
    */
-  isEnabled: eq('parent.value.paramValueBuilder', raw(ParamValueBuilder.UseCustomValue)),
+  isEnabled: eq('parent.value.paramValueBuilder', raw(ParamValueBuilder.CustomValue)),
 
   /**
    * @override
@@ -333,7 +348,7 @@ const ParamValueField = AtmValueEditorField.extend({
     'parent.{value.paramValueBuilder,context.defaultValue}',
     function toParamDefaultValueResetter() {
       if (
-        this.parent?.value?.paramValueBuilder === ParamValueBuilder.UseDefaultValue &&
+        this.parent?.value?.paramValueBuilder === ParamValueBuilder.DefaultValue &&
         !_.isEqual(atmFormValueToRawValue(this.value), this.parent.context?.defaultValue)
       ) {
         this.valueChanged(atmRawValueToFormValue(this.parent.context?.defaultValue));
@@ -352,7 +367,7 @@ function getParamValueBuilderTypesForParamSpec(paramSpec) {
     forbiddenValueBuilders.add(ParamValueBuilder.LeaveUnassigned);
   }
   if (paramSpec?.defaultValue === null || paramSpec?.defaultValue === undefined) {
-    forbiddenValueBuilders.add(ParamValueBuilder.UseDefaultValue);
+    forbiddenValueBuilders.add(ParamValueBuilder.DefaultValue);
   } else {
     forbiddenValueBuilders.add(ParamValueBuilder.LeaveUnassigned);
   }
