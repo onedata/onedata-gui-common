@@ -785,7 +785,7 @@ class Helper {
   }
 
   getParameters() {
-    return findAll('.entry-field');
+    return findAll('.configMapping-field');
   }
 
   getFormGroup(name, entryIdx = 0) {
