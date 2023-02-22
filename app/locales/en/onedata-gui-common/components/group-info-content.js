@@ -7,6 +7,5 @@ export default {
   groupMembers: 'Groups',
   openGroup: 'Group details',
   effective: 'effective',
-  direct: 'direct',
-  ofWhich: 'of which',
+  ofWhichDirect: 'of which {{directCount}} direct',
 };

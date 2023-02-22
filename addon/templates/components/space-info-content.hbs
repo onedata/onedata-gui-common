@@ -48,9 +48,9 @@
     {{/if}}
   </tbody>
 </table>
-<div class="space-links-container">
+<div class="links-container">
   {{#if showLinkToRestApiModal}}
-    <a {{action "openRestApiModal"}} class="space-info-link rest-api-link clickable">
+    <a {{action "openRestApiModal"}} class="info-link rest-api-link clickable">
       <span>{{tt this "openRestApi"}}</span>
       {{one-icon icon="rest"}}
     </a>
@@ -61,7 +61,7 @@
   {{#if showLinkToFileBrowser}}
     <a
       href={{linkToFileBrowser}}
-      class="space-info-link file-browser-link clickable"
+      class="info-link file-browser-link clickable"
     >
       <span>{{tt this "openFileBrowser"}}</span>
       {{one-icon icon="link-external"}}
@@ -71,7 +71,7 @@
     {{/if}}
   {{/if}}
   {{#if showLinkToSpace}}
-    <a href={{linkToSpace}} class="space-info-link space-link clickable">
+    <a href={{linkToSpace}} class="info-link space-link clickable">
       {{tt this "openSpace"}}
       {{one-icon icon="link-external"}}
     </a>

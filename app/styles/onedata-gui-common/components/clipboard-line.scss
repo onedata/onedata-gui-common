@@ -6,13 +6,18 @@
   position: relative;
   width: 100%;
 
-  &.clipboard-line-text {
+  &.sm.clipboard-line-text {
     display: flex;
 
     .clipboard-btn-text {
       position: relative;
       transform: none;
-      margin-top: -0.5em;
+      margin-top: -0.2em;
+      line-height: 1;
+
+      .copy-btn-icon {
+        line-height: 21px;
+      }
     }
 
     .clipboard-input {

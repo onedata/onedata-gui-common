@@ -1,6 +1,7 @@
 /**
- * Renders animated icon, which show popover with record info after click,
- * when records type is user show username with fullname, otherwise only name.
+ * Renders animated icon, which shows popover with record info after click.
+ * For `user` records it shows username and fullname,
+ * for other types of records - just name.
  *
  * @author Agnieszka Warchoł
  * @copyright (C) 2022 ACK CYFRONET AGH

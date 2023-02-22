@@ -22,14 +22,7 @@
     tagName="div"
     class="record-text-container"
   }}
-    {{#if (eq recordType "user")}}
-      <span class="record-name user-fullname">{{or record.fullName "—"}}</span>
-      {{#if record.username}}
-        <span class="user-username">({{record.username}})</span>
-      {{/if}}
-    {{else}}
-      <span class="record-name">{{record.name}}</span>
-    {{/if}}
+    {{record-name record=record}}
   {{/truncated-string}}
 </div>
 {{#record-info-popover

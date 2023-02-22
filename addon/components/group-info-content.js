@@ -5,11 +5,13 @@
  * @copyright (C) 2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
+
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { computed } from '@ember/object';
 import layout from '../templates/components/group-info-content';
+import { promise } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -29,7 +31,26 @@ export default Component.extend(I18n, {
    */
   record: undefined,
 
-  linkToGroup: computed('record', function linkToFileBrowser() {
+  /**
+   * Promise proxy used to load group members
+   * @type {Ember.ComputedProperty<PromiseArray>}
+   */
+  groupMembersLoadingProxy: promise.array(
+    promise.all('record.effGroupList', 'record.groupList')
+  ),
+
+  /**
+   * Promise proxy used to load user members
+   * @type {Ember.ComputedProperty<PromiseArray>}
+   */
+  userMembersLoadingProxy: promise.array(
+    promise.all('record.effUserList', 'record.userList')
+  ),
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  linkToGroup: computed('record', function linkToGroup() {
     return this.router.urlFor(
       'onedata.sidebar.content.aspect',
       'groups',
