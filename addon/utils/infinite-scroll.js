@@ -79,9 +79,13 @@ export default EmberObject.extend({
   /**
    * @public
    * @param {HTMLElement} listContainerElement
+   * @param {HTMLElement} scrollableContainerElement
    */
-  mount(listContainerElement) {
-    this.set('listContainerElement', listContainerElement);
+  mount(listContainerElement, scrollableContainerElement) {
+    this.setProperties({
+      listContainerElement,
+      scrollableContainerElement,
+    });
     this.initScrollHandler();
   },
 
@@ -126,18 +130,24 @@ export default EmberObject.extend({
 
   initScrollHandler() {
     const {
+      scrollableContainerElement,
       listContainerElement,
       entries,
       firstRowModel,
+      singleRowHeight,
     } = this.getProperties(
+      'scrollableContainerElement',
       'listContainerElement',
       'entries',
       'firstRowModel',
+      'singleRowHeight',
     );
     this.set('scrollHandler', ScrollHandler.create({
+      scrollableContainerElement,
       listContainerElement,
       entries,
       firstRowModel,
+      singleRowHeight,
       onScroll: this.get('onScroll'),
     }));
   },
