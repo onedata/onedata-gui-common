@@ -8,6 +8,7 @@ import { setProperties } from '@ember/object';
 
 const defaultMockUser = Object.freeze({
   fullName: 'Joe Smith',
+  name: 'Joe Smith',
   username: 'joe',
   entityId: 'dummy_user_id',
   constructor: {
@@ -55,7 +56,7 @@ describe('Integration | Component | form component/static user field', function 
   it('renders text from field.value property when field.value and field.user are not empty', async function () {
     setProperties(this.get('field'), {
       user: defaultMockUser,
-      value: { ...defaultMockUser, fullName: 'Other User', username: 'george' },
+      value: { ...defaultMockUser, fullName: 'Other User', name: 'Other User', username: 'george' },
     });
 
     await render(hbs `{{form-component/static-user-field field=field}}`);

@@ -22,7 +22,11 @@
     tagName="div"
     class="record-text-container"
   }}
-    {{record-name record=record}}
+    {{#if record.name}}
+      {{record-name record=record}}
+    {{else}}
+      —
+    {{/if}}
   {{/truncated-string}}
 </div>
 {{#record-info-popover
