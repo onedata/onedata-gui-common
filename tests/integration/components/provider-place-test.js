@@ -124,60 +124,51 @@ describe('Integration | Component | provider place', function () {
       .to.be.equal(prevWidth / 2);
   });
 
-  it('notifies about hostname copy to clipboard success', async function (done) {
+  it('notifies about hostname copy to clipboard success', async function () {
     await render(hbs `
       {{provider-place
         provider=provider}}`);
-    click('.circle').then(() => {
-      triggerCopyClick();
-      expect(this.get('globalNotify.infoMessages')).to.have.length(1);
-      expect(this.get('globalNotify.infoMessages')).to.contain(
-        COPY_SUCCESS_MSG);
-      done();
-    });
+    await click('.circle');
+    triggerCopyClick();
+    expect(this.get('globalNotify.infoMessages')).to.have.length(1);
+    expect(this.get('globalNotify.infoMessages')).to.contain(COPY_SUCCESS_MSG);
   });
 
-  it('notifies about hostname copy to clipboard error', async function (done) {
+  it('notifies about hostname copy to clipboard error', async function () {
     await render(hbs `
       {{provider-place
         provider=provider}}`);
-    click('.circle').then(() => {
-      triggerCopyClick(false);
-      expect(this.get('globalNotify.infoMessages')).to.have.length(1);
-      expect(this.get('globalNotify.infoMessages')).to.contain(COPY_ERROR_MSG);
-      done();
-    });
+    await click('.circle');
+    triggerCopyClick(false);
+    expect(this.get('globalNotify.infoMessages')).to.have.length(1);
+    expect(this.get('globalNotify.infoMessages')).to.contain(COPY_ERROR_MSG);
   });
 
-  it('shows list of supported spaces', async function (done) {
+  it('shows list of supported spaces', async function () {
     await render(hbs `
       {{provider-place
         provider=provider}}`);
 
     const spaces = this.get('spaces');
-    click('.circle').then(() => {
-      const drop = document.querySelector('.provider-place-drop');
-      expect(drop.querySelectorAll('.provider-place-drop-space'))
-        .to.have.length(spaces.length);
-      spaces.forEach((space) => {
-          expect(drop.textContent).to.contain(space.name);
-        }),
-        expect(drop.textContent).to.contain('1 MiB');
-      done();
+    await click('.circle');
+    const drop = document.querySelector('.provider-place-drop');
+    expect(drop.querySelectorAll('.provider-place-drop-space'))
+      .to.have.length(spaces.length);
+    spaces.forEach((space) => {
+      expect(drop.textContent).to.contain(space.name);
     });
+    expect(drop.textContent).to.contain('1 MiB');
   });
 
-  it('shows multiple providers if necessary', async function (done) {
+  it('shows multiple providers if necessary', async function () {
     await render(hbs `
       {{provider-place
         provider=providers}}`);
 
-    click('.circle').then(() => {
-      const dropContainer = document.querySelector('.provider-place-drop-container');
-      expect(dropContainer.querySelectorAll('.oneproviders-list-item'))
-        .to.have.length(2);
-      expect(dropContainer.querySelector('.oneproviders-list-item.active')).to.exist;
-      done();
-    });
+    await click('.circle');
+    const dropContainer = document.querySelector('.provider-place-drop-container');
+    expect(dropContainer.querySelectorAll('.oneproviders-list-item'))
+      .to.have.length(2);
+    expect(dropContainer.querySelector('.oneproviders-list-item.active')).to.exist;
   });
 });

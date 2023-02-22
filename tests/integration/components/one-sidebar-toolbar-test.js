@@ -17,7 +17,7 @@ describe('Integration | Component | one sidebar toolbar', function () {
     expect(findAll('.oneicon-space')).to.have.length(1);
   });
 
-  it('renders button that calls given action', async function (done) {
+  it('renders button that calls given action', async function () {
     const actionSpy = sinon.spy();
     this.set('buttons', [{
       icon: 'space',
@@ -28,9 +28,7 @@ describe('Integration | Component | one sidebar toolbar', function () {
       {{one-sidebar-toolbar buttons=buttons}}
       <div class="collapsible-toolbar-global-toggle"></div>
     `);
-    click('.test-button').then(() => {
-      expect(actionSpy).to.be.calledOnce;
-      done();
-    });
+    await click('.test-button');
+    expect(actionSpy).to.be.calledOnce;
   });
 });

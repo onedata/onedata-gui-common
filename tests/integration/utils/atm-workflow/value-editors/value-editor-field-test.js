@@ -39,11 +39,10 @@ describe('Integration | Utility | atm-workflow/value-editors/value-editor-field'
   });
 
   context('in edit mode', function () {
-    it('renders component with class "value-editor"', async function (done) {
+    it('renders component with class "value-editor"', async function () {
       await renderForm();
 
       expect(find('.value-editor')).to.exist;
-      done();
     });
 
     it('shows editor with default when field has undefined value', async function () {

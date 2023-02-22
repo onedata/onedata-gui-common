@@ -53,7 +53,7 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
     itHasModeClass('edit');
     itAddsInputStoreClassWhenNeeded();
 
-    it('allows to remove store', async function (done) {
+    it('allows to remove store', async function () {
       const onRemoveSpy = sinon.stub().resolves();
       this.set('store.onRemove', onRemoveSpy);
       await renderComponent();
@@ -63,10 +63,9 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
       await click('.remove-store-action-trigger');
       await click(getModalFooter().querySelector('.question-yes'));
       expect(onRemoveSpy).to.be.calledOnce;
-      done();
     });
 
-    it('allows to modify store on click', async function (done) {
+    it('allows to modify store on click', async function () {
       const onModifySpy = sinon.stub().resolves();
       this.set('store.onModify', onModifySpy);
       await renderComponent();
@@ -83,7 +82,6 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
         .and.to.be.calledWith(this.get('store'), sinon.match({
           name: 'store2',
         }));
-      done();
     });
   });
 
@@ -96,14 +94,13 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
     itHasModeClass('view');
     itAddsInputStoreClassWhenNeeded();
 
-    it('does not show remove button', async function (done) {
+    it('does not show remove button', async function () {
       await renderComponent();
 
       expect(find('.remove-store-action-trigger')).to.not.exist;
-      done();
     });
 
-    it('allows to view store details on click', async function (done) {
+    it('allows to view store details on click', async function () {
       await renderComponent();
 
       await click('.workflow-visualiser-stores-list-store');
@@ -112,7 +109,6 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
       expect(
         getModalBody().querySelector('.name-field .field-component').textContent.trim()
       ).to.equal('store1');
-      done();
     });
   });
 });
@@ -129,45 +125,41 @@ async function renderComponent() {
 }
 
 function itShowsStoreName() {
-  it('shows store name', async function (done) {
+  it('shows store name', async function () {
     await renderComponent();
 
     expect(find('.store-name').textContent.trim()).to.equal('store1');
-    done();
   });
 }
 
 function itHasModeClass(mode) {
   const className = `mode-${mode}`;
-  it(`has "${className}" class`, async function (done) {
+  it(`has "${className}" class`, async function () {
     await renderComponent();
 
     expect(find('.workflow-visualiser-stores-list-store'))
       .to.have.class(className);
-    done();
   });
 }
 
 function itAddsInputStoreClassWhenNeeded() {
   it('has class "tag-item-warning" when "requiresInitialContent" is true',
-    async function (done) {
+    async function () {
       this.set('store.requiresInitialContent', true);
 
       await renderComponent();
 
       expect(find('.workflow-visualiser-stores-list-store'))
         .to.have.class('tag-item-warning');
-      done();
     });
 
   it('does not have class "tag-item-warning" when "requiresInitialContent" is false',
-    async function (done) {
+    async function () {
       this.set('store.requiresInitialContent', false);
 
       await renderComponent();
 
       expect(find('.workflow-visualiser-stores-list-store'))
         .to.not.have.class('tag-item-warning');
-      done();
     });
 }

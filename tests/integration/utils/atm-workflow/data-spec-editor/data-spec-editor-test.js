@@ -71,24 +71,22 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
   });
 
   context('in edit mode', function () {
-    it('shows dropdown with all data spec types', async function (done) {
+    it('shows dropdown with all data spec types', async function () {
       await renderForm();
 
       expect(atmDataSpecTypeHelper.getSelectedOptionText()).to.be.null;
       expect(await atmDataSpecTypeHelper.getOptionsText())
         .to.deep.equal(atmDataSpecTypesInfo.map(({ label }) => label));
-      done();
     });
 
-    it('has "Select type..." dropdown placeholder', async function (done) {
+    it('has "Select type..." dropdown placeholder', async function () {
       await renderForm();
 
       expect(atmDataSpecTypeHelper.getPlaceholder()).to.equal('Select type...');
-      done();
     });
 
     simpleAtmDataSpecTypesInfo.forEach(({ type, label }) => {
-      it(`allows to create ${type} type data spec`, async function (done) {
+      it(`allows to create ${type} type data spec`, async function () {
         await renderForm();
 
         await atmDataSpecTypeHelper.selectOptionByText(label);
@@ -96,11 +94,10 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
           type,
           valueConstraints: {},
         });
-        done();
       });
     });
 
-    it('allows to create file type data spec', async function (done) {
+    it('allows to create file type data spec', async function () {
       await renderForm();
 
       await atmDataSpecTypeHelper.selectOptionByText('File');
@@ -112,10 +109,9 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
           fileType: AtmFileType.Regular,
         },
       });
-      done();
     });
 
-    it('allows to create time series measurement type data spec', async function (done) {
+    it('allows to create time series measurement type data spec', async function () {
       await renderForm();
 
       await atmDataSpecTypeHelper.selectOptionByText('Time series measurement');
@@ -132,10 +128,9 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
           }],
         },
       });
-      done();
     });
 
-    it('allows to create array type data spec', async function (done) {
+    it('allows to create array type data spec', async function () {
       await renderForm();
 
       await atmDataSpecTypeHelper.selectOptionByText('Array');
@@ -155,15 +150,13 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
           },
         },
       });
-      done();
     });
 
-    it('has "Select item type..." dropdown placeholder when inside array type', async function (done) {
+    it('has "Select item type..." dropdown placeholder when inside array type', async function () {
       await renderForm();
 
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(atmDataSpecTypeHelper.getPlaceholder()).to.equal('Select item type...');
-      done();
     });
 
     it('allows to select only types matching typeOrSupertype filter', async function () {
@@ -300,15 +293,14 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       this.get('rootGroup').changeMode('view');
     });
 
-    it('does not show dropdown with data spec types', async function (done) {
+    it('does not show dropdown with data spec types', async function () {
       await renderForm();
 
       expect(atmDataSpecTypeHelper.getTrigger()).to.be.null;
-      done();
     });
 
     simpleAtmDataSpecTypesInfo.forEach(({ type, label }) => {
-      it(`shows ${type} type data spec`, async function (done) {
+      it(`shows ${type} type data spec`, async function () {
         setVisibleAtmDataSpec(this, {
           type,
           valueConstraints: {},
@@ -316,11 +308,10 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
         await renderForm();
 
         expect(find('.data-type-name')).to.have.trimmed.text(label);
-        done();
       });
     });
 
-    it('shows file type data spec', async function (done) {
+    it('shows file type data spec', async function () {
       setVisibleAtmDataSpec(this, {
         type: AtmDataSpecType.File,
         valueConstraints: {
@@ -333,10 +324,9 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       expect(find('.data-type-name')).to.have.trimmed.text('File');
       expect(find('.form-summary-toggle')).to.contain.text('Regular');
       expect(find('.fileType-field')).to.contain.text('Regular');
-      done();
     });
 
-    it('shows time series measurement type data spec', async function (done) {
+    it('shows time series measurement type data spec', async function () {
       setVisibleAtmDataSpec(this, {
         type: AtmDataSpecType.TimeSeriesMeasurement,
         valueConstraints: {
@@ -353,10 +343,9 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       expect(find('.data-type-name')).to.have.trimmed.text('Time series measurement');
       expect(find('.form-summary-toggle')).to.contain.text('Defined measurements: 1');
       expect(find('.nameMatcher-field')).to.contain.text('series1');
-      done();
     });
 
-    it('shows array type data spec', async function (done) {
+    it('shows array type data spec', async function () {
       setVisibleAtmDataSpec(this, {
         type: AtmDataSpecType.Array,
         valueConstraints: {
@@ -376,7 +365,6 @@ describe('Integration | Utility | atm workflow/data spec editor/data spec editor
       const dataTypeNames = findAll('.data-type-name')
         .map((node) => node.textContent.trim());
       expect(dataTypeNames).to.deep.equal(['Array', 'Array', 'String']);
-      done();
     });
   });
 });

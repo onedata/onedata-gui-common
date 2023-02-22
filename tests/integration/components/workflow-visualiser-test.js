@@ -341,7 +341,7 @@ describe('Integration | Component | workflow visualiser', function () {
     itShowsVisualiserElements();
     itShowsStoresList();
 
-    it('shows lane details', async function (done) {
+    it('shows lane details', async function () {
       const rawData = twoEmptyLanesExample;
 
       await renderWithRawData(this, rawData);
@@ -350,10 +350,9 @@ describe('Integration | Component | workflow visualiser', function () {
       expect(
         getModalBody().querySelector('.name-field .field-component').textContent.trim()
       ).to.equal('lane0');
-      done();
     });
 
-    it('shows store information in modal', async function (done) {
+    it('shows store information in modal', async function () {
       const rawData = noLanesExample;
       await renderWithRawData(this, rawData);
 
@@ -363,29 +362,26 @@ describe('Integration | Component | workflow visualiser', function () {
       expect(
         getModalBody().querySelector('.name-field .field-component').textContent.trim()
       ).to.equal('store0');
-      done();
     });
 
-    it('does not show edition-related elements in empty visualiser', async function (done) {
+    it('does not show edition-related elements in empty visualiser', async function () {
       const rawData = noLanesExample;
 
       await renderWithRawData(this, rawData);
 
       expect(find('.create-lane-action-trigger')).to.not.exist;
-      done();
     });
 
-    it('does not allow to change lane name', async function (done) {
+    it('does not allow to change lane name', async function () {
       const rawData = twoEmptyLanesExample;
 
       await renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
       expect(find('.lane-name .one-label')).to.not.exist;
-      done();
     });
 
-    it('does not show edition-related elements in lanes and interlane spaces', async function (done) {
+    it('does not show edition-related elements in lanes and interlane spaces', async function () {
       const rawData = twoNonEmptyLanesExample;
 
       await renderWithRawData(this, rawData);
@@ -393,10 +389,9 @@ describe('Integration | Component | workflow visualiser', function () {
 
       expect(modifyTrigger).to.not.exist;
       expect(find('.create-lane-action-trigger')).to.not.exist;
-      done();
     });
 
-    it('does not show edition-related elements in empty lane', async function (done) {
+    it('does not show edition-related elements in empty lane', async function () {
       const rawData = twoEmptyLanesExample;
 
       await renderWithRawData(this, rawData);
@@ -404,21 +399,19 @@ describe('Integration | Component | workflow visualiser', function () {
       expect(find(
         '.workflow-visualiser-interblock-space .add-block-action-trigger'
       )).to.not.exist;
-      done();
     });
 
-    it('does not allow to change parallel box name', async function (done) {
+    it('does not allow to change parallel box name', async function () {
       const rawData = twoEmptyLanesExample;
 
       await renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
       expect(find('.parallel-box-name .one-label')).to.not.exist;
-      done();
     });
 
     it('does not show edition-related elements of parallel boxes and spaces between them',
-      async function (done) {
+      async function () {
         const rawData = twoNonEmptyLanesExample;
 
         await renderWithRawData(this, rawData);
@@ -427,10 +420,9 @@ describe('Integration | Component | workflow visualiser', function () {
         expect(find(
           '.workflow-visualiser-interblock-space.between-parallel-box-space .add-block-action-trigger'
         )).to.not.exist;
-        done();
       });
 
-    it('does not show edition-related elements in empty parallel box', async function (done) {
+    it('does not show edition-related elements in empty parallel box', async function () {
       const rawData = twoLanesWithEmptyBlocksExample;
 
       await renderWithRawData(this, rawData);
@@ -438,20 +430,18 @@ describe('Integration | Component | workflow visualiser', function () {
       expect(find(
         '.workflow-visualiser-parallel-box .workflow-visualiser-interblock-space .add-block-action-trigger'
       )).to.not.exist;
-      done();
     });
 
-    it('does not allow to change task name', async function (done) {
+    it('does not allow to change task name', async function () {
       const rawData = twoEmptyLanesExample;
 
       await renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
       expect(find('.task-name .one-label')).to.not.exist;
-      done();
     });
 
-    it('does not show edition-related elements of tasks and spaces between them', async function (done) {
+    it('does not show edition-related elements of tasks and spaces between them', async function () {
       const rawData = twoNonEmptyLanesExample;
 
       await renderWithRawData(this, rawData);
@@ -460,16 +450,14 @@ describe('Integration | Component | workflow visualiser', function () {
       expect(find(
         '.workflow-visualiser-interblock-space.between-task-space .add-block-action-trigger'
       )).to.not.exist;
-      done();
     });
   });
 
   context('regarding left edge scroll', function () {
-    it('does not show scroll button, when there is no overflow', async function (done) {
+    it('does not show scroll button, when there is no overflow', async function () {
       await renderForScrollTest(this, 5, laneWidth * 10);
 
       expect(find('.left-edge-scroll-step-trigger')).to.not.have.class('visible');
-      done();
     });
 
     itScrollsToLane(
@@ -499,11 +487,10 @@ describe('Integration | Component | workflow visualiser', function () {
   });
 
   context('regarding right edge scroll', function () {
-    it('does not show scroll button, when there is no overflow', async function (done) {
+    it('does not show scroll button, when there is no overflow', async function () {
       await renderForScrollTest(this, 5, laneWidth * 10);
 
       expect(find('.right-edge-scroll-step-trigger')).to.not.have.class('visible');
-      done();
     });
     // WARNING: Test below is fragile to zoom < 100%.
     itScrollsToLane(
@@ -563,7 +550,7 @@ class WindowStub {
 }
 
 function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
-  it(message, async function (done) {
+  it(message, async function () {
     await renderForScrollTest(this, 5, laneWidth * 0.6);
     await scrollToLane(overflowEdge, overflowLane, 10);
     for (const operation of operations) {
@@ -598,46 +585,42 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
           .to.be.closeTo(dom.offset(lanesContainer).left + dom.width(lanesContainer), 2);
       }
     }
-    done();
   });
 }
 
 function itHasModeClass(mode) {
-  it(`has class "mode-${mode}"`, async function (done) {
+  it(`has class "mode-${mode}"`, async function () {
     const rawData = noLanesExample;
 
     await renderWithRawData(this, rawData);
 
     expect(find('.workflow-visualiser')).to.have.class(`mode-${mode}`);
-    done();
   });
 }
 
 function itShowsVisualiserElements() {
-  it('shows one interlane space when there are no lanes', async function (done) {
+  it('shows one interlane space when there are no lanes', async function () {
     const rawData = noLanesExample;
 
     await renderWithRawData(this, rawData);
 
     checkRenderedLanesStructure(rawData);
-    done();
   });
 
   itRendersEmptyLanes('shows an empty lane', 1);
   itRendersEmptyLanes('shows two empty lanes', 2);
 
-  it('shows a non-empty lane', async function (done) {
+  it('shows a non-empty lane', async function () {
     const rawData = twoNonEmptyLanesExample;
 
     await renderWithRawData(this, rawData);
 
     checkRenderedLanesStructure(rawData);
-    done();
   });
 }
 
 function itShowsStoresList() {
-  it('shows stores list', async function (done) {
+  it('shows stores list', async function () {
     const rawData = noLanesExample;
     const mode = this.get('mode');
 
@@ -647,18 +630,16 @@ function itShowsStoresList() {
     expect(storesList).to.exist;
     expect(storesList).to.have.class(`mode-${mode}`);
     checkRenderedStoresList(rawData);
-    done();
   });
 }
 
 function itRendersEmptyLanes(message, lanesNumber) {
-  it(message, async function (done) {
+  it(message, async function () {
     const rawData = generateExample(lanesNumber, 0, 0);
 
     await renderWithRawData(this, rawData);
 
     checkRenderedLanesStructure(rawData);
-    done();
   });
 }
 
@@ -843,7 +824,7 @@ function itPerformsCustomAction({
   applyUpdate,
   initialRawData,
 }) {
-  it(description, async function (done) {
+  it(description, async function () {
     await renderWithRawData(this, initialRawData);
 
     await actionExecutor();
@@ -856,7 +837,6 @@ function itPerformsCustomAction({
     const yieldedRawData = changeStub.lastCall.args[0];
     checkRenderedLanesStructure(yieldedRawData);
     checkRenderedStoresList(yieldedRawData);
-    done();
   });
 }
 
@@ -865,14 +845,13 @@ function itDoesNotPerformAction({
   actionTriggerGetter,
   initialRawData = threeNonEmptyLanesExample,
 }) {
-  it(description, async function (done) {
+  it(description, async function () {
     await renderWithRawData(this, initialRawData);
 
     const actionTrigger = await actionTriggerGetter();
 
     const actionParent = actionTrigger.parentElement;
     expect(actionParent).to.have.class('disabled');
-    done();
   });
 }
 

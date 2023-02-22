@@ -51,7 +51,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       this.set('modalOptions.mode', 'create');
     });
 
-    it('shows correct header, form in "create" mode and footer', async function (done) {
+    it('shows correct header, form in "create" mode and footer', async function () {
       await showModal(this);
 
       expect(getModalHeader().querySelector('h1').textContent.trim())
@@ -65,11 +65,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       expect(cancelBtn.textContent.trim()).to.equal('Cancel');
       expect(submitBtn).to.have.class('btn-primary');
       expect(submitBtn.textContent.trim()).to.equal('Create');
-      done();
     });
 
     it('disables submit when form is invalid and enables it, when becomes valid',
-      async function (done) {
+      async function () {
         await showModal(this);
 
         const submitBtn = getModalFooter().querySelector('.btn-submit');
@@ -81,7 +80,6 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
 
         await fillIn('.name-field .form-control', '');
         expect(submitBtn.disabled).to.be.true;
-        done();
       });
 
     itDoesNotShowTabs();
@@ -105,7 +103,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       });
     });
 
-    it('shows correct header, form in "edit" mode and footer', async function (done) {
+    it('shows correct header, form in "edit" mode and footer', async function () {
       await showModal(this);
 
       expect(getModalHeader().querySelector('h1').textContent.trim())
@@ -121,11 +119,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       expect(cancelBtn.textContent.trim()).to.equal('Cancel');
       expect(submitBtn).to.have.class('btn-primary');
       expect(submitBtn.textContent.trim()).to.equal('OK');
-      done();
     });
 
     it('disables submit when form is invalid and enables it, when becomes valid',
-      async function (done) {
+      async function () {
         await showModal(this);
 
         const submitBtn = getModalFooter().querySelector('.btn-submit');
@@ -136,7 +133,6 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
 
         await fillIn('.name-field .form-control', '');
         expect(submitBtn.disabled).to.be.true;
-        done();
       });
 
     itDoesNotShowTabs();
@@ -160,7 +156,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       });
     });
 
-    it('shows correct header, form in "view" mode and no footer', async function (done) {
+    it('shows correct header, form in "view" mode and no footer', async function () {
       await showModal(this);
 
       expect(getModalHeader().querySelector('h1').textContent.trim())
@@ -170,10 +166,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       expect(form.querySelector('.name-field .field-component').textContent.trim())
         .to.equal(simplestStore.name);
       expect(getModalFooter()).to.not.exist;
-      done();
     });
 
-    it('shows tabs with "details" tab preselected', async function (done) {
+    it('shows tabs with "details" tab preselected', async function () {
       await showModal(this);
 
       const tabs = getModalBody().querySelectorAll('.bs-tab-onedata .nav-link');
@@ -182,10 +177,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       expect(tabs[1].textContent.trim()).to.equal('Content');
       expect(tabs[0].parentElement).to.have.class('active');
       expect(getModalBody().querySelector('.store-form')).to.exist;
-      done();
     });
 
-    it('closes modal on "x" click', async function (done) {
+    it('closes modal on "x" click', async function () {
       const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
       await showModal(this);
@@ -193,7 +187,6 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
 
       await click(getModalHeader().querySelector('.close'));
       expect(onHideSpy).to.be.calledOnce;
-      done();
     });
 
     itClosesModalOnBackdropClick();
@@ -217,16 +210,15 @@ async function showModal(testCase) {
 }
 
 function itDoesNotShowTabs() {
-  it('does not show tabs', async function (done) {
+  it('does not show tabs', async function () {
     await showModal(this);
 
     expect(getModalBody().querySelector('.bs-tab-onedata')).to.not.exist;
-    done();
   });
 }
 
 function itClosesModalOnCancelClick() {
-  it('closes modal on cancel click', async function (done) {
+  it('closes modal on cancel click', async function () {
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     await showModal(this);
@@ -234,12 +226,11 @@ function itClosesModalOnCancelClick() {
 
     await click(getModalFooter().querySelector('.btn-cancel'));
     expect(onHideSpy).to.be.calledOnce;
-    done();
   });
 }
 
 function itClosesModalOnBackdropClick() {
-  it('closes modal on backdrop click', async function (done) {
+  it('closes modal on backdrop click', async function () {
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     await showModal(this);
@@ -247,12 +238,11 @@ function itClosesModalOnBackdropClick() {
 
     await click(getModal());
     expect(onHideSpy).to.be.calledOnce;
-    done();
   });
 }
 
 function itPassesStoreProvidedByFormOnSubmit(fillForm = () => {}, expectedData) {
-  it('passes store from form on submit', async function (done) {
+  it('passes store from form on submit', async function () {
     const submitStub = sinon.stub().resolves();
     this.set('modalOptions.onSubmit', submitStub);
     await showModal(this);
@@ -261,12 +251,11 @@ function itPassesStoreProvidedByFormOnSubmit(fillForm = () => {}, expectedData) 
     await click(getModalFooter().querySelector('.btn-submit'));
 
     expect(submitStub).to.be.calledWith(expectedData);
-    done();
   });
 }
 
 function itDisablesAllControlsWhileSubmitting(fillForm = () => {}) {
-  it('disables all controls while submitting', async function (done) {
+  it('disables all controls while submitting', async function () {
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
     await showModal(this);
@@ -279,12 +268,11 @@ function itDisablesAllControlsWhileSubmitting(fillForm = () => {}) {
     const modalFooter = getModalFooter();
     expect(modalFooter.querySelector('.btn-cancel')).to.have.attr('disabled');
     expect(modalFooter.querySelector('.btn-submit')).to.have.attr('disabled');
-    done();
   });
 }
 
 function itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm = () => {}) {
-  it('does not close modal on backdrop click when submitting', async function (done) {
+  it('does not close modal on backdrop click when submitting', async function () {
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
@@ -295,6 +283,5 @@ function itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm = () => {}) {
     await click(getModal());
 
     expect(onHideSpy).to.not.be.called;
-    done();
   });
 }

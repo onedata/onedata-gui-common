@@ -128,7 +128,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
 function itIsOfType(type, parent, [elementBefore, elementAfter]) {
   const className = `space-position-${type}`;
   it(`has class "${className}" when ${siblingsDescription(elementBefore, elementAfter)}`,
-    async function (done) {
+    async function () {
       setProperties(this.get('blockSpace'), {
         parent,
         elementBefore,
@@ -140,14 +140,13 @@ function itIsOfType(type, parent, [elementBefore, elementAfter]) {
       }}`);
 
       expect(find('.workflow-visualiser-interblock-space')).to.have.class(className);
-      done();
     });
 }
 
 function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementType, mode) {
   it(
     `allows to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
-    async function (done) {
+    async function () {
       const onAddElement = sinon.stub().resolves();
       setProperties(this.get('blockSpace'), {
         mode,
@@ -167,7 +166,6 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementT
       };
       expect(onAddElement).to.be.calledOnce
         .and.to.be.calledWith(parent, elementBefore, sinon.match(newElementMatcher));
-      done();
     }
   );
 }
@@ -175,7 +173,7 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementT
 function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], newElementType, mode) {
   it(
     `does not allow to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
-    async function (done) {
+    async function () {
       setProperties(this.get('blockSpace'), {
         mode,
         elementBefore,
@@ -188,7 +186,6 @@ function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], newEl
       }}`);
 
       expect(find(`.create-${dasherize(newElementType)}-action-trigger`)).to.not.exist;
-      done();
     }
   );
 }
@@ -196,7 +193,7 @@ function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], newEl
 function itHasArrow(hasArrow, parent, [elementBefore, elementAfter], mode) {
   it(
     `${hasArrow ? 'renders' : 'does not render any'} arrow when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
-    async function (done) {
+    async function () {
       setProperties(this.get('blockSpace'), {
         mode,
         elementBefore,
@@ -214,7 +211,6 @@ function itHasArrow(hasArrow, parent, [elementBefore, elementAfter], mode) {
       } else {
         expect(arrow).to.not.exist;
       }
-      done();
     }
   );
 }

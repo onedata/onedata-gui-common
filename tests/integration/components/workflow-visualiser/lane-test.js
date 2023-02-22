@@ -93,15 +93,14 @@ describe('Integration | Component | workflow visualiser/lane', function () {
     itRendersLaneElements();
     itRendersActions(viewLaneActionsSpec);
 
-    it('does not allow to modify lane name', async function (done) {
+    it('does not allow to modify lane name', async function () {
       await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
       // .one-label is a trigger for one-inline-editor
       expect(find('.lane-name .one-label')).to.not.exist;
-      done();
     });
 
-    it('allows to show lane details', async function (done) {
+    it('allows to show lane details', async function () {
       await render(hbs `
         {{global-modal-mounter}}
         {{workflow-visualiser/lane elementModel=lane}}
@@ -113,7 +112,6 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       expect(
         getModalBody().querySelector('.name-field .field-component').textContent.trim()
       ).to.equal('lane1');
-      done();
     });
   });
 
@@ -126,7 +124,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
     itRendersLaneElements();
     itRendersActions(editLaneActionsSpec);
 
-    it('allows to modify lane name', async function (done) {
+    it('allows to modify lane name', async function () {
       setProperties(this.get('lane'), {
         name: 'my-lane',
         onModify(lane, { name }) {
@@ -143,10 +141,9 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       await click('.lane-name .save-icon');
 
       expect(find('.lane-name').textContent.trim()).to.equal('new-name');
-      done();
     });
 
-    it('allows to modify lane details', async function (done) {
+    it('allows to modify lane details', async function () {
       const onModifySpy = sinon.stub().resolves();
       this.set('lane.onModify', onModifySpy);
       await render(hbs `
@@ -166,14 +163,13 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
       expect(onModifySpy).to.be.calledOnce
         .and.to.be.calledWith(this.get('lane'), { name: 'othername' });
-      done();
     });
 
     [
       ['left', -1, 'isFirst'],
       ['right', 1, 'isLast'],
     ].forEach(([direction, moveStep, disablingProp]) => {
-      it(`allows to move ${direction} the lane`, async function (done) {
+      it(`allows to move ${direction} the lane`, async function () {
         const onMoveSpy = sinon.stub().resolves();
         this.set('lane.onMove', onMoveSpy);
 
@@ -186,10 +182,9 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
         expect(onMoveSpy).to.be.calledOnce
           .and.to.be.calledWith(this.get('lane'), moveStep);
-        done();
       });
 
-      it(`disables moving ${direction} the lane when "${disablingProp}" is true`, async function (done) {
+      it(`disables moving ${direction} the lane when "${disablingProp}" is true`, async function () {
         this.set(`lane.${disablingProp}`, true);
         await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
@@ -199,11 +194,10 @@ describe('Integration | Component | workflow visualiser/lane', function () {
           `.webui-popover.in .move-${direction}-lane-action-trigger`
         ).parentElement;
         expect(actionParent).to.have.class('disabled');
-        done();
       });
     });
 
-    it('allows to clear lane, when it is not empty', async function (done) {
+    it('allows to clear lane, when it is not empty', async function () {
       const onClearSpy = sinon.stub().resolves();
       const block = ParallelBox.create({ id: 'b1' });
       const lane = this.get('lane');
@@ -226,10 +220,9 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       await click(getModalFooter().querySelector('.question-yes'));
 
       expect(onClearSpy).to.be.calledOnce.and.to.be.calledWith(lane);
-      done();
     });
 
-    it('does not allow to clear lane, when it is empty', async function (done) {
+    it('does not allow to clear lane, when it is empty', async function () {
       const actionsFactory = this.get('lane.actionsFactory');
       this.set('lane.elements', [InterblockSpace.create({ actionsFactory })]);
       await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
@@ -240,10 +233,9 @@ describe('Integration | Component | workflow visualiser/lane', function () {
         '.webui-popover.in .clear-lane-action-trigger'
       ).parentElement;
       expect(actionParent).to.have.class('disabled');
-      done();
     });
 
-    it('allows to remove lane', async function (done) {
+    it('allows to remove lane', async function () {
       const onRemoveSpy = sinon.stub().resolves();
       this.set('lane.onRemove', onRemoveSpy);
       await render(hbs `
@@ -258,25 +250,23 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       await click(getModalFooter().querySelector('.question-yes'));
 
       expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('lane'));
-      done();
     });
   });
 });
 
 function itShowsName() {
-  it('shows lane name', async function (done) {
+  it('shows lane name', async function () {
     const laneName = 'my-lane';
     this.set('lane.name', laneName);
 
     await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
     expect(find('.lane-name').textContent.trim()).to.equal(laneName);
-    done();
   });
 }
 
 function itRendersLaneElements() {
-  it('renders lane elements', async function (done) {
+  it('renders lane elements', async function () {
     const actionsFactory = this.get('lane.actionsFactory');
     const block1 = ParallelBox.create({ id: 'b1', name: 'block1' });
     const block2 = ParallelBox.create({ id: 'b2', name: 'block2' });
@@ -314,12 +304,11 @@ function itRendersLaneElements() {
     expect(space3Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
     expect(space3Element).to.have.attr('data-element-before-id', 'b2');
     expect(space3Element).to.not.have.attr('data-element-after-id');
-    done();
   });
 }
 
 function itRendersActions(actionsSpec) {
-  it('renders actions', async function (done) {
+  it('renders actions', async function () {
     await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
     await click('.lane-actions-trigger');
@@ -332,6 +321,5 @@ function itRendersActions(actionsSpec) {
       expect(action.textContent.trim()).to.equal(label);
       expect(action.querySelector('.one-icon')).to.have.class(`oneicon-${icon}`);
     });
-    done();
   });
 }

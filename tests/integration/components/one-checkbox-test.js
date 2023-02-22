@@ -27,7 +27,7 @@ describe('Integration | Component | one checkbox', function () {
     expect(find('.this-checkbox')).to.have.class('one-checkbox-base');
   });
 
-  it('invokes update action on click', async function (done) {
+  it('invokes update action on click', async function () {
     const toggleSelectionHandler = sinon.spy();
     this.set('toggleSelection', toggleSelectionHandler);
 
@@ -38,9 +38,7 @@ describe('Integration | Component | one checkbox', function () {
       update=(action toggleSelection)}}`);
 
     expect(find('.this-checkbox')).to.exist;
-    click('.this-checkbox').then(() => {
-      expect(toggleSelectionHandler).to.be.calledOnce;
-      done();
-    });
+    await click('.this-checkbox');
+    expect(toggleSelectionHandler).to.be.calledOnce;
   });
 });

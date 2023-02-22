@@ -25,7 +25,7 @@ describe('Integration | Component | user credentials form', function () {
 
   it(
     'shows old password, new password and retype new password fields in change password mode',
-    async function (done) {
+    async function () {
       await render(hbs `{{user-credentials-form changingPassword=true}}`);
 
       const form = new UserCredentialsFormHelper(this.element);
@@ -38,8 +38,6 @@ describe('Integration | Component | user credentials form', function () {
         .to.exist;
       expect(form.getInput('change-newPasswordRetype'), 'new pass retype field')
         .to.exist;
-
-      done();
     }
   );
 
