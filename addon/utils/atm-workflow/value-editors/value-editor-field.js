@@ -244,6 +244,13 @@ export const ValueEditorField = FormField.extend({
           validate(value, this.atmDataSpec) ? value : undefined
         );
       }
+      // Became empty, notify about emptiness
+      if (this.editorStateManager && !editorStateManager) {
+        this.handleEditorStateManagerChange({
+          value: null,
+          isValid: false,
+        });
+      }
       this.set('editorStateManager', editorStateManager);
     }
 

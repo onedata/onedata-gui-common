@@ -97,6 +97,11 @@ export const atmDataSpecTypeDefinition = Object.freeze({
       allowedFileTypes: sortedAllowedFileTypes,
     };
   },
+  getDefaultValue() {
+    return {
+      file_id: '',
+    };
+  },
 });
 
 /**

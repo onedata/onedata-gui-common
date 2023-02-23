@@ -1,15 +1,14 @@
 /**
- * Extended version of ember-bootstrap tooltip. Adds positioning of tooltip
- * arrow by setting `arrowPlacement` and `arrowOffset` property.
+ * Extended version of ember-bootstrap tooltip. Adds custom bugfixes.
  *
  * Typical usage:
  * ```
- * {{one-tooltip title="tooltip text" placement="top" arrowPlacement="right"}}
+ * {{one-tooltip title="tooltip text" placement="top"}}
  * ```
  *
  * @module components/one-tooltip
- * @author Michal Borzecki
- * @copyright (C) 2017-2022 ACK CYFRONET AGH
+ * @author Michał Borzęcki
+ * @copyright (C) 2017-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -18,25 +17,9 @@ import { inject } from '@ember/service';
 import { observer } from '@ember/object';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import config from 'ember-get-config';
-import dom from 'onedata-gui-common/utils/dom';
 
 export default BsTooltip.extend({
   scrollState: inject(),
-
-  /**
-   * Arrow position.
-   * @type {string}
-   *
-   * For top and bottom tooltip placement valid values are: left, right, center
-   * For left and right tooltip placement valid values are: top, bottom, center
-   */
-  arrowPlacement: 'center',
-
-  /**
-   * Arrow offset (in px) from the edge specified by `arrowPosition` property.
-   * @type {number}
-   */
-  arrowOffset: 20,
 
   /**
    * If true, the global scrollState will be observed and tooltip will be hidden
@@ -108,84 +91,5 @@ export default BsTooltip.extend({
 
       this._super(...args);
     });
-  },
-
-  /**
-   * Adds to bs-tooltip arrow implementation translateX/Y property to place it
-   * again over the target after tooltip offset manipulation.
-   *
-   * @param {number} delta
-   * @param {string} dimension
-   * @param {boolean} isVertical
-   */
-  replaceArrow(delta, dimension, isVertical) {
-    this._super(delta, dimension, isVertical);
-
-    const {
-      arrowElement,
-      arrowPlacement,
-    } = this.getProperties(
-      'arrowElement',
-      'arrowPlacement'
-    );
-
-    if (!arrowElement) {
-      return;
-    }
-
-    let offset = this._getArrowRelativeOffset();
-    switch (arrowPlacement) {
-      case 'left':
-        offset += delta / 2;
-        /* falls through */
-      case 'right':
-        dom.setStyle(arrowElement, 'transform', `translateX(${offset}px)`);
-        break;
-      case 'top':
-      case 'bottom':
-        dom.setStyle(arrowElement, 'transform', `translateY(${offset}px)`);
-        break;
-    }
-  },
-
-  /**
-   * Adds to bs-tooltip implementation a fake placement offset to change
-   * tooltip position.
-   *
-   * @param {Object} offset
-   * @param {string} placement
-   */
-  applyPlacement(offset, placement) {
-    const arrowPlacement = this.get('arrowPlacement');
-    const arrowOffset = -this._getArrowRelativeOffset();
-    switch (arrowPlacement) {
-      case 'left':
-      case 'right':
-        offset.left += arrowOffset;
-        break;
-      case 'top':
-      case 'bottom':
-        offset.top += arrowOffset;
-        break;
-    }
-
-    this._super(offset, placement);
-  },
-
-  _getArrowRelativeOffset() {
-    if (!this.overlayElement) {
-      return 0;
-    }
-
-    let offset;
-    if (this.arrowPlacement === 'left' || this.arrowPlacement === 'right') {
-      offset = dom.width(this.overlayElement) / 2 - this.arrowOffset;
-    } else {
-      offset = dom.height(this.overlayElement) / 2 - this.arrowOffset;
-    }
-    if (this.arrowPlacement === 'left' || this.arrowPlacement === 'top') {
-      offset *= -1;
-    }
-    return offset;
   },
 });

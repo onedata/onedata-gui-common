@@ -160,13 +160,4 @@ export default class DatasetValueEditorState extends ValueEditorState {
         return false;
     }
   }
-
-  /**
-   * @override
-   */
-  getDefaultValue() {
-    return {
-      datasetId: '',
-    };
-  }
 }

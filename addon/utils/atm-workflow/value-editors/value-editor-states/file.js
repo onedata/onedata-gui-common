@@ -160,13 +160,4 @@ export default class FileValueEditorState extends ValueEditorState {
         return false;
     }
   }
-
-  /**
-   * @override
-   */
-  getDefaultValue() {
-    return {
-      file_id: '',
-    };
-  }
 }

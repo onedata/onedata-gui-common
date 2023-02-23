@@ -17,11 +17,4 @@ export default class StringValueEditorState extends ValueEditorState {
     super(...arguments);
     this.editorComponentName = `${editorComponentsPrefix}/string/editor`;
   }
-
-  /**
-   * @override
-   */
-  getDefaultValue() {
-    return '';
-  }
 }

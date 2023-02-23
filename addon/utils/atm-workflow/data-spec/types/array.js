@@ -93,4 +93,7 @@ export const atmDataSpecTypeDefinition = Object.freeze({
     }
     return true;
   },
+  getDefaultValue() {
+    return [];
+  },
 });
