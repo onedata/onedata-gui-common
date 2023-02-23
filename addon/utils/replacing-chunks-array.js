@@ -384,7 +384,7 @@ export default ArraySlice.extend(Evented, {
    * to prevent issues with async array modification.
    * @returns {Promise}
    */
-  _reload({ head = false, minSize = this.get('chunkSize'), offset = 0 } = {}) {
+  async _reload({ head = false, minSize = this.get('chunkSize'), offset = 0 } = {}) {
     const {
       _start,
       _end,
@@ -422,19 +422,28 @@ export default ArraySlice.extend(Evented, {
       fetchStartIndex = null;
     }
 
-    return this.fetchWrapper(
+    try {
+      const { arrayUpdate, endReached } = await this.fetchWrapper(
         fetchStartIndex,
         size,
         offset,
-      )
-      .then(({ arrayUpdate, endReached }) => {
-        const fetchedCount = get(arrayUpdate, 'length');
-        const updatedEnd = _start + fetchedCount;
-        safeExec(this, 'setProperties', {
-          _startReached: false,
-          _endReached: Boolean(endReached),
-          error: undefined,
+      );
+      const fetchedCount = get(arrayUpdate, 'length');
+      const updatedEnd = _start + fetchedCount;
+      safeExec(this, 'setProperties', {
+        _startReached: Boolean(head),
+        _endReached: Boolean(endReached),
+        error: undefined,
+      });
+      if (head) {
+        // clear array without notify
+        sourceArray.splice(0, get(sourceArray, 'length'));
+        sourceArray.push(...arrayUpdate);
+        this.setProperties({
+          startIndex: 0,
+          endIndex: fetchedCount,
         });
+      } else {
         this.setEmptyIndex(_start - 1);
         if (updatedEnd < get(sourceArray, 'length')) {
           set(sourceArray, 'length', updatedEnd);
@@ -444,18 +453,18 @@ export default ArraySlice.extend(Evented, {
           sourceArray[i + _start] = arrayUpdate[i];
         }
         sourceArray.arrayContentDidChange(_start);
-        return this;
-      })
-      .catch(error => {
-        safeExec(this, 'set', 'error', error);
-        throw error;
-      })
-      .finally(() => {
-        safeExec(this, () => {
-          this.set('_isReloading', false);
-          this.notifyPropertyChange('[]');
-        });
+      }
+
+      return this;
+    } catch (error) {
+      safeExec(this, 'set', 'error', error);
+      throw error;
+    } finally {
+      safeExec(this, () => {
+        this.set('_isReloading', false);
+        this.notifyPropertyChange('[]');
       });
+    }
   },
 
   scheduleReload({ head, minSize, offset } = {}) {

@@ -227,6 +227,7 @@ export default EmberObject.extend({
       return;
     }
 
+    this.set('ignoreNextScroll', true);
     schedule('afterRender', this, () => {
       window.requestAnimationFrame(() => {
         safeExec(this, () => {
