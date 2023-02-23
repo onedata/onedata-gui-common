@@ -83,7 +83,7 @@
     }
 
     // Make place for upper-floating labels of config entries. That style is
-    // not needed for argsuments and results sections because their labels are
+    // not needed for arguments and results sections because their labels are
     // much shorter and don't leak on nested fields labels.
     .lambdaConfigSection-field > .control-label {
       margin-bottom: 2em;

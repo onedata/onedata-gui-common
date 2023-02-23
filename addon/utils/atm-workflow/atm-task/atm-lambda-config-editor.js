@@ -149,8 +149,8 @@ export function rawValueToAtmLambdaConfigEditorValue(rawValue, configParameterSp
 export function atmLambdaConfigEditorValueToRawValue(formValue) {
   const atmLambdaConfig = {};
 
-  (formValue?.__fieldsValueNames ?? [])
-  .map((valueName) => formValue[valueName])
+  formValue?.__fieldsValueNames
+    ?.map((valueName) => formValue[valueName])
     .filter(Boolean)
     .forEach((entry) => {
       const paramName = entry.context?.name;
@@ -362,11 +362,15 @@ const ParamValueField = AtmValueEditorField.extend({
  * @returns {Array<ParamValueBuilder>}
  */
 function getParamValueBuilderTypesForParamSpec(paramSpec) {
+  if (!paramSpec) {
+    return [];
+  }
+
   const forbiddenValueBuilders = new Set();
-  if (!paramSpec?.isOptional) {
+  if (!paramSpec.isOptional) {
     forbiddenValueBuilders.add(ParamValueBuilder.LeaveUnassigned);
   }
-  if (paramSpec?.defaultValue === null || paramSpec?.defaultValue === undefined) {
+  if (paramSpec.defaultValue === null || paramSpec.defaultValue === undefined) {
     forbiddenValueBuilders.add(ParamValueBuilder.DefaultValue);
   } else {
     forbiddenValueBuilders.add(ParamValueBuilder.LeaveUnassigned);

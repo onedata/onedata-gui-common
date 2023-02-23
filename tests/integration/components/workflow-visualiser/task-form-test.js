@@ -1042,18 +1042,17 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       });
 
     it('does not render config parameters section when lambda has no parameters',
-      async function (done) {
+      async function () {
         this.set('atmLambda.revisionRegistry.1.configParameterSpecs', []);
 
         await renderComponent();
 
         expect(find('.lambdaConfigSection-field')).to.not.exist;
-        done();
       }
     );
 
     it('renders config parameters section when lambda has parameters',
-      async function (done) {
+      async function () {
         this.set('atmLambda.revisionRegistry.1.configParameterSpecs', [{
           name: 'param1',
           dataSpec: {
@@ -1074,12 +1073,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           .getSelectedOptionText()
         ).to.equal('Default value');
         expect(find('.lambdaConfigSection-field input')).to.have.value('10');
-        done();
       }
     );
 
     it('allows to setup lambda parameters with its defaults',
-      async function (done) {
+      async function () {
         this.set('atmLambda.revisionRegistry.1.configParameterSpecs', [{
           name: 'param1',
           dataSpec: {
@@ -1096,12 +1094,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             lambdaConfig: {},
           }),
         }));
-        done();
       }
     );
 
     it('allows to setup lambda parameters with custom values',
-      async function (done) {
+      async function () {
         this.set('atmLambda.revisionRegistry.1.configParameterSpecs', [{
           name: 'param1',
           dataSpec: {
@@ -1124,7 +1121,6 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             },
           }),
         }));
-        done();
       }
     );
 
@@ -1929,7 +1925,7 @@ function itFillsFieldsWithDataAboutResourceOverride() {
 }
 
 function itFillsFieldsWithDataAboutLambdaConfig() {
-  it('fills fields with data about lambda config', async function (done) {
+  it('fills fields with data about lambda config', async function () {
     this.set('atmLambda.revisionRegistry.1.configParameterSpecs', [{
       name: 'param1',
       dataSpec: {
@@ -1947,7 +1943,6 @@ function itFillsFieldsWithDataAboutLambdaConfig() {
       .and.to.contain.text('param1')
       .and.to.contain.text('Custom value');
     expect(find('.lambdaConfigSection-field input')).to.have.value('15');
-    done();
   });
 }
 

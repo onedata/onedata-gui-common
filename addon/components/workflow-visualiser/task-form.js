@@ -294,9 +294,9 @@ export default Component.extend(I18n, {
       fields: [
         this.atmLambdaFieldsGroup,
         this.detailsFieldsGroup,
+        this.lambdaConfigFields,
         this.argumentMappingsFieldsCollectionGroup,
         this.resultMappingsFieldsCollectionGroup,
-        this.lambdaConfigFields,
         this.timeSeriesStoreSectionFields,
         this.resourcesFieldsGroup,
       ],
