@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import cdmiObjectIdToGuid from 'onedata-gui-common/utils/cdmi-object-id-to-guid';
 
-describe('Unit | Utility | cdmi object id to guid', function () {
+describe('Unit | Utility | cdmi-object-id-to-guid', function () {
   it('converts cdmi object id to file guid', function () {
     const guid =
       'Z3VpZCNlMmY3NjVkYTMyOWMyMGNiYjU5MGE1NGViM2E3MTMyZCM4Mzk4MjE5ZWMwZTIyNjA0NWNkN2Q4NmMyOTgwNDEwYQ';

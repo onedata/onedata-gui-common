@@ -5,7 +5,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { render, find } from '@ember/test-helpers';
 import dom from 'onedata-gui-common/utils/dom';
 
-describe('Integration | Utility | dom/is visible', function () {
+describe('Integration | Utility | dom/is-visible', function () {
   setupRenderingTest();
 
   it('returns true for a button', async function () {

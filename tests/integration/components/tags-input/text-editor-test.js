@@ -13,7 +13,7 @@ import {
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | tags input/text editor', function () {
+describe('Integration | Component | tags-input/text-editor', function () {
   setupRenderingTest();
 
   it('has class "tags-input-text-editor"', async function () {

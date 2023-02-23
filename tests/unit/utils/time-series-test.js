@@ -4,7 +4,7 @@ import {
   getTimeSeriesMetricNamesWithAggregator,
 } from 'onedata-gui-common/utils/time-series';
 
-describe('Unit | Utility | time series', function () {
+describe('Unit | Utility | time-series', function () {
   describe('getTimeSeriesMetricNamesWithAggregator', function () {
     it('returns metric names having specific aggregator, sorted by resolution ascending', function () {
       const result = getTimeSeriesMetricNamesWithAggregator({

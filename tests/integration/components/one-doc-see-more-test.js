@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | one doc see more', function () {
+describe('Integration | Component | one-doc-see-more', function () {
   setupRenderingTest();
 
   it('renders text and link with default name if linkName is not provided', async function () {

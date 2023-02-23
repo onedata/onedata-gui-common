@@ -18,7 +18,7 @@ function createMockArray() {
   ]);
 }
 
-describe('Unit | Utility | conflict ids array', function () {
+describe('Unit | Utility | conflict-ids-array', function () {
   it('computes conflict labels on init', function () {
     const array = createMockArray();
 

@@ -5,7 +5,7 @@ import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import EmberObject from '@ember/object';
 
-describe('Integration | Helper | model routable id', function () {
+describe('Integration | Helper | model-routable-id', function () {
   setupRenderingTest();
 
   it('extracts id', async function () {

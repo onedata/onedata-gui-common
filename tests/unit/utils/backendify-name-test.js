@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import backendifyName, { maxLength } from 'onedata-gui-common/utils/backendify-name';
 
-describe('Unit | Utility | backendify name', function () {
+describe('Unit | Utility | backendify-name', function () {
   it('trims spaces from the string', function () {
     expect(backendifyName('  aaa    ')).to.equal('aaa');
   });

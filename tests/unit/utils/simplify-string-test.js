@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import simplifyString from 'onedata-gui-common/utils/simplify-string';
 
-describe('Unit | Utility | simplify string', function () {
+describe('Unit | Utility | simplify-string', function () {
   it('changes spaces to dashes', function () {
     const result = simplifyString('abc def   ghi');
     expect(result).to.be.equal('abc-def-ghi');

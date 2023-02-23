@@ -18,7 +18,7 @@ import {
 
 const componentClass = 'lane-form';
 
-describe('Integration | Component | modals/workflow visualiser/lane modal/lane form', function () {
+describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-form', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -67,7 +67,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     itHasAllFieldsEnabledByDefault();
     itAllowsToDisableAllFields();
 
-    it('renders empty "name" field', async function (done) {
+    it('renders empty "name" field', async function () {
       await renderComponent();
 
       const label = find('.name-field .control-label');
@@ -75,29 +75,26 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(label.textContent.trim()).to.equal('Name:');
       expect(field.type).to.equal('text');
       expect(field.value).to.equal('');
-      done();
     });
 
-    it('marks "name" field as invalid when it is empty', async function (done) {
+    it('marks "name" field as invalid when it is empty', async function () {
       await renderComponent();
 
       await focus('.name-field .form-control');
       await blur('.name-field .form-control');
 
       expect(find('.name-field')).to.have.class('has-error');
-      done();
     });
 
-    it('marks "name" field as valid when it is not empty', async function (done) {
+    it('marks "name" field as valid when it is not empty', async function () {
       await renderComponent();
 
       await fillIn('.name-field .form-control', 'somename');
 
       expect(find('.name-field')).to.have.class('has-success');
-      done();
     });
 
-    it('renders "max retries" field with "0" as default value', async function (done) {
+    it('renders "max retries" field with "0" as default value', async function () {
       await renderComponent();
 
       const label = find('.maxRetries-field .control-label');
@@ -105,64 +102,57 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(label.textContent.trim()).to.equal('Max. retries:');
       expect(field.type).to.equal('number');
       expect(field.value).to.equal('0');
-      done();
     });
 
-    it('marks "max retries" field as invalid when it is empty', async function (done) {
+    it('marks "max retries" field as invalid when it is empty', async function () {
       await renderComponent();
 
       await fillIn('.maxRetries-field .form-control', '');
 
       expect(find('.maxRetries-field')).to.have.class('has-error');
-      done();
     });
 
-    it('marks "max retries" field as invalid when it contains negative number', async function (done) {
+    it('marks "max retries" field as invalid when it contains negative number', async function () {
       await renderComponent();
 
       await fillIn('.maxRetries-field .form-control', '-3');
 
       expect(find('.maxRetries-field')).to.have.class('has-error');
-      done();
     });
 
-    it('marks "max retries" field as invalid when it contains a float number', async function (done) {
+    it('marks "max retries" field as invalid when it contains a float number', async function () {
       await renderComponent();
 
       await fillIn('.maxRetries-field .form-control', '3.5');
 
       expect(find('.maxRetries-field')).to.have.class('has-error');
-      done();
     });
 
-    it('marks "max retries" field as valid when it contains a positive integer number', async function (done) {
+    it('marks "max retries" field as valid when it contains a positive integer number', async function () {
       await renderComponent();
 
       await fillIn('.maxRetries-field .form-control', '3');
 
       expect(find('.maxRetries-field')).to.have.class('has-success');
-      done();
     });
 
-    it('has fields group "Iterator options"', async function (done) {
+    it('has fields group "Iterator options"', async function () {
       await renderComponent();
 
       expect(find('.iteratorOptions-field .control-label').textContent.trim())
         .to.equal('Iterator options');
-      done();
     });
 
-    it('renders "source store" field with first store preselected', async function (done) {
+    it('renders "source store" field with first store preselected', async function () {
       await renderComponent();
 
       const label = find('.sourceStore-field .control-label');
       const field = find('.sourceStore-field .dropdown-field-trigger');
       expect(label.textContent.trim()).to.equal('Source store:');
       expect(field.textContent.trim()).to.equal('store1');
-      done();
     });
 
-    it('provides all stores to choose in "source store" field', async function (done) {
+    it('provides all stores to choose in "source store" field', async function () {
       await renderComponent();
 
       await clickTrigger('.sourceStore-field');
@@ -174,10 +164,9 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       definedStores.sortBy('name').forEach(({ name }, idx) =>
         expect(options[idx + 1].textContent.trim()).to.equal(name)
       );
-      done();
     });
 
-    it('renders "max batch size" field with "100" as default value', async function (done) {
+    it('renders "max batch size" field with "100" as default value', async function () {
       await renderComponent();
 
       const label = find('.maxBatchSize-field .control-label');
@@ -185,47 +174,41 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(label.textContent.trim()).to.equal('Max. batch size:');
       expect(field.type).to.equal('number');
       expect(field.value).to.equal('100');
-      done();
     });
 
-    it('marks "max batch size" field as invalid when it is empty', async function (done) {
+    it('marks "max batch size" field as invalid when it is empty', async function () {
       await renderComponent();
 
       await fillIn('.maxBatchSize-field .form-control', '');
 
       expect(find('.maxBatchSize-field')).to.have.class('has-error');
-      done();
     });
 
-    it('marks "max batch size" field as invalid when it contains negative number', async function (done) {
+    it('marks "max batch size" field as invalid when it contains negative number', async function () {
       await renderComponent();
 
       await fillIn('.maxBatchSize-field .form-control', '-3');
 
       expect(find('.maxBatchSize-field')).to.have.class('has-error');
-      done();
     });
 
-    it('marks "max batch size" field as invalid when it contains a float number', async function (done) {
+    it('marks "max batch size" field as invalid when it contains a float number', async function () {
       await renderComponent();
 
       await fillIn('.maxBatchSize-field .form-control', '3.5');
 
       expect(find('.maxBatchSize-field')).to.have.class('has-error');
-      done();
     });
 
-    it('marks "max batch size" field as valid when it contains a positive integer number', async function (
-      done) {
+    it('marks "max batch size" field as valid when it contains a positive integer number', async function () {
       await renderComponent();
 
       await fillIn('.maxBatchSize-field .form-control', '3');
 
       expect(find('.maxBatchSize-field')).to.have.class('has-success');
-      done();
     });
 
-    it('notifies about changes of values and validation state', async function (done) {
+    it('notifies about changes of values and validation state', async function () {
       const changeSpy = this.get('changeSpy');
       await renderComponent();
 
@@ -256,10 +239,9 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
         },
         isValid: true,
       });
-      done();
     });
 
-    it('allows to configure new lane', async function (done) {
+    it('allows to configure new lane', async function () {
       const changeSpy = this.get('changeSpy');
       await renderComponent();
 
@@ -280,10 +262,9 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
         },
         isValid: true,
       });
-      done();
     });
 
-    it('allows to configure new lane with store created in place', async function (done) {
+    it('allows to configure new lane with store created in place', async function () {
       const changeSpy = this.get('changeSpy');
       await renderComponent();
 
@@ -304,11 +285,10 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
         },
         isValid: true,
       });
-      done();
     });
 
     it('does not change source store when creating new store in place failed',
-      async function (done) {
+      async function () {
         this.set('createStoreAction', { execute: () => resolve({ status: 'failed' }) });
         const changeSpy = this.get('changeSpy');
         await renderComponent();
@@ -331,7 +311,6 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
           },
           isValid: true,
         });
-        done();
       });
   });
 
@@ -344,7 +323,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     itHasAllFieldsEnabledByDefault();
     itAllowsToDisableAllFields();
 
-    it('fills fields with data of passed lane', async function (done) {
+    it('fills fields with data of passed lane', async function () {
       this.set('lane', {
         name: 'lane1',
         maxRetries: 10,
@@ -361,10 +340,9 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(find('.sourceStore-field .dropdown-field-trigger').textContent.trim())
         .to.equal('store2');
       expect(find('.maxBatchSize-field .form-control').value).to.equal('50');
-      done();
     });
 
-    it('does not update form values on passed lane change', async function (done) {
+    it('does not update form values on passed lane change', async function () {
       const lane1 = this.set('lane', {
         name: 'lane1',
       });
@@ -374,7 +352,6 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       await settled();
 
       expect(find('.name-field .form-control').value).to.equal('lane1');
-      done();
     });
   });
 
@@ -385,7 +362,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
     itHasModeClass('view');
 
-    it('fills fields with data of passed lane', async function (done) {
+    it('fills fields with data of passed lane', async function () {
       this.set('lane', {
         name: 'lane1',
         maxRetries: 10,
@@ -402,10 +379,9 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(find('.sourceStore-field .field-component').textContent.trim())
         .to.equal('store2');
       expect(find('.maxBatchSize-field .field-component').textContent.trim()).to.equal('50');
-      done();
     });
 
-    it('updates form values on passed lane change', async function (done) {
+    it('updates form values on passed lane change', async function () {
       const lane1 = this.set('lane', {
         name: 'lane1',
       });
@@ -415,7 +391,6 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       await settled();
 
       expect(find('.name-field .field-component').textContent.trim()).to.equal('lane2');
-      done();
     });
   });
 });
@@ -432,27 +407,25 @@ async function renderComponent() {
 }
 
 function itHasModeClass(mode) {
-  it(`has class "mode-${mode}`, async function (done) {
+  it(`has class "mode-${mode}`, async function () {
     await renderComponent();
 
     expect(find(`.${componentClass}`)).to.have.class(`mode-${mode}`);
-    done();
   });
 }
 
 function itHasAllFieldsEnabledByDefault() {
-  it('has all fields enabled by default', async function (done) {
+  it('has all fields enabled by default', async function () {
     await renderComponent();
 
     expect(find(`.${componentClass}`)).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
     expect(find('.field-disabled')).to.not.exist;
-    done();
   });
 }
 
 function itAllowsToDisableAllFields() {
-  it('allows to disable all fields', async function (done) {
+  it('allows to disable all fields', async function () {
     this.set('isDisabled', true);
 
     await renderComponent();
@@ -460,6 +433,5 @@ function itAllowsToDisableAllFields() {
     expect(find(`.${componentClass}`)).to.have.class('form-disabled')
       .and.to.not.have.class('form-enabled');
     expect(find('.field-enabled')).to.not.exist;
-    done();
   });
 }

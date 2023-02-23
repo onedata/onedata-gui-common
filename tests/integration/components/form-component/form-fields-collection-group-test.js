@@ -17,7 +17,7 @@ import { createValuesContainer } from 'onedata-gui-common/utils/form-component/v
 import { set } from '@ember/object';
 
 describe(
-  'Integration | Component | form component/form fields collection group',
+  'Integration | Component | form-component/form-fields-collection-group',
   function () {
     setupRenderingTest();
 

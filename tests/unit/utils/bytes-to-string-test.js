@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 
-describe('Unit | Utility | bytes to string', function () {
+describe('Unit | Utility | bytes-to-string', function () {
   it('can convert byte size to YiB string', function () {
     const result = bytesToString(Math.pow(1024, 8), { iecFormat: true });
     expect(result).to.be.equal('1 YiB');

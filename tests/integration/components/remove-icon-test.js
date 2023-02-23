@@ -5,7 +5,7 @@ import { render, click, triggerEvent, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | remove icon', function () {
+describe('Integration | Component | remove-icon', function () {
   setupRenderingTest();
 
   it('has class "remove-icon"', async function () {

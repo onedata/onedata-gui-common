@@ -4,7 +4,7 @@ import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
-describe('Integration | Utility | form component/number field', function () {
+describe('Integration | Utility | form-component/number-field', function () {
   setupTest();
 
   it('defines inputType as "number"', function () {

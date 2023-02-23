@@ -8,7 +8,7 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import { settled } from '@ember/test-helpers';
 
-describe('Integration | Utility | workflow visualiser/actions/move left lane action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/move-left-lane-action', function () {
   setupTest();
 
   beforeEach(function () {

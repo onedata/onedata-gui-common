@@ -17,7 +17,7 @@ const DummyComponent = Component.extend({
   </button>`,
 });
 
-describe('Integration | Mixin | is new tab request event', function () {
+describe('Integration | Mixin | is-new-tab-request-event', function () {
   setupRenderingTest();
 
   beforeEach(function () {

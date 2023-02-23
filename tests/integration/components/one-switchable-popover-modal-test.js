@@ -8,7 +8,7 @@ const CONTENT_TEXT = 'contentText';
 const WINDOW_WIDTH_LG = 1000;
 const WINDOW_WIDTH_SM = 400;
 
-describe('Integration | Component | one switchable popover modal', function () {
+describe('Integration | Component | one-switchable-popover-modal', function () {
   setupRenderingTest();
 
   beforeEach(function () {

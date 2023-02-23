@@ -13,7 +13,7 @@ import { registerService } from '../../helpers/stub-service';
 
 import EventsBusStub from 'dummy/tests/helpers/events-bus-stub';
 
-describe('Integration | Component | one tree', function () {
+describe('Integration | Component | one-tree', function () {
   setupRenderingTest();
 
   beforeEach(function () {

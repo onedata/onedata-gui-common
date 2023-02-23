@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../helpers/stub-service';
 
-describe('Unit | Service | rest api generator', function () {
+describe('Unit | Service | rest-api-generator', function () {
   setupTest('service:rest-api-generator', {});
 
   it('generates curl command for rest sample', function () {

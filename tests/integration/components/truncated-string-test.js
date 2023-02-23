@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, triggerEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | truncated string', function () {
+describe('Integration | Component | truncated-string', function () {
   setupRenderingTest();
 
   it('does not show tooltip, when text is fully visible', async function () {

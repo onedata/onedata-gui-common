@@ -14,7 +14,7 @@ import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
 import { Promise } from 'rsvp';
 import sinon from 'sinon';
 
-describe('Integration | Utility | workflow visualiser/actions/modify workflow charts dashboard action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/modify-workflow-charts-dashboard-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

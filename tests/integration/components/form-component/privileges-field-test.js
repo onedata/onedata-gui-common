@@ -31,7 +31,7 @@ const translations = {
   'prvT.g1a': 'privilege1a',
 };
 
-describe('Integration | Component | form component/privileges field', function () {
+describe('Integration | Component | form-component/privileges-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

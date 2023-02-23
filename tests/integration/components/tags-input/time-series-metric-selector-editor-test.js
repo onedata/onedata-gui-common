@@ -107,7 +107,7 @@ const aggregators = [{
   tagLabelName: 'last',
 }];
 
-describe('Integration | Component | tags input/time series metric selector editor', function () {
+describe('Integration | Component | tags-input/time-series-metric-selector-editor', function () {
   setupRenderingTest();
 
   beforeEach(function () {

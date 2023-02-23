@@ -5,7 +5,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { render, find } from '@ember/test-helpers';
 import { FileType, SymbolicLinkTargetType } from 'onedata-gui-common/utils/file';
 
-describe('Integration | Component | one file icon', function () {
+describe('Integration | Component | one-file-icon', function () {
   setupRenderingTest();
 
   it('has class "one-file-icon"', async function () {

@@ -6,7 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 
 const componentClass = 'revisions-table-state-tag';
 
-describe('Integration | Component | revisions table/state tag', function () {
+describe('Integration | Component | revisions-table/state-tag', function () {
   setupRenderingTest();
 
   it(`has class "${componentClass}"`, async function () {

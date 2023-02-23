@@ -17,11 +17,4 @@ export default class NumberValueEditorState extends ValueEditorState {
     super(...arguments);
     this.editorComponentName = `${editorComponentsPrefix}/number/editor`;
   }
-
-  /**
-   * @override
-   */
-  getDefaultValue() {
-    return 0;
-  }
 }

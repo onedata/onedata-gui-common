@@ -1,3 +1,5 @@
+import atmLambda from './atm-workflow/atm-lambda';
+import atmTask from './atm-workflow/atm-task';
 import dataSpec from './atm-workflow/data-spec';
 import dataSpecEditor from './atm-workflow/data-spec-editor';
 import storeConfigEditors from './atm-workflow/store-config-editors';
@@ -6,6 +8,8 @@ import storeContentUpdateOptionsEditor from './atm-workflow/store-content-update
 import valueEditors from './atm-workflow/value-editors';
 
 export default {
+  atmLambda,
+  atmTask,
   dataSpec,
   dataSpecEditor,
   storeConfigEditors,

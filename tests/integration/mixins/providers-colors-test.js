@@ -9,7 +9,7 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { Promise } from 'rsvp';
 import { settled } from '@ember/test-helpers';
 
-describe('Integration | Mixin | components/providers colors', function () {
+describe('Integration | Mixin | components/providers-colors', function () {
   setupTest();
 
   it('detects overflow', async function () {

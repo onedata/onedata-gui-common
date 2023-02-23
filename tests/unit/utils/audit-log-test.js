@@ -16,7 +16,7 @@ import {
 
 const sampleNormalizeContent = (content) => Number(content);
 
-describe('Unit | Utility | audit log', function () {
+describe('Unit | Utility | audit-log', function () {
   setupTest();
 
   describe('normalizeEntriesPage', function () {

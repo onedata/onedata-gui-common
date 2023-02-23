@@ -5,7 +5,7 @@ import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import ParalallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import { get } from '@ember/object';
 
-describe('Unit | Utility | workflow visualiser/lane/interblock space', function () {
+describe('Unit | Utility | workflow-visualiser/lane/interblock-space', function () {
   it('has "__modelType" equal to "interblockSpace"', function () {
     const interblockSpace = InterblockSpace.create();
 

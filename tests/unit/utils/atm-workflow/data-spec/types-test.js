@@ -11,7 +11,7 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 import _ from 'lodash';
 
-describe('Unit | Utility | atm workflow/data spec/types', function () {
+describe('Unit | Utility | atm-workflow/data-spec/types', function () {
   describe('getAtmValueConstraintsConditions', function () {
     _.difference(atmDataSpecTypesArray, [AtmDataSpecType.Array, AtmDataSpecType.File])
       .forEach((atmDataSpecType) => {

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import stripObject from 'onedata-gui-common/utils/strip-object';
 
-describe('Unit | Utility | strip object', function () {
+describe('Unit | Utility | strip-object', function () {
   // Replace this with your real tests.
   it('creates new object', function () {
     const obj = {};

@@ -7,7 +7,7 @@ import {
 } from 'mocha';
 import { GlobalCssVariablesManager } from 'onedata-gui-common/utils/global-css-variables-manager';
 
-describe('Unit | Utility | global css variables manager', function () {
+describe('Unit | Utility | global-css-variables-manager', function () {
   beforeEach(function () {
     this.variablesManager = new GlobalCssVariablesManager();
   });

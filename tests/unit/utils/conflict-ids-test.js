@@ -5,7 +5,7 @@ import {
 } from 'mocha';
 import conflictIds from 'onedata-gui-common/utils/conflict-ids';
 
-describe('conflictIds', function () {
+describe('Unit | Utility | conflict-ids', function () {
   it('generates ids with length greater than 3 if both ids are completely different',
     function () {
       const result = conflictIds([

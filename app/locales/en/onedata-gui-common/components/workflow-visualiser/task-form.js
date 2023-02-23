@@ -98,6 +98,9 @@ export default {
         },
       },
     },
+    lambdaConfigSection: {
+      label: 'Configuration parameters',
+    },
     timeSeriesStoreSection: {
       label: 'Time series store',
       createTimeSeriesStore: {

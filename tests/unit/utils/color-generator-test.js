@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import ColorGenerator from 'onedata-gui-common/utils/color-generator';
 
-describe('Unit | Utility | color generator', function () {
+describe('Unit | Utility | color-generator', function () {
   it('generates an array of unique colors', function () {
     const generator = createGenerator();
 

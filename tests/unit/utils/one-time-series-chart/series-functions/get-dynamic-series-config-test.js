@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import getDynamicSeriesConfig from 'onedata-gui-common/utils/one-time-series-chart/series-functions/get-dynamic-series-config';
 
-describe('Unit | Utility | one time series chart/series functions/get dynamic series config', function () {
+describe('Unit | Utility | one-time-series-chart/series-functions/get-dynamic-series-config', function () {
   it('returns value read from context.dynamicSeriesConfig when propertyName is not provided', async function () {
     const context = { dynamicSeriesConfig: { a: 1 } };
     expect(await getDynamicSeriesConfig(context)).to.deep.equal({

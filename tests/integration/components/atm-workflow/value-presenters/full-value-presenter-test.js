@@ -11,7 +11,7 @@ import {
 import { replaceEmberAceWithTextarea } from '../../../../helpers/ember-ace';
 import TestComponent from 'onedata-gui-common/components/test-component';
 
-describe('Integration | Component | atm workflow/value presenters/full value presenter',
+describe('Integration | Component | atm-workflow/value-presenters/full-value-presenter',
   function () {
     setupRenderingTest();
 

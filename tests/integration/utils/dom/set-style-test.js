@@ -5,7 +5,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { render, find } from '@ember/test-helpers';
 import dom from 'onedata-gui-common/utils/dom';
 
-describe('Integration | Utility | dom/set style', function () {
+describe('Integration | Utility | dom/set-style', function () {
   setupRenderingTest();
 
   it('sets style on a single element', async function () {

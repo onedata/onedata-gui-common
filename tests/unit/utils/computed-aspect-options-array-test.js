@@ -12,7 +12,7 @@ const NavigationState = EmberObject.extend({
   },
 });
 
-describe('Unit | Utility | computed aspect options array', function () {
+describe('Unit | Utility | computed-aspect-options-array', function () {
   beforeEach(function () {
     const navigationState = NavigationState.create();
     const testedClass = EmberObject.extend({

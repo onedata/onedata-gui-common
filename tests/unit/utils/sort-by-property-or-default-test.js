@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import sortByPropertyOrDefault from 'onedata-gui-common/utils/sort-by-property-or-default';
 
-describe('Unit | Utility | sort by property or default', function () {
+describe('Unit | Utility | sort-by-property-or-default', function () {
   it('sorts by entityId and then by property', function () {
     const array = [{
         entityId: 1,

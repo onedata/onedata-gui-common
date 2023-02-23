@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import isStandaloneGuiOneprovider from 'onedata-gui-common/utils/is-standalone-gui-oneprovider';
 
-describe('Unit | Utility | is standalone gui oneprovider', function () {
+describe('Unit | Utility | is-standalone-gui-oneprovider', function () {
   it('detects standalone gui Oneprovider version', function () {
     const result = isStandaloneGuiOneprovider('19.02.2');
     expect(result).to.equal(true);

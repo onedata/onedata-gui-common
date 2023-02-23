@@ -5,7 +5,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { render, find } from '@ember/test-helpers';
 import { dateFormat } from 'onedata-gui-common/helpers/date-format';
 
-describe('Integration | Component | atm workflow/value presenters/time series measurement/single line presenter',
+describe('Integration | Component | atm-workflow/value-presenters/time-series-measurement/single-line-presenter',
   function () {
     setupRenderingTest();
 

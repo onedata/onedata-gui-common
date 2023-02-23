@@ -16,7 +16,7 @@ import { hbs } from 'ember-cli-htmlbars';
 
 const errorMsg = 'error!';
 
-describe('Integration | Component | one form simple', function () {
+describe('Integration | Component | one-form-simple', function () {
   setupRenderingTest();
 
   beforeEach(function () {

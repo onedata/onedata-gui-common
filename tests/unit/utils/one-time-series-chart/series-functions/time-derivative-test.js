@@ -269,7 +269,7 @@ const casesToCheck = [{
   },
 }];
 
-describe('Unit | Utility | one time series chart/series functions/time derivative',
+describe('Unit | Utility | one-time-series-chart/series-functions/time-derivative',
   function () {
     casesToCheck.forEach((spec) => testTimeDerivative(spec));
   }

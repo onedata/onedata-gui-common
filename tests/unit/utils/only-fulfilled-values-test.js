@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import onlyFulfilledValues from 'onedata-gui-common/utils/only-fulfilled-values';
 import { resolve, reject } from 'rsvp';
 
-describe('Unit | Utility | only fulfilled values', function () {
+describe('Unit | Utility | only-fulfilled-values', function () {
   it('resolves to an array of fulfilled values', function () {
     const result = onlyFulfilledValues([
       resolve('ok1'),
