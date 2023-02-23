@@ -21,4 +21,9 @@ import { typeDefinitionBase } from './commons';
 /**
  * @type {AtmDataSpecTypeDefinition<AtmNumberValueConstraints, null>}
  */
-export const atmDataSpecTypeDefinition = typeDefinitionBase;
+export const atmDataSpecTypeDefinition = Object.freeze({
+  ...typeDefinitionBase,
+  getDefaultValue() {
+    return 0;
+  },
+});

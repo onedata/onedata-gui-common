@@ -86,6 +86,7 @@ export default Action.extend({
 
     const keysToCheck = [
       'lambdaRevisionNumber',
+      'lambdaConfig',
       'name',
       'argumentMappings',
       'resultMappings',

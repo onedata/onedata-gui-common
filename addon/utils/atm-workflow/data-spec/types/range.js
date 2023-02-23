@@ -24,4 +24,11 @@ import { typeDefinitionBase } from './commons';
 export const atmDataSpecTypeDefinition = Object.freeze({
   ...typeDefinitionBase,
   supertype: 'object',
+  getDefaultValue() {
+    return {
+      start: 0,
+      end: 1,
+      step: 1,
+    };
+  },
 });

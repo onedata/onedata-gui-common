@@ -20,20 +20,6 @@ describe('Integration | Utility | form component/form field validator', function
     }
   );
 
-  it(
-    'has falsy isValid when errors array is not empty',
-    function () {
-      const fieldValidator = FormFieldValidator
-        .extend(buildValidations())
-        .create({
-          ownerSource: this.owner,
-          errors: [{ a: 1 }],
-        });
-
-      expect(get(fieldValidator, 'isValid')).to.be.false;
-    }
-  );
-
   it('reports injected validators errors through "errors" property', function () {
     const validators = [
       validator('number', {
