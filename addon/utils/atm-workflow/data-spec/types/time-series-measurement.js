@@ -33,6 +33,13 @@ import { typeDefinitionBase } from './commons';
 export const atmDataSpecTypeDefinition = Object.freeze({
   ...typeDefinitionBase,
   supertype: 'object',
+  getDefaultValue() {
+    return {
+      timestamp: Math.floor(Date.now() / 1000),
+      tsName: '',
+      value: 0,
+    };
+  },
   // TODO: VFS-10007 implement `getValueConstraintsConditions`
 });
 

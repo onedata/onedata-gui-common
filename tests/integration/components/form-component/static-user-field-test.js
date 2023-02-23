@@ -12,7 +12,7 @@ const defaultMockUser = Object.freeze({
   entityId: 'dummy_user_id',
 });
 
-describe('Integration | Component | form component/static user field', function () {
+describe('Integration | Component | form-component/static-user-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

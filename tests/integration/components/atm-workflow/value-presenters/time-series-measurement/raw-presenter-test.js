@@ -5,7 +5,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { render, find } from '@ember/test-helpers';
 import { replaceEmberAceWithTextarea } from '../../../../../helpers/ember-ace';
 
-describe('Integration | Component | atm workflow/value presenters/time series measurement/raw presenter', function () {
+describe('Integration | Component | atm-workflow/value-presenters/time-series-measurement/raw-presenter', function () {
   setupRenderingTest();
 
   beforeEach(function () {

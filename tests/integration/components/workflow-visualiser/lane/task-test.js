@@ -34,7 +34,7 @@ const taskActionsSpec = [{
   icon: 'remove',
 }];
 
-describe('Integration | Component | workflow visualiser/lane/task', function () {
+describe('Integration | Component | workflow-visualiser/lane/task', function () {
   setupRenderingTest();
 
   beforeEach(function () {

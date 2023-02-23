@@ -13,7 +13,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 
-describe('Integration | Component | one way capacity', function () {
+describe('Integration | Component | one-way-capacity', function () {
   setupRenderingTest();
 
   it('shows passed capacity', async function () {

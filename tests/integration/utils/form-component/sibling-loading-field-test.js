@@ -4,7 +4,7 @@ import SiblingLoadingField from 'onedata-gui-common/utils/form-component/sibling
 import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
-describe('Integration | Utility | form component/sibling loading field', function () {
+describe('Integration | Utility | form-component/sibling-loading-field', function () {
   setupTest();
 
   [

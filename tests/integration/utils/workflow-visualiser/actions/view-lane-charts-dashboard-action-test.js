@@ -11,7 +11,7 @@ import {
 } from '../../../../helpers/modal';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 
-describe('Integration | Utility | workflow visualiser/actions/view lane charts dashboard action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/view-lane-charts-dashboard-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

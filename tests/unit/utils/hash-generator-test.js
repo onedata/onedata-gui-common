@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import HashGenerator from 'onedata-gui-common/utils/hash-generator';
 import sinon from 'sinon';
 
-describe('Unit | Utility | hash generator', function () {
+describe('Unit | Utility | hash-generator', function () {
   it('generates CRC-16 (KERMIT algorithm) hexadecimal hash from provided string', function () {
     const subject = new HashGenerator();
 

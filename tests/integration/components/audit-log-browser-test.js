@@ -26,7 +26,7 @@ const severityIcons = {
 };
 const latestLogEntryTimestamp = 1658324755;
 
-describe('Integration | Component | audit log browser', function () {
+describe('Integration | Component | audit-log-browser', function () {
   setupRenderingTest();
 
   beforeEach(function () {

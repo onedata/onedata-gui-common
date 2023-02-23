@@ -14,7 +14,7 @@ import {
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 
-describe('Integration | Utility | workflow visualiser/actions/view lane action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/view-lane-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

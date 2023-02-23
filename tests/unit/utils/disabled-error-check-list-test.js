@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import DisabledErrorCheckList from 'onedata-gui-common/utils/disabled-error-check-list';
 
-describe('Unit | Utility | disabled error check list', function () {
+describe('Unit | Utility | disabled-error-check-list', function () {
   class FakeStorage {
     constructor(storage = {}) {
       this.storage = storage;

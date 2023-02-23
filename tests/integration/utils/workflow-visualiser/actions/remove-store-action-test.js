@@ -15,7 +15,7 @@ import {
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
-describe('Integration | Utility | workflow visualiser/actions/remove store action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/remove-store-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

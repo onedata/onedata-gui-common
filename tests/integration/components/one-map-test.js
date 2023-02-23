@@ -29,7 +29,7 @@ function getMapObject() {
   return find('.one-map-container').mapInstance;
 }
 
-describe('Integration | Component | one map', function () {
+describe('Integration | Component | one-map', function () {
   setupRenderingTest();
 
   it('shows whole world map by default', async function () {

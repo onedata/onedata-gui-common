@@ -8,7 +8,7 @@ import Action from 'onedata-gui-common/utils/action';
 
 const componentClass = 'revisions-table-create-revision-entry';
 
-describe('Integration | Component | revisions table/create revision entry', function () {
+describe('Integration | Component | revisions-table/create-revision-entry', function () {
   setupRenderingTest();
 
   beforeEach(function () {

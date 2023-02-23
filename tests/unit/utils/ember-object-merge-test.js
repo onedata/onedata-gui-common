@@ -4,7 +4,7 @@ import { default as merge } from 'onedata-gui-common/utils/ember-object-merge';
 
 import { default as EmberObject, get } from '@ember/object';
 
-describe('Unit | Utility | ember object merge', function () {
+describe('Unit | Utility | ember-object-merge', function () {
   it('merges deeply one ember object into another with plain objects', function () {
     const a = EmberObject.create({
       one: {

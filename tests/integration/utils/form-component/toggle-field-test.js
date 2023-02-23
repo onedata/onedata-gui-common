@@ -4,7 +4,7 @@ import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
-describe('Integration | Utility | form component/toggle field', function () {
+describe('Integration | Utility | form-component/toggle-field', function () {
   setupTest();
 
   it('defines fieldComponentName as "form-component/toggle-field"', function () {

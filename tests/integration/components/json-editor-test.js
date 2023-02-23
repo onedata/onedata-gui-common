@@ -5,7 +5,7 @@ import { render, fillIn, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | json editor', function () {
+describe('Integration | Component | json-editor', function () {
   setupRenderingTest();
 
   it('shows passed value', async function () {

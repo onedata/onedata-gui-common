@@ -31,7 +31,7 @@ const operatorBlockClasses = {
   root: RootOperatorQueryBlock,
 };
 
-describe('Integration | Component | query builder/operator block', function () {
+describe('Integration | Component | query-builder/operator-block', function () {
   setupRenderingTest();
 
   setDefaultQueryValuesBuilder();

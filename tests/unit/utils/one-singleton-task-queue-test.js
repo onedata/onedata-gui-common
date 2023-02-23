@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import OneSingletonTaskQueue from 'onedata-gui-common/utils/one-singleton-task-queue';
 import sleep from 'onedata-gui-common/utils/sleep';
 
-describe('Unit | Utility | one singleton task queue', function () {
+describe('Unit | Utility | one-singleton-task-queue', function () {
   it('does not schedule task with the same type if its already in queue', async function () {
     const taskQueue = new OneSingletonTaskQueue();
     let globalCounter = 0;

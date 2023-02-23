@@ -16,7 +16,7 @@ import {
 
 const mathOperators = ['eq', 'lt', 'lte', 'gt', 'gte'];
 
-describe('Integration | Component | query builder/condition comparator value editor',
+describe('Integration | Component | query-builder/condition-comparator-value-editor',
   function () {
     setupRenderingTest();
 

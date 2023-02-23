@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
 import { get } from '@ember/object';
 
-describe('Unit | Utility | workflow visualiser/visualiser element', function () {
+describe('Unit | Utility | workflow-visualiser/visualiser-element', function () {
   [
     '__modelType',
     'renderer',

@@ -56,7 +56,7 @@ const simpleAtmDataSpecTypesInfo = atmDataSpecTypesInfo.filter(({ type }) =>
 const atmDataSpecTypeHelper = new OneDrodopdownHelper('.data-type-selector');
 const fileTypeHelper = new OneDrodopdownHelper('.fileType-field');
 
-describe('Integration | Utility | atm workflow/data spec editor/data spec editor', function () {
+describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor', function () {
   setupRenderingTest();
 
   beforeEach(function () {

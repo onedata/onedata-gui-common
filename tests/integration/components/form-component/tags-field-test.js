@@ -15,7 +15,7 @@ import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import sinon from 'sinon';
 import { setProperties, get } from '@ember/object';
 
-describe('Integration | Component | form component/tags field', function () {
+describe('Integration | Component | form-component/tags-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

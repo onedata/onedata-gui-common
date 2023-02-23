@@ -5,7 +5,7 @@ import EmberObject, { computed } from '@ember/object';
 
 const hashMatcher = /[0-9a-f]{4}/;
 
-describe('Unit | Utility | duplicate name hash mapper', function () {
+describe('Unit | Utility | duplicate-name-hash-mapper', function () {
   it('exposes a hash for values if name is duplicated', function () {
     const subject = DuplicateNameHashMapper.create();
 

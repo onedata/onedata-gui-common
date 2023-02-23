@@ -25,7 +25,7 @@ import sinon from 'sinon';
 
 const ERROR_MSG = 'error!';
 
-describe('Integration | Component | one dynamic tree', function () {
+describe('Integration | Component | one-dynamic-tree', function () {
   setupRenderingTest();
 
   beforeEach(function () {

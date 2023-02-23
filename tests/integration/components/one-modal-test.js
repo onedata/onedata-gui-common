@@ -8,7 +8,7 @@ import { next } from '@ember/runloop';
 import { Promise } from 'rsvp';
 import overrideComponents from 'onedata-gui-common/utils/override-components';
 
-describe('Integration | Component | one modal', function () {
+describe('Integration | Component | one-modal', function () {
   setupRenderingTest();
 
   beforeEach(function () {

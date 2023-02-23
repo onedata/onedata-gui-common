@@ -18,7 +18,7 @@ function createArray(type, content) {
   }
 }
 
-describe('Unit | Utility | mutate array', function () {
+describe('Unit | Utility | mutate-array', function () {
 
   ['plain', 'ember'].forEach(arrayType => {
     it(`adds and removes items using compare fun. for ${arrayType} array`,

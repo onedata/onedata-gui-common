@@ -92,7 +92,7 @@ const storeTypes = [{
 const storeTypesWithGenericConfig = storeTypes
   .filter(({ type }) => type !== 'timeSeries');
 
-describe('Integration | Component | modals/workflow visualiser/store modal/store form', function () {
+describe('Integration | Component | modals/workflow-visualiser/store-modal/store-form', function () {
   setupRenderingTest();
 
   beforeEach(function () {

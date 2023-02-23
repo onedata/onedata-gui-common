@@ -13,7 +13,7 @@ import _ from 'lodash';
 import { replaceEmberAceWithTextarea } from '../../../../../helpers/ember-ace';
 import TestComponent from 'onedata-gui-common/components/test-component';
 
-describe('Integration | Component | atm workflow/value presenters/array/visual presenter', function () {
+describe('Integration | Component | atm-workflow/value-presenters/array/visual-presenter', function () {
   setupRenderingTest();
 
   beforeEach(function () {

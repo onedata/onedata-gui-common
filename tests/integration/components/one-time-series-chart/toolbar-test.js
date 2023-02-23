@@ -14,7 +14,7 @@ import { get } from '@ember/object';
 import { all as allFulfilled } from 'rsvp';
 import { render, settled, click, find } from '@ember/test-helpers';
 
-describe('Integration | Component | one time series chart/toolbar', function () {
+describe('Integration | Component | one-time-series-chart/toolbar', function () {
   const { afterEach } = setupRenderingTest();
 
   afterEach(function () {

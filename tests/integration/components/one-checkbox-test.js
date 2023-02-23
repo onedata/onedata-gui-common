@@ -5,7 +5,7 @@ import { render, click, find } from '@ember/test-helpers';
 import sinon from 'sinon';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | one checkbox', function () {
+describe('Integration | Component | one-checkbox', function () {
   setupRenderingTest();
 
   it('renders one-way-checkbox internally', async function () {

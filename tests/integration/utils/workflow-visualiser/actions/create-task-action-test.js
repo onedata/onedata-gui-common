@@ -12,7 +12,7 @@ const newTaskMatcher = sinon.match({
   name: 'task1',
 });
 
-describe('Integration | Utility | workflow visualiser/actions/create task action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/create-task-action', function () {
   setupTest();
 
   beforeEach(function () {

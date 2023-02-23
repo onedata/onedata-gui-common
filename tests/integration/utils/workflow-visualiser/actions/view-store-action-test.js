@@ -14,7 +14,7 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { resolve } from 'rsvp';
 import $ from 'jquery';
 
-describe('Integration | Utility | workflow visualiser/actions/view store action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/view-store-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

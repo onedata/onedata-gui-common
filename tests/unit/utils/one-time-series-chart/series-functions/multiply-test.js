@@ -64,7 +64,7 @@ const casesToCheck = [...normalizedTransformCasesToCheck, {
   output: { type: 'points', data: [new Point(2, 60), new Point(3, null)] },
 }];
 
-describe('Unit | Utility | one time series chart/series functions/multiply', function () {
+describe('Unit | Utility | one-time-series-chart/series-functions/multiply', function () {
   casesToCheck.forEach(({ input, output }) => testMultiply(input, output));
 });
 

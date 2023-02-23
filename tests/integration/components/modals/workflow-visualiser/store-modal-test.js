@@ -30,7 +30,7 @@ const simplestStore = {
   requiresInitialContent: false,
 };
 
-describe('Integration | Component | modals/workflow visualiser/store modal', function () {
+describe('Integration | Component | modals/workflow-visualiser/store-modal', function () {
   setupRenderingTest();
 
   beforeEach(function () {

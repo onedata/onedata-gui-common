@@ -13,7 +13,7 @@ import {
 } from 'ember-power-select/test-support/helpers';
 import { set } from '@ember/object';
 
-describe('Integration | Component | form component/dropdown field', function () {
+describe('Integration | Component | form-component/dropdown-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

@@ -15,7 +15,7 @@ import { get } from '@ember/object';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
 
-describe('Integration | Component | query builder/block adder', function () {
+describe('Integration | Component | query-builder/block-adder', function () {
   setupRenderingTest();
 
   setDefaultQueryValuesBuilder();

@@ -4,7 +4,7 @@ import PromiseArray, { promiseArray } from 'onedata-gui-common/utils/ember/promi
 import { Promise, resolve } from 'rsvp';
 import { get } from '@ember/object';
 
-describe('Unit | Utility | ember/promise array', function () {
+describe('Unit | Utility | ember/promise-array', function () {
   it('exports promise array class with promise and proxy capabilites', function () {
     const origData = [1, 2, 3];
     let resolveCallback;

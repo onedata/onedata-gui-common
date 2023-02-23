@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | application error', function () {
+describe('Integration | Component | application-error', function () {
   setupRenderingTest();
 
   it('renders error details when error property is provided', async function () {

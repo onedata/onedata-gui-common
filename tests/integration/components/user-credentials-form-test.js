@@ -11,7 +11,7 @@ class UserCredentialsFormHelper extends FormHelper {
   }
 }
 
-describe('Integration | Component | user credentials form', function () {
+describe('Integration | Component | user-credentials-form', function () {
   setupRenderingTest();
 
   it('shows secret password field by default', async function () {

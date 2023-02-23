@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { hbs } from 'ember-cli-htmlbars';
 import { render, find } from '@ember/test-helpers';
 
-describe('Integration | Component | atm workflow/value presenters/array/single line presenter', function () {
+describe('Integration | Component | atm-workflow/value-presenters/array/single-line-presenter', function () {
   setupRenderingTest();
 
   it('has classes "single-line-presenter" and "array-single-line-presenter"', async function () {

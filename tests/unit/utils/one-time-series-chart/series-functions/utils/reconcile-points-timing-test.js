@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
 import reconcilePointsTiming from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/reconcile-points-timing';
 
-describe('Unit | Utility | one time series chart/series functions/utils/reconcile points timing', function () {
+describe('Unit | Utility | one-time-series-chart/series-functions/utils/reconcile-points-timing', function () {
   testReconcilePointsTiming({
     description: 'aligns timings of passed series to the newest one',
     input: [

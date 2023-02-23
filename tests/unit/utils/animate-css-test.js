@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import animateCss from 'onedata-gui-common/utils/animate-css';
 
-describe('Unit | Utility | animate css', function () {
+describe('Unit | Utility | animate-css', function () {
   it('adds and removes animation classes', function () {
     const element = document.createElement('div');
     const div = document.body.appendChild(element);

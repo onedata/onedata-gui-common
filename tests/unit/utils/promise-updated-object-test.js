@@ -5,7 +5,7 @@ import { Promise } from 'rsvp';
 import { default as EmberObject, get } from '@ember/object';
 import { settled } from '@ember/test-helpers';
 
-describe('Unit | Utility | promise updated object', function () {
+describe('Unit | Utility | promise-updated-object', function () {
   it('leaves original reference to content', async function () {
     const c1 = EmberObject.create({
       one: 1,

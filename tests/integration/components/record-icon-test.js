@@ -5,7 +5,7 @@ import { render, findAll, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { camelize } from '@ember/string';
 
-describe('Integration | Component | record icon', function () {
+describe('Integration | Component | record-icon', function () {
   setupRenderingTest();
 
   it('has class "record-icon"', async function () {

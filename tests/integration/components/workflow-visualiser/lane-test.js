@@ -51,7 +51,7 @@ const viewLaneActionsSpec = [{
   icon: 'browser-info',
 }];
 
-describe('Integration | Component | workflow visualiser/lane', function () {
+describe('Integration | Component | workflow-visualiser/lane', function () {
   setupRenderingTest();
 
   beforeEach(function () {

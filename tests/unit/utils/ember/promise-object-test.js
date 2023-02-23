@@ -5,7 +5,7 @@ import EmberPromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { Promise } from 'rsvp';
 import { settled } from '@ember/test-helpers';
 
-describe('Unit | Utility | ember/promise object', function () {
+describe('Unit | Utility | ember/promise-object', function () {
   it('still has first resolved content after promise replace', async function () {
     const content1 = { c1: null };
     const content2 = { c2: null };

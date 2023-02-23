@@ -18,7 +18,7 @@ import {
 
 const componentClass = 'lane-form';
 
-describe('Integration | Component | modals/workflow visualiser/lane modal/lane form', function () {
+describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-form', function () {
   setupRenderingTest();
 
   beforeEach(function () {

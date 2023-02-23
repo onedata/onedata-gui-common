@@ -32,7 +32,7 @@ const blockActionsSpec = [{
   icon: 'remove',
 }];
 
-describe('Integration | Component | workflow visualiser/lane/parallel box', function () {
+describe('Integration | Component | workflow-visualiser/lane/parallel-box', function () {
   setupRenderingTest();
 
   beforeEach(function () {

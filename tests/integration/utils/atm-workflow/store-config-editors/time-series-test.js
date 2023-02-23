@@ -81,7 +81,7 @@ const unitOptions = [{
   label: 'Custom',
 }];
 
-describe('Integration | Utility | atm workflow/store config editors/time series', function () {
+describe('Integration | Utility | atm-workflow/store-config-editors/time-series', function () {
   setupRenderingTest();
 
   beforeEach(function () {

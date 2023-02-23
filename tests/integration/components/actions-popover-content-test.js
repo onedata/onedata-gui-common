@@ -5,7 +5,7 @@ import { render, click, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | actions popover content', function () {
+describe('Integration | Component | actions-popover-content', function () {
   setupRenderingTest();
 
   beforeEach(function () {

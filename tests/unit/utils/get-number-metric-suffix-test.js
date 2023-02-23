@@ -22,7 +22,7 @@ function prefixForUnit(suffix) {
   return suffix === 'K' ? 'k' : suffix;
 }
 
-describe('Unit | Utility | get number metric suffix', function () {
+describe('Unit | Utility | get-number-metric-suffix', function () {
   [
     [undefined, 'no value'],
     [null, 'null'],

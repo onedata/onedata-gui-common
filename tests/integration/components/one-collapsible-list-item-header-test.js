@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | one collapsible list item header', function () {
+describe('Integration | Component | one-collapsible-list-item-header', function () {
   setupRenderingTest();
 
   it('propagates click events to btn-toolbar children', async function () {

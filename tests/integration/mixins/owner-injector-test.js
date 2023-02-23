@@ -6,7 +6,7 @@ import OwnerInjectorMixin from 'onedata-gui-common/mixins/owner-injector';
 import Service, { inject as service } from '@ember/service';
 import { setupTest } from 'ember-mocha';
 
-describe('Integration | Mixin | owner injector', function () {
+describe('Integration | Mixin | owner-injector', function () {
   setupTest();
 
   beforeEach(function () {

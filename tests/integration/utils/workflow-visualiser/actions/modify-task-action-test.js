@@ -9,7 +9,7 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { settled } from '@ember/test-helpers';
 
-describe('Integration | Utility | workflow visualiser/actions/modify task action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/modify-task-action', function () {
   setupTest();
 
   beforeEach(function () {
