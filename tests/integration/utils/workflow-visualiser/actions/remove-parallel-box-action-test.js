@@ -17,7 +17,7 @@ import { Promise } from 'rsvp';
 
 const parallelBoxName = 'box1';
 
-describe('Integration | Utility | workflow visualiser/actions/remove parallel box action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/remove-parallel-box-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

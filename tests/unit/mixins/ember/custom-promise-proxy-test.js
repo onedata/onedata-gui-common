@@ -5,7 +5,7 @@ import EmberCustomPromiseProxyMixin from 'onedata-gui-common/mixins/ember/custom
 import { settled } from '@ember/test-helpers';
 import { Promise } from 'rsvp';
 
-describe('Unit | Mixin | ember/custom promise proxy', function () {
+describe('Unit | Mixin | ember/custom-promise-proxy', function () {
   it('sets chosen property after promise resolve', async function () {
     const val = {};
     const propertyName = 'hello';

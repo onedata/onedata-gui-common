@@ -10,7 +10,7 @@ import { getModalBody, getModalFooter } from '../../../../helpers/modal';
 import { resolve } from 'rsvp';
 import $ from 'jquery';
 
-describe('Integration | Component | workflow visualiser/stores list/store', function () {
+describe('Integration | Component | workflow-visualiser/stores-list/store', function () {
   setupRenderingTest();
 
   beforeEach(function () {

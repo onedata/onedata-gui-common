@@ -13,7 +13,7 @@ import { run } from '@ember/runloop';
 import moment from 'moment';
 import { settled } from '@ember/test-helpers';
 
-describe('Unit | Utility | one time series chart/configuration', function () {
+describe('Unit | Utility | one-time-series-chart/configuration', function () {
   beforeEach(function () {
     this.fakeClock = sinon.useFakeTimers({
       now: Date.now(),

@@ -7,7 +7,7 @@ import VisualiserSpace from 'onedata-gui-common/utils/workflow-visualiser/visual
 import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
 import _ from 'lodash';
 
-describe('Integration | Component | workflow visualiser/visualiser space', function () {
+describe('Integration | Component | workflow-visualiser/visualiser-space', function () {
   setupRenderingTest();
 
   it('has classes "workflow-visualiser-space" and "workflow-visualiser-element"', async function () {

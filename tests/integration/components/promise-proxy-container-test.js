@@ -5,7 +5,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find, findAll } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | promise proxy container', function () {
+describe('Integration | Component | promise-proxy-container', function () {
   setupRenderingTest();
 
   it('renders error alert if promise has been rejected', async function () {

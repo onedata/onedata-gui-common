@@ -11,7 +11,7 @@ import sinon from 'sinon';
 import setDefaultQueryValuesBuilder from '../../helpers/set-default-query-values-builder';
 import $ from 'jquery';
 
-describe('Integration | Component | query builder main component', function () {
+describe('Integration | Component | query-builder-main-component', function () {
   setupRenderingTest();
 
   setDefaultQueryValuesBuilder();

@@ -5,7 +5,7 @@ import trimToken from 'onedata-gui-common/utils/trim-token';
 const correctToken =
   'MDAzM2xvY2F00aW9uIGRldi1vbmV6b25lLmRlZmF1bHQuc3ZjLmNsdXN00ZXIubG9jYWwKMDAzNmlkZW500aWZpZXIgNjU1NjUxOWNjYjY00MmJmZGNiZDliZWFkMTdjODBjNzFjaGJlNDgKMDAxYWNpZCB00aW1lIDwgMTYxMjg2MDQ5NwowMDJmc2lnbmF00dXJlIGmQBEaZEjxmYJjUlX5DcVCAK01S00unbxWZvU016RYdSXxCg';
 
-describe('Unit | Utility | trim token', function () {
+describe('Unit | Utility | trim-token', function () {
   it('returns unchanged token when token is correct', function () {
     const trimmedToken = trimToken(correctToken);
     expect(trimmedToken).to.equal(correctToken);

@@ -7,7 +7,7 @@ import Ember from 'ember';
 
 const correctTranslation = 'correctTranslation';
 
-describe('Unit | Utility | get error description', function () {
+describe('Unit | Utility | get-error-description', function () {
   beforeEach(function () {
     this.i18n = new I18nStub();
   });

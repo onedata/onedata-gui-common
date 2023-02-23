@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import { next } from '@ember/runloop';
 import overrideComponents from 'onedata-gui-common/utils/override-components';
 
-describe('Integration | Component | one modal', function () {
+describe('Integration | Component | one-modal', function () {
   setupRenderingTest();
 
   beforeEach(function () {

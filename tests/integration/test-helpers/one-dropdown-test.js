@@ -7,7 +7,7 @@ import OneDrodopdownHelper from '../../helpers/one-dropdown';
 import sinon from 'sinon';
 import { clickTrigger } from 'ember-power-select/test-support/helpers';
 
-describe('Integration | Test helper | one dropdown', function () {
+describe('Integration | Test helper | one-dropdown', function () {
   setupRenderingTest();
 
   beforeEach(function () {

@@ -64,7 +64,7 @@ const casesToCheck = [...normalizedTransformCasesToCheck, {
   },
 }];
 
-describe('Unit | Utility | one time series chart/series functions/abs', function () {
+describe('Unit | Utility | one-time-series-chart/series-functions/abs', function () {
   casesToCheck.forEach(({ input, output }) => testAbs(input, output));
 });
 

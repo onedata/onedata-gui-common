@@ -12,7 +12,7 @@ import OneTooltipHelper from '../../helpers/one-tooltip';
 const latestEntryIndex = 1658324755;
 const waitTimeForReload = 10;
 
-describe('Integration | Component | infinite scroll table', function () {
+describe('Integration | Component | infinite-scroll-table', function () {
   const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {

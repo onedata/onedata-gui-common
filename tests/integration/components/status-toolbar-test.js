@@ -5,7 +5,7 @@ import { render, click, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import dom from 'onedata-gui-common/utils/dom';
 
-describe('Integration | Component | status toolbar', function () {
+describe('Integration | Component | status-toolbar', function () {
   setupRenderingTest();
 
   it('hides icon if icon `enabled` property is set to false', async function () {

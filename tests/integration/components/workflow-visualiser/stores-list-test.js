@@ -15,7 +15,7 @@ import sinon from 'sinon';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 
-describe('Integration | Component | workflow visualiser/stores list', function () {
+describe('Integration | Component | workflow-visualiser/stores-list', function () {
   setupRenderingTest();
 
   beforeEach(function () {

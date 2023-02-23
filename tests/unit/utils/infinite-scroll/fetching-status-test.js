@@ -5,7 +5,7 @@ import { get } from '@ember/object';
 import { createMockReplacingChunksArray } from '../../../helpers/replacing-chunks-array';
 import { settled } from '@ember/test-helpers';
 
-describe('Unit | Utility | infinite scroll/fetching status', function () {
+describe('Unit | Utility | infinite-scroll/fetching-status', function () {
   it('sets isFetchingNext when fetch next started and not resolved yet', async function () {
     const entries = createMockReplacingChunksArray({
       startIndex: 0,

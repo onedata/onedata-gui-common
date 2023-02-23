@@ -8,7 +8,7 @@ import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/conditio
 import sinon from 'sinon';
 import { get } from '@ember/object';
 
-describe('Integration | Component | query builder/block settings', function () {
+describe('Integration | Component | query-builder/block-settings', function () {
   setupRenderingTest();
 
   it('does not show block selector when "open" is false', async function () {

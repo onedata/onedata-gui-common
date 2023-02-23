@@ -24,7 +24,7 @@ const ClsBase = EmberObject.extend({
   },
 });
 
-describe('Unit | Utility | computed last proxy content', function () {
+describe('Unit | Utility | computed-last-proxy-content', function () {
   it('returns undefined if proxy is not yet resolved', function () {
     const Cls = ClsBase.extend({
       proxy: promise.object(raw(new Promise(() => {}))),

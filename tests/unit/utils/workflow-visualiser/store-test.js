@@ -4,7 +4,7 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { get } from '@ember/object';
 import sinon from 'sinon';
 
-describe('Unit | Utility | workflow visualiser/store', function () {
+describe('Unit | Utility | workflow-visualiser/store', function () {
   it('has undefined store data properties', function () {
     const store = Store.create();
 

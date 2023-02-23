@@ -406,7 +406,7 @@ const valueBuilderStoreDropdown = new OneDrodopdownHelper('.valueBuilderStore-fi
 const targetStoreDropdown = new OneDrodopdownHelper('.targetStore-field');
 const dispatchFunctionDropdown = new OneDrodopdownHelper('.dispatchFunction-field');
 
-describe('Integration | Component | workflow visualiser/task form', function () {
+describe('Integration | Component | workflow-visualiser/task-form', function () {
   setupRenderingTest();
 
   beforeEach(function () {

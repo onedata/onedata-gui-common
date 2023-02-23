@@ -6,7 +6,7 @@ import { render, settled, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import dom from 'onedata-gui-common/utils/dom';
 
-describe('Integration | Component | one atlas', function () {
+describe('Integration | Component | one-atlas', function () {
   setupRenderingTest();
 
   beforeEach(function () {

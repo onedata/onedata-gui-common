@@ -32,7 +32,7 @@ const mathOperators = [{
   symbol: '≥',
 }];
 
-describe('Integration | Component | query builder/condition block', function () {
+describe('Integration | Component | query-builder/condition-block', function () {
   setupRenderingTest();
 
   setDefaultQueryValuesBuilder();

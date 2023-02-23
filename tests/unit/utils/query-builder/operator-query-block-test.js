@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import OperatorQueryBlock from 'onedata-gui-common/utils/query-builder/operator-query-block';
 import { get } from '@ember/object';
 
-describe('Unit | Utility | query builder/operator query block', function () {
+describe('Unit | Utility | query-builder/operator-query-block', function () {
   it('has empty "operator" and "operands" fields on init', function () {
     const block = OperatorQueryBlock.create();
     expect(get(block, 'operator')).to.be.null;

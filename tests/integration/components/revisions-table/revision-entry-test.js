@@ -7,7 +7,7 @@ import sinon from 'sinon';
 
 const componentClass = 'revisions-table-revision-entry';
 
-describe('Integration | Component | revisions table/revision entry', function () {
+describe('Integration | Component | revisions-table/revision-entry', function () {
   setupRenderingTest();
 
   it(`has class "${componentClass}"`, async function () {

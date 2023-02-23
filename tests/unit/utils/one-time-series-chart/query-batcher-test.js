@@ -20,7 +20,7 @@ import { suppressRejections } from '../../../helpers/suppress-rejections';
 
 const defaultBatchAccumulationTime = 5;
 
-describe('Unit | Utility | one time series chart/query batcher', function () {
+describe('Unit | Utility | one-time-series-chart/query-batcher', function () {
   beforeEach(function () {
     this.fetchData = sinon.stub().callsFake(({ collectionRef, layout, startTimestamp, windowLimit }) => {
       let negativeValueOccurred = false;

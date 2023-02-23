@@ -18,7 +18,7 @@ const point = (timestamp, value, options) =>
   new Point(timestamp, value, { pointDuration: 2, ...(options || {}) });
 let fakeClock;
 
-describe('Unit | Utility | one time series chart/series functions/load series', function () {
+describe('Unit | Utility | one-time-series-chart/series-functions/load-series', function () {
   beforeEach(function () {
     this.context = createContext();
     this.context.lastPointTimestamp = 20;

@@ -14,7 +14,7 @@ import {
 import { get } from '@ember/object';
 import { settled } from '@ember/test-helpers';
 
-describe('Unit | Utility | one time series chart/model', function () {
+describe('Unit | Utility | one-time-series-chart/model', function () {
   beforeEach(function () {
     const now = Date.now();
     this.fakeClock = sinon.useFakeTimers({

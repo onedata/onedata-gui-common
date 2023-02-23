@@ -10,7 +10,7 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { Promise, resolve, reject } from 'rsvp';
 import { settled } from '@ember/test-helpers';
 
-describe('Integration | Utility | form component/loading field', function () {
+describe('Integration | Utility | form-component/loading-field', function () {
   setupTest();
 
   it('defines fieldComponentName as "form-component/loading-field"', function () {

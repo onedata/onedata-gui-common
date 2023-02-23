@@ -16,7 +16,7 @@ import { setProperties } from '@ember/object';
 import { dasherize } from '@ember/string';
 import { resolve } from 'rsvp';
 
-describe('Integration | Component | workflow visualiser/lane/interblock space', function () {
+describe('Integration | Component | workflow-visualiser/lane/interblock-space', function () {
   setupRenderingTest();
 
   beforeEach(function () {

@@ -5,7 +5,7 @@ import { render, find, findAll } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { getSlide } from '../../helpers/one-carousel';
 
-describe('Integration | Component | one carousel', function () {
+describe('Integration | Component | one-carousel', function () {
   setupRenderingTest();
 
   it('has class "one-carousel"', async function () {

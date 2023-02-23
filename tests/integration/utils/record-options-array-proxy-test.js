@@ -4,7 +4,7 @@ import RecordOptionsArrayProxy from 'onedata-gui-common/utils/record-options-arr
 import { setupTest } from 'ember-mocha';
 import { getProperties, get } from '@ember/object';
 
-describe('Integration | Utility | record options array proxy', function () {
+describe('Integration | Utility | record-options-array-proxy', function () {
   setupTest();
 
   beforeEach(function () {

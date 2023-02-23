@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import QueryValueComponentsBuilder from 'onedata-gui-common/utils/query-value-components-builder';
 
-describe('Unit | Utility | query value components builder', function () {
+describe('Unit | Utility | query-value-components-builder', function () {
   beforeEach(function () {
     this.builder = QueryValueComponentsBuilder.create();
     this.queryProperty = {

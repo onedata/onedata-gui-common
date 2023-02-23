@@ -19,7 +19,7 @@ import { Promise } from 'rsvp';
 
 const laneName = 'lane1';
 
-describe('Integration | Utility | workflow visualiser/actions/clear lane action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/clear-lane-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

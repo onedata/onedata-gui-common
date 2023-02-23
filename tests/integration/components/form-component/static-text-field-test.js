@@ -6,7 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import { setProperties } from '@ember/object';
 
-describe('Integration | Component | form component/static text field', function () {
+describe('Integration | Component | form-component/static-text-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

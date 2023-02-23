@@ -7,7 +7,7 @@ import TextareaField from 'onedata-gui-common/utils/form-component/textarea-fiel
 import sinon from 'sinon';
 import { set, setProperties } from '@ember/object';
 
-describe('Integration | Component | form component/textarea field', function () {
+describe('Integration | Component | form-component/textarea-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

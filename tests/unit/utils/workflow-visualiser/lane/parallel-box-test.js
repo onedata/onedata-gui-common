@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import { get } from '@ember/object';
 
-describe('Unit | Utility | workflow visualiser/lane/parallel box', function () {
+describe('Unit | Utility | workflow-visualiser/lane/parallel-box', function () {
   it('has "__modelType" equal to "parallelBox"', function () {
     const parallelBox = ParallelBox.create();
 

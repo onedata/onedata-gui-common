@@ -5,7 +5,7 @@ import { render, click, findAll, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | checkbox list', function () {
+describe('Integration | Component | checkbox-list', function () {
   setupRenderingTest();
 
   beforeEach(function () {

@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import sinon from 'sinon';
 import staticBuilder from 'onedata-gui-common/utils/one-time-series-chart/series-builders/static';
 
-describe('Unit | Utility | one time series chart/series builders/static', function () {
+describe('Unit | Utility | one-time-series-chart/series-builders/static', function () {
   it('generates single series', async function () {
     const fakeSeries = { name: '123', data: [] };
     const context = {

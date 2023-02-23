@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import { default as EmberObject, get } from '@ember/object';
 import emberObjectReplace from 'onedata-gui-common/utils/ember-object-replace';
 
-describe('Unit | Utility | ember object replace', function () {
+describe('Unit | Utility | ember-object-replace', function () {
   it('adds and removes first level properties from Ember Object based on POJSO',
     function () {
       const foo = {

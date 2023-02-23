@@ -7,7 +7,7 @@ import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 import { settled } from '@ember/test-helpers';
 
-describe('Integration | Utility | form component/dropdown field', function () {
+describe('Integration | Utility | form-component/dropdown-field', function () {
   setupTest();
 
   it('defines fieldComponentName as "form-component/dropdown-field"', function () {

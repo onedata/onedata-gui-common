@@ -11,7 +11,7 @@ import { setProperties } from '@ember/object';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
-describe('Integration | Component | workflow visualiser/interlane space', function () {
+describe('Integration | Component | workflow-visualiser/interlane-space', function () {
   setupRenderingTest();
 
   beforeEach(function () {

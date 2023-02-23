@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import OneTooltipHelper from '../../helpers/one-tooltip';
 
-describe('Integration | Component | one way toggle', function () {
+describe('Integration | Component | one-way-toggle', function () {
   setupRenderingTest();
 
   it('renders checked toggle when passed checked value true', async function () {

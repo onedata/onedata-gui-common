@@ -40,7 +40,7 @@ const twoLanesWithEmptyBlocksExample = generateExample(2, 2, 0);
 const twoNonEmptyLanesExample = generateExample(2, 2, 2);
 const threeNonEmptyLanesExample = generateExample(3, 3, 2);
 
-describe('Integration | Component | workflow visualiser', function () {
+describe('Integration | Component | workflow-visualiser', function () {
   setupRenderingTest();
 
   beforeEach(function () {

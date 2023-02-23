@@ -4,7 +4,7 @@ import EmberObject, { get, set } from '@ember/object';
 import computedCurrentUserPrivileges from 'onedata-gui-common/utils/computed-current-user-privileges';
 import { settled } from '@ember/test-helpers';
 
-describe('Unit | Utility | computed current user privileges', function () {
+describe('Unit | Utility | computed-current-user-privileges', function () {
   beforeEach(function () {
     this.flags = ['space_view_transfers', 'space_view_qos', 'space_view'];
   });

@@ -195,7 +195,7 @@ const casesToCheck = [{
   },
 }];
 
-describe('Unit | Utility | one time series chart/series functions/rate',
+describe('Unit | Utility | one-time-series-chart/series-functions/rate',
   function () {
     casesToCheck.forEach((spec) => testRate(spec));
   }

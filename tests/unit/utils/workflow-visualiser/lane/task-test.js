@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { get } from '@ember/object';
 
-describe('Unit | Utility | workflow visualiser/lane/task', function () {
+describe('Unit | Utility | workflow-visualiser/lane/task', function () {
   it('has "__modelType" equal to "task"', function () {
     const element = Task.create();
 

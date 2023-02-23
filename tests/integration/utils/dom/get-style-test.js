@@ -5,7 +5,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { render, find } from '@ember/test-helpers';
 import dom from 'onedata-gui-common/utils/dom';
 
-describe('Integration | Utility | dom/get style', function () {
+describe('Integration | Utility | dom/get-style', function () {
   setupRenderingTest();
 
   it('returns value based on inline style', async function () {

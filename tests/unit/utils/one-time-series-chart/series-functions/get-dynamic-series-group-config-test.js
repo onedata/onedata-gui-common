@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import getDynamicSeriesGroupConfig from 'onedata-gui-common/utils/one-time-series-chart/series-functions/get-dynamic-series-group-config';
 
-describe('Unit | Utility | one time series chart/series functions/get dynamic series group config',
+describe('Unit | Utility | one-time-series-chart/series-functions/get-dynamic-series-group-config',
   function () {
     it('returns value read from context.dynamicSeriesGroupConfig when propertyName is not provided', function () {
       const context = { dynamicSeriesGroupConfig: { a: 1 } };

@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Helper | one doc url', function () {
+describe('Integration | Helper | one-doc-url', function () {
   setupRenderingTest();
 
   it('generates valid URL', async function () {

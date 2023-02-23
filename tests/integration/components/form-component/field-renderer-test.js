@@ -8,7 +8,7 @@ import MissingMessage from 'onedata-gui-common/utils/i18n/missing-message';
 import { setProperties } from '@ember/object';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
 
-describe('Integration | Component | form component/field renderer', function () {
+describe('Integration | Component | form-component/field-renderer', function () {
   setupRenderingTest();
 
   beforeEach(function () {

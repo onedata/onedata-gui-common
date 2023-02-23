@@ -14,7 +14,7 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import { setProperties } from '@ember/object';
 
-describe('Integration | Component | modals/question modal', function () {
+describe('Integration | Component | modals/question-modal', function () {
   setupRenderingTest();
 
   beforeEach(function () {

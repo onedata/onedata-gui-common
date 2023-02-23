@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import { setupTest } from 'ember-mocha';
 import EmberObject, { observer } from '@ember/object';
 
-describe('Unit | Service | app storage', function () {
+describe('Unit | Service | app-storage', function () {
   setupTest();
 
   it('sets data', function () {

@@ -29,7 +29,7 @@ const operatorBlockClasses = {
   not: NotOperatorQueryBlock,
 };
 
-describe('Integration | Component | query builder/block selector', function () {
+describe('Integration | Component | query-builder/block-selector', function () {
   setupRenderingTest();
 
   setDefaultQueryValuesBuilder();

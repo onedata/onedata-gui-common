@@ -4,7 +4,7 @@ import PrivilegesField from 'onedata-gui-common/utils/form-component/privileges-
 import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
-describe('Integration | Utility | form component/privileges field', function () {
+describe('Integration | Utility | form-component/privileges-field', function () {
   setupTest();
 
   it('defines fieldComponentName as "form-component/privileges-field"', function () {

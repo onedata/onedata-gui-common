@@ -5,7 +5,7 @@ import { setupTest } from 'ember-mocha';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
-describe('Integration | Utility | form component/textarea field', function () {
+describe('Integration | Utility | form-component/textarea-field', function () {
   setupTest();
 
   it('defines fieldComponentName as "form-component/textarea-field"', function () {

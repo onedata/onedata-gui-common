@@ -10,7 +10,7 @@ import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe(
-  'Integration | Utility | form component/form fields collection group',
+  'Integration | Utility | form-component/form-fields-collection-group',
   function () {
     setupTest();
 

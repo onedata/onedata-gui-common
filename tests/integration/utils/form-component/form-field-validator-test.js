@@ -5,7 +5,7 @@ import FormFieldValidator from 'onedata-gui-common/utils/form-component/form-fie
 import { validator, buildValidations } from 'ember-cp-validations';
 import { setupTest } from 'ember-mocha';
 
-describe('Integration | Utility | form component/form field validator', function () {
+describe('Integration | Utility | form-component/form-field-validator', function () {
   setupTest();
 
   it(

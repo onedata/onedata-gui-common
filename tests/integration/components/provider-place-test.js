@@ -39,7 +39,7 @@ const Router = Service.extend({
   },
 });
 
-describe('Integration | Component | provider place', function () {
+describe('Integration | Component | provider-place', function () {
   setupRenderingTest();
 
   beforeEach(function () {

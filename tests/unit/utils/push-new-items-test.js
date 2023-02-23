@@ -17,7 +17,7 @@ function createArray(type, content) {
   }
 }
 
-describe('Unit | Utility | push new items', function () {
+describe('Unit | Utility | push-new-items', function () {
 
   ['plain', 'ember'].forEach(arrayType => {
     it(`adds only new, updated items using compare fun. for ${arrayType} array`,

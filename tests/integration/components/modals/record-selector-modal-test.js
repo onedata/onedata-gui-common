@@ -22,7 +22,7 @@ import { A } from '@ember/array';
 import sinon from 'sinon';
 import { suppressRejections } from '../../../helpers/suppress-rejections';
 
-describe('Integration | Component | modals/record selector modal', async function () {
+describe('Integration | Component | modals/record-selector-modal', async function () {
   setupRenderingTest();
 
   beforeEach(function () {

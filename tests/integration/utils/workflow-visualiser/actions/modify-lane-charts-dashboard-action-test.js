@@ -14,7 +14,7 @@ import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import { Promise } from 'rsvp';
 import sinon from 'sinon';
 
-describe('Integration | Utility | workflow visualiser/actions/modify lane charts dashboard action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/modify-lane-charts-dashboard-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

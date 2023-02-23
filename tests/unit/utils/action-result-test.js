@@ -4,7 +4,7 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import { getProperties } from '@ember/object';
 import { Promise, resolve, reject } from 'rsvp';
 
-describe('Unit | Utility | action result', function () {
+describe('Unit | Utility | action-result', function () {
   it(
     'sets result status to "pending" and result and error to null on init',
     function () {

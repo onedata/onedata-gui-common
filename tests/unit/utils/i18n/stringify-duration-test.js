@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import stringifyDuration from 'onedata-gui-common/utils/i18n/stringify-duration';
 
-describe('Unit | Utility | i18n/stringify duration', function () {
+describe('Unit | Utility | i18n/stringify-duration', function () {
   testStringify('converts -1h', -3600, {}, 'an hour ago');
   testStringify('converts +1h', 3600, {}, 'in an hour');
   testStringify('converts -1h (short version)', -3600, { shortFormat: true }, '1 hr');

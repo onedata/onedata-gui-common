@@ -25,7 +25,7 @@ const simpliestLane = {
   },
 };
 
-describe('Integration | Component | modals/workflow visualiser/lane modal', function () {
+describe('Integration | Component | modals/workflow-visualiser/lane-modal', function () {
   setupRenderingTest();
 
   beforeEach(function () {

@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, findAll, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | resource load error', function () {
+describe('Integration | Component | resource-load-error', function () {
   setupRenderingTest();
 
   it('renders show details button if reason is provided', async function () {
