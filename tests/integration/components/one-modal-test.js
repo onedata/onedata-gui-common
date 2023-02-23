@@ -5,6 +5,7 @@ import { render, settled, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import { next } from '@ember/runloop';
+import { Promise } from 'rsvp';
 import overrideComponents from 'onedata-gui-common/utils/override-components';
 
 describe('Integration | Component | one modal', function () {
@@ -16,7 +17,7 @@ describe('Integration | Component | one modal', function () {
 
   it(
     'calls onShown and onHidden when modal is closed before it was fully shown',
-    async function (done) {
+    async function () {
       const shownSpy = sinon.spy();
       const hiddenSpy = sinon.spy();
       this.set('shown', shownSpy);
@@ -35,17 +36,16 @@ describe('Integration | Component | one modal', function () {
       `);
 
       this.set('isModalOpened', true);
+      // Using next to let any Ember observers fire. It should be still not
+      // enough time to render modal completely.
+      await (new Promise((resolve) => next(this, resolve)));
+      expect(shownSpy).to.not.be.called;
+      expect(hiddenSpy).to.not.be.called;
 
-      next(this, async () => {
-        expect(shownSpy).to.not.be.called;
-        expect(hiddenSpy).to.not.be.called;
-
-        this.set('isModalOpened', false);
-        await settled();
-        expect(shownSpy).to.be.calledOnce;
-        expect(hiddenSpy).to.be.calledOnce;
-        done();
-      });
+      this.set('isModalOpened', false);
+      await settled();
+      expect(shownSpy).to.be.calledOnce;
+      expect(hiddenSpy).to.be.calledOnce;
     }
   );
 
