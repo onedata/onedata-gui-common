@@ -111,6 +111,22 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   [-10, 0, 10, 1.25].forEach((value) =>
     itRecognizesValueAsValid(value, numberDataSpec)
   );
+  itRecognizesValueAsValid(10, {
+    ...numberDataSpec,
+    valueConstraints: { integersOnly: true },
+  });
+  itRecognizesValueAsInvalid(10.5, {
+    ...numberDataSpec,
+    valueConstraints: { integersOnly: true },
+  });
+  itRecognizesValueAsValid(10, {
+    ...numberDataSpec,
+    valueConstraints: { integersOnly: false },
+  });
+  itRecognizesValueAsValid(10.5, {
+    ...numberDataSpec,
+    valueConstraints: { integersOnly: false },
+  });
   ['', NaN, true, null, undefined, {}].forEach((value) =>
     itRecognizesValueAsInvalid(value, numberDataSpec)
   );

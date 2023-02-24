@@ -299,7 +299,9 @@ class Helper {
       name: 'somename',
       dataSpec: {
         type: AtmDataSpecType.Number,
-        valueConstraints: {},
+        valueConstraints: {
+          integersOnly: false,
+        },
       },
       isOptional: true,
       defaultValue: 10,

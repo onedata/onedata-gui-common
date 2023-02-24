@@ -204,7 +204,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
       changeSpy.resetHistory();
 
       await fillIn('.name-field .form-control', 'someName');
-      await selectChoose('.data-spec-editor', 'Number');
+      await selectChoose('.data-spec-editor', 'String');
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
@@ -213,7 +213,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
           type: 'list',
           config: {
             itemDataSpec: {
-              type: 'number',
+              type: 'string',
               valueConstraints: {},
             },
           },

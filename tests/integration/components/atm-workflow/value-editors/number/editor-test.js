@@ -65,6 +65,24 @@ describe('Integration | Component | atm-workflow/value-editors/number/editor', f
     }
   });
 
+  it('allows to input a float number, but with validation error when integersOnly constraint is true',
+    async function () {
+      this.set('stateManager', new ValueEditorStateManager({
+        type: AtmDataSpecType.Number,
+        valueConstraints: {
+          integersOnly: true,
+        },
+      }));
+      await renderComponent();
+
+      await fillIn('input', '10.5');
+
+      expect(this.stateManager.value).to.equal(10.5);
+      expect(this.stateManager.isValid).to.be.false;
+      expect(find('.value-field')).to.have.class('has-error');
+    }
+  );
+
   it('can be disabled', async function () {
     this.stateManager.isDisabled = true;
     await renderComponent();

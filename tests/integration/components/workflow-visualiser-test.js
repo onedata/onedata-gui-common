@@ -99,7 +99,7 @@ describe('Integration | Component | workflow-visualiser', function () {
         );
         await selectChoose(
           getModalBody('store-modal').querySelector('.data-spec-editor'),
-          'Number'
+          'String'
         );
         await click(getModalFooter('store-modal').querySelector('.btn-submit'));
         await click(getModalFooter().querySelector('.btn-submit'));
@@ -113,7 +113,7 @@ describe('Integration | Component | workflow-visualiser', function () {
           type: 'list',
           config: {
             itemDataSpec: {
-              type: 'number',
+              type: 'string',
               valueConstraints: {},
             },
           },
@@ -200,7 +200,7 @@ describe('Integration | Component | workflow-visualiser', function () {
         );
         await selectChoose(
           getModalBody('store-modal').querySelector('.data-spec-editor'),
-          'Number'
+          'String'
         );
         await click(getModalFooter('store-modal').querySelector('.btn-submit'));
         await click(getModalFooter().querySelector('.btn-submit'));
@@ -214,7 +214,7 @@ describe('Integration | Component | workflow-visualiser', function () {
           type: 'list',
           config: {
             itemDataSpec: {
-              type: 'number',
+              type: 'string',
               valueConstraints: {},
             },
           },
@@ -292,7 +292,7 @@ describe('Integration | Component | workflow-visualiser', function () {
         );
         await selectChoose(
           getModalBody().querySelector('.data-spec-editor'),
-          'Number'
+          'String'
         );
         await click(getModalFooter().querySelector('.btn-submit'));
       },
@@ -303,7 +303,7 @@ describe('Integration | Component | workflow-visualiser', function () {
         type: 'list',
         config: {
           itemDataSpec: {
-            type: 'number',
+            type: 'string',
             valueConstraints: {},
           },
         },
@@ -1064,7 +1064,7 @@ function generateExample(
       type: 'list',
       config: {
         itemDataSpec: {
-          type: 'number',
+          type: 'string',
           valueConstraints: {},
         },
       },

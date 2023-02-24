@@ -50,8 +50,12 @@ const atmDataSpecTypesInfo = [{
 }];
 
 const simpleAtmDataSpecTypesInfo = atmDataSpecTypesInfo.filter(({ type }) =>
-  ![AtmDataSpecType.File, AtmDataSpecType.Array, AtmDataSpecType.TimeSeriesMeasurement]
-  .includes(type)
+  ![
+    AtmDataSpecType.Array,
+    AtmDataSpecType.File,
+    AtmDataSpecType.Number,
+    AtmDataSpecType.TimeSeriesMeasurement,
+  ].includes(type)
 );
 const atmDataSpecTypeHelper = new OneDrodopdownHelper('.data-type-selector');
 const fileTypeHelper = new OneDrodopdownHelper('.fileType-field');
@@ -94,6 +98,20 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
           type,
           valueConstraints: {},
         });
+      });
+    });
+
+    it('allows to create number type data spec', async function () {
+      await renderForm();
+
+      await atmDataSpecTypeHelper.selectOptionByText('Number');
+      await click('.form-summary-toggle');
+      await click('.integersOnly-field .one-way-toggle');
+      expect(getCreatedAtmDataSpec(this)).to.deep.equal({
+        type: AtmDataSpecType.Number,
+        valueConstraints: {
+          integersOnly: true,
+        },
       });
     });
 

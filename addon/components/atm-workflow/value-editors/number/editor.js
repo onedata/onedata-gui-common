@@ -9,7 +9,7 @@
 import { computed, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
-import { not } from 'ember-awesome-macros';
+import { not, bool } from 'ember-awesome-macros';
 import EditorBase from '../commons/editor-base';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
@@ -93,7 +93,11 @@ const FormRootGroup = FormFieldsRootGroup.extend({
    * @override
    */
   fields: computed(() => [
-    NumberField.create({
+    NumberField.extend({
+      integer: bool(
+        'parent.component.editorState.atmDataSpec.valueConstraints.integersOnly'
+      ),
+    }).create({
       name: 'value',
       withValidationMessage: false,
     }),
