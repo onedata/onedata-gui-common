@@ -10,6 +10,8 @@ $iconified-block-padding: $padding-base-vertical;
   $default-iconified-block-icon-background-color-hover: #{darken($default-leading-color, 3%)};
   $default-iconified-block-background-color-hover: #{$main-content-hover-background};
   $default-iconified-block-icon-color: #{$color-one-blue-gray};
+  $default-iconified-block-icon-background-color-hover: darken($default-leading-color, 3%);
+  $default-iconified-block-background-color-hover: $main-content-hover-background;
 
   display: flex;
   border: $iconified-block-border-width solid var(--iconified-block-border-color, $default-iconified-block-border-color);
