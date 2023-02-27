@@ -440,8 +440,8 @@ export default ArraySlice.extend(Evented, {
         sourceArray.splice(0, get(sourceArray, 'length'));
         sourceArray.push(...arrayUpdate);
         this.setProperties({
-          startIndex: 0,
-          endIndex: fetchedCount,
+          startIndex: -1,
+          endIndex: fetchedCount - 1,
         });
       } else {
         this.setEmptyIndex(_start - 1);
