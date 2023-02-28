@@ -592,7 +592,6 @@ export default ArraySlice.extend(Evented, {
       initialJumpIndex ?
       this.scheduleJump(initialJumpIndex) :
       this.scheduleReload({ head: true }).then(() => {
-        this.set('_startReached', this.get('_start') === 0);
         return this.startEndChanged();
       })
     );
