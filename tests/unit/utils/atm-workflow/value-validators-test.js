@@ -245,6 +245,22 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   [132, NaN, true, null, undefined, {}].forEach((value) =>
     itRecognizesValueAsInvalid(value, stringDataSpec)
   );
+  itRecognizesValueAsValid('a', {
+    ...stringDataSpec,
+    valueConstraints: { allowedValues: ['a', 'b'] },
+  });
+  itRecognizesValueAsValid('a', {
+    ...stringDataSpec,
+    valueConstraints: { allowedValues: null },
+  });
+  itRecognizesValueAsInvalid('a', {
+    ...stringDataSpec,
+    valueConstraints: { allowedValues: ['b'] },
+  });
+  itRecognizesValueAsInvalid('a', {
+    ...stringDataSpec,
+    valueConstraints: { allowedValues: [] },
+  });
 
   [{
     timestamp: 123,

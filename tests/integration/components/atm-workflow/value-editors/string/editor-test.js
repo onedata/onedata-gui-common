@@ -54,6 +54,42 @@ describe('Integration | Component | atm-workflow/value-editors/string/editor', f
     }
   });
 
+  it('allows to input a string, but with validation error when that string is not in "allowedValues" constraint',
+    async function () {
+      this.set('stateManager', new ValueEditorStateManager({
+        type: AtmDataSpecType.String,
+        valueConstraints: {
+          allowedValues: ['a', 'b'],
+        },
+      }));
+      await renderComponent();
+
+      await fillIn('textarea', 'c');
+
+      expect(this.stateManager.value).to.equal('c');
+      expect(this.stateManager.isValid).to.be.false;
+      expect(find('.value-field')).to.have.class('has-error');
+    }
+  );
+
+  it('allows to input a string without validation error when that string is in "allowedValues" constraint',
+    async function () {
+      this.set('stateManager', new ValueEditorStateManager({
+        type: AtmDataSpecType.String,
+        valueConstraints: {
+          allowedValues: ['a', 'b'],
+        },
+      }));
+      await renderComponent();
+
+      await fillIn('textarea', 'a');
+
+      expect(this.stateManager.value).to.equal('a');
+      expect(this.stateManager.isValid).to.be.true;
+      expect(find('.value-field')).to.not.have.class('has-error');
+    }
+  );
+
   it('gets larger when provided string has many lines', async function () {
     await renderComponent();
     const heightBefore = dom.height(find('textarea'));

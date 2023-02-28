@@ -129,7 +129,8 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       const summary = String(numberEditor.summarizeFormValues(i18n, formValues));
 
       expect(summary).to.equal('Allowed numbers: Any');
-    });
+    }
+  );
 
   it('shows a valid summary when "integers only" toggle is checked and there are no "allowed values"', function () {
     const formValues = numberEditor.valueConstraintsToFormValues({
