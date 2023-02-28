@@ -22,7 +22,6 @@ export default Component.extend(I18n, {
   router: service(),
   guiUtils: service(),
   userManager: service(),
-  harvesterManager: service(),
 
   /**
    * @override
@@ -34,6 +33,11 @@ export default Component.extend(I18n, {
    * @type {Models.Harvester}
    */
   record: undefined,
+
+  /**
+   * @type {Location}
+   */
+  _location: location,
 
   /**
    * @type {PromiseObject<Models.User>}
@@ -63,25 +67,14 @@ export default Component.extend(I18n, {
   }),
 
   /**
-   * Available harvesting backend types list
-   * @returns {Ember.ComputedProperty<PromiseArray<string>>}
+   * @type {Ember.ComputedProperty<string|null>}
    */
-  backendTypesListProxy: reads('harvesterManager.backendTypesListProxy'),
-
-  /**
-   * @type {Ember.ComputedProperty<string>}
-   */
-  backendType: computed('backendTypesListProxy.isFulfilled', function backendType() {
-    const backendTypesListProxy = this.backendTypesListProxy;
-    if (this.backendTypesListProxy.isFulfilled) {
-      console.log(backendTypesListProxy.content);
-      for (const { id, name } of backendTypesListProxy.content) {
-        if (id === this.record.harvestingBackendType) {
-          return name;
-        }
-      }
+  publicUrl: computed('record.entityId', function publicUrl() {
+    if (this.record.entityId) {
+      return this._location.origin + this._location.pathname +
+        this.router.urlFor('public.harvesters', this.record.entityId);
     } else {
-      return '';
+      return null;
     }
   }),
 

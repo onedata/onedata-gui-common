@@ -31,18 +31,18 @@
         {{record.public}}
       </td>
     </tr>
-    <tr class="row-with-text">
-      <td class="property-name">{{tt this "backendType"}}</td>
-      <td class="property-value">
-        {{backendType}}
-      </td>
-    </tr>
-    <tr class="row-with-text">
-      <td class="property-name">{{tt this "backendEndpoint"}}</td>
-      <td class="property-value">
-        {{record.harvestingBackendEndpoint}}
-      </td>
-    </tr>
+    {{#if record.public}}
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "publicUrl"}}</td>
+        <td class="property-value">
+          {{one-clipboard-line
+            size="sm"
+            value=publicUrl
+            type="text"
+          }}
+        </td>
+      </tr>
+    {{/if}}
     {{#if creator.fullName}}
       <tr class="row-with-text">
         <td class="property-name">{{tt this "creator"}}</td>
