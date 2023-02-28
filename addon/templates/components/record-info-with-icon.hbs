@@ -29,12 +29,14 @@
     {{/if}}
   {{/truncated-string}}
 </div>
-{{#record-info-popover
-  isOpened=recordInfoOpened
-  triggerSelector=(concat "#" elementId " .record-info-trigger")
-}}
-  {{component (concat recordType "-info-content")
-    record=record
-    errorReason=errorReason
+{{#if recordType}}
+  {{#record-info-popover
+    isOpened=recordInfoOpened
+    triggerSelector=(concat "#" elementId " .record-info-trigger")
   }}
-{{/record-info-popover}}
+    {{component (concat recordType "-info-content")
+      record=record
+      errorReason=errorReason
+    }}
+  {{/record-info-popover}}
+{{/if}}
