@@ -654,6 +654,10 @@ label.align-left {
 .btn-tooltip-container {
   @extend .btn;
   padding: 0 !important;
+
+  &:not(button) {
+    border: 0;
+  }
 }
 
 .btn {

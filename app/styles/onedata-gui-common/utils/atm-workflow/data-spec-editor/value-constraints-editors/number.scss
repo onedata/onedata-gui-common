@@ -4,4 +4,21 @@
       width: auto;
     }
   }
+
+  .allowedValues-field {
+    flex-wrap: wrap;
+
+    .control-label {
+      flex-basis: 100%;
+      margin-bottom: 0.4em;
+    }
+
+    .btn-tooltip-container {
+      font-size: inherit;
+    }
+
+    .full-value-editor {
+      font-size: $font-size-base;
+    }
+  }
 }

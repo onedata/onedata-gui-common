@@ -20,6 +20,12 @@ import {
   getAtmValueConstraintsConditions,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import validate from 'onedata-gui-common/utils/atm-workflow/value-validators/number';
+import {
+  ValueEditorField as AtmValueEditorField,
+  rawValueToFormValue as atmRawValueToFormValue,
+  formValueToRawValue as atmFormValueToRawValue,
+} from 'onedata-gui-common/utils/atm-workflow/value-editors';
 
 const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.number';
 
@@ -57,6 +63,7 @@ const FormElement = FormFieldsGroup.extend({
   fields: computed(function fields() {
     return [
       IntegersOnlyToggle.create(),
+      AllowedValuesEditor.create(),
     ];
   }),
 
@@ -107,14 +114,47 @@ const IntegersOnlyToggle = ToggleField.extend({
   },
 });
 
+const AllowedValuesEditor = AtmValueEditorField.extend({
+  /**
+   * @override
+   */
+  name: 'allowedValues',
+
+  /**
+   * @override
+   */
+  isOptional: true,
+
+  /**
+   * @override
+   */
+  atmDataSpec: Object.freeze({
+    type: AtmDataSpecType.Array,
+    valueConstraints: {
+      itemDataSpec: {
+        type: AtmDataSpecType.Number,
+      },
+    },
+  }),
+});
+
 /**
  * @param {Utils.FormComponent.ValuesContainer} values Values from number editor
  * @returns {AtmNumberValueConstraints} value constraints
  */
 function formValuesToValueConstraints(values) {
-  return (typeof values?.integersOnly === 'boolean') ? {
-    integersOnly: values.integersOnly,
-  } : {};
+  const constraints = {};
+
+  if (typeof values?.integersOnly === 'boolean') {
+    constraints.integersOnly = values.integersOnly;
+  }
+
+  const allowedValues = atmFormValueToRawValue(values?.allowedValues);
+  if (allowedValues !== null) {
+    constraints.allowedValues = allowedValues;
+  }
+
+  return constraints;
 }
 
 /**
@@ -126,6 +166,7 @@ function formValuesToValueConstraints(values) {
 function valueConstraintsToFormValues(valueConstraints) {
   return createValuesContainer({
     integersOnly: Boolean(valueConstraints?.integersOnly),
+    allowedValues: atmRawValueToFormValue(valueConstraints?.allowedValues, true),
   });
 }
 
@@ -135,17 +176,38 @@ function valueConstraintsToFormValues(valueConstraints) {
  * @returns {SafeString}
  */
 function summarizeFormValues(i18n, values) {
-  const allowedNumbers = values?.integersOnly ? 'integersOnly' : 'any';
+  const integersOnly = Boolean(values?.integersOnly);
+  let allowedNumbersText = '';
+
+  if (values?.allowedValues?.hasValue) {
+    const allowedValues = values?.allowedValues?.value;
+    const validAllowedValues = allowedValues?.filter((value) => validate(value, {
+      type: AtmDataSpecType.Number,
+      valueConstraints: {
+        integersOnly,
+      },
+    }));
+    if (validAllowedValues?.length) {
+      allowedNumbersText = validAllowedValues.join(', ');
+    } else {
+      allowedNumbersText = i18n.t(`${i18nPrefix}.summary.allowedNumbers.none`);
+    }
+  } else {
+    const i18nKey = values?.integersOnly ? 'integersOnly' : 'any';
+    allowedNumbersText = i18n.t(`${i18nPrefix}.summary.allowedNumbers.${i18nKey}`);
+  }
+
   return i18n.t(`${i18nPrefix}.summary.base`, {
-    allowedNumbers: i18n.t(`${i18nPrefix}.summary.allowedNumbers.${allowedNumbers}`),
+    allowedNumbers: allowedNumbersText,
   });
 }
 
 /**
+ * @param {Utils.FormComponent.ValuesContainer} values
  * @returns {boolean}
  */
-function shouldWarnOnRemove() {
-  return false;
+function shouldWarnOnRemove(values) {
+  return values?.allowedValues?.hasValue && values?.allowedValues?.value?.length > 0;
 }
 
 export default {
