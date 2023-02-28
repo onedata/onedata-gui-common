@@ -10,6 +10,7 @@ import { computed, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 import { not, bool } from 'ember-awesome-macros';
+import { validator } from 'ember-cp-validations';
 import EditorBase from '../commons/editor-base';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
@@ -95,13 +96,31 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   fields: computed(() => [
     NumberField.extend({
       integer: bool(
-        'parent.component.editorState.atmDataSpec.valueConstraints.integersOnly'
+        'parent.atmDataSpec.valueConstraints.integersOnly'
+      ),
+      customValidators: computed(
+        'parent.atmDataSpec.valueConstraints.allowedValues',
+        function customValidators() {
+          const allowedValues = this.parent?.atmDataSpec?.valueConstraints?.allowedValues;
+          if (Array.isArray(allowedValues)) {
+            return [validator('inclusion', {
+              in: allowedValues.map((n) => String(n)),
+            })];
+          } else {
+            return [];
+          }
+        }
       ),
     }).create({
       name: 'value',
       withValidationMessage: false,
     }),
   ]),
+
+  /**
+   * @type {ComputedProperty<AtmDataSpec>}
+   */
+  atmDataSpec: reads('component.editorState.atmDataSpec'),
 
   /**
    * @override

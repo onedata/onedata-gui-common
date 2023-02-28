@@ -111,6 +111,9 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   [-10, 0, 10, 1.25].forEach((value) =>
     itRecognizesValueAsValid(value, numberDataSpec)
   );
+  ['', NaN, true, null, undefined, {}].forEach((value) =>
+    itRecognizesValueAsInvalid(value, numberDataSpec)
+  );
   itRecognizesValueAsValid(10, {
     ...numberDataSpec,
     valueConstraints: { integersOnly: true },
@@ -127,9 +130,30 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
     ...numberDataSpec,
     valueConstraints: { integersOnly: false },
   });
-  ['', NaN, true, null, undefined, {}].forEach((value) =>
-    itRecognizesValueAsInvalid(value, numberDataSpec)
-  );
+  itRecognizesValueAsValid(10, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: [5, 10] },
+  });
+  itRecognizesValueAsValid(10, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: null },
+  });
+  itRecognizesValueAsInvalid(10, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: [5] },
+  });
+  itRecognizesValueAsInvalid(10, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: [] },
+  });
+  itRecognizesValueAsInvalid(10.5, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: [10.5], integersOnly: true },
+  });
+  itRecognizesValueAsInvalid(10, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: [5], integersOnly: true },
+  });
 
   [{}, { someKey: 123 }].forEach((value) =>
     itRecognizesValueAsValid(value, objectDataSpec)

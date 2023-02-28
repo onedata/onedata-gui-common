@@ -247,5 +247,6 @@ export function isAtmDataSpecCompatible(
  * @returns {unknown}
  */
 export function getDefaultValueForAtmDataSpec(atmDataSpec) {
-  return atmDataSpecTypeDefinitions[atmDataSpec?.type]?.getDefaultValue?.() ?? null;
+  return atmDataSpecTypeDefinitions[atmDataSpec?.type]
+    ?.getDefaultValue?.(atmDataSpec) ?? null;
 }

@@ -17,6 +17,7 @@ import { typeDefinitionBase } from './commons';
 /**
  * @typedef {Object} AtmNumberValueConstraints
  * @property {boolean} [integersOnly]
+ * @property {Array<number>|null} [allowedValues]
  */
 
 /**
@@ -69,7 +70,8 @@ export const atmDataSpecTypeDefinition = Object.freeze({
       integersOnlyConstraintValues,
     };
   },
-  getDefaultValue() {
-    return 0;
+  getDefaultValue(atmDataSpec) {
+    const allowedValues = atmDataSpec?.valueConstraints?.allowedValues;
+    return (!allowedValues?.length || allowedValues?.includes(0)) ? 0 : allowedValues[0];
   },
 });

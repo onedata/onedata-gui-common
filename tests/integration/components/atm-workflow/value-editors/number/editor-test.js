@@ -83,6 +83,42 @@ describe('Integration | Component | atm-workflow/value-editors/number/editor', f
     }
   );
 
+  it('allows to input a number, but with validation error when that number is not in "allowedValues" constraint',
+    async function () {
+      this.set('stateManager', new ValueEditorStateManager({
+        type: AtmDataSpecType.Number,
+        valueConstraints: {
+          allowedValues: [1, 2],
+        },
+      }));
+      await renderComponent();
+
+      await fillIn('input', '10');
+
+      expect(this.stateManager.value).to.equal(10);
+      expect(this.stateManager.isValid).to.be.false;
+      expect(find('.value-field')).to.have.class('has-error');
+    }
+  );
+
+  it('allows to input a number without validation error when that number is in "allowedValues" constraint',
+    async function () {
+      this.set('stateManager', new ValueEditorStateManager({
+        type: AtmDataSpecType.Number,
+        valueConstraints: {
+          allowedValues: [1, 2],
+        },
+      }));
+      await renderComponent();
+
+      await fillIn('input', '2');
+
+      expect(this.stateManager.value).to.equal(2);
+      expect(this.stateManager.isValid).to.be.true;
+      expect(find('.value-field')).to.not.have.class('has-error');
+    }
+  );
+
   it('can be disabled', async function () {
     this.stateManager.isDisabled = true;
     await renderComponent();

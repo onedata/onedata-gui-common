@@ -13,5 +13,14 @@
  */
 export default function validate(value, atmDataSpec) {
   const integersOnly = Boolean(atmDataSpec?.valueConstraints?.integersOnly);
-  return integersOnly ? Number.isInteger(value) : Number.isFinite(value);
+  if (!(integersOnly ? Number.isInteger(value) : Number.isFinite(value))) {
+    return false;
+  }
+
+  const allowedValues = atmDataSpec?.valueConstraints?.allowedValues;
+  if (Array.isArray(allowedValues) && !allowedValues.includes(value)) {
+    return false;
+  }
+
+  return true;
 }
