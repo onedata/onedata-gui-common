@@ -137,21 +137,12 @@ export default ArraySlice.extend(Evented, {
     'loadMoreThreshold',
     'sourceArray.[]',
     function endChanged() {
-      if (!this.get('isReloading')) {
-        const {
-          _end,
-          _endReached,
-          loadMoreThreshold,
-          sourceArray,
-        } = this.getProperties(
-          '_end',
-          '_endReached',
-          'loadMoreThreshold',
-          'sourceArray',
-        );
-        if (!_endReached && _end + loadMoreThreshold >= get(sourceArray, 'length')) {
-          return this.scheduleTask('fetchNext');
-        }
+      if (
+        !this.isReloading &&
+        !this._endReached &&
+        this._end + this.loadMoreThreshold >= this.sourceArray.length
+      ) {
+        return this.scheduleTask('fetchNext');
       }
     }
   ),
@@ -203,7 +194,7 @@ export default ArraySlice.extend(Evented, {
   },
 
   /**
-   * @returns {{ arrayUpdate: Array, endReached: Boolean }}
+   * @returns {Promise<{ arrayUpdate: Array, endReached: boolean }>}
    */
   async fetchWrapper(index, size, offset) {
     const effOffset = (index == null && (!offset || offset < 0)) ? 0 : offset;
@@ -384,7 +375,7 @@ export default ArraySlice.extend(Evented, {
    * to prevent issues with async array modification.
    * @returns {Promise}
    */
-  async _reload({ head = false, minSize = this.get('chunkSize'), offset = 0 } = {}) {
+  async _reload({ head = false, minSize = this.chunkSize, offset = 0 } = {}) {
     const {
       _start,
       _end,
@@ -440,8 +431,9 @@ export default ArraySlice.extend(Evented, {
         sourceArray.splice(0, get(sourceArray, 'length'));
         sourceArray.push(...arrayUpdate);
         this.setProperties({
-          startIndex: -1,
-          endIndex: fetchedCount - 1,
+          emptyIndex: -1,
+          startIndex: 0,
+          endIndex: fetchedCount,
         });
       } else {
         this.setEmptyIndex(_start - 1);
@@ -452,9 +444,8 @@ export default ArraySlice.extend(Evented, {
         for (let i = 0; i < updateBoundary; ++i) {
           sourceArray[i + _start] = arrayUpdate[i];
         }
-        sourceArray.arrayContentDidChange(_start);
       }
-
+      sourceArray.arrayContentDidChange(this._start);
       return this;
     } catch (error) {
       safeExec(this, 'set', 'error', error);
@@ -549,7 +540,8 @@ export default ArraySlice.extend(Evented, {
    *     parameter, but chunk shoud be considered as last if the `isLast` flag is true
    *   - if the result is not an array nor object, then chunk is considered as empty
    *     and as last
-   * @returns {{ arrayUpdate: Array, endReached: Boolean }}
+   *
+   * @returns {Promise<{ arrayUpdate: Array, endReached: boolean }>}
    */
   handleFetchDataFetchResult(fetchResult) {
     let arrayUpdate;
