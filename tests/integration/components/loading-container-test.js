@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | loading container', function () {
+describe('Integration | Component | loading-container', function () {
   setupRenderingTest();
 
   it('renders yielded content if isLoading is false', async function () {

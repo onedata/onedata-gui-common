@@ -106,6 +106,10 @@ export const atmDataSpecTypesArray = Object.freeze([
  * `AtmValueConstraintsConditions`
  * @property {(atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>, context: IsValueConstraintsMatchingFiltersFuncCtx) => boolean} isValueConstraintsMatchingFilters
  * Returns `true` when specific data spec value constraints fulfill all provided filters.
+ * @property {(atmDataSpec: AtmDataSpec) => unknown} getDefaultValue Returns
+ * value default for this data type. WARNING: It doesn't have to be a valid
+ * value! It represents a value being as close as possible to the simplest
+ * valid value.
  */
 
 /**
@@ -232,4 +236,16 @@ export function isAtmDataSpecCompatible(
     return getAtmDataSpecTypeSupertypes(typeOrSubtypeAtmDataSpec.type)
       .includes(referenceAtmDataSpec.type);
   }
+}
+
+/**
+ * Returns value default for provided data spec. WARNING: It doesn't have to be
+ * a valid value! It represents a value being as close as possible to the
+ * simplest valid value. For some types (e.g. file) it's not possible to
+ * generate an always-valid default value.
+ * @param {AtmDataSpec} atmDataSpec
+ * @returns {unknown}
+ */
+export function getDefaultValueForAtmDataSpec(atmDataSpec) {
+  return atmDataSpecTypeDefinitions[atmDataSpec?.type]?.getDefaultValue?.() ?? null;
 }

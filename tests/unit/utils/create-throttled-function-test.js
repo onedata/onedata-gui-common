@@ -9,7 +9,7 @@ import createThrottledFunction from 'onedata-gui-common/utils/create-throttled-f
 import sinon from 'sinon';
 import { settled } from '@ember/test-helpers';
 
-describe('Unit | Utility | create throttled function', function () {
+describe('Unit | Utility | create-throttled-function', function () {
   beforeEach(function () {
     this.clock = sinon.useFakeTimers({
       now: Date.now(),

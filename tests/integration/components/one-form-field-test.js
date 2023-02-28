@@ -5,7 +5,7 @@ import { render, fillIn, find, findAll } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | one form field', function () {
+describe('Integration | Component | one-form-field', function () {
   setupRenderingTest();
 
   it('can render text input with provided value', async function () {

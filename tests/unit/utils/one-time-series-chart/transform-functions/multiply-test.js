@@ -121,7 +121,7 @@ export const casesToCheck = [{
   output: [null, 8, null],
 }];
 
-describe('Unit | Utility | one time series chart/transform functions/multiply', function () {
+describe('Unit | Utility | one-time-series-chart/transform-functions/multiply', function () {
   casesToCheck.forEach(({ input, output }) => testMultiply(input, output));
 });
 

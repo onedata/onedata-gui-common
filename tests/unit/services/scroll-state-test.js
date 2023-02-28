@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupTest } from 'ember-mocha';
 
-describe('Unit | Service | scroll state', function () {
+describe('Unit | Service | scroll-state', function () {
   setupTest();
   it('changes lastScrollEvent', function () {
     const service = this.owner.lookup('service:scroll-state');

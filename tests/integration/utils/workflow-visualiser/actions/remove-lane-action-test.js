@@ -17,7 +17,7 @@ import { Promise } from 'rsvp';
 
 const laneName = 'lane1';
 
-describe('Integration | Utility | workflow visualiser/actions/remove lane action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/remove-lane-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

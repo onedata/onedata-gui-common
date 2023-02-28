@@ -8,7 +8,7 @@ import { registerService, lookupService } from '../../helpers/stub-service';
 import Service from '@ember/service';
 import { setProperties } from '@ember/object';
 
-describe('Integration | Component | alert global', function () {
+describe('Integration | Component | alert-global', function () {
   setupRenderingTest();
 
   beforeEach(function () {

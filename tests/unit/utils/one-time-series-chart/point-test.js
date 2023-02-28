@@ -13,7 +13,7 @@ const pointBase = Object.freeze({
   fake: false,
 });
 
-describe('Unit | Utility | one time series chart/point', function () {
+describe('Unit | Utility | one-time-series-chart/point', function () {
   it('creates a point', function () {
     expect(new Point(1, 2)).to.include(Object.assign({}, pointBase, {
       timestamp: 1,

@@ -15,7 +15,7 @@ import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 import { set } from '@ember/object';
 
-describe('Integration | Component | form component/radio field', function () {
+describe('Integration | Component | form-component/radio-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

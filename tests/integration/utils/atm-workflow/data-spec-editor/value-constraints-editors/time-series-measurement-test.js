@@ -80,7 +80,7 @@ const unitOptions = [{
   label: 'Custom',
 }];
 
-describe('Integration | Utility | atm workflow/data spec editor/value constraints editors/time series measurement',
+describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraints-editors/time-series-measurement',
   function () {
     setupRenderingTest();
 

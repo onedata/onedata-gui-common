@@ -11,7 +11,7 @@ import { set } from '@ember/object';
 
 const datetimeFormat = 'YYYY/MM/DD H:mm';
 
-describe('Integration | Component | form component/datetime field', function () {
+describe('Integration | Component | form-component/datetime-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

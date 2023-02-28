@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import addConflictLabels from 'onedata-gui-common/utils/add-conflict-labels';
 
-describe('Unit | Utility | add conflict labels', function () {
+describe('Unit | Utility | add-conflict-labels', function () {
   it('adds conflictLabel to array records of the same name', function () {
     const records = [{
         id: 'some123a',

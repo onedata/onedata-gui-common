@@ -50,7 +50,7 @@ hourOnlySimpleChartDefinition.seriesBuilders[0].builderRecipe.seriesTemplate
   .dataProvider.functionArguments.sourceSpecProvider.functionArguments.data
   .externalSourceParameters.metricNames = ['3600'];
 
-describe('Integration | Component | one time series charts section', function () {
+describe('Integration | Component | one-time-series-charts-section', function () {
   const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {

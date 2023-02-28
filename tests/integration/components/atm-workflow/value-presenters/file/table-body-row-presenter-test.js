@@ -6,7 +6,7 @@ import { render, find, findAll } from '@ember/test-helpers';
 import { Promise, reject } from 'rsvp';
 import { FileType } from 'onedata-gui-common/utils/file';
 
-describe('Integration | Component | atm workflow/value presenters/file/table body row presenter', function () {
+describe('Integration | Component | atm-workflow/value-presenters/file/table-body-row-presenter', function () {
   setupRenderingTest();
 
   beforeEach(function () {

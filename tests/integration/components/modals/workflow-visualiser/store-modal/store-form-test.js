@@ -92,7 +92,7 @@ const storeTypes = [{
 const storeTypesWithGenericConfig = storeTypes
   .filter(({ type }) => type !== 'timeSeries');
 
-describe('Integration | Component | modals/workflow visualiser/store modal/store form', function () {
+describe('Integration | Component | modals/workflow-visualiser/store-modal/store-form', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -114,22 +114,20 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       this.set('mode', 'create');
     });
 
-    it('has class "mode-create', async function (done) {
+    it('has class "mode-create', async function () {
       await renderComponent();
 
       expect(find(`.${componentClass}`)).to.have.class('mode-create');
-      done();
     });
 
-    it('does not render "id" and "instance id" fields', async function (done) {
+    it('does not render "id" and "instance id" fields', async function () {
       await renderComponent();
 
       expect(find('.id-field')).to.not.exist;
       expect(find('.instanceId-field')).to.not.exist;
-      done();
     });
 
-    it('renders empty "name" field', async function (done) {
+    it('renders empty "name" field', async function () {
       await renderComponent();
 
       const label = find('.name-field .control-label');
@@ -137,29 +135,26 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect(label.textContent.trim()).to.equal('Name:');
       expect(field.type).to.equal('text');
       expect(field.value).to.equal('');
-      done();
     });
 
-    it('marks "name" field as invalid when it is empty', async function (done) {
+    it('marks "name" field as invalid when it is empty', async function () {
       await renderComponent();
 
       await focus('.name-field .form-control');
       await blur('.name-field .form-control');
 
       expect(find('.name-field')).to.have.class('has-error');
-      done();
     });
 
-    it('marks "name" field as valid when it is not empty', async function (done) {
+    it('marks "name" field as valid when it is not empty', async function () {
       await renderComponent();
 
       await fillIn('.name-field .form-control', 'somename');
 
       expect(find('.name-field')).to.have.class('has-success');
-      done();
     });
 
-    it('renders empty "description" field', async function (done) {
+    it('renders empty "description" field', async function () {
       await renderComponent();
 
       const label = find('.description-field .control-label');
@@ -167,30 +162,27 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect(label.textContent.trim()).to.equal('Description (optional):');
       expect(field.matches('textarea')).to.be.true;
       expect(field.value).to.equal('');
-      done();
     });
 
-    it('marks "description" field as valid when it is empty', async function (done) {
+    it('marks "description" field as valid when it is empty', async function () {
       await renderComponent();
 
       await focus('.description-field .form-control');
       await blur('.description-field .form-control');
 
       expect(find('.description-field')).to.have.class('has-success');
-      done();
     });
 
-    it('renders "type" field with preselected "list" option', async function (done) {
+    it('renders "type" field with preselected "list" option', async function () {
       await renderComponent();
 
       const label = find('.type-field .control-label');
       const field = find('.type-field .dropdown-field-trigger');
       expect(label.textContent.trim()).to.equal('Type:');
       expect(field.textContent.trim()).to.equal('List');
-      done();
     });
 
-    it('notifies about changes of values and validation state', async function (done) {
+    it('notifies about changes of values and validation state', async function () {
       const changeSpy = this.get('changeSpy');
 
       await renderComponent();
@@ -230,7 +222,6 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
         isValid: true,
       });
-      done();
     });
 
     storeTypesWithGenericConfig.forEach(({
@@ -241,7 +232,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       defaultValueForTests,
       createDefaultValueForTests,
     }) => {
-      it(`shows generic configuration fields for store "${label}"`, async function (done) {
+      it(`shows generic configuration fields for store "${label}"`, async function () {
         await renderComponent();
 
         await selectChoose('.type-field', label);
@@ -258,10 +249,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             .to.equal('Default value:');
           expect(defaultValueField.querySelector('.create-value-btn')).to.exist;
         }
-        done();
       });
 
-      it(`allows to configure new "${label}" store`, async function (done) {
+      it(`allows to configure new "${label}" store`, async function () {
         const changeSpy = this.get('changeSpy');
 
         await renderComponent();
@@ -301,11 +291,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           };
         }
         expect(changeSpy).to.be.calledWith(expectedJson);
-        done();
       });
     });
 
-    it('shows time series configuration fields for store "Time series"', async function (done) {
+    it('shows time series configuration fields for store "Time series"', async function () {
       await renderComponent();
 
       await selectChoose('.type-field', 'Time series');
@@ -313,10 +302,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expectTimeSeriesConfigExpandState(true);
 
       expect(find('.timeSeriesSchema-field')).to.not.exist;
-      done();
     });
 
-    it('allows to configure new "Time series" store', async function (done) {
+    it('allows to configure new "Time series" store', async function () {
       const changeSpy = this.get('changeSpy');
 
       await renderComponent();
@@ -359,17 +347,15 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
         isValid: true,
       });
-      done();
     });
 
-    it('renders unchecked "needs user input" toggle', async function (done) {
+    it('renders unchecked "needs user input" toggle', async function () {
       await renderComponent();
 
       const label = find('.needsUserInput-field .control-label');
       const toggle = find('.needsUserInput-field .one-way-toggle');
       expect(label.textContent.trim()).to.equal('Needs user input:');
       expect(toggle).to.not.have.class('checked');
-      done();
     });
 
     itHasAllFieldsEnabledByDefault();
@@ -381,11 +367,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       this.set('mode', 'edit');
     });
 
-    it('has class "mode-edit', async function (done) {
+    it('has class "mode-edit', async function () {
       await renderComponent();
 
       expect(find(`.${componentClass}`)).to.have.class('mode-edit');
-      done();
     });
 
     storeTypesWithGenericConfig.forEach(({
@@ -396,7 +381,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       defaultValueForTests,
       expectDefaultValueForTests,
     }) => {
-      it(`fills fields with data of passed "${label}" store on init`, async function (done) {
+      it(`fills fields with data of passed "${label}" store on init`, async function () {
         this.set('store', Store.create({
           schemaId: 'store1id',
           instanceId: 'incorrect value that should not exist',
@@ -433,11 +418,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         } else {
           expect(needsUserInputToggle).to.not.have.class('checked');
         }
-        done();
       });
     });
 
-    it('fills fields with data of passed "Time series" store on init', async function (done) {
+    it('fills fields with data of passed "Time series" store on init', async function () {
       this.set('store', Store.create({
         schemaId: 'store1id',
         instanceId: 'incorrect value that should not exist',
@@ -480,10 +464,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         .to.contain('Bytes');
       expect(findAll('.metrics-field .tag-item')).to.have.length(1);
       expect(find('.metrics-field .tag-item').textContent).to.contain('"sum5s" (sum; 5s; 1440 samp.)');
-      done();
     });
 
-    it('does not update form values on passed store change', async function (done) {
+    it('does not update form values on passed store change', async function () {
       const store1 = this.set('store', Store.create({
         name: 'store1',
         description: 'desc',
@@ -495,7 +478,6 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await settled();
 
       expect(find('.name-field .form-control').value).to.equal('store1');
-      done();
     });
 
     itHasAllFieldsEnabledByDefault();
@@ -507,11 +489,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       this.set('mode', 'view');
     });
 
-    it('has class "mode-view', async function (done) {
+    it('has class "mode-view', async function () {
       await renderComponent();
 
       expect(find(`.${componentClass}`)).to.have.class('mode-view');
-      done();
     });
 
     storeTypesWithGenericConfig.forEach(({
@@ -522,7 +503,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       defaultValueForTests,
       expectDefaultValueForTests,
     }) => {
-      it(`fills fields with data of passed "${label}" store`, async function (done) {
+      it(`fills fields with data of passed "${label}" store`, async function () {
         this.set('store', Store.create({
           schemaId: 'store1id',
           instanceId: 'store1instanceId',
@@ -564,11 +545,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         } else {
           expect(needsUserInputToggle).to.not.have.class('checked');
         }
-        done();
       });
     });
 
-    it('fills fields with data of passed "Time series" store on init', async function (done) {
+    it('fills fields with data of passed "Time series" store on init', async function () {
       this.set('store', Store.create({
         schemaId: 'store1id',
         instanceId: 'store1instanceId',
@@ -612,10 +592,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         .to.contain('Bytes');
       expect(findAll('.metrics-field .tag-item')).to.have.length(1);
       expect(find('.metrics-field .tag-item').textContent).to.contain('"sum5s" (sum; 5s; 1440 samp.)');
-      done();
     });
 
-    it('updates form values on passed store change', async function (done) {
+    it('updates form values on passed store change', async function () {
       const store1 = this.set('store', {
         name: 'store1',
       });
@@ -625,25 +604,22 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await settled();
 
       expect(find('.name-field .field-component').textContent.trim()).to.equal('store2');
-      done();
     });
 
-    it('hides description field, when description is empty', async function (done) {
+    it('hides description field, when description is empty', async function () {
       this.set('store', {});
 
       await renderComponent();
 
       expect(find('.description-field')).to.not.exist;
-      done();
     });
 
-    it('hides default value field, when default value is empty', async function (done) {
+    it('hides default value field, when default value is empty', async function () {
       this.set('store', { defaultInitialContent: null });
 
       await renderComponent();
 
       expect(find('.defaultValue-field')).to.not.exist;
-      done();
     });
   });
 });
@@ -658,18 +634,17 @@ async function renderComponent() {
 }
 
 function itHasAllFieldsEnabledByDefault() {
-  it('has all fields enabled by default', async function (done) {
+  it('has all fields enabled by default', async function () {
     await renderComponent();
 
     expect(find('.store-form')).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
     expect(find('.field-disabled')).to.not.exist;
-    done();
   });
 }
 
 function itAllowsToDisableAllFields() {
-  it('allows to disable all fields', async function (done) {
+  it('allows to disable all fields', async function () {
     this.set('isDisabled', true);
 
     await renderComponent();
@@ -677,7 +652,6 @@ function itAllowsToDisableAllFields() {
     expect(find('.store-form')).to.have.class('form-disabled')
       .and.to.not.have.class('form-enabled');
     expect(find('.field-enabled')).to.not.exist;
-    done();
   });
 }
 

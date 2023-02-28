@@ -6,7 +6,7 @@ import _object from 'lodash/object';
 
 const ERROR_MSG = 'error!';
 
-describe('Unit | Component | one form', function () {
+describe('Unit | Component | one-form', function () {
   setupTest();
 
   beforeEach(function () {

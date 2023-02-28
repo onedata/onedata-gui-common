@@ -5,7 +5,7 @@ import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | test callback', function () {
+describe('Integration | Component | test-callback', function () {
   setupRenderingTest();
 
   it('immediately invokes callback', async function () {

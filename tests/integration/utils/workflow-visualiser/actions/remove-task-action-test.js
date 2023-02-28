@@ -17,7 +17,7 @@ import { Promise } from 'rsvp';
 
 const taskName = 'task1';
 
-describe('Integration | Utility | workflow visualiser/actions/remove task action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/remove-task-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

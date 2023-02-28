@@ -8,7 +8,7 @@ const SampleObject = EmberObject.extend({
   computedProperty: oneWayModifiable('sourceProperty'),
 });
 
-describe('Unit | Utility | one way modifiable', function () {
+describe('Unit | Utility | one-way-modifiable', function () {
   it('is computed', function () {
     const sampleObject = SampleObject.create();
     expect(sampleObject.get('computedProperty'))

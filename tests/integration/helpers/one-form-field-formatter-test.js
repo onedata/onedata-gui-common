@@ -6,7 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import moment from 'moment';
 import { certFormatter } from 'onedata-gui-common/helpers/date-format';
 
-describe('Integration | Helper | one form field formatter', function () {
+describe('Integration | Helper | one-form-field-formatter', function () {
   setupRenderingTest();
 
   it('handles date format', async function () {

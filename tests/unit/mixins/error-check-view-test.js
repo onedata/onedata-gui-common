@@ -7,7 +7,7 @@ import { get } from '@ember/object';
 import sinon from 'sinon';
 import { settled } from '@ember/test-helpers';
 
-describe('Unit | Mixin | error check view', function () {
+describe('Unit | Mixin | error-check-view', function () {
   it('resolves tryErrorCheck proxy with undefined if error check is disabled',
     async function () {
       const checkErrorType = 'one';

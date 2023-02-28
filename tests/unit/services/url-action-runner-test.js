@@ -4,7 +4,7 @@ import { setupTest } from 'ember-mocha';
 import { get } from '@ember/object';
 import sinon from 'sinon';
 
-describe('Unit | Service | url action runner', function () {
+describe('Unit | Service | url-action-runner', function () {
   setupTest();
 
   it('has empty actionRunners map on init', function () {

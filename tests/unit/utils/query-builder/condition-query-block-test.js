@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import { get } from '@ember/object';
 
-describe('Unit | Utility | query builder/condition query block', function () {
+describe('Unit | Utility | query-builder/condition-query-block', function () {
   it(
     'has empty "property", "comparator" and "comparatorValue" fields on init',
     function () {

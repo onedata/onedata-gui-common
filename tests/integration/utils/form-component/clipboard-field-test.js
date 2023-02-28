@@ -4,7 +4,7 @@ import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-fi
 import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
-describe('Integration | Utility | form component/clipboard field', function () {
+describe('Integration | Utility | form-component/clipboard-field', function () {
   setupTest();
 
   it('defines fieldComponentName as "form-component/clipboard-field"', function () {

@@ -5,7 +5,7 @@ import { render, triggerKeyEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Helper | invoke on enter', function () {
+describe('Integration | Helper | invoke-on-enter', function () {
   setupRenderingTest();
 
   it('invokes action once on enter press', async function () {

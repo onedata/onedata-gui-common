@@ -12,7 +12,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { Promise } from 'rsvp';
 import sinon from 'sinon';
 
-describe('Integration | Component | one inline editor', function () {
+describe('Integration | Component | one-inline-editor', function () {
   setupRenderingTest();
 
   it('renders value', async function () {

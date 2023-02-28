@@ -4,7 +4,7 @@ import DatetimeField from 'onedata-gui-common/utils/form-component/datetime-fiel
 import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
-describe('Integration | Utility | form component/datetime field', function () {
+describe('Integration | Utility | form-component/datetime-field', function () {
   setupTest();
 
   it('defines fieldComponentName as "form-component/datetime-field"', function () {

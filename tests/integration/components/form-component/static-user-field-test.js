@@ -16,7 +16,7 @@ const defaultMockUser = Object.freeze({
   },
 });
 
-describe('Integration | Component | form component/static user field', function () {
+describe('Integration | Component | form-component/static-user-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

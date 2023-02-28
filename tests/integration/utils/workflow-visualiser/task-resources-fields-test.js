@@ -9,7 +9,7 @@ import { createTaskResourcesFields } from 'onedata-gui-common/utils/workflow-vis
 import _ from 'lodash';
 import { render, fillIn, find } from '@ember/test-helpers';
 
-describe('Integration | Utility | workflow visualiser/task resources fields', function () {
+describe('Integration | Utility | workflow-visualiser/task-resources-fields', function () {
   setupRenderingTest();
 
   describe('createTaskResourcesFields', function () {

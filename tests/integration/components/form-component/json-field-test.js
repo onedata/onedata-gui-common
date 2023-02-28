@@ -7,7 +7,7 @@ import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import sinon from 'sinon';
 import { set } from '@ember/object';
 
-describe('Integration | Component | form component/json field', function () {
+describe('Integration | Component | form-component/json-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

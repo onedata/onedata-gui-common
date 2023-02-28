@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import areWorkflowSchemaRevisionsEqual from 'onedata-gui-common/utils/workflow-visualiser/are-workflow-schema-revisions-equal';
 
-describe('Unit | Utility | workflow visualiser/are workflow schema revisions equal', function () {
+describe('Unit | Utility | workflow-visualiser/are-workflow-schema-revisions-equal', function () {
   it('returns true for two identical revisions', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();

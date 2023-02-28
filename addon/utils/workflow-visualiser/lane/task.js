@@ -43,6 +43,12 @@ export default VisualiserRecord.extend({
 
   /**
    * @virtual
+   * @type {Object}
+   */
+  lambdaConfig: undefined,
+
+  /**
+   * @virtual
    * @type {Array<Object>}
    */
   argumentMappings: undefined,

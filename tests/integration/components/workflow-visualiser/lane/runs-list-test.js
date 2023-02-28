@@ -13,7 +13,7 @@ import sinon from 'sinon';
 
 const componentClassName = 'runs-list';
 
-describe('Integration | Component | workflow visualiser/lane/runs list', function () {
+describe('Integration | Component | workflow-visualiser/lane/runs-list', function () {
   setupRenderingTest();
 
   it(`has class "${componentClassName}"`, async function () {

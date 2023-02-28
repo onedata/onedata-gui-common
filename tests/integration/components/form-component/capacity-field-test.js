@@ -8,7 +8,7 @@ import { clickTrigger, selectChoose } from 'ember-power-select/test-support/help
 import { set } from '@ember/object';
 import { render, focus, blur, fillIn, find } from '@ember/test-helpers';
 
-describe('Integration | Component | form component/capacity field', function () {
+describe('Integration | Component | form-component/capacity-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

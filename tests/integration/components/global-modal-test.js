@@ -14,7 +14,7 @@ import { Promise } from 'rsvp';
 import ModalInstance from 'onedata-gui-common/utils/modal-manager/modal-instance';
 import { set } from '@ember/object';
 
-describe('Integration | Component | global modal', function () {
+describe('Integration | Component | global-modal', function () {
   setupRenderingTest();
 
   beforeEach(function () {

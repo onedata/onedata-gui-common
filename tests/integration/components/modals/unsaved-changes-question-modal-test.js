@@ -13,7 +13,7 @@ import {
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
-describe('Integration | Component | modals/unsaved changes question modal', function () {
+describe('Integration | Component | modals/unsaved-changes-question-modal', function () {
   setupRenderingTest();
 
   beforeEach(function () {

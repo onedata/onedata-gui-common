@@ -7,7 +7,7 @@ import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import sinon from 'sinon';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
 
-describe('Integration | Component | form component/toggle field', function () {
+describe('Integration | Component | form-component/toggle-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

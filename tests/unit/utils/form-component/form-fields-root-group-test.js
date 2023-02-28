@@ -5,7 +5,7 @@ import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { get } from '@ember/object';
 
-describe('Unit | Utility | form component/form fields root group', function () {
+describe('Unit | Utility | form-component/form-fields-root-group', function () {
   [
     'path',
     'valuePath',

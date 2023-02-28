@@ -6,7 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
-describe('Integration | Component | one button', function () {
+describe('Integration | Component | one-button', function () {
   setupRenderingTest();
 
   it('renders button which calls "onClick" action on click', async function () {

@@ -6,7 +6,7 @@ import { setupTest } from 'ember-mocha';
 import { validator } from 'ember-cp-validations';
 import sinon from 'sinon';
 
-describe('Integration | Utility | form component/form field', function () {
+describe('Integration | Utility | form-component/form-field', function () {
   setupTest();
 
   it(

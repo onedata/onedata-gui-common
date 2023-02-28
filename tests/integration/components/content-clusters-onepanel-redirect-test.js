@@ -5,7 +5,7 @@ import { render, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | content clusters onepanel redirect', function () {
+describe('Integration | Component | content-clusters-onepanel-redirect', function () {
   setupRenderingTest();
 
   it('is shows loading state after redirectToOnepanelApp method was invoked',

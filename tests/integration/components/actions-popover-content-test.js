@@ -5,7 +5,7 @@ import { render, click, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | actions popover content', function () {
+describe('Integration | Component | actions-popover-content', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -20,7 +20,7 @@ describe('Integration | Component | actions popover content', function () {
     }]);
   });
 
-  it('renders actions', async function (done) {
+  it('renders actions', async function () {
     const actions = this.get('acts');
     const action = actions[0];
     action.action = sinon.spy();
@@ -32,10 +32,8 @@ describe('Integration | Component | actions popover content', function () {
     expect(actionItem.querySelector(`.oneicon-${action.icon}`)).to.exist;
     expect(actionItem.querySelector('.one-label').textContent.trim())
       .to.equal(action.title);
-    click(actionItem.querySelector('a')).then(() => {
-      expect(action.action).to.be.calledOnce;
-      done();
-    });
+    await click(actionItem.querySelector('a'));
+    expect(action.action).to.be.calledOnce;
   });
 
   it('renders header', async function () {
@@ -50,7 +48,7 @@ describe('Integration | Component | actions popover content', function () {
       .to.equal(header.title);
   });
 
-  it('calls actionClicked after action click', async function (done) {
+  it('calls actionClicked after action click', async function () {
     const clickSpy = sinon.spy();
     this.set('actionClicked', clickSpy);
     await render(hbs `{{actions-popover-content
@@ -58,9 +56,7 @@ describe('Integration | Component | actions popover content', function () {
       actionClicked=(action actionClicked)}}
     `);
 
-    click('.actions-popover-content li:first-child a').then(() => {
-      expect(clickSpy).to.be.calledOnce;
-      done();
-    });
+    await click('.actions-popover-content li:first-child a');
+    expect(clickSpy).to.be.calledOnce;
   });
 });

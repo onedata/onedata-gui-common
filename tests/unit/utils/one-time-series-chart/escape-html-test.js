@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import escapeHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-html';
 
-describe('Unit | Utility | one time series chart/escape html', function () {
+describe('Unit | Utility | one-time-series-chart/escape-html', function () {
   it('returns the same string, when argument does not contain any HTML', function () {
     const input = 'some text';
     const output = escapeHtml(input);

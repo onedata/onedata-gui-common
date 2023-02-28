@@ -54,7 +54,7 @@ const objectSubtypes = [
   AtmDataSpecType.TimeSeriesMeasurement,
 ];
 
-describe('Unit | Utility | atm workflow/data spec/filters', function () {
+describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
   describe('isAtmDataSpecMatchingFilters', function () {
     function testTypeOrSupertypeFilter(atmDataSpec, filteredType, result) {
       testFilter('typeOrSupertype', atmDataSpec, filteredType, result);

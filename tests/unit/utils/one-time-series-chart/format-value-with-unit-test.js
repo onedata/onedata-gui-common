@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import formatValueWithUnit from 'onedata-gui-common/utils/one-time-series-chart/format-value-with-unit';
 import { stringifyArgumentData } from './transform-functions/helpers';
 
-describe('Unit | Utility | one time series chart/format value with unit', function () {
+describe('Unit | Utility | one-time-series-chart/format-value-with-unit', function () {
   testFormatValueWithUnit(null, null);
   testFormatValueWithUnit(NaN, null);
   testFormatValueWithUnit('123', null);

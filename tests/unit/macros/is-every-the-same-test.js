@@ -9,7 +9,7 @@ const HostObject = EmberObject.extend({
   isEveryTheSame: isEveryTheSame('arr', 'byKey'),
 });
 
-describe('Unit | Macro | is every the same', function () {
+describe('Unit | Macro | is-every-the-same', function () {
   it('returns false when collection has different field value for each item', function () {
     const hostObject = HostObject.create({
       arr: [{ key1: 'abc' }, { key1: 'def' }],
