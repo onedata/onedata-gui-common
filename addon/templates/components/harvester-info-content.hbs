@@ -41,12 +41,7 @@
       <tr class="row-with-text">
         <td class="property-name">{{tt this "creator"}}</td>
         <td class="property-value">
-          {{#truncated-string}}
-            <span class="user-fullname">{{creator.fullName}}</span>
-            {{#if creator.username}}
-              <span class="user-username">({{creator.username}})</span>
-            {{/if}}
-          {{/truncated-string}}
+          {{record-name record=creator}}
         </td>
       </tr>
     {{/if}}
@@ -60,8 +55,8 @@
     {{/if}}
   </tbody>
 </table>
-<div class="record-links-container">
-  <a href={{linkToHarvester}} class="harvester-info-link clickable">
+<div class="links-container">
+  <a href={{linkToHarvester}} class="info-link clickable">
     {{tt this "openHarvester"}}
     {{one-icon icon="link-external"}}
   </a>
