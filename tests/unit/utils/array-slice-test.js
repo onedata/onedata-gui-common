@@ -16,7 +16,7 @@ const ArraySum = EmberObject.extend({
   }),
 });
 
-describe('Unit | Utility | array slice', function () {
+describe('Unit | Utility | array-slice', function () {
   it('adds an item using pushObject method', function () {
     const sourceArrayTemplate = _.range(0, 10);
 

@@ -11,7 +11,7 @@ import {
 } from '../../../../helpers/modal';
 import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
 
-describe('Integration | Utility | workflow visualiser/actions/view workflow charts dashboard action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/view-workflow-charts-dashboard-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

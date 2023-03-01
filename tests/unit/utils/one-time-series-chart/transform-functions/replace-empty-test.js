@@ -132,7 +132,7 @@ export const casesToCheck = [...notReplaceableValues.map(value => ({
   output: [1, 1, 2, 2, 2],
 }];
 
-describe('Unit | Utility | one time series chart/transform functions/replace empty', function () {
+describe('Unit | Utility | one-time-series-chart/transform-functions/replace-empty', function () {
   casesToCheck.forEach(({ data, strategy, fallbackValue, output }) =>
     testReplaceEmpty(data, strategy, fallbackValue, output)
   );

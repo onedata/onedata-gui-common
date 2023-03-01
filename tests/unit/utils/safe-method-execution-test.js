@@ -6,7 +6,7 @@ import { settled } from '@ember/test-helpers';
 
 import EmberObject from '@ember/object';
 
-describe('Unit | Utility | safe method execution', function () {
+describe('Unit | Utility | safe-method-execution', function () {
   it('invokes method on valid object', function () {
     const testObject = EmberObject.create({
       echo(p1, p2) {

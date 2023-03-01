@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
 import mergePointsArrays from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/merge-points-arrays';
 
-describe('Unit | Utility | one time series chart/series functions/utils/merge points arrays', function () {
+describe('Unit | Utility | one-time-series-chart/series-functions/utils/merge-points-arrays', function () {
   it('merges points arrays preserving points flags and assigning new values', function () {
     // Points flags are not have to show some logical situation of time series points state.
     // We only have to check all possible combinations of these flags, which matter

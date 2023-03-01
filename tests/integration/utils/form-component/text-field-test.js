@@ -6,7 +6,7 @@ import { setupTest } from 'ember-mocha';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
-describe('Integration | Utility | form component/text field', function () {
+describe('Integration | Utility | form-component/text-field', function () {
   setupTest();
 
   it('defines inputType as "text"', function () {

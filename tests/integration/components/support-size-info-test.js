@@ -13,7 +13,7 @@ import {
 import { hbs } from 'ember-cli-htmlbars';
 import $ from 'jquery';
 
-describe('Integration | Component | support size info', function () {
+describe('Integration | Component | support-size-info', function () {
   setupRenderingTest();
 
   beforeEach(function () {

@@ -15,7 +15,7 @@ import {
 } from '../../../../helpers/modal';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 
-describe('Integration | Utility | workflow visualiser/actions/create store action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/create-store-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

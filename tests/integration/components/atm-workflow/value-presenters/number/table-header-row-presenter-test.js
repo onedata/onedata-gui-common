@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { hbs } from 'ember-cli-htmlbars';
 import { render, findAll } from '@ember/test-helpers';
 
-describe('Integration | Component | atm workflow/value presenters/number/table header row presenter', function () {
+describe('Integration | Component | atm-workflow/value-presenters/number/table-header-row-presenter', function () {
   setupRenderingTest();
 
   it('has classes "table-header-row-presenter" and "number-table-header-row-presenter"', async function () {

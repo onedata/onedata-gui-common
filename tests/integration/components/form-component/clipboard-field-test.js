@@ -6,7 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-field';
 import { setProperties } from '@ember/object';
 
-describe('Integration | Component | form component/clipboard field', function () {
+describe('Integration | Component | form-component/clipboard-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

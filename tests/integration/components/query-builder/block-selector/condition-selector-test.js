@@ -41,7 +41,7 @@ numberComparators.forEach(({ operator, symbol }) => {
   comparatorTranslations[`number.${operator}`] = symbol;
 });
 
-describe('Integration | Component | query builder/block selector/condition selector', function () {
+describe('Integration | Component | query-builder/block-selector/condition-selector', function () {
   setupRenderingTest();
 
   setDefaultQueryValuesBuilder();

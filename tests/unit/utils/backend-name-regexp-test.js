@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import backendNameRegexp from 'onedata-gui-common/utils/backend-name-regexp';
 
-describe('Unit | Utility | backend name regexp', function () {
+describe('Unit | Utility | backend-name-regexp', function () {
   it('matches unicode names with spaces', function () {
     expect('Zażółć gęślą jaźń').to.match(backendNameRegexp);
   });

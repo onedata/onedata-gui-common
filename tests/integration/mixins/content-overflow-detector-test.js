@@ -11,7 +11,7 @@ const PARENT_WIDTH = 1000;
 const ELEMENT_WIDTH = 500;
 const SIBLING_WIDTH = 300;
 
-describe('Integration | Mixin | content overflow detector', function () {
+describe('Integration | Mixin | content-overflow-detector', function () {
   setupRenderingTest();
 
   beforeEach(function () {

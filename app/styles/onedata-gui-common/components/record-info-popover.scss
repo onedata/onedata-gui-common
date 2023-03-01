@@ -22,9 +22,19 @@
       }
       .property-value {
         padding-right: 0;
+        position: relative;
 
-        .user-username {
-          opacity: $disabled-opacity;
+        .record-icon {
+          font-size: 2em;
+          position: absolute;
+          top: 0.08em;
+          left: 0;
+        }
+
+        .type-name {
+          vertical-align: top;
+          padding-left: 2em;
+          text-transform: capitalize;
         }
       }
       td {
@@ -42,7 +52,7 @@
   .webui-popover-content {
     padding: $padding-small-horizontal;
   }
-  .space-links-container, .record-links-container {
+  .links-container {
     padding-top: 15px;
     display: flex;
     align-items: center;
@@ -54,7 +64,7 @@
       margin-top: 0.1em;
     }
 
-    .space-info-link {
+    .info-link {
       display: flex;
       align-items: center;
     }

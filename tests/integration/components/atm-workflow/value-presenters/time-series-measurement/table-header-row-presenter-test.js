@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { hbs } from 'ember-cli-htmlbars';
 import { render, findAll } from '@ember/test-helpers';
 
-describe('Integration | Component | atm workflow/value presenters/time-series-measurement/table header row presenter',
+describe('Integration | Component | atm-workflow/value-presenters/time-series-measurement/table-header-row-presenter',
   function () {
     setupRenderingTest();
 

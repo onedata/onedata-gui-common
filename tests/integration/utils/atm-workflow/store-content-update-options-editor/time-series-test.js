@@ -37,7 +37,7 @@ const prefixCombinerOptions = [{
   label: 'Overwrite',
 }];
 
-describe('Integration | Utility | atm workflow/store content update options editor/time series', function () {
+describe('Integration | Utility | atm-workflow/store-content-update-options-editor/time-series', function () {
   setupRenderingTest();
 
   beforeEach(function () {

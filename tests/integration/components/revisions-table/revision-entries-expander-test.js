@@ -7,7 +7,7 @@ import sinon from 'sinon';
 
 const componentClass = 'revisions-table-revision-entries-expander';
 
-describe('Integration | Component | revisions table/revision entries expander',
+describe('Integration | Component | revisions-table/revision-entries-expander',
   function () {
     setupRenderingTest();
 

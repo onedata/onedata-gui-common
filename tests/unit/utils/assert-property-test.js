@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import assertProperty from 'onedata-gui-common/utils/assert-property';
 
-describe('Unit | Utility | assert property', function () {
+describe('Unit | Utility | assert-property', function () {
   it('does not throw assertion error if the property condition is met', function () {
     const obj = {
       hello: 1,

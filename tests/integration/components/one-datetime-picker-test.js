@@ -6,7 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import OneDatetimePickerHelper from '../../helpers/one-datetime-picker';
 
-describe('Integration | Component | one datetime picker', function () {
+describe('Integration | Component | one-datetime-picker', function () {
   const { afterEach } = setupRenderingTest();
 
   afterEach(function () {

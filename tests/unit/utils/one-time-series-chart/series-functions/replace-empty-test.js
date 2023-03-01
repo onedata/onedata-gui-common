@@ -114,7 +114,7 @@ const casesToCheck = [...normalizedTransformCasesToCheck, {
   output: { type: 'points', data: [new Point(1, 2), new Point(3, 2)] },
 }];
 
-describe('Unit | Utility | one time series chart/series functions/replace empty', function () {
+describe('Unit | Utility | one-time-series-chart/series-functions/replace-empty', function () {
   casesToCheck.forEach(({ data, strategy, fallbackValue, output }) =>
     testReplaceEmpty(data, strategy, fallbackValue, output)
   );

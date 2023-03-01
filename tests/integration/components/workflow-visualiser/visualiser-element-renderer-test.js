@@ -5,7 +5,7 @@ import { render, find, findAll } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { get } from '@ember/object';
 
-describe('Integration | Component | workflow visualiser/visualiser element renderer', function () {
+describe('Integration | Component | workflow-visualiser/visualiser-element-renderer', function () {
   setupRenderingTest();
 
   it('renders nothing when lane element is not defined', async function () {

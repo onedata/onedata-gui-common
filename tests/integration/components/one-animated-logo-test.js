@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | one animated logo', function () {
+describe('Integration | Component | one-animated-logo', function () {
   setupRenderingTest();
 
   it('expands and collapses', async function () {

@@ -38,7 +38,7 @@ function getTreeSumedValue(tree, useAnd) {
   }, useAnd);
 }
 
-describe('Unit | Utility | privileges array to object', function () {
+describe('Unit | Utility | privileges-array-to-object', function () {
   it('marks privileges as true if available', function () {
     const result = privilegesArrayToObject(flatFlags, groupedFlags);
     expect(getTreeSumedValue(result, true)).to.be.true;

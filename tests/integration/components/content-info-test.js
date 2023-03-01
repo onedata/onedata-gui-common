@@ -5,7 +5,7 @@ import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | content info', function () {
+describe('Integration | Component | content-info', function () {
   setupRenderingTest();
 
   it('renders yielded content with buttonAction available for invoking', async function () {

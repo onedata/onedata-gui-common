@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, click, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | render later', function () {
+describe('Integration | Component | render-later', function () {
   setupRenderingTest();
 
   it('does not render content for falsy trigger value', async function () {

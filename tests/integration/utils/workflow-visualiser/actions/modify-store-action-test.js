@@ -15,7 +15,7 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
-describe('Integration | Utility | workflow visualiser/actions/modify store action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/modify-store-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {

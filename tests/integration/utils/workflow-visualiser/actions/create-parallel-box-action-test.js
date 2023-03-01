@@ -12,7 +12,7 @@ const newParallelBoxMatcher = sinon.match({
   tasks: [],
 });
 
-describe('Integration | Utility | workflow visualiser/actions/create parallel box action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/create-parallel-box-action', function () {
   setupTest();
 
   beforeEach(function () {

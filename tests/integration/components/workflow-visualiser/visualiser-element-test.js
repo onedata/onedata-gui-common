@@ -5,7 +5,7 @@ import { render, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
 
-describe('Integration | Component | workflow visualiser/visualiser element', function () {
+describe('Integration | Component | workflow-visualiser/visualiser-element', function () {
   setupRenderingTest();
 
   it('has class "workflow-visualiser-element', async function () {

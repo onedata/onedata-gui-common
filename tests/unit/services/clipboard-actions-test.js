@@ -4,7 +4,7 @@ import { setupTest } from 'ember-mocha';
 import CopyRecordIdAction from 'onedata-gui-common/utils/clipboard-actions/copy-record-id-action';
 import { get } from '@ember/object';
 
-describe('Unit | Service | clipboard actions', function () {
+describe('Unit | Service | clipboard-actions', function () {
   setupTest();
 
   it('creates action "CopyRecordIdAction"', function () {

@@ -4,7 +4,7 @@ import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visua
 import { get } from '@ember/object';
 import sinon from 'sinon';
 
-describe('Unit | Utility | workflow visualiser/visualiser record', function () {
+describe('Unit | Utility | workflow-visualiser/visualiser-record', function () {
   it('has undefined "name"', function () {
     const element = VisualiserRecord.create();
 

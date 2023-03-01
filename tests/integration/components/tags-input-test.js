@@ -17,7 +17,7 @@ import OneTooltipHelper from '../../helpers/one-tooltip';
 
 const disabledCreateTriggerTip = 'Maximum number of elements has been reached.';
 
-describe('Integration | Component | tags input', function () {
+describe('Integration | Component | tags-input', function () {
   setupRenderingTest();
 
   beforeEach(function () {

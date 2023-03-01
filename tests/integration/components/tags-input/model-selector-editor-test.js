@@ -55,7 +55,7 @@ availableModels['service'][0].name += 'onezone';
 availableModels['serviceOnepanel'][0].serviceType = 'onezone';
 availableModels['serviceOnepanel'][0].name += 'onezone';
 
-describe('Integration | Component | tags input/model selector editor', function () {
+describe('Integration | Component | tags-input/model-selector-editor', function () {
   setupRenderingTest();
 
   beforeEach(function () {

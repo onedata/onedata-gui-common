@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import clusterizeProvidersByCoordinates from 'onedata-gui-common/utils/clusterize-providers-by-coordinates';
 
-describe('Unit | Utility | clusterize providers by coordinates', function () {
+describe('Unit | Utility | clusterize-providers-by-coordinates', function () {
   it('clusterizes providers', function () {
     const providers = [
       { latitude: -4, longitude: 3.4 },

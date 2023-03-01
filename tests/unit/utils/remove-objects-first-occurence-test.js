@@ -5,7 +5,7 @@ import { A } from '@ember/array';
 import EmberObject, { observer } from '@ember/object';
 import sinon from 'sinon';
 
-describe('Unit | Utility | remove objects first occurence', function () {
+describe('Unit | Utility | remove-objects-first-occurence', function () {
   it('removes only first occurence of each object specified to remove from target array', function () {
     const array = A([
       'one',

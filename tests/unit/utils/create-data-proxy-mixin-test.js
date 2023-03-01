@@ -5,7 +5,7 @@ import EmberObject, { get } from '@ember/object';
 import sinon from 'sinon';
 import { settled } from '@ember/test-helpers';
 
-describe('Unit | Utility | create data proxy mixin', function () {
+describe('Unit | Utility | create-data-proxy-mixin', function () {
   it('adds property that will eventually contain resolved data using fetch function',
     async function () {
       const data = 'hello';

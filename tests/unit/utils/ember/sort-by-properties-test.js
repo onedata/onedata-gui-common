@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import emberSortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
 
-describe('Unit | Utility | ember/sort by properties', function () {
+describe('Unit | Utility | ember/sort-by-properties', function () {
   it('can use two properties and respects asc/desc', function () {
     const items = [
       { a: 3, b: 1 },

@@ -13,7 +13,7 @@ import { run } from '@ember/runloop';
 import moment from 'moment';
 import { settled } from '@ember/test-helpers';
 
-describe('Unit | Utility | one time series chart/configuration', function () {
+describe('Unit | Utility | one-time-series-chart/configuration', function () {
   beforeEach(function () {
     this.fakeClock = sinon.useFakeTimers({
       now: Date.now(),
@@ -1324,7 +1324,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   context('in live mode', function () {
     it('calculates series and newestPointTimestamp state for null lastPointTimestamp',
-      async function (done) {
+      async function () {
         const nowTimestamp = Math.floor(Date.now() / 1000);
         // There will be always 10 subtracted from `nowTimestamp` to take
         // live data delay into account. See Configuration.liveModeTimestampOffset docs.
@@ -1369,13 +1369,12 @@ describe('Unit | Utility | one time series chart/configuration', function () {
           ]),
         ]);
         expect(state.newestPointTimestamp).to.be.null;
-        done();
       });
   });
 
   context('in non-live mode', function () {
     it('calculates series and newestPointTimestamp state for null lastPointTimestamp',
-      async function (done) {
+      async function () {
         const dummy1Src = dummyDataSource([
           [19, 1],
           [20, 2],
@@ -1443,11 +1442,10 @@ describe('Unit | Utility | one time series chart/configuration', function () {
           ]),
         ]);
         expect(state.newestPointTimestamp).to.equal(20);
-        done();
       });
 
     it('calculates series and newestPointTimestamp state for non-null lastPointTimestamp',
-      async function (done) {
+      async function () {
         const dummySrc = {
           fetchSeries: sinon.spy(({ lastPointTimestamp }) => {
             if (lastPointTimestamp === 19) {
@@ -1497,11 +1495,10 @@ describe('Unit | Utility | one time series chart/configuration', function () {
           ]),
         ]);
         expect(state.newestPointTimestamp).to.equal(20);
-        done();
       });
 
     it('calculates series and newestPointTimestamp state for null lastPointTimestamp and larger time resolution',
-      async function (done) {
+      async function () {
         const dummySrc = {
           fetchSeries: sinon.spy(({ timeResolution }) => {
             if (timeResolution === 2) {
@@ -1555,11 +1552,10 @@ describe('Unit | Utility | one time series chart/configuration', function () {
           ]),
         ]);
         expect(state.newestPointTimestamp).to.equal(19);
-        done();
       });
 
     it('calculates series and newestPointTimestamp state for null lastPointTimestamp and irregular time resolution sizes',
-      async function (done) {
+      async function () {
         const dummySrc = {
           fetchSeries: sinon.spy(({ timeResolution }) => {
             if (timeResolution === 6) {
@@ -1609,7 +1605,6 @@ describe('Unit | Utility | one time series chart/configuration', function () {
           ]),
         ]);
         expect(state.newestPointTimestamp).to.equal(28);
-        done();
       });
   });
 });

@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | hr label', function () {
+describe('Integration | Component | hr-label', function () {
   setupRenderingTest();
 
   it('renders provided text', async function () {

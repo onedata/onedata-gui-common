@@ -4,7 +4,7 @@ import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
-describe('Integration | Utility | form component/tags field', function () {
+describe('Integration | Utility | form-component/tags-field', function () {
   setupTest();
 
   it('defines fieldComponentName as "form-component/tags-field"', function () {

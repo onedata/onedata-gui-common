@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | provider place/super circle', function () {
+describe('Integration | Component | provider-place/super-circle', function () {
   setupRenderingTest();
 
   it('renders with source and without desitnation animation class', async function () {

@@ -25,7 +25,7 @@ const simpliestLane = {
   },
 };
 
-describe('Integration | Component | modals/workflow visualiser/lane modal', function () {
+describe('Integration | Component | modals/workflow-visualiser/lane-modal', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -57,7 +57,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       this.set('modalOptions.mode', 'create');
     });
 
-    it('shows correct header, form in "create" mode and footer', async function (done) {
+    it('shows correct header, form in "create" mode and footer', async function () {
       await showModal(this);
 
       expect(getModalHeader().querySelector('h1').textContent.trim())
@@ -71,11 +71,10 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       expect(cancelBtn.textContent.trim()).to.equal('Cancel');
       expect(submitBtn).to.have.class('btn-primary');
       expect(submitBtn.textContent.trim()).to.equal('Create');
-      done();
     });
 
     it('disables submit when form is invalid and enables it, when becomes valid',
-      async function (done) {
+      async function () {
         await showModal(this);
 
         const submitBtn = getModalFooter().querySelector('.btn-submit');
@@ -86,7 +85,6 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
 
         await fillIn('.name-field .form-control', '');
         expect(submitBtn.disabled).to.be.true;
-        done();
       });
 
     itClosesModalOnCancelClick();
@@ -108,7 +106,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       });
     });
 
-    it('shows correct header, form in "edit" mode and footer', async function (done) {
+    it('shows correct header, form in "edit" mode and footer', async function () {
       await showModal(this);
 
       expect(getModalHeader().querySelector('h1').textContent.trim())
@@ -124,11 +122,10 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       expect(cancelBtn.textContent.trim()).to.equal('Cancel');
       expect(submitBtn).to.have.class('btn-primary');
       expect(submitBtn.textContent.trim()).to.equal('OK');
-      done();
     });
 
     it('disables submit when form is invalid and enables it, when becomes valid',
-      async function (done) {
+      async function () {
         await showModal(this);
 
         const submitBtn = getModalFooter().querySelector('.btn-submit');
@@ -139,7 +136,6 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
 
         await fillIn('.name-field .form-control', '');
         expect(submitBtn.disabled).to.be.true;
-        done();
       });
 
     itClosesModalOnCancelClick();
@@ -162,7 +158,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       });
     });
 
-    it('shows correct header, form in "view" mode and footer', async function (done) {
+    it('shows correct header, form in "view" mode and footer', async function () {
       await showModal(this);
 
       expect(getModalHeader().querySelector('h1').textContent.trim())
@@ -177,7 +173,6 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       expect(cancelBtn).to.have.class('btn-default');
       expect(cancelBtn.textContent.trim()).to.equal('Close');
       expect(submitBtn).to.not.exist;
-      done();
     });
 
     itClosesModalOnCancelClick();
@@ -199,7 +194,7 @@ async function showModal(testCase) {
 }
 
 function itClosesModalOnCancelClick() {
-  it('closes modal on cancel click', async function (done) {
+  it('closes modal on cancel click', async function () {
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     await showModal(this);
@@ -207,12 +202,11 @@ function itClosesModalOnCancelClick() {
 
     await click(getModalFooter().querySelector('.btn-cancel'));
     expect(onHideSpy).to.be.calledOnce;
-    done();
   });
 }
 
 function itClosesModalOnBackdropClick() {
-  it('closes modal on backdrop click', async function (done) {
+  it('closes modal on backdrop click', async function () {
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     await showModal(this);
@@ -220,12 +214,11 @@ function itClosesModalOnBackdropClick() {
 
     await click(getModal());
     expect(onHideSpy).to.be.calledOnce;
-    done();
   });
 }
 
 function itInjectsCreateStoreAction() {
-  it('injects createStoreAction to form', async function (done) {
+  it('injects createStoreAction to form', async function () {
     const executeStub = sinon.stub().resolves({ status: 'failed' });
     this.set('modalOptions.createStoreAction', { execute: executeStub });
 
@@ -235,12 +228,11 @@ function itInjectsCreateStoreAction() {
     await selectChoose('.sourceStore-field', 'Create store...');
 
     expect(executeStub).to.be.calledOnce;
-    done();
   });
 }
 
 function itPassesLaneProvidedByFormOnSubmit(fillForm = () => {}, expectedData) {
-  it('passes lane from form on submit', async function (done) {
+  it('passes lane from form on submit', async function () {
     const submitStub = sinon.stub().resolves();
     this.set('modalOptions.onSubmit', submitStub);
     await showModal(this);
@@ -249,12 +241,11 @@ function itPassesLaneProvidedByFormOnSubmit(fillForm = () => {}, expectedData) {
     await click(getModalFooter().querySelector('.btn-submit'));
 
     expect(submitStub).to.be.calledWith(expectedData);
-    done();
   });
 }
 
 function itDisablesAllControlsWhileSubmitting(fillForm = () => {}) {
-  it('disables all controls while submitting', async function (done) {
+  it('disables all controls while submitting', async function () {
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
     await showModal(this);
@@ -266,12 +257,11 @@ function itDisablesAllControlsWhileSubmitting(fillForm = () => {}) {
     const modalFooter = getModalFooter();
     expect(modalFooter.querySelector('.btn-cancel')).to.have.attr('disabled');
     expect(modalFooter.querySelector('.btn-submit')).to.have.attr('disabled');
-    done();
   });
 }
 
 function itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm = () => {}) {
-  it('does not close modal on backdrop click when submitting', async function (done) {
+  it('does not close modal on backdrop click when submitting', async function () {
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
@@ -282,6 +272,5 @@ function itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm = () => {}) {
     await click(getModal());
 
     expect(onHideSpy).to.not.be.called;
-    done();
   });
 }

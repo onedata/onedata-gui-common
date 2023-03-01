@@ -7,7 +7,7 @@ import {
 } from 'onedata-gui-common/utils/form-component/values-container';
 import EmberObject, { get } from '@ember/object';
 
-describe('Unit | Utility | form component/clone value', function () {
+describe('Unit | Utility | form-component/clone-value', function () {
   it('clones nested values tree', function () {
     const values = createValuesContainer({
       field1: 'abc',

@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import ComponentsProviderSpaceMixin from 'onedata-gui-common/mixins/components/provider-space';
 
-describe('Unit | Mixin | components/provider space', function () {
+describe('Unit | Mixin | components/provider-space', function () {
   it('finds support size for a specified provider', function () {
     const ProviderSpaceObject = EmberObject.extend(ComponentsProviderSpaceMixin);
     const subject = ProviderSpaceObject.create();

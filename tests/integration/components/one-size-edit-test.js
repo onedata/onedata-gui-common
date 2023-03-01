@@ -6,7 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 
-describe('Integration | Component | one size edit', function () {
+describe('Integration | Component | one-size-edit', function () {
   setupRenderingTest();
 
   it('displays size number and unit in display mode', async function () {

@@ -6,7 +6,7 @@ import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 
-describe('Integration | Utility | form component/static text field', function () {
+describe('Integration | Utility | form-component/static-text-field', function () {
   setupTest();
 
   it('defines fieldComponentName as "form-component/static-text-field"', function () {

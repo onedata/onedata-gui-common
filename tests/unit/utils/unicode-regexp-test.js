@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { unicodeLetter } from 'onedata-gui-common/utils/unicode-regexp';
 
-describe('Unit | Utility | unicode letter regexp', function () {
+describe('Unit | Utility | unicode-letter-regexp', function () {
   it('exports string for composing unicode letters regexp', function () {
     const re = new RegExp(`_${unicodeLetter}+_`);
     expect('_normal_', 'ascii').to.match(re);

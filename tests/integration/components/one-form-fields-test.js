@@ -5,7 +5,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find, findAll } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | one form fields', function () {
+describe('Integration | Component | one-form-fields', function () {
   setupRenderingTest();
 
   it('puts an "optional" label in optional inputs', async function () {

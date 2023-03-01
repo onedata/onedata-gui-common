@@ -15,7 +15,7 @@ const operatorBlockClasses = {
   not: NotOperatorQueryBlock,
 };
 
-describe('Integration | Component | query builder/block visualiser', function () {
+describe('Integration | Component | query-builder/block-visualiser', function () {
   setupRenderingTest();
 
   setDefaultQueryValuesBuilder();

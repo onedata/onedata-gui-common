@@ -6,7 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 
 const thousandSpaceHtml = '<span class="thousand-space"></span>';
 
-describe('Integration | Helper | format number', function () {
+describe('Integration | Helper | format-number', function () {
   setupRenderingTest();
 
   checkNumberFormat({

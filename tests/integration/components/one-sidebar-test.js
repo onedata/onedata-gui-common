@@ -26,7 +26,7 @@ const TestableOneSidebar = OneSidebar.extend({
   },
 });
 
-describe('Integration | Component | one sidebar', function () {
+describe('Integration | Component | one-sidebar', function () {
   setupRenderingTest();
 
   beforeEach(function () {

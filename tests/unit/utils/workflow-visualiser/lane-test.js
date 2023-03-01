@@ -4,7 +4,7 @@ import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import { get } from '@ember/object';
 import sinon from 'sinon';
 
-describe('Unit | Utility | workflow visualiser/lane', function () {
+describe('Unit | Utility | workflow-visualiser/lane', function () {
   it('has "__modelType" equal to "lane"', function () {
     const lane = Lane.create();
 

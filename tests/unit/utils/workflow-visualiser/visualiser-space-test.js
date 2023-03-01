@@ -5,7 +5,7 @@ import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visua
 import { get } from '@ember/object';
 import sinon from 'sinon';
 
-describe('Unit | Utility | workflow visualiser/visualiser space', function () {
+describe('Unit | Utility | workflow-visualiser/visualiser-space', function () {
   it('has undefined "elementBefore" and "elementAfter" on init', function () {
     const interlaneSpace = VisualiserSpace.create();
 

@@ -3,7 +3,7 @@ import { describe, it, context } from 'mocha';
 import State from 'onedata-gui-common/utils/one-time-series-chart/state';
 import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
 
-describe('Unit | Utility | one time series chart/state', function () {
+describe('Unit | Utility | one-time-series-chart/state', function () {
   testStateContainsCopiedProperty({
     propName: 'title',
     value: {
