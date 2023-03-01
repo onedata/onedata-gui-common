@@ -30,10 +30,7 @@
         <td class="property-name">{{tt this "creator"}}</td>
         <td class="property-value">
           {{#truncated-string}}
-            <span class="user-fullname">{{creator.fullName}}</span>
-            {{#if creator.username}}
-              <span class="user-username">({{creator.username}})</span>
-            {{/if}}
+            {{record-name record=creator}}
           {{/truncated-string}}
         </td>
       </tr>
