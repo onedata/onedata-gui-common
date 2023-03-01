@@ -6,9 +6,9 @@ import { render, find, click } from '@ember/test-helpers';
 import sinon from 'sinon';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { ValueEditorStateManager } from 'onedata-gui-common/utils/atm-workflow/value-editors';
-import OneDrodopdownHelper from '../../../../../helpers/one-dropdown';
+import OneDropdownHelper from '../../../../../helpers/one-dropdown';
 
-const valueDropdown = new OneDrodopdownHelper('.value-field');
+const valueDropdown = new OneDropdownHelper('.value-field');
 
 describe('Integration | Component | atm-workflow/value-editors/boolean/editor', function () {
   setupRenderingTest();

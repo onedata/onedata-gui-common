@@ -6,14 +6,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed, set } from '@ember/object';
+import { computed, observer, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
-import { not, bool } from 'ember-awesome-macros';
-import { validator } from 'ember-cp-validations';
+import { not, bool, conditional, raw } from 'ember-awesome-macros';
 import EditorBase from '../commons/editor-base';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
+import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/number/editor';
 
 export default EditorBase.extend({
@@ -76,6 +76,11 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   component: undefined,
 
   /**
+   * @type {ComputedProperty<'text'|'dropdown'>}
+   */
+  editorType: conditional('valueConstraints.allowedValues', raw('dropdown'), raw('text')),
+
+  /**
    * @override
    */
   ownerSource: reads('component'),
@@ -91,36 +96,33 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   isEnabled: not('component.isDisabled'),
 
   /**
-   * @override
+   * @type {ComputedProperty<AtmNumberValueConstraints>}
    */
-  fields: computed(() => [
-    NumberField.extend({
-      integer: bool(
-        'parent.atmDataSpec.valueConstraints.integersOnly'
-      ),
-      customValidators: computed(
-        'parent.atmDataSpec.valueConstraints.allowedValues',
-        function customValidators() {
-          const allowedValues = this.parent?.atmDataSpec?.valueConstraints?.allowedValues;
-          if (Array.isArray(allowedValues)) {
-            return [validator('inclusion', {
-              in: allowedValues.map((n) => String(n)),
-            })];
-          } else {
-            return [];
-          }
-        }
-      ),
-    }).create({
-      name: 'value',
-      withValidationMessage: false,
-    }),
-  ]),
+  valueConstraints: reads('component.editorState.atmDataSpec.valueConstraints'),
+
+  fieldsSetter: observer(
+    'valueConstraints.allowedValues',
+    function fieldsSetter() {
+      if (this.fields[0]?.editorType !== this.editorType) {
+        this.fields.forEach((field) => field.destroy());
+
+        const FieldClass = this.editorType === 'dropdown' ?
+          DropdownValueInput : TextValueInput;
+        this.set('fields', [
+          FieldClass.create(),
+        ]);
+        this.fieldsParentSetter();
+      }
+    }
+  ),
 
   /**
-   * @type {ComputedProperty<AtmDataSpec>}
+   * @override
    */
-  atmDataSpec: reads('component.editorState.atmDataSpec'),
+  init() {
+    this._super(...arguments);
+    this.fieldsSetter();
+  },
 
   /**
    * @override
@@ -129,4 +131,59 @@ const FormRootGroup = FormFieldsRootGroup.extend({
     this._super(...arguments);
     scheduleOnce('afterRender', this.component, 'propagateValueChange');
   },
+});
+
+const DropdownValueInput = DropdownField.extend({
+  /**
+   * @type {'dropdown'}
+   */
+  editorType: 'dropdown',
+
+  /**
+   * @override
+   */
+  name: 'value',
+
+  /**
+   * @override
+   */
+  withValidationMessage: false,
+
+  /**
+   * @override
+   */
+  options: computed(
+    'parent.valueConstraints.{allowedValues,integersOnly}',
+    function options() {
+      const integersOnly = Boolean(this.parent?.valueConstraints?.integersOnly);
+      return this.parent?.valueConstraints?.allowedValues
+        ?.filter((value) => !integersOnly || Number.isInteger(value))
+        ?.map((value) => ({
+          value: String(value),
+          label: String(value),
+        })) ?? [];
+    }
+  ),
+});
+
+const TextValueInput = NumberField.extend({
+  /**
+   * @type {'text'}
+   */
+  editorType: 'text',
+
+  /**
+   * @override
+   */
+  name: 'value',
+
+  /**
+   * @override
+   */
+  withValidationMessage: false,
+
+  /**
+   * @override
+   */
+  integer: bool('parent.valueConstraints.integersOnly'),
 });

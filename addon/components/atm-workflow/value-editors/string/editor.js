@@ -6,15 +6,15 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed, set } from '@ember/object';
+import { computed, observer, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
-import { not } from 'ember-awesome-macros';
-import { validator } from 'ember-cp-validations';
+import { not, conditional, raw, array } from 'ember-awesome-macros';
 import autosize from 'onedata-gui-common/utils/autosize';
 import EditorBase from '../commons/editor-base';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
+import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/string/editor';
 
 export default EditorBase.extend({
@@ -85,6 +85,11 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   component: undefined,
 
   /**
+   * @type {ComputedProperty<'text'|'dropdown'>}
+   */
+  editorType: conditional('valueConstraints.allowedValues', raw('dropdown'), raw('text')),
+
+  /**
    * @override
    */
   ownerSource: reads('component'),
@@ -100,37 +105,31 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   isEnabled: not('component.isDisabled'),
 
   /**
-   * @override
+   * @type {ComputedProperty<AtmStringValueConstraints>}
    */
-  fields: computed(() => [
-    TextareaField.extend({
-      customValidators: computed(
-        'parent.atmDataSpec.valueConstraints.allowedValues',
-        function customValidators() {
-          const allowedValues = this.parent?.atmDataSpec?.valueConstraints?.allowedValues;
-          if (Array.isArray(allowedValues)) {
-            return [validator('inclusion', {
-              in: allowedValues,
-            })];
-          } else {
-            return [];
-          }
-        }
-      ),
-    }).create({
-      name: 'value',
-      withValidationMessage: false,
-      // allows empty string
-      isOptional: true,
-      // autosize library will take care of a real textarea height
-      rows: 1,
-    }),
-  ]),
+  valueConstraints: reads('component.editorState.atmDataSpec.valueConstraints'),
+
+  fieldsSetter: observer(
+    'valueConstraints.allowedValues',
+    function fieldsSetter() {
+      if (this.fields[0]?.editorType !== this.editorType) {
+        this.fields.forEach((field) => field.destroy());
+
+        const FieldClass = this.editorType === 'dropdown' ?
+          DropdownValueInput : TextValueInput;
+        this.set('fields', [FieldClass.create()]);
+        this.fieldsParentSetter();
+      }
+    }
+  ),
 
   /**
-   * @type {ComputedProperty<AtmDataSpec>}
+   * @override
    */
-  atmDataSpec: reads('component.editorState.atmDataSpec'),
+  init() {
+    this._super(...arguments);
+    this.fieldsSetter();
+  },
 
   /**
    * @override
@@ -139,4 +138,64 @@ const FormRootGroup = FormFieldsRootGroup.extend({
     this._super(...arguments);
     scheduleOnce('afterRender', this.component, 'propagateValueChange');
   },
+});
+
+const DropdownValueInput = DropdownField.extend({
+  /**
+   * @type {'dropdown'}
+   */
+  editorType: 'dropdown',
+
+  /**
+   * @override
+   */
+  name: 'value',
+
+  /**
+   * @override
+   */
+  withValidationMessage: false,
+
+  /**
+   * Allow empty string.
+   * @override
+   */
+  isOptional: array.includes('parent.valueConstraints.allowedValues', raw('')),
+
+  /**
+   * @override
+   */
+  options: computed('parent.valueConstraints.allowedValues', function options() {
+    return this.parent?.valueConstraints?.allowedValues
+      ?.map((value) => ({ value, label: value })) ?? [];
+  }),
+});
+
+const TextValueInput = TextareaField.extend({
+  /**
+   * @type {'text'}
+   */
+  editorType: 'text',
+
+  /**
+   * @override
+   */
+  name: 'value',
+
+  /**
+   * @override
+   */
+  withValidationMessage: false,
+
+  /**
+   * Allow empty string.
+   * @override
+   */
+  isOptional: true,
+
+  /**
+   * `autosize` library will take care of a real textarea height.
+   * @override
+   */
+  rows: 1,
 });

@@ -17,7 +17,7 @@ import {
   atmLambdaConfigEditorValueToRawValue,
   migrateAtmLambdaConfigEditorValueToNewSpecs,
 } from 'onedata-gui-common/utils/atm-workflow/atm-task';
-import OneDrodopdownHelper from '../../../../helpers/one-dropdown';
+import OneDropdownHelper from '../../../../helpers/one-dropdown';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 
 const allOptionalAndDefaultSpecCombinations = Object.freeze([{
@@ -798,7 +798,7 @@ class Helper {
       '.value-editor' : '.dropdown-field-trigger';
     const fieldElement = this.getFormGroup(name, entryIdx)?.querySelector(fieldSelector);
     if (fieldElement && name === 'paramValueBuilder') {
-      return new OneDrodopdownHelper(fieldElement);
+      return new OneDropdownHelper(fieldElement);
     } else {
       return fieldElement;
     }

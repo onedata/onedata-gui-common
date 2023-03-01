@@ -6,7 +6,7 @@ import { find, render, settled } from '@ember/test-helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import fileEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/file';
 import { lookupService } from '../../../../../helpers/stub-service';
-import OneDrodopdownHelper from '../../../../../helpers/one-dropdown';
+import OneDropdownHelper from '../../../../../helpers/one-dropdown';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { AtmFileType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 
@@ -24,7 +24,7 @@ const fileTypeOptions = [{
   label: 'Symbolic link',
 }];
 
-const fileTypeHelper = new OneDrodopdownHelper('.fileType-field');
+const fileTypeHelper = new OneDropdownHelper('.fileType-field');
 
 describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraints-editors/file', function () {
   setupRenderingTest();

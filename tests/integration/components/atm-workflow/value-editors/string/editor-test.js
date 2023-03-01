@@ -7,6 +7,9 @@ import sinon from 'sinon';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { ValueEditorStateManager } from 'onedata-gui-common/utils/atm-workflow/value-editors';
 import dom from 'onedata-gui-common/utils/dom';
+import OneDropdownHelper from '../../../../../helpers/one-dropdown';
+
+const valueDropdown = new OneDropdownHelper('.value-field');
 
 describe('Integration | Component | atm-workflow/value-editors/string/editor', function () {
   setupRenderingTest();
@@ -54,42 +57,6 @@ describe('Integration | Component | atm-workflow/value-editors/string/editor', f
     }
   });
 
-  it('allows to input a string, but with validation error when that string is not in "allowedValues" constraint',
-    async function () {
-      this.set('stateManager', new ValueEditorStateManager({
-        type: AtmDataSpecType.String,
-        valueConstraints: {
-          allowedValues: ['a', 'b'],
-        },
-      }));
-      await renderComponent();
-
-      await fillIn('textarea', 'c');
-
-      expect(this.stateManager.value).to.equal('c');
-      expect(this.stateManager.isValid).to.be.false;
-      expect(find('.value-field')).to.have.class('has-error');
-    }
-  );
-
-  it('allows to input a string without validation error when that string is in "allowedValues" constraint',
-    async function () {
-      this.set('stateManager', new ValueEditorStateManager({
-        type: AtmDataSpecType.String,
-        valueConstraints: {
-          allowedValues: ['a', 'b'],
-        },
-      }));
-      await renderComponent();
-
-      await fillIn('textarea', 'a');
-
-      expect(this.stateManager.value).to.equal('a');
-      expect(this.stateManager.isValid).to.be.true;
-      expect(find('.value-field')).to.not.have.class('has-error');
-    }
-  );
-
   it('gets larger when provided string has many lines', async function () {
     await renderComponent();
     const heightBefore = dom.height(find('textarea'));
@@ -98,6 +65,62 @@ describe('Integration | Component | atm-workflow/value-editors/string/editor', f
 
     const heightAfter = dom.height(find('textarea'));
     expect(heightAfter).to.be.above(heightBefore);
+  });
+
+  it('shows all allowed strings in dropdown when "allowedValues" is set', async function () {
+    this.set('stateManager', new ValueEditorStateManager({
+      type: AtmDataSpecType.String,
+      valueConstraints: {
+        allowedValues: ['a', 'b'],
+      },
+    }));
+
+    await renderComponent();
+
+    expect(await valueDropdown.getOptionsText()).to.deep.equal(['a', 'b']);
+  });
+
+  it('selects empty string by default if empty string exists in non-empty "allowedValues"', async function () {
+    this.set('stateManager', new ValueEditorStateManager({
+      type: AtmDataSpecType.String,
+      valueConstraints: {
+        allowedValues: ['a', '', 'b'],
+      },
+    }));
+
+    await renderComponent();
+
+    expect(valueDropdown.getSelectedOptionText()).to.be.null;
+    expect(this.stateManager.value).to.equal('');
+  });
+
+  it('selects first allowed value by default if 0 does not exist in non-empty "allowedValues"', async function () {
+    this.set('stateManager', new ValueEditorStateManager({
+      type: AtmDataSpecType.String,
+      valueConstraints: {
+        allowedValues: ['a', 'b'],
+      },
+    }));
+
+    await renderComponent();
+
+    expect(valueDropdown.getSelectedOptionText()).to.equal('a');
+    expect(this.stateManager.value).to.equal('a');
+  });
+
+  it('allows to change selected string when "allowedValues" is not empty', async function () {
+    this.set('stateManager', new ValueEditorStateManager({
+      type: AtmDataSpecType.String,
+      valueConstraints: {
+        allowedValues: ['a', 'b'],
+      },
+    }));
+    await renderComponent();
+
+    await valueDropdown.selectOptionByText('b');
+
+    expect(await valueDropdown.getSelectedOptionText()).to.equal('b');
+    expect(this.stateManager.value).to.equal('b');
   });
 
   it('can be disabled', async function () {

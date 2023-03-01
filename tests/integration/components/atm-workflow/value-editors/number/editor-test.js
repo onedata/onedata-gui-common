@@ -6,6 +6,9 @@ import { render, find, click, fillIn } from '@ember/test-helpers';
 import sinon from 'sinon';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { ValueEditorStateManager } from 'onedata-gui-common/utils/atm-workflow/value-editors';
+import OneDropdownHelper from '../../../../../helpers/one-dropdown';
+
+const valueDropdown = new OneDropdownHelper('.value-field');
 
 describe('Integration | Component | atm-workflow/value-editors/number/editor', function () {
   setupRenderingTest();
@@ -83,41 +86,76 @@ describe('Integration | Component | atm-workflow/value-editors/number/editor', f
     }
   );
 
-  it('allows to input a number, but with validation error when that number is not in "allowedValues" constraint',
+  it('shows all allowed numbers in dropdown when "allowedValues" is set', async function () {
+    this.set('stateManager', new ValueEditorStateManager({
+      type: AtmDataSpecType.Number,
+      valueConstraints: {
+        allowedValues: [1, 2, 2.5],
+      },
+    }));
+
+    await renderComponent();
+
+    expect(await valueDropdown.getOptionsText()).to.deep.equal(['1', '2', '2.5']);
+  });
+
+  it('shows only integer allowed numbers in dropdown when "allowedValues" is set and "integersOnly" is true',
     async function () {
       this.set('stateManager', new ValueEditorStateManager({
         type: AtmDataSpecType.Number,
         valueConstraints: {
-          allowedValues: [1, 2],
+          integersOnly: true,
+          allowedValues: [1, 2, 2.5],
         },
       }));
+
       await renderComponent();
 
-      await fillIn('input', '10');
+      expect(await valueDropdown.getOptionsText()).to.deep.equal(['1', '2']);
+    });
 
-      expect(this.stateManager.value).to.equal(10);
-      expect(this.stateManager.isValid).to.be.false;
-      expect(find('.value-field')).to.have.class('has-error');
-    }
-  );
+  it('selects 0 by default if 0 exists in non-empty "allowedValues"', async function () {
+    this.set('stateManager', new ValueEditorStateManager({
+      type: AtmDataSpecType.Number,
+      valueConstraints: {
+        allowedValues: [1, 0, 2],
+      },
+    }));
 
-  it('allows to input a number without validation error when that number is in "allowedValues" constraint',
-    async function () {
-      this.set('stateManager', new ValueEditorStateManager({
-        type: AtmDataSpecType.Number,
-        valueConstraints: {
-          allowedValues: [1, 2],
-        },
-      }));
-      await renderComponent();
+    await renderComponent();
 
-      await fillIn('input', '2');
+    expect(await valueDropdown.getSelectedOptionText()).to.equal('0');
+    expect(this.stateManager.value).to.equal(0);
+  });
 
-      expect(this.stateManager.value).to.equal(2);
-      expect(this.stateManager.isValid).to.be.true;
-      expect(find('.value-field')).to.not.have.class('has-error');
-    }
-  );
+  it('selects first allowed value by default if 0 does not exist in non-empty "allowedValues"', async function () {
+    this.set('stateManager', new ValueEditorStateManager({
+      type: AtmDataSpecType.Number,
+      valueConstraints: {
+        allowedValues: [1, 2],
+      },
+    }));
+
+    await renderComponent();
+
+    expect(await valueDropdown.getSelectedOptionText()).to.equal('1');
+    expect(this.stateManager.value).to.equal(1);
+  });
+
+  it('allows to change selected number when "allowedValues" is not empty', async function () {
+    this.set('stateManager', new ValueEditorStateManager({
+      type: AtmDataSpecType.Number,
+      valueConstraints: {
+        allowedValues: [1, 2],
+      },
+    }));
+    await renderComponent();
+
+    await valueDropdown.selectOptionByText('2');
+
+    expect(await valueDropdown.getSelectedOptionText()).to.equal('2');
+    expect(this.stateManager.value).to.equal(2);
+  });
 
   it('can be disabled', async function () {
     this.stateManager.isDisabled = true;
