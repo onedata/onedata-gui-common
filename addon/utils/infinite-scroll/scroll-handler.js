@@ -210,7 +210,6 @@ export default EmberObject.extend({
     );
   },
 
-  // FIXME: this may be removed when moved into generic scroll toolkit
   /**
    * When entries array gets expanded on the beginning (items are unshifted into
    * array), we need to compensate scroll because new content is added on top.
