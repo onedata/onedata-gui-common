@@ -15,9 +15,10 @@ import EmberObject, {
   observer,
 } from '@ember/object';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import { schedule, next } from '@ember/runloop';
+import { next } from '@ember/runloop';
 import ListWatcher from 'onedata-gui-common/utils/list-watcher';
 import $ from 'jquery';
+import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 export default EmberObject.extend({
   /**
@@ -218,24 +219,21 @@ export default EmberObject.extend({
    * scroll correction manually.
    * @param {number} newItemsCount how many items have been added to the beginning
    *   of the list
-   * @returns {void}
+   * @returns {Promise}
    */
-  adjustScrollAfterBeginningChange(newEntriesCount = 0) {
+  async adjustScrollAfterBeginningChange(newEntriesCount = 0) {
     const topDiff = newEntriesCount * this.singleRowHeight;
     if (topDiff <= 0 || !this.scrollableContainerElement) {
       return;
     }
 
     this.set('ignoreNextScroll', true);
-    schedule('afterRender', this, () => {
-      window.requestAnimationFrame(() => {
-        safeExec(this, () => {
-          this.scrollTo(
-            null,
-            this.scrollableContainerElement.scrollTop + topDiff
-          );
-        });
-      });
+    await waitForRender();
+    safeExec(this, () => {
+      this.scrollTo(
+        null,
+        this.scrollableContainerElement.scrollTop + topDiff
+      );
     });
   },
 

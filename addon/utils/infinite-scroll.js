@@ -79,9 +79,12 @@ export default EmberObject.extend({
   /**
    * @public
    * @param {HTMLElement} listContainerElement
-   * @param {HTMLElement} scrollableContainerElement
+   * @param {HTMLElement} [scrollableContainerElement]
    */
-  mount(listContainerElement, scrollableContainerElement) {
+  mount(
+    listContainerElement,
+    scrollableContainerElement = listContainerElement?.closest('.ps')
+  ) {
     this.setProperties({
       listContainerElement,
       scrollableContainerElement,
