@@ -94,19 +94,21 @@ describe('Integration | Component | atm-workflow/value-editors/string/editor', f
     expect(this.stateManager.value).to.equal('');
   });
 
-  it('selects first allowed value by default if 0 does not exist in non-empty "allowedValues"', async function () {
-    this.set('stateManager', new ValueEditorStateManager({
-      type: AtmDataSpecType.String,
-      valueConstraints: {
-        allowedValues: ['a', 'b'],
-      },
-    }));
+  it('selects first allowed value by default if empty string does not exist in non-empty "allowedValues"',
+    async function () {
+      this.set('stateManager', new ValueEditorStateManager({
+        type: AtmDataSpecType.String,
+        valueConstraints: {
+          allowedValues: ['a', 'b'],
+        },
+      }));
 
-    await renderComponent();
+      await renderComponent();
 
-    expect(valueDropdown.getSelectedOptionText()).to.equal('a');
-    expect(this.stateManager.value).to.equal('a');
-  });
+      expect(valueDropdown.getSelectedOptionText()).to.equal('a');
+      expect(this.stateManager.value).to.equal('a');
+    }
+  );
 
   it('allows to change selected string when "allowedValues" is not empty', async function () {
     this.set('stateManager', new ValueEditorStateManager({

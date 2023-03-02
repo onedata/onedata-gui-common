@@ -31,7 +31,7 @@ const FormElement = FormFieldsGroup.extend({
   /**
    * @override
    */
-  classes: 'string-value-constraints-editor',
+  classes: 'string-value-constraints-editor value-constraints-editor',
 
   /**
    * @override
@@ -91,7 +91,7 @@ function formValuesToValueConstraints(values) {
   const constraints = {};
 
   const allowedValues = atmFormValueToRawValue(values?.allowedValues);
-  if (allowedValues !== null) {
+  if (Array.isArray(allowedValues)) {
     constraints.allowedValues = allowedValues;
   }
 
@@ -119,7 +119,7 @@ function summarizeFormValues(i18n, values) {
   let allowedStringsText = '';
 
   if (values?.allowedValues?.hasValue) {
-    const allowedValues = values?.allowedValues?.value;
+    const allowedValues = values.allowedValues.value;
     const validAllowedValues = allowedValues?.filter((value) => validate(value, {
       type: AtmDataSpecType.String,
     }));
@@ -142,7 +142,7 @@ function summarizeFormValues(i18n, values) {
  * @returns {boolean}
  */
 function shouldWarnOnRemove(values) {
-  return values?.allowedValues?.hasValue && values?.allowedValues?.value?.length > 0;
+  return values?.allowedValues?.hasValue && values.allowedValues.value?.length > 0;
 }
 
 export default {

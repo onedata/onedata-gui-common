@@ -109,15 +109,23 @@ const FormRootGroup = FormFieldsRootGroup.extend({
    */
   valueConstraints: reads('component.editorState.atmDataSpec.valueConstraints'),
 
-  fieldsSetter: observer(
+  valueFieldSetter: observer(
     'valueConstraints.allowedValues',
-    function fieldsSetter() {
-      if (this.fields[0]?.editorType !== this.editorType) {
-        this.fields.forEach((field) => field.destroy());
-
+    function valueFieldSetter() {
+      const valueField = this.getFieldByPath('value');
+      const valueFieldIdx = valueField ? this.fields.indexOf(valueField) : 0;
+      if (valueField?.editorType !== this.editorType) {
         const FieldClass = this.editorType === 'dropdown' ?
           DropdownValueInput : TextValueInput;
-        this.set('fields', [FieldClass.create()]);
+        const newValueField = FieldClass.create();
+
+        if (valueField) {
+          valueField.destroy();
+          this.fields.replace(valueFieldIdx, 1, [newValueField]);
+        } else {
+          this.fields.insertAt(valueFieldIdx, newValueField);
+        }
+
         this.fieldsParentSetter();
       }
     }
@@ -128,7 +136,7 @@ const FormRootGroup = FormFieldsRootGroup.extend({
    */
   init() {
     this._super(...arguments);
-    this.fieldsSetter();
+    this.valueFieldSetter();
   },
 
   /**
