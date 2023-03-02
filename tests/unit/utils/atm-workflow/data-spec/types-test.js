@@ -112,7 +112,7 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
       }
     );
 
-    it('returns conditions containing all possible integersOnly values for type number and typeOrSupertype filter without integersOnly constraint',
+    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSupertype filter without integersOnly constraint',
       function () {
         expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSupertype',
@@ -139,7 +139,7 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
       }
     );
 
-    it('returns conditions containing all possible integersOnly values for type number and typeOrSupertype filter with falsy integersOnly constraint',
+    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSupertype filter with falsy integersOnly constraint',
       function () {
         expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSupertype',
@@ -155,7 +155,7 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
       }
     );
 
-    it('returns conditions containing all possible integersOnly values for type number and typeOrSupertype filter with mixed integersOnly constraints',
+    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSupertype filter with mixed integersOnly constraints',
       function () {
         expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSupertype',
@@ -187,7 +187,7 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
       }
     );
 
-    it('returns conditions containing all possible integersOnly values for type number and typeOrSubtype filter with truthy integersOnly constraint',
+    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSubtype filter with truthy integersOnly constraint',
       function () {
         expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSubtype',
@@ -219,7 +219,7 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
       }
     );
 
-    it('returns conditions containing all possible integersOnly values for type number and typeOrSubtype filter with mixed integersOnly constraints',
+    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSubtype filter with mixed integersOnly constraints',
       function () {
         expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSubtype',
@@ -240,7 +240,7 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
       }
     );
 
-    it('returns conditions containing all possible integersOnly values for type number and mixed typeOrSubtype and typeOrSupertype filters',
+    it('returns conditions containing only valid integersOnly values for type number and mixed typeOrSubtype and typeOrSupertype filters',
       function () {
         [
           [false, false, [false]],
@@ -279,7 +279,7 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
       }
     );
 
-    it('returns conditions containing all possible file types for typeOrSupertype filter with type file without value constraints',
+    it('returns conditions containing narrowed selection of file types for typeOrSupertype filter with type file without value constraints',
       function () {
         expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
           filterType: 'typeOrSupertype',
