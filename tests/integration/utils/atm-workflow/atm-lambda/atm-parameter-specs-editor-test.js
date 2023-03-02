@@ -18,7 +18,7 @@ import {
   rawValueToAtmParameterSpecsEditorValue,
   atmParameterSpecsEditorValueToRawValue,
 } from 'onedata-gui-common/utils/atm-workflow/atm-lambda';
-import OneDrodopdownHelper from '../../../../helpers/one-dropdown';
+import OneDropdownHelper from '../../../../helpers/one-dropdown';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 
 describe('Integration | Utility | atm-workflow/atm-lambda/atm-parameter-specs-editor', function () {
@@ -282,7 +282,7 @@ class Helper {
   async setupSingleNumberParameter() {
     await this.addParameter();
     const dataSpecDropdown =
-      new OneDrodopdownHelper(this.getField('entryDataSpec'));
+      new OneDropdownHelper(this.getField('entryDataSpec'));
 
     await fillIn(this.getField('entryName'), 'somename');
     await dataSpecDropdown.selectOptionByText('Number');
@@ -299,7 +299,9 @@ class Helper {
       name: 'somename',
       dataSpec: {
         type: AtmDataSpecType.Number,
-        valueConstraints: {},
+        valueConstraints: {
+          integersOnly: false,
+        },
       },
       isOptional: true,
       defaultValue: 10,

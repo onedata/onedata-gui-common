@@ -71,6 +71,8 @@
   }
 
   &.string-editor {
+    min-width: 8em;
+
     textarea {
       max-height: 8em;
     }

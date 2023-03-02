@@ -41,7 +41,7 @@ const FormElement = FormFieldsGroup.extend({
     return conditions.allowedFileTypes;
   }),
 
-  classes: 'file-value-constraints-editor',
+  classes: 'file-value-constraints-editor value-constraints-editor',
   i18nPrefix: `${i18nPrefix}.fields`,
   // Does not take parent fields group translation path into account
   translationPath: '',

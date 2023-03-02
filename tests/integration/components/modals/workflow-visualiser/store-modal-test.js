@@ -23,7 +23,9 @@ const simplestStore = {
   config: {
     itemDataSpec: {
       type: 'number',
-      valueConstraints: {},
+      valueConstraints: {
+        integersOnly: false,
+      },
     },
   },
   defaultInitialContent: null,

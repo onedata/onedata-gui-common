@@ -6,14 +6,15 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed, set } from '@ember/object';
+import { computed, observer, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
-import { not } from 'ember-awesome-macros';
+import { not, conditional, raw, array } from 'ember-awesome-macros';
 import autosize from 'onedata-gui-common/utils/autosize';
 import EditorBase from '../commons/editor-base';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
+import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/string/editor';
 
 export default EditorBase.extend({
@@ -84,6 +85,11 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   component: undefined,
 
   /**
+   * @type {ComputedProperty<'text'|'dropdown'>}
+   */
+  editorType: conditional('valueConstraints.allowedValues', raw('dropdown'), raw('text')),
+
+  /**
    * @override
    */
   ownerSource: reads('component'),
@@ -99,18 +105,39 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   isEnabled: not('component.isDisabled'),
 
   /**
+   * @type {ComputedProperty<AtmStringValueConstraints>}
+   */
+  valueConstraints: reads('component.editorState.atmDataSpec.valueConstraints'),
+
+  valueFieldSetter: observer(
+    'valueConstraints.allowedValues',
+    function valueFieldSetter() {
+      const valueField = this.getFieldByPath('value');
+      const valueFieldIdx = valueField ? this.fields.indexOf(valueField) : 0;
+      if (valueField?.editorType !== this.editorType) {
+        const FieldClass = this.editorType === 'dropdown' ?
+          DropdownValueInput : TextValueInput;
+        const newValueField = FieldClass.create();
+
+        if (valueField) {
+          valueField.destroy();
+          this.fields.replace(valueFieldIdx, 1, [newValueField]);
+        } else {
+          this.fields.insertAt(valueFieldIdx, newValueField);
+        }
+
+        this.fieldsParentSetter();
+      }
+    }
+  ),
+
+  /**
    * @override
    */
-  fields: computed(() => [
-    TextareaField.create({
-      name: 'value',
-      withValidationMessage: false,
-      // allows empty string
-      isOptional: true,
-      // autosize library will take care of a real textarea height
-      rows: 1,
-    }),
-  ]),
+  init() {
+    this._super(...arguments);
+    this.valueFieldSetter();
+  },
 
   /**
    * @override
@@ -119,4 +146,64 @@ const FormRootGroup = FormFieldsRootGroup.extend({
     this._super(...arguments);
     scheduleOnce('afterRender', this.component, 'propagateValueChange');
   },
+});
+
+const DropdownValueInput = DropdownField.extend({
+  /**
+   * @type {'dropdown'}
+   */
+  editorType: 'dropdown',
+
+  /**
+   * @override
+   */
+  name: 'value',
+
+  /**
+   * @override
+   */
+  withValidationMessage: false,
+
+  /**
+   * Allow empty string.
+   * @override
+   */
+  isOptional: array.includes('parent.valueConstraints.allowedValues', raw('')),
+
+  /**
+   * @override
+   */
+  options: computed('parent.valueConstraints.allowedValues', function options() {
+    return this.parent?.valueConstraints?.allowedValues
+      ?.map((value) => ({ value, label: value })) ?? [];
+  }),
+});
+
+const TextValueInput = TextareaField.extend({
+  /**
+   * @type {'text'}
+   */
+  editorType: 'text',
+
+  /**
+   * @override
+   */
+  name: 'value',
+
+  /**
+   * @override
+   */
+  withValidationMessage: false,
+
+  /**
+   * Allow empty string.
+   * @override
+   */
+  isOptional: true,
+
+  /**
+   * `autosize` library will take care of a real textarea height.
+   * @override
+   */
+  rows: 1,
 });

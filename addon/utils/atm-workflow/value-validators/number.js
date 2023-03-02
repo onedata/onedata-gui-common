@@ -8,8 +8,19 @@
 
 /**
  * @param {unknown} value
+ * @param {AtmNumberDataSpec} atmDataSpec
  * @returns {boolean}
  */
-export default function validate(value) {
-  return Number.isFinite(value);
+export default function validate(value, atmDataSpec) {
+  const integersOnly = Boolean(atmDataSpec?.valueConstraints?.integersOnly);
+  if (!(integersOnly ? Number.isInteger(value) : Number.isFinite(value))) {
+    return false;
+  }
+
+  const allowedValues = atmDataSpec?.valueConstraints?.allowedValues;
+  if (Array.isArray(allowedValues) && !allowedValues.includes(value)) {
+    return false;
+  }
+
+  return true;
 }

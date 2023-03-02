@@ -16,6 +16,7 @@ import { typeDefinitionBase } from './commons';
 
 /**
  * @typedef {Object} AtmStringValueConstraints
+ * @property {Array<string>|null} [allowedValues]
  */
 
 /**
@@ -23,7 +24,8 @@ import { typeDefinitionBase } from './commons';
  */
 export const atmDataSpecTypeDefinition = Object.freeze({
   ...typeDefinitionBase,
-  getDefaultValue() {
-    return '';
+  getDefaultValue(atmDataSpec) {
+    const allowedValues = atmDataSpec?.valueConstraints?.allowedValues;
+    return (!allowedValues?.length || allowedValues?.includes('')) ? '' : allowedValues[0];
   },
 });

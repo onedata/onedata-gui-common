@@ -172,6 +172,28 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
           });
       });
 
+      [
+        [undefined, undefined, true],
+        [undefined, false, true],
+        [undefined, true, true],
+        [false, false, true],
+        [false, true, true],
+        [true, false, false],
+        [true, true, true],
+      ].forEach(([integersOnly1, integersOnly2, isValid]) => {
+        testTypeOrSupertypeFilter({
+          type: AtmDataSpecType.Number,
+          valueConstraints: {
+            integersOnly: integersOnly1,
+          },
+        }, {
+          type: AtmDataSpecType.Number,
+          valueConstraints: {
+            integersOnly: integersOnly2,
+          },
+        }, isValid);
+      });
+
       atmFileTypesArray.forEach((atmFileType) => {
         testTypeOrSupertypeFilter({
           type: AtmDataSpecType.File,
@@ -331,6 +353,28 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
               type: filteredAtmDataSpecType,
             }, false);
           });
+      });
+
+      [
+        [undefined, undefined, true],
+        [undefined, false, true],
+        [undefined, true, false],
+        [false, false, true],
+        [false, true, false],
+        [true, false, true],
+        [true, true, true],
+      ].forEach(([integersOnly1, integersOnly2, isValid]) => {
+        testTypeOrSubtypeFilter({
+          type: AtmDataSpecType.Number,
+          valueConstraints: {
+            integersOnly: integersOnly1,
+          },
+        }, {
+          type: AtmDataSpecType.Number,
+          valueConstraints: {
+            integersOnly: integersOnly2,
+          },
+        }, isValid);
       });
 
       const fileTypeOrSupertypes = [
