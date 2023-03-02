@@ -53,6 +53,7 @@ import infiniteScrollTable from './onedata-gui-common/components/infinite-scroll
 import errorInline from './onedata-gui-common/components/error-inline';
 import userInfoContent from './onedata-gui-common/components/user-info-content';
 import spaceInfoContent from './onedata-gui-common/components/space-info-content';
+import harvesterInfoContent from './onedata-gui-common/components/harvester-info-content';
 import groupInfoContent from './onedata-gui-common/components/group-info-content';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
@@ -148,6 +149,7 @@ const translations = {
     errorInline,
     userInfoContent,
     spaceInfoContent,
+    harvesterInfoContent,
     groupInfoContent,
     alerts: {
       endpointError,
