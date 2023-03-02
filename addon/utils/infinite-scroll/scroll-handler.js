@@ -18,6 +18,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { next } from '@ember/runloop';
 import ListWatcher from 'onedata-gui-common/utils/list-watcher';
 import $ from 'jquery';
+import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 export default EmberObject.extend({
   /**
@@ -40,6 +41,18 @@ export default EmberObject.extend({
 
   /**
    * @virtual
+   * @type {HTMLElement}
+   */
+  scrollableContainerElement: undefined,
+
+  /**
+   * @virtual
+   * @type {number}
+   */
+  singleRowHeight: 0,
+
+  /**
+   * @virtual optional
    * @type {({ headerVisible: boolean }) => void}
    */
   onScroll: undefined,
@@ -60,6 +73,12 @@ export default EmberObject.extend({
    */
   listWatcher: undefined,
 
+  /**
+   * When scroll position is changed by code, use this flag to ignore next scroll event.
+   * @type {boolean}
+   */
+  ignoreNextScroll: false,
+
   //#endregion
 
   /**
@@ -67,6 +86,11 @@ export default EmberObject.extend({
    * @param {boolean} headerVisible
    */
   onTableScroll(items, headerVisible) {
+    if (this.ignoreNextScroll) {
+      this.set('ignoreNextScroll', false);
+      return;
+    }
+
     const {
       _window,
       listContainerElement,
@@ -121,7 +145,7 @@ export default EmberObject.extend({
       setProperties(entries, { startIndex, endIndex });
     }
     safeExec(this, 'set', 'headerVisible', headerVisible);
-    onScroll({ headerVisible });
+    onScroll?.({ headerVisible });
   },
 
   entriesLoadedObserver: observer(
@@ -141,6 +165,7 @@ export default EmberObject.extend({
 
   init() {
     this._super(...arguments);
+    this.bindScrollAdjustHandler();
     this.entriesLoadedObserver();
   },
 
@@ -171,6 +196,54 @@ export default EmberObject.extend({
     const listWatcher = this.get('listWatcher');
     if (listWatcher) {
       listWatcher.destroy();
+    }
+  },
+
+  bindScrollAdjustHandler() {
+    this.entries.on(
+      'willChangeArrayBeginning',
+      async ({ updatePromise, newItemsCount }) => {
+        await updatePromise;
+        safeExec(this, () => {
+          this.adjustScrollAfterBeginningChange(newItemsCount);
+        });
+      }
+    );
+  },
+
+  /**
+   * When entries array gets expanded on the beginning (items are unshifted into
+   * array), we need to compensate scroll because new content is added on top.
+   * Currently (as of 2021) not all browsers support scroll anchoring and
+   * `perfect-scrollbar` has issues with it (anchoring is disabled), so we need to do
+   * scroll correction manually.
+   * @param {number} newItemsCount how many items have been added to the beginning
+   *   of the list
+   * @returns {Promise}
+   */
+  async adjustScrollAfterBeginningChange(newEntriesCount = 0) {
+    const topDiff = newEntriesCount * this.singleRowHeight;
+    if (topDiff <= 0 || !this.scrollableContainerElement) {
+      return;
+    }
+
+    this.set('ignoreNextScroll', true);
+    await waitForRender();
+    safeExec(this, () => {
+      this.scrollTo(
+        null,
+        this.scrollableContainerElement.scrollTop + topDiff
+      );
+    });
+  },
+
+  /**
+   * @param  {...any} params The same parameters as in `HTMLElement.scrollTo` method.
+   * @return {void}
+   */
+  scrollTo(...params) {
+    if (this.scrollableContainerElement) {
+      this.scrollableContainerElement.scrollTo(...params);
     }
   },
 });

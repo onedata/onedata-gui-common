@@ -10,13 +10,18 @@
 import Service, { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 
+/**
+ *
+ * @typedef {'id'|SpecialResourceId} ViewOptionsResourceId
+ */
+
 export default Service.extend({
   navigationState: service(),
 
   /**
    * Static definition of options that are used by main-content when displaying
    * specific aspects.
-   * Maps: resource type -> aspect -> MainContentViewOptions
+   * Maps: resource type -> ViewOptionsResourceId -> aspect -> MainContentViewOptions
    * @virtual optional
    * @type {Object}
    */
@@ -28,10 +33,19 @@ export default Service.extend({
    */
   mainContentViewOptions: computed(
     'staticViewOptions',
-    'navigationState.{activeResourceType,activeAspect}',
+    'navigationState.{activeResourceType,activeResourceId,isActiveResourceIdSpecial,activeAspect}',
     function mainContentViewOptions() {
-      return this.staticViewOptions[this.navigationState.activeResourceType]
-        ?.[this.navigationState.activeAspect] ?? {};
+      const resourceOptions = this.staticViewOptions[
+        this.navigationState.activeResourceType
+      ];
+      if (!resourceOptions) {
+        return {};
+      }
+      if (this.navigationState.isActiveResourceIdSpecial) {
+        return resourceOptions?.[this.navigationState.activeResourceId] ?? {};
+      } else {
+        return resourceOptions?.id?.[this.navigationState.activeAspect] ?? {};
+      }
     }
   ),
 });

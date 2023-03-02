@@ -29,6 +29,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   font-size: $tags-input-font-scale * 1em;
 
   &.has-clear-button {
+    position: relative;
     padding-right: 45px;
   }
 
@@ -69,6 +70,17 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
         margin-left: -$padding-xs-horizontal * 0.5;
       }
     }
+  }
+
+  .tags-input-placeholder {
+    @extend .tag-item;
+    @extend .tag-item-plaintext;
+    color: $input-color-placeholder;
+    font-size: $font-size-base;
+    padding-left: 0;
+    // fix positioning because of tags-input form-control paddings
+    margin-bottom: 0;
+    margin-top: -$padding-xs-horizontal;
   }
 
   .tag-icon {
