@@ -4,7 +4,7 @@
       type="default"
       size="sm"
       class="create-value-btn"
-      disabled=(or (not isEffectivelyEnabled) hasInvalidAtmDataSpec)
+      disabled=(or isInViewMode (not isEffectivelyEnabled) hasInvalidAtmDataSpec)
       onClick=(action "createValue")
     }}
       {{valueCreatorButtonLabel}}
