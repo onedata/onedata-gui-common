@@ -23,7 +23,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {UserRecord}
    */
-  user: undefined,
+  record: undefined,
 
   /**
    * @virtual optional

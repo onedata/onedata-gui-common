@@ -5,7 +5,7 @@
 </h1>
 <table class="table table-condensed table-info">
   <tbody>
-    <tr class="row-with-input">
+    <tr class="row-with-text">
       <td class="property-name">{{tt this "name"}}</td>
       <td class="property-value">
         {{one-clipboard-line
@@ -15,7 +15,7 @@
         }}
       </td>
     </tr>
-    <tr class="row-with-input">
+    <tr class="row-with-text">
       <td class="property-name">{{tt this "id"}}</td>
       <td class="property-value">
         {{one-clipboard-line
@@ -25,13 +25,23 @@
         }}
       </td>
     </tr>
+    {{#if publicUrl}}
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "publicUrl"}}</td>
+        <td class="property-value">
+          {{one-clipboard-line
+            size="sm"
+            value=publicUrl
+            type="text"
+          }}
+        </td>
+      </tr>
+    {{/if}}
     {{#if creator.fullName}}
       <tr class="row-with-text">
         <td class="property-name">{{tt this "creator"}}</td>
         <td class="property-value">
-          {{#truncated-string}}
-            {{record-name record=creator}}
-          {{/truncated-string}}
+          {{record-name record=creator}}
         </td>
       </tr>
     {{/if}}
@@ -45,32 +55,11 @@
     {{/if}}
   </tbody>
 </table>
-<div class="links-container">
-  {{#if showLinkToRestApiModal}}
-    <a {{action "openRestApiModal"}} class="info-link rest-api-link clickable">
-      <span>{{tt this "openRestApi"}}</span>
-      {{one-icon icon="rest"}}
-    </a>
-    {{#if (or showLinkToFileBrowser showLinkToSpace)}}
-      <span class="col-separator"></span>
-    {{/if}}
-  {{/if}}
-  {{#if showLinkToFileBrowser}}
-    <a
-      href={{linkToFileBrowser}}
-      class="info-link file-browser-link clickable"
-    >
-      <span>{{tt this "openFileBrowser"}}</span>
+{{#if linkToHarvester}}
+  <div class="links-container">
+    <a href={{linkToHarvester}} class="info-link clickable">
+      {{tt this "openHarvester"}}
       {{one-icon icon="link-external"}}
     </a>
-    {{#if showLinkToSpace}}
-      <span class="col-separator"></span>
-    {{/if}}
-  {{/if}}
-  {{#if showLinkToSpace}}
-    <a href={{linkToSpace}} class="info-link space-link clickable">
-      {{tt this "openSpace"}}
-      {{one-icon icon="link-external"}}
-    </a>
-  {{/if}}
-</div>
+  </div>
+{{/if}}
