@@ -20,8 +20,6 @@ export default Component.extend(I18n, {
   layout,
   classNames: ['harvester-info-content'],
 
-  router: service(),
-  guiUtils: service(),
   userManager: service(),
 
   /**
@@ -36,9 +34,16 @@ export default Component.extend(I18n, {
   record: undefined,
 
   /**
-   * @type {Location}
+   * @virtual optional
+   * @type {string}
    */
-  _location: location,
+  linkToHarvester: undefined,
+
+  /**
+   * @virtual optional
+   * @type {string}
+   */
+  publicUrl: undefined,
 
   /**
    * @type {PromiseObject<Models.User>}
@@ -65,29 +70,5 @@ export default Component.extend(I18n, {
     if (timestamp) {
       return moment.unix(timestamp).format(reportFormatter);
     }
-  }),
-
-  /**
-   * @type {Ember.ComputedProperty<string|null>}
-   */
-  publicUrl: computed('record.entityId', function publicUrl() {
-    if (this.record.entityId) {
-      return this._location.origin + this._location.pathname +
-        this.router.urlFor('public.harvesters', this.record.entityId);
-    } else {
-      return null;
-    }
-  }),
-
-  /**
-   * @type {Ember.ComputedProperty<string>}
-   */
-  linkToHarvester: computed('record', function linkToHarvester() {
-    return this.router.urlFor(
-      'onedata.sidebar.content.aspect',
-      'harvesters',
-      this.guiUtils.getRoutableIdFor(this.record),
-      'plugin'
-    );
   }),
 });

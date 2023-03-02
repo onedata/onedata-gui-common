@@ -25,7 +25,7 @@
         }}
       </td>
     </tr>
-    {{#if record.public}}
+    {{#if publicUrl}}
       <tr class="row-with-text">
         <td class="property-name">{{tt this "publicUrl"}}</td>
         <td class="property-value">
@@ -55,9 +55,11 @@
     {{/if}}
   </tbody>
 </table>
-<div class="links-container">
-  <a href={{linkToHarvester}} class="info-link clickable">
-    {{tt this "openHarvester"}}
-    {{one-icon icon="link-external"}}
-  </a>
-</div>
+{{#if linkToHarvester}}
+  <div class="links-container">
+    <a href={{linkToHarvester}} class="info-link clickable">
+      {{tt this "openHarvester"}}
+      {{one-icon icon="link-external"}}
+    </a>
+  </div>
+{{/if}}
