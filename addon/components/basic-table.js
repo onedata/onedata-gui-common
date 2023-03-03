@@ -9,7 +9,6 @@ import 'basictable';
 /**
  * Creates a table element which uses JQuery Basic Table to handle with small devices.
  *
- * @module components/basic-table.js
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,7 +1,6 @@
 /**
  * Moves down parallel box. Needs parallel box instance passed via context.
  *
- * @module utils/workflow-visualiser/actions/move-down-parallel-box-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

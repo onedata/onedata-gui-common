@@ -1,8 +1,7 @@
 /**
  * An inline input with copy to clipboard button
  *
- * @module components/clipboard-line
- * @author Jakub Liput, Michal Borzecki
+ * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

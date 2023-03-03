@@ -4,8 +4,7 @@
  * property, then all fields, which paths starts with that path, will be
  * considered as disabled.
  *
- * @module mixins/components/one-dynamic-tree/disabled-paths
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

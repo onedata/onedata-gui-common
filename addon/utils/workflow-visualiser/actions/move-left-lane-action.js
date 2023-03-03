@@ -1,7 +1,6 @@
 /**
  * Moves left lane. Needs lane instance passed via context.
  *
- * @module utils/workflow-visualiser/actions/move-left-lane-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

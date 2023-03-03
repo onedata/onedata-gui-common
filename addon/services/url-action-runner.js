@@ -4,7 +4,6 @@
  * extended in main projects to introduce some runners implementations (e.g. by registering
  * them in `init` method).
  *
- * @module services/url-action-runner
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

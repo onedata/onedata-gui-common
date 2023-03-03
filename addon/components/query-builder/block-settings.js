@@ -1,7 +1,6 @@
 /**
  * Shows query block settings
- * 
- * @module components/query-builder/block-settings
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -69,7 +68,7 @@ export default Component.extend({
 
   actions: {
     /**
-     * @param {Function} closeSelectorCallback 
+     * @param {Function} closeSelectorCallback
      * @param {Array<Utils.QueryBuilder.QueryBlock>} newBlocks
      */
     blockReplace(closeSelectorCallback, newBlocks) {

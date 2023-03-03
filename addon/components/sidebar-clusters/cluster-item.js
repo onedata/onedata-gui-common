@@ -1,7 +1,6 @@
 /**
  * A first-level item component for clusters sidebar
  *
- * @module components/sidebar-clusters/group-item
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,8 +1,7 @@
 /**
  * Plugin for Chartist which maximizes bars width to fill available space.
  *
- * @module utils/chartist/center-line-chart
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

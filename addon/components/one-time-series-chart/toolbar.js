@@ -4,7 +4,6 @@
  * `models` is an array, hence it is possible to control many plots
  * in the same time.
  *
- * @module components/one-time-series-chart/toolbar
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

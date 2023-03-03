@@ -1,10 +1,9 @@
 /**
- * List header class of the collapsible list. For example of use case see 
+ * List header class of the collapsible list. For example of use case see
  * components/one-collapsible-list.js.
- *  
+ *
  * Yields in place, where action buttons can be rendered
  *
- * @module components/one-collapsible-list-header.js
  * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

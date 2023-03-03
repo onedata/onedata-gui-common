@@ -1,10 +1,9 @@
 /**
  * A container component for login form.
- * 
+ *
  * In common, it's only a form for username/password.
  *
- * @module components/login-box/login-form-container
- * @author Michal Borzecki, Jakub Liput
+ * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

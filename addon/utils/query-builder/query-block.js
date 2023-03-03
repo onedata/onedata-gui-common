@@ -1,7 +1,6 @@
 /**
  * A base class for query builder blocks.
- * 
- * @module utils/query-builder/query-block
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -30,7 +29,7 @@ export default EmberObject.extend(Evented, {
 
   /**
    * How many levels have tree starting from this query block.
-   * Eg. 
+   * Eg.
    * @type {Number|ComputedProperty<Number>}
    */
   levelScore: 1,

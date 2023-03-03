@@ -104,7 +104,6 @@
  * finished, then new `runsArray` is generated and at the end the next animation
  * request (from `visibleRunsPosition` change) is processed.
  *
- * @module components/workflow-visualiser/lane/runs-list
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

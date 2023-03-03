@@ -12,7 +12,6 @@
  * prepared and executed to get data needed by queries in that batch. In the same
  * time a new batch is created to accept new incoming queries.
  *
- * @module utils/one-time-series-chart/query-batcher
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

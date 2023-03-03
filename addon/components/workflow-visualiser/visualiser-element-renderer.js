@@ -1,7 +1,6 @@
 /**
  * Renders visualiser element depending on renderer setting.
  *
- * @module components/workflow-visualiser/visualiser-element-renderer
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

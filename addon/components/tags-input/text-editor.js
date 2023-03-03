@@ -2,7 +2,6 @@
  * A tags (tokenizer) input editor, which allows to add tags using simple text input.
  * Tags are added after separator character detection or on Enter keydown.
  *
- * @module components/tags-input/text-editor
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

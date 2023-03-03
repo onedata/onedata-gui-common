@@ -1,7 +1,6 @@
 /**
  * A condition query block. Contains information about query conditions.
- * 
- * @module utils/query-builder/condition-query-block
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

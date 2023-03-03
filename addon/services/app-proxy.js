@@ -2,7 +2,6 @@
  * Exposes parent application proxy API (available through
  * window.frameElement.appProxy)
  *
- * @module services/app-proxy
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2019-2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

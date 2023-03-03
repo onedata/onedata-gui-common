@@ -2,7 +2,6 @@
  * Button component with API based on ember-bootstrap button. Renders spinner when
  * called action returns a pending promise or when `isPending` is set to true.
  *
- * @module components/one-button
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -4,7 +4,6 @@
  * as standalone component, provide a model object - see more about it in
  * `Utils.OneTimeSeriesChart.Model` class.
  *
- * @module components/one-time-series-chart/plot
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

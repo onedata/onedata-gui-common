@@ -3,9 +3,8 @@
  * the Onepanel has the same clusterId as expected.
  * There can be duplicated clusters with the same hostname, but with different
  * ids. These with invalid clusterIds should be presented as dead and allow only to
- * deregister them. 
+ * deregister them.
  *
- * @module utils/validate-onepanel-connection
  * @author Jakub Liput
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

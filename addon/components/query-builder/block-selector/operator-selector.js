@@ -1,8 +1,7 @@
 /**
  * Allows to select one of the operators. Specified ones can be disabled. Notifies about
  * selected operator using its name, not query block instance.
- * 
- * @module components/query-builder/block-selector/operator-selector
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

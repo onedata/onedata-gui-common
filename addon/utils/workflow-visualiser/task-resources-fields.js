@@ -4,7 +4,6 @@
  * Is extracted as a separate function due to multiple usages (in lambda form,
  * task form, etc.).
  *
- * @module utils/workflow-visualiser/task-resources-fields
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

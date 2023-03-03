@@ -1,8 +1,7 @@
 /**
  * An icon with addtional icon in the corner (eg. with x).
  * See dummy app for examples.
- * 
- * @module components/one-icon-tagged
+ *
  * @author Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

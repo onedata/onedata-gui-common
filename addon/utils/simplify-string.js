@@ -4,14 +4,13 @@
  * * whitespaces from the original string are converted to dashes,
  * * there are no two and more dashes in a row,
  * * does not start and and with dash.
- * 
- * Example: 
+ *
+ * Example:
  * ```
  * simplifyString('Abc2-3 @#d-') === 'abc2-3-d'
  * ```
- * 
- * @module utils/simplify-string
- * @author Michal Borzecki
+ *
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

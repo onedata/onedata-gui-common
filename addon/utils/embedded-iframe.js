@@ -2,7 +2,6 @@
  * Container object for iframe, that will be embedded into Onedata GUI
  * application. Allows injecting data and share actions.
  *
- * @module utils/embedded-iframe
  * @author Michał Borzęcki
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

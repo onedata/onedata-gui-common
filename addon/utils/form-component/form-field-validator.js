@@ -5,7 +5,6 @@
  * and `isValid` fields. It is an internal class of the forms framework and should not
  * be modified neither accessed from the outside of the internal forms framework code.
  *
- * @module utils/form-component/form-field-validator
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

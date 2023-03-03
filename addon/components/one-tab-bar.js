@@ -2,7 +2,6 @@
  * Create scrollable and searchable tab bar using items array with tabs
  * specification.
  *
- * @module components/one-tab-bar
  * @author Jakub Liput
  * @copyright (C) 2019-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

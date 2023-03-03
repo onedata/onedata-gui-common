@@ -16,7 +16,6 @@
  * - `actionsFactory` - the same as above
  * - `storeContentPresenterContext` - is needed (but optional) when `mode` is `'view'`
  *
- * @module components/modals/workflow-visualiser/store-modal
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

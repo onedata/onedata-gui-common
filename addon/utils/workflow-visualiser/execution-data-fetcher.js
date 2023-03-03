@@ -2,7 +2,6 @@
  * Provides functions for fetching workflow execution stats. Needs to be extended
  * with real implementation.
  *
- * @module utils/workflow-visualiser/execution-data-fetcher
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

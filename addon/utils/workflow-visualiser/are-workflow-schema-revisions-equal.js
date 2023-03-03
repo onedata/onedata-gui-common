@@ -3,7 +3,6 @@
  * It cannot be done via simple _.isEqual, because some notations are equivalent
  * but different in JavaScript object - like null and undefined etc.
  *
- * @module utils/workflow-visualiser/are-workflow-schema-revisions-equal
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

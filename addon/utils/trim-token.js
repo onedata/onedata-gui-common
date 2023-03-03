@@ -5,7 +5,6 @@
  * Trims token from whitespaces and all special characters. Only digits and
  * ASCII letters are allowed.
  *
- * @module utils/trim-token
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

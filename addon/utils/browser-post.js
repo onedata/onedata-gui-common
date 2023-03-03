@@ -3,7 +3,6 @@
  *
  * Copied from: https://stackoverflow.com/a/133997
  *
- * @module utils/browser-post
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -7,7 +7,6 @@
  * For more information about configuration options see
  * `Utils.OneTimeSeriesChart.Configuration` class.
  *
- * @module components/one-time-series-chart
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

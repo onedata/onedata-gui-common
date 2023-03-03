@@ -1,7 +1,6 @@
 /**
  * Base component for all visualisers components.
  *
- * @module components/workflow-visualiser/visualiser-element
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

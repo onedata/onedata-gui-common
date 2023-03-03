@@ -7,7 +7,6 @@
  * multiple value clones which is especially handy in terms of Ember Data models
  * and diff analysis.
  *
- * @module utils/form-component/clone-value
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,8 +1,7 @@
 /**
  * Abstract component for creating list of second level items in sidebar (called
  * aspects).
- * 
- * @module components/one-sidebar-second-level-items
+ *
  * @author Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

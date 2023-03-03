@@ -3,7 +3,6 @@
  * application assets directory. It allows to fetch them later (on demand)
  * by a browser.
  *
- * @module utils/copy-dynamic-libraries
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

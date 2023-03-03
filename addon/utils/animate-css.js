@@ -1,8 +1,7 @@
 /**
  * Port of https://github.com/daneden/animate.css example script, but with modified API.
  * Adds animation CSS classes on element and removes them when animation completes.
- * 
- * @module utils/animate-css
+ *
  * @author Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

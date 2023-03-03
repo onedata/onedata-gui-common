@@ -1,7 +1,6 @@
 /**
  * An util, that injects application breakpoints to ember sass configuration.
  *
- * @module utils/define-sass-breakpoints
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

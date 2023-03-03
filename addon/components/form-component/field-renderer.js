@@ -1,7 +1,6 @@
 /**
  * A component responsible for rendering form elements.
  *
- * @module components/form-component/field-renderer
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

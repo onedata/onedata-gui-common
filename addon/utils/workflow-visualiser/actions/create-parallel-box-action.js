@@ -2,7 +2,6 @@
  * Creates new parallel box. Needs createParallelBoxCallback passed via context.
  * It will then be used to save a new parallel box.
  *
- * @module utils/workflow-visualiser/actions/create-parallel-box-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

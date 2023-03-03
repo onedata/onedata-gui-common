@@ -1,6 +1,5 @@
 /**
- * @module components/demo-components/one-dynamic-tree/tree-demo
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

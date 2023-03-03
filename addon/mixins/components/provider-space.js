@@ -1,7 +1,6 @@
 /**
  * A base to build a component that shows info about space in context of particular provider.
  *
- * @module mixins/components/provider-space
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

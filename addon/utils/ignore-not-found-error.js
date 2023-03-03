@@ -3,7 +3,6 @@
  * in server responses. If error is different than `notFound`, it is
  * rethrown.
  *
- * @module utils/ignore-not-found-error
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

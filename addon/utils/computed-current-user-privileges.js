@@ -20,7 +20,6 @@
  *
  * @param {Array<String>} `allFlags`
  *
- * @module utils/computed-current-user-privileges
  * @author Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

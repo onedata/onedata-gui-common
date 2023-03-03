@@ -6,7 +6,6 @@
  * {{one-tooltip title="tooltip text" placement="top"}}
  * ```
  *
- * @module components/one-tooltip
  * @author Michał Borzęcki
  * @copyright (C) 2017-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

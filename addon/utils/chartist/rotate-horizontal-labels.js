@@ -1,8 +1,7 @@
 /**
  * Plugin for Chartist which rotates x axis labels by 45 degrees.
  *
- * @module utils/chartist/rotate-horizontal-labels
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

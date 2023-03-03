@@ -5,7 +5,6 @@
  * Is responsible for generating view/editor component names, default values and validators
  * for query comparators.
  *
- * @module utils/query-value-components-builder
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

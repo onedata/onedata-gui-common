@@ -2,7 +2,6 @@
  * Shows task audit log. Needs `task` and `getAuditLogContentCallback` passed via context.
  * Optionally `runNumber` can be passed to point to another (non-default) run.
  *
- * @module utils/workflow-visualiser/actions/view-task-audit-log-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

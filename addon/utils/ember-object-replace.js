@@ -8,7 +8,6 @@
  * If property value is equals deeply in source and destination then leave original
  * value - this prevents changing object references in properties.
  *
- * @module utils/ember-object-replace
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

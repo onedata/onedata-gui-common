@@ -1,8 +1,7 @@
 /**
  * A login-box header component
  *
- * @module components/login-box/header
- * @author Michal Borzecki, Jakub Liput
+ * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

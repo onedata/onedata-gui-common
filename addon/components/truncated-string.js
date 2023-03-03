@@ -2,7 +2,6 @@
  * A component that truncates text inside it. If text is truncated, tooltip
  * with full text will be shown on hover.
  *
- * @module components/truncated-string
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

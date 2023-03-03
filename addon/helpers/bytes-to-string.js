@@ -1,7 +1,6 @@
 /**
  * A helper to use bytes-to-string util.
  *
- * @module helpers/bytes-to-string
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -4,7 +4,6 @@
  * - taskDetailsProviderCallback - it will be called to obtain new task details,
  * - task.
  *
- * @module utils/workflow-visualiser/actions/modify-task-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

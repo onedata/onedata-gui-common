@@ -33,7 +33,6 @@
  * getPropertyNameProxy({ reload: boolean, fetchArgs: Array }): PromiseObject<T>
  * ```
  *
- * @module utils/create-data-proxy-mixin
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

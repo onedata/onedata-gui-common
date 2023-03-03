@@ -1,17 +1,17 @@
 /**
- * A component that displays information about some process status as icons. 
- * Each icon can have a subicon - icon, that is visible in the bottom right 
+ * A component that displays information about some process status as icons.
+ * Each icon can have a subicon - icon, that is visible in the bottom right
  * corner of the main status icon. It is possible to attach custom click
  * event handler by setting clickAction property for an icon component.
- * 
+ *
  * To enable tooltip, set hint property for an icon.
- * 
+ *
  * Examples:
  * ```
  * {{#status-toolbar as |toolbar|}}
- *   {{toolbar.icon 
+ *   {{toolbar.icon
  *     icon="space"
- *     status="done" 
+ *     status="done"
  *     subIcon="checkbox"
  *     subIconClass="subicon"}}
  *   {{toolbar.icon
@@ -22,8 +22,7 @@
  * {{/status-toolbar}}
  * ```
  *
- * @module components/status-toolbar
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

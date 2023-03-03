@@ -5,7 +5,6 @@
  * "sidebar" or "content" strings for placing a content for these particular
  * parts of view.
  *
- * @module components/app-layout
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

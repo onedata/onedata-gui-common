@@ -1,8 +1,7 @@
 /**
  * A component that shows support size information using a chart.
  *
- * @module components/space-support-info/chart
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

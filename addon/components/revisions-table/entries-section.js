@@ -3,7 +3,6 @@
  * always-visible entry and a collection of expandable revisions, which are collapsed
  * by default.
  *
- * @module components/revisions-table/entries-section
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

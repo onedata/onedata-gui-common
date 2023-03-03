@@ -6,7 +6,7 @@
  * An example:
  * ```
  * {{#promise-proxy-container proxy=somePromiseObject}}
- *   {{some-component model=somePromiseObject.content}} 
+ *   {{some-component model=somePromiseObject.content}}
  * {{/promise-proxy-container}}
  * ```
  *
@@ -14,7 +14,6 @@
  * It will render error message if `somePromiseObject` is rejected..
  * It will render `some-component` if promise has fulfilled.
  *
- * @module components/promise-proxy-container
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

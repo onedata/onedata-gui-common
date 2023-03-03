@@ -1,8 +1,7 @@
 /**
  * A component that shows information about support size using table and chart.
  *
- * @module components/support-size-info
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
