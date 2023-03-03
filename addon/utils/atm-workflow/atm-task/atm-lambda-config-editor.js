@@ -29,6 +29,7 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/value-editors';
 import { getDefaultValueForAtmDataSpec } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import findTypedElementsMigration from 'onedata-gui-common/utils/atm-workflow/find-typed-elements-migration';
 
 /**
  * @typedef {'defaultValue' | 'customValue' | 'leaveUnassigned'} ParamValueBuilder
@@ -174,23 +175,41 @@ export function migrateAtmLambdaConfigEditorValueToNewSpecs(
   formValue,
   targetConfigParameterSpecs,
 ) {
+  const fromSpecs = formValue.__fieldsValueNames.map((fieldName) => ({
+    name: formValue[fieldName].context.name,
+    dataSpec: formValue[fieldName].context.dataSpec,
+  }));
+  const migration = findTypedElementsMigration(fromSpecs, targetConfigParameterSpecs);
+
   // Default form value for the new specs. That will be our starting point. We
   // will assign here old values from `formValue` where possible.
   const targetFormValue =
     rawValueToAtmLambdaConfigEditorValue(null, targetConfigParameterSpecs);
 
-  const fieldNamesToMigrate = new Set(formValue.__fieldsValueNames);
-  const fieldNamesToOverride = new Set(targetFormValue.__fieldsValueNames);
+  Object.keys(migration).forEach((fromName) => {
+    const toName = migration[fromName];
+    if (!toName) {
+      return;
+    }
 
-  // Tries to migrate value from the old spec to the new spec if possible.
-  const tryToMigrate = (fieldNameToMigrate, fieldNameToOverride) => {
-    const selectedBuilder = formValue[fieldNameToMigrate].paramValueBuilder;
+    const fromFieldName = formValue.__fieldsValueNames.find((fieldName) =>
+      formValue[fieldName].context.name === fromName
+    );
+    const toFieldName = targetFormValue.__fieldsValueNames.find((fieldName) =>
+      targetFormValue[fieldName].context.name === toName
+    );
+
+    if (!fromFieldName || !toFieldName) {
+      return;
+    }
+
+    const selectedBuilder = formValue[fromFieldName].paramValueBuilder;
     const targetBuilderOptions = getParamValueBuilderTypesForParamSpec(
-      targetFormValue[fieldNameToOverride].context
+      targetFormValue[toFieldName].context
     );
     const hasTheSameAtmDataSpec = _.isEqual(
-      targetFormValue[fieldNameToOverride].context.dataSpec,
-      formValue[fieldNameToMigrate].context.dataSpec
+      targetFormValue[toFieldName].context.dataSpec,
+      formValue[fromFieldName].context.dataSpec
     );
     // Can migrate only when selected builder is still available
     // and - if custom value was assigned - data specs matches.
@@ -200,67 +219,22 @@ export function migrateAtmLambdaConfigEditorValueToNewSpecs(
         hasTheSameAtmDataSpec
       )
     ) {
-      targetFormValue[fieldNameToOverride].paramValueBuilder =
-        formValue[fieldNameToMigrate].paramValueBuilder;
+      targetFormValue[toFieldName].paramValueBuilder =
+        formValue[fromFieldName].paramValueBuilder;
       if (selectedBuilder === ParamValueBuilder.CustomValue) {
-        targetFormValue[fieldNameToOverride].paramValue =
-          formValue[fieldNameToMigrate].paramValue;
+        targetFormValue[toFieldName].paramValue =
+          formValue[fromFieldName].paramValue;
       } else {
-        const newValue = targetFormValue[fieldNameToOverride].context.defaultValue ??
+        const newValue = targetFormValue[toFieldName].context.defaultValue ??
           getDefaultValueForAtmDataSpec(
-            targetFormValue[fieldNameToOverride].context.dataSpec
+            targetFormValue[toFieldName].context.dataSpec
           );
-        targetFormValue[fieldNameToOverride].paramValue = atmRawValueToFormValue(
+        targetFormValue[toFieldName].paramValue = atmRawValueToFormValue(
           newValue
         );
       }
     }
-  };
-
-  // Migrate param values for params with the same name before and after migration
-  for (const fieldNameToMigrate of fieldNamesToMigrate) {
-    const matchingFieldNameToOverride = [...fieldNamesToOverride].find((fieldName) =>
-      targetFormValue[fieldName].context.name ===
-      formValue[fieldNameToMigrate].context.name
-    );
-    if (matchingFieldNameToOverride) {
-      tryToMigrate(fieldNameToMigrate, matchingFieldNameToOverride);
-      fieldNamesToMigrate.delete(fieldNameToMigrate);
-      fieldNamesToOverride.delete(matchingFieldNameToOverride);
-    }
-  }
-
-  // Migrate param values for params with the same data spec before and after migration
-  for (const fieldNameToMigrate of fieldNamesToMigrate) {
-    // Try to find any other parameter, that has the same data spec in the old
-    // param specs as the current one. If there are some, then we won't know
-    // which one of them should be assigned to which new spec - migration is not
-    // possible.
-    const otherMigrationsWithTheSameDataSpec = [...fieldNamesToMigrate]
-      .filter((fieldName) => {
-        return fieldName !== fieldNameToMigrate && _.isEqual(
-          formValue[fieldName].context.dataSpec,
-          formValue[fieldNameToMigrate].context.dataSpec
-        );
-      });
-    // Find all matching places to reuse current value. If there is more than
-    // one, then migration is not possible as we don't know which one should be
-    // used.
-    const matchingFieldNamesToOverride = [...fieldNamesToOverride].filter((fieldName) =>
-      _.isEqual(
-        targetFormValue[fieldName].context.dataSpec,
-        formValue[fieldNameToMigrate].context.dataSpec
-      )
-    );
-    if (
-      !otherMigrationsWithTheSameDataSpec.length &&
-      matchingFieldNamesToOverride.length === 1
-    ) {
-      tryToMigrate(fieldNameToMigrate, matchingFieldNamesToOverride[0]);
-      fieldNamesToMigrate.delete(fieldNameToMigrate);
-      fieldNamesToOverride.delete(matchingFieldNamesToOverride[0]);
-    }
-  }
+  });
 
   return targetFormValue;
 }
