@@ -68,7 +68,24 @@ export default Service.extend({
 
     const actionRunner = this.getActionRunner(actionName);
     const actionResult = (typeof actionRunner === 'function') ?
-      actionRunner(queryParams) : resolve();
+      actionRunner(queryParams, transition) : resolve();
     return actionResult && actionResult.then ? actionResult : resolve(actionResult);
+  },
+
+  /**
+   * @param {Transition} transition
+   */
+  clearActionQueryParams(transition) {
+    const queryParams = transition.to.queryParams;
+    const queryParamsNames = Object.keys(queryParams);
+    if (queryParamsNames.find(name => name.startsWith('action_'))) {
+      const queryParamsWithoutAction = Object.keys(queryParams)
+        .reduce((params, key) => {
+          params[key] = key.startsWith('action_') ?
+            undefined : queryParams[key];
+          return params;
+        }, {});
+      this.transitionTo({ queryParams: queryParamsWithoutAction });
+    }
   },
 });
