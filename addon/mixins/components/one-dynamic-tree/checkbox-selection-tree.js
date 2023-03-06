@@ -16,8 +16,7 @@
  * * only nodes which represent checkbox fields or their parents are in the tree.
  * * node name is taken from tree definition.
  *
- * @module mixins/components/one-dynamic-tree/checkbox-selection-tree
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

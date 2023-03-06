@@ -2,7 +2,6 @@
  * A generic component for showing resources list. Show name and additional may also show
  * flippable icon with info popover with more contextual content.
  *
- * @module components/resources-list
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

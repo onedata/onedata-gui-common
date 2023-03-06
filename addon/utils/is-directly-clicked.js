@@ -3,7 +3,6 @@
  * elements with ".clickable" class). Providing element is optional - if not
  * supplied, `event.currentTarget` will be used.
  *
- * @module utils/is-directly-clicked
  * @author Michał Borzęcki
  * @copyright (C) 2021-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

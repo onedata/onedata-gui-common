@@ -10,8 +10,7 @@
  *   is in branch 'basic' of 'user', then its value can be found by
  *   `this.get('values.user.basic.name')`.
  *
- * @module mixins/components/one-dynamic-tree/values-tree
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

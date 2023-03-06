@@ -6,8 +6,7 @@
  * (default width of a label)
  * - insertBefore - label will be inserted before last label node
  *
- * @module utils/chartist/additional-x-label
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

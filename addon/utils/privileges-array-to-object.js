@@ -1,11 +1,10 @@
 /**
  * Converts array of privileges to a tree of categorized privileges.
  *
- * @module utils/privileges-array-to-object
  * @author Michał Borzęcki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
- * 
+ *
  * @param {Array<string>} arr Array of privileges names, that are available for
  *  some entity. Example: ``['privilege1Name', 'privilege3Name']``
  * @param {Array<Object>} privilegesGroups Grouped privileges names - schema of

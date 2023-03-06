@@ -1,8 +1,7 @@
 /**
  * Route for all urls, that cannot be directly mapped to main routes.
  *
- * @module routes/not-found
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

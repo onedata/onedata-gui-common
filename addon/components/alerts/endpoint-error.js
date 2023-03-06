@@ -1,7 +1,6 @@
 /**
  * Content for alert modal showing error reaching endpoint
- * 
- * @module components/alerts/endpoint-error
+ *
  * @author Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

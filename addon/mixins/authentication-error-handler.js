@@ -1,7 +1,6 @@
 /**
  * Adds functions to consume authentication error information (currently from cookies)
  *
- * @module mixins/authentication-error-handler
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

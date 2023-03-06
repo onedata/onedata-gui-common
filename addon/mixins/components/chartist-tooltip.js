@@ -4,8 +4,7 @@
  * To enable, addChartTooltip must be called in chartist eventListener plugin
  * and chartTooltipSelector must be set.
  *
- * @module mixins/components/chartist-tooltip
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

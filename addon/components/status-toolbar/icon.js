@@ -2,8 +2,7 @@
  * A status icon used in status-toolbar. For example of usage see
  * the status-toolbar component documentation.
  *
- * @module components/status-toolbar/icon
- * @author Jakub Liput, Michal Borzecki
+ * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

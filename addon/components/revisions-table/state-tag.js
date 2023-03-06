@@ -1,7 +1,6 @@
 /**
  * Shows tag informing about revision state.
  *
- * @module components/revisions-table/state-tag
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

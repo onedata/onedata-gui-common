@@ -2,7 +2,6 @@
  * Based on ember-spin-spinner (https://github.com/rsschermer/ember-spin-spinner)
  * Licensed under The MIT License (MIT) Copyright (c) 2014 R.S. Schermer
  *
- * @module components/spin-spinner
  * @author Jakub Liput
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

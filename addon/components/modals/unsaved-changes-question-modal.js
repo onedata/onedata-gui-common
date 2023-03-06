@@ -2,7 +2,6 @@
  * A modal that asks user if unsaved changes should be saved or ignored. Does not
  * need any extra configuration (from `modalOptions`).
  *
- * @module components/modals/unsaved-changes-question-modal
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

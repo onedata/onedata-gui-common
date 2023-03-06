@@ -2,7 +2,6 @@
  * A tags (tokenizer) input editor, which allows to add tags using dropdown-like selector.
  * Tags are added on click on selector list item.
  *
- * @module components/tags-input/selector-editor
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,7 +1,6 @@
 /**
  * Button select group used for switching displayed AIP/DIP archive.
  *
- * @module components/archive-dip-switch
  * @author Jakub Liput
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

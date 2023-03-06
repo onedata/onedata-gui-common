@@ -4,7 +4,6 @@
  *
  * NOTE: ported from ember-cli-onedata-common
  *
- * @module utils/conflict-ids-array
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

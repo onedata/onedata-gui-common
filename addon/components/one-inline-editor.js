@@ -3,8 +3,7 @@
  * as plain text. After click (direct on text or via 'start edition' button)
  * it changes to editor which triggers `onSave` action on edition approval.
  *
- * @module components/one-inline-editor
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

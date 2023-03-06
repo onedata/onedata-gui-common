@@ -1,7 +1,6 @@
 /**
  * Base class for visualiser records (concrete data entries like tasks, lanes etc.).
  *
- * @module utils/workflow-visualiser/visualiser-record
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

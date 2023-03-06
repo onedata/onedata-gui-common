@@ -1,7 +1,6 @@
 /**
  * Renders time series chart dashboard section according to settings passed via `sectionSpec`.
  *
- * @module components/one-time-series-charts-section
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

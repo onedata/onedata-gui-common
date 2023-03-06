@@ -69,8 +69,7 @@
  * That toggle is set to true if and only if all nested not-disabled toggles
  * are checked.
  *
- * @module components/one-dynamic-tree
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

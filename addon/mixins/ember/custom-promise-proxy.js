@@ -8,7 +8,6 @@
  *
  * For example of usage see unit tests or `util:promise-updated-object`.
  *
- * @module mixins/ember/custom-promise-proxy
  * @author Jakub Liput, EmberJS
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

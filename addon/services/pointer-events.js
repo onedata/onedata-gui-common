@@ -2,7 +2,6 @@
  * Controls pointer-events styles for main layout elements. Allows to passthrough mouse events
  * to specified DOM nodes (that are behind another nodes).
  *
- * @module services/pointer-events
  * @author Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

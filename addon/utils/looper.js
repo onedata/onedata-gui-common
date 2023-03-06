@@ -7,7 +7,6 @@
  * - remember to call `stop` method or `destroy` when want to stop interval
  * - `interval` can be always changed - it will start new interval timer and clear old
  *
- * @module utils/looper
  * @author Jakub Liput
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

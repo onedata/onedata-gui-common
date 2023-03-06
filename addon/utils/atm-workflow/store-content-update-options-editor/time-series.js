@@ -4,7 +4,6 @@
  * for conversion between form values and store content update options
  * in both directions.
  *
- * @module utils/atm-workflow/store-content-update-options-editor/time-series
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

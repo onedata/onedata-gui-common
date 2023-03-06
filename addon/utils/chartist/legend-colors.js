@@ -5,8 +5,7 @@
  * * colors - array of colors for series
  * * styles - object of css styles for a legend item colored square
  *
- * @module utils/chartist/legend-colors
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

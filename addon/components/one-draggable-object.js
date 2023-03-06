@@ -1,7 +1,6 @@
 /**
  * Extends draggable-object to fix nested draggable objects bug.
  *
- * @module components/one-draggable-object
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

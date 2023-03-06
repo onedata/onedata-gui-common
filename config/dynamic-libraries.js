@@ -4,7 +4,6 @@
  * building. Thanks to that it will be possible to load each library separately
  * on demand.
  *
- * @module config/dynamic-libraries
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

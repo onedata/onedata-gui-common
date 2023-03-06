@@ -1,8 +1,7 @@
 /**
  * Shows a floating text block containing log entries from `visual-logger` *
  * service. Use `visualLogger.log(message: string)` to add an entry.
- * 
- * @module components/visual-logger
+ *
  * @author Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

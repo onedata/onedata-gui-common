@@ -13,8 +13,7 @@ import dom from 'onedata-gui-common/utils/dom';
  * }}
  * ```
  *
- * @module components/one-image
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

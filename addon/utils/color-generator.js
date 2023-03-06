@@ -6,7 +6,6 @@
  * Idempotency of generating colors in guaranteed ONLY within calls to the
  * same generator instance.
  *
- * @module utils/color-generator
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,8 +1,7 @@
 /**
  * An util function, that checks if given object may be an Ember Data record.
  *
- * @module utils/is-record
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

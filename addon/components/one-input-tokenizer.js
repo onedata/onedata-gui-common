@@ -1,7 +1,6 @@
 /**
  * Ember wrapper component for `input-tokenizer` jQuery plugin
  *
- * @module components/one-input-tokenizer
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

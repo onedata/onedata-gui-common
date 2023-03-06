@@ -6,7 +6,6 @@
  * ease the process of migration. After successfull upgrade all calls to this
  * util should be removed.
  *
- * @module utils/silence-deprecations
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

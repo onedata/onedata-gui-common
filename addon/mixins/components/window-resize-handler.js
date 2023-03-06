@@ -1,8 +1,7 @@
 /**
  * A mixin that provides functionality related to window resize event handling.
  * Version specific for components.
- * 
- * @module mixins/components/window-resize-handler
+ *
  * @author Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

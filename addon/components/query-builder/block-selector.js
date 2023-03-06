@@ -1,8 +1,7 @@
 /**
  * Contains options for query block. In 'create' mode allows to select new block, in 'edit'
  * mode has options for changing existing query blocks.
- * 
- * @module components/query-builder/block-selector
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -169,7 +168,7 @@ export default Component.extend(...mixins, {
   ),
 
   /**
-   * @param {String} operatorName 
+   * @param {String} operatorName
    * @param {Array<Utils.QueryBuilder.QueryBlock>} initialOperands
    * @returns {Utils.QueryBuilder.OperatorQueryBlock}
    */
@@ -183,16 +182,16 @@ export default Component.extend(...mixins, {
 
   actions: {
     /**
-     * @param {String} operatorName 
+     * @param {String} operatorName
      */
     operatorAdded(operatorName) {
       this.get('onBlockAdd')(this.createOperatorBlock(operatorName));
     },
 
     /**
-     * @param {QueryProperty} property 
-     * @param {String} comparator 
-     * @param {any} comparatorValue 
+     * @param {QueryProperty} property
+     * @param {String} comparator
+     * @param {any} comparatorValue
      */
     conditionAdded(property, comparator, comparatorValue) {
       const condition = ConditionQueryBlock.create({
@@ -204,7 +203,7 @@ export default Component.extend(...mixins, {
     },
 
     /**
-     * @param {String} operatorName 
+     * @param {String} operatorName
      */
     surround(operatorName) {
       const {
@@ -217,7 +216,7 @@ export default Component.extend(...mixins, {
     },
 
     /**
-     * @param {String} operatorName 
+     * @param {String} operatorName
      */
     changeToOperator(operatorName) {
       const {

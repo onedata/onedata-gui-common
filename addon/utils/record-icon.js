@@ -9,7 +9,6 @@
  *
  * TODO: add more icons when used in projects other than onezone-gui.
  *
- * @module utils/record-icon
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  */

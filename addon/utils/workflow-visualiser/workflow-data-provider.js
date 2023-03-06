@@ -3,7 +3,6 @@
  * Created by workflow-visualiser and used internally by actions-factory to
  * provide necessary data to the actions.
  *
- * @module utils/workflow-visualiser/workflow-data-provider
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

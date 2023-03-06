@@ -4,7 +4,6 @@
  * In contrast to Ember throttle, this makes last invocation of function after
  * timeSpacing if there is no invocations.
  *
- * @module utils/create-throttled-function
  * @author Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

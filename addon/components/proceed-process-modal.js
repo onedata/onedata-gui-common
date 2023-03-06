@@ -2,8 +2,7 @@
  * Shows modal, that represents a consent for doing something (run some
  * process etc.). Contains two buttons: cancel and proceed.
  *
- * @module components/proceed-process-modal
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

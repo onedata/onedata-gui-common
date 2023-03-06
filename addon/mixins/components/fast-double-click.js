@@ -11,15 +11,14 @@
  * - click
  * - -> the `dblclick` event is not fired by browser, because there was to short
  *   period between double clicks (300ms)
- * 
+ *
  * This mixin invokes `fastDoubleClick` method when component is double clicked
  * without need to wait for this period (in this case 300ms).
- * 
+ *
  * If you want to handle also click event please use `super` in `click` handler.
- * 
+ *
  * See dummy app demo-component for example.
- * 
- * @module mixins/components/fast-double-click
+ *
  * @author Jakub Liput
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

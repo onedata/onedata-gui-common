@@ -4,8 +4,7 @@ import layout from 'onedata-gui-common/templates/components/one-way-radio-group'
 /**
  * Creates radio inputs group based one the one-toggle-radio component.
  *
- * @module components/one-way-radio-group
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

@@ -1,7 +1,6 @@
 /**
  * Redirect to Onepanel GUI (hosted on Onezone domain) on component load
- * 
- * @module components/content-clusters-onepanel-redirect
+ *
  * @author Jakub Liput
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -2,7 +2,6 @@
  * Check if user event like click or enter push is requesting opening new tab in browser.
  * Eg. ctrl + click.
  *
- * @module utils/is-new-tab-request-event
  * @author Jakub Liput
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

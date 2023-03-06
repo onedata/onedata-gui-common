@@ -6,7 +6,6 @@
  * model records. Available models are: user, group, oneprovider, service (op and oz),
  * serviceOnepanel (opp and ozp).
  *
- * @module components/tags-input/model-selector-editor
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

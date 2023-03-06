@@ -11,8 +11,7 @@
  *   `this.get('_fieldsTree.user.basic.name')`.
  * * fields have `_isField: true`, parents do not.
  *
- * @module mixins/components/one-dynamic-tree/fields-tree
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

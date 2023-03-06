@@ -1,8 +1,7 @@
 /**
  * A list entry for single space in context of particular provider
  * in provider-place/drop component.
- * 
- * @module components/provider-place/drop/space
+ *
  * @author Jakub Liput
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
