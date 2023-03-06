@@ -37,8 +37,5 @@ export default Component.extend({
         disabledFieldsPaths.pushObjects(['node3', 'node2.node22.node221']);
       }
     },
-    search(query) {
-      this.set('_searchQuery', query);
-    },
   },
 });
