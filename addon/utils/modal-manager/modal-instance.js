@@ -1,7 +1,6 @@
 /**
  * Internal class used to manage modal instances by modal-manager service.
  *
- * @module utils/modal-manager/modal-instance
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

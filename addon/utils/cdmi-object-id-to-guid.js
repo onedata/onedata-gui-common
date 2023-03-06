@@ -1,8 +1,7 @@
 /**
  * Computes GUID from CDMI Object ID. For conversion algorithm details see documentation of
  * utils/guid-to-cdmi-object-id.
- * 
- * @module utils/cdmi-object-id-to-guid
+ *
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

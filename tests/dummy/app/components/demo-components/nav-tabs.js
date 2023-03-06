@@ -1,5 +1,4 @@
 /**
- * @module components/demo-components/nav-tabs
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

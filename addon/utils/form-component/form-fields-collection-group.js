@@ -3,7 +3,6 @@
  * `removeField` to remove it from fields list. DO NOT modify fields array on your own.
  * Before usage you have to override `fieldFactoryMethod` so it returns form element.
  *
- * @module utils/form-component/form-fields-collection-group
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

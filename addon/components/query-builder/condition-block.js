@@ -1,7 +1,6 @@
 /**
  * Shows and allows to edit query conditon.
- * 
- * @module components/query-builder/condition-block
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -163,7 +162,7 @@ export default Component.extend(...mixins, {
     },
 
     /*
-     * @param {any} newValue 
+     * @param {any} newValue
      */
     comparatorValueChange(newValue) {
       this.set('editComparatorValue', newValue);

@@ -8,7 +8,6 @@
  * You should override `i18nPrefix` property to path of component locale.
  * A prefix can be used with or without trailing dot.
  *
- * @module mixins/components/i18n
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

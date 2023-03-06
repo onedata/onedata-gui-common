@@ -10,7 +10,6 @@
  * If component has not been used as a block component, then default item
  * template is used (checkbox with `item.name` label)
  *
- * @module components/checkbox-list
  * @author Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

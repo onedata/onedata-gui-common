@@ -4,7 +4,6 @@
  * Also creates `Application.getOnedataConfig(): Promise<Object>` method for accessing
  * the config in other modules.
  *
- * @module initializers/fetch-gui-context
  * @author Jakub Liput
  * @copyright (C) 2016-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

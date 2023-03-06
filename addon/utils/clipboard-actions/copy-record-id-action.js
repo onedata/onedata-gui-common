@@ -1,7 +1,6 @@
 /**
  * Copies id of record passed via context to the clipboard.
  *
- * @module utils/clipboard-actions/copy-record-id-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,7 +1,6 @@
 /**
  * Global definitions of breakpoints for all applications.
  *
- * @module breakpoints
  * @author Jakub Liput
  * @copyright (C) 2018-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

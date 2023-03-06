@@ -6,7 +6,6 @@
  * It is forbidden to use the same resolution twice for the same aggregator. Also
  * metric IDs must be unique.
  *
- * @module components/tags-input/time-series-metric-selector-editor
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

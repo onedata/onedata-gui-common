@@ -10,8 +10,7 @@
  * object with field `separator: true`) - it will be rendered as a header
  * for all following actions.
  *
- * @module components/actions-popover-content
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

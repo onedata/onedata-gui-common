@@ -9,7 +9,6 @@
  * NOTE: single instance of the factory can be used only by the one workflow
  * visualiser at a time.
  *
- * @module utils/workflow-visualiser/actions-factory
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

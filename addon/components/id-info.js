@@ -1,7 +1,6 @@
 /**
  * Display id icon and popover with clipboard for id.
  *
- * @module components/id-info
  * @author Agnieszka Warchoł
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

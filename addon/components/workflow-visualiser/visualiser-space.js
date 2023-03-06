@@ -1,7 +1,6 @@
 /**
  * Base component for spacings between visualiser elements.
  *
- * @module components/workflow-visualiser/visualiser-space
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

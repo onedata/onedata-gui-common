@@ -1,7 +1,6 @@
 /**
  * Second level sidebar items component base for clusters.
  *
- * @module component/sidebar-cluster/second-level-items
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,8 +1,7 @@
 /**
  * A circle representing a provider on world map.
  *
- * @module components/provider-place
- * @author Jakub Liput, Michal Borzecki
+ * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

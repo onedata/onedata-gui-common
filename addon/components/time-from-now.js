@@ -2,7 +2,6 @@
  * Displays the human-readable amount of time elapse from the `date`
  * and updates it automatically
  *
- * @module components/time-from-now
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

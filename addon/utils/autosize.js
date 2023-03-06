@@ -11,7 +11,6 @@
  * The MIT License(MIT)
  * Copyright(c) 2015 Jack Moore
  *
- * @module utils/autosize
  * @author Jack Moore, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -2,7 +2,6 @@
  * Hides external implemetation of ember-drag-drop dragCoordinator service behind
  * our API.
  *
- * @module services/drag-drop
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

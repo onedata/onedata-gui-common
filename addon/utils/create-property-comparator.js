@@ -1,8 +1,7 @@
 /**
  * Creates comparator function in sorting, which compares object by its
  * properties using greater than and lower than operators (>, <).
- * 
- * @module utils/create-property-comparator
+ *
  * @author Jakub Liput
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

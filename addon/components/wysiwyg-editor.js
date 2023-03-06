@@ -2,7 +2,6 @@
  * Reexports Pell editor as custom wysiwyg-editor component with predefined
  * options.
  *
- * @module components/wysiwyg-editor
  * @author Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

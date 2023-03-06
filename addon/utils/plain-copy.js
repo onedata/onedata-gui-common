@@ -4,7 +4,6 @@
  * Based on implementation: http://stackoverflow.com/a/15002755
  * NOTE that it will not clone object deeply, but just copy references
  *
- * @module utils/plain-copy
  * @author Jakub Liput, qrilka from Stack Overflow
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

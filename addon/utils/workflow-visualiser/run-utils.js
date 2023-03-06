@@ -1,7 +1,6 @@
 /**
  * Contains various utils related to workflow lane runs.
  *
- * @module utils/workflow-visualiser/run-utils
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

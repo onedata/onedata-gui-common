@@ -1,8 +1,7 @@
 /**
  * Displays animated version of Onedata logo.
  *
- * @module components/one-animated-logo
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

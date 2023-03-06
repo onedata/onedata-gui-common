@@ -9,7 +9,6 @@
  * Yields:
  * - toggleAction - action, that toggles list item visibility
  *
- * @module components/one-collapsible-list-item-header.js
  * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

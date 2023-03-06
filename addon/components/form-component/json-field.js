@@ -1,7 +1,6 @@
 /**
  * A component responsible for rendering JSON field.
  *
- * @module components/form-component/json-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

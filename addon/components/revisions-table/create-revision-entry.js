@@ -1,7 +1,6 @@
 /**
  * Renders a special revisions table entry, which allows to create new revision.
  *
- * @module components/revisions-table/create-revision-entry
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

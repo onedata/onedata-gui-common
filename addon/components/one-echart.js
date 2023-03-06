@@ -2,7 +2,6 @@
  * Renders chart using Apache ECharts library.
  * More about that library: https://echarts.apache.org/
  *
- * @module components/one-echart
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

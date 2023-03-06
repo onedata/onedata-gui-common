@@ -1,7 +1,6 @@
 /**
  * OR operator query block.
- * 
- * @module utils/query-builder/or-operator-query-block
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

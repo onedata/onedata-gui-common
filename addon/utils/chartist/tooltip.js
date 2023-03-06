@@ -22,8 +22,7 @@
  * - valueSuffix - [bar/line chart only] suffix for tooltip entries (e.g. for units)
  * - roundValues - if true, values in tooltip will be rounded
  *
- * @module utils/chartist/tooltip
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

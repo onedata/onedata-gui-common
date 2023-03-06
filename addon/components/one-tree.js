@@ -44,8 +44,7 @@
  * Note: keys used to identify tree components and items do not have to be strings.
  * Every value, that is not recognized as an empty value in JS, is good.
  *
- * @module components/one-tree
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

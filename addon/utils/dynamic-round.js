@@ -5,7 +5,6 @@
  * - 0.0003 => "< 0.001"
  * - 1.23 => "1.23"
  *
- * @module utils/dynamic-round
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,11 +1,10 @@
 /**
  * Shows record icon. To calculate proper icon, one of `record` or `modelName` properties
  * must be set. When both provided, `record` is used.
- * 
+ *
  * To get a more detailed icon (e.g. icon dedicated for a specific group type)
  * you must pass `record` and set `useSubtypeIcon` to true.
  *
- * @module components/record-icon
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

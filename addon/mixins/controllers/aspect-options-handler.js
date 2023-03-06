@@ -1,10 +1,9 @@
 /**
  * Adds aliases for handling `options` query param.
- * 
+ *
  * IMPORTANT: you must add `queryParams: ['options']` to controller manually,
  * because not every use-case allows to add `queryParam` using this controller.
  *
- * @module mixins/controllers/aspect-options-handler
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

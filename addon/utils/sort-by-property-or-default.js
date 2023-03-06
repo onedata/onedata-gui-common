@@ -5,7 +5,6 @@
  * Sorts the (Ember) objects of array in place by given property and place
  * default object in first place of array using entityId (if present).
  *
- * @module utils/sort-by-property-or-default
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

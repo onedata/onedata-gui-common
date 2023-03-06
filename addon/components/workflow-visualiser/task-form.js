@@ -5,7 +5,6 @@
  * A form responsible for showing and editing/creating tasks. It does not persists
  * data. Any changes are yielded using `onChange` callback.
  *
- * @module components/workflow-visualiser/taske-form
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -2,11 +2,10 @@
  * Finds a minimum rectangle to contain all given points in a map and then returns
  * map settings accurate for found rectangle.
  *
- * @module utils/map-position-for-coordinates
  * @author Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
- * 
+ *
  * @function
  * @param {Array<{ latitude: number, longitude: number }>} points
  * @param {number} [paddingFactor=2] result rectangle will be enlarged by this factor

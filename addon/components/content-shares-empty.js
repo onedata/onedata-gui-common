@@ -1,7 +1,6 @@
 /**
  * A component with information about no shares available
  *
- * @module components/content-shares-empty
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

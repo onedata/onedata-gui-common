@@ -1,7 +1,6 @@
 /**
  * Fixes JS evaluation in Firefox and Safari after back button press.
  *
- * @module instance-initializers/back-fixer
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

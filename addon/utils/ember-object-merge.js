@@ -5,7 +5,6 @@
  * Copy properites from source to destination EmberObject, overwriting
  * properties that are both in source and desitination.
  *
- * @module utils/ember-object-merge
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

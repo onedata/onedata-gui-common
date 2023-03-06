@@ -12,7 +12,6 @@
  * 3. notifyResult() - notifies user using data from ActionResult. Notification can be
  *    changed/cancelled by simple overriding that method.
  *
- * @module utils/action
  * @author Michał Borzęcki
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

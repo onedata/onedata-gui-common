@@ -1,11 +1,10 @@
 /**
  * A modal-like component that allows to test components inside modal but without
  * modal logic and styles, which speeds-up tests execution.
- * 
+ *
  * Implemented mainly for testing, and will facilitate transition from modals to other
  * containers in future.
  *
- * @module components/one-pseudo-modal
  * @author Jakub Liput
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -7,8 +7,7 @@
  *
  * Can be used only as a contextual component yielded by one-tree.
  *
- * @module components/one-tree/item
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

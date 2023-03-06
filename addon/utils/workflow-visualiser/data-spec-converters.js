@@ -2,7 +2,6 @@
  * Provides converters for type <-> data spec. Data specs are used to define type of
  * data accepted by lambda argument/result and stores.
  *
- * @module utils/workflow-visualiser/data-spec-converters
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

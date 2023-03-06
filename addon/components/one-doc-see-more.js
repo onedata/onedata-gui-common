@@ -1,7 +1,6 @@
 /**
  * General text with link to documentation with customizable documentation path and text
- * 
- * @module components/one-doc-see-more
+ *
  * @author Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

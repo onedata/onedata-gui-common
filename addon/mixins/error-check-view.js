@@ -1,8 +1,7 @@
 /**
  * Use this mixin in components/views that can show error but optionally you
  * want to check if the error still exists before rendering.
- * 
- * @module mixins/error-check-view
+ *
  * @author Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

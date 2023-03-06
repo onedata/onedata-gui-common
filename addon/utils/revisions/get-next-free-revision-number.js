@@ -1,7 +1,6 @@
 /**
  * Calculates next free revision number.
  *
- * @module utils/revisions/get-next-free-revision-number
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

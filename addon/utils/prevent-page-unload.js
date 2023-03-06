@@ -10,7 +10,6 @@
  *
  * Code is based on https://stackoverflow.com/a/19538231
  *
- * @module utils/prevent-page-unload
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,8 +1,7 @@
 /**
  * A global state of page scrolling.
  *
- * @module services/scroll-state
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -17,7 +16,7 @@ export default Service.extend({
 
   /**
    * Persists scroll event
-   * @param {Event} scrollEvent 
+   * @param {Event} scrollEvent
    */
   scrollOccurred(scrollEvent) {
     this.set('lastScrollEvent', scrollEvent);

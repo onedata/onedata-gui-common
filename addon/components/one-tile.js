@@ -1,10 +1,9 @@
 /**
  * A tile, container for small summary of some aspect used mainly in overviews
- * 
+ *
  * Put them in `.one-tile-container` div.
  * Set `aspect` property for use as a link.
  *
- * @module components/one-tile
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

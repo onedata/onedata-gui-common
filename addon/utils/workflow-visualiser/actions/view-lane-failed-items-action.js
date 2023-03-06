@@ -2,7 +2,6 @@
  * Shows failed items of specific lane. Needs `lane`, `runNumber` and `getStoreContentCallback`
  * passed via context. If `runNumber` is not provided, the visible one will be used.
  *
- * @module utils/workflow-visualiser/actions/view-lane-failed-items-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

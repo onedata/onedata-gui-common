@@ -3,8 +3,7 @@
  * should be specified with latitude and longitude properties.
  * Example of use can be found in one-atlas component.
  *
- * @module components/one-atlas/position
- * @author Jakub Liput, Michal Borzecki
+ * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

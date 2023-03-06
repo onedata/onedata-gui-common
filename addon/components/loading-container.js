@@ -14,7 +14,6 @@
  * It will render error message if `backendError` is non-empty string
  * It will render `some-component` if above conditions are not met.
  *
- * @module components/loading-container
  * @author Jakub Liput
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
