@@ -1,9 +1,8 @@
 /**
  * Modifies collection of passed `orig` array to be the same as `update` array.
- * 
+ *
  * NOTE: extended from `onedata-gui-common` `util:push-new-items`
- * 
- * @module utils/mutate-array
+ *
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

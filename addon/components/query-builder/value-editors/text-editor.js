@@ -1,7 +1,6 @@
 /**
  * Allows to edit query text values.
  *
- * @module components/query-builder/value-editors/text-editor
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -51,7 +50,7 @@ export default EditorBaseComponent.extend({
 
   /**
    * @override
-   * @param {KeyboardEvent} event 
+   * @param {KeyboardEvent} event
    */
   keyDown(event) {
     if (event.key === 'Enter') {
@@ -63,7 +62,7 @@ export default EditorBaseComponent.extend({
 
   /**
    * @override
-   * @param {InputEvent} event 
+   * @param {InputEvent} event
    */
   input(event) {
     const value = event.currentTarget.value;

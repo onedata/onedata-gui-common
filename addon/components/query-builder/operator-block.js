@@ -1,7 +1,6 @@
 /**
  * Visualizes a single operator block.
- * 
- * @module components/query-builder/operator-block
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -135,7 +134,7 @@ export default Component.extend(...mixins, {
 
   actions: {
     /**
-     * @param {Utils.QueryBuilder.QueryBlock} newQueryBlock 
+     * @param {Utils.QueryBuilder.QueryBlock} newQueryBlock
      */
     addBlock(newQueryBlock) {
       const queryBlock = this.get('queryBlock');
@@ -164,7 +163,7 @@ export default Component.extend(...mixins, {
     },
 
     /**
-     * @param {Utils.QueryBuilder.QueryBlock} queryBlock 
+     * @param {Utils.QueryBuilder.QueryBlock} queryBlock
      */
     removeBlock(queryBlock) {
       this.get('queryBlock.operands').removeObject(queryBlock);

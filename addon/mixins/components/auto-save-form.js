@@ -1,7 +1,6 @@
 /**
  * Base for creating forms that submits data automatically with delay.
  *
- * @module mixins/components/auto-save-form
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,9 +1,8 @@
 /**
  * An animated cirlce that should be rendered below provider circle.
- * 
+ *
  * It denotes that provider is transferring data: in or out.
  *
- * @module components/provider-place/super-circle
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

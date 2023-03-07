@@ -2,7 +2,6 @@
  * A container for all form elements - root group. To work properly it should have
  * specified 'ownerSource' and 'i18nPrefix'.
  *
- * @module utils/form-component/form-fields-root-group
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

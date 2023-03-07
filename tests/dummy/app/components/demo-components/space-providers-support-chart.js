@@ -1,6 +1,5 @@
 /**
- * @module components/demo-components/space-providers-support-chart
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

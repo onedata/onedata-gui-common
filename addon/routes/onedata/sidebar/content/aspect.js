@@ -1,7 +1,6 @@
 /**
  * A route to view or modify a specific aspect of a resource
  *
- * @module routes/onedata/sidebar/content/option
  * @author Jakub Liput
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

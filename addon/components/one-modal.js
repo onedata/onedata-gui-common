@@ -1,7 +1,6 @@
 /**
  * Custom extension of ember-bootstrap bs-modal
  *
- * @module components/bs-modal
  * @author Michał Borzęcki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -2,7 +2,6 @@
  * Draws a Oneprovider map representation in form of colored circle. Scale can
  * be adjusted using properties `mapSize` and `scale`.
  *
- * @module components/oneprovider-map-circle
  * @author Michał Borzęcki
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -2,7 +2,6 @@
  * Single tab used in one-tab-bar (it's parent component should be
  * `one-tab-bar/tab-bar-ul`).
  *
- * @module components/one-tab-bar
  * @author Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

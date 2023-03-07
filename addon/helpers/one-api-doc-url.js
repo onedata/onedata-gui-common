@@ -10,7 +10,6 @@
  * generates:
  * `https://onedata.org/#/home/api/stable/oneprovider?anchor=tag/File-registration`
  *
- * @module helpers/one-api-doc-url
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

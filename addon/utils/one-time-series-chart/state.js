@@ -3,7 +3,6 @@
  * with series evaluated according to the view parameters. It contains data
  * ready to use by chart visualisation library.
  *
- * @module utils/one-time-series-chart/state
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

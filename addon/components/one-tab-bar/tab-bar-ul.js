@@ -2,13 +2,12 @@
  * Auto-horizontal-resizable container element for `tab-bar-li` components.
  * It is not scrollable - for scrolling `one-tab-bar` uses
  * `tab-bar-ul-container` component.
- * 
+ *
  * Something like this:
  * ```
  * tab1 | tab2 | tab3
  * ```
- * 
- * @module components/one-tab-bar/tab-bar-ul
+ *
  * @author Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

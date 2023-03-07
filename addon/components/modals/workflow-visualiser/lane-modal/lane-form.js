@@ -2,7 +2,6 @@
  * A form responsible for showing and editing/creating lanes. It does not persists
  * data. Any changes are yielded using `onChange` callback.
  *
- * @module components/modals/workflow-visualiser/lane-modal/lane-form
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

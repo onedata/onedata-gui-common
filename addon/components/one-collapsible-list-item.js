@@ -11,7 +11,6 @@ import layout from 'onedata-gui-common/templates/components/one-collapsible-list
  * If isCollapsible == false then item cannot be toggled.
  * Item closes its content if eventsBus triggers closeEventName event
  *
- * @module components/one-collapsible-list-item.js
  * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

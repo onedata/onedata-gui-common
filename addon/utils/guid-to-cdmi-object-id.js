@@ -1,7 +1,7 @@
 /**
  * Computes CDMI Object ID for Onedata CDMI implementation.
  * Original Erlang imlpementation:
- * 
+ *
  * ```
  * %%--------------------------------------------------------------------
  * %% @doc Build an object ID given an enterprise number and data as a
@@ -28,8 +28,7 @@
  *             {error, badarg}
  *     end.
  * ```
- * 
- * @module utils/guid-to-cdmi-object-id
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -2,7 +2,6 @@
  * A form field base class. Introduces validators mechanism. Provides one internal
  * validator - presenceValidator - which can be controlled by flag isOptional.
  *
- * @module utils/form-component/form-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

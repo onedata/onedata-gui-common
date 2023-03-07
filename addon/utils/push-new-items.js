@@ -4,7 +4,6 @@
  *
  * For detailed description see unit tests that covers all features.
  *
- * @module utils/push-new-items
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

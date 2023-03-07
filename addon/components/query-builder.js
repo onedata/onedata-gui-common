@@ -3,7 +3,6 @@
  * To integrate query builder with outside world, inject your own `rootQueryBlock`
  * and see methods for reading edited query data.
  *
- * @module components/query-builder
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -33,10 +32,10 @@ export default Component.extend(I18n, {
    * - key
    * - displayedKey
    * - type
-   * 
+   *
    * Additional properties:
    * - isSpecialKey
-   * 
+   *
    * @virtual
    * @type {Array<QueryProperty>}
    */

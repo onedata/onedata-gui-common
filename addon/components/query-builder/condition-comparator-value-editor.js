@@ -1,8 +1,7 @@
 /**
  * A component responsible for visualising and editing comparator values for condition
  * query blocks. Has three modes: view, edit and create
- * 
- * @module components/query-builder/condition-comparator-value-editor
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

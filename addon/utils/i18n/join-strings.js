@@ -3,7 +3,6 @@
  * generate: `["one", "two", "three"]` -> `one, two or three`.
  * Uses translations of conjuctions - if it is not available it uses passed conjunction.
  *
- * @module utils/i18n/join-string
  * @author Jakub Liput
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -536,7 +536,6 @@
  * NOTE: series function arguments can only reference to other series functions.
  * Transform functions are not available at the series function definition level.
  *
- * @module utils/one-time-series-chart/configuration
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

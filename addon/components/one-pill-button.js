@@ -1,7 +1,6 @@
 /**
  * A button-like element splited into two parts: text and menu toggle
- * 
- * @module components/one-pill-button
+ *
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

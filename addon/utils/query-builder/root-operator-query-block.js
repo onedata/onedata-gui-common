@@ -1,8 +1,7 @@
 /**
  * An operator query block for root of query block hierarchy.
  * Can have only one operand.
- * 
- * @module utils/query-builder/root-operator-query-block
+ *
  * @author Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

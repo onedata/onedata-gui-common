@@ -2,7 +2,6 @@
  * Controls lifecycle of attached embedded iframes according to their
  * owners list.
  *
- * @module services/embedded-iframe-manager
  * @author Michał Borzęcki
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

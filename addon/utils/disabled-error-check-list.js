@@ -1,14 +1,13 @@
 /**
  * Mark some resources to skip error checking before showing error message,
  * because error check was done in another place.
- * 
+ *
  * Eg. when someone enters `clusters/:id/authentication-error` route using
  * URL we want to check the error before rendering message.
- * 
+ *
  * However sometimes we redirect to this route internally because we detected
  * this error somewhere else and then we can skip error checking.
- * 
- * @module utils/disabled-error-check-list
+ *
  * @author Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,8 +1,7 @@
 /**
  * An operator query block base class. Aggregates operands, which may be conditions or
  * another operators.
- * 
- * @module utils/query-builder/operator-query-block
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

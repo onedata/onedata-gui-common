@@ -1,8 +1,7 @@
 /**
  * A component that renders providers support for specified space.
  *
- * @module components/space-providers-support-chart
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

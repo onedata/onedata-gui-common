@@ -8,7 +8,6 @@
  *  backend form, eg. space_view_transfers; if an array is provided, displays multiple
  *  privileges
  *
- * @module utils/i18n/insufficient-privileges-message
  * @author Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

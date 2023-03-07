@@ -1,7 +1,6 @@
 /**
  * Contains data related to "time series" automation stores.
  *
- * @module utils/atm-workflow/store-config/time-series
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

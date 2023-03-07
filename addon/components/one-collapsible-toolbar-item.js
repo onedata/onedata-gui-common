@@ -2,8 +2,7 @@
  * An item element for one-collapsible-toolbar. For example of use see
  * description for one-collapsible-toolbar component.
  *
- * @module components/one-collapsible-toolbar-item
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

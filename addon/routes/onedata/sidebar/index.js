@@ -1,7 +1,6 @@
 /**
  * Redirects to a default resource content view in collection or empty information
  *
- * @module routes/onedata/sidebar/index
  * @author Jakub Liput
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

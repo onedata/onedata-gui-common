@@ -1,8 +1,7 @@
 /**
  * Returns type of given data (`typeof` operator alias).
  *
- * @module helpers/data-type
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

@@ -1,7 +1,6 @@
 /**
  * Shows query block adder with adder trigger.
- * 
- * @module components/query-builder/block-adder
+ *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -86,7 +85,7 @@ export default Component.extend({
 
   actions: {
     /**
-     * 
+     *
      * @param {Function} closeSelectorCallback
      * @param {Utils.QueryBuilder.QueryBlock} selectedBlock
      */

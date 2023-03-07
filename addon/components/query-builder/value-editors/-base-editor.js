@@ -1,7 +1,6 @@
 /**
  * Base (abstract) implementation of query value editor.
  *
- * @module components/query-builder/value-editors/-base-editor
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

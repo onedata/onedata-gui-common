@@ -2,8 +2,7 @@
  * Returns id for passed model, that can be used for routing purposes
  * (inside link-to helper etc).
  *
- * @module helpers/model-routable-id
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

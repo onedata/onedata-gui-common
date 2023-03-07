@@ -4,8 +4,7 @@
  *
  * WARNING: data stored in app-storage is not persisted! It is only stored in memory.
  *
- * @module services/app-storage
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

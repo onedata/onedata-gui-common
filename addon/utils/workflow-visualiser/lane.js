@@ -1,7 +1,6 @@
 /**
  * Lane - aggregates parallel boxes and spaces between them.
  *
- * @module utils/workflow-visualiser/lane
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

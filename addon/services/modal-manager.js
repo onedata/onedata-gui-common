@@ -22,7 +22,6 @@
  * the modal-manager service. So it is important to render only one instance of
  * the global-modal for the whole application.
  *
- * @module services/modal-manager
  * @author Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

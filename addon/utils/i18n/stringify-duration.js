@@ -3,7 +3,6 @@
  * negative number means duration in the past ('2 hours ago'), positive in the future
  * ('in 2 hours'). Short format of negative and positive duration is the same.
  *
- * @module utils/i18n/stringify-duration
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

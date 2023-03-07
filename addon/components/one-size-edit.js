@@ -1,7 +1,6 @@
 /**
  * Data size editor with number input, unit selector and confirm/cancel support.
- * 
- * @module components/one-size-edit
+ *
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

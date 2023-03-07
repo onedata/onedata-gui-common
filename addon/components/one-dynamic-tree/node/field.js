@@ -2,8 +2,7 @@
  * A component represents tree node field, used internally by the one-dynamic-tree
  * component. For example of tree usage, see one-dynamic-tree documentation.
  *
- * @module components/one-dynamic-tree/node/field
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

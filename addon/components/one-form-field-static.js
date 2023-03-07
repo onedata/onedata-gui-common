@@ -1,7 +1,6 @@
 /**
  * Renders an element that looks like input, but is only for display
  *
- * @module components/one-form-field-static
  * @author Jakub Liput
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

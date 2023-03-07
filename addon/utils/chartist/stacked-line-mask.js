@@ -4,8 +4,7 @@
  * (each series is a sum of original values and all preceding series)
  * in descending value order.
  *
- * @module utils/chartist/stacked-line-mask
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

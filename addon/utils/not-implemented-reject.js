@@ -2,7 +2,6 @@
  * A function that should be used for callbacks to inject that
  * return promises and are critical for code to work.
  *
- * @module utils/not-implemented-reject
  * @author Jakub Liput
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

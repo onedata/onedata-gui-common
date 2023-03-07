@@ -1,7 +1,6 @@
 /**
  * Provides clipboard manipulation functions ready to use for GUI.
  *
- * @module services/clipboard-actions
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
