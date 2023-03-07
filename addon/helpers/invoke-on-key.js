@@ -1,7 +1,10 @@
 /**
  * Invokes a function associated with keyboard key in the event. Key-function
- * association is provided by a map key->function as a first argument of the
+ * association is provided by a map key -> function as a first argument of the
  * helper.
+ *
+ * Possible key values can be found here:
+ * https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
  *
  * Example:
  * ```
@@ -21,7 +24,7 @@
 import { helper } from '@ember/component/helper';
 
 /**
- * @param {[{ [key: string]: () => void }]} params
+ * @param {[{ [key: KeyboardEvent['key']]: () => void }]} params
  * @returns {void}
  */
 export function invokeOnKey(params) {
