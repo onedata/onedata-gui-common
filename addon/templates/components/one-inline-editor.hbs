@@ -1,12 +1,17 @@
 {{#if _inEditionMode}}
-  {{one-way-input _inputValue
-    disabled=_whileSaving
-    class=(concat-classes "form-control" inputClasses)
-    update=(action (mut _inputValue))
-    onenter=(action "saveEdition")
-    onescape=(action "cancelEdition")
-    placeholder=inputPlaceholder
-    onblur=(action onLostFocus)}}
+  <input
+    type="text"
+    class={{concat-classes "form-control" inputClasses}}
+    value={{_inputValue}}
+    disabled={{_whileSaving}}
+    placeholder={{inputPlaceholder}}
+    oninput={{action (mut _inputValue) value="target.value"}}
+    onkeydown={{invoke-on-key (hash
+      Enter=(action "saveEdition")
+      Escape=(action "cancelEdition")
+    )}}
+    onblur={{action onLostFocus}}
+  />
   <span class="action-icons">
     {{#if _whileSaving}}
       {{spin-spinner-block sizeClass="xs"}}

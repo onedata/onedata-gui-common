@@ -1,4 +1,6 @@
-{{one-way-checkbox 
-  id=inputId 
-  checked=checked
-  disabled=(or isReadOnly _isInProgress)}}
+<input
+  id={{inputId}}
+  type="checkbox"
+  checked={{checked}}
+  disabled={{or isReadOnly _isInProgress}}
+/>

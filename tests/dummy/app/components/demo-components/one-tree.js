@@ -78,10 +78,4 @@ export default Component.extend({
   ]),
 
   _searchQuery: '',
-
-  actions: {
-    search(query) {
-      this.set('_searchQuery', query);
-    },
-  },
 });

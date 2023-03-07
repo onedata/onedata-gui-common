@@ -4,14 +4,16 @@
     (if (or isReadOnly option.disabled) "disabled" "clickable")
     (if option.name (concat "option-" option.name))
   }}>
-    {{one-way-radio value
-      class=(concat "field-" (concat (dot-to-dash fieldName) (concat "-" option.value)))
-      id=(if (eq index 0) inputId null)
-      option=option.value
-      update=(action "updateHandler")
-      focusOut=onFocusOut
-      disabled=(or isReadOnly option.disabled)
-    }}
+    <input
+      id={{if (eq index 0) inputId null}}
+      type="radio"
+      class={{concat "field-" (concat (dot-to-dash fieldName) (concat "-" option.value))}}
+      value={{option.value}}
+      disabled={{or isReadOnly option.disabled}}
+      checked={{eq value option.value}}
+      onchange={{action "updateHandler" option.value}}
+      onblur={{onFocusOut}}
+    />
     <div class="one-way-radio-control"></div>
     <span class="one-label">{{option.label}}</span>
   </label>

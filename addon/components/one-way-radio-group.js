@@ -57,8 +57,7 @@ export default Component.extend({
       if (value !== this.value) {
         // Radio input becomes checked just after user click without waiting for
         // the selected value change from parent component - it's not a correct
-        // "one-way" approach. It's a bug in `ember-one-way-controls` package,
-        // which is not maintained. In order to fix that issue, we syntetically
+        // "one-way" approach. In order to fix that issue, we syntetically
         // deselect input just after its selection and we wait for the selection
         // driven by `value` taken from the parent component.
         const currentlySelectedInputIdx = this.options
