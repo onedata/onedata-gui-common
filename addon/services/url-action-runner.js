@@ -6,15 +6,17 @@
  *
  * @module services/url-action-runner
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Service from '@ember/service';
+import Service, { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import { resolve } from 'rsvp';
 
 export default Service.extend({
+  router: service(),
+
   /**
    * @type {Map<String,Function>}
    */
@@ -85,7 +87,7 @@ export default Service.extend({
             undefined : queryParams[key];
           return params;
         }, {});
-      this.transitionTo({ queryParams: queryParamsWithoutAction });
+      this.router.transitionTo({ queryParams: queryParamsWithoutAction });
     }
   },
 });
