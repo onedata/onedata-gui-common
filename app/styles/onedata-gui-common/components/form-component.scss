@@ -147,7 +147,8 @@ $form-component-view-margin: $padding-base-vertical;
       padding-top: initial;
     }
 
-    &.dropdown-field-renderer {
+    &.dropdown-field-renderer,
+    &.custom-value-dropdown-field-renderer {
       .dropdown-field .oneicon {
         font-size: 2.2em;
         vertical-align: middle;
@@ -158,7 +159,8 @@ $form-component-view-margin: $padding-base-vertical;
 
     &.text-like-field-renderer,
     &.textarea-field-renderer,
-    &.dropdown-field-renderer {
+    &.dropdown-field-renderer,
+    &.custom-value-dropdown-field-renderer {
       .field-component {
         word-wrap: break-word;
       }
@@ -329,4 +331,42 @@ $form-component-view-margin: $padding-base-vertical;
 
 .dropdown-field-dropdown {
   max-height: 300px;
+}
+
+.custom-value-dropdown-field-dropdown {
+  .ember-power-select-options {
+    .custom-option-input {
+      display: none;
+    }
+    .custom-option-label-prefix {
+      font-style: italic;
+    }
+    .custom-option-label-prefix + .custom-option-value {
+      margin-left: 0.5em;
+    }
+    .custom-option-value {
+      opacity: $disabled-opacity;
+    }
+  }
+}
+
+.custom-value-dropdown-field-trigger {
+  .ember-power-select-selected-item {
+    display: block;
+    width: 100%;
+    .custom-option-input {
+      width: 100%;
+    }
+  }
+  .ember-power-select-selected-item {
+    .custom-input-option {
+      display: none;
+    }
+  }
+  .custom-option-input {
+    outline: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
 }

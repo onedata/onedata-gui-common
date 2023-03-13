@@ -1,0 +1,77 @@
+{{#if isInViewMode}}
+  {{#if selectedOption.icon}}
+    {{one-icon icon=selectedOption.icon}}
+  {{/if}}
+  <span class="text">{{selectedOption.label}}</span>
+{{else}}
+  {{#one-dropdown
+    tagName="div"
+    triggerClass=(concat-classes
+      "dropdown-field-trigger"
+      (if (eq size "sm") "small")
+      "custom-value-dropdown-field-trigger"
+      (if isCustomInputFocused "ember-power-select-trigger--active")
+    )
+    dropdownClass=(concat-classes
+      "dropdown-field-dropdown"
+      (concat field.name "-field-dropdown")
+      (if (eq size "sm") "small")
+      "custom-value-dropdown-field-dropdown"
+    )
+    disabled=(not isEffectivelyEnabled)
+    options=preparedOptions
+    selected=selectedOption
+    placeholder=placeholder
+    renderInPlace=false
+    triggerId=fieldId
+    searchEnabled=showSearch
+    matcher=matchDropdownOption
+    onchange=(action "valueChanged")
+    onfocus=(action "focus")
+    onblur=(action "triggerFocusLost")
+    onclose=(action "focusLost")
+    onkeydown=(action "keyDown")
+    as |option|
+  }}
+    {{#if (eq option customInputOption)}}
+      <div class="option-container option-custom-input">
+        {{#if isCustomInputOptionIconShown}}
+          {{one-icon icon=customInputOptionIcon}}
+        {{/if}}
+        {{!-- "text" class is added to have styles from power-select option --}}
+        <input
+          type="text"
+          class="custom-option-input text"
+          value={{customInputValue}}
+          placeholder={{customInputPlaceholder}}
+          onfocus={{action "onInputFocus"}}
+          onblur={{action "onInputBlur"}}
+          oninput={{action "onCustomInput" value="target.value"}}
+        >
+        <div class="option-container custom-input-option">
+          {{#if isCustomInputOptionIconShown}}
+            {{one-icon icon=customInputOptionIcon}}
+          {{/if}}
+          {{#truncated-string class="text"}}
+            <span class="custom-option-label-prefix">
+              {{customInputOptionTextPrefix}}
+            </span>
+            {{#if customInputOption.value}}
+              <span class="custom-option-value">({{customInputOption.value}})</span>
+            {{/if}}
+          {{/truncated-string}}
+        </div>
+      </div>
+    {{else}}
+      <div class="option-container option-{{option.name}}">
+        {{#if option.icon}}
+          {{one-icon icon=option.icon}}
+        {{/if}}
+        {{#truncated-string class="text"}}
+          {{option.label}}
+        {{/truncated-string}}
+      </div>
+    {{/if}}
+  {{/one-dropdown}}
+{{/if}}
+{{yield}}

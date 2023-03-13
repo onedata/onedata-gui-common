@@ -15,7 +15,7 @@ import {
   formValuesToDataSpec,
   dataSpecToFormValues,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
-import OneDrodopdownHelper from '../../../../helpers/one-dropdown';
+import OneDropdownHelper from '../../../../helpers/one-dropdown';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { AtmFileType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 import { set } from '@ember/object';
@@ -53,8 +53,8 @@ const simpleAtmDataSpecTypesInfo = atmDataSpecTypesInfo.filter(({ type }) =>
   ![AtmDataSpecType.File, AtmDataSpecType.Array, AtmDataSpecType.TimeSeriesMeasurement]
   .includes(type)
 );
-const atmDataSpecTypeHelper = new OneDrodopdownHelper('.data-type-selector');
-const fileTypeHelper = new OneDrodopdownHelper('.fileType-field');
+const atmDataSpecTypeHelper = new OneDropdownHelper('.data-type-selector');
+const fileTypeHelper = new OneDropdownHelper('.fileType-field');
 
 describe('Integration | Utility | atm workflow/data spec editor/data spec editor', function () {
   setupRenderingTest();

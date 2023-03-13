@@ -12,6 +12,8 @@ import DatetimeField from 'onedata-gui-common/utils/form-component/datetime-fiel
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import StaticUserField from 'onedata-gui-common/utils/form-component/static-user-field';
+import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
+import CustomValueDropdownField from 'onedata-gui-common/utils/form-component/custom-value-dropdown-field';
 import {
   Tag as RecordTag,
   removeExcessiveTags,
@@ -29,6 +31,9 @@ const modelSelectorSource = {
 };
 
 export default Component.extend({
+  isFormInfoShown: true,
+  isDuplicatedFieldShown: true,
+
   rootFieldsGroup: computed(function rootFieldsGroup() {
     const component = this;
     return FormFieldsRootGroup
@@ -44,92 +49,119 @@ export default Component.extend({
       .create({
         ownerSource: this,
         fields: [
-          TextField.create({
-            ownerSource: this,
-            name: 'name',
-            label: 'Name',
-            defaultValue: 'someName',
-          }),
-          TextField.create({
-            ownerSource: this,
-            name: 'surname',
-            label: 'Surname',
-          }),
-          RadioField.create({
-            ownerSource: this,
-            name: 'age',
-            label: 'Age',
-            options: [{
-              name: 'child',
-              value: 0,
-              label: 'Child',
-            }, {
-              name: 'adult',
-              value: 1,
-              label: 'Adult',
-            }],
-          }),
-          DatetimeField.create({
-            ownerSource: this,
-            name: 'datetime',
-            label: 'Datetime',
-          }),
-          FormFieldsCollectionGroup.extend({
-            fieldFactoryMethod(createdFieldsCounter) {
-              return TextField.create({
-                name: 'textField',
-                valueName: `textField${createdFieldsCounter}`,
-              });
-            },
-          }).create({
-            addButtonText: 'Add',
-            name: 'textCollection',
-            label: 'Text collection',
-          }),
-          LoadingField.create({
-            name: 'loading',
-            label: 'Loading',
-            loadingProxy: PromiseObject.create({
-              promise: new Promise(() => {}),
-            }),
-            loadingText: 'Loading...',
-          }),
-          TagsField.extend({
-            valueToTags(value) {
-              return (value || [])
-                .map(val => RecordTag.create({
-                  ownerSource: this,
-                  value: val,
-                }));
-            },
-            tagsToValue(tags) {
-              return removeExcessiveTags(tags).mapBy('value').uniq()
-                .compact();
-            },
-          }).create({
-            name: 'records',
-            label: 'Records',
-            tagEditorSettings: {
-              models: [{
-                name: 'group',
-                getRecords: () => resolve(modelSelectorSource['group']),
-              }, {
-                name: 'provider',
-                getRecords: () =>
-                  resolve(modelSelectorSource['provider']),
-              }],
-            },
-            tagEditorComponentName: 'tags-input/model-selector-editor',
-            defaultValue: [],
-          }),
-          StaticTextField.create({
-            name: 'staticText',
-            label: 'Static text',
-            text: 'Excepteur voluptate magna ad quis culpa anim do proident ullamco sint. Non exercitation non eu ipsum reprehenderit sunt. Enim cillum anim aute consectetur do laborum dolor consectetur veniam sunt.',
-          }),
+          this.nameField,
+          this.surnameField,
+          this.dropdownField,
+          this.customValueDropdownField,
+          this.radioField,
+          this.datetimeField,
+          this.addButtonField,
+          this.loadingField,
+          this.tagsField,
+          this.staticTextField,
           this.staticUserField,
         ],
       });
+  }),
+
+  nameField: computed(function nameField() {
+    return TextField.create({
+      ownerSource: this,
+      name: 'name',
+      label: 'Name',
+      defaultValue: 'someName',
+    });
+
+  }),
+
+  surnameField: computed(function surnameField() {
+    return TextField.create({
+      ownerSource: this,
+      name: 'surname',
+      label: 'Surname',
+    });
+  }),
+
+  radioField: computed(function radioField() {
+    return RadioField.create({
+      ownerSource: this,
+      name: 'age',
+      label: 'Age',
+      options: [{
+        name: 'child',
+        value: 0,
+        label: 'Child',
+      }, {
+        name: 'adult',
+        value: 1,
+        label: 'Adult',
+      }],
+    });
+  }),
+
+  datetimeField: computed(function datetimeField() {
+    return DatetimeField.create({
+      ownerSource: this,
+      name: 'datetime',
+      label: 'Datetime',
+    });
+  }),
+
+  addButtonField: computed(function addButtonField() {
+    return FormFieldsCollectionGroup.extend({
+      fieldFactoryMethod(createdFieldsCounter) {
+        return TextField.create({
+          name: 'textField',
+          valueName: `textField${createdFieldsCounter}`,
+        });
+      },
+    }).create({
+      addButtonText: 'Add',
+      name: 'textCollection',
+      label: 'Text collection',
+    });
+  }),
+
+  loadingField: computed(function loadingField() {
+    return LoadingField.create({
+      name: 'loading',
+      label: 'Loading',
+      loadingProxy: PromiseObject.create({
+        promise: new Promise(() => {}),
+      }),
+      loadingText: 'Loading...',
+    });
+  }),
+
+  tagsField: computed(function tagsField() {
+    return TagsField.extend({
+      valueToTags(value) {
+        return (value || [])
+          .map(val => RecordTag.create({
+            ownerSource: this,
+            value: val,
+          }));
+      },
+      tagsToValue(tags) {
+        return removeExcessiveTags(tags).mapBy('value').uniq()
+          .compact();
+      },
+    }).create({
+      name: 'records',
+      label: 'Records',
+      tagEditorSettings: {
+        models: [{
+          name: 'group',
+          getRecords: () => resolve(modelSelectorSource['group']),
+        }, {
+          name: 'provider',
+          getRecords: () =>
+            resolve(modelSelectorSource['provider']),
+        }],
+      },
+      tagEditorComponentName: 'tags-input/model-selector-editor',
+      defaultValue: [],
+    });
   }),
 
   staticUserField: computed(function staticUserField() {
@@ -141,6 +173,73 @@ export default Component.extend({
         name: 'user',
         label: 'User',
       });
+  }),
+
+  staticTextField: computed(function staticTextField() {
+    return StaticTextField.create({
+      name: 'staticText',
+      label: 'Static text',
+      text: 'Excepteur voluptate magna ad quis culpa anim do proident ullamco sint. Non exercitation non eu ipsum reprehenderit sunt. Enim cillum anim aute consectetur do laborum dolor consectetur veniam sunt.',
+    });
+  }),
+
+  dropdownField: computed(function dropdownField() {
+    return DropdownField.create({
+      name: 'someOptions',
+      label: 'Few options',
+      // uncomment to see static mode
+      // value: 'one',
+      // mode: 'view',
+      options: [{
+          value: 'one',
+          name: 'one',
+          icon: 'browser-file',
+          label: 'One',
+        },
+        {
+          value: 'two',
+          name: 'two',
+          icon: 'browser-directory',
+          label: 'Two',
+        },
+        {
+          value: 'three',
+          name: 'three',
+          icon: 'browser-dataset',
+          label: 'Three',
+        },
+      ],
+    });
+  }),
+
+  customValueDropdownField: computed(function customValueDropdownField() {
+    return CustomValueDropdownField.create({
+      name: 'customInputOptions',
+      label: 'Custom input dropdown',
+      isCustomInputOptionIconShown: true,
+      // uncomment to see static mode
+      // value: 'one',
+      // mode: 'view',
+      options: [{
+          value: 'one',
+          name: 'one',
+          icon: 'browser-file',
+          label: 'One',
+        },
+        {
+          value: 'two',
+          name: 'two',
+          icon: 'browser-directory',
+          label: 'Two',
+        },
+        {
+          value: 'three',
+          name: 'three',
+          icon: 'browser-dataset',
+          label: 'Three',
+        },
+      ],
+    });
   }),
 
   user: computed(function user() {
