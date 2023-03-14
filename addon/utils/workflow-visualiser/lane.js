@@ -45,9 +45,16 @@ export default VisualiserRecord.extend({
   elements: undefined,
 
   /**
+   * @virtual
    * @type {RunsListVisibleRunsPosition}
    */
   visibleRunsPosition: undefined,
+
+  /**
+   * @virtual
+   * @type {boolean}
+   */
+  hasWronglyReferencedStores: false,
 
   /**
    * @virtual optional
@@ -105,5 +112,13 @@ export default VisualiserRecord.extend({
   showLatestRun() {
     const onShowLatestRun = this.get('onShowLatestRun');
     return onShowLatestRun ? onShowLatestRun(this) : resolve();
+  },
+
+  /**
+   * @returns {Array<string>}
+   */
+  getUsedStoreSchemaIds() {
+    const iteratorStoreSchemaId = this.storeIteratorSpec?.storeSchemaId;
+    return iteratorStoreSchemaId ? [iteratorStoreSchemaId] : [];
   },
 });

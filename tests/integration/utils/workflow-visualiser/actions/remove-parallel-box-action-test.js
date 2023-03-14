@@ -48,7 +48,7 @@ describe('Integration | Utility | workflow-visualiser/actions/remove-parallel-bo
     expect(getModalHeader().querySelector('h1').textContent.trim())
       .to.equal('Remove parallel box');
     expect(getModalBody().textContent.trim()).to.contain(
-      `You are about to delete the parallel box "${parallelBoxName}".`
+      `You are about to delete the parallel box ${parallelBoxName}.`
     );
     const yesButton = getModalFooter().querySelector('.question-yes');
     expect(yesButton.textContent.trim()).to.equal('Remove');

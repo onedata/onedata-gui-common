@@ -10,6 +10,7 @@ import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visua
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { raw, or } from 'ember-awesome-macros';
+import _ from 'lodash';
 
 export default VisualiserRecord.extend({
   /**
@@ -71,6 +72,12 @@ export default VisualiserRecord.extend({
   resourceSpecOverride: undefined,
 
   /**
+   * @virtual
+   * @type {boolean}
+   */
+  hasWronglyReferencedStores: false,
+
+  /**
    * @type {ComputedProperty<AtmLambdaRevision>}
    */
   lambdaRevision: computed(
@@ -111,4 +118,24 @@ export default VisualiserRecord.extend({
    * @type {ComputedProperty<Number>}
    */
   itemsFailed: or('visibleRun.itemsFailed', raw(0)),
+
+  /**
+   * @returns {Array<string>}
+   */
+  getUsedStoreSchemaIds() {
+    const storeSchemaIdsFromArgs = this.argumentMappings
+      ?.filter((mapping) =>
+        mapping?.valueBuilder?.valueBuilderType === 'singleValueStoreContent' &&
+        mapping.valueBuilder.valueBuilderRecipe
+      )
+      ?.map((mapping) => mapping.valueBuilder.valueBuilderRecipe) ?? [];
+
+    const storeSchemaIdsFromResults = this.resultMappings
+      ?.map((mapping) => mapping?.storeSchemaId)
+      // If schemaId contains `_` it means that it is a special internal reference,
+      // not an ID.
+      ?.filter((storeSchemaId) => storeSchemaId && !storeSchemaId.includes('_')) ?? [];
+
+    return _.uniq([...storeSchemaIdsFromArgs, ...storeSchemaIdsFromResults]);
+  },
 });

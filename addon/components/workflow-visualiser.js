@@ -699,7 +699,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   getDefinedStores() {
     const rawStores = this.get('rawData.stores') || [];
-    return rawStores.map(rawStore => this.getElementForRawData('store', rawStore));
+    return rawStores.map(rawStore => {
+      const store = this.getElementForRawData('store', rawStore);
+      store.clearReferencingRecords();
+      return store;
+    });
   },
 
   /**
@@ -837,15 +841,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
       newestRunNumber = 1;
     }
 
-    const existingLane = this.getCachedElement('lane', { id });
+    let lane = this.getCachedElement('lane', { id });
 
-    if (existingLane) {
+    if (lane) {
       const {
         runsRegistry: prevRunsRegistry,
         visibleRunNumber: prevVisibleRunNumber,
         visibleRunsPosition: prevVisibleRunsPosition,
       } = getProperties(
-        existingLane,
+        lane,
         'runsRegistry',
         'visibleRunNumber',
         'visibleRunsPosition'
@@ -869,7 +873,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
           };
         }
       }
-      this.updateElement(existingLane, {
+      this.updateElement(lane, {
         name,
         maxRetries,
         storeIteratorSpec,
@@ -881,17 +885,16 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const elements = this.getLaneElementsForRawData(
         'parallelBox',
         rawParallelBoxes,
-        existingLane
+        lane
       );
-      this.updateElement(existingLane, { elements });
-      return existingLane;
+      this.updateElement(lane, { elements });
     } else {
       const {
         mode,
         actionsFactory,
       } = this.getProperties('mode', 'actionsFactory');
 
-      const newLane = Lane.create({
+      lane = Lane.create({
         id,
         schemaId: id,
         name,
@@ -914,14 +917,23 @@ export default Component.extend(I18n, WindowResizeHandler, {
         onShowLatestRun: (lane) => this.showLatestLaneRun(lane),
       });
       set(
-        newLane,
+        lane,
         'elements',
-        this.getLaneElementsForRawData('parallelBox', rawParallelBoxes, newLane)
+        this.getLaneElementsForRawData('parallelBox', rawParallelBoxes, lane)
       );
-      this.addElementToCache('lane', newLane);
-
-      return newLane;
+      this.addElementToCache('lane', lane);
     }
+
+    const usedStoreSchemaIds = lane.getUsedStoreSchemaIds();
+    const usedStores = usedStoreSchemaIds
+      .map((storeSchemaId) => this.getStoreBySchemaId(storeSchemaId))
+      .filter(Boolean);
+    usedStores.forEach((store) => store.registerReferencingRecord(lane));
+    if (usedStoreSchemaIds.length > usedStores.length) {
+      set(lane, 'hasWronglyReferencedStores', true);
+    }
+
+    return lane;
   },
 
   /**
@@ -1094,10 +1106,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const usedLambdasMap = this.get('usedLambdasMap') || {};
     const lambda = usedLambdasMap[lambdaId];
 
-    const existingTask = this.getCachedElement('task', { id });
+    let task = this.getCachedElement('task', { id });
 
-    if (existingTask) {
-      this.updateElement(existingTask, {
+    if (task) {
+      this.updateElement(task, {
         runsRegistry: normalizedRunsRegistry,
         name,
         parent,
@@ -1110,14 +1122,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
         timeSeriesStoreConfig,
         resourceSpecOverride,
       });
-      return existingTask;
     } else {
       const {
         mode,
         actionsFactory,
       } = this.getProperties('mode', 'actionsFactory');
 
-      const newTask = Task.create({
+      task = Task.create({
         id,
         schemaId: id,
         runsRegistry: normalizedRunsRegistry,
@@ -1136,10 +1147,19 @@ export default Component.extend(I18n, WindowResizeHandler, {
         onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),
         onRemove: task => this.removeElement(task),
       });
-      this.addElementToCache('task', newTask);
-
-      return newTask;
+      this.addElementToCache('task', task);
     }
+
+    const usedStoreSchemaIds = task.getUsedStoreSchemaIds();
+    const usedStores = usedStoreSchemaIds
+      .map((storeSchemaId) => this.getStoreBySchemaId(storeSchemaId))
+      .filter(Boolean);
+    usedStores.forEach((store) => store.registerReferencingRecord(task));
+    if (usedStoreSchemaIds.length > usedStores.length) {
+      set(task, 'hasWronglyReferencedStores', true);
+    }
+
+    return task;
   },
 
   /**

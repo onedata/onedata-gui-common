@@ -1,0 +1,52 @@
+{{#global-modal
+  classNames="remove-store-modal"
+  allowClose=(not isSubmitting)
+  modalId=modalId
+  as |modal|
+}}
+
+  {{#modal.header}}
+    <h1>
+      {{one-icon icon="sign-warning-rounded"}}
+      <span class="one-label">{{tt this "header"}}</span>
+    </h1>
+  {{/modal.header}}
+
+  {{#modal.body}}
+    <p>
+      {{tt this "body.main" storeName=store.name}}
+      {{#if store.referencingRecords.length}}
+        {{tt this "body.referencingRecordsIntro"}}
+      {{/if}}
+    </p>
+    {{#if store.referencingRecords.length}}
+      <ul>
+        {{#each store.referencingRecords as |referencingRecord|}}
+          <li>{{evaluate-function stringifyRecord referencingRecord}}</li>
+        {{/each}}
+      </ul>
+      <p>{{tt this "body.areYouSure"}}</p>
+    {{/if}}
+  {{/modal.body}}
+
+  {{#modal.footer class="btn-toolbar"}}
+    {{#bs-button
+      type="default"
+      class="question-no"
+      onClick=modal.close
+      disabled=isSubmitting
+    }}
+      {{tt this "buttons.cancel"}}
+    {{/bs-button}}
+    {{#one-button
+      type="danger"
+      buttonType="submit"
+      class="question-yes"
+      onClick=(action "submit" modal.submit)
+      disabled=isSubmitting
+    }}
+      {{tt this "buttons.remove"}}
+    {{/one-button}}
+  {{/modal.footer}}
+
+{{/global-modal}}
