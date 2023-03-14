@@ -13,6 +13,16 @@
       hideViewIcons=true
       onSave=(action "changeName")
     }}
+    {{#if task.hasWronglyReferencedStores}}
+      <img
+        class="warning-icon no-store-warning-icon"
+        src={{root-url "assets/images/sign-warning-large.svg"}}
+      />
+      {{one-tooltip
+        triggerElement=(local-selector elementId ".no-store-warning-icon")
+        title=(tt this "noStoreWarning")
+      }}
+    {{/if}}
     {{one-icon
       icon="settings-circle-filled"
       class=(concat-classes
