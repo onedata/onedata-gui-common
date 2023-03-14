@@ -20,6 +20,7 @@ import {
 } from 'onedata-gui-common/components/tags-input/model-selector-editor';
 import { resolve } from 'rsvp';
 import _ from 'lodash';
+import { validator } from 'ember-cp-validations';
 
 const modelSelectorSource = {
   group: _.times(10, i => ({
@@ -217,26 +218,32 @@ export default Component.extend({
       name: 'customInputOptions',
       label: 'Custom input dropdown',
       isCustomInputOptionIconShown: true,
-      // uncomment to see static mode
+      //// uncomment to see static mode
       // value: 'one',
       // mode: 'view',
+      customValidators: [
+        validator('format', {
+          type: 'email',
+          allowBlank: false,
+        }),
+      ],
       options: [{
-          value: 'one',
+          value: 'one@example.com',
           name: 'one',
           icon: 'browser-file',
-          label: 'One',
+          label: 'two@example.com',
         },
         {
-          value: 'two',
+          value: 'two@example.com',
           name: 'two',
           icon: 'browser-directory',
-          label: 'Two',
+          label: 'two@example.com',
         },
         {
-          value: 'three',
+          value: 'wrong',
           name: 'three',
           icon: 'browser-dataset',
-          label: 'Three',
+          label: 'wrong address',
         },
       ],
     });

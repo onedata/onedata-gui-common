@@ -6,10 +6,10 @@ import { hbs } from 'ember-cli-htmlbars';
 import CustomValueDropdownField from 'onedata-gui-common/utils/form-component/custom-value-dropdown-field';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
-
 import OneDropdownHelper from '../../../helpers/one-dropdown';
 import { assert } from '@ember/debug';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
+import { validator } from 'ember-cp-validations';
 
 describe('Integration | Component | form-component/custom-value-dropdown-field', function () {
   setupRenderingTest();
@@ -407,7 +407,7 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
       const valueChangedSpy = sinon.spy(helper.field, 'valueChanged');
 
       await helper.render();
-      await helper.dropdown.selectOptionByText('Custom value...');
+      await helper.selectCustomValueOption();
 
       expect(valueChangedSpy).to.be.calledOnce;
       expect(valueChangedSpy).to.be.calledWith('');
@@ -447,12 +447,60 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
       });
 
       await helper.renderUsingRenderer();
-      await helper.dropdown.selectOptionByText('Custom value...');
+      await helper.selectCustomValueOption();
       await fillIn(helper.customValueInput, 'hello');
 
       expect(helper.rootGroup.dumpValue()).to.have.property('customValueField', 'hello');
     }
   );
+
+  it('is rendered in group as invalid if custom value does not conform validation', async function () {
+    const helper = new Helper(this);
+    helper.field = helper.createField({
+      name: 'customValueField',
+      options: [
+        { value: 'predefined', label: 'Predefined' },
+      ],
+      customValidators: [
+        validator('format', {
+          type: 'email',
+          allowBlank: false,
+        }),
+      ],
+    });
+    await helper.renderUsingRenderer();
+
+    await helper.selectCustomValueOption();
+    await fillIn(helper.customValueInput, 'hello');
+
+    const fieldMessage = helper.formGroupElement.querySelector('.field-message');
+    expect(helper.formGroupElement).to.have.class('has-error');
+    expect(fieldMessage).to.exist;
+    expect(fieldMessage).to.have.trimmed.text('This field must be a valid email address');
+  });
+
+  it('is rendered in group as valid if custom value does conforms validation', async function () {
+    const helper = new Helper(this);
+    helper.field = helper.createField({
+      name: 'customValueField',
+      options: [
+        { value: 'predefined', label: 'Predefined' },
+      ],
+      customValidators: [
+        validator('format', {
+          type: 'email',
+          allowBlank: false,
+        }),
+      ],
+    });
+    await helper.renderUsingRenderer();
+
+    await helper.selectCustomValueOption();
+    await fillIn(helper.customValueInput, 'hello@world.com');
+
+    expect(helper.formGroupElement).to.not.have.class('has-error');
+    expect(helper.formGroupElement.querySelector('.field-message')).to.not.exist;
+  });
 
   //#endregion
 });
@@ -483,6 +531,13 @@ class Helper {
         this.field,
       ],
     });
+  }
+  get formGroupElement() {
+    return find(`.form-group.${this.field.name}-field`);
+  }
+
+  async selectCustomValueOption() {
+    await this.dropdown.selectOptionByText('Custom value...');
   }
 
   createField(data) {
