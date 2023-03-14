@@ -227,6 +227,7 @@ export default Component.extend({
           allowBlank: false,
         }),
       ],
+      showSearch: true,
       options: [{
           value: 'one@example.com',
           name: 'one',

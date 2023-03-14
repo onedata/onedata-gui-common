@@ -48,16 +48,6 @@ export default DropdownField.extend({
     ];
   }),
 
-  // FIXME: zdecydować, czy przy wyszukiwaniu powinno zawsze pokazywać customowego itema
-
-  // customInputOptionText: computed('customInputOptionTextPrefix', 'customInputValue', function () {
-  //   let text = this.customInputOptionTextPrefix;
-  //   if (this.customInputValue) {
-  //     text += ` <span class="custom-option-value">(${this.customInputValue})</span>`;
-  //   }
-  //   return htmlSafe(text);
-  // }),
-
   isCustomInputOptionIconShown: reads('field.isCustomInputOptionIconShown'),
 
   customInputOptionIcon: reads('field.customInputOptionIcon'),
@@ -80,8 +70,6 @@ export default DropdownField.extend({
     this.set('customInputOption', EmberObject.create({
       value: '',
     }));
-    // FIXME: debug
-    window.customValueDropdownField = this;
   },
 
   isCustomInputOption(option) {
@@ -105,18 +93,38 @@ export default DropdownField.extend({
     input.focus();
   },
 
+  isEventFromSearchInput(event) {
+    return event.target.matches('.ember-power-select-search-input');
+  },
+
+  isEventFromCustomOptionInput(event) {
+    return event.target.matches('.custom-option-input');
+  },
+
   actions: {
     valueChanged(option) {
-      this._super(option);
+      this._super(...arguments);
       if (this.isCustomInputOption(option)) {
         this.focusCustomInput();
       }
     },
-    focus() {
+    open(powerSelect, event) {
+      this._super(...arguments);
+      if (this.isEventFromCustomOptionInput(event)) {
+        return false;
+      }
+    },
+    click(powerSelect, event) {
+      console.log(event);
+    },
+    focus(powerSelect, event) {
+      if (this.isEventFromSearchInput(event)) {
+        return;
+      }
       this.focusCustomInput();
     },
     keyDown(powerSelect, event) {
-      if (this.isCustomInputOption(this.selectedOption)) {
+      if (this.isEventFromCustomOptionInput(event)) {
         event.stopPropagation();
         return false;
       }
