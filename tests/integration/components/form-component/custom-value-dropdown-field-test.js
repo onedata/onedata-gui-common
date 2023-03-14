@@ -432,6 +432,92 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
     }
   );
 
+  it('renders "rename" icon by default for custom option in trigger and dropdown if icon is enabled',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        options: [
+          { name: 'predefined', value: 1, label: 'predefined', icon: 'space' },
+        ],
+        value: '',
+        isCustomInputOptionIconShown: true,
+      });
+
+      await helper.render();
+      const trigger = await helper.dropdown.getTrigger();
+      const customValueOption = await helper.getCustomValueOption();
+
+      expect(trigger.querySelector('.one-icon')).to.have.class('oneicon-rename');
+      expect(customValueOption.querySelector('.one-icon'))
+        .to.have.class('oneicon-rename');
+    }
+  );
+
+  it('renders user-defined icon for custom option in trigger and dropdown if icon is enabled and customized',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        options: [
+          { name: 'predefined', value: 1, label: 'predefined', icon: 'space' },
+        ],
+        value: '',
+        isCustomInputOptionIconShown: true,
+        customInputOptionIcon: 'warning',
+      });
+
+      await helper.render();
+      const trigger = await helper.dropdown.getTrigger();
+      const customValueOption = await helper.getCustomValueOption();
+
+      expect(trigger.querySelector('.one-icon')).to.have.class('oneicon-warning');
+      expect(customValueOption.querySelector('.one-icon'))
+        .to.have.class('oneicon-warning');
+    }
+  );
+
+  it('does not render icon for custom option in trigger and dropdown if icon is customized but disabled',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        options: [
+          { name: 'predefined', value: 1, label: 'predefined', icon: 'space' },
+        ],
+        value: '',
+        isCustomInputOptionIconShown: false,
+        customInputOptionIcon: 'warning',
+      });
+
+      await helper.render();
+      const trigger = await helper.dropdown.getTrigger();
+      const customValueOption = await helper.getCustomValueOption();
+
+      expect(trigger.querySelector('.one-icon')).to.not.exist;
+      expect(customValueOption.querySelector('.one-icon')).to.not.exist;
+    }
+  );
+
+  it('renders custom icon and custom text when field is in "view" mode and there is no option for value',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        options: [
+          { name: 'one', value: 1, label: 'One', icon: 'space' },
+          { name: 'two', value: 2, label: 'Two', icon: 'provider' },
+        ],
+        value: 'Some custom value',
+        isCustomInputOptionIconShown: true,
+        customInputOptionIcon: 'browser-file',
+      });
+      helper.field.changeMode('view');
+
+      await helper.render();
+
+      expect(find('.text')).to.have.trimmed.text('Some custom value');
+      expect(find('.one-icon')).to.have.class('oneicon-browser-file');
+      expect(find('.ember-basic-dropdown')).to.not.exist;
+    }
+  );
+
   //#endregion
 
   //#region custom value features using field-renderer
@@ -506,6 +592,10 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
 });
 
 class Helper {
+  static get customValueOptionLabel() {
+    return 'Custom value...';
+  }
+
   constructor(mochaContext) {
     assert('mochaContext is mandatory', mochaContext);
     /** @type {Mocha.Context} */
@@ -536,8 +626,11 @@ class Helper {
     return find(`.form-group.${this.field.name}-field`);
   }
 
+  async getCustomValueOption() {
+    return await this.dropdown.getOptionByText(Helper.customValueOptionLabel);
+  }
   async selectCustomValueOption() {
-    await this.dropdown.selectOptionByText('Custom value...');
+    await this.dropdown.selectOptionByText(Helper.customValueOptionLabel);
   }
 
   createField(data) {
