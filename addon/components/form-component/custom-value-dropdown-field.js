@@ -12,14 +12,23 @@ import EmberObject from '@ember/object';
 import { reads } from '@ember/object/computed';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import { computed } from '@ember/object';
+import { or, raw } from 'ember-awesome-macros';
 
 export default DropdownField.extend({
   layout,
   classNames: ['custom-value-dropdown-field'],
 
-  customInputPlaceholder: 'Enter custom value...',
+  customInputValuePlaceholder: or(
+    'field.customValueInputPlaceholder',
+    // FIXME: przenieść do defaultowych i18n dla komponentu
+    raw('Enter custom value...')
+  ),
 
-  customInputOptionTextPrefix: 'Custom value...',
+  customInputOptionTextPrefix: or(
+    'field.customInputOptionTextPrefix',
+    // FIXME: przenieść do defaultowych i18n dla komponentu
+    raw('Custom value...')
+  ),
 
   //#region state
 

@@ -9,6 +9,7 @@ import sinon from 'sinon';
 
 import OneDropdownHelper from '../../../helpers/one-dropdown';
 import { assert } from '@ember/debug';
+import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 
 describe('Integration | Component | form-component/custom-value-dropdown-field', function () {
   setupRenderingTest();
@@ -30,8 +31,8 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
     const fieldName = 'field1';
     const tPath = `${i18nPrefix}.${fieldName}`;
     helper.field = helper.createField({
-      i18nPrefix: 'somePrefix',
-      name: 'field1',
+      i18nPrefix,
+      name: fieldName,
       options: [
         { value: 1, name: 'first', icon: 'space' },
         { value: 2, name: 'second' },
@@ -240,7 +241,7 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
 
   //#endregion
 
-  //#region custom value
+  //#region custom value features
 
   it('renders special custom value option after predefined options', async function () {
     const helper = new Helper(this);
@@ -277,7 +278,7 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
     });
   });
 
-  it('custom value is initially an empty string and renders input in selector trigger if is selected',
+  it('renders input in selector trigger when custom value is selected',
     async function () {
       const helper = new Helper(this);
       helper.field = helper.createField({
@@ -294,7 +295,7 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
     }
   );
 
-  it('custom value input in selector trigger is not rendered if the custom option is not selected',
+  it('does not render custom value input in selector trigger if the custom option is not selected',
     async function () {
       const helper = new Helper(this);
       helper.field = helper.createField({
@@ -310,7 +311,7 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
     }
   );
 
-  it('renders trigger as active if custom input is focused',
+  it('renders trigger as active if custom value input is focused',
     async function () {
       const helper = new Helper(this);
       helper.field = helper.createField({
@@ -328,7 +329,72 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
     }
   );
 
-  it('notifies field object about value to custom, which is an empty string by default',
+  it('renders "Enter custom value..." placeholder in custom value input by default',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        options: [
+          { value: 'predefined', label: 'Predefined' },
+        ],
+        value: '',
+      });
+
+      await helper.render();
+
+      expect(helper.customValueInput)
+        .to.have.attr('placeholder', 'Enter custom value...');
+    }
+  );
+
+  it('renders custom placeholder in custom value input if it is specified in i18n',
+    async function () {
+      const helper = new Helper(this);
+      const i18nPrefix = 'somePrefix';
+      const fieldName = 'field1';
+      const tPath = `${i18nPrefix}.${fieldName}`;
+      helper.field = helper.createField({
+        i18nPrefix,
+        name: fieldName,
+        options: [
+          { value: 'predefined', label: 'Predefined' },
+        ],
+        value: '',
+      });
+      sinon.stub(helper.i18n, 't')
+        .withArgs(`${tPath}.customValueInputPlaceholder`)
+        .returns('My custom prompt');
+
+      await helper.render();
+
+      expect(helper.customValueInput)
+        .to.have.attr('placeholder', 'My custom prompt');
+    }
+  );
+
+  it('renders custom text in custom value option if it is specified in i18n',
+    async function () {
+      const helper = new Helper(this);
+      const i18nPrefix = 'somePrefix';
+      const fieldName = 'field1';
+      const tPath = `${i18nPrefix}.${fieldName}`;
+      helper.field = helper.createField({
+        i18nPrefix,
+        name: fieldName,
+        options: [
+          { value: 'predefined', label: 'Predefined' },
+        ],
+      });
+      sinon.stub(helper.i18n, 't')
+        .withArgs(`${tPath}.customInputOptionTextPrefix`)
+        .returns('My custom option');
+
+      await helper.render();
+
+      expect(helper.dropdown.getOptionByText('My custom option')).to.exist;
+    }
+  );
+
+  it('notifies field object about change value to custom, which is an empty string by default',
     async function () {
       const helper = new Helper(this);
       helper.field = helper.createField({
@@ -367,6 +433,28 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
   );
 
   //#endregion
+
+  //#region custom value features using field-renderer
+
+  it('passes custom input value to form root group after selecting custom option and changing its text',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        name: 'customValueField',
+        options: [
+          { value: 'predefined', label: 'Predefined' },
+        ],
+      });
+
+      await helper.renderUsingRenderer();
+      await helper.dropdown.selectOptionByText('Custom value...');
+      await fillIn(helper.customValueInput, 'hello');
+
+      expect(helper.rootGroup.dumpValue()).to.have.property('customValueField', 'hello');
+    }
+  );
+
+  //#endregion
 });
 
 class Helper {
@@ -387,6 +475,14 @@ class Helper {
   }
   get customValueInput() {
     return find('.custom-value-dropdown-field-trigger .custom-option-input');
+  }
+  get rootGroup() {
+    return FormFieldsRootGroup.create({
+      ownerSource: this.mochaContext.owner,
+      fields: [
+        this.field,
+      ],
+    });
   }
 
   createField(data) {
@@ -410,10 +506,20 @@ class Helper {
       field: this.field,
       fieldId: this.fieldId,
     });
-    await render(hbs`{{ form-component/custom-value-dropdown-field
+    await render(hbs`{{form-component/custom-value-dropdown-field
       field=field
       fieldId=fieldId
     }}`);
+    this.dropdown = new OneDropdownHelper('.custom-value-dropdown-field-trigger');
+  }
+  async renderUsingRenderer() {
+    if (!this.field) {
+      this.field = this.createField();
+    }
+    this.mochaContext.setProperties({
+      rootGroup: this.rootGroup,
+    });
+    await render(hbs`{{form-component/field-renderer field=rootGroup}}`);
     this.dropdown = new OneDropdownHelper('.custom-value-dropdown-field-trigger');
   }
 }

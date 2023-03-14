@@ -10,6 +10,7 @@
  */
 
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
+import { computed } from '@ember/object';
 
 export default DropdownField.extend({
   /**
@@ -34,4 +35,34 @@ export default DropdownField.extend({
    * @type {string}
    */
   customInputOptionIcon: 'rename',
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<HtmlSafe>}
+   */
+  customValueInputPlaceholder: computed(
+    'i18nPrefix',
+    'translationPath',
+    function customInputPlaceholder() {
+      // Null value, because powerselect converts `undefined` to string 'undefined'
+      return this.getTranslation(
+        'customValueInputPlaceholder', {}, { defaultValue: null }
+      );
+    }
+  ),
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<HtmlSafe>}
+   */
+  customInputOptionTextPrefix: computed(
+    'i18nPrefix',
+    'translationPath',
+    function customInputPlaceholder() {
+      // Null value, because powerselect converts `undefined` to string 'undefined'
+      return this.getTranslation(
+        'customInputOptionTextPrefix', {}, { defaultValue: null }
+      );
+    }
+  ),
 });
