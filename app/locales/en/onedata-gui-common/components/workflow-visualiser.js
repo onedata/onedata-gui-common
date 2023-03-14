@@ -19,7 +19,7 @@ export default {
       latest: 'Latest run',
       past: 'Past run',
     },
-    unknownStore: 'Unknown',
+    noIteratedStore: 'This lane has no store to iterate on. Modify lane properties to fix this issue.',
     actions: {
       createLane: {
         newLaneName: 'Untitled lane',

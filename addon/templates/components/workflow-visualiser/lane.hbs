@@ -117,7 +117,14 @@
         }}
       </div>
     {{else}}
-      <span class="one-label">{{tt this "unknownStore"}}</span>
+      <img
+        class="warning-icon no-iterated-store-warning-icon"
+        src={{root-url "assets/images/sign-warning-large.svg"}}
+      />
+      {{one-tooltip
+        triggerElement=(local-selector elementId ".no-iterated-store-warning-icon")
+        title=(tt this "noIteratedStore")
+      }}
     {{/if}}
   </div>
   {{#perfect-scrollbar-element class="lane-elements"}}
