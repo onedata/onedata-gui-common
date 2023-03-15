@@ -1,12 +1,12 @@
 {{#if isInViewMode}}
-  {{#if (and selectedOption (not (eq selectedOption customInputOption)))}}
+  {{#if (and selectedOption (not (eq selectedOption customValueOption)))}}
     {{#if selectedOption.icon}}
       {{one-icon icon=selectedOption.icon}}
     {{/if}}
     <span class="text">{{selectedOption.label}}</span>
   {{else}}
-    {{#if (and isCustomInputOptionIconShown customInputOptionIcon)}}
-      {{one-icon icon=customInputOptionIcon}}
+    {{#if (and isCustomInputOptionIconShown customValueOptionIcon)}}
+      {{one-icon icon=customValueOptionIcon}}
     {{/if}}
     <span class="text">{{value}}</span>
   {{/if}}
@@ -41,31 +41,36 @@
     onopen=(action "open")
     as |option|
   }}
-    {{#if (eq option customInputOption)}}
-      <div class="option-container option-custom-input">
-        {{#if (and isCustomInputOptionIconShown customInputOptionIcon)}}
-          {{one-icon icon=customInputOptionIcon}}
+    {{#if (eq option customValueOption)}}
+      <div class="option-container custom-value-option">
+        {{!-- rendered both in dropdown option and trigger selected option --}}
+        {{#if (and isCustomInputOptionIconShown customValueOptionIcon)}}
+          {{one-icon icon=customValueOptionIcon}}
         {{/if}}
+
+        {{!-- shown only when rendered as trigger selected option (see styles) --}}
         {{!-- "text" class is added to have styles from power-select option --}}
         <input
           type="text"
-          class="custom-option-input text"
-          value={{customInputOption.value}}
-          placeholder={{customInputValuePlaceholder}}
+          class="custom-value-trigger-input text"
+          value={{customValueOption.value}}
+          placeholder={{customValueInputPlaceholder}}
           onfocus={{action "onInputFocus"}}
           onblur={{action "onInputBlur"}}
           oninput={{action "onCustomInput" value="target.value"}}
         >
-        <div class="option-container custom-input-option">
+
+        {{!-- shown only when rendered as option in dropdown (see styles) --}}
+        <div class="custom-value-dropdown-option-content">
           {{#if isCustomInputOptionIconShown}}
-            {{one-icon icon=customInputOptionIcon}}
+            {{one-icon icon=customValueOptionIcon}}
           {{/if}}
           {{#truncated-string class="text"}}
             <span class="custom-option-label-prefix">
-              {{customInputOptionTextPrefix}}
+              {{customValueOptionTextPrefix}}
             </span>
-            {{#if customInputOption.value}}
-              <span class="custom-option-value">({{customInputOption.value}})</span>
+            {{#if customValueOption.value}}
+              <span class="custom-option-value">({{customValueOption.value}})</span>
             {{/if}}
           {{/truncated-string}}
         </div>

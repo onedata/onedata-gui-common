@@ -215,7 +215,7 @@ export default Component.extend({
 
   customValueDropdownField: computed(function customValueDropdownField() {
     return CustomValueDropdownField.create({
-      name: 'customInputOptions',
+      name: 'customValueOptions',
       label: 'Custom input dropdown',
       isCustomInputOptionIconShown: true,
       //// uncomment to see static mode

@@ -335,7 +335,7 @@ $form-component-view-margin: $padding-base-vertical;
 
 .custom-value-dropdown-field-dropdown {
   .ember-power-select-options {
-    .custom-option-input {
+    .custom-value-trigger-input {
       display: none;
     }
     .custom-option-label-prefix {
@@ -357,11 +357,11 @@ $form-component-view-margin: $padding-base-vertical;
     width: 100%;
   }
   .ember-power-select-selected-item {
-    .custom-input-option {
+    .custom-value-dropdown-option-content {
       display: none;
     }
   }
-  .option-custom-input {
+  .custom-value-option {
     position: relative;
 
     &::after {
@@ -374,7 +374,7 @@ $form-component-view-margin: $padding-base-vertical;
       border-right: 1px solid $main-border-color;
     }
   }
-  .custom-option-input {
+  .custom-value-trigger-input {
     position: relative;
     outline: none;
     border: none;

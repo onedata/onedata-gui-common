@@ -12,22 +12,27 @@ import EmberObject from '@ember/object';
 import { reads } from '@ember/object/computed';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import { computed } from '@ember/object';
-import { or, raw } from 'ember-awesome-macros';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { or } from 'ember-awesome-macros';
+import computedT from 'onedata-gui-common/utils/computed-t';
 
-export default DropdownField.extend({
+export default DropdownField.extend(I18n, {
   layout,
   classNames: ['custom-value-dropdown-field'],
 
-  customInputValuePlaceholder: or(
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.formComponent.customValueDropdownField',
+
+  customValueInputPlaceholder: or(
     'field.customValueInputPlaceholder',
-    // FIXME: przenieść do defaultowych i18n dla komponentu
-    raw('Enter custom value...')
+    computedT('customValueInputPlaceholder'),
   ),
 
-  customInputOptionTextPrefix: or(
-    'field.customInputOptionTextPrefix',
-    // FIXME: przenieść do defaultowych i18n dla komponentu
-    raw('Custom value...')
+  customValueOptionTextPrefix: or(
+    'field.customValueOptionTextPrefix',
+    computedT('customValueOptionTextPrefix'),
   ),
 
   //#region state
@@ -44,13 +49,13 @@ export default DropdownField.extend({
   preparedOptions: computed('field.preparedOptions', function preparedOptions() {
     return [
       ...this.field.preparedOptions,
-      this.customInputOption,
+      this.customValueOption,
     ];
   }),
 
   isCustomInputOptionIconShown: reads('field.isCustomInputOptionIconShown'),
 
-  customInputOptionIcon: reads('field.customInputOptionIcon'),
+  customValueOptionIcon: reads('field.customValueOptionIcon'),
 
   selectedOption: computed('preparedOptions.@each.value', 'value', function selectedOption() {
     return this.preparedOptions?.find(option => option?.value === this.value);
@@ -58,13 +63,13 @@ export default DropdownField.extend({
 
   init() {
     this._super(...arguments);
-    this.set('customInputOption', EmberObject.create({
+    this.set('customValueOption', EmberObject.create({
       value: '',
     }));
   },
 
   isCustomInputOption(option) {
-    return option === this.customInputOption;
+    return option === this.customValueOption;
   },
 
   async focusCustomInput() {
@@ -77,7 +82,7 @@ export default DropdownField.extend({
     ) {
       return;
     }
-    const input = this.element?.querySelector('.ember-power-select-selected-item .custom-option-input');
+    const input = this.element?.querySelector('.ember-power-select-selected-item .custom-value-trigger-input');
     if (!input) {
       return;
     }
@@ -89,7 +94,7 @@ export default DropdownField.extend({
   },
 
   isEventFromCustomOptionInput(event) {
-    return event.target.matches('.custom-option-input');
+    return event.target.matches('.custom-value-trigger-input');
   },
 
   actions: {
@@ -117,16 +122,6 @@ export default DropdownField.extend({
         return false;
       }
     },
-    // FIXME: sprawdzić co to
-    triggerFocusLost() {
-      const element = this.get('element');
-      const trigger =
-        element && element.querySelector('.ember-basic-dropdown-trigger');
-      // Focus lost due to opening dropdown should be omitted
-      if (!trigger || trigger.getAttribute('aria-expanded') !== 'true') {
-        this.send('focusLost');
-      }
-    },
     onInputFocus() {
       this.set('isCustomInputFocused', true);
     },
@@ -134,7 +129,7 @@ export default DropdownField.extend({
       this.set('isCustomInputFocused', false);
     },
     onCustomInput(value) {
-      this.set('customInputOption.value', value);
+      this.set('customValueOption.value', value);
       this.field.valueChanged(value);
     },
   },

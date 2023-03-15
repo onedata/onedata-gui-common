@@ -34,7 +34,7 @@ export default DropdownField.extend({
    * @virtual optional
    * @type {string}
    */
-  customInputOptionIcon: 'rename',
+  customValueOptionIcon: 'rename',
 
   /**
    * @virtual optional
@@ -55,13 +55,13 @@ export default DropdownField.extend({
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  customInputOptionTextPrefix: computed(
+  customValueOptionTextPrefix: computed(
     'i18nPrefix',
     'translationPath',
     function customInputPlaceholder() {
       // Null value, because powerselect converts `undefined` to string 'undefined'
       return this.getTranslation(
-        'customInputOptionTextPrefix', {}, { defaultValue: null }
+        'customValueOptionTextPrefix', {}, { defaultValue: null }
       );
     }
   ),

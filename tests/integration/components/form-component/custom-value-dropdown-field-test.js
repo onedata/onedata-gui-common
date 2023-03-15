@@ -245,23 +245,15 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
 
   it('renders special custom value option after predefined options', async function () {
     const helper = new Helper(this);
-    const i18nPrefix = 'somePrefix';
-    const fieldName = 'field1';
-    const tPath = `${i18nPrefix}.${fieldName}`;
     const options = [
-      { value: 1, name: 'first' },
-      { value: 2, name: 'second' },
+      { value: 1, name: 'first', label: 'First' },
+      { value: 2, name: 'second', label: 'Second' },
     ];
     helper.field = helper.createField({
       i18nPrefix: 'somePrefix',
       name: 'field1',
       options,
     });
-    sinon.stub(helper.i18n, 't')
-      .withArgs(`${tPath}.options.first.label`)
-      .returns('First')
-      .withArgs(`${tPath}.options.second.label`)
-      .returns('Second');
 
     await helper.render();
     const renderedOptions = await helper.dropdown.getOptions();
@@ -269,8 +261,7 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
     const expected = [
       { label: 'First' },
       { label: 'Second' },
-      // default label of custom value option
-      { label: 'Custom value...' },
+      { label: Helper.customValueOptionLabel },
     ];
     expected.forEach(({ label }, index) => {
       const option = renderedOptions[index];
@@ -403,7 +394,7 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
         ],
       });
       sinon.stub(helper.i18n, 't')
-        .withArgs(`${tPath}.customInputOptionTextPrefix`)
+        .withArgs(`${tPath}.customValueOptionTextPrefix`)
         .returns('My custom option');
 
       await helper.render();
@@ -480,7 +471,7 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
         ],
         value: '',
         isCustomInputOptionIconShown: true,
-        customInputOptionIcon: 'warning',
+        customValueOptionIcon: 'warning',
       });
 
       await helper.render();
@@ -502,7 +493,7 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
         ],
         value: '',
         isCustomInputOptionIconShown: false,
-        customInputOptionIcon: 'warning',
+        customValueOptionIcon: 'warning',
       });
 
       await helper.render();
@@ -524,7 +515,7 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
         ],
         value: 'Some custom value',
         isCustomInputOptionIconShown: true,
-        customInputOptionIcon: 'browser-file',
+        customValueOptionIcon: 'browser-file',
       });
       helper.field.changeMode('view');
 
@@ -650,7 +641,7 @@ class Helper {
     return findAll('.ember-power-select-option');
   }
   get customValueInput() {
-    return find('.custom-value-dropdown-field-trigger .custom-option-input');
+    return find('.custom-value-dropdown-field-trigger .custom-value-trigger-input');
   }
   get rootGroup() {
     return FormFieldsRootGroup.create({
