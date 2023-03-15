@@ -346,6 +346,24 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
     }
   );
 
+  it('renders custom edited text in dropdown option after custom value input edit',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        options: [
+          { value: 'predefined', label: 'Predefined' },
+        ],
+        value: '',
+      });
+      await helper.render();
+
+      await fillIn(helper.customValueInput, 'hello');
+      const customValueOption = await helper.getCustomValueOption();
+
+      expect(customValueOption).to.contain.text('hello');
+    }
+  );
+
   it('renders custom placeholder in custom value input if it is specified in i18n',
     async function () {
       const helper = new Helper(this);
@@ -587,6 +605,26 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
     expect(helper.formGroupElement).to.not.have.class('has-error');
     expect(helper.formGroupElement.querySelector('.field-message')).to.not.exist;
   });
+
+  it('restores custom-edited value in input after other option is selected and custom option is selected again',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        name: 'customValueField',
+        options: [
+          { value: 'predefined', label: 'Predefined' },
+        ],
+      });
+
+      await helper.renderUsingRenderer();
+      await helper.selectCustomValueOption();
+      await fillIn(helper.customValueInput, 'hello');
+      await helper.dropdown.selectOptionByText('Predefined');
+      await helper.selectCustomValueOption();
+
+      expect(helper.customValueInput).to.have.value('hello');
+    }
+  );
 
   //#endregion
 });

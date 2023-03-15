@@ -52,15 +52,6 @@ export default DropdownField.extend({
 
   customInputOptionIcon: reads('field.customInputOptionIcon'),
 
-  customInputValue: computed({
-    get() {
-      return this.customInputOption.value;
-    },
-    set(key, value) {
-      return this.set('customInputOption.value', value);
-    },
-  }),
-
   selectedOption: computed('preparedOptions.@each.value', 'value', function selectedOption() {
     return this.preparedOptions?.find(option => option?.value === this.value);
   }),
@@ -143,7 +134,6 @@ export default DropdownField.extend({
       this.set('isCustomInputFocused', false);
     },
     onCustomInput(value) {
-      // this.set('customInputValue', value);
       this.set('customInputOption.value', value);
       this.field.valueChanged(value);
     },
