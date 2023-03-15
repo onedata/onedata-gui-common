@@ -26,16 +26,43 @@ import { isEmpty } from 'ember-awesome-macros';
 
 /**
  * @typedef {Object} OneInlineEditorSettings
- * @param {'text'|'tags'} type
+ * @param {'text'|'tags'|'custom'} type See discriminated types descriptions.
  */
 
 /**
+ * Classic type of `one-inline-editor` that is suitable for editing plain text in
+ * single-line input.
+ * @typedef {Object} OneInlineTextEditorSettings
+ * @param {'text'} type
+ */
+
+/**
+ * When using `'tags'` editor type, the editor uses tags-input to show and edit tags.
  * @typedef {OneInlineEditorSettings} OneInlineTagsEditorSettings
  * @param {'tags'} type
  * @param {string} tagEditorComponentName See `tagEditorComponentName` in `tags-input`.
  * @param {Object} tagEditorSettings See `tagEditorSettings` in `tags-input`.
  * @param {boolean} startTagCreationOnInit If true, tag editor (selector) will appear
  *   right after the tags input goes into edit mode.
+ */
+
+/**
+ * In this mode the `one-inline-editor` yields a block to render own component in
+ * edit mode with API object for integrating it with `one-inline-editor`. The API object
+ * is of type `OneInlineCustomEditorAPI`
+ * @typedef {Object} OneInlineCustomEditorSettings
+ * @param {'custom'} type
+ */
+
+/**
+ * @typedef {Object} OneInlineCustomEditorAPI
+ * @param {string} value Current edited value in editor.
+ * @param {(value: string) => void} onChange Callback to inform the inline-editor about
+ *   custom editor value change.
+ * @param {() => void} onLostFocus Callback to inform the inline-editor that the custom
+ *   editor lost focus.
+ * @param {() => void} onSave Callback to invoke save on inline-editor.
+ * @param {() => void} onCancel Callback to invoke edit cancel on inline-editor.
  */
 
 export default Component.extend(I18n, {

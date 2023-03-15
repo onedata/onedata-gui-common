@@ -13,6 +13,14 @@
       onChange=(action (mut _inputValue))
       onFocusLost=(action onLostFocus)
     }}
+  {{else if (eq editorType "custom")}}
+    {{yield (hash
+      value=_inputValue
+      onChange=(action (mut _inputValue))
+      onLostFocus=(action onLostFocus)
+      onSave=(action "saveEdition")
+      onCancel=(action "cancelEdition")
+    )}}
   {{else}}
     {{one-way-input _inputValue
       disabled=_whileSaving
