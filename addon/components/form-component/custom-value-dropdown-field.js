@@ -114,9 +114,6 @@ export default DropdownField.extend({
         return false;
       }
     },
-    click(powerSelect, event) {
-      console.log(event);
-    },
     focus(powerSelect, event) {
       if (this.isEventFromSearchInput(event)) {
         return;
