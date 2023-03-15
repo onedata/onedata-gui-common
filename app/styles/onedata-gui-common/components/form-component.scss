@@ -351,22 +351,36 @@ $form-component-view-margin: $padding-base-vertical;
 }
 
 .custom-value-dropdown-field-trigger {
+  $dropdown-arrow-separator-spacing: 10px;
   .ember-power-select-selected-item {
     display: block;
     width: 100%;
-    .custom-option-input {
-      width: 100%;
-    }
   }
   .ember-power-select-selected-item {
     .custom-input-option {
       display: none;
     }
   }
+  .option-custom-input {
+    position: relative;
+
+    &::after {
+      $extra-vertical-length: 4px;
+      position: absolute;
+      content: '';
+      right: $dropdown-arrow-separator-spacing;
+      top: -$extra-vertical-length;
+      bottom: -$extra-vertical-length;
+      border-right: 1px solid $main-border-color;
+    }
+  }
   .custom-option-input {
+    position: relative;
     outline: none;
     border: none;
     padding: 0;
     margin: 0;
+    padding-right: $dropdown-arrow-separator-spacing + 4px;
+    width: calc(100% - #{$dropdown-arrow-separator-spacing})
   }
 }
