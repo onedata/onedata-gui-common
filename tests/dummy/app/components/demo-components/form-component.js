@@ -32,13 +32,31 @@ const modelSelectorSource = {
 };
 
 export default Component.extend({
+  //#region configuration
+
   isFormInfoShown: true,
+
   isDuplicatedFieldShown: true,
+
+  //#endregion
+
+  //#region state
+
+  lastChangedField: '',
+
+  lastChangedValue: '',
+
+  //#endregion
+
+  valuesSource: computed(() => ({
+    customValueDropdown: 'hello@world.com',
+  })),
 
   rootFieldsGroup: computed(function rootFieldsGroup() {
     const component = this;
     return FormFieldsRootGroup
       .extend({
+        valuesSource: reads('formComponent.valuesSource'),
         onValueChange(value, field) {
           this._super(...arguments);
           setProperties(component, {
@@ -48,6 +66,7 @@ export default Component.extend({
         },
       })
       .create({
+        formComponent: this,
         ownerSource: this,
         fields: [
           this.nameField,
@@ -215,7 +234,7 @@ export default Component.extend({
 
   customValueDropdownField: computed(function customValueDropdownField() {
     return CustomValueDropdownField.create({
-      name: 'customValueOptions',
+      name: 'customValueDropdown',
       label: 'Custom input dropdown',
       isCustomInputOptionIconShown: true,
       //// uncomment to see static mode
@@ -232,7 +251,7 @@ export default Component.extend({
           value: 'one@example.com',
           name: 'one',
           icon: 'browser-file',
-          label: 'two@example.com',
+          label: 'one@example.com',
         },
         {
           value: 'two@example.com',
@@ -260,9 +279,19 @@ export default Component.extend({
 
   isFormValid: reads('rootFieldsGroup.isValid'),
 
-  lastChangedField: '',
-
-  lastChangedValue: '',
-
   values: reads('rootFieldsGroup.valuesSource'),
+
+  init() {
+    this._super(...arguments);
+    /// Some optional tests to uncomment
+    // this.testDynamicValuesInjection();
+  },
+
+  testDynamicValuesInjection() {
+    setTimeout(() => {
+      this.set('valuesSource', {
+        customValueDropdown: 'other',
+      });
+    }, 4000);
+  },
 });

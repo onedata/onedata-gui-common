@@ -355,32 +355,33 @@ $form-component-view-margin: $padding-base-vertical;
   .ember-power-select-selected-item {
     display: block;
     width: 100%;
-  }
-  .ember-power-select-selected-item {
+
     .custom-value-dropdown-option-content {
       display: none;
     }
-  }
-  .custom-value-option {
-    position: relative;
+    .custom-value-option {
+      position: relative;
 
-    &::after {
-      $extra-vertical-length: 4px;
-      position: absolute;
-      content: '';
-      right: $dropdown-arrow-separator-spacing;
-      top: -$extra-vertical-length;
-      bottom: -$extra-vertical-length;
-      border-right: 1px solid $main-border-color;
+      &::after {
+        $extra-vertical-length: 4px;
+        position: absolute;
+        content: '';
+        right: $dropdown-arrow-separator-spacing;
+        top: -$extra-vertical-length;
+        bottom: -$extra-vertical-length;
+        border-right: 1px solid $main-border-color;
+      }
     }
-  }
-  .custom-value-trigger-input {
-    position: relative;
-    outline: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    padding-right: $dropdown-arrow-separator-spacing + 4px;
-    width: calc(100% - #{$dropdown-arrow-separator-spacing})
+    input.custom-value-trigger-input {
+      position: relative;
+      outline: none;
+      border: none;
+      background: none;
+      padding: 0;
+      margin: 0;
+      padding-left: 0;
+      padding-right: $dropdown-arrow-separator-spacing + 4px;
+      width: calc(100% - #{$dropdown-arrow-separator-spacing})
+    }
   }
 }

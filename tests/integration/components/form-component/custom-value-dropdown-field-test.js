@@ -617,6 +617,27 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
     }
   );
 
+  it('has custom value option selected with value filled in if non-predefined value if specified in field',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        name: 'customValueField',
+        options: [
+          { value: 'predefined', label: 'Predefined' },
+        ],
+        value: 'hello',
+      });
+
+      await helper.renderUsingRenderer();
+
+      expect(helper.customValueInput).to.have.value('hello');
+      const customValueOption = await helper.getCustomValueOption();
+      expect(customValueOption).to.exist;
+      expect(customValueOption.textContent).to.contain(Helper.customValueOptionLabel);
+      expect(customValueOption.textContent).to.contain('hello');
+    }
+  );
+
   //#endregion
 });
 

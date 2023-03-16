@@ -8,32 +8,18 @@
 
 import DropdownField from 'onedata-gui-common/components/form-component/dropdown-field';
 import layout from '../../templates/components/form-component/custom-value-dropdown-field';
-import EmberObject from '@ember/object';
+import EmberObject, { observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import { computed } from '@ember/object';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { or } from 'ember-awesome-macros';
-import computedT from 'onedata-gui-common/utils/computed-t';
 
-export default DropdownField.extend(I18n, {
+export default DropdownField.extend({
   layout,
   classNames: ['custom-value-dropdown-field'],
 
-  /**
-   * @override
-   */
-  i18nPrefix: 'components.formComponent.customValueDropdownField',
+  customValueInputPlaceholder: reads('field.customValueInputPlaceholder'),
 
-  customValueInputPlaceholder: or(
-    'field.customValueInputPlaceholder',
-    computedT('customValueInputPlaceholder'),
-  ),
-
-  customValueOptionTextPrefix: or(
-    'field.customValueOptionTextPrefix',
-    computedT('customValueOptionTextPrefix'),
-  ),
+  customValueOptionTextPrefix: reads('field.customValueOptionTextPrefix'),
 
   //#region state
 
@@ -44,8 +30,6 @@ export default DropdownField.extend(I18n, {
   /**
    * @type {ComputedProperty<Array<FieldOption>>}
    */
-  // preparedOptions: reads('field.preparedOptions'),
-
   preparedOptions: computed('field.preparedOptions', function preparedOptions() {
     return [
       ...this.field.preparedOptions,
@@ -58,7 +42,18 @@ export default DropdownField.extend(I18n, {
   customValueOptionIcon: reads('field.customValueOptionIcon'),
 
   selectedOption: computed('preparedOptions.@each.value', 'value', function selectedOption() {
-    return this.preparedOptions?.find(option => option?.value === this.value);
+    return this.findOption(this.value);
+  }),
+
+  findOption(value) {
+    return this.preparedOptions?.find(option => option?.value === value);
+  },
+
+  autoSetCustomValue: observer('value', function autoSetCustomValue() {
+    if (this.findOption(this.value)) {
+      return;
+    }
+    this.setCustomValue(this.value);
   }),
 
   init() {
@@ -66,6 +61,7 @@ export default DropdownField.extend(I18n, {
     this.set('customValueOption', EmberObject.create({
       value: '',
     }));
+    this.autoSetCustomValue();
   },
 
   isCustomInputOption(option) {
@@ -95,6 +91,10 @@ export default DropdownField.extend(I18n, {
 
   isEventFromCustomOptionInput(event) {
     return event.target.matches('.custom-value-trigger-input');
+  },
+
+  setCustomValue(value) {
+    this.set('customValueOption.value', value);
   },
 
   actions: {
@@ -129,7 +129,7 @@ export default DropdownField.extend(I18n, {
       this.set('isCustomInputFocused', false);
     },
     onCustomInput(value) {
-      this.set('customValueOption.value', value);
+      this.setCustomValue(value);
       this.field.valueChanged(value);
     },
   },

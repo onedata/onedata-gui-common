@@ -12,6 +12,8 @@
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import { computed } from '@ember/object';
 
+const defaultI18nPrefix = 'components.formComponent.customValueDropdownField';
+
 export default DropdownField.extend({
   /**
    * @override
@@ -46,7 +48,14 @@ export default DropdownField.extend({
     function customInputPlaceholder() {
       // Null value, because powerselect converts `undefined` to string 'undefined'
       return this.getTranslation(
-        'customValueInputPlaceholder', {}, { defaultValue: null }
+        'customValueInputPlaceholder', {}, {
+          defaultValue: this.t(
+            `${defaultI18nPrefix}.customValueInputPlaceholder`, {}, {
+              defaultValue: '',
+              usePrefix: false,
+            },
+          ),
+        }
       );
     }
   ),
@@ -61,7 +70,14 @@ export default DropdownField.extend({
     function customInputPlaceholder() {
       // Null value, because powerselect converts `undefined` to string 'undefined'
       return this.getTranslation(
-        'customValueOptionTextPrefix', {}, { defaultValue: null }
+        'customValueOptionTextPrefix', {}, {
+          defaultValue: this.t(
+            `${defaultI18nPrefix}.customValueOptionTextPrefix`, {}, {
+              defaultValue: '',
+              usePrefix: false,
+            },
+          ),
+        }
       );
     }
   ),
