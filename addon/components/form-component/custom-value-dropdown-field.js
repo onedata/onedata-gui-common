@@ -86,11 +86,21 @@ export default DropdownField.extend({
   },
 
   isEventFromSearchInput(event) {
-    return event.target.matches('.ember-power-select-search-input');
+    return Boolean(
+      event.target.matches('.ember-power-select-search-input')
+    );
   },
 
   isEventFromCustomOptionInput(event) {
-    return event.target.matches('.custom-value-trigger-input');
+    return Boolean(
+      event.target.matches('.custom-value-trigger-input')
+    );
+  },
+
+  isEventFromCustomOptionInTrigger(event) {
+    return Boolean(
+      event.target.closest('.ember-power-select-selected-item .custom-value-option')
+    );
   },
 
   setCustomValue(value) {
@@ -106,7 +116,7 @@ export default DropdownField.extend({
     },
     open(powerSelect, event) {
       this._super(...arguments);
-      if (this.isEventFromCustomOptionInput(event)) {
+      if (this.isEventFromCustomOptionInTrigger(event)) {
         return false;
       }
     },

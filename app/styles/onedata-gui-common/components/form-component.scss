@@ -351,25 +351,35 @@ $form-component-view-margin: $padding-base-vertical;
 }
 
 .custom-value-dropdown-field-trigger {
-  $dropdown-arrow-separator-spacing: 10px;
+  --dropdown-arrow-separator-spacing: #{$ember-power-select-trigger-ltr-padding};
   .ember-power-select-selected-item {
-    display: block;
-    width: 100%;
+    padding-right: var(--dropdown-arrow-separator-spacing);
 
     .custom-value-dropdown-option-content {
       display: none;
     }
     .custom-value-option {
       position: relative;
+      margin-top: -$ember-power-select-trigger-ltr-padding;
+      padding-top: $ember-power-select-trigger-ltr-padding;
+      margin-bottom: -$ember-power-select-trigger-ltr-padding;
+      padding-bottom: $ember-power-select-trigger-ltr-padding;
+      margin-left: -$ember-power-select-option-large-padding-horizontal;
+      padding-left: $ember-power-select-option-large-padding-horizontal;
+      cursor: text;
 
-      &::after {
-        $extra-vertical-length: 4px;
+      &::before {
+        $vertical-spacing: 8px;
         position: absolute;
         content: '';
-        right: $dropdown-arrow-separator-spacing;
-        top: -$extra-vertical-length;
-        bottom: -$extra-vertical-length;
+        right: 0;
+        top: $vertical-spacing;
+        bottom: $vertical-spacing;
         border-right: 1px solid $main-border-color;
+      }
+
+      .one-icon {
+        margin-left: $ember-power-select-option-large-padding-horizontal;
       }
     }
     input.custom-value-trigger-input {
@@ -380,8 +390,33 @@ $form-component-view-margin: $padding-base-vertical;
       padding: 0;
       margin: 0;
       padding-left: 0;
-      padding-right: $dropdown-arrow-separator-spacing + 4px;
-      width: calc(100% - #{$dropdown-arrow-separator-spacing})
+      padding-right: var(--dropdown-arrow-separator-spacing);
+      width: 100%;
+    }
+  }
+}
+
+.ember-power-select-trigger.custom-value-dropdown-field-trigger.small,
+.form-group-sm .ember-power-select-trigger.custom-value-dropdown-field-trigger {
+  --dropdown-arrow-separator-spacing: 8px;
+  .ember-power-select-selected-item {
+    .custom-value-option {
+      // adding 2px becasue of top/bottom 1px border
+      margin: #{-$ember-power-select-option-small-padding-vertical - 1px} #{-$ember-power-select-option-small-padding-horizontal - 1px};
+      padding: #{$ember-power-select-option-small-padding-vertical + 1px} #{$ember-power-select-option-small-padding-horizontal + 1px};
+      min-height: $input-height-small - 2px;
+      margin-right: 0;
+      padding-right: 0;
+
+      .one-icon {
+        margin-left: $ember-power-select-option-small-padding-horizontal;
+      }
+
+      &::before {
+        $vertical-spacing: 6px;
+        top: $vertical-spacing;
+        bottom: $vertical-spacing;
+      }
     }
   }
 }

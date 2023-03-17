@@ -16,16 +16,21 @@
             onchange=(action "selectApiCommand")
             as |apiCommand|
           }}
-            <span class="api-command-title">
-              {{apiCommand.name}}
-            </span>
-            <span class="api-command-type">
-              <span
-                class="label label-info api-tag-label {{apiCommand.type}}-api-tag-label"
-              >
-                {{tt this (concat "apiType." apiCommand.type)}}
-              </span>
-            </span>
+            <div class="option-container">
+              {{#truncated-string class="text api-command-container"}}
+                <span class="api-command-title">
+                  {{apiCommand.name}}
+                </span>
+                <span class="api-command-type">
+                  <span class={{concat-classes
+                    "label label-info api-tag-label"
+                    (concat apiCommand.type "-api-tag-label")
+                  }}>
+                    {{tt this (concat "apiType." apiCommand.type)}}
+                  </span>
+                </span>
+              {{/truncated-string}}
+            </div>
           {{/one-dropdown}}
         </div>
       </td>
@@ -108,12 +113,12 @@
           }}
           {{#if hasOptionalParameters}}
             <div class="optional-parameters-text">
-              {{tt this "apiOptionalParameters"}} 
+              {{tt this "apiOptionalParameters"}}
               {{#each optionalParameters as |param|}}
                 <strong>{{param}},</strong>
               {{/each}}
               {{tt this "coverIn"}}
-              <a 
+              <a
                 href={{one-api-doc-url
                   product=product
                   version="latest"
@@ -153,7 +158,7 @@
                       $TOKEN
                     </td>
                     <td class="placeholder-description">
-                      {{tt this "authorizationTokenDescription"}} 
+                      {{tt this "authorizationTokenDescription"}}
                       <a href={{accessTokenUrl}} target="_blank">{{tt this "tokenPage"}}</a>.
                     </td>
                   </tr>
