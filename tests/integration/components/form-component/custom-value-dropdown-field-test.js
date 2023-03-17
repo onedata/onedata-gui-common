@@ -10,6 +10,7 @@ import OneDropdownHelper from '../../../helpers/one-dropdown';
 import { assert } from '@ember/debug';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import { validator } from 'ember-cp-validations';
+import sleep from 'onedata-gui-common/utils/sleep';
 
 describe('Integration | Component | form-component/custom-value-dropdown-field', function () {
   setupRenderingTest();
@@ -635,6 +636,49 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
       expect(customValueOption).to.exist;
       expect(customValueOption.textContent).to.contain(Helper.customValueOptionLabel);
       expect(customValueOption.textContent).to.contain('hello');
+    }
+  );
+
+  it('filters available options including empty custom value option according to query in search input',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        showSearch: true,
+        options: [
+          { name: 'hello-one', value: 'hello-one', label: 'Hello One' },
+          { name: 'hello-two', value: 'hello-two', label: 'Hello Custom' },
+          { name: 'world-one', value: 'world-one', label: 'World One' },
+          { name: 'world-two', value: 'world-two', label: 'World Custom' },
+        ],
+      });
+      await helper.render();
+
+      await helper.dropdown.fillInSearchInput('custom');
+
+      const options = await helper.dropdown.getOptions();
+      expect(options).to.have.lengthOf(3);
+      expect(options[0]).to.have.trimmed.text('Hello Custom');
+      expect(options[1]).to.have.trimmed.text('World Custom');
+      expect(options[2]).to.have.trimmed.text('Custom value...');
+    });
+
+  it('has none option selected and reports no value if value is not set',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        name: 'customValueField',
+        options: [
+          { value: 'predefined', label: 'Predefined' },
+        ],
+      });
+
+      await helper.renderUsingRenderer();
+
+      expect(helper.dropdown.getSelectedOptionText()).to.be.null;
+      expect(helper.customValueInput).to.not.exist;
+      const values = helper.rootGroup.dumpValue();
+      expect(values).to.have.property('customValueField');
+      expect(values.customValueField).to.be.undefined;
     }
   );
 

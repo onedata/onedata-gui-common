@@ -12,6 +12,7 @@ import EmberObject, { observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import { computed } from '@ember/object';
+import { raw, conditional } from 'ember-awesome-macros';
 
 export default DropdownField.extend({
   layout,
@@ -50,17 +51,46 @@ export default DropdownField.extend({
   },
 
   autoSetCustomValue: observer('value', function autoSetCustomValue() {
-    if (this.findOption(this.value)) {
+    if (this.value == null || this.findOption(this.value)) {
       return;
     }
     this.setCustomValue(this.value);
   }),
 
+  customValueOption: computed(function customValueOption() {
+    return EmberObject.extend({
+      icon: conditional(
+        'dropdown.isCustomInputOptionIconShown',
+        'dropdown.customValueOptionIcon',
+        raw(null),
+      ),
+      // NOTE: the label is rendered using HTML in HBS - consider changing this
+      // text label if HBS label changes
+      label: computed(
+        'dropdown.isInViewMode',
+        'customValueOptionTextPrefix',
+        'value',
+        function label() {
+          if (this.dropdown.isInViewMode) {
+            return this.value;
+          } else {
+            let label = this.dropdown.customValueOptionTextPrefix;
+            if (this.value) {
+              label += ` (${this.value})`;
+            }
+            return label;
+          }
+        }
+      ),
+      name: '__custom-value__',
+    }).create({
+      dropdown: this,
+      value: '',
+    });
+  }),
+
   init() {
     this._super(...arguments);
-    this.set('customValueOption', EmberObject.create({
-      value: '',
-    }));
     this.autoSetCustomValue();
   },
 
@@ -78,7 +108,9 @@ export default DropdownField.extend({
     ) {
       return;
     }
-    const input = this.element?.querySelector('.ember-power-select-selected-item .custom-value-trigger-input');
+    const input = this.element?.querySelector(
+      '.ember-power-select-selected-item .custom-value-trigger-input'
+    );
     if (!input) {
       return;
     }

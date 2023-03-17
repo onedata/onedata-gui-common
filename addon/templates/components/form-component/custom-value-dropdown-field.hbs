@@ -1,15 +1,8 @@
 {{#if isInViewMode}}
-  {{#if (and selectedOption (not (eq selectedOption customValueOption)))}}
-    {{#if selectedOption.icon}}
-      {{one-icon icon=selectedOption.icon}}
-    {{/if}}
-    <span class="text">{{selectedOption.label}}</span>
-  {{else}}
-    {{#if (and isCustomInputOptionIconShown customValueOptionIcon)}}
-      {{one-icon icon=customValueOptionIcon}}
-    {{/if}}
-    <span class="text">{{value}}</span>
+  {{#if selectedOption.icon}}
+    {{one-icon icon=selectedOption.icon}}
   {{/if}}
+  <span class="text">{{selectedOption.label}}</span>
 {{else}}
   {{#one-dropdown
     tagName="div"
@@ -62,9 +55,11 @@
 
         {{!-- shown only when rendered as option in dropdown (see styles) --}}
         <div class="custom-value-dropdown-option-content">
-          {{#if isCustomInputOptionIconShown}}
-            {{one-icon icon=customValueOptionIcon}}
+          {{#if customValueOption.icon}}
+            {{one-icon icon=customValueOption.icon}}
           {{/if}}
+          {{!-- NOTE: if changing below label format, change also text generated in
+                `customValueOption.label` --}}
           {{#truncated-string class="text"}}
             <span class="custom-option-label-prefix">
               {{customValueOptionTextPrefix}}
