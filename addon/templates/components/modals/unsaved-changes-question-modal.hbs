@@ -32,15 +32,20 @@
     }}
       {{tt this "button.cancel"}}
     {{/bs-button}}
-    {{#one-button
-      type="primary"
-      buttonType="submit"
-      class="question-save"
-      onClick=(action "submit" modal.submit true)
-      disabled=isSubmitting
-    }}
-      {{tt this "button.save"}}
-    {{/one-button}}
+    <span class="btn-tooltip-container">
+      {{#one-button
+        type="primary"
+        buttonType="submit"
+        class="question-save"
+        onClick=(action "submit" modal.submit true)
+        disabled=(or isSubmitting saveDisabledReason)
+      }}
+        {{tt this "button.save"}}
+      {{/one-button}}
+      {{#if saveDisabledReason}}
+        {{one-tooltip title=saveDisabledReason}}
+      {{/if}}
+    </span>
   {{/modal.footer}}
 
 {{/global-modal}}

@@ -78,12 +78,16 @@
 
   .lane-menu-trigger-space {
     flex: 0 0 45px;
+    white-space: nowrap;
+
+    & ~ .lane-menu-trigger-space {
+      text-align: right;
+    }
   }
 
   .lane-actions-trigger,
   .lane-run-actions-trigger {
     vertical-align: middle;
-    float: right;
     padding: 0 ($padding-xs-horizontal * math.div(2, 3));
 
     .icon-dot {
@@ -105,8 +109,13 @@
     }
   }
 
-  .no-iterated-store-warning-icon {
-    height: 1.5em;
+  .validation-error-indicator {
+    display: inline-block;
+    margin-left: 0.5em;
+
+    .warning-icon {
+      height: 1.5em;
+    }
   }
 
   &.mode-edit {

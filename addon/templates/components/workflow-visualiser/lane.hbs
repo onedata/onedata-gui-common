@@ -21,6 +21,18 @@
       {{#truncated-string class="lane-name"}}{{name}}{{/truncated-string}}
     {{/if}}
     <div class="lane-menu-trigger-space">
+      {{#if lane.validationErrors.length}}
+        <div class="validation-error-indicator">
+          <img
+            class="warning-icon"
+            src={{root-url "assets/images/sign-warning-large.svg"}}
+          />
+          {{one-tooltip
+            triggerElement=(local-selector elementId ".warning-icon")
+            title=lane.validationErrors.0.errorMessage
+          }}
+        </div>
+      {{/if}}
       {{one-menu-toggle
         class=(concat-classes
           "lane-actions-trigger"
@@ -117,14 +129,7 @@
         }}
       </div>
     {{else}}
-      <img
-        class="warning-icon no-iterated-store-warning-icon"
-        src={{root-url "assets/images/sign-warning-large.svg"}}
-      />
-      {{one-tooltip
-        triggerElement=(local-selector elementId ".no-iterated-store-warning-icon")
-        title=(tt this "noIteratedStore")
-      }}
+      <span class="one-label">{{tt this "unknownStore"}}</span>
     {{/if}}
   </div>
   {{#perfect-scrollbar-element class="lane-elements"}}

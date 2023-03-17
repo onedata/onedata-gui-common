@@ -72,12 +72,6 @@ export default VisualiserRecord.extend({
   resourceSpecOverride: undefined,
 
   /**
-   * @virtual
-   * @type {boolean}
-   */
-  hasWronglyReferencedStores: false,
-
-  /**
    * @type {ComputedProperty<AtmLambdaRevision>}
    */
   lambdaRevision: computed(

@@ -51,12 +51,6 @@ export default VisualiserRecord.extend({
   visibleRunsPosition: undefined,
 
   /**
-   * @virtual
-   * @type {boolean}
-   */
-  hasWronglyReferencedStores: false,
-
-  /**
    * @virtual optional
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Lane} lane

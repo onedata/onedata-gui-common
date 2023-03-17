@@ -118,6 +118,7 @@ import {
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 import { typeOf } from '@ember/utils';
 import dom from 'onedata-gui-common/utils/dom';
+import validateAtmWorkflowSchemaRevision from 'onedata-gui-common/utils/atm-workflow/validate-atm-workflow-schema-revision';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
@@ -178,8 +179,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   /**
    * @virtual optional
-   * @type {Function}
-   * @param {Array<any>} rawDataDump deep copy of rawData with modifications applied
+   * @type {(rawDataDump: Object, validationErrors: Array<AtmWorkflowSchemaValidationError>) => Promise<void>}
    * @returns {Promise}
    */
   onChange: undefined,
@@ -258,6 +258,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {AtmExecutionState}
    */
   executionState: undefined,
+
+  /**
+   * @type {ComputedProperty<Array<AtmWorkflowSchemaValidationError>>}
+   */
+  validationErrors: computed('rawData', function validationErrors() {
+    return validateAtmWorkflowSchemaRevision(this.i18n, this.rawData);
+  }),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
@@ -840,6 +847,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
       };
       newestRunNumber = 1;
     }
+    const validationErrors =
+      this.validationErrors.filter(({ elementId }) => elementId === id);
 
     let lane = this.getCachedElement('lane', { id });
 
@@ -881,6 +890,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         runsRegistry: normalizedRunsRegistry,
         visibleRunNumber,
         visibleRunsPosition,
+        validationErrors,
       });
       const elements = this.getLaneElementsForRawData(
         'parallelBox',
@@ -907,6 +917,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
           runNumber: newestRunNumber,
           placement: 'end',
         },
+        validationErrors,
         mode,
         actionsFactory,
         onModify: (lane, modifiedProps) => this.modifyElement(lane, modifiedProps),
@@ -929,9 +940,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
       .map((storeSchemaId) => this.getStoreBySchemaId(storeSchemaId))
       .filter(Boolean);
     usedStores.forEach((store) => store.registerReferencingRecord(lane));
-    if (usedStoreSchemaIds.length > usedStores.length) {
-      set(lane, 'hasWronglyReferencedStores', true);
-    }
 
     return lane;
   },
@@ -1105,6 +1113,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     const usedLambdasMap = this.get('usedLambdasMap') || {};
     const lambda = usedLambdasMap[lambdaId];
+    const validationErrors =
+      this.validationErrors.filter(({ elementId }) => elementId === id);
 
     let task = this.getCachedElement('task', { id });
 
@@ -1121,6 +1131,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         resultMappings,
         timeSeriesStoreConfig,
         resourceSpecOverride,
+        validationErrors,
       });
     } else {
       const {
@@ -1144,6 +1155,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         resultMappings,
         timeSeriesStoreConfig,
         resourceSpecOverride,
+        validationErrors,
         onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),
         onRemove: task => this.removeElement(task),
       });
@@ -1155,9 +1167,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
       .map((storeSchemaId) => this.getStoreBySchemaId(storeSchemaId))
       .filter(Boolean);
     usedStores.forEach((store) => store.registerReferencingRecord(task));
-    if (usedStoreSchemaIds.length > usedStores.length) {
-      set(task, 'hasWronglyReferencedStores', true);
-    }
 
     return task;
   },
@@ -1501,7 +1510,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
   applyChange(changedRawDump) {
     const onChange = this.get('onChange');
     if (onChange) {
-      return resolve(onChange(changedRawDump));
+      return resolve(onChange(
+        changedRawDump,
+        validateAtmWorkflowSchemaRevision(this.i18n, changedRawDump)
+      ));
     } else {
       return resolve();
     }
