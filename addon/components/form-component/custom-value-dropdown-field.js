@@ -13,6 +13,7 @@ import { reads } from '@ember/object/computed';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import { computed } from '@ember/object';
 import { raw, conditional } from 'ember-awesome-macros';
+import _ from 'lodash';
 
 export default DropdownField.extend({
   layout,
@@ -47,7 +48,7 @@ export default DropdownField.extend({
   }),
 
   findOption(value) {
-    return this.preparedOptions?.find(option => option?.value === value);
+    return _.findLast(this.preparedOptions, option => option?.value === value);
   },
 
   autoSetCustomValue: observer('value', function autoSetCustomValue() {
@@ -139,8 +140,19 @@ export default DropdownField.extend({
     this.set('customValueOption.value', value);
   },
 
+  isPredefinedOptionWithSameValueAsCustom(option) {
+    return option !== this.customValueOption &&
+      this.customValueOption.value === option.value &&
+      this.preparedOptions.filter(o => o.value === option?.value).length > 1;
+  },
+
   actions: {
     valueChanged(option) {
+      // to not block selecting predefined option with the same values as current custom
+      // value, clear custom value if a duplicate is found
+      if (this.isPredefinedOptionWithSameValueAsCustom(option)) {
+        this.customValueOption.set('value', '');
+      }
       this._super(...arguments);
       if (this.isCustomInputOption(option)) {
         this.focusCustomInput();

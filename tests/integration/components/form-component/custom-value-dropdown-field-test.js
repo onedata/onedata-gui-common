@@ -10,7 +10,6 @@ import OneDropdownHelper from '../../../helpers/one-dropdown';
 import { assert } from '@ember/debug';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import { validator } from 'ember-cp-validations';
-import sleep from 'onedata-gui-common/utils/sleep';
 
 describe('Integration | Component | form-component/custom-value-dropdown-field', function () {
   setupRenderingTest();
@@ -679,6 +678,43 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
       const values = helper.rootGroup.dumpValue();
       expect(values).to.have.property('customValueField');
       expect(values.customValueField).to.be.undefined;
+    }
+  );
+
+  it('has custom option still selected, if custom value equals one of predefined options',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        name: 'customValueField',
+        options: [
+          { value: 'predefined', label: 'Predefined' },
+        ],
+      });
+
+      await helper.renderUsingRenderer();
+      await helper.selectCustomValueOption();
+      await fillIn(helper.customValueInput, 'predefined');
+
+      expect(helper.customValueInput).to.exist;
+    }
+  );
+
+  it('allows to select predefined option with the same value as custom value',
+    async function () {
+      const helper = new Helper(this);
+      helper.field = helper.createField({
+        name: 'customValueField',
+        options: [
+          { value: 'predefined_value', label: 'Predefined label' },
+        ],
+      });
+
+      await helper.renderUsingRenderer();
+      await helper.selectCustomValueOption();
+      await fillIn(helper.customValueInput, 'predefined_value');
+      await helper.dropdown.selectOptionByText('Predefined label');
+
+      expect(helper.dropdown.getSelectedOptionText()).to.equal('Predefined label');
     }
   );
 
