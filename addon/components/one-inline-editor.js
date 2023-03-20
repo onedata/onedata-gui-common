@@ -4,14 +4,14 @@
  * it changes to editor which triggers `onSave` action on edition approval.
  *
  * @module components/one-inline-editor
- * @author Michal Borzecki
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2018-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 import { run, next } from '@ember/runloop';
-import { observer, computed } from '@ember/object';
+import EmberObject, { set, observer, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import layout from '../templates/components/one-inline-editor';
@@ -26,16 +26,43 @@ import { isEmpty } from 'ember-awesome-macros';
 
 /**
  * @typedef {Object} OneInlineEditorSettings
- * @param {'text'|'tags'} type
+ * @param {'text'|'tags'|'custom'} type See discriminated types descriptions.
  */
 
 /**
+ * Classic type of `one-inline-editor` that is suitable for editing plain text in
+ * single-line input.
+ * @typedef {Object} OneInlineTextEditorSettings
+ * @param {'text'} type
+ */
+
+/**
+ * When using `'tags'` editor type, the editor uses tags-input to show and edit tags.
  * @typedef {OneInlineEditorSettings} OneInlineTagsEditorSettings
  * @param {'tags'} type
  * @param {string} tagEditorComponentName See `tagEditorComponentName` in `tags-input`.
  * @param {Object} tagEditorSettings See `tagEditorSettings` in `tags-input`.
  * @param {boolean} startTagCreationOnInit If true, tag editor (selector) will appear
  *   right after the tags input goes into edit mode.
+ */
+
+/**
+ * In this mode the `one-inline-editor` yields a block to render own component in
+ * edit mode with API object for integrating it with `one-inline-editor`. The API object
+ * is of type `OneInlineCustomEditorApi`
+ * @typedef {Object} OneInlineCustomEditorSettings
+ * @param {'custom'} type
+ */
+
+/**
+ * @typedef {Object} OneInlineCustomEditorApi
+ * @param {string} value Current edited value in editor.
+ * @param {(value: string) => void} onChange Callback to inform the inline-editor about
+ *   custom editor value change.
+ * @param {() => void} onLostFocus Callback to inform the inline-editor that the custom
+ *   editor lost focus.
+ * @param {() => void} onSave Callback to invoke save on inline-editor.
+ * @param {() => void} onCancel Callback to invoke edit cancel on inline-editor.
  */
 
 export default Component.extend(I18n, {
@@ -170,6 +197,12 @@ export default Component.extend(I18n, {
   onLostFocus: notImplementedIgnore,
 
   /**
+   * Action called for custom type editor, passing API object
+   * @type {(api: OneInlineCustomEditorApi) => void}
+   */
+  onApiRegister: notImplementedIgnore,
+
+  /**
    * Automatically set to true if the component is rendered in one-collapsible-toolbar
    * @type {boolean}
    */
@@ -205,6 +238,28 @@ export default Component.extend(I18n, {
     return typeof this.get('isEditing') === 'boolean';
   }),
 
+  editorApi: computed(function editorApi() {
+    return EmberObject
+      .extend({
+        value: reads('editor._inputValue'),
+        onChange(value) {
+          set(this.editor, '_inputValue', value);
+        },
+        onLostFocus() {
+          this.editor.onLostFocus(...arguments);
+        },
+        onSave() {
+          this.editor.saveEdition();
+        },
+        onCancel() {
+          this.editor.cancelEdition();
+        },
+      })
+      .create({
+        editor: this,
+      });
+  }),
+
   resizeOnEdit: observer('_inEditionMode', function resizeOnEdit() {
     if (this.get('_inEditionMode')) {
       this.resizeToFitToolbar();
@@ -221,7 +276,6 @@ export default Component.extend(I18n, {
       this.stopEdition();
     }
   }),
-
   inputValueChangedObserver: observer(
     '_inputValue',
     function inputValueChangedObserver() {
@@ -241,6 +295,9 @@ export default Component.extend(I18n, {
   },
 
   didInsertElement() {
+    if (this.editorType === 'custom') {
+      this.onApiRegister(this.editorApi);
+    }
     if (this.get('isInToolbar')) {
       $(window).on(`resize.${this.element.id}`, () => {
         run(() => {

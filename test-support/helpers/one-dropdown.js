@@ -1,7 +1,7 @@
 import { find, click, fillIn } from '@ember/test-helpers';
 import { findInElementsByText } from './find';
 
-export default class OneDrodopdownHelper {
+export default class OneDropdownHelper {
   /**
    * @public
    * @param {HTMLElement|string} elementOrSelector Dropdown's trigger or it's parent
