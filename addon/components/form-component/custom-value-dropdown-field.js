@@ -159,7 +159,6 @@ export default DropdownField.extend({
       }
     },
     open(powerSelect, event) {
-      this._super(...arguments);
       if (this.isEventFromCustomOptionInTrigger(event)) {
         return false;
       }
