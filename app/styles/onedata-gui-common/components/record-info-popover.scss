@@ -36,6 +36,9 @@
           padding-left: 2em;
           text-transform: capitalize;
         }
+        &.type-name {
+          text-transform: capitalize;
+        }
       }
       td {
         overflow-wrap: break-word;
