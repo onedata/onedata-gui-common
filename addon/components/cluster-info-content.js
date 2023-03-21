@@ -24,4 +24,10 @@ export default Component.extend(I18n, {
    * @type {Models.AtmInventory}
    */
   record: undefined,
+
+  /**
+   * @virtual optional
+   * @type {string}
+   */
+  linkToCluster: undefined,
 });

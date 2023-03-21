@@ -4,4 +4,5 @@ export default {
   domain: 'Domain',
   version: 'Version',
   id: 'ID',
+  openCluster: 'Cluster details',
 };

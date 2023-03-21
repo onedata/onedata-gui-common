@@ -43,3 +43,11 @@
     </tr>
   </tbody>
 </table>
+{{#if linkToCluster}}
+  <div class="links-container">
+    <a href={{linkToCluster}} class="info-link clickable">
+      {{tt this "openCluster"}}
+      {{one-icon icon="link-external"}}
+    </a>
+  </div>
+{{/if}}

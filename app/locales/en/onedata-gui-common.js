@@ -57,7 +57,6 @@ import harvesterInfoContent from './onedata-gui-common/components/harvester-info
 import groupInfoContent from './onedata-gui-common/components/group-info-content';
 import atmInventoryInfoContent from './onedata-gui-common/components/atm-inventory-info-content';
 import clusterInfoContent from './onedata-gui-common/components/cluster-info-content';
-import providerInfoContent from './onedata-gui-common/components/provider-info-content';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -156,7 +155,6 @@ const translations = {
     groupInfoContent,
     atmInventoryInfoContent,
     clusterInfoContent,
-    providerInfoContent,
     alerts: {
       endpointError,
     },
