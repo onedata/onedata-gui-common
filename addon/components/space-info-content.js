@@ -75,6 +75,11 @@ export default Component.extend(I18n, {
   closeSpaceInfoPopover: undefined,
 
   /**
+   * @type {string}
+   */
+  showCreator: true,
+
+  /**
    * @type {PromiseObject<Models.User>}
    */
   creatorProxy: promise.object(computed(
