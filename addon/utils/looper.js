@@ -8,22 +8,26 @@
  * - `interval` can be always changed - it will start new interval timer and clear old
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import EmberObject, { observer } from '@ember/object';
-import Evented, { on } from '@ember/object/evented';
+import Evented from '@ember/object/evented';
 import { cancel, later } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default EmberObject.extend(Evented, {
-  _intervalId: null,
-
+  /**
+   * Time in milliseconds between the `tick` event (callback invocation).
+   * @virtual optional
+   * @type {number|null}
+   */
   interval: null,
 
   /**
    * If true, the tick notify will be launched right after changing interval
+   * @virtual optional
    * @type {boolean}
    */
   immediate: false,
@@ -33,25 +37,19 @@ export default EmberObject.extend(Evented, {
    */
   nextNotifyTimer: undefined,
 
-  resetInterval: on('init', observer('interval', function () {
-    const {
-      immediate,
-      interval,
-      _intervalId,
-    } = this.getProperties('immediate', 'interval', '_intervalId');
-    if (_intervalId != null) {
-      clearInterval(_intervalId);
+  _intervalId: null,
+
+  init() {
+    this._super(...arguments);
+    this.intervalObserver();
+  },
+
+  intervalObserver: observer('interval', function intervalObserver() {
+    this.restartInterval();
+    if (this.interval && this.interval > 0 && this.immediate) {
+      this.notify();
     }
-    if (interval && interval > 0) {
-      this.set(
-        '_intervalId',
-        setInterval(this.notify.bind(this), interval)
-      );
-      if (immediate) {
-        this.notify();
-      }
-    }
-  })),
+  }),
 
   destroy() {
     try {
@@ -72,5 +70,17 @@ export default EmberObject.extend(Evented, {
       'nextNotifyTimer',
       later(() => safeExec(this, () => this.trigger('tick')))
     );
+  },
+
+  restartInterval() {
+    if (this._intervalId != null) {
+      clearInterval(this._intervalId);
+    }
+    if (this.interval && this.interval > 0) {
+      this.set(
+        '_intervalId',
+        setInterval(this.notify.bind(this), this.interval)
+      );
+    }
   },
 });
