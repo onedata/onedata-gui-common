@@ -31,14 +31,13 @@
           left: 0;
         }
 
-        .type-name {
+        .record-icon + .record-name {
           vertical-align: top;
           padding-left: 2em;
-          text-transform: capitalize;
         }
-        &.type-name {
-          text-transform: capitalize;
-        }
+      }
+      .capitalized-text {
+        text-transform: capitalize;
       }
       td {
         overflow-wrap: break-word;

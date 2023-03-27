@@ -3,7 +3,6 @@ export default {
   name: 'Name',
   type: 'Type',
   domain: 'Domain',
-  version: 'Version',
   id: 'ID',
   openCluster: 'Cluster details',
 };
