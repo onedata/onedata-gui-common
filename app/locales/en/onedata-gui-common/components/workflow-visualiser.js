@@ -138,7 +138,6 @@ export default {
         title: 'Pods activity',
       },
     },
-    noStoreWarning: 'This task tries to use a store that does not exist. Adjust its arguments and/or results assignments to fix this issue.',
     details: {
       instanceId: 'Instance ID',
       status: 'Status',

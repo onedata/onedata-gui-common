@@ -22,7 +22,10 @@
     {{#if store.referencingRecords.length}}
       <ul>
         {{#each store.referencingRecords as |referencingRecord|}}
-          <li>{{evaluate-function stringifyRecord referencingRecord}}</li>
+          <li>
+            {{evaluate-function stringifyRecordType referencingRecord}}
+            <strong>{{referencingRecord.name}}</strong>
+          </li>
         {{/each}}
       </ul>
       <p>{{tt this "body.areYouSure"}}</p>

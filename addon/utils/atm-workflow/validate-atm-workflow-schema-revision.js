@@ -152,6 +152,8 @@ function validateAtmTask(validationContext, task) {
     ?.forEach((mapping) => {
       const storeSchemaId = mapping?.storeSchemaId;
       if (
+        // If schemaId contains `_` it means that it is a special internal reference,
+        // not an ID.
         !storeSchemaId?.includes('_') &&
         !(storeSchemaId in validationContext.storesMap)
       ) {

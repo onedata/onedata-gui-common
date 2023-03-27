@@ -12,7 +12,6 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { htmlSafe } from '@ember/string';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import layout from 'onedata-gui-common/templates/components/modals/workflow-visualiser/remove-store-modal';
 
@@ -57,12 +56,9 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<(record: Utils.WorkflowVisualiser.VisualiserRecord) => SafeString>}
    */
-  stringifyRecord: computed(function stringifyRecord() {
-    return (record) => {
-      const recordTypeString =
-        this.t(`recordTypes.${record.__modelType}`, {}, { defaultValue: '' });
-      return htmlSafe(`${recordTypeString} <strong>${record.name}</strong>`);
-    };
+  stringifyRecordType: computed(function stringifyRecordType() {
+    return (record) =>
+      this.t(`recordTypes.${record.__modelType}`, {}, { defaultValue: '' });
   }),
 
   actions: {
