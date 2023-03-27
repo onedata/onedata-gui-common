@@ -1,5 +1,5 @@
 export default {
-  title: 'Harvester details',
+  title: 'Harvester info',
   name: 'Name',
   id: 'ID',
   publicUrl: 'Public URL',

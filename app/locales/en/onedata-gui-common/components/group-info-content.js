@@ -1,5 +1,5 @@
 export default {
-  title: 'Group details',
+  title: 'Group info',
   name: 'Name',
   id: 'ID',
   type: 'Type',

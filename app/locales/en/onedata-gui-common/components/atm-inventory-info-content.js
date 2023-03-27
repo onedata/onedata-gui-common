@@ -1,5 +1,5 @@
 export default {
-  title: 'Automation inventory details',
+  title: 'Automation inventory info',
   name: 'Name',
   id: 'ID',
   openAtmInventory: 'Automation inventory details',

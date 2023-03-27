@@ -1,5 +1,5 @@
 export default {
-  title: 'Space details',
+  title: 'Space info',
   name: 'Name',
   id: 'ID',
   creator: 'Creator',

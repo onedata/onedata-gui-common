@@ -1,5 +1,5 @@
 export default {
-  title: 'Cluster details',
+  title: 'Cluster info',
   name: 'Name',
   type: 'Type',
   domain: 'Domain',
