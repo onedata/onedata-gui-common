@@ -64,14 +64,14 @@ describe('Integration | Component | modals/workflow-visualiser/remove-store-moda
     await this.helper.render();
 
     expect(this.helper.mainText).to.match(
-      /^You are about to delete the store store1.\s+It is used by the elements below:$/
+      /^You are about to delete the store store1.\s+However, it is referenced by other schema elements:$/
     );
     expect(this.helper.referencesListText).to.deep.equal([
       'Lane lane1',
       'Task task1',
     ]);
     expect(this.helper.secondaryText).to.equal(
-      'These elements will require manual configuration adjustments after store removal. Are you sure?'
+      'If you proceed, you will have to manually adjust their configuration. Are you sure?'
     );
   });
 
