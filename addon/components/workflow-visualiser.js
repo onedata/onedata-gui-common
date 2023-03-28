@@ -118,6 +118,7 @@ import {
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 import { typeOf } from '@ember/utils';
 import dom from 'onedata-gui-common/utils/dom';
+import validateAtmWorkflowSchemaRevision from 'onedata-gui-common/utils/atm-workflow/validate-atm-workflow-schema-revision';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
@@ -178,8 +179,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   /**
    * @virtual optional
-   * @type {Function}
-   * @param {Array<any>} rawDataDump deep copy of rawData with modifications applied
+   * @type {(rawDataDump: Object, validationErrors: Array<AtmWorkflowSchemaValidationError>) => Promise<void>}
    * @returns {Promise}
    */
   onChange: undefined,
@@ -258,6 +258,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {AtmExecutionState}
    */
   executionState: undefined,
+
+  /**
+   * @type {ComputedProperty<Array<AtmWorkflowSchemaValidationError>>}
+   */
+  validationErrors: computed('rawData', function validationErrors() {
+    return validateAtmWorkflowSchemaRevision(this.i18n, this.rawData);
+  }),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
@@ -699,7 +706,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   getDefinedStores() {
     const rawStores = this.get('rawData.stores') || [];
-    return rawStores.map(rawStore => this.getElementForRawData('store', rawStore));
+    return rawStores.map(rawStore => {
+      const store = this.getElementForRawData('store', rawStore);
+      store.clearReferencingRecords();
+      return store;
+    });
   },
 
   /**
@@ -836,16 +847,18 @@ export default Component.extend(I18n, WindowResizeHandler, {
       };
       newestRunNumber = 1;
     }
+    const validationErrors =
+      this.validationErrors.filter(({ elementId }) => elementId === id);
 
-    const existingLane = this.getCachedElement('lane', { id });
+    let lane = this.getCachedElement('lane', { id });
 
-    if (existingLane) {
+    if (lane) {
       const {
         runsRegistry: prevRunsRegistry,
         visibleRunNumber: prevVisibleRunNumber,
         visibleRunsPosition: prevVisibleRunsPosition,
       } = getProperties(
-        existingLane,
+        lane,
         'runsRegistry',
         'visibleRunNumber',
         'visibleRunsPosition'
@@ -869,7 +882,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
           };
         }
       }
-      this.updateElement(existingLane, {
+      this.updateElement(lane, {
         name,
         maxRetries,
         storeIteratorSpec,
@@ -877,21 +890,21 @@ export default Component.extend(I18n, WindowResizeHandler, {
         runsRegistry: normalizedRunsRegistry,
         visibleRunNumber,
         visibleRunsPosition,
+        validationErrors,
       });
       const elements = this.getLaneElementsForRawData(
         'parallelBox',
         rawParallelBoxes,
-        existingLane
+        lane
       );
-      this.updateElement(existingLane, { elements });
-      return existingLane;
+      this.updateElement(lane, { elements });
     } else {
       const {
         mode,
         actionsFactory,
       } = this.getProperties('mode', 'actionsFactory');
 
-      const newLane = Lane.create({
+      lane = Lane.create({
         id,
         schemaId: id,
         name,
@@ -904,6 +917,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
           runNumber: newestRunNumber,
           placement: 'end',
         },
+        validationErrors,
         mode,
         actionsFactory,
         onModify: (lane, modifiedProps) => this.modifyElement(lane, modifiedProps),
@@ -914,14 +928,20 @@ export default Component.extend(I18n, WindowResizeHandler, {
         onShowLatestRun: (lane) => this.showLatestLaneRun(lane),
       });
       set(
-        newLane,
+        lane,
         'elements',
-        this.getLaneElementsForRawData('parallelBox', rawParallelBoxes, newLane)
+        this.getLaneElementsForRawData('parallelBox', rawParallelBoxes, lane)
       );
-      this.addElementToCache('lane', newLane);
-
-      return newLane;
+      this.addElementToCache('lane', lane);
     }
+
+    const usedStoreSchemaIds = lane.getUsedStoreSchemaIds();
+    const usedStores = usedStoreSchemaIds
+      .map((storeSchemaId) => this.getStoreBySchemaId(storeSchemaId))
+      .filter(Boolean);
+    usedStores.forEach((store) => store.registerReferencingRecord(lane));
+
+    return lane;
   },
 
   /**
@@ -1093,11 +1113,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     const usedLambdasMap = this.get('usedLambdasMap') || {};
     const lambda = usedLambdasMap[lambdaId];
+    const validationErrors =
+      this.validationErrors.filter(({ elementId }) => elementId === id);
 
-    const existingTask = this.getCachedElement('task', { id });
+    let task = this.getCachedElement('task', { id });
 
-    if (existingTask) {
-      this.updateElement(existingTask, {
+    if (task) {
+      this.updateElement(task, {
         runsRegistry: normalizedRunsRegistry,
         name,
         parent,
@@ -1109,15 +1131,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
         resultMappings,
         timeSeriesStoreConfig,
         resourceSpecOverride,
+        validationErrors,
       });
-      return existingTask;
     } else {
       const {
         mode,
         actionsFactory,
       } = this.getProperties('mode', 'actionsFactory');
 
-      const newTask = Task.create({
+      task = Task.create({
         id,
         schemaId: id,
         runsRegistry: normalizedRunsRegistry,
@@ -1133,13 +1155,20 @@ export default Component.extend(I18n, WindowResizeHandler, {
         resultMappings,
         timeSeriesStoreConfig,
         resourceSpecOverride,
+        validationErrors,
         onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),
         onRemove: task => this.removeElement(task),
       });
-      this.addElementToCache('task', newTask);
-
-      return newTask;
+      this.addElementToCache('task', task);
     }
+
+    const usedStoreSchemaIds = task.getUsedStoreSchemaIds();
+    const usedStores = usedStoreSchemaIds
+      .map((storeSchemaId) => this.getStoreBySchemaId(storeSchemaId))
+      .filter(Boolean);
+    usedStores.forEach((store) => store.registerReferencingRecord(task));
+
+    return task;
   },
 
   /**
@@ -1481,7 +1510,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
   applyChange(changedRawDump) {
     const onChange = this.get('onChange');
     if (onChange) {
-      return resolve(onChange(changedRawDump));
+      return resolve(onChange(
+        changedRawDump,
+        validateAtmWorkflowSchemaRevision(this.i18n, changedRawDump)
+      ));
     } else {
       return resolve();
     }

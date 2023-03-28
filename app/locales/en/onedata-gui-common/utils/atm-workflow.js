@@ -6,6 +6,7 @@ import storeConfigEditors from './atm-workflow/store-config-editors';
 import storeContentUpdateOptions from './atm-workflow/store-content-update-options';
 import storeContentUpdateOptionsEditor from './atm-workflow/store-content-update-options-editor';
 import valueEditors from './atm-workflow/value-editors';
+import validateAtmWorkflowSchemaRevision from './atm-workflow/validate-atm-workflow-schema-revision';
 
 export default {
   atmLambda,
@@ -16,4 +17,5 @@ export default {
   storeContentUpdateOptions,
   storeContentUpdateOptionsEditor,
   valueEditors,
+  validateAtmWorkflowSchemaRevision,
 };

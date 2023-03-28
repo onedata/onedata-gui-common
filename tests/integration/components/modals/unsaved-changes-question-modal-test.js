@@ -12,6 +12,7 @@ import {
 } from '../../../helpers/modal';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
+import OneTooltipHelper from '../../../helpers/one-tooltip';
 
 describe('Integration | Component | modals/unsaved-changes-question-modal', function () {
   setupRenderingTest();
@@ -135,6 +136,18 @@ describe('Integration | Component | modals/unsaved-changes-question-modal', func
 
       expect(onHideSpy).to.not.be.called;
     });
+
+  it('disables "save" button with tooltip attached when "saveDisabledReason" is provided',
+    async function () {
+      this.set('modalOptions.saveDisabledReason', 'abc');
+
+      await showModal(this);
+
+      expect(getButton('save')).to.have.attr('disabled');
+      expect(await (new OneTooltipHelper(getButton('save').parentElement)).getText())
+        .to.equal('abc');
+    }
+  );
 });
 
 async function showModal(testCase) {
