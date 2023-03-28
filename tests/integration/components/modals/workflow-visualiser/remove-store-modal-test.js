@@ -158,7 +158,7 @@ class Helper {
 
   get referencesListText() {
     return [...getModalBody().querySelectorAll('li')]
-      .map((li) => li.textContent.trim());
+      .map((li) => li.textContent.trim().replace(/\s+/g, ' '));
   }
 
   get secondaryText() {
