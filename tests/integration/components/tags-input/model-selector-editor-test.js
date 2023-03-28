@@ -83,9 +83,9 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
     await click('.tag-creator-trigger');
     expect(find('.ember-basic-dropdown-trigger')).to.have.trimmed.text('User');
     const dropdown = new OneDropdownHelper('.tags-selector');
-    const options = await dropdown.getOptions();
+    const optionsTexts = await dropdown.getOptionsText();
     models.mapBy('translation').forEach((translation, index) => {
-      expect(options[index]).to.have.trimmed.text(translation);
+      expect(optionsTexts[index]).to.equal(translation);
     });
   });
 

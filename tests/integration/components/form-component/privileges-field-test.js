@@ -9,7 +9,7 @@ import { lookupService } from '../../../helpers/stub-service';
 import { setProperties } from '@ember/object';
 import { set } from '@ember/object';
 import { findInElementsByText } from '../../../helpers/find';
-import siblings from 'onedata-gui-common/utils/dom/siblings';
+import dom from 'onedata-gui-common/utils/dom';
 
 const privilegesGroups = [{
   groupName: 'g0',
@@ -131,7 +131,7 @@ function findToggleNextToText(mochaContext, text) {
   if (!groupNodeText) {
     return null;
   }
-  const formGroup = siblings(groupNodeText).find(sibling =>
+  const formGroup = dom.siblings(groupNodeText).find(sibling =>
     sibling.matches('.form-group')
   );
   return formGroup?.querySelector('.one-way-toggle');
