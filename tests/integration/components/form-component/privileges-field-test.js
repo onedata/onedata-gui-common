@@ -8,7 +8,8 @@ import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 import { setProperties } from '@ember/object';
 import { set } from '@ember/object';
-import $ from 'jquery';
+import { findInElementsByText } from '../../../helpers/find';
+import dom from 'onedata-gui-common/utils/dom';
 
 const privilegesGroups = [{
   groupName: 'g0',
@@ -48,61 +49,46 @@ describe('Integration | Component | form-component/privileges-field', function (
     }));
   });
 
-  it(
-    'has class "privileges-field"',
-    async function () {
-      await render(hbs `{{form-component/privileges-field field=field}}`);
+  it('has class "privileges-field"', async function () {
+    await render(hbs `{{form-component/privileges-field field=field}}`);
 
-      expect(find('.privileges-field')).to.exist;
-    }
-  );
+    expect(find('.privileges-field')).to.exist;
+  });
 
-  it(
-    'renders privileges tree',
-    async function () {
-      await render(hbs `{{form-component/privileges-field field=field}}`);
+  it('renders privileges tree', async function () {
+    await render(hbs `{{form-component/privileges-field field=field}}`);
 
-      Object.values(translations).forEach(translation =>
-        expect($(`.node-text:contains(${translation})`)).to.exist
-      );
-    }
-  );
+    Object.values(translations).forEach(translation => {
+      expect(findInElementsByText(findAll('.node-text'), translation)).to.exist;
+    });
+  });
 
-  it(
-    'can be disabled',
-    async function () {
-      this.set('field.isEnabled', false);
+  it('can be disabled', async function () {
+    this.set('field.isEnabled', false);
 
-      await render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `{{form-component/privileges-field field=field}}`);
 
-      expect(find('.one-way-toggle:not(.disabled)')).to.not.exist;
-    }
-  );
+    expect(find('.one-way-toggle:not(.disabled)')).to.not.exist;
+  });
 
-  it(
-    'notifies field object about changed value',
-    async function () {
-      const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
+  it('notifies field object about changed value', async function () {
+    const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      await render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `{{form-component/privileges-field field=field}}`);
+    const toggle = findToggleNextToText(this, 'group0');
 
-      return click(
-        $(this.element).find('.node-text:contains(group0) + .form-group .one-way-toggle')[0]
-      ).then(() => {
-        expect(valueChangedSpy).to.be.calledOnce;
-        expect(valueChangedSpy).to.be.calledWith(['g0a', 'g0b']);
-      });
-    }
-  );
+    await click(toggle);
+    expect(valueChangedSpy).to.be.calledOnce;
+    expect(valueChangedSpy).to.be.calledWith(['g0a', 'g0b']);
+  });
 
   it('sets tree value to privileges specified in field object', async function () {
     this.set('field.value', ['g1a']);
 
     await render(hbs `{{form-component/privileges-field field=field}}`);
+    const toggle = findToggleNextToText(this, 'privilege1a');
 
-    expect(
-      $(this.element).find('.node-text:contains(privilege1a) + .form-group .one-way-toggle')[0]
-    ).to.have.class('checked');
+    expect(toggle).to.have.class('checked');
     // g1a privilege toggle and g1 group toggle
     expect(findAll('.one-way-toggle.checked')).to.have.length(2);
   });
@@ -127,10 +113,26 @@ describe('Integration | Component | form-component/privileges-field', function (
     field.changeMode('view');
 
     await render(hbs `{{form-component/privileges-field field=field}}`);
+    const toggle = findToggleNextToText(this, 'privilege1a');
 
-    expect(
-      $(this.element).find('.node-text:contains(privilege1a) + .form-group .one-way-toggle')[0]
-    ).to.have.class('checked');
+    expect(toggle).to.have.class('checked');
     expect(find('.one-way-toggle:not(.disabled)')).to.not.exist;
   });
 });
+
+/**
+ * @param {Mocha.Context} mochaContext
+ * @param {string} text
+ * @returns {HTMLElement}
+ */
+function findToggleNextToText(mochaContext, text) {
+  const nodeTexts = mochaContext.element.querySelectorAll('.node-text');
+  const groupNodeText = findInElementsByText(nodeTexts, text);
+  if (!groupNodeText) {
+    return null;
+  }
+  const formGroup = dom.siblings(groupNodeText).find(sibling =>
+    sibling.matches('.form-group')
+  );
+  return formGroup?.querySelector('.one-way-toggle');
+}
