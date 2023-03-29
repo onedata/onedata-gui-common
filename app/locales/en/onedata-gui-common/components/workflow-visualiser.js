@@ -39,13 +39,13 @@ export default {
       clearLane: {
         title: 'Clear',
         modalHeader: 'Clear lane',
-        modalDescription: 'You are about to clear the lane "{{laneName}}".',
+        modalDescription: 'You are about to clear the lane <strong>{{laneName}}</strong>.',
         modalYes: 'Clear',
       },
       removeLane: {
         title: 'Remove',
         modalHeader: 'Remove lane',
-        modalDescription: 'You are about to delete the lane "{{laneName}}".',
+        modalDescription: 'You are about to delete the lane <strong>{{laneName}}</strong>.',
         modalYes: 'Remove',
       },
       viewLaneFailedItems: {
@@ -110,7 +110,7 @@ export default {
       removeParallelBox: {
         title: 'Remove',
         modalHeader: 'Remove parallel box',
-        modalDescription: 'You are about to delete the parallel box "{{parallelBoxName}}".',
+        modalDescription: 'You are about to delete the parallel box <strong>{{parallelBoxName}}</strong>.',
         modalYes: 'Remove',
       },
     },
@@ -123,7 +123,7 @@ export default {
       removeTask: {
         title: 'Remove',
         modalHeader: 'Remove task',
-        modalDescription: 'You are about to delete the task "{{taskName}}".',
+        modalDescription: 'You are about to delete the task <strong>{{taskName}}</strong>.',
         modalYes: 'Remove',
       },
       viewTaskAuditLog: {
@@ -154,9 +154,6 @@ export default {
       },
       removeStore: {
         title: 'Remove',
-        modalHeader: 'Remove store',
-        modalDescription: 'You are about to delete the store "{{storeName}}".',
-        modalYes: 'Remove',
       },
       viewWorkflowAuditLog: {
         title: 'Audit log',

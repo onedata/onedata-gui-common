@@ -45,6 +45,12 @@ export default VisualiserElement.extend({
 
   /**
    * @virtual optional
+   * @type {Array<AtmWorkflowSchemaValidationError>}
+   */
+  validationErrors: undefined,
+
+  /**
+   * @virtual optional
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.VisualiserRecord} record
    * @param {Object} modifiedProps
@@ -93,6 +99,16 @@ export default VisualiserElement.extend({
    * @type {ComputedProperty<String>}
    */
   status: reads('visibleRun.status'),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    if (!this.validationErrors) {
+      this.set('validationErrors', []);
+    }
+  },
 
   modify(modifiedProps) {
     const onModify = this.get('onModify');

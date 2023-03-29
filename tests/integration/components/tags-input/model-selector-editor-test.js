@@ -9,15 +9,15 @@ import {
   click,
   fillIn,
   find,
-  findAll,
 } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import $ from 'jquery';
 import sinon from 'sinon';
-import { selectChoose, clickTrigger } from 'ember-power-select/test-support/helpers';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
+import OneDropdownHelper from '../../../helpers/one-dropdown';
 import _ from 'lodash';
 import { resolve } from 'rsvp';
+import { findInElementsByText } from '../../../helpers/find';
 
 const models = [{
   name: 'user',
@@ -82,10 +82,10 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
 
     await click('.tag-creator-trigger');
     expect(find('.ember-basic-dropdown-trigger')).to.have.trimmed.text('User');
-    await clickTrigger('.tags-selector');
-    const options = findAll('.ember-power-select-option');
+    const dropdown = new OneDropdownHelper('.tags-selector');
+    const optionsTexts = await dropdown.getOptionsText();
     models.mapBy('translation').forEach((translation, index) => {
-      expect(options[index]).to.have.trimmed.text(translation);
+      expect(optionsTexts[index]).to.equal(translation);
     });
   });
 
@@ -97,7 +97,8 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
       }}`);
 
       await click('.tag-creator-trigger');
-      await selectChoose('.tags-selector', translation);
+      const dropdown = new OneDropdownHelper('.tags-selector');
+      await dropdown.selectOptionByText(translation);
       const options = getSelector().querySelectorAll('.selector-item.record-item');
       expect(options).to.have.length(availableModels[typeName].length);
       availableModels[typeName].forEach(({ name }, index) => {
@@ -174,7 +175,8 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
       }}`);
 
       await click('.tag-creator-trigger');
-      await selectChoose('.tags-selector', models[index].translation);
+      const dropdown = new OneDropdownHelper('.tags-selector');
+      await dropdown.selectOptionByText(models[index].translation);
       const allOption = getSelector().querySelector('.selector-item:not(.record-item)');
       expect(allOption).to.exist;
       expect(allOption).to.have.class('all-item');
@@ -189,8 +191,7 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
   });
 
   models.forEach(({ name: typeName, translation }) => {
-    it(
-      `does not render ${typeName} records, which are already selected`,
+    it(`does not render ${typeName} records, which are already selected`,
       async function () {
         this.set('selectedTags', defaultSettings.models.map(({ name }) => ({
           value: {
@@ -206,16 +207,17 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
         }}`);
 
         await click('.tag-creator-trigger');
-        await selectChoose('.tags-selector', translation);
+        const dropdown = new OneDropdownHelper('.tags-selector');
+        await dropdown.selectOptionByText(translation);
         const options = getSelector().querySelectorAll('.selector-item.record-item');
         expect(options).to.have.length(2);
-        expect($(options).find(
-          `.tag-label:contains(${availableModels[typeName][0].name})`
-        )[0]).to.not.exist;
+        expect(
+          findInElementsByText(options, availableModels[typeName][0].name)
+        ).to.not.exist;
       }
     );
 
-    it('allows to add record tag by clicking on it', async function () {
+    it(`allows to add ${typeName}-type record tag by clicking on it`, async function () {
       this.set('tags', []);
       const changeSpy = sinon.spy(tags => this.set('tags', tags));
       this.set('change', changeSpy);
@@ -228,13 +230,14 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
       }}`);
 
       await click('.tag-creator-trigger');
-      await selectChoose('.tags-selector', translation);
+      const dropdown = new OneDropdownHelper('.tags-selector');
+      await dropdown.selectOptionByText(translation);
       await click(getSelector().querySelector('.selector-item.record-item'));
       const options = getSelector().querySelectorAll('.selector-item.record-item');
       expect(options).to.have.length(2);
-      expect($(options).find(
-        `.tag-label:contains(${availableModels[typeName][0].name})`
-      )[0]).to.not.exist;
+      expect(
+        findInElementsByText(options, availableModels[typeName][0].name)
+      ).to.not.exist;
       expect(changeSpy.lastCall.args[0].mapBy('value.record'))
         .to.deep.equal([availableModels[typeName][0]]);
     });
@@ -283,7 +286,8 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
       }}`);
 
       await click('.tag-creator-trigger');
-      await selectChoose('.tags-selector', models[typeIndex].translation);
+      const dropdown = new OneDropdownHelper('.tags-selector');
+      await dropdown.selectOptionByText(models[typeIndex].translation);
       expect(find('.ember-basic-dropdown-trigger').querySelector('.oneicon'))
         .to.have.class(`oneicon-${typeIcon || icon}`);
 
@@ -318,7 +322,8 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
         }}`);
 
         await click('.tag-creator-trigger');
-        await selectChoose('.tags-selector', models.findBy('name', name).translation);
+        const dropdown = new OneDropdownHelper('.tags-selector');
+        await dropdown.selectOptionByText(models.findBy('name', name).translation);
         expect(getSelector().querySelector('.all-records-added-description'))
           .to.not.exist;
         await click(getSelector().querySelector('.selector-item.all-item'));
@@ -351,7 +356,8 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
         }}`);
 
         await click('.tag-creator-trigger');
-        await selectChoose('.tags-selector', models.findBy('name', name).translation);
+        const dropdown = new OneDropdownHelper('.tags-selector');
+        await dropdown.selectOptionByText(models.findBy('name', name).translation);
         expect(getSelector().querySelector('.all-records-added-description'))
           .to.not.exist;
         await click(getSelector().querySelector('.selector-item.all-item'));
@@ -420,7 +426,8 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
       }}`);
 
       await click('.tag-creator-trigger');
-      await selectChoose('.tags-selector', models[index].translation);
+      const dropdown = new OneDropdownHelper('.tags-selector');
+      await dropdown.selectOptionByText(models[index].translation);
       await click(getSelector().querySelector('.btn-by-id'));
       expect(getSelector().querySelector('.id-description'))
         .to.have.trimmed.text(label);
@@ -459,7 +466,8 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
         }}`);
 
         await click('.tag-creator-trigger');
-        await selectChoose('.tags-selector', translation);
+        const dropdown = new OneDropdownHelper('.tags-selector');
+        await dropdown.selectOptionByText(translation);
         await click(getSelector().querySelector('.btn-by-id'));
         await fillIn(getSelector().querySelector('.record-id'), '123');
         await click(getSelector().querySelector('.add-id'));
