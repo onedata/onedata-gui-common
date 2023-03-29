@@ -35,14 +35,14 @@ export default EmberObject.extend({
   /**
    * @public
    * @virtual optional
-   * @type {Array<Utils.AtmWorkflow.ChartsDashboardSpec.Section>}
+   * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
    */
   sections: undefined,
 
   /**
    * @public
    * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardSpec.Section | null}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
    */
   parentSection: null,
 

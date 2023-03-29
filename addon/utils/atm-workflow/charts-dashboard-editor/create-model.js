@@ -19,7 +19,7 @@ const i18nPrefix = 'utils.atmWorkflow.chartsDashboardEditor.createModel';
 /**
  * Converts raw charts dashboard spec into a model used by dashboard editor.
  * @param {AtmTimeSeriesDashboardSpec | null} dashboardSpec
- * @returns {Utils.AtmWorkflow.ChartsDashboardSpec.Model}
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Model}
  */
 export function createModelFromSpec(dashboardSpec) {
   const rootSection = dashboardSpec?.rootSection ?
@@ -34,7 +34,7 @@ export function createModelFromSpec(dashboardSpec) {
  * Returns new, empty section.
  * @param {Ember.Service} i18n
  * @param {boolean} [isRoot]
- * @returns {Utils.AtmWorkflow.ChartsDashboardSpec.Section}
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Section}
  */
 export function createNewSection(i18n, isRoot = false) {
   return createSectionModelFromSpec({
@@ -45,7 +45,7 @@ export function createNewSection(i18n, isRoot = false) {
 /**
  * @param {Partial<OneTimeSeriesChartsSectionSpec>} sectionSpec
  * @param {boolean} [isRoot]
- * @returns {Utils.AtmWorkflow.ChartsDashboardSpec.Section}
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Section}
  */
 function createSectionModelFromSpec(sectionSpec, isRoot = false) {
   const section = Section.create({

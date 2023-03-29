@@ -20,7 +20,18 @@
     {{#each section.sections as |subsection|}}
       {{atm-workflow/charts-dashboard-editor/sections-editor/section
         section=subsection
+        actionsFactory=actionsFactory
       }}
     {{/each}}
   </div>
 {{/if}}
+
+<div
+  class="large-trigger add-subsection clickable"
+  onclick={{action "addSubsection"}}
+>
+  <span class="content">
+    {{one-icon icon="plus"}}
+    {{tt this "addSubsection"}}
+  </span>
+</div>

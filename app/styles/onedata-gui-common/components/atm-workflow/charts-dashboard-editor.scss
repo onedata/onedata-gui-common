@@ -58,6 +58,24 @@
       border-color: $block-border-color;
     }
 
+    .large-trigger {
+      display: inline-grid;
+      padding: 2em;
+      border: 1px dashed $block-border-transparent-color;
+      border-radius: $border-radius-base;
+
+      .one-icon {
+        margin-right: 0.4em;
+        font-size: 1.5em;
+        line-height: 0;
+        vertical-align: -0.3em;
+      }
+
+      &:hover {
+        background-color: $block-background-transparent-color;
+      }
+    }
+
     .editor-sidebar {
       border-left: 1px solid $main-border-color;
     }

@@ -4,7 +4,7 @@ export default EmberObject.extend({
   /**
    * @public
    * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardSpec.Section | null}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
    */
   rootSection: null,
 

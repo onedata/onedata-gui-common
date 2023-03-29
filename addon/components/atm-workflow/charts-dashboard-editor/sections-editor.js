@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor';
+import ActionsFactory from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/sections-editor-actions/actions-factory';
 
 export default Component.extend({
   layout,
@@ -7,7 +8,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardSpec.Section}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section}
    */
   rootSection: undefined,
 
@@ -16,4 +17,14 @@ export default Component.extend({
    * @type {() => void}
    */
   onRemoveDashboard: undefined,
+
+  /**
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.ActionsFactory}
+   */
+  actionsFactory: undefined,
+
+  init() {
+    this._super(...arguments);
+    this.set('actionsFactory', new ActionsFactory(this));
+  },
 });

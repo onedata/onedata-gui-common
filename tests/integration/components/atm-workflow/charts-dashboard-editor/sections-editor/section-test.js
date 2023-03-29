@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, find, findAll } from '@ember/test-helpers';
+import { render, find, findAll, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { setProperties, set } from '@ember/object';
+import sinon from 'sinon';
 import { createNewSection } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/create-model';
 import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 
@@ -11,7 +12,10 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   setupRenderingTest();
 
   beforeEach(function () {
-    this.set('section', createSection(this));
+    this.setProperties({
+      section: createSection(this),
+      actionsFactory: {},
+    });
   });
 
   it('has class "section"', async function () {
@@ -48,11 +52,35 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     expect(subsections[0]).to.contain.text('s1');
     expect(subsections[1]).to.contain.text('s2');
   });
+
+  it('shows creation triggers', async function () {
+    await renderComponent();
+
+    const triggers = findAll('.large-trigger');
+    expect(triggers).to.have.length(1);
+    expect(triggers[0]).to.contain.text('Add subsection');
+  });
+
+  it('triggers subsection creation on "add subsection" click', async function () {
+    const executeSpy = sinon.spy();
+    this.actionsFactory.createAddSubsectionAction = sinon.spy(() => ({
+      execute: executeSpy,
+    }));
+    await renderComponent();
+    expect(this.actionsFactory.createAddSubsectionAction).to.be.not.called;
+
+    await click('.add-subsection');
+
+    expect(this.actionsFactory.createAddSubsectionAction).to.be.calledOnce
+      .and.calledWith({ targetSection: this.section });
+    expect(executeSpy).to.be.calledOnce;
+  });
 });
 
 async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/sections-editor/section
     section=section
+    actionsFactory=actionsFactory
   }}`);
 }
 

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, find, click } from '@ember/test-helpers';
+import { render, find, findAll, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { set } from '@ember/object';
 import sinon from 'sinon';
@@ -12,7 +12,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 
   beforeEach(function () {
     this.setProperties({
-      rootSection: createNewSection(this.owner.lookup('service:i18n')),
+      rootSection: createNewSection(this.owner.lookup('service:i18n'), true),
       onRemoveDashboard: sinon.spy(),
     });
   });
@@ -39,6 +39,28 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     await renderComponent();
 
     expect(find('.section')).to.exist.and.to.contain.text('title1');
+  });
+
+  it('allows to add nested sections', async function () {
+    await renderComponent();
+
+    // Add first nested subsection
+    await click('.root-section > .add-subsection');
+
+    const sections = findAll('.section');
+    expect(sections).to.have.length(2);
+    expect(sections[1]).to.contain.text('Untitled section');
+
+    // Add second nested subsection (after first one)
+    await click('.root-section > .add-subsection');
+
+    expect(findAll('.section')).to.have.length(3);
+
+    // Add first nested subsubsection (inside first one)
+    await click('.add-subsection');
+
+    expect(findAll('.section')).to.have.length(4);
+    expect(findAll('.section .section .section')).to.have.length(1);
   });
 });
 

@@ -20,7 +20,7 @@ export default Component.extend({
   dashboardSpec: undefined,
 
   /**
-   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardSpec.Model>}
+   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Model>}
    */
   model: computed('dashboardSpec', function model() {
     return createModelFromSpec(this.dashboardSpec);
