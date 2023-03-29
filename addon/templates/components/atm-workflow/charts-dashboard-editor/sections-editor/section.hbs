@@ -10,3 +10,17 @@
     {{/if}}
   </div>
 {{/if}}
+
+{{#if section.description}}
+  <p class="section-description">{{section.description}}</p>
+{{/if}}
+
+{{#if section.sections.length}}
+  <div class="section-subsections">
+    {{#each section.sections as |subsection|}}
+      {{atm-workflow/charts-dashboard-editor/sections-editor/section
+        section=subsection
+      }}
+    {{/each}}
+  </div>
+{{/if}}
