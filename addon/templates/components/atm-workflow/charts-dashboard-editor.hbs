@@ -1,0 +1,7 @@
+{{#if model.rootSection}}
+
+{{else}}
+  {{atm-workflow/charts-dashboard-editor/no-dashboard-info
+    onCreateDashboard=(action "createDashboard")
+  }}
+{{/if}}
