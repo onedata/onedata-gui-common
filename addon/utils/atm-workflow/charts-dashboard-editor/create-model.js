@@ -7,6 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { set } from '@ember/object';
 import Model from './model';
 import Section from './section';
 
@@ -30,7 +31,7 @@ export function createModelFromSpec(dashboardSpec) {
  * @returns {Utils.AtmWorkflow.ChartsDashboardSpec.Section}
  */
 export function createSectionModelFromSpec(sectionSpec, isRoot = false) {
-  return Section.create({
+  const section = Section.create({
     isRoot,
     title: sectionSpec.title ?? '',
     titleTip: sectionSpec.titleTip ?? '',
@@ -39,4 +40,6 @@ export function createSectionModelFromSpec(sectionSpec, isRoot = false) {
       ?.filter(Boolean)
       .map((sectionSpec) => createSectionModelFromSpec(sectionSpec)) ?? [],
   });
+  section.sections.forEach((subsection) => set(subsection, 'parentSection', section));
+  return section;
 }

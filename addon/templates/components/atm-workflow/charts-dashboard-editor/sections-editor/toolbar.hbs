@@ -1,0 +1,19 @@
+{{#one-button
+  class="remove-dashboard-btn"
+  type="danger"
+  size="sm"
+  onClick=(action
+    (mut isRemoveDashboardConfirmationOpened)
+    (not isRemoveDashboardConfirmationOpened)
+  )
+}}
+  {{one-icon icon="browser-delete"}}
+  <span class="text">{{tt this "removeDashboard"}}</span>
+  {{remove-ack-popover
+    triggerSelector=(local-selector elementId ".remove-dashboard-btn")
+    isOpened=isRemoveDashboardConfirmationOpened
+    question=(tt this "removeDashboardConfirmation")
+    onConfirm=(action "removeDashboard")
+    onClose=(action (mut isRemoveDashboardConfirmationOpened) false)
+  }}
+{{/one-button}}

@@ -45,5 +45,16 @@ export default Component.extend({
 
       set(this.model, 'rootSection', createSectionModelFromSpec({}, true));
     },
+
+    /**
+     * @returns {void}
+     */
+    removeDashboard() {
+      const rootSection = this.model.rootSection;
+      if (rootSection) {
+        rootSection.destroy();
+        set(this.model, 'rootSection', null);
+      }
+    },
   },
 });

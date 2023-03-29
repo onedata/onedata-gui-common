@@ -1,5 +1,5 @@
 /**
- * A popover with question asking user whether or not to remove some editor element.
+ * A popover with question asking user whether or not to remove some element.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -8,7 +8,7 @@
 
 import Component from '@ember/component';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/commons/remove-ack-popover';
+import layout from 'onedata-gui-common/templates/components/remove-ack-popover';
 
 export default Component.extend(I18n, {
   layout,
@@ -17,7 +17,7 @@ export default Component.extend(I18n, {
   /**
    * @override
    */
-  i18nPrefix: 'components.atmWorkflow.valueEditors.commons.removeAckPopover',
+  i18nPrefix: 'components.removeAckPopover',
 
   /**
    * @virtual

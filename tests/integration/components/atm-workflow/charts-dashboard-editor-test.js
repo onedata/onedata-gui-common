@@ -15,23 +15,27 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor', funct
     expect(find('.charts-dashboard-editor')).to.exist;
   });
 
-  it('shows "no dashboard" info when dashboard spec is not provided', async function () {
+  it('shows "no dashboard" info and no sections editor when dashboard spec is not provided', async function () {
     const helper = new Helper(this);
 
     await helper.render();
 
     expect(helper.noDashboardInfo).to.exist;
+    expect(helper.sectionsEditor).to.not.exist;
   });
 
-  it('does not show "no dashboard" info when dashboard spec is provided', async function () {
-    const helper = new Helper(this, { rootSection: {} });
+  it('does not show "no dashboard" info and shows sections editor when dashboard spec is provided',
+    async function () {
+      const helper = new Helper(this, { rootSection: {} });
 
-    await helper.render();
+      await helper.render();
 
-    expect(helper.noDashboardInfo).to.not.exist;
-  });
+      expect(helper.noDashboardInfo).to.not.exist;
+      expect(helper.sectionsEditor).to.exist;
+    }
+  );
 
-  it('does not show "no dashboard" info when dashboard spec was not provided and user created one',
+  it('does not show "no dashboard" info and shows sections editor when dashboard spec was not provided and user created one',
     async function () {
       const helper = new Helper(this);
       await helper.render();
@@ -39,10 +43,11 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor', funct
       await click(helper.createDashboardBtn);
 
       expect(helper.noDashboardInfo).to.not.exist;
+      expect(helper.sectionsEditor).to.exist;
     }
   );
 
-  it('shows "no dashboard" info when user created dashboard and then another nullish dashboard spec was provided',
+  it('shows "no dashboard" info and no sections editor when user created dashboard and then another nullish dashboard spec was provided',
     async function () {
       const helper = new Helper(this);
       await helper.render();
@@ -52,8 +57,20 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor', funct
       await settled();
 
       expect(helper.noDashboardInfo).to.exist;
+      expect(helper.sectionsEditor).to.not.exist;
     }
   );
+
+  it('allows to remove dashboard', async function () {
+    const helper = new Helper(this, { rootSection: {} });
+    await helper.render();
+
+    await click('.remove-dashboard-btn');
+    await click('.webui-popover-content .btn-confirm');
+
+    expect(helper.noDashboardInfo).to.exist;
+    expect(helper.sectionsEditor).to.not.exist;
+  });
 });
 
 class Helper {
@@ -63,6 +80,10 @@ class Helper {
 
   get createDashboardBtn() {
     return this.noDashboardInfo?.querySelector('.create-btn');
+  }
+
+  get sectionsEditor() {
+    return find('.sections-editor');
   }
 
   get dashboardSpec() {

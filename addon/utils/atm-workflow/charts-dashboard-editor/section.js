@@ -40,6 +40,13 @@ export default EmberObject.extend({
   sections: undefined,
 
   /**
+   * @public
+   * @virtual optional
+   * @type {Utils.AtmWorkflow.ChartsDashboardSpec.Section | null}
+   */
+  parentSection: null,
+
+  /**
    * @override
    */
   init() {
@@ -54,7 +61,13 @@ export default EmberObject.extend({
    */
   willDestroy() {
     try {
-      this.sections.forEach((section) => section.destroy());
+      if (this.sections.length) {
+        this.sections.forEach((section) => section.destroy());
+        this.set('sections', []);
+      }
+      if (this.parentSection) {
+        this.set('parentSection', null);
+      }
     } finally {
       this._super(...arguments);
     }

@@ -22,4 +22,52 @@
       font-size: 1.2em;
     }
   }
+
+  .sections-editor {
+    display: grid;
+    grid-template-columns: 1fr 15em;
+    grid-template-rows: min-content 1fr;
+
+    .editor-toolbar {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0.3em;
+      gap: 0.3em;
+      border-bottom: 1px solid $main-border-color;
+    }
+
+    .dashboard-visualiser {
+      background-image: linear-gradient(
+        135deg,
+        $color-one-white 25%,
+        $block-background-color 25%,
+        $block-background-color 50%,
+        $color-one-white 50%,
+        $color-one-white 75%,
+        $block-background-color 75%,
+        $block-background-color 100%,
+      );
+      background-size: 20.00px 20.00px;
+      border-bottom-left-radius: $border-radius-base;
+    }
+
+    .editor-sidebar {
+      border-left: 1px solid $main-border-color;
+    }
+
+    @media (max-width: $screen-xs-max) {
+      grid-template-columns: 1fr;
+      grid-template-rows: min-content 1fr min-content;
+
+      .dashboard-visualiser {
+        border-radius: 0;
+      }
+
+      .editor-sidebar {
+        border-top: 1px solid $main-border-color;
+        border-left: 0;
+      }
+    }
+  }
 }
