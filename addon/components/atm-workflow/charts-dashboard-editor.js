@@ -1,14 +1,17 @@
 import Component from '@ember/component';
 import { computed, set } from '@ember/object';
+import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor';
 import {
   createModelFromSpec,
-  createSectionModelFromSpec,
+  createNewSection,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/create-model';
 
 export default Component.extend({
   layout,
   classNames: ['charts-dashboard-editor'],
+
+  i18n: service(),
 
   /**
    * @virtual
@@ -43,7 +46,7 @@ export default Component.extend({
         return;
       }
 
-      set(this.model, 'rootSection', createSectionModelFromSpec({}, true));
+      set(this.model, 'rootSection', createNewSection(this.i18n, true));
     },
 
     /**

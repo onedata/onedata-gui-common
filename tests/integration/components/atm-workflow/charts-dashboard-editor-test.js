@@ -26,12 +26,18 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor', funct
 
   it('does not show "no dashboard" info and shows sections editor when dashboard spec is provided',
     async function () {
-      const helper = new Helper(this, { rootSection: {} });
+      const helper = new Helper(this, {
+        rootSection: {
+          title: 'title1',
+        },
+      });
 
       await helper.render();
 
       expect(helper.noDashboardInfo).to.not.exist;
       expect(helper.sectionsEditor).to.exist;
+      expect(helper.sectionsEditor.querySelector('.section'))
+        .to.contain.text('title1');
     }
   );
 
@@ -44,6 +50,8 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor', funct
 
       expect(helper.noDashboardInfo).to.not.exist;
       expect(helper.sectionsEditor).to.exist;
+      expect(helper.sectionsEditor.querySelector('.section'))
+        .to.contain.text('Untitled section');
     }
   );
 

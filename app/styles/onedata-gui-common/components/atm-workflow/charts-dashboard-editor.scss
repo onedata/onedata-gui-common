@@ -38,6 +38,7 @@
     }
 
     .dashboard-visualiser {
+      padding: 3em;
       background-image: linear-gradient(
         135deg,
         $color-one-white 25%,
@@ -48,8 +49,13 @@
         $block-background-color 75%,
         $block-background-color 100%,
       );
-      background-size: 20.00px 20.00px;
+      background-size: 1em 1em;
       border-bottom-left-radius: $border-radius-base;
+    }
+
+    .root-section {
+      background-color: $block-background-color;
+      border-color: $block-border-color;
     }
 
     .editor-sidebar {

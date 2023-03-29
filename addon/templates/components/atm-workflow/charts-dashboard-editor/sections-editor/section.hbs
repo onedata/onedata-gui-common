@@ -1,0 +1,12 @@
+{{#if (or section.title section.titleTip)}}
+  <div class="section-header">
+    {{#if section.title}}
+      <h3 class="section-title">{{section.title}}</h3>
+    {{/if}}
+    {{#if section.titleTip}}
+      {{#one-label-tip class="section-title-tip" tooltipClass="tooltip-lg"}}
+        {{section.titleTip}}
+      {{/one-label-tip}}
+    {{/if}}
+  </div>
+{{/if}}

@@ -3,13 +3,18 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import { set } from '@ember/object';
 import sinon from 'sinon';
+import { createNewSection } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/create-model';
 
 describe('Integration | Component | atm-workflow/charts-dashboard-editor/sections-editor', function () {
   setupRenderingTest();
 
   beforeEach(function () {
-    this.set('onRemoveDashboard', sinon.spy());
+    this.setProperties({
+      rootSection: createNewSection(this.owner.lookup('service:i18n')),
+      onRemoveDashboard: sinon.spy(),
+    });
   });
 
   it('has class "sections-editor"', async function () {
@@ -26,6 +31,14 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     await click('.webui-popover-content .btn-confirm');
 
     expect(this.onRemoveDashboard).to.be.calledOnce;
+  });
+
+  it('shows root section', async function () {
+    set(this.rootSection, 'title', 'title1');
+
+    await renderComponent();
+
+    expect(find('.section')).to.exist.and.to.contain.text('title1');
   });
 });
 

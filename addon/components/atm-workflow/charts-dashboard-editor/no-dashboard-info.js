@@ -8,12 +8,15 @@
  */
 
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/no-dashboard-info';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 export default Component.extend(I18n, {
   layout,
   classNames: ['no-dashboard-info', 'info-box'],
+
+  i18n: service(),
 
   /**
    * @override
