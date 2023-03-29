@@ -5,4 +5,6 @@ export default {
   domain: 'Domain',
   id: 'ID',
   openCluster: 'Cluster details',
+  onezone: 'Onezone',
+  oneprovider: 'Oneprovider',
 };

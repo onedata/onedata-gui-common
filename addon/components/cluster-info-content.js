@@ -9,6 +9,7 @@
 import Component from '@ember/component';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from '../templates/components/cluster-info-content';
+import { computed } from '@ember/object';
 
 export default Component.extend(I18n, {
   layout,
@@ -30,4 +31,17 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   linkToCluster: undefined,
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  clusterType: computed('record.type', function clusterType() {
+    if (this.record.type) {
+      return this.t(this.record.type, {}, {
+        defaultValue: this.record.type,
+      });
+    } else {
+      return '—';
+    }
+  }),
 });

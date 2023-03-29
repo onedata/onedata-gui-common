@@ -52,7 +52,9 @@ export default Component.extend(I18n, {
    */
   groupType: computed('record.type', function groupType() {
     if (this.record.type) {
-      return this.record.type.replace('_', ' ');
+      return this.t(this.record.type.replace('_', ''), {}, {
+        defaultValue: this.record.type.replace('_', ' '),
+      });
     } else {
       return '—';
     }
