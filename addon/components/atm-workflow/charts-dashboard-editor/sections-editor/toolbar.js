@@ -16,6 +16,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.UndoManager}
+   */
+  undoManager: undefined,
+
+  /**
+   * @virtual
    * @type {() => void}
    */
   onRemoveDashboard: undefined,
@@ -26,6 +32,20 @@ export default Component.extend(I18n, {
   isRemoveDashboardConfirmationOpened: false,
 
   actions: {
+    /**
+     * @returns {void}
+     */
+    undo() {
+      this.undoManager.undo();
+    },
+
+    /**
+     * @returns {void}
+     */
+    redo() {
+      this.undoManager.redo();
+    },
+
     /**
      * @returns {void}
      */

@@ -39,6 +39,14 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   onExecute: notImplementedThrow,
 
   /**
+   * @virtual
+   * @type {Function}
+   * @returns {Promise<Utils.ActionResult>}
+   * Performs action undo
+   */
+  onExecuteUndo: notImplementedThrow,
+
+  /**
    * @virtual optional
    * @type {string}
    */
@@ -70,6 +78,12 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   context: null,
 
   /**
+   * If true, then execution should be reversed (undone).
+   * @type {boolean}
+   */
+  undo: false,
+
+  /**
    * @virtual optional
    * @type {ComputedProperty<String>}
    */
@@ -78,8 +92,9 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   }),
 
   /**
-   * Will be called just after the onExecute() method. Are executed in order and if some
-   * of them fails, then the following rest is not called. Errors change action result.
+   * Will be called just after the onExecute[Undo]() method. Are executed in
+   * order and if some of them fails, then the following rest is not called.
+   * Errors change action result.
    * @type {ComputedProperty<Array<Function>>}
    */
   executeHooks: computed(() => []),
@@ -104,16 +119,11 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @returns {Promise<Utils.ActionResult>}
    */
   execute() {
-    const {
-      disabled,
-      executeHooks,
-    } = this.getProperties('disabled', 'executeHooks');
-
-    if (disabled) {
+    if (this.disabled) {
       return;
     }
 
-    return resolve(this.onExecute())
+    return resolve(this.undo ? this.onExecuteUndo() : this.onExecute())
       .then(result => (!result || !result.interceptPromise) ? ActionResult.create({
         status: 'done',
         result,
@@ -123,7 +133,7 @@ export default EmberObject.extend(I18n, OwnerInjector, {
         error: result,
       }) : result)
       .then(result => {
-        const executeHooksPromise = (executeHooks || []).reduce(
+        const executeHooksPromise = (this.executeHooks || []).reduce(
           (hooksPromise, hook) => hooksPromise.then(() => hook(result, this)),
           resolve()
         );
@@ -139,6 +149,17 @@ export default EmberObject.extend(I18n, OwnerInjector, {
             return result;
           });
       });
+  },
+
+  /**
+   * Executes action (onExecuteUndo and then execute hooks)
+   * @returns {Promise<Utils.ActionResult>}
+   */
+  async executeUndo() {
+    this.set('undo', true);
+    const result = await this.execute();
+    this.set('undo', false);
+    return result;
   },
 
   /**

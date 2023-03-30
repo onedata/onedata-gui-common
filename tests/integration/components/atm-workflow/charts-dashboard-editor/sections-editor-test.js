@@ -41,6 +41,13 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     expect(find('.section')).to.exist.and.to.contain.text('title1');
   });
 
+  it('starts with nothing to undo and redo', async function () {
+    await renderComponent();
+
+    expect(find('.undo-btn')).to.have.attr('disabled');
+    expect(find('.redo-btn')).to.have.attr('disabled');
+  });
+
   it('allows to add nested sections', async function () {
     await renderComponent();
 
@@ -61,6 +68,34 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 
     expect(findAll('.section')).to.have.length(4);
     expect(findAll('.section .section .section')).to.have.length(1);
+  });
+
+  it('allows to undo and redo section creation', async function () {
+    await renderComponent();
+
+    // Add nested subsection
+    await click('.add-subsection');
+    // Add nested subsubsection (inside first one)
+    await click('.add-subsection');
+    // Undo subsubsection creation
+    await click('.undo-btn');
+
+    expect(findAll('.section')).to.have.length(2);
+
+    // Undo subsection creation
+    await click('.undo-btn');
+
+    expect(findAll('.section')).to.have.length(1);
+
+    // Redo subsection creation
+    await click('.redo-btn');
+
+    expect(findAll('.section')).to.have.length(2);
+
+    // Redo subsubsection creation
+    await click('.redo-btn');
+
+    expect(findAll('.section')).to.have.length(3);
   });
 });
 

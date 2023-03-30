@@ -41,11 +41,37 @@ export default Action.extend({
   /**
    * @override
    */
+  willDestroy() {
+    try {
+      const newSubsection = this.cacheFor('newSubsection');
+      if (newSubsection && !newSubsection.parentSection) {
+        newSubsection.destroy();
+      }
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
   onExecute() {
     set(this.newSubsection, 'parentSection', this.targetSection);
     set(this.targetSection, 'sections', [
       ...this.targetSection.sections,
       this.newSubsection,
     ]);
+  },
+
+  /**
+   * @override
+   */
+  onExecuteUndo() {
+    set(
+      this.targetSection,
+      'sections',
+      this.targetSection.sections.filter((section) => section !== this.newSubsection)
+    );
+    set(this.newSubsection, 'parentSection', null);
   },
 });

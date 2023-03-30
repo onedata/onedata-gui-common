@@ -35,7 +35,8 @@ export default class ActionsFactory {
    * @returns {void}
    */
   destroy() {
-    this.onExecuteListeners.clear();
+    this.executeListeners.clear();
+    this.ownerSource = null;
   }
 
   /**
