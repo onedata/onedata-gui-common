@@ -46,6 +46,11 @@ export default Component.extend(I18n, {
   publicUrl: undefined,
 
   /**
+   * @type {string}
+   */
+  showCreator: true,
+
+  /**
    * @type {PromiseObject<Models.User>}
    */
   creatorProxy: promise.object(computed(
