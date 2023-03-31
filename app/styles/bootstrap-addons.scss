@@ -66,6 +66,12 @@ $first-table-column-padding-left: 16px;
         margin-left: 0;
       }
     }
+    .btn-tooltip-container {
+      > button,
+      > .btn {
+        margin-top: 0;
+      }
+    }
     &.btn-toolbar-stack {
       @media (max-width: $screen-xs-max) {
         .btn {

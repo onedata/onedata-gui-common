@@ -13,6 +13,18 @@
       hideViewIcons=true
       onSave=(action "changeName")
     }}
+    {{#if task.validationErrors.length}}
+      <div class="validation-error-indicator">
+        <img
+          class="warning-icon"
+          src={{root-url "assets/images/sign-warning-large.svg"}}
+        />
+        {{one-tooltip
+          triggerElement=(local-selector elementId ".warning-icon")
+          title=task.validationErrors.0.errorMessage
+        }}
+      </div>
+    {{/if}}
     {{one-icon
       icon="settings-circle-filled"
       class=(concat-classes

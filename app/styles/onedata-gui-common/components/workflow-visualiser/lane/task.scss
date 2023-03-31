@@ -107,6 +107,15 @@
     min-width: 0;
   }
 
+  .validation-error-indicator {
+    margin-left: 0.5em;
+    margin-right: 0.2em;
+
+    .warning-icon {
+      height: 1.3em;
+    }
+  }
+
   .task-actions-trigger {
     position: absolute;
     bottom: -1px;

@@ -1,5 +1,5 @@
 export default {
-  title: 'Group details',
+  title: 'Group info',
   name: 'Name',
   id: 'ID',
   type: 'Type',
@@ -8,4 +8,8 @@ export default {
   openGroup: 'Group details',
   effective: 'effective',
   ofWhichDirect: 'of which {{directCount}} direct',
+  organization: 'Organization',
+  team: 'Team',
+  roleholders: 'Role holders',
+  unit: 'Unit',
 };

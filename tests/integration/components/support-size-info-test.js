@@ -11,7 +11,7 @@ import {
   find,
 } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import $ from 'jquery';
+import { findInElementsByText } from '../../helpers/find';
 
 describe('Integration | Component | support-size-info', function () {
   setupRenderingTest();
@@ -47,10 +47,11 @@ describe('Integration | Component | support-size-info', function () {
     `);
 
     await settled();
-    ['Provider1', 'Provider2'].forEach((name) =>
-      expect($(this.element).find(`text:contains("${name}"), li:contains("${name}")`))
-      .to.exist
-    );
+    ['Provider1', 'Provider2'].forEach((name) => {
+      expect(
+        findInElementsByText(this.element.querySelectorAll('text, li'), name)
+      ).to.exist;
+    });
   });
 
   it('renders support size table', async function () {
