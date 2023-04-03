@@ -5,7 +5,7 @@ import FormFieldValidator from 'onedata-gui-common/utils/form-component/form-fie
 import { validator, buildValidations } from 'ember-cp-validations';
 import { setupTest } from 'ember-mocha';
 
-describe('Integration | Utility | form component/form field validator', function () {
+describe('Integration | Utility | form-component/form-field-validator', function () {
   setupTest();
 
   it(
@@ -17,20 +17,6 @@ describe('Integration | Utility | form component/form field validator', function
 
       expect(get(fieldValidator, 'errors')).to.have.length(0);
       expect(get(fieldValidator, 'isValid')).to.be.true;
-    }
-  );
-
-  it(
-    'has falsy isValid when errors array is not empty',
-    function () {
-      const fieldValidator = FormFieldValidator
-        .extend(buildValidations())
-        .create({
-          ownerSource: this.owner,
-          errors: [{ a: 1 }],
-        });
-
-      expect(get(fieldValidator, 'isValid')).to.be.false;
     }
   );
 

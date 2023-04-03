@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | name conflict', function () {
+describe('Integration | Component | name-conflict', function () {
   setupRenderingTest();
 
   it('renders name with conflict label if available', async function () {

@@ -14,7 +14,7 @@ import { Promise } from 'rsvp';
 import sinon from 'sinon';
 import OneTooltipHelper from '../../helpers/one-tooltip';
 
-describe('Integration | Component | one inline editor', function () {
+describe('Integration | Component | one-inline-editor', function () {
   setupRenderingTest();
 
   it('renders value', async function () {

@@ -4,8 +4,7 @@ import layout from 'onedata-gui-common/templates/components/one-way-radio-group'
 /**
  * Creates radio inputs group based one the one-toggle-radio component.
  *
- * @module components/one-way-radio-group
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -58,8 +57,7 @@ export default Component.extend({
       if (value !== this.value) {
         // Radio input becomes checked just after user click without waiting for
         // the selected value change from parent component - it's not a correct
-        // "one-way" approach. It's a bug in `ember-one-way-controls` package,
-        // which is not maintained. In order to fix that issue, we syntetically
+        // "one-way" approach. In order to fix that issue, we syntetically
         // deselect input just after its selection and we wait for the selection
         // driven by `value` taken from the parent component.
         const currentlySelectedInputIdx = this.options

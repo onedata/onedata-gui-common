@@ -1,8 +1,7 @@
 /**
  * Provides information about status of global collapsible toolbar component
  *
- * @module services/global-collapsible-toolbar
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

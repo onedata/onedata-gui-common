@@ -1,5 +1,4 @@
 /**
- * @module components/demo-components/one-tab-bar
  * @author Jakub Liput
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -10,6 +9,17 @@ import { computed } from '@ember/object';
 import _ from 'lodash';
 
 export default Component.extend({
+  selectedItemIndex: 14,
+
+  manyShortItems: computed(function items() {
+    return _.range(1, 20).map(i => ({
+      id: String(i),
+      name: String(i).padStart(2, '0') + '. Pro',
+      icon: 'space',
+      class: 'provider-online',
+    }));
+  }),
+
   items: computed(function items() {
     return _.range(1, 20).map(i => ({
       id: String(i),

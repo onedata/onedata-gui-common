@@ -229,7 +229,6 @@
  * in translations), but different values (due to the different valueName which
  * is used to create a path in values tree).
  *
- * @module utils/form-component/form-element
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

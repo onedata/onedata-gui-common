@@ -2,8 +2,7 @@
  * A component that creates symmetric Bezier curve using to
  * two points and curveFactor.
  *
- * @module components/bezier-curve
- * @author Michal Borzecki, Jakub Liput
+ * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

@@ -4,7 +4,6 @@
  * - taskDetailsProviderCallback - it will be called to obtain new task details,
  * - createTaskCallback - it will be used to save a new task.
  *
- * @module utils/workflow-visualiser/actions/create-task-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,7 +1,6 @@
 /**
  * Creates toggle-like checkbox component. Allows to use three-state selection.
  *
- * @module components/one-way-toggle
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2017-2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

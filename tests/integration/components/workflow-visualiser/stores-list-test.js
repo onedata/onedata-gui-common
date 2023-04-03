@@ -15,7 +15,7 @@ import sinon from 'sinon';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 
-describe('Integration | Component | workflow visualiser/stores list', function () {
+describe('Integration | Component | workflow-visualiser/stores-list', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -50,21 +50,20 @@ describe('Integration | Component | workflow visualiser/stores list', function (
 
     itRendersListOfStores('edit');
 
-    it('shows "add store" button', async function (done) {
+    it('shows "add store" button', async function () {
       await renderComponent();
 
       const addBtn = find('.create-store-action-trigger');
       expect(addBtn).to.exist;
       expect(addBtn.textContent.trim()).to.equal('Add store');
-      done();
     });
 
-    it('allows to add new store', async function (done) {
+    it('allows to add new store', async function () {
       await renderComponent();
 
       await click('.create-store-action-trigger');
       await fillIn(getModalBody().querySelector('.name-field .form-control'), 'store1');
-      await selectChoose(getModalBody().querySelector('.data-spec-editor'), 'Number');
+      await selectChoose(getModalBody().querySelector('.data-spec-editor'), 'String');
       await click(getModalFooter().querySelector('.btn-submit'));
 
       expect(this.get('createStoreStub')).to.be.calledOnce.and.to.be.calledWith({
@@ -73,14 +72,13 @@ describe('Integration | Component | workflow visualiser/stores list', function (
         type: 'list',
         config: {
           itemDataSpec: {
-            type: 'number',
+            type: 'string',
             valueConstraints: {},
           },
         },
         defaultInitialContent: null,
         requiresInitialContent: false,
       });
-      done();
     });
   });
 
@@ -91,11 +89,10 @@ describe('Integration | Component | workflow visualiser/stores list', function (
 
     itRendersListOfStores('view');
 
-    it('does not show "add store" button', async function (done) {
+    it('does not show "add store" button', async function () {
       await renderComponent();
 
       expect(find('.create-store-action-trigger')).to.not.exist;
-      done();
     });
   });
 });
@@ -112,7 +109,7 @@ async function renderComponent() {
 }
 
 function itRendersListOfStores(mode) {
-  it('renders passed list of stores', async function (done) {
+  it('renders passed list of stores', async function () {
     await renderComponent();
 
     expect(find('.workflow-visualiser-stores-list')).to.have.class(`mode-${mode}`);
@@ -122,6 +119,5 @@ function itRendersListOfStores(mode) {
     expect(stores[1]).to.have.class(`mode-${mode}`);
     expect(stores[0].textContent.trim()).to.equal('store1');
     expect(stores[1].textContent.trim()).to.equal('store2');
-    done();
   });
 }

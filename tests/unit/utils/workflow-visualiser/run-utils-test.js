@@ -5,7 +5,7 @@ import {
   inAdvanceRunNumber,
 } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 
-describe('Unit | Utility | workflow visualiser/run utils', function () {
+describe('Unit | Utility | workflow-visualiser/run-utils', function () {
   describe('runsRegistryToSortedArray', function () {
     it('returns sorted array of runs for registry with normal runs only', function () {
       const sorterArr = runsRegistryToSortedArray({

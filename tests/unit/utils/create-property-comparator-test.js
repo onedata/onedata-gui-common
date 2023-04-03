@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import createPropertyComparator from 'onedata-gui-common/utils/create-property-comparator';
 
-describe('Unit | Utility | create property comparator', function () {
+describe('Unit | Utility | create-property-comparator', function () {
   it('creates function that sorts objects by string property', function () {
     const objects = [{
         id: 1,

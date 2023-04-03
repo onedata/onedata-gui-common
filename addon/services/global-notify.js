@@ -23,7 +23,6 @@ function aliasToShow(type) {
  * - fatal error in operation (esp. for backend operations)
  * - ...and more planned
  *
- * @module services/global-notify
  * @author Jakub Liput
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

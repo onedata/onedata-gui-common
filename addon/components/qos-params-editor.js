@@ -5,7 +5,6 @@
  * Provides viewer and editor of QoS parameters for storage (but is pretty
  * universal an may by used in the future for another similiar problems)
  *
- * @module components/qos-params-editor
  * @author Michał Borzęcki
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

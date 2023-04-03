@@ -5,7 +5,6 @@
  * Ordered queue of tasks, which can hold only one task of specified type until the task
  * of a speficied type is completed. Supports asynchronous tasks.
  *
- * @module utils/one-singleton-task-queue
  * @author Jakub Liput
  * @copyright (C) 2021-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

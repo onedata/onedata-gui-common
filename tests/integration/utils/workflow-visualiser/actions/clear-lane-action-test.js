@@ -19,7 +19,7 @@ import { Promise } from 'rsvp';
 
 const laneName = 'lane1';
 
-describe('Integration | Utility | workflow visualiser/actions/clear lane action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/clear-lane-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -65,7 +65,7 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
     expect(getModalHeader().querySelector('h1').textContent.trim())
       .to.equal('Clear lane');
     expect(getModalBody().textContent.trim()).to.contain(
-      `You are about to clear the lane "${laneName}".`
+      `You are about to clear the lane ${laneName}.`
     );
     const yesButton = getModalFooter().querySelector('.question-yes');
     expect(yesButton.textContent.trim()).to.equal('Clear');

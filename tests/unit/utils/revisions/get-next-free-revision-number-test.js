@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import getNextFreeRevisionNumber from 'onedata-gui-common/utils/revisions/get-next-free-revision-number';
 
-describe('Unit | Utility | revisions/get next free revision number', function () {
+describe('Unit | Utility | revisions/get-next-free-revision-number', function () {
   it('returns 1 for empty array of revision numbers', function () {
     expect(getNextFreeRevisionNumber([])).to.equal(1);
   });

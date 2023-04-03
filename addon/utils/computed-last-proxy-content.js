@@ -1,8 +1,7 @@
 /**
  * Get access to last resolved value of PromiseObject.
  * Computed property for this value should be observed to work properly.
- * 
- * @module utils/computed-last-proxy-content
+ *
  * @author Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

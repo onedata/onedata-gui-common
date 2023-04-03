@@ -7,7 +7,7 @@ import {
 import { typeOf } from '@ember/utils';
 import EmberObject from '@ember/object';
 
-describe('Unit | Utility | form component/values container', function () {
+describe('Unit | Utility | form-component/values-container', function () {
   describe('createValuesContainer', function () {
     it('creates an empty Ember object', function () {
       const container = createValuesContainer();

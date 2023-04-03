@@ -8,6 +8,7 @@
               "item-icon-container"
               (if isResourceWithAdditionalInfo "icon-container popover-info-trigger")
             }}
+            data-record-id={{item.record.entityId}}
             {{action
               (mut item.itemInfoOpened)
               (not item.itemInfoOpened)
@@ -30,7 +31,6 @@
               }}
               {{#one-tooltip
                 placement="top"
-                arrowPlacement="left"
                 triggerEvents="hover"
               }}
                 {{#if item.conflictingLabelSource}}
@@ -71,16 +71,17 @@
           }}
         {{/if}}
       {{/listItem.header}}
+      {{#if isResourceWithAdditionalInfo}}
+        {{#record-info-popover
+          isOpened=item.itemInfoOpened
+          triggerSelector=item.itemInfoTriggerSelector
+        }}
+          {{component (concat item.record.constructor.modelName "-info-content")
+            record=item.record
+          }}
+        {{/record-info-popover}}
+      {{/if}}
     {{/list.item}}
-    {{#record-info-popover
-      isOpened=(and isResourceWithAdditionalInfo item.itemInfoOpened)
-      triggerSelector=(concat "#" elementId " .item-icon-container")
-    }}
-      {{space-info-content
-        space=item.space
-        closeSpaceInfoPopover=(action "closeSpaceInfoPopover" item)
-      }}
-    {{/record-info-popover}}
   {{/each}}
 {{/one-collapsible-list}}
 {{yield}}

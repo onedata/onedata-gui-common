@@ -2,7 +2,6 @@
  * A component responsible for rendering fields using text-like inputs (text,
  * number, email etc.).
  *
- * @module components/form-component/text-like-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

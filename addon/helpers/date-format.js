@@ -4,7 +4,6 @@
 /**
  * Converts date in text or MomentJS to some predefined format
  *
- * @module helpers/date-format
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

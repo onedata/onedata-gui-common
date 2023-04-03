@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
 import { get } from '@ember/object';
 
-describe('Unit | Utility | workflow visualiser/interlane space', function () {
+describe('Unit | Utility | workflow-visualiser/interlane-space', function () {
   it('has "__modelType" equal to "interlaneSpace"', function () {
     const interlaneSpace = InterlaneSpace.create();
 

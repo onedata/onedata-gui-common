@@ -1,8 +1,7 @@
 /**
- * Disables event bubbling so it does not propagate. 
- * 
- * @module helpers/disable-bubbling
- * @author Michal Borzecki
+ * Disables event bubbling so it does not propagate.
+ *
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

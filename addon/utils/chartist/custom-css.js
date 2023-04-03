@@ -27,8 +27,7 @@
  * run-loop, all properties from transitionProperties. In result we will see
  * stroke-opacity animation 0.5 to 1.
  *
- * @module utils/chartist/custom-css
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

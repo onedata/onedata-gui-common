@@ -4,7 +4,6 @@
  *
  * See tests for use examples.
  *
- * @module utils/ember/computed-pipe
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

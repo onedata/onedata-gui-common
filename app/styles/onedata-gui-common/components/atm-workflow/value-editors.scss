@@ -71,6 +71,8 @@
   }
 
   &.string-editor {
+    min-width: 8em;
+
     textarea {
       max-height: 8em;
     }
@@ -186,12 +188,6 @@
       margin-top: 0.5em;
     }
 
-    .no-items-info,
-    .add-item-trigger {
-      padding: 0 0.3em;
-      font-size: 90%;
-    }
-
     &.editor-with-json {
       .editor-box-content {
         flex-direction: column;
@@ -204,6 +200,14 @@
         padding-top: 0.3em;
       }
     }
+  }
+
+  .file-value-editor-selector,
+  .dataset-value-editor-selector,
+  &.array-editor .add-item-trigger,
+  &.array-editor .no-items-info {
+    padding: 0 0.3em;
+    font-size: 90%;
   }
 
   .form-group {

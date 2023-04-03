@@ -7,7 +7,7 @@ import { lookupService } from '../../helpers/stub-service';
 import TestComponent from 'onedata-gui-common/components/test-component';
 import { get } from '@ember/object';
 
-describe('Integration | Component | global modal mounter', function () {
+describe('Integration | Component | global-modal-mounter', function () {
   setupRenderingTest();
 
   beforeEach(function () {

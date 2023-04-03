@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { bytesToString } from 'onedata-gui-common/helpers/bytes-to-string';
 
-describe('Unit | Helper | bytes to string', function () {
+describe('Unit | Helper | bytes-to-string', function () {
   it('supports iecFormat option of bytes-to-string util', function () {
     const result = bytesToString([1024], { iecFormat: true });
     expect(result).to.be.equal('1 KiB');

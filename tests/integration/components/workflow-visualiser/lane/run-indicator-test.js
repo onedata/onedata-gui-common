@@ -68,7 +68,7 @@ const runTypes = [{
   translation: 'retry',
 }];
 
-describe('Integration | Component | workflow visualiser/lane/run indicator', function () {
+describe('Integration | Component | workflow-visualiser/lane/run-indicator', function () {
   setupRenderingTest();
 
   it(`has class "${componentClassName}"`, async function () {

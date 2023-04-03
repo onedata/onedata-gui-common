@@ -2,7 +2,6 @@
  * Creates new lane. Needs definedStores and createLaneCallback passed via context.
  * The latter will be used to save a new lane.
  *
- * @module utils/workflow-visualiser/actions/create-lane-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

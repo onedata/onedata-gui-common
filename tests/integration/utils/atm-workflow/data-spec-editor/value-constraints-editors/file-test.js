@@ -26,7 +26,7 @@ const fileTypeOptions = [{
 
 const fileTypeHelper = new OneDropdownHelper('.fileType-field');
 
-describe('Integration | Utility | atm workflow/data spec editor/value constraints editors/file', function () {
+describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraints-editors/file', function () {
   setupRenderingTest();
 
   beforeEach(function () {

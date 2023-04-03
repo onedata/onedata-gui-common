@@ -6,7 +6,6 @@
  * When used as an util function, first parameter can be directly a number. Without
  * nesting it in an array.
  *
- * @module helpers/format-number
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,7 +1,6 @@
 /**
  * Application main menu component.
  *
- * @module components/main-menu-column
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

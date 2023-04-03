@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import isRecord from 'onedata-gui-common/utils/is-record';
 import EmberObject from '@ember/object';
 
-describe('Unit | Utility | is record', function () {
+describe('Unit | Utility | is-record', function () {
   it('returns true if given object has "store" property', function () {
     const testObject = EmberObject.create({ store: {} });
     const result = isRecord(testObject);

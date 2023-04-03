@@ -5,7 +5,7 @@ import { render, click, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import dom from 'onedata-gui-common/utils/dom';
 
-describe('Integration | Component | one collapsible toolbar', function () {
+describe('Integration | Component | one-collapsible-toolbar', function () {
   setupRenderingTest();
 
   it('renders in full version in large container', async function () {

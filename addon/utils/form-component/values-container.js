@@ -5,7 +5,6 @@
  * In normal usage ValueContainer should be used when we want to define value
  * for the whole form group.
  *
- * @module utils/form-component/values-container
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

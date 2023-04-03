@@ -9,7 +9,6 @@
  *    pasting anchor url into the input. Solved by cancelling drag event when input
  *    inside the anchor is active.
  *
- * @module components/one-link-to
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

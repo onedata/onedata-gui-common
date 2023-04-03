@@ -17,7 +17,7 @@ import { Promise } from 'rsvp';
 
 const taskName = 'task1';
 
-describe('Integration | Utility | workflow visualiser/actions/remove task action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/remove-task-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -48,7 +48,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove task action
     expect(getModalHeader().querySelector('h1').textContent.trim())
       .to.equal('Remove task');
     expect(getModalBody().textContent.trim()).to.contain(
-      `You are about to delete the task "${taskName}".`
+      `You are about to delete the task ${taskName}.`
     );
     const yesButton = getModalFooter().querySelector('.question-yes');
     expect(yesButton.textContent.trim()).to.equal('Remove');

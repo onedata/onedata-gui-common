@@ -5,7 +5,7 @@ import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import moment from 'moment';
 
-describe('Integration | Helper | date format', function () {
+describe('Integration | Helper | date-format', function () {
   setupRenderingTest();
 
   it('parses and renders date for certs view', async function () {

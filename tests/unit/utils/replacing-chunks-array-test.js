@@ -38,7 +38,7 @@ const gteMatcher = (compareValue) => {
   );
 };
 
-describe('Unit | Utility | replacing chunks array', function () {
+describe('Unit | Utility | replacing-chunks-array', function () {
   beforeEach(function () {
     this.mockArray = new MockArray();
     this.fetch = MockArray.prototype.fetch.bind(this.mockArray);

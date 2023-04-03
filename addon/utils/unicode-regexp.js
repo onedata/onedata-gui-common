@@ -4,8 +4,7 @@
  * - advanced unicode matching currenlty does not work in Firefox:
  *   https://javascript.info/regexp-unicode
  * - XRegExp library is fine but currently it's too heavy for our needs
- * 
- * @module utils/unicode-regexp
+ *
  * @author Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

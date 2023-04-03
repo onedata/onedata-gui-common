@@ -15,7 +15,7 @@ const fieldModes = [
   'mixed',
 ];
 
-describe('Integration | Utility | form component/form element', function () {
+describe('Integration | Utility | form-component/form-element', function () {
   setupTest();
 
   it('has an empty fields array', function () {

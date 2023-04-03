@@ -3,10 +3,15 @@
     padding-top: $padding-base-vertical;
   }
 
-  .defaultValue-field,
   .dashboardSpec-field {
     textarea {
       height: 8em;
+    }
+  }
+
+  @media (min-width: $screen-sm-min) {
+    .defaultValue-field .control-label {
+      padding-top: 0.5em;
     }
   }
 }

@@ -53,7 +53,7 @@ const MediaStub = Service.extend({
   isTablet: false,
 });
 
-describe('Unit | Service | navigation state', function () {
+describe('Unit | Service | navigation-state', function () {
   setupTest();
 
   beforeEach(function () {

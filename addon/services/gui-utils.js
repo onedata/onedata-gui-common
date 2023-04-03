@@ -5,8 +5,7 @@
  * Provides data and implementation of utils specific for gui,
  * that uses onedata-gui-common.
  *
- * @module services/gui-utils
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

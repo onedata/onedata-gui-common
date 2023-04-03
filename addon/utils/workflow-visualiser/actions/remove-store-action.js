@@ -1,19 +1,15 @@
 /**
  * Removes store. Needs store instance passed via context.
  *
- * @module utils/workflow-visualiser/actions/remove-store-action
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Action from 'onedata-gui-common/utils/action';
 import ActionResult from 'onedata-gui-common/utils/action-result';
-import { get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-
-// TODO: VFS-7715 Block removing store, when referenced by at least one lane iterator or task
 
 export default Action.extend({
   modalManager: service(),
@@ -41,33 +37,15 @@ export default Action.extend({
   /**
    * @override
    */
-  onExecute() {
-    const {
-      store,
-      modalManager,
-    } = this.getProperties(
-      'store',
-      'modalManager'
-    );
-
+  async onExecute() {
     const result = ActionResult.create();
-    return modalManager
-      .show('question-modal', {
-        headerIcon: 'sign-warning-rounded',
-        headerText: this.t('modalHeader'),
-        descriptionParagraphs: [{
-          text: this.t('modalDescription', {
-            storeName: get(store, 'name'),
-          }),
-        }],
-        yesButtonText: this.t('modalYes'),
-        yesButtonType: 'danger',
-        onSubmit: () =>
-          result.interceptPromise(store.remove()),
-      }).hiddenPromise
-      .then(() => {
-        result.cancelIfPending();
-        return result;
-      });
+    await this.modalManager.show('workflow-visualiser/remove-store-modal', {
+      store: this.store,
+      onSubmit: () =>
+        result.interceptPromise(this.store.remove()),
+    }).hiddenPromise;
+
+    result.cancelIfPending();
+    return result;
   },
 });

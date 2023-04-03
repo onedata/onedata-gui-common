@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import sortRevisionNumbers from 'onedata-gui-common/utils/revisions/sort-revision-numbers';
 
-describe('Unit | Utility | revisions/sort revision numbers', function () {
+describe('Unit | Utility | revisions/sort-revision-numbers', function () {
   it('sorts integer revision numbers', function () {
     const result = sortRevisionNumbers([1, 11, 2, 10]);
     expect(result).to.deep.equal([1, 2, 10, 11]);

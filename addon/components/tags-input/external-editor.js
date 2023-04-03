@@ -6,7 +6,6 @@
  * applied to the tags-input using callbacks passed in `startTagCreationCallback`
  * invocation.
  *
- * @module components/tags-input/external-editor
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

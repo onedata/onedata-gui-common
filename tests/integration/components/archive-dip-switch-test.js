@@ -5,7 +5,7 @@ import { render, find, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | archive dip switch', function () {
+describe('Integration | Component | archive-dip-switch', function () {
   setupRenderingTest();
 
   it('displays DIP as active if archiveDipMode is "dip"', async function () {

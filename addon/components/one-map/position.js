@@ -1,9 +1,8 @@
 /**
- * A one-map position component. Represents a place in a map, which 
+ * A one-map position component. Represents a place in a map, which
  * should be specified using latitude and longitude properties.
- * 
- * @module components/one-map/position
- * @author Michal Borzecki
+ *
+ * @author Michał Borzęcki
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

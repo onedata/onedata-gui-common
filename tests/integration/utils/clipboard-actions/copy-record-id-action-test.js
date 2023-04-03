@@ -6,7 +6,7 @@ import { get, getProperties, set } from '@ember/object';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
-describe('Integration | Utility | clipboard actions/copy record id action', function () {
+describe('Integration | Utility | clipboard-actions/copy-record-id-action', function () {
   setupTest();
 
   beforeEach(function () {

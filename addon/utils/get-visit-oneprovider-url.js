@@ -1,7 +1,6 @@
 /**
  * Generate URL for opening default view for Oneprovider (like in Oneprovider drop)
- * 
- * @module utils/get-visit-oneprovider-url
+ *
  * @author Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

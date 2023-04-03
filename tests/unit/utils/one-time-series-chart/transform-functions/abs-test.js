@@ -43,7 +43,7 @@ export const casesToCheck = [{
   output: [null, null],
 }];
 
-describe('Unit | Utility | one time series chart/transform functions/abs', function () {
+describe('Unit | Utility | one-time-series-chart/transform-functions/abs', function () {
   casesToCheck.forEach(({ input, output }) => testAbs(input, output));
 });
 

@@ -1,8 +1,8 @@
 /**
  * Facilitates usage of copy-button in Onedata front-ends.
- * 
+ *
  * Example usage:
- * 
+ *
  * ```
  * {{#one-copy-button
  *   class="btn btn-primary"
@@ -10,11 +10,10 @@
  *   localTarget=".clipboard-input"
  * }}
  * ```
- * 
+ *
  * Will render button with default copy icon and label that will copy contents
  * of `.clipboard-input` input/textarea found in current component.
- * 
- * @module components/one-copy-button
+ *
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

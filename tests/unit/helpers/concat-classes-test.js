@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { concatClasses } from 'onedata-gui-common/helpers/concat-classes';
 
-describe('Unit | Helper | concat classes', function () {
+describe('Unit | Helper | concat-classes', function () {
   it('concats classes', function () {
     const result = concatClasses(['a', 'b', 'c d']);
     expect(result).to.be.equal('a b c d');

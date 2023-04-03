@@ -11,7 +11,7 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import { set } from '@ember/object';
 
-describe('Integration | Utility | atm workflow/charts dashboard editor', function () {
+describe('Integration | Utility | atm-workflow/charts-dashboard-editor', function () {
   setupRenderingTest();
 
   beforeEach(function () {

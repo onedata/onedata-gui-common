@@ -7,7 +7,6 @@
  * Needs importing `node_modules/perfect-scrollbar/css/perfect-scrollbar.css`
  * to vendor CSS.
  *
- * @module mixins/perfect-scrollbar
  * @author Jakub Liput
  * @copyright (C) 2018 briarsweetbriar
  * @copyright (C) 2019-2020 ACK CYFRONET AGH

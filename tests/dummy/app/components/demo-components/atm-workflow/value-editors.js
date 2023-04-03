@@ -47,9 +47,19 @@ export default Component.extend({
     });
   }),
 
-  numberEditorStateManager: computed(() => {
+  numberEditorStateManager1: computed(() => {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.Number,
+    });
+  }),
+
+  numberEditorStateManager2: computed(() => {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.Number,
+      valueConstraints: {
+        allowedValues: [1, 1.5, 2, 3],
+        integersOnly: true,
+      },
     });
   }),
 
@@ -65,9 +75,24 @@ export default Component.extend({
     });
   }),
 
-  stringEditorStateManager: computed(() => {
+  stringEditorStateManager1: computed(() => {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.String,
+    });
+  }),
+
+  stringEditorStateManager2: computed(() => {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.String,
+      valueConstraints: {
+        allowedValues: [
+          '',
+          'a',
+          'b',
+          'c',
+          'Velit non veniam ut ipsum dolore laboris ea. Reprehenderit velit magna proident qui magna anim elit veniam. Laboris in nulla reprehenderit ex velit aliqua amet cillum do nisi esse cupidatat. Tempor pariatur consectetur proident ipsum magna proident irure ipsum excepteur esse veniam amet.',
+        ],
+      },
     });
   }),
 

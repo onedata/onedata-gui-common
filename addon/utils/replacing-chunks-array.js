@@ -6,7 +6,6 @@
  * Array that fetches additional chunks of data if requesting indices
  * that are not currently loaded
  *
- * @module utils/replacing-chunks-array
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -3,7 +3,6 @@
  * and cannot resolve service injections on their own. Needs specified `ownerSource`
  * (usually whatever component or service), that hold a reference to the Ember owner.
  *
- * @module mixins/owner-injector
  * @author Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

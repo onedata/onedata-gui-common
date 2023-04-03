@@ -1,7 +1,6 @@
 /**
  * Represents single workflow store.
  *
- * @module utils/workflow-visualiser/store
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -80,6 +79,12 @@ export default EmberObject.extend({
   contentMayChange: true,
 
   /**
+   * @virtual
+   * @type {Array<Utils.WorkflowVisualiser.VisualiserRecord>}
+   */
+  referencingRecords: undefined,
+
+  /**
    * @virtual optional
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Store} store
@@ -103,6 +108,13 @@ export default EmberObject.extend({
     return getStoreReadDataSpec(this.getProperties('type', 'config'));
   }),
 
+  init() {
+    this._super(...arguments);
+    if (!this.referencingRecords) {
+      this.set('referencingRecords', []);
+    }
+  },
+
   modify(modifiedProps) {
     const onModify = this.get('onModify');
     return onModify ? onModify(this, modifiedProps) : resolve();
@@ -111,5 +123,22 @@ export default EmberObject.extend({
   remove() {
     const onRemove = this.get('onRemove');
     return onRemove ? onRemove(this) : resolve();
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.VisualiserRecord} record
+   * @returns {void}
+   */
+  registerReferencingRecord(record) {
+    if (!this.referencingRecords.includes(record)) {
+      this.set('referencingRecords', [...this.referencingRecords, record]);
+    }
+  },
+
+  /**
+   * @returns {void}
+   */
+  clearReferencingRecords() {
+    this.set('referencingRecords', []);
   },
 });

@@ -10,7 +10,7 @@ import {
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | one input tokenizer', function () {
+describe('Integration | Component | one-input-tokenizer', function () {
   setupRenderingTest();
 
   it('displays injected input text', async function () {

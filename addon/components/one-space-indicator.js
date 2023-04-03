@@ -1,13 +1,12 @@
 /**
  * A bar chart that shows used space according to given currentTotalSize,
  * newTotalSize and occupiedSize.
- * 
+ *
  * The valid currentTotalSize and occupied size is required to work.
  * Optionally, newTotalSize can be used to show how the space will change
  * after changing total size.
  *
- * @module components/one-space-indicator
- * @author Michal Borzecki, Jakub Liput
+ * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

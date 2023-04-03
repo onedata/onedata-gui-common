@@ -2,7 +2,6 @@
  * Create scrollable and searchable tab bar using items array with tabs
  * specification.
  *
- * @module components/one-tab-bar
  * @author Jakub Liput
  * @copyright (C) 2019-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -12,7 +11,6 @@ import Component from '@ember/component';
 import layout from '../templates/components/one-tab-bar';
 import { sort } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
-import $ from 'jquery';
 import { or, raw, conditional, and, eq, not } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 
@@ -163,12 +161,16 @@ export default Component.extend({
   }),
 
   jumpToItem(itemId) {
-    const element = this.get('element');
-    const item = element.querySelector(`.item-${itemId}`);
-    if (item) {
-      const $content = $(element.querySelector('.container-inner-scroll-content'));
-      $content.animate({ scrollLeft: item.offsetLeft }, 200);
+    const item = this.element.querySelector(`.item-${itemId}`);
+    if (!item) {
+      return;
     }
+    /**
+     * @type {HTMLElement}
+     */
+    const content = this.element.querySelector('.container-inner-scroll-content');
+    // scrollTo on very old browsers (pre-2017) is not supported and ignored
+    content?.scrollTo?.({ left: item.offsetLeft, behavior: 'smooth' });
   },
 
   actions: {

@@ -2,7 +2,6 @@
  * A single slide component used by one-carousel. Needs `slideId` to be defined
  * during the creation in hbs.
  *
- * @module components/one-carousel/slide
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

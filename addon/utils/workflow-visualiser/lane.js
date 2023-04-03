@@ -1,7 +1,6 @@
 /**
  * Lane - aggregates parallel boxes and spaces between them.
  *
- * @module utils/workflow-visualiser/lane
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -46,6 +45,7 @@ export default VisualiserRecord.extend({
   elements: undefined,
 
   /**
+   * @virtual
    * @type {RunsListVisibleRunsPosition}
    */
   visibleRunsPosition: undefined,
@@ -106,5 +106,13 @@ export default VisualiserRecord.extend({
   showLatestRun() {
     const onShowLatestRun = this.get('onShowLatestRun');
     return onShowLatestRun ? onShowLatestRun(this) : resolve();
+  },
+
+  /**
+   * @returns {Array<string>}
+   */
+  getUsedStoreSchemaIds() {
+    const iteratorStoreSchemaId = this.storeIteratorSpec?.storeSchemaId;
+    return iteratorStoreSchemaId ? [iteratorStoreSchemaId] : [];
   },
 });

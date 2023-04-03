@@ -9,8 +9,7 @@
  *   If text width is greater than maxWidth, then font size is scaled down
  * * class - class for text svg element
  *
- * @module utils/chartist/centered-text
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

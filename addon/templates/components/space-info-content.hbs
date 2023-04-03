@@ -4,49 +4,54 @@
   </span>
 </h1>
 <table class="table table-condensed table-info">
-  <tr class="row-with-input">
-    <td class="property-name">{{tt this "name"}}</td>
-    <td class="property-value">
-      {{one-clipboard-line
-        size="sm"
-        value=space.name
-      }}
-    </td>
-  </tr>
-  <tr class="row-with-input">
-    <td class="property-name">{{tt this "id"}}</td>
-    <td class="property-value">
-      {{one-clipboard-line
-        size="sm"
-        value=space.entityId
-      }}
-    </td>
-  </tr>
-  {{#if creator.fullName}}
-    <tr class="row-with-text">
-      <td class="property-name">{{tt this "creator"}}</td>
+  <tbody>
+    <tr class="row-with-input">
+      <td class="property-name">{{tt this "name"}}</td>
       <td class="property-value">
-        {{#truncated-string}}
-          <span class="user-fullname">{{creator.fullName}}</span>
-          {{#if creator.username}}
-            <span class="user-username">({{creator.username}})</span>
-          {{/if}}
-        {{/truncated-string}}
+        {{one-clipboard-line
+          size="sm"
+          value=record.name
+          type="text"
+        }}
       </td>
     </tr>
-  {{/if}}
-  {{#if creationTime}}
-    <tr class="row-with-text">
-      <td class="property-name">{{tt this "creationTime"}}</td>
+    <tr class="row-with-input">
+      <td class="property-name">{{tt this "id"}}</td>
       <td class="property-value">
-        {{creationTime}}
+        {{one-clipboard-line
+          size="sm"
+          value=record.entityId
+          type="text"
+        }}
       </td>
     </tr>
-  {{/if}}
+    {{#if showCreator}}
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "creator"}}</td>
+        <td class="property-value">
+          {{#truncated-string}}
+            {{#if creator.fullName}}
+              {{record-name record=creator}}
+            {{else}}
+              –
+            {{/if}}
+          {{/truncated-string}}
+        </td>
+      </tr>
+    {{/if}}
+    {{#if creationTime}}
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "creationTime"}}</td>
+        <td class="property-value">
+          {{creationTime}}
+        </td>
+      </tr>
+    {{/if}}
+  </tbody>
 </table>
-<div class="space-links-container">
+<div class="links-container">
   {{#if showLinkToRestApiModal}}
-    <a {{action "openRestApiModal"}} class="space-info-link rest-api-link clickable">
+    <a {{action "openRestApiModal"}} class="info-link rest-api-link clickable">
       <span>{{tt this "openRestApi"}}</span>
       {{one-icon icon="rest"}}
     </a>
@@ -57,7 +62,7 @@
   {{#if showLinkToFileBrowser}}
     <a
       href={{linkToFileBrowser}}
-      class="space-info-link file-browser-link clickable"
+      class="info-link file-browser-link clickable"
     >
       <span>{{tt this "openFileBrowser"}}</span>
       {{one-icon icon="link-external"}}
@@ -67,7 +72,7 @@
     {{/if}}
   {{/if}}
   {{#if showLinkToSpace}}
-    <a href={{linkToSpace}} class="space-info-link space-link clickable">
+    <a href={{linkToSpace}} class="info-link space-link clickable">
       {{tt this "openSpace"}}
       {{one-icon icon="link-external"}}
     </a>

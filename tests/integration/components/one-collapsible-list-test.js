@@ -5,7 +5,7 @@ import { render, click, fillIn, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | one collapsible list', function () {
+describe('Integration | Component | one-collapsible-list', function () {
   setupRenderingTest();
 
   it('renders items with headers', async function () {

@@ -1,6 +1,5 @@
 /**
- * @module components/demo-components/one-tree
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -79,10 +78,4 @@ export default Component.extend({
   ]),
 
   _searchQuery: '',
-
-  actions: {
-    search(query) {
-      this.set('_searchQuery', query);
-    },
-  },
 });

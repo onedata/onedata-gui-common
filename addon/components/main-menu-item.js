@@ -1,7 +1,6 @@
 /**
  * Single main menu item
  *
- * @module components/main-menu-item
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -1,8 +1,7 @@
 /**
  * Shows information about authentication error after last attempt to connect
  * new account.
- * 
- * @module components/authentication-error-modal
+ *
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

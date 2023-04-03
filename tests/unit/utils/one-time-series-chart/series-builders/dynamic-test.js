@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import sinon from 'sinon';
 import dynamicBuilder from 'onedata-gui-common/utils/one-time-series-chart/series-builders/dynamic';
 
-describe('Unit | Utility | one time series chart/series builders/dynamic', function () {
+describe('Unit | Utility | one-time-series-chart/series-builders/dynamic', function () {
   it('generates multiple series based on external source and injects dynamic config into each of them',
     async function () {
       const context = {

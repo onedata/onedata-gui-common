@@ -2,7 +2,6 @@
  * Space between parallel boxes or tasks. Allows creating new elements and renders
  * arrows, lines etc.
  *
- * @module components/workflow-visualiser/lane/interblock-space
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -14,7 +14,6 @@
  *   some welcome info
  * - new - when a creation of new resouce should take whole content view
  *
- * @module routes/onedata/sidebar/content
  * @author Jakub Liput
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

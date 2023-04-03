@@ -8,7 +8,7 @@ import sinon from 'sinon';
 const allowedOperatorsList = ['and', 'or', 'except', 'not'];
 
 describe(
-  'Integration | Component | query builder/block selector/operator selector',
+  'Integration | Component | query-builder/block-selector/operator-selector',
   function () {
     setupRenderingTest();
 

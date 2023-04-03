@@ -3,8 +3,7 @@
  *
  * if ignoreZero option is true, then sum equal to zero will not be displayed
  *
- * @module utils/chartist/bar-sum-labels
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

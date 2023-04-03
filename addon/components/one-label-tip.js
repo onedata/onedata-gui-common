@@ -1,12 +1,11 @@
 /**
  * Inserts 'help' icon with tooltip
- * Typical usage: 
+ * Typical usage:
  * ```
  * {{one-label-tip title="tooltip text"}}
  * ```
- * 
- * @module components/one-label-tip
- * @author Michal Borzecki
+ *
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -39,16 +38,10 @@ export default Component.extend({
   icon: 'sign-question-rounded',
 
   /**
-   * Placement of the tooltip 
+   * Placement of the tooltip
    * @type {string}
    */
   placement: 'top',
-
-  /**
-   * Placement of the tooltip arrow
-   * @type {string}
-   */
-  arrowPlacement: 'right',
 
   /**
    * The event(s) that should trigger the tooltip
@@ -60,7 +53,7 @@ export default Component.extend({
 
   /**
    * In mobile mode, it's better to not propagate click event from tip.
-   * @param {Event} clickEvent 
+   * @param {Event} clickEvent
    */
   click(clickEvent) {
     clickEvent.preventDefault();

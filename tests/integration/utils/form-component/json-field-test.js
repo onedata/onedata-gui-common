@@ -6,7 +6,7 @@ import { setupTest } from 'ember-mocha';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
-describe('Integration | Utility | form component/json field', function () {
+describe('Integration | Utility | form-component/json-field', function () {
   setupTest();
 
   it('defines fieldComponentName as "form-component/json-field"', function () {

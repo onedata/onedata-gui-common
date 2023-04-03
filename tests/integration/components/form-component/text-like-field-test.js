@@ -7,7 +7,7 @@ import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import sinon from 'sinon';
 import { set } from '@ember/object';
 
-describe('Integration | Component | form component/text like field', function () {
+describe('Integration | Component | form-component/text-like-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

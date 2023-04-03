@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | one tile', function () {
+describe('Integration | Component | one-tile', function () {
   setupRenderingTest();
 
   it('renders tile title', async function () {

@@ -8,7 +8,7 @@ import { lookupService } from '../../../helpers/stub-service';
 
 const defaultUnits = ['MiB', 'GiB', 'TiB', 'PiB'];
 
-describe('Integration | Utility | form component/capacity field', function () {
+describe('Integration | Utility | form-component/capacity-field', function () {
   setupTest();
 
   it('defines fieldComponentName as "form-component/capacity-field"', function () {

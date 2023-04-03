@@ -5,7 +5,6 @@
  * Instance of this class is bound to some `$container`.
  * We can now test if some child element is visible in viewport.
  *
- * @module utils/view-tester
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

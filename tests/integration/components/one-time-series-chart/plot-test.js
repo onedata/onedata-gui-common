@@ -16,7 +16,7 @@ import {
 import { get } from '@ember/object';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
 
-describe('Integration | Component | one time series chart/plot', function () {
+describe('Integration | Component | one-time-series-chart/plot', function () {
   const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {

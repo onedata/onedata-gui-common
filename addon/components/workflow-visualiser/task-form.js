@@ -5,7 +5,6 @@
  * A form responsible for showing and editing/creating tasks. It does not persists
  * data. Any changes are yielded using `onChange` callback.
  *
- * @module components/workflow-visualiser/taske-form
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -66,6 +65,13 @@ import {
   rawValueToFormValue as atmRawValueToFormValue,
   formValueToRawValue as atmFormValueToRawValue,
 } from 'onedata-gui-common/utils/atm-workflow/value-editors';
+import {
+  AtmLambdaConfigEditor,
+  rawValueToAtmLambdaConfigEditorValue,
+  atmLambdaConfigEditorValueToRawValue,
+  migrateAtmLambdaConfigEditorValueToNewSpecs,
+} from 'onedata-gui-common/utils/atm-workflow/atm-task';
+import findTypedElementsMigration from 'onedata-gui-common/utils/atm-workflow/find-typed-elements-migration';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -288,6 +294,7 @@ export default Component.extend(I18n, {
       fields: [
         this.atmLambdaFieldsGroup,
         this.detailsFieldsGroup,
+        this.lambdaConfigFields,
         this.argumentMappingsFieldsCollectionGroup,
         this.resultMappingsFieldsCollectionGroup,
         this.timeSeriesStoreSectionFields,
@@ -545,6 +552,20 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
    */
+  lambdaConfigFields: computed(function lambdaConfigFields() {
+    return AtmLambdaConfigEditor.extend({
+      isVisible: notEmpty('value.__fieldsValueNames'),
+    }).create({
+      classes: 'task-form-section',
+      name: 'lambdaConfigSection',
+      addColonToLabel: false,
+      label: this.t('fields.lambdaConfigSection.label'),
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
+   */
   timeSeriesStoreSectionFields: computed(function timeSeriesStoreSectionFields() {
     return FormFieldsGroup.create({
       classes: 'task-form-section',
@@ -762,7 +783,7 @@ export default Component.extend(I18n, {
   changeAtmLambdaRevisionNumber(currentRevisionNumber, newRevisionNumber) {
     const currentRevValues = this.fields.valuesSource;
     const newRevPlainValues =
-      taskToFormData(this.task, this.atmLambda, newRevisionNumber);
+      taskToFormData(null, this.atmLambda, newRevisionNumber);
 
     const currentRevision = this.atmLambda?.revisionRegistry?.[currentRevisionNumber];
     const newRevision = this.atmLambda?.revisionRegistry?.[newRevisionNumber];
@@ -783,6 +804,12 @@ export default Component.extend(I18n, {
       newRevPlainValues.resultMappings
     );
     propsToUpdateInCurrentRevision.resultMappings = newResultMappings;
+
+    propsToUpdateInCurrentRevision.lambdaConfigSection =
+      migrateAtmLambdaConfigEditorValueToNewSpecs(
+        currentRevValues.lambdaConfigSection,
+        newRevision.configParameterSpecs
+      );
 
     if (!currentRevValues.resources.overrideResources) {
       set(
@@ -954,6 +981,10 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
     details: detailsSection,
     argumentMappings: createValuesContainer(formArgumentMappings),
     resultMappings: createValuesContainer(formResultMappings),
+    lambdaConfigSection: rawValueToAtmLambdaConfigEditorValue(
+      task?.lambdaConfig,
+      atmLambdaRevision?.configParameterSpecs
+    ),
     timeSeriesStoreSection,
     resources: generateResourcesFormData(resourceSpec, resourceSpecOverride),
   };
@@ -1035,6 +1066,7 @@ function formDataToTask(formData, atmLambda, stores) {
   const task = {
     lambdaId: atmLambdaId,
     lambdaRevisionNumber: atmLambdaRevisionNumber,
+    lambdaConfig: atmLambdaConfigEditorValueToRawValue(formData?.lambdaConfigSection),
     name: details.name,
     argumentMappings: [],
     resultMappings: [],
@@ -1208,71 +1240,35 @@ function getStoreContentUpdateOptionsType(storeType) {
  * @returns {Utils.FormComponent.ValuesContainer} reference to `newValues`
  */
 function migrateArgResRevision(fromSpecs, currentValues, toSpecs, newValues) {
-  const namesMapping = findArgResRevisionMigrationMapping(
-    fromSpecs,
-    toSpecs
-  );
+  const migration = findTypedElementsMigration(fromSpecs, toSpecs);
 
-  for (const toFieldName of newValues.__fieldsValueNames) {
-    const toName = newValues[toFieldName].context.name;
-    const fromName = namesMapping[toName];
-    if (!fromName) {
-      continue;
+  Object.keys(migration).forEach((fromName) => {
+    const toName = migration[fromName];
+    if (!toName) {
+      return;
     }
-    for (const fromFieldName of currentValues.__fieldsValueNames) {
-      if (currentValues[fromFieldName].context.name === fromName) {
-        const newContext = newValues[toFieldName].context;
-        set(
-          newValues,
-          toFieldName,
-          cloneValue(currentValues[fromFieldName])
-        );
-        set(newValues[toFieldName], 'context', newContext);
-        break;
-      }
+
+    const fromFieldName = currentValues.__fieldsValueNames.find((fieldName) =>
+      currentValues[fieldName].context.name === fromName
+    );
+    const toFieldName = newValues.__fieldsValueNames.find((fieldName) =>
+      newValues[fieldName].context.name === toName
+    );
+
+    if (!fromFieldName || !toFieldName) {
+      return;
     }
-  }
+
+    const newContext = newValues[toFieldName].context;
+    set(
+      newValues,
+      toFieldName,
+      cloneValue(currentValues[fromFieldName])
+    );
+    set(newValues[toFieldName], 'context', newContext);
+  });
+
   return newValues;
-}
-
-/**
- * Tries to find the best data migration mapping from `fromSpecs` arguments/results
- * format to `toSpecs` arguments/results format. Such mapping can be later used
- * to migrate form values from one revision to another.
- * @param {Array<AtmLambdaArgumentSpec>|Array<AtmLambdaResultSpec>} fromSpecs
- * @param {Array<AtmLambdaArgumentSpec>|Array<AtmLambdaResultSpec>} toSpecs
- * @returns {Object<string, string|null>} keys are names from `toSpecs`, values are
- * names from `fromSpecs` or null if there is no clear migration to that specific
- * "to" spec.
- */
-function findArgResRevisionMigrationMapping(fromSpecs, toSpecs) {
-  const fromSpecsAsMap = _.keyBy(fromSpecs, 'name');
-  const toSpecsAsMap = _.keyBy(toSpecs, 'name');
-  const mapping = {};
-  for (const toSpecName in toSpecsAsMap) {
-    if (toSpecName in fromSpecsAsMap) {
-      mapping[toSpecName] = toSpecName;
-      delete toSpecsAsMap[toSpecName];
-      delete fromSpecsAsMap[toSpecName];
-    }
-  }
-
-  for (const toSpecName in toSpecsAsMap) {
-    const toDataSpec = toSpecsAsMap[toSpecName].dataSpec;
-    for (const fromSpecName in fromSpecsAsMap) {
-      const fromDataSpec = fromSpecsAsMap[fromSpecName].dataSpec;
-      if (_.isEqual(toDataSpec, fromDataSpec)) {
-        mapping[toSpecName] = fromSpecName;
-        delete toSpecsAsMap[toSpecName];
-        delete fromSpecsAsMap[fromSpecName];
-      }
-    }
-  }
-  for (const toSpecName in toSpecsAsMap) {
-    mapping[toSpecName] = null;
-    delete toSpecsAsMap[toSpecName];
-  }
-  return mapping;
 }
 
 const SingleResultMappingsCollectionGroup = FormFieldsCollectionGroup.extend({

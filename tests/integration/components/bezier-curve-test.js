@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | bezier curve', function () {
+describe('Integration | Component | bezier-curve', function () {
   setupRenderingTest();
 
   it('renders', async function () {

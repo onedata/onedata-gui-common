@@ -6,7 +6,7 @@ import { A } from '@ember/array';
 import { get, getProperties } from '@ember/object';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
-describe('Unit | Utility | form component/form fields group', function () {
+describe('Unit | Utility | form-component/form-fields-group', function () {
   it('sets child fields parent when passing fields on creation', function () {
     const formGroup = FormFieldsGroup.create({
       fields: A([FormField.create()]),

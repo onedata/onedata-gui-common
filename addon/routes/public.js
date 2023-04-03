@@ -1,7 +1,6 @@
 /**
  * This route is an access point to all publicly exposed resources
- * 
- * @module routes/public
+ *
  * @author Michał Borzęcki
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

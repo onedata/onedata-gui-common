@@ -9,7 +9,7 @@ import { Promise, resolve, reject } from 'rsvp';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { suppressRejections } from '../../../helpers/suppress-rejections';
 
-describe('Integration | Component | form component/loading field', function () {
+describe('Integration | Component | form-component/loading-field', function () {
   setupRenderingTest();
 
   beforeEach(function () {

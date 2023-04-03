@@ -18,7 +18,7 @@ const point = (timestamp, value, options) =>
   new Point(timestamp, value, { pointDuration: 2, ...(options || {}) });
 let fakeClock;
 
-describe('Unit | Utility | one time series chart/series functions/load series', function () {
+describe('Unit | Utility | one-time-series-chart/series-functions/load-series', function () {
   beforeEach(function () {
     this.context = createContext();
     this.context.lastPointTimestamp = 20;
@@ -339,34 +339,31 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
       ],
     });
 
-    it('produces empty series when custom source does not exist', async function (done) {
+    it('produces empty series when custom source does not exist', async function () {
       delete this.context.externalDataSources.customSource;
 
       expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
         type: 'points',
         data: [],
       });
-      done();
     });
 
-    it('returns empty series when timeResolution is not provided', async function (done) {
+    it('returns empty series when timeResolution is not provided', async function () {
       this.context.timeResolution = null;
 
       expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
         type: 'points',
         data: [],
       });
-      done();
     });
 
-    it('returns empty series when pointsCount is not provided', async function (done) {
+    it('returns empty series when pointsCount is not provided', async function () {
       this.context.pointsCount = null;
 
       expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
         type: 'points',
         data: [],
       });
-      done();
     });
 
     testFetchSeriesScenario({

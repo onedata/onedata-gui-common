@@ -4,7 +4,6 @@
 /**
  * Base class for visualiser elements spaces.
  *
- * @module utils/workflow-visualiser/visualiser-space
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

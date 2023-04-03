@@ -12,9 +12,9 @@ import {
 } from '../../../../helpers/modal';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { resolve } from 'rsvp';
-import $ from 'jquery';
+import { findInElementsByText } from '../../../../helpers/find';
 
-describe('Integration | Utility | workflow visualiser/actions/view store action', function () {
+describe('Integration | Utility | workflow-visualiser/actions/view-store-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -49,10 +49,9 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
     expect(getModal()).to.have.class('store-modal');
     expect(getModalHeader().querySelector('h1').textContent.trim())
       .to.equal('Store details');
-
-    await click(
-      $(getModalBody()).find('.bs-tab-onedata .nav-link:contains("Details")')[0]
-    );
+    const navLinks = getModalBody().querySelectorAll('.bs-tab-onedata .nav-link');
+    const detailsLink = findInElementsByText(navLinks, 'Details');
+    await click(detailsLink);
 
     expect(
       getModalBody().querySelector('.name-field .field-component').textContent.trim()

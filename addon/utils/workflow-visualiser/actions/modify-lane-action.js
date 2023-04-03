@@ -1,7 +1,6 @@
 /**
  * Modifies lane. Needs definedStores and lane passed via context.
  *
- * @module utils/workflow-visualiser/actions/modify-lane-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

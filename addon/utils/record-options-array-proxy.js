@@ -2,7 +2,6 @@
  * A proxy array that transforms source array to an array of options ready to use
  * by dropdown or other enumeration mechanism. Extracts label and correct icon.
  *
- * @module utils/record-options-array-proxy
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  */

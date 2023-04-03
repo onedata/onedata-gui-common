@@ -1,0 +1,7 @@
+.record-name {
+  .record-username {
+    margin-left: $padding-xs-horizontal;
+    color: change-color($main-text-color-inactive, $lightness: 60%);
+    font-size: $font-size-small;
+  }
+}

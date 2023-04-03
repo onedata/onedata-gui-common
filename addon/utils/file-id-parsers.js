@@ -1,7 +1,6 @@
 /**
  * Set of parsers dedicated for file ID.
- * 
- * @module utils/file-id-parsers
+ *
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -12,7 +11,7 @@ const guidRegexp = /guid#(.*)#(.*)/;
 const shareGuidRegexp = /shareGuid#(.*)#(.*)#(.*)/;
 
 /**
- * @param {String} fileEntityId 
+ * @param {String} fileEntityId
  * @returns {String}
  */
 export function getInternalFileIdFromFileId(fileEntityId) {
@@ -22,7 +21,7 @@ export function getInternalFileIdFromFileId(fileEntityId) {
 }
 
 /**
- * @param {String} fileEntityId 
+ * @param {String} fileEntityId
  * @returns {String}
  */
 export function getSpaceIdFromFileId(fileEntityId) {
@@ -32,7 +31,7 @@ export function getSpaceIdFromFileId(fileEntityId) {
 }
 
 /**
- * @param {String} fileEntityId 
+ * @param {String} fileEntityId
  * @returns {String}
  */
 export function getShareIdFromFileId(fileEntityId) {

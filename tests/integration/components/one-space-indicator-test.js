@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | one space indicator', function () {
+describe('Integration | Component | one-space-indicator', function () {
   setupRenderingTest();
 
   it('renders space usage', async function () {

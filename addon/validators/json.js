@@ -1,7 +1,6 @@
 /**
  * Defines JSON validator, which indicates error when JSON cannot be parsed.
  *
- * @module validators/json
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

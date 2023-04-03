@@ -4,7 +4,6 @@
  * loaded successfully, it is cached so any subsequent requests for that library
  * can be resolved immediately.
  *
- * @module services/libraries-loader
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -6,10 +6,9 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import $ from 'jquery';
 
 /**
- * Creates a base for checkbox-like components using the one-way-checkbox component.
+ * Creates a base for checkbox-like components using the checkbox input.
  * Allows to put checkbox deeper in DOM without worry about value change handling.
  *
- * @module components/one-checkbox-base.js
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

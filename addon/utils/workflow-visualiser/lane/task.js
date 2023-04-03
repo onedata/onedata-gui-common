@@ -1,7 +1,6 @@
 /**
  * Task - single job with progress.
  *
- * @module utils/workflow-visualiser/lane/task
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -11,6 +10,7 @@ import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visua
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { raw, or } from 'ember-awesome-macros';
+import _ from 'lodash';
 
 export default VisualiserRecord.extend({
   /**
@@ -40,6 +40,12 @@ export default VisualiserRecord.extend({
    * @type {RevisionNumber}
    */
   lambdaRevisionNumber: undefined,
+
+  /**
+   * @virtual
+   * @type {Object}
+   */
+  lambdaConfig: undefined,
 
   /**
    * @virtual
@@ -106,4 +112,24 @@ export default VisualiserRecord.extend({
    * @type {ComputedProperty<Number>}
    */
   itemsFailed: or('visibleRun.itemsFailed', raw(0)),
+
+  /**
+   * @returns {Array<string>}
+   */
+  getUsedStoreSchemaIds() {
+    const storeSchemaIdsFromArgs = this.argumentMappings
+      ?.filter((mapping) =>
+        mapping?.valueBuilder?.valueBuilderType === 'singleValueStoreContent' &&
+        mapping.valueBuilder.valueBuilderRecipe
+      )
+      ?.map((mapping) => mapping.valueBuilder.valueBuilderRecipe) ?? [];
+
+    const storeSchemaIdsFromResults = this.resultMappings
+      ?.map((mapping) => mapping?.storeSchemaId)
+      // If schemaId contains `_` it means that it is a special internal reference,
+      // not an ID.
+      ?.filter((storeSchemaId) => storeSchemaId && !storeSchemaId.includes('_')) ?? [];
+
+    return _.uniq([...storeSchemaIdsFromArgs, ...storeSchemaIdsFromResults]);
+  },
 });

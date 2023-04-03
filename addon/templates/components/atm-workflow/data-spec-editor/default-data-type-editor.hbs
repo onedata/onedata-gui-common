@@ -10,10 +10,12 @@
   {{/if}}
 </div>
 {{#if formRootGroup}}
-  <a class="azure clickable form-summary-toggle" {{action "toggleFormVisibility"}}>
-    {{one-icon class="form-summary-icon" icon="settings"}}
-    <span class="form-summary">{{formSummary}}</span>
-  </a>
+  {{#truncated-string}}
+    <a class="azure clickable form-summary-toggle" {{action "toggleFormVisibility"}}>
+      {{one-icon class="form-summary-icon" icon="settings"}}
+      <span class="form-summary">{{formSummary}}</span>
+    </a>
+  {{/truncated-string}}
   {{#if isFormVisible}}
     <hr />
     {{form-component/field-renderer field=formRootGroup}}

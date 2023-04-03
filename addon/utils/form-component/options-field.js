@@ -1,7 +1,6 @@
 /**
  * A form field base for all fields which selects one value from a defined set.
  *
- * @module utils/options-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

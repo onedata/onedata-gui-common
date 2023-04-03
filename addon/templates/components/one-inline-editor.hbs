@@ -16,15 +16,19 @@
   {{else if (eq editorType "custom")}}
     {{yield editorApi}}
   {{else}}
-    {{one-way-input _inputValue
-      disabled=_whileSaving
-      class=(concat-classes "form-control" inputClasses)
-      update=(action (mut _inputValue))
-      onenter=(action "saveEdition")
-      onescape=(action "cancelEdition")
-      placeholder=inputPlaceholder
-      onblur=(action onLostFocus)
-    }}
+    <input
+      type="text"
+      class={{concat-classes "form-control" inputClasses}}
+      value={{_inputValue}}
+      disabled={{_whileSaving}}
+      placeholder={{inputPlaceholder}}
+      oninput={{action (mut _inputValue) value="target.value"}}
+      onkeydown={{invoke-on-key (hash
+        Enter=(action "saveEdition")
+        Escape=(action "cancelEdition")
+      )}}
+      onblur={{action onLostFocus}}
+    />
   {{/if}}
   <span class="action-icons">
     {{#if _whileSaving}}

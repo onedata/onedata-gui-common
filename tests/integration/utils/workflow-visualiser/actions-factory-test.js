@@ -31,7 +31,7 @@ import ViewLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-vis
 import { get } from '@ember/object';
 import sinon from 'sinon';
 
-describe('Integration | Utility | workflow visualiser/actions factory', function () {
+describe('Integration | Utility | workflow-visualiser/actions-factory', function () {
   setupTest();
 
   it('creates action "CreateLaneAction"', function () {

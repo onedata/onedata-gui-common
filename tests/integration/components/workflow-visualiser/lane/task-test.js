@@ -34,7 +34,7 @@ const taskActionsSpec = [{
   icon: 'remove',
 }];
 
-describe('Integration | Component | workflow visualiser/lane/task', function () {
+describe('Integration | Component | workflow-visualiser/lane/task', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -71,38 +71,34 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
 
     itShowsTaskName();
 
-    it('does not allow to modify task name', async function (done) {
+    it('does not allow to modify task name', async function () {
       this.set('task.name', 'my-task');
       await renderComponent();
 
       // .one-label is a trigger for one-inline-editor
       expect(find('.task-name .one-label')).to.not.exist;
-      done();
     });
 
-    it('does not render actions', async function (done) {
+    it('does not render actions', async function () {
       await renderComponent();
 
       expect(find('.task-actions-trigger')).to.not.exist;
-      done();
     });
 
-    it('has collapsed details section by default', async function (done) {
+    it('has collapsed details section by default', async function () {
       await renderComponent();
 
       expect(find('.task-details-collapse')).to.not.have.class('in');
-      done();
     });
 
-    it('expands details section on task click', async function (done) {
+    it('expands details section on task click', async function () {
       await renderComponent();
       await expandDetails();
 
       expect(find('.task-details-collapse')).to.have.class('in');
-      done();
     });
 
-    it('shows task details values', async function (done) {
+    it('shows task details values', async function () {
       setProperties(this.get('task'), {
         instanceId: 'someId',
         runsRegistry: {
@@ -133,7 +129,6 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         expect(entry.querySelector('.detail-value').textContent.trim())
           .to.equal(value);
       });
-      done();
     });
 
     itShowsStatus('pending', 'Pending');
@@ -149,7 +144,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     itShowsStatus('unscheduled', 'Unscheduled');
     itShowsStatus('unknown', 'Unknown');
 
-    it('allows to copy task instance id', async function (done) {
+    it('allows to copy task instance id', async function () {
       const executeStub = sinon.stub(
         CopyRecordIdAction.prototype,
         'execute'
@@ -164,7 +159,6 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       await click('.copy-record-id-action-trigger');
 
       expect(executeStub).to.be.calledOnce;
-      done();
     });
   });
 
@@ -175,7 +169,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
 
     itShowsTaskName();
 
-    it('allows to modify task name', async function (done) {
+    it('allows to modify task name', async function () {
       setProperties(this.get('task'), {
         name: 'my-task',
         onModify(task, { name }) {
@@ -192,10 +186,9 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       await click('.task-name .save-icon');
 
       expect(find('.task-name').textContent.trim()).to.equal('new-name');
-      done();
     });
 
-    it('renders actions', async function (done) {
+    it('renders actions', async function () {
       await renderComponent();
 
       const actionsTrigger = find('.task-actions-trigger');
@@ -212,10 +205,9 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         expect(action.textContent.trim()).to.equal(label);
         expect(action.querySelector('.one-icon')).to.have.class(`oneicon-${icon}`);
       });
-      done();
     });
 
-    it('allows to modify task', async function (done) {
+    it('allows to modify task', async function () {
       const taskDiff = { name: 'someName' };
       const detailsProviderStub = sinon.stub().resolves(taskDiff);
       this.get('task.actionsFactory')
@@ -235,10 +227,9 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       });
       expect(onModifySpy).to.be.calledOnce
         .and.to.be.calledWith(this.get('task'), taskDiff);
-      done();
     });
 
-    it('allows to remove task', async function (done) {
+    it('allows to remove task', async function () {
       const onRemoveSpy = sinon.stub().resolves();
       this.set('task.onRemove', onRemoveSpy);
       await renderComponent();
@@ -250,10 +241,9 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       await click(getModalFooter().querySelector('.question-yes'));
 
       expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('task'));
-      done();
     });
 
-    it('it does not show status', async function (done) {
+    it('it does not show status', async function () {
       setProperties(this.get('task'), {
         name: 'my-task',
         status: 'finished',
@@ -261,25 +251,23 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       await renderComponent();
 
       expect(find('.workflow-visualiser-task')).to.not.have.class('status-finished');
-      done();
     });
   });
 });
 
 function itShowsTaskName() {
-  it('shows task name', async function (done) {
+  it('shows task name', async function () {
     const taskName = 'task1';
     this.set('task.name', taskName);
 
     await renderComponent();
 
     expect(find('.task-name').textContent.trim()).to.equal(taskName);
-    done();
   });
 }
 
 function itShowsStatus(status, statusTranslation) {
-  it(`shows "${status}" status`, async function (done) {
+  it(`shows "${status}" status`, async function () {
     this.set('task.status', status);
 
     await renderComponent();
@@ -288,7 +276,6 @@ function itShowsStatus(status, statusTranslation) {
     expect(find('.workflow-visualiser-task')).to.have.class(`status-${status}`);
     expect(find('.status-detail .detail-value').textContent.trim())
       .to.equal(statusTranslation);
-    done();
   });
 }
 

@@ -17,8 +17,7 @@
  * It can be used to handle multiple different scenarios of displaying form fields.
  * More inormation about prefixes in comments for commponent fields.
  *
- * @module components/one-form
- * @author Michal Borzecki
+ * @author Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */

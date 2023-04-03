@@ -7,7 +7,7 @@ import Action from 'onedata-gui-common/utils/action';
 import sinon from 'sinon';
 import { ResourceListItem } from 'onedata-gui-common/components/resources-list';
 
-describe('Integration | Component | resources list', function () {
+describe('Integration | Component | resources-list', function () {
   setupRenderingTest();
 
   it('has class "resources-list', async function () {

@@ -41,15 +41,4 @@ export default class RangeValueEditorState extends ValueEditorState {
 
     super.setValue(normalizedValue);
   }
-
-  /**
-   * @override
-   */
-  getDefaultValue() {
-    return {
-      start: 0,
-      end: 1,
-      step: 1,
-    };
-  }
 }

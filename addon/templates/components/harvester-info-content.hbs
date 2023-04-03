@@ -1,0 +1,69 @@
+<h1>
+  <span class="one-label">
+    {{tt this "title"}}
+  </span>
+</h1>
+<table class="table table-condensed table-info">
+  <tbody>
+    <tr class="row-with-text">
+      <td class="property-name">{{tt this "name"}}</td>
+      <td class="property-value">
+        {{one-clipboard-line
+          size="sm"
+          value=record.name
+          type="text"
+        }}
+      </td>
+    </tr>
+    <tr class="row-with-text">
+      <td class="property-name">{{tt this "id"}}</td>
+      <td class="property-value">
+        {{one-clipboard-line
+          size="sm"
+          value=record.entityId
+          type="text"
+        }}
+      </td>
+    </tr>
+    {{#if publicUrl}}
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "publicUrl"}}</td>
+        <td class="property-value">
+          {{one-clipboard-line
+            size="sm"
+            value=publicUrl
+            type="text"
+          }}
+        </td>
+      </tr>
+    {{/if}}
+    {{#if showCreator}}
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "creator"}}</td>
+        <td class="property-value">
+          {{#if creator.fullName}}
+            {{record-name record=creator}}
+          {{else}}
+            –
+          {{/if}}
+        </td>
+      </tr>
+    {{/if}}
+    {{#if creationTime}}
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "creationTime"}}</td>
+        <td class="property-value">
+          {{creationTime}}
+        </td>
+      </tr>
+    {{/if}}
+  </tbody>
+</table>
+{{#if linkToHarvester}}
+  <div class="links-container">
+    <a href={{linkToHarvester}} class="info-link clickable">
+      {{tt this "openHarvester"}}
+      {{one-icon icon="link-external"}}
+    </a>
+  </div>
+{{/if}}

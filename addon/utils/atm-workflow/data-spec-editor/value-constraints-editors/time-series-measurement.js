@@ -31,7 +31,7 @@ const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.tim
 const customPseudoUnit = 'custom';
 
 const FormElement = FormFieldsCollectionGroup.extend({
-  classes: 'time-series-measurement-value-constraints-editor boxes-collection-layout',
+  classes: 'time-series-measurement-value-constraints-editor value-constraints-editor boxes-collection-layout',
   isDefaultValueIgnored: false,
   i18nPrefix: `${i18nPrefix}.fields`,
   // Does not take parent fields group translation path into account

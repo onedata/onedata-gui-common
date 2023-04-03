@@ -1,7 +1,6 @@
 /**
  * Generates ids as similar as possible to the backend ones.
  *
- * @module utils/generate-id
  * @author Michał Borzęcki
  * @copyright (C) 2021-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

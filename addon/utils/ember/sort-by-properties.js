@@ -2,8 +2,7 @@
  * Sort by properties like the `computed.sort` from Ember.
  * Ported from:
  * https: //github.com/emberjs/ember.js/blob/v2.18.0/packages/ember-runtime/lib/computed/reduce_computed_macros.js
- * 
- * @module utils/ember/sort-by-properties
+ *
  * @author Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -17,9 +16,9 @@ import { compare } from '@ember/utils';
  * This function sorts the `items` array of objects by properties using order
  * specified in `sortProperties` and returns new Ember Array.
  * See http://api.emberjs.com/ember/3.8/functions/@ember%2Fobject%2Fcomputed/sort
- * @param {Array<object>} items 
+ * @param {Array<object>} items
  * @param {Array<string>} sortProperties
- * @returns {EmberArray<object>} 
+ * @returns {EmberArray<object>}
  */
 export default function emberSortByProperties(items, sortProperties) {
   return sortByNormalizedSortProperties(items, normalizeSortProperties(sortProperties));

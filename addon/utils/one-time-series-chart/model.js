@@ -3,7 +3,6 @@
  * one-time-series-chart. It allows to fully control and get information
  * about specific chart.
  *
- * @module utils/one-time-series-chart/model
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

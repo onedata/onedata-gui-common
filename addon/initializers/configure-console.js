@@ -4,8 +4,7 @@
  * Note, that this blocks application initialization until config is resolved/rejected.
  * In case of errors, configure with blank config, which should lead to disable debug logs.
  * This is done because if attacked could make configuration unavailabe, the logs should not be visible.
- * 
- * @module initializers/configure-console
+ *
  * @author Jakub Liput
  * @copyright (C) 2016-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -2,7 +2,6 @@
  * Renders chart using Apache ECharts library.
  * More about that library: https://echarts.apache.org/
  *
- * @module components/one-echart
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -154,7 +153,9 @@ export default Component.extend(WindowResizeHandler, {
 
     const echartSeriesArray = this.chart.getOption().series;
     canvas.__onedata__ = {
-      series: echartSeriesArray.map(({ name, type, data = [] }) => ({
+      // We need to apply filter, because when one of series is going to
+      // disappear, then for a moment it becomes `null` before a real removal.
+      series: echartSeriesArray.filter(Boolean).map(({ name, type, data = [] }) => ({
         name,
         type,
         data: data.map((entry) => {

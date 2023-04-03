@@ -17,7 +17,7 @@ import {
 } from '../../helpers/one-time-series-chart';
 import { render, settled, click, find } from '@ember/test-helpers';
 
-describe('Integration | Component | one time series chart', function () {
+describe('Integration | Component | one-time-series-chart', function () {
   const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {

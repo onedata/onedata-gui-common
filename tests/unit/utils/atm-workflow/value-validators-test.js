@@ -114,6 +114,46 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   ['', NaN, true, null, undefined, {}].forEach((value) =>
     itRecognizesValueAsInvalid(value, numberDataSpec)
   );
+  itRecognizesValueAsValid(10, {
+    ...numberDataSpec,
+    valueConstraints: { integersOnly: true },
+  });
+  itRecognizesValueAsInvalid(10.5, {
+    ...numberDataSpec,
+    valueConstraints: { integersOnly: true },
+  });
+  itRecognizesValueAsValid(10, {
+    ...numberDataSpec,
+    valueConstraints: { integersOnly: false },
+  });
+  itRecognizesValueAsValid(10.5, {
+    ...numberDataSpec,
+    valueConstraints: { integersOnly: false },
+  });
+  itRecognizesValueAsValid(10, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: [5, 10] },
+  });
+  itRecognizesValueAsValid(10, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: null },
+  });
+  itRecognizesValueAsInvalid(10, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: [5] },
+  });
+  itRecognizesValueAsInvalid(10, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: [] },
+  });
+  itRecognizesValueAsInvalid(10.5, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: [10.5], integersOnly: true },
+  });
+  itRecognizesValueAsInvalid(10, {
+    ...numberDataSpec,
+    valueConstraints: { allowedValues: [5], integersOnly: true },
+  });
 
   [{}, { someKey: 123 }].forEach((value) =>
     itRecognizesValueAsValid(value, objectDataSpec)
@@ -205,6 +245,22 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   [132, NaN, true, null, undefined, {}].forEach((value) =>
     itRecognizesValueAsInvalid(value, stringDataSpec)
   );
+  itRecognizesValueAsValid('a', {
+    ...stringDataSpec,
+    valueConstraints: { allowedValues: ['a', 'b'] },
+  });
+  itRecognizesValueAsValid('a', {
+    ...stringDataSpec,
+    valueConstraints: { allowedValues: null },
+  });
+  itRecognizesValueAsInvalid('a', {
+    ...stringDataSpec,
+    valueConstraints: { allowedValues: ['b'] },
+  });
+  itRecognizesValueAsInvalid('a', {
+    ...stringDataSpec,
+    valueConstraints: { allowedValues: [] },
+  });
 
   [{
     timestamp: 123,

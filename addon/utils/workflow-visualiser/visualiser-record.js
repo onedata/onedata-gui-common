@@ -1,7 +1,6 @@
 /**
  * Base class for visualiser records (concrete data entries like tasks, lanes etc.).
  *
- * @module utils/workflow-visualiser/visualiser-record
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -43,6 +42,12 @@ export default VisualiserElement.extend({
    * @type {Boolean}
    */
   isLast: false,
+
+  /**
+   * @virtual optional
+   * @type {Array<AtmWorkflowSchemaValidationError>}
+   */
+  validationErrors: undefined,
 
   /**
    * @virtual optional
@@ -94,6 +99,16 @@ export default VisualiserElement.extend({
    * @type {ComputedProperty<String>}
    */
   status: reads('visibleRun.status'),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    if (!this.validationErrors) {
+      this.set('validationErrors', []);
+    }
+  },
 
   modify(modifiedProps) {
     const onModify = this.get('onModify');
