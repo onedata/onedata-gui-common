@@ -47,6 +47,7 @@ export default Action.extend({
       if (newSubsection && !newSubsection.parentSection) {
         newSubsection.destroy();
       }
+      this.set('context', null);
     } finally {
       this._super(...arguments);
     }

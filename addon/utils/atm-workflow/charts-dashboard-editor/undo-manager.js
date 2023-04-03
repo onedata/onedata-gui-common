@@ -5,7 +5,7 @@
  * - register done actions by calling `addActionToHistory(action)`,
  * - when you want to undo latest action, call `undo()`. You can do it multiple
  *   time and undo manu operations,
- * - when you want to redo previousle undone action, call `redo()`. You can
+ * - when you want to redo previously undone action, call `redo()`. You can
  *   do as many times as `undo` method was called.
  * - if you have reach the beginning of operation history, `undo()` will do
  *   nothing. The same when you have reached the newest operation and called

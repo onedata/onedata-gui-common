@@ -5,7 +5,11 @@ import { render, find, findAll, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { set } from '@ember/object';
 import sinon from 'sinon';
-import { createNewSection } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/create-model';
+import { drag } from '../../../../helpers/drag-drop';
+import {
+  createNewSection,
+  createModelFromSpec,
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/create-model';
 
 describe('Integration | Component | atm-workflow/charts-dashboard-editor/sections-editor', function () {
   setupRenderingTest();
@@ -97,6 +101,183 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 
     expect(findAll('.section')).to.have.length(3);
   });
+
+  it('does not render any drop places when nothing is dragged', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: 'root',
+        sections: [{
+          title: '1',
+        }],
+      },
+    }).rootSection);
+
+    await renderComponent();
+
+    expect(find('.draggable-object-target')).to.not.exist;
+  });
+
+  it('renders all possible drop places when section is dragged', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: 'root',
+        sections: [{
+          title: '1',
+          sections: [{
+            title: '1.1',
+          }, {
+            title: '1.2',
+          }],
+        }, {
+          title: '2',
+        }],
+      },
+    }).rootSection);
+    await renderComponent();
+
+    let structure = getElementsStructure();
+    await drag(`#${structure.sections[0].sections[0].element.id}`);
+
+    structure = getElementsStructure();
+    expect(structure.insideDragTarget).to.exist;
+    expect(structure.beforeDragTarget).to.not.exist;
+    expect(structure.afterDragTarget).to.not.exist;
+    [
+      structure.sections[0],
+      structure.sections[0].sections[1],
+      structure.sections[1],
+    ].forEach((sectionElement) => {
+      expect(sectionElement.insideDragTarget).to.exist;
+      expect(sectionElement.beforeDragTarget).to.exist;
+      expect(sectionElement.afterDragTarget).to.exist;
+    });
+    const draggedSection = structure.sections[0].sections[0];
+    expect(draggedSection.insideDragTarget).to.not.exist;
+    expect(draggedSection.beforeDragTarget).to.not.exist;
+    expect(draggedSection.afterDragTarget).to.not.exist;
+  });
+
+  it('allows to drag&drop section into another section, undo it and redo it again',
+    async function () {
+      this.set('rootSection', createModelFromSpec({
+        rootSection: {
+          title: 'root',
+          sections: [{
+            title: '1',
+          }, {
+            title: '2',
+          }],
+        },
+      }).rootSection);
+      await renderComponent();
+
+      let structure = getElementsStructure();
+      await drag(`#${structure.sections[0].element.id}`, {
+        drop: `#${structure.sections[1].element.id} > .inside-drag-target`,
+      });
+
+      structure = getElementsStructure();
+      expect(structure.sections).to.have.length(1);
+      expect(structure.sections[0].title).to.equal('2');
+      expect(structure.sections[0].sections).to.have.length(1);
+      expect(structure.sections[0].sections[0].title).to.equal('1');
+
+      await click('.undo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.sections).to.have.length(2);
+      expect(structure.sections[0].title).to.equal('1');
+      expect(structure.sections[1].title).to.equal('2');
+      expect(structure.sections[0].sections).to.have.length(0);
+      expect(structure.sections[1].sections).to.have.length(0);
+
+      await click('.redo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.sections).to.have.length(1);
+      expect(structure.sections[0].title).to.equal('2');
+      expect(structure.sections[0].sections).to.have.length(1);
+      expect(structure.sections[0].sections[0].title).to.equal('1');
+    }
+  );
+
+  it('allows to drag&drop section before another section, undo it and redo it again',
+    async function () {
+      this.set('rootSection', createModelFromSpec({
+        rootSection: {
+          title: 'root',
+          sections: [{
+            title: '1',
+          }, {
+            title: '2',
+          }, {
+            title: '3',
+          }],
+        },
+      }).rootSection);
+      await renderComponent();
+
+      let structure = getElementsStructure();
+      await drag(`#${structure.sections[2].element.id}`, {
+        drop: `#${structure.sections[1].element.id} > .before-drag-target`,
+      });
+
+      structure = getElementsStructure();
+      expect(structure.sections.map(({ title }) => title))
+        .to.deep.equal(['1', '3', '2']);
+
+      await click('.undo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.sections.map(({ title }) => title))
+        .to.deep.equal(['1', '2', '3']);
+
+      await click('.redo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.sections.map(({ title }) => title))
+        .to.deep.equal(['1', '3', '2']);
+    }
+  );
+
+  it('allows to drag&drop section after another section, undo it and redo it again',
+    async function () {
+      this.set('rootSection', createModelFromSpec({
+        rootSection: {
+          title: 'root',
+          sections: [{
+            title: '1',
+          }, {
+            title: '2',
+          }, {
+            title: '3',
+          }],
+        },
+      }).rootSection);
+      await renderComponent();
+
+      let structure = getElementsStructure();
+      await drag(`#${structure.sections[0].element.id}`, {
+        drop: `#${structure.sections[1].element.id} > .after-drag-target`,
+      });
+
+      structure = getElementsStructure();
+      expect(structure.sections.map(({ title }) => title))
+        .to.deep.equal(['2', '1', '3']);
+
+      await click('.undo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.sections.map(({ title }) => title))
+        .to.deep.equal(['1', '2', '3']);
+
+      await click('.redo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.sections.map(({ title }) => title))
+        .to.deep.equal(['2', '1', '3']);
+    }
+  );
 });
 
 async function renderComponent() {
@@ -104,4 +285,28 @@ async function renderComponent() {
     rootSection=rootSection
     onRemoveDashboard=onRemoveDashboard
   }}`);
+}
+
+function getElementsStructure(sectionElement) {
+  if (!sectionElement) {
+    const root = find('.root-section');
+    if (!root) {
+      return {
+        element: null,
+      };
+    }
+    return getElementsStructure(root);
+  }
+
+  return {
+    element: sectionElement,
+    title: sectionElement.querySelector(':scope > .section-header > .section-title')
+      ?.textContent.trim() ?? null,
+    insideDragTarget: sectionElement.querySelector(':scope > .inside-drag-target'),
+    beforeDragTarget: sectionElement.querySelector(':scope > .before-drag-target'),
+    afterDragTarget: sectionElement.querySelector(':scope > .after-drag-target'),
+    sections: [
+      ...sectionElement.querySelectorAll(':scope > .section-subsections > .section'),
+    ].map((subsectionElement) => getElementsStructure(subsectionElement)),
+  };
 }

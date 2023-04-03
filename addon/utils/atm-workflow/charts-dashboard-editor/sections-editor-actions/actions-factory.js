@@ -7,6 +7,7 @@
  */
 
 import AddSubsectionAction from './add-subsection-action';
+import MoveElementAction from './move-element-action';
 
 /**
  * @typedef {(action: Utils.Action) => void} ActionExecuteListener
@@ -64,6 +65,18 @@ export default class ActionsFactory {
    */
   createAddSubsectionAction(context) {
     return this.attachExecuteListener(AddSubsectionAction.create({
+      ownerSource: this.ownerSource,
+      context,
+    }));
+  }
+
+  /**
+   * @public
+   * @param {MoveElementActionContext} context
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.MoveElementAction}
+   */
+  createMoveElementAction(context) {
+    return this.attachExecuteListener(MoveElementAction.create({
       ownerSource: this.ownerSource,
       context,
     }));

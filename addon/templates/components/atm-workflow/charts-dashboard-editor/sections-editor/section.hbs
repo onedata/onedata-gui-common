@@ -1,3 +1,10 @@
+{{#if (and draggedSection (not isMeOrParentDragged))}}
+  {{one-draggable-object-target
+    class="inside-drag-target"
+    action=(action "acceptDraggedElement" "inside")
+  }}
+{{/if}}
+
 {{#if (or section.title section.titleTip)}}
   <div class="section-header">
     {{#if section.title}}
@@ -35,3 +42,15 @@
     {{tt this "addSubsection"}}
   </span>
 </div>
+
+{{#if (and (not section.isRoot) draggedSection (not isMeOrParentDragged))}}
+  {{one-draggable-object-target
+    class="before-drag-target"
+    action=(action "acceptDraggedElement" "before")
+  }}
+
+  {{one-draggable-object-target
+    class="after-drag-target"
+    action=(action "acceptDraggedElement" "after")
+  }}
+{{/if}}

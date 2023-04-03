@@ -1,6 +1,15 @@
 import EmberObject from '@ember/object';
 
+export const SectionElementType = 'chartsDashboardEditorSection';
+
 export default EmberObject.extend({
+  /**
+   * @public
+   * @readonly
+   * @type {SectionElementType}
+   */
+  elementType: SectionElementType,
+
   /**
    * If this is `true` then this section is a root (top) section. There is only
    * one root section in the dashboard and it contains all other sections and
