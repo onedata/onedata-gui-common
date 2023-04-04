@@ -278,6 +278,115 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
         .to.deep.equal(['2', '1', '3']);
     }
   );
+
+  it('allows to remove section, undo it and redo it again', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: 'root',
+        sections: [{
+          title: '1',
+        }, {
+          title: '2',
+        }, {
+          title: '3',
+        }],
+      },
+    }).rootSection);
+    await renderComponent();
+    let structure = getElementsStructure();
+
+    await click(structure.sections[1].removeTrigger);
+
+    structure = getElementsStructure();
+    expect(structure.sections.map(({ title }) => title))
+      .to.deep.equal(['1', '3']);
+
+    await click('.undo-btn');
+
+    structure = getElementsStructure();
+    expect(structure.sections.map(({ title }) => title))
+      .to.deep.equal(['1', '2', '3']);
+
+    await click('.redo-btn');
+
+    structure = getElementsStructure();
+    expect(structure.sections.map(({ title }) => title))
+      .to.deep.equal(['1', '3']);
+  });
+
+  it('allows to duplicate section, undo it and redo it again', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: 'root',
+        sections: [{
+          title: '1',
+          sections: [{
+            title: '1.1',
+          }],
+        }, {
+          title: '2',
+        }],
+      },
+    }).rootSection);
+    await renderComponent();
+    let structure = getElementsStructure();
+
+    await click(structure.sections[0].duplicateTrigger);
+
+    structure = getElementsStructure();
+    expect(structure.sections.map(({ title }) => title))
+      .to.deep.equal(['1', '1', '2']);
+    expect(structure.sections[0].sections.map(({ title }) => title))
+      .to.deep.equal(['1.1']);
+    expect(structure.sections[1].sections.map(({ title }) => title))
+      .to.deep.equal(['1.1']);
+
+    await click('.undo-btn');
+
+    structure = getElementsStructure();
+    expect(structure.sections.map(({ title }) => title))
+      .to.deep.equal(['1', '2']);
+    expect(structure.sections[0].sections.map(({ title }) => title))
+      .to.deep.equal(['1.1']);
+
+    await click('.redo-btn');
+
+    structure = getElementsStructure();
+    expect(structure.sections.map(({ title }) => title))
+      .to.deep.equal(['1', '1', '2']);
+    expect(structure.sections[0].sections.map(({ title }) => title))
+      .to.deep.equal(['1.1']);
+    expect(structure.sections[1].sections.map(({ title }) => title))
+      .to.deep.equal(['1.1']);
+  });
+
+  it('duplicates section deeply', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: 'root',
+        sections: [{
+          title: '1',
+          sections: [{
+            title: '1.1',
+          }],
+        }],
+      },
+    }).rootSection);
+    await renderComponent();
+    let structure = getElementsStructure();
+
+    await click(structure.sections[0].duplicateTrigger);
+    // We introduce something differing to one of the duplicates to see
+    // if that change will take place only once.
+    structure = getElementsStructure();
+    await click(structure.sections[0].addSubsectionTrigger);
+
+    structure = getElementsStructure();
+    expect(structure.sections[0].sections.map(({ title }) => title))
+      .to.deep.equal(['1.1', 'Untitled section']);
+    expect(structure.sections[1].sections.map(({ title }) => title))
+      .to.deep.equal(['1.1']);
+  });
 });
 
 async function renderComponent() {
@@ -305,6 +414,9 @@ function getElementsStructure(sectionElement) {
     insideDragTarget: sectionElement.querySelector(':scope > .inside-drag-target'),
     beforeDragTarget: sectionElement.querySelector(':scope > .before-drag-target'),
     afterDragTarget: sectionElement.querySelector(':scope > .after-drag-target'),
+    duplicateTrigger: sectionElement.querySelector(':scope > .floating-toolbar .duplicate-action'),
+    removeTrigger: sectionElement.querySelector(':scope > .floating-toolbar .remove-action'),
+    addSubsectionTrigger: sectionElement.querySelector(':scope > .add-subsection'),
     sections: [
       ...sectionElement.querySelectorAll(':scope > .section-subsections > .section'),
     ].map((subsectionElement) => getElementsStructure(subsectionElement)),

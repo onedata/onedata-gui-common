@@ -8,6 +8,8 @@
 
 import AddSubsectionAction from './add-subsection-action';
 import MoveElementAction from './move-element-action';
+import DuplicateElementAction from './duplicate-element-action';
+import RemoveElementAction from './remove-element-action';
 
 /**
  * @typedef {(action: Utils.Action) => void} ActionExecuteListener
@@ -77,6 +79,30 @@ export default class ActionsFactory {
    */
   createMoveElementAction(context) {
     return this.attachExecuteListener(MoveElementAction.create({
+      ownerSource: this.ownerSource,
+      context,
+    }));
+  }
+
+  /**
+   * @public
+   * @param {DuplicateElementActionContext} context
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.DuplicateElementAction}
+   */
+  createDuplicateElementAction(context) {
+    return this.attachExecuteListener(DuplicateElementAction.create({
+      ownerSource: this.ownerSource,
+      context,
+    }));
+  }
+
+  /**
+   * @public
+   * @param {RemoveElementActionContext} context
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.RemoveElementAction}
+   */
+  createRemoveElementAction(context) {
+    return this.attachExecuteListener(RemoveElementAction.create({
       ownerSource: this.ownerSource,
       context,
     }));

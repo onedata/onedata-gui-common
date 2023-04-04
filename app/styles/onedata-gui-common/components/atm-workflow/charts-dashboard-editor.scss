@@ -134,6 +134,52 @@
       border-color: $block-border-color;
     }
 
+    .floating-toolbar {
+      position: absolute;
+      top: 0;
+      right: 1em;
+      transform: translateY(-50%);
+      margin: 0;
+      display: flex;
+      border: 1px solid $main-border-color;
+      border-radius: $border-radius-base;
+      background-color: $color-one-white;
+      opacity: 0;
+      pointer-events: none;
+      transition: transition-ease(opacity);
+
+      .action {
+        padding: 0.1em;
+        line-height: 0;
+        font-size: 130%;
+
+        &:hover {
+          color: $color-one-azure;
+        }
+
+        & + .action {
+          border-left: 1px solid $main-border-color;
+        }
+      }
+
+      .remove-action:hover {
+        color: $color-one-danger;
+      }
+    }
+
+    .hovered > .floating-toolbar {
+      opacity: 0.75;
+      pointer-events: initial;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .is-dragging-object > .floating-toolbar {
+      display: none;
+    }
+
     .large-trigger {
       display: inline-grid;
       padding: 2em;

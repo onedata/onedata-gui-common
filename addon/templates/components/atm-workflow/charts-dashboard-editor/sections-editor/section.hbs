@@ -43,6 +43,13 @@
   </span>
 </div>
 
+{{#if (not section.isRoot)}}
+  {{atm-workflow/charts-dashboard-editor/sections-editor/floating-toolbar
+    model=section
+    actionsFactory=actionsFactory
+  }}
+{{/if}}
+
 {{#if (and (not section.isRoot) draggedSection (not isMeOrParentDragged))}}
   {{one-draggable-object-target
     class="before-drag-target"

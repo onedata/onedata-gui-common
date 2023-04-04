@@ -2,7 +2,7 @@ import EmberObject from '@ember/object';
 
 export const SectionElementType = 'chartsDashboardEditorSection';
 
-export default EmberObject.extend({
+const Section = EmberObject.extend({
   /**
    * @public
    * @readonly
@@ -81,4 +81,21 @@ export default EmberObject.extend({
       this._super(...arguments);
     }
   },
+
+  /**
+   * @public
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Section}
+   */
+  clone() {
+    return Section.create({
+      isRoot: this.isRoot,
+      title: this.title,
+      titleTip: this.titleTip,
+      description: this.description,
+      sections: this.sections.map((section) => section.clone()),
+      parentSection: this.parentSection,
+    });
+  },
 });
+
+export default Section;

@@ -7,7 +7,7 @@
  */
 
 import Action from 'onedata-gui-common/utils/action';
-import { set, computed } from '@ember/object';
+import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { createNewSection } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/create-model';
@@ -32,22 +32,23 @@ export default Action.extend({
   targetSection: reads('context.targetSection'),
 
   /**
-   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
+   * Becomes defined during action execution
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
    */
-  newSubsection: computed(function newSubsection() {
-    return createNewSection(this.i18n);
-  }),
+  newSubsection: null,
 
   /**
    * @override
    */
   willDestroy() {
     try {
-      const newSubsection = this.cacheFor('newSubsection');
-      if (newSubsection && !newSubsection.parentSection) {
-        newSubsection.destroy();
+      if (this.newSubsection && !this.newSubsection.parentSection) {
+        this.newSubsection.destroy();
       }
-      this.set('context', null);
+      this.setProperties({
+        context: null,
+        newSubsection: null,
+      });
     } finally {
       this._super(...arguments);
     }
@@ -57,6 +58,9 @@ export default Action.extend({
    * @override
    */
   onExecute() {
+    if (!this.newSubsection) {
+      this.set('newSubsection', createNewSection(this.i18n));
+    }
     set(this.newSubsection, 'parentSection', this.targetSection);
     set(this.targetSection, 'sections', [
       ...this.targetSection.sections,

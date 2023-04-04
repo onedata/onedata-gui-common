@@ -75,6 +75,35 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       .and.calledWith({ targetSection: this.section });
     expect(executeSpy).to.be.calledOnce;
   });
+
+  it('has floating toolbar', async function () {
+    await renderComponent();
+
+    expect(find('.floating-toolbar')).to.exist;
+  });
+
+  it('does not have floating toolbar when is a root section', async function () {
+    this.set('section.isRoot', true);
+
+    await renderComponent();
+
+    expect(find('.floating-toolbar')).to.not.exist;
+  });
+
+  it('triggers action on action trigger click in floating toolbar', async function () {
+    const executeSpy = sinon.spy();
+    this.actionsFactory.createRemoveElementAction = sinon.spy(() => ({
+      execute: executeSpy,
+    }));
+    await renderComponent();
+    expect(this.actionsFactory.createRemoveElementAction).to.be.not.called;
+
+    await click('.floating-toolbar .remove-action');
+
+    expect(this.actionsFactory.createRemoveElementAction).to.be.calledOnce
+      .and.calledWith({ elementToRemove: this.section });
+    expect(executeSpy).to.be.calledOnce;
+  });
 });
 
 async function renderComponent() {
