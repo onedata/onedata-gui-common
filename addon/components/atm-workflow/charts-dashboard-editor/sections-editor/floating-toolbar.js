@@ -1,3 +1,12 @@
+/**
+ * Floating toolbar for editor elements (sections and charts). Rendered actions
+ * depends on type of the passed model.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';

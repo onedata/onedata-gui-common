@@ -1,3 +1,12 @@
+/**
+ * An editor component for dashboard sections. Allows to manage sections and
+ * charts existence and layout.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { observer } from '@ember/object';
 import { inject as service } from '@ember/service';

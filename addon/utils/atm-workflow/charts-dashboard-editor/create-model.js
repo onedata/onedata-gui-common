@@ -1,6 +1,6 @@
 /**
  * A set of functions which are responsible for creating editor model (from
- * gived spec of from scratch).
+ * given spec of from scratch).
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH

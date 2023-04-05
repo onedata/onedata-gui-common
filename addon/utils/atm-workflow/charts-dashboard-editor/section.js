@@ -1,3 +1,11 @@
+/**
+ * Model of a single section for the dashboard editor.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import EmberObject from '@ember/object';
 import { ElementType } from './common';
 

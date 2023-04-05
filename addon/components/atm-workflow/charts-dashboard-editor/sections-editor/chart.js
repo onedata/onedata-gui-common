@@ -1,3 +1,11 @@
+/**
+ * Shows single dashboard chart.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { reads } from '@ember/object/computed';
