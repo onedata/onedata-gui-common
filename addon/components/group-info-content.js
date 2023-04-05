@@ -50,6 +50,19 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<string>}
    */
+  groupType: computed('record.type', function groupType() {
+    if (this.record.type) {
+      return this.t(this.record.type.replace('_', ''), {}, {
+        defaultValue: this.record.type.replace('_', ' '),
+      });
+    } else {
+      return '—';
+    }
+  }),
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
   linkToGroup: computed('record', function linkToGroup() {
     return this.router.urlFor(
       'onedata.sidebar.content.aspect',

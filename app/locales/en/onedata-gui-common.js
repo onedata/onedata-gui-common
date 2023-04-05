@@ -56,6 +56,8 @@ import spaceInfoContent from './onedata-gui-common/components/space-info-content
 import harvesterInfoContent from './onedata-gui-common/components/harvester-info-content';
 import groupInfoContent from './onedata-gui-common/components/group-info-content';
 import removeAckPopover from './onedata-gui-common/components/remove-ack-popover';
+import atmInventoryInfoContent from './onedata-gui-common/components/atm-inventory-info-content';
+import clusterInfoContent from './onedata-gui-common/components/cluster-info-content';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -154,6 +156,8 @@ const translations = {
     harvesterInfoContent,
     groupInfoContent,
     removeAckPopover,
+    atmInventoryInfoContent,
+    clusterInfoContent,
     alerts: {
       endpointError,
     },
