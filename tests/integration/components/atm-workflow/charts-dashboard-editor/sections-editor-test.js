@@ -105,9 +105,9 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   it('does not render any drop places when nothing is dragged', async function () {
     this.set('rootSection', createModelFromSpec({
       rootSection: {
-        title: 'root',
+        title: { content: 'root' },
         sections: [{
-          title: '1',
+          title: { content: '1' },
         }],
       },
     }).rootSection);
@@ -120,16 +120,16 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   it('renders all possible drop places when section is dragged', async function () {
     this.set('rootSection', createModelFromSpec({
       rootSection: {
-        title: 'root',
+        title: { content: 'root' },
         sections: [{
-          title: '1',
+          title: { content: '1' },
           sections: [{
-            title: '1.1',
+            title: { content: '1.1' },
           }, {
-            title: '1.2',
+            title: { content: '1.2' },
           }],
         }, {
-          title: '2',
+          title: { content: '2' },
         }],
       },
     }).rootSection);
@@ -161,11 +161,11 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     async function () {
       this.set('rootSection', createModelFromSpec({
         rootSection: {
-          title: 'root',
+          title: { content: 'root' },
           sections: [{
-            title: '1',
+            title: { content: '1' },
           }, {
-            title: '2',
+            title: { content: '2' },
           }],
         },
       }).rootSection);
@@ -205,13 +205,13 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     async function () {
       this.set('rootSection', createModelFromSpec({
         rootSection: {
-          title: 'root',
+          title: { content: 'root' },
           sections: [{
-            title: '1',
+            title: { content: '1' },
           }, {
-            title: '2',
+            title: { content: '2' },
           }, {
-            title: '3',
+            title: { content: '3' },
           }],
         },
       }).rootSection);
@@ -244,13 +244,13 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     async function () {
       this.set('rootSection', createModelFromSpec({
         rootSection: {
-          title: 'root',
+          title: { content: 'root' },
           sections: [{
-            title: '1',
+            title: { content: '1' },
           }, {
-            title: '2',
+            title: { content: '2' },
           }, {
-            title: '3',
+            title: { content: '3' },
           }],
         },
       }).rootSection);
@@ -282,13 +282,13 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   it('allows to remove section, undo it and redo it again', async function () {
     this.set('rootSection', createModelFromSpec({
       rootSection: {
-        title: 'root',
+        title: { content: 'root' },
         sections: [{
-          title: '1',
+          title: { content: '1' },
         }, {
-          title: '2',
+          title: { content: '2' },
         }, {
-          title: '3',
+          title: { content: '3' },
         }],
       },
     }).rootSection);
@@ -317,14 +317,14 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   it('allows to duplicate section, undo it and redo it again', async function () {
     this.set('rootSection', createModelFromSpec({
       rootSection: {
-        title: 'root',
+        title: { content: 'root' },
         sections: [{
-          title: '1',
+          title: { content: '1' },
           sections: [{
-            title: '1.1',
+            title: { content: '1.1' },
           }],
         }, {
-          title: '2',
+          title: { content: '2' },
         }],
       },
     }).rootSection);
@@ -363,11 +363,11 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   it('duplicates section deeply', async function () {
     this.set('rootSection', createModelFromSpec({
       rootSection: {
-        title: 'root',
+        title: { content: 'root' },
         sections: [{
-          title: '1',
+          title: { content: '1' },
           sections: [{
-            title: '1.1',
+            title: { content: '1.1' },
           }],
         }],
       },
@@ -413,21 +413,21 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   it('renders all possible drop places when chart is dragged', async function () {
     this.set('rootSection', createModelFromSpec({
       rootSection: {
-        title: 'root',
+        title: { content: 'root' },
         sections: [{
-          title: '1',
+          title: { content: '1' },
           charts: [{
-            title: 'c1.1',
+            title: { content: 'c1.1' },
           }, {
-            title: 'c1.2',
+            title: { content: 'c1.2' },
           }],
           sections: [{
-            title: '1.1',
+            title: { content: '1.1' },
           }],
         }, {
-          title: '2',
+          title: { content: '2' },
           charts: [{
-            title: 'c2.1',
+            title: { content: 'c2.1' },
           }],
         }],
       },
@@ -469,12 +469,12 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     async function () {
       this.set('rootSection', createModelFromSpec({
         rootSection: {
-          title: 'root',
+          title: { content: 'root' },
           sections: [{
-            title: '1',
+            title: { content: '1' },
           }],
           charts: [{
-            title: 'c1',
+            title: { content: 'c1' },
           }],
         },
       }).rootSection);
@@ -510,13 +510,13 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     async function () {
       this.set('rootSection', createModelFromSpec({
         rootSection: {
-          title: 'root',
+          title: { content: 'root' },
           charts: [{
-            title: '1',
+            title: { content: '1' },
           }, {
-            title: '2',
+            title: { content: '2' },
           }, {
-            title: '3',
+            title: { content: '3' },
           }],
         },
       }).rootSection);
@@ -549,13 +549,13 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     async function () {
       this.set('rootSection', createModelFromSpec({
         rootSection: {
-          title: 'root',
+          title: { content: 'root' },
           charts: [{
-            title: '1',
+            title: { content: '1' },
           }, {
-            title: '2',
+            title: { content: '2' },
           }, {
-            title: '3',
+            title: { content: '3' },
           }],
         },
       }).rootSection);
@@ -587,13 +587,13 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   it('allows to remove chart, undo it and redo it again', async function () {
     this.set('rootSection', createModelFromSpec({
       rootSection: {
-        title: 'root',
+        title: { content: 'root' },
         charts: [{
-          title: '1',
+          title: { content: '1' },
         }, {
-          title: '2',
+          title: { content: '2' },
         }, {
-          title: '3',
+          title: { content: '3' },
         }],
       },
     }).rootSection);
@@ -622,11 +622,11 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   it('allows to duplicate chart, undo it and redo it again', async function () {
     this.set('rootSection', createModelFromSpec({
       rootSection: {
-        title: 'root',
+        title: { content: 'root' },
         charts: [{
-          title: '1',
+          title: { content: '1' },
         }, {
-          title: '2',
+          title: { content: '2' },
         }],
       },
     }).rootSection);

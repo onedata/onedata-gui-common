@@ -28,7 +28,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor', funct
     async function () {
       const helper = new Helper(this, {
         rootSection: {
-          title: 'title1',
+          title: { content: 'title1' },
         },
       });
 

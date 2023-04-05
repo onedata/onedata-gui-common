@@ -39,7 +39,9 @@ export function createModelFromSpec(dashboardSpec) {
  */
 export function createNewSection(i18n, isRoot = false) {
   return createSectionModelFromSpec({
-    title: String(i18n.t(`${i18nPrefix}.newSection.title`)),
+    title: {
+      content: String(i18n.t(`${i18nPrefix}.newSection.title`)),
+    },
   }, isRoot);
 }
 
@@ -50,7 +52,9 @@ export function createNewSection(i18n, isRoot = false) {
  */
 export function createNewChart(i18n) {
   return createChartModelFromSpec({
-    title: String(i18n.t(`${i18nPrefix}.newChart.title`)),
+    title: {
+      content: String(i18n.t(`${i18nPrefix}.newChart.title`)),
+    },
   });
 }
 
@@ -62,8 +66,8 @@ export function createNewChart(i18n) {
 function createSectionModelFromSpec(sectionSpec, isRoot = false) {
   const section = Section.create({
     isRoot,
-    title: sectionSpec.title ?? '',
-    titleTip: sectionSpec.titleTip ?? '',
+    title: sectionSpec.title?.content ?? '',
+    titleTip: sectionSpec.title?.tip ?? '',
     description: sectionSpec.description ?? '',
     charts: sectionSpec.charts
       ?.filter(Boolean)
@@ -83,8 +87,8 @@ function createSectionModelFromSpec(sectionSpec, isRoot = false) {
  */
 function createChartModelFromSpec(chartSpec) {
   const chart = Chart.create({
-    title: chartSpec.title ?? '',
-    titleTip: chartSpec.titleTip ?? '',
+    title: chartSpec.title?.content ?? '',
+    titleTip: chartSpec.title?.tip ?? '',
   });
   return chart;
 }
