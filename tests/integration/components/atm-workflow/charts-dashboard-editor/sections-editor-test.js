@@ -9,7 +9,7 @@ import { drag } from '../../../../helpers/drag-drop';
 import {
   createNewSection,
   createModelFromSpec,
-} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/create-model';
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 
 describe('Integration | Component | atm-workflow/charts-dashboard-editor/sections-editor', function () {
   setupRenderingTest();
@@ -387,6 +387,270 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     expect(structure.sections[1].sections.map(({ title }) => title))
       .to.deep.equal(['1.1']);
   });
+
+  it('allows to add chart, undo it and redo it again', async function () {
+    await renderComponent();
+    let structure = getElementsStructure();
+
+    await click(structure.addChartTrigger);
+
+    structure = getElementsStructure();
+    expect(structure.charts.map(({ title }) => title))
+      .to.deep.equal(['Untitled chart']);
+
+    await click('.undo-btn');
+
+    structure = getElementsStructure();
+    expect(structure.charts).to.have.length(0);
+
+    await click('.redo-btn');
+
+    structure = getElementsStructure();
+    expect(structure.charts.map(({ title }) => title))
+      .to.deep.equal(['Untitled chart']);
+  });
+
+  it('renders all possible drop places when chart is dragged', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: 'root',
+        sections: [{
+          title: '1',
+          charts: [{
+            title: 'c1.1',
+          }, {
+            title: 'c1.2',
+          }],
+          sections: [{
+            title: '1.1',
+          }],
+        }, {
+          title: '2',
+          charts: [{
+            title: 'c2.1',
+          }],
+        }],
+      },
+    }).rootSection);
+    await renderComponent();
+
+    let structure = getElementsStructure();
+    await drag(`#${structure.sections[0].charts[0].element.id}`);
+
+    structure = getElementsStructure();
+    expect(structure.insideDragTarget).to.exist;
+    expect(structure.beforeDragTarget).to.not.exist;
+    expect(structure.afterDragTarget).to.not.exist;
+    [
+      structure,
+      structure.sections[0],
+      structure.sections[0].sections[0],
+      structure.sections[1],
+    ].forEach((sectionElement) => {
+      expect(sectionElement.insideDragTarget).to.exist;
+      expect(sectionElement.beforeDragTarget).to.not.exist;
+      expect(sectionElement.afterDragTarget).to.not.exist;
+    });
+    [
+      structure.sections[0].charts[1],
+      structure.sections[1].charts[0],
+    ].forEach((sectionElement) => {
+      expect(sectionElement.insideDragTarget).to.not.exist;
+      expect(sectionElement.beforeDragTarget).to.exist;
+      expect(sectionElement.afterDragTarget).to.exist;
+    });
+    const draggedChart = structure.sections[0].charts[0];
+    expect(draggedChart.insideDragTarget).to.not.exist;
+    expect(draggedChart.beforeDragTarget).to.not.exist;
+    expect(draggedChart.afterDragTarget).to.not.exist;
+  });
+
+  it('allows to drag&drop chart into another section, undo it and redo it again',
+    async function () {
+      this.set('rootSection', createModelFromSpec({
+        rootSection: {
+          title: 'root',
+          sections: [{
+            title: '1',
+          }],
+          charts: [{
+            title: 'c1',
+          }],
+        },
+      }).rootSection);
+      await renderComponent();
+
+      let structure = getElementsStructure();
+      await drag(`#${structure.charts[0].element.id}`, {
+        drop: `#${structure.sections[0].element.id} > .inside-drag-target`,
+      });
+
+      structure = getElementsStructure();
+      expect(structure.charts).to.have.length(0);
+      expect(structure.sections[0].charts).to.have.length(1);
+      expect(structure.sections[0].charts[0].title).to.equal('c1');
+
+      await click('.undo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.charts).to.have.length(1);
+      expect(structure.charts[0].title).to.equal('c1');
+      expect(structure.sections[0].charts).to.have.length(0);
+
+      await click('.redo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.charts).to.have.length(0);
+      expect(structure.sections[0].charts).to.have.length(1);
+      expect(structure.sections[0].charts[0].title).to.equal('c1');
+    }
+  );
+
+  it('allows to drag&drop chart before another chart, undo it and redo it again',
+    async function () {
+      this.set('rootSection', createModelFromSpec({
+        rootSection: {
+          title: 'root',
+          charts: [{
+            title: '1',
+          }, {
+            title: '2',
+          }, {
+            title: '3',
+          }],
+        },
+      }).rootSection);
+      await renderComponent();
+
+      let structure = getElementsStructure();
+      await drag(`#${structure.charts[2].element.id}`, {
+        drop: `#${structure.charts[1].element.id} > .before-drag-target`,
+      });
+
+      structure = getElementsStructure();
+      expect(structure.charts.map(({ title }) => title))
+        .to.deep.equal(['1', '3', '2']);
+
+      await click('.undo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.charts.map(({ title }) => title))
+        .to.deep.equal(['1', '2', '3']);
+
+      await click('.redo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.charts.map(({ title }) => title))
+        .to.deep.equal(['1', '3', '2']);
+    }
+  );
+
+  it('allows to drag&drop chart after another chart, undo it and redo it again',
+    async function () {
+      this.set('rootSection', createModelFromSpec({
+        rootSection: {
+          title: 'root',
+          charts: [{
+            title: '1',
+          }, {
+            title: '2',
+          }, {
+            title: '3',
+          }],
+        },
+      }).rootSection);
+      await renderComponent();
+
+      let structure = getElementsStructure();
+      await drag(`#${structure.charts[0].element.id}`, {
+        drop: `#${structure.charts[1].element.id} > .after-drag-target`,
+      });
+
+      structure = getElementsStructure();
+      expect(structure.charts.map(({ title }) => title))
+        .to.deep.equal(['2', '1', '3']);
+
+      await click('.undo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.charts.map(({ title }) => title))
+        .to.deep.equal(['1', '2', '3']);
+
+      await click('.redo-btn');
+
+      structure = getElementsStructure();
+      expect(structure.charts.map(({ title }) => title))
+        .to.deep.equal(['2', '1', '3']);
+    }
+  );
+
+  it('allows to remove chart, undo it and redo it again', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: 'root',
+        charts: [{
+          title: '1',
+        }, {
+          title: '2',
+        }, {
+          title: '3',
+        }],
+      },
+    }).rootSection);
+    await renderComponent();
+    let structure = getElementsStructure();
+
+    await click(structure.charts[1].removeTrigger);
+
+    structure = getElementsStructure();
+    expect(structure.charts.map(({ title }) => title))
+      .to.deep.equal(['1', '3']);
+
+    await click('.undo-btn');
+
+    structure = getElementsStructure();
+    expect(structure.charts.map(({ title }) => title))
+      .to.deep.equal(['1', '2', '3']);
+
+    await click('.redo-btn');
+
+    structure = getElementsStructure();
+    expect(structure.charts.map(({ title }) => title))
+      .to.deep.equal(['1', '3']);
+  });
+
+  it('allows to duplicate chart, undo it and redo it again', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: 'root',
+        charts: [{
+          title: '1',
+        }, {
+          title: '2',
+        }],
+      },
+    }).rootSection);
+    await renderComponent();
+    let structure = getElementsStructure();
+
+    await click(structure.charts[0].duplicateTrigger);
+
+    structure = getElementsStructure();
+    expect(structure.charts.map(({ title }) => title))
+      .to.deep.equal(['1', '1', '2']);
+
+    await click('.undo-btn');
+
+    structure = getElementsStructure();
+    expect(structure.charts.map(({ title }) => title))
+      .to.deep.equal(['1', '2']);
+
+    await click('.redo-btn');
+
+    structure = getElementsStructure();
+    expect(structure.charts.map(({ title }) => title))
+      .to.deep.equal(['1', '1', '2']);
+  });
 });
 
 async function renderComponent() {
@@ -409,16 +673,21 @@ function getElementsStructure(sectionElement) {
 
   return {
     element: sectionElement,
-    title: sectionElement.querySelector(':scope > .section-header > .section-title')
-      ?.textContent.trim() ?? null,
+    title: sectionElement.querySelector(
+      ':scope > .section-header > .section-title, :scope > .title-area .title-content'
+    )?.textContent.trim() ?? null,
     insideDragTarget: sectionElement.querySelector(':scope > .inside-drag-target'),
     beforeDragTarget: sectionElement.querySelector(':scope > .before-drag-target'),
     afterDragTarget: sectionElement.querySelector(':scope > .after-drag-target'),
     duplicateTrigger: sectionElement.querySelector(':scope > .floating-toolbar .duplicate-action'),
     removeTrigger: sectionElement.querySelector(':scope > .floating-toolbar .remove-action'),
+    addChartTrigger: sectionElement.querySelector(':scope > .add-chart'),
     addSubsectionTrigger: sectionElement.querySelector(':scope > .add-subsection'),
     sections: [
       ...sectionElement.querySelectorAll(':scope > .section-subsections > .section'),
     ].map((subsectionElement) => getElementsStructure(subsectionElement)),
+    charts: [
+      ...sectionElement.querySelectorAll(':scope > .section-charts > .chart'),
+    ].map((chartElement) => getElementsStructure(chartElement)),
   };
 }

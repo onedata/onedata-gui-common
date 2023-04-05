@@ -5,7 +5,8 @@ import { render, find, findAll, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { setProperties, set } from '@ember/object';
 import sinon from 'sinon';
-import { createNewSection } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/create-model';
+import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import { createNewSection } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 
 describe('Integration | Component | atm-workflow/charts-dashboard-editor/sections-editor/section', function () {
@@ -57,22 +58,44 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     await renderComponent();
 
     const triggers = findAll('.large-trigger');
-    expect(triggers).to.have.length(1);
-    expect(triggers[0]).to.contain.text('Add subsection');
+    expect(triggers).to.have.length(2);
+    expect(triggers[0]).to.contain.text('Add chart');
+    expect(triggers[1]).to.contain.text('Add subsection');
+  });
+
+  it('triggers chart creation on "add chart" click', async function () {
+    const executeSpy = sinon.spy();
+    this.actionsFactory.createAddElementAction = sinon.spy(() => ({
+      execute: executeSpy,
+    }));
+    await renderComponent();
+    expect(this.actionsFactory.createAddElementAction).to.be.not.called;
+
+    await click('.add-chart');
+
+    expect(this.actionsFactory.createAddElementAction).to.be.calledOnce
+      .and.calledWith({
+        newElementType: ElementType.Chart,
+        targetSection: this.section,
+      });
+    expect(executeSpy).to.be.calledOnce;
   });
 
   it('triggers subsection creation on "add subsection" click', async function () {
     const executeSpy = sinon.spy();
-    this.actionsFactory.createAddSubsectionAction = sinon.spy(() => ({
+    this.actionsFactory.createAddElementAction = sinon.spy(() => ({
       execute: executeSpy,
     }));
     await renderComponent();
-    expect(this.actionsFactory.createAddSubsectionAction).to.be.not.called;
+    expect(this.actionsFactory.createAddElementAction).to.be.not.called;
 
     await click('.add-subsection');
 
-    expect(this.actionsFactory.createAddSubsectionAction).to.be.calledOnce
-      .and.calledWith({ targetSection: this.section });
+    expect(this.actionsFactory.createAddElementAction).to.be.calledOnce
+      .and.calledWith({
+        newElementType: ElementType.Section,
+        targetSection: this.section,
+      });
     expect(executeSpy).to.be.calledOnce;
   });
 

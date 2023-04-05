@@ -1,14 +1,13 @@
 import EmberObject from '@ember/object';
-
-export const SectionElementType = 'chartsDashboardEditorSection';
+import { ElementType } from './common';
 
 const Section = EmberObject.extend({
   /**
    * @public
    * @readonly
-   * @type {SectionElementType}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType.Section}
    */
-  elementType: SectionElementType,
+  elementType: ElementType.Section,
 
   /**
    * If this is `true` then this section is a root (top) section. There is only
@@ -44,6 +43,13 @@ const Section = EmberObject.extend({
   /**
    * @public
    * @virtual optional
+   * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.Chart>}
+   */
+  charts: undefined,
+
+  /**
+   * @public
+   * @virtual optional
    * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
    */
   sections: undefined,
@@ -60,6 +66,9 @@ const Section = EmberObject.extend({
    */
   init() {
     this._super(...arguments);
+    if (!this.charts) {
+      this.set('charts', []);
+    }
     if (!this.sections) {
       this.set('sections', []);
     }
@@ -70,6 +79,10 @@ const Section = EmberObject.extend({
    */
   willDestroy() {
     try {
+      if (this.charts.length) {
+        this.charts.forEach((chart) => chart.destroy());
+        this.set('charts', []);
+      }
       if (this.sections.length) {
         this.sections.forEach((section) => section.destroy());
         this.set('sections', []);
@@ -92,6 +105,7 @@ const Section = EmberObject.extend({
       title: this.title,
       titleTip: this.titleTip,
       description: this.description,
+      charts: this.charts.map((chart) => chart.clone()),
       sections: this.sections.map((section) => section.clone()),
       parentSection: this.parentSection,
     });

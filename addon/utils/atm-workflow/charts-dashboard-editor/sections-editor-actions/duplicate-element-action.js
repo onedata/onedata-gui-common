@@ -10,11 +10,11 @@ import Action from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { SectionElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/section';
+import { ElementType } from '../common';
 
 /**
  * @typedef {Object} DuplicateElementActionContext
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Section} elementToDuplicate
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} elementToDuplicate
  */
 
 export default Action.extend({
@@ -27,13 +27,13 @@ export default Action.extend({
   context: undefined,
 
   /**
-   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
    */
   elementToDuplicate: reads('context.elementToDuplicate'),
 
   /**
    * Becomes defined during action execution
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
    */
   createdDuplicate: null,
 
@@ -43,7 +43,7 @@ export default Action.extend({
   collectionName: computed(
     'elementToDuplicate.elementType',
     function collectionName() {
-      return this.elementToDuplicate.elementType === SectionElementType ?
+      return this.elementToDuplicate.elementType === ElementType.Section ?
         'sections' : 'charts';
     }
   ),

@@ -5,7 +5,7 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
 import {
   createModelFromSpec,
   createNewSection,
-} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/create-model';
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 
 export default Component.extend({
   layout,

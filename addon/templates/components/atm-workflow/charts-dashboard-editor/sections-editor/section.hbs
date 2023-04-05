@@ -1,4 +1,4 @@
-{{#if (and draggedSection (not isMeOrParentDragged))}}
+{{#if (or draggedChart (and draggedSection (not isMeOrParentDragged)))}}
   {{one-draggable-object-target
     class="inside-drag-target"
     action=(action "acceptDraggedElement" "inside")
@@ -21,6 +21,27 @@
 {{#if section.description}}
   <p class="section-description">{{section.description}}</p>
 {{/if}}
+
+{{#if section.charts.length}}
+  <div class="section-charts">
+    {{#each section.charts as |chart|}}
+      {{atm-workflow/charts-dashboard-editor/sections-editor/chart
+        chart=chart
+        actionsFactory=actionsFactory
+      }}
+    {{/each}}
+  </div>
+{{/if}}
+
+<div
+  class="large-trigger add-chart clickable"
+  onclick={{action "addChart"}}
+>
+  <span class="content">
+    {{one-icon icon="plus"}}
+    {{tt this "addChart"}}
+  </span>
+</div>
 
 {{#if section.sections.length}}
   <div class="section-subsections">

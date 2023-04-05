@@ -10,6 +10,7 @@
 import { set } from '@ember/object';
 import Model from './model';
 import Section from './section';
+import Chart from './chart';
 
 /**
  * @type {string}
@@ -43,6 +44,17 @@ export function createNewSection(i18n, isRoot = false) {
 }
 
 /**
+ * Returns new, empty chart.
+ * @param {Ember.Service} i18n
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Chart}
+ */
+export function createNewChart(i18n) {
+  return createChartModelFromSpec({
+    title: String(i18n.t(`${i18nPrefix}.newChart.title`)),
+  });
+}
+
+/**
  * @param {Partial<OneTimeSeriesChartsSectionSpec>} sectionSpec
  * @param {boolean} [isRoot]
  * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Section}
@@ -53,10 +65,26 @@ function createSectionModelFromSpec(sectionSpec, isRoot = false) {
     title: sectionSpec.title ?? '',
     titleTip: sectionSpec.titleTip ?? '',
     description: sectionSpec.description ?? '',
+    charts: sectionSpec.charts
+      ?.filter(Boolean)
+      .map((chartSpec) => createChartModelFromSpec(chartSpec)) ?? [],
     sections: sectionSpec.sections
       ?.filter(Boolean)
       .map((sectionSpec) => createSectionModelFromSpec(sectionSpec)) ?? [],
   });
+  section.charts.forEach((chart) => set(chart, 'parentSection', section));
   section.sections.forEach((subsection) => set(subsection, 'parentSection', section));
   return section;
+}
+
+/**
+ * @param {Partial<OTSCChartDefinition>} chartSpec
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Chart}
+ */
+function createChartModelFromSpec(chartSpec) {
+  const chart = Chart.create({
+    title: chartSpec.title ?? '',
+    titleTip: chartSpec.titleTip ?? '',
+  });
+  return chart;
 }

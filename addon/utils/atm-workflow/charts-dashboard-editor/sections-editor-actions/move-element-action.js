@@ -11,11 +11,11 @@ import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
-import { SectionElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/section';
+import { ElementType } from '../common';
 
 /**
  * @typedef {Object} MoveElementActionContext
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Section} movedElement
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} movedElement
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Section} newParent
  * @property {MoveElementActionNewPosition | null} newPosition
  *   `null` will place `movedElement` at the end
@@ -24,7 +24,7 @@ import { SectionElementType } from 'onedata-gui-common/utils/atm-workflow/charts
 /**
  * @typedef {Object} MoveElementActionNewPosition
  * @property {'before' | 'after'} placement
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Section} referenceElement
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} referenceElement
  */
 
 export default Action.extend({
@@ -69,7 +69,7 @@ export default Action.extend({
   collectionName: computed(
     'movedElement.elementType',
     function collectionName() {
-      return this.movedElement.elementType === SectionElementType ?
+      return this.movedElement.elementType === ElementType.Section ?
         'sections' : 'charts';
     }
   ),

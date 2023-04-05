@@ -10,11 +10,11 @@ import Action from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { SectionElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/section';
+import { ElementType } from '../common';
 
 /**
  * @typedef {Object} RemoveElementActionContext
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Section} elementToRemove
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} elementToRemove
  */
 
 export default Action.extend({
@@ -27,7 +27,7 @@ export default Action.extend({
   context: undefined,
 
   /**
-   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
+   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
    */
   elementToRemove: reads('context.elementToRemove'),
 
@@ -49,7 +49,7 @@ export default Action.extend({
   collectionName: computed(
     'elementToRemove.elementType',
     function collectionName() {
-      return this.elementToRemove.elementType === SectionElementType ?
+      return this.elementToRemove.elementType === ElementType.Section ?
         'sections' : 'charts';
     }
   ),

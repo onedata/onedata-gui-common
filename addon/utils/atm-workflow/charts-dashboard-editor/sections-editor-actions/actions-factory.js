@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import AddSubsectionAction from './add-subsection-action';
+import AddElementAction from './add-element-action';
 import MoveElementAction from './move-element-action';
 import DuplicateElementAction from './duplicate-element-action';
 import RemoveElementAction from './remove-element-action';
@@ -62,11 +62,11 @@ export default class ActionsFactory {
 
   /**
    * @public
-   * @param {AddSubsectionActionContext} context
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.AddSubsectionAction}
+   * @param {AddElementActionContext} context
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.AddElementAction}
    */
-  createAddSubsectionAction(context) {
-    return this.attachExecuteListener(AddSubsectionAction.create({
+  createAddElementAction(context) {
+    return this.attachExecuteListener(AddElementAction.create({
       ownerSource: this.ownerSource,
       context,
     }));

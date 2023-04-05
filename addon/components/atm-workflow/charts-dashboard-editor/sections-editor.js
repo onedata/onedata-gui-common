@@ -3,9 +3,11 @@ import { observer } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor';
 import ActionsFactory from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/sections-editor-actions/actions-factory';
-import UndoManager from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/undo-manager';
-import EdgeScroller from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/edge-scroller';
-import { SectionElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/section';
+import {
+  ElementType,
+  UndoManager,
+  EdgeScroller,
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 
 export default Component.extend({
   layout,
@@ -26,7 +28,7 @@ export default Component.extend({
   onRemoveDashboard: undefined,
 
   /**
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActionsFactory}
    */
   actionsFactory: undefined,
 
@@ -43,7 +45,11 @@ export default Component.extend({
   edgeScrollerEnabler: observer(
     'dragDrop.draggedElementModel.elementType',
     function edgeScrollerEnabler() {
-      if (this.dragDrop.draggedElementModel?.elementType === SectionElementType) {
+      const draggedElementType = this.dragDrop.draggedElementModel?.elementType;
+      if (
+        draggedElementType === ElementType.Chart ||
+        draggedElementType === ElementType.Section
+      ) {
         this.edgeScroller?.enable();
       } else {
         this.edgeScroller?.disable();

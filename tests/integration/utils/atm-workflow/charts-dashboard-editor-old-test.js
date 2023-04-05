@@ -8,10 +8,10 @@ import {
   default as ChartsDashboardEditor,
   formValueToChartsDashboardSpec,
   chartsDashboardSpecToFormValue,
-} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-old';
 import { set } from '@ember/object';
 
-describe('Integration | Utility | atm-workflow/charts-dashboard-editor', function () {
+describe('Integration | Utility | atm-workflow/charts-dashboard-editor-old', function () {
   setupRenderingTest();
 
   beforeEach(function () {

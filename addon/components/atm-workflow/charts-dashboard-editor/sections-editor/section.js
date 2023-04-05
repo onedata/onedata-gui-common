@@ -5,7 +5,7 @@ import { not } from 'ember-awesome-macros';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor/section';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { SectionElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/section';
+import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 
 export default OneDraggableObject.extend(I18n, {
   layout,
@@ -35,7 +35,7 @@ export default OneDraggableObject.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActionsFactory}
    */
   actionsFactory: undefined,
 
@@ -60,7 +60,18 @@ export default OneDraggableObject.extend(I18n, {
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Section | null>}
    */
   draggedSection: computed('dragDrop.draggedElementModel', function draggedSection() {
-    if (this.dragDrop.draggedElementModel?.elementType === SectionElementType) {
+    if (this.dragDrop.draggedElementModel?.elementType === ElementType.Section) {
+      return this.dragDrop.draggedElementModel;
+    } else {
+      return null;
+    }
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null>}
+   */
+  draggedChart: computed('dragDrop.draggedElementModel', function draggedChart() {
+    if (this.dragDrop.draggedElementModel?.elementType === ElementType.Chart) {
       return this.dragDrop.draggedElementModel;
     } else {
       return null;
@@ -121,8 +132,20 @@ export default OneDraggableObject.extend(I18n, {
     /**
      * @returns {void}
      */
+    addChart() {
+      const action = this.actionsFactory.createAddElementAction({
+        newElementType: ElementType.Chart,
+        targetSection: this.section,
+      });
+      action.execute();
+    },
+
+    /**
+     * @returns {void}
+     */
     addSubsection() {
-      const action = this.actionsFactory.createAddSubsectionAction({
+      const action = this.actionsFactory.createAddElementAction({
+        newElementType: ElementType.Section,
         targetSection: this.section,
       });
       action.execute();

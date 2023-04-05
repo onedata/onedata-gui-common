@@ -25,6 +25,7 @@
   }
 
   .sections-editor {
+    $section-padding: 1em;
     display: grid;
     min-height: 0;
     grid-template-columns: 1fr 15em;
@@ -55,10 +56,46 @@
       border-bottom-left-radius: $border-radius-base;
     }
 
+    .chart,
     .section {
       position: relative;
-      $section-padding: 1em;
+    }
 
+    .chart {
+      > .before-drag-target,
+      > .after-drag-target {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 2 * $section-padding;
+
+        &.accepts-drag::before {
+          top: 0;
+          height: 100%;
+          width: 0.5 * $section-padding;
+        }
+      }
+
+      > .before-drag-target {
+        left: 0;
+        transform: translateX(-1px) translateX(#{-$section-padding});
+
+        &.accepts-drag::before {
+          left: 0.25 * $section-padding;
+        }
+      }
+
+      > .after-drag-target {
+        right: 0;
+        transform: translateX(1px) translateX(#{$section-padding});
+
+        &.accepts-drag::before {
+          right: 0.25 * $section-padding;
+        }
+      }
+    }
+
+    .section {
       > .before-drag-target,
       > .after-drag-target {
         position: absolute;
@@ -93,16 +130,27 @@
 
       > .inside-drag-target {
         position: absolute;
-        top: $section-padding;
-        bottom: $section-padding;
+        top: 0;
+        bottom: 0;
         left: 0;
         right: 0;
 
-        &.accepts-drag::before {
-          top: calc(#{-$section-padding} - 1px);
-          bottom: calc(#{-$section-padding} - 1px);
-          left: -1px;
-          right: -1px;
+        &.accepts-drag {
+          &::before {
+            top: -1px;
+            bottom: -1px;
+            left: -1px;
+            right: -1px;
+          }
+
+          & ~ * .chart:not(.is-dragging-object) {
+            opacity: 0.5;
+            pointer-events: none;
+
+            .draggable-object-target {
+              pointer-events: initial;
+            }
+          }
         }
 
         + * {
