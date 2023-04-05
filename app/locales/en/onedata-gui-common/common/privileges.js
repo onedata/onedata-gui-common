@@ -5,6 +5,7 @@ export default {
     space_delete: 'remove space',
     space_view_privileges: 'view privileges',
     space_set_privileges: 'set privileges',
+    space_manage_marketplace: 'manage Marketplace',
 
     space_read_data: 'read files',
     space_write_data: 'write files',
