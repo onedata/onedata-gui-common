@@ -51,7 +51,6 @@ export default EmberObject.extend(Evented, {
 
   init() {
     this._super(...arguments);
-    this.set('lastInterval', this.interval);
     this.intervalObserver();
   },
 
