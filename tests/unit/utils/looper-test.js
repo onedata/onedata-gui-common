@@ -126,10 +126,14 @@ describe('Unit | Utility | looper', function () {
     });
     const tickSpy = sinon.spy();
     this.looper.on('tick', tickSpy);
+    this.fakeClock.tick(1);
+    // immediate option causes tick to be invoked
+    tickSpy.resetHistory();
 
-    this.fakeClock.tick(9);
+    this.fakeClock.tick(8);
     this.looper.restartInterval();
-    this.fakeClock.tick(12);
+    // one legal tick should be invoked at time 10
+    this.fakeClock.tick(15);
 
     expect(tickSpy).to.have.been.calledOnce;
   });
