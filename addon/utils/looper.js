@@ -32,6 +32,8 @@ export default EmberObject.extend(Evented, {
    */
   immediate: false,
 
+  //#region state
+
   /**
    * @type {any}
    */
@@ -39,12 +41,25 @@ export default EmberObject.extend(Evented, {
 
   _intervalId: null,
 
+  /**
+   * Stores last value of interval to compare with current interval when it changes.
+   * @type {number|null}
+   */
+  lastInterval: undefined,
+
+  //#endregion
+
   init() {
     this._super(...arguments);
+    this.set('lastInterval', this.interval);
     this.intervalObserver();
   },
 
   intervalObserver: observer('interval', function intervalObserver() {
+    if (this.interval === this.lastInterval) {
+      return;
+    }
+    this.set('lastInterval', this.interval);
     this.restartInterval();
     if (this.interval && this.interval > 0 && this.immediate) {
       this.notify();
