@@ -7,7 +7,6 @@ import {
 } from 'mocha';
 import Looper from 'onedata-gui-common/utils/looper';
 import sinon from 'sinon';
-import { settled } from '@ember/test-helpers';
 
 describe('Unit | Utility | looper', function () {
   beforeEach(function () {
