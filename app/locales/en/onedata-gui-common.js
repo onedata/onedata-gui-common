@@ -55,6 +55,8 @@ import userInfoContent from './onedata-gui-common/components/user-info-content';
 import spaceInfoContent from './onedata-gui-common/components/space-info-content';
 import harvesterInfoContent from './onedata-gui-common/components/harvester-info-content';
 import groupInfoContent from './onedata-gui-common/components/group-info-content';
+import atmInventoryInfoContent from './onedata-gui-common/components/atm-inventory-info-content';
+import clusterInfoContent from './onedata-gui-common/components/cluster-info-content';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -66,6 +68,7 @@ import unsavedChangesQuestionModal from './onedata-gui-common/components/modals/
 import workflowVisualiserStoreModal from './onedata-gui-common/components/modals/workflow-visualiser/store-modal';
 import workflowVisualiserLaneModal from './onedata-gui-common/components/modals/workflow-visualiser/lane-modal';
 import workflowVisualiserChartsModal from './onedata-gui-common/components/modals/workflow-visualiser/charts-modal';
+import workflowVisualiserRemoveStoreModal from './onedata-gui-common/components/modals/workflow-visualiser/remove-store-modal';
 import toggleDirStatsQuestionModal from './onedata-gui-common/components/modals/toggle-dir-stats-question-modal';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
@@ -151,6 +154,8 @@ const translations = {
     spaceInfoContent,
     harvesterInfoContent,
     groupInfoContent,
+    atmInventoryInfoContent,
+    clusterInfoContent,
     alerts: {
       endpointError,
     },
@@ -168,6 +173,7 @@ const translations = {
         storeModal: workflowVisualiserStoreModal,
         laneModal: workflowVisualiserLaneModal,
         chartsModal: workflowVisualiserChartsModal,
+        removeStoreModal: workflowVisualiserRemoveStoreModal,
       },
     },
   },

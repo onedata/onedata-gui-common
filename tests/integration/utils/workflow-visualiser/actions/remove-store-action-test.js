@@ -8,7 +8,6 @@ import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/acti
 import { getProperties, get } from '@ember/object';
 import {
   getModal,
-  getModalHeader,
   getModalBody,
   getModalFooter,
 } from '../../../../helpers/modal';
@@ -41,16 +40,10 @@ describe('Integration | Utility | workflow-visualiser/actions/remove-store-actio
   it('shows modal on execute', async function () {
     await executeAction(this);
 
-    expect(getModal()).to.have.class('question-modal');
-    expect(getModalHeader().querySelector('.oneicon-sign-warning-rounded')).to.exist;
-    expect(getModalHeader().querySelector('h1').textContent.trim())
-      .to.equal('Remove store');
+    expect(getModal()).to.have.class('remove-store-modal');
     expect(getModalBody().textContent.trim()).to.contain(
-      'You are about to delete the store "store1".'
+      'You are about to delete the store store1.'
     );
-    const yesButton = getModalFooter().querySelector('.question-yes');
-    expect(yesButton.textContent.trim()).to.equal('Remove');
-    expect(yesButton).to.have.class('btn-danger');
   });
 
   it(

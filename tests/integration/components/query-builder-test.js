@@ -9,7 +9,7 @@ import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-op
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import sinon from 'sinon';
 import setDefaultQueryValuesBuilder from '../../helpers/set-default-query-values-builder';
-import $ from 'jquery';
+import { findInElementsByText } from '../../helpers/find';
 
 describe('Integration | Component | query-builder-main-component', function () {
   setupRenderingTest();
@@ -94,7 +94,10 @@ describe('Integration | Component | query-builder-main-component', function () {
     });
 
     it('value nested in operators is changed', async function () {
-      const firstValue = $(this.element).find('.comparator-value:contains("1")')[0];
+      const firstValue = findInElementsByText(
+        this.element.querySelectorAll('.comparator-value'),
+        '1'
+      );
       await click(firstValue);
 
       await fillIn('input.comparator-value', 'test');

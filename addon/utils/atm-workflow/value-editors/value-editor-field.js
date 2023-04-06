@@ -203,13 +203,17 @@ export const ValueEditorField = FormField.extend({
    * @returns {void}
    */
   handleEditorStateManagerChange(dump) {
+    const previousIsValid = this.isValid;
     this.set('lastEditorStateManagerDump', dump);
     // if `hasValue` is false, then it should not be possible to receive any
     // change notifications from inside the editor. It's because editor should
     // not be rendered at all when `hasValue` is not true. Checking for
     // `!this.value?.hasValue` condition is here only to catch any logical
     // error in editor code (delayed notifications etc.).
-    if (!this.value?.hasValue || _.isEqual(this.value?.value, dump.value)) {
+    if (
+      !this.value?.hasValue ||
+      (_.isEqual(this.value?.value, dump.value) && previousIsValid === dump.isValid)
+    ) {
       return;
     }
     this.valueChanged({

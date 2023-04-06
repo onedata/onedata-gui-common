@@ -37,11 +37,15 @@
         </td>
       </tr>
     {{/if}}
-    {{#if creator.fullName}}
+    {{#if showCreator}}
       <tr class="row-with-text">
         <td class="property-name">{{tt this "creator"}}</td>
         <td class="property-value">
-          {{record-name record=creator}}
+          {{#if creator.fullName}}
+            {{record-name record=creator}}
+          {{else}}
+            –
+          {{/if}}
         </td>
       </tr>
     {{/if}}

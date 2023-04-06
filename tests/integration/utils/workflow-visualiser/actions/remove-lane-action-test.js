@@ -48,7 +48,7 @@ describe('Integration | Utility | workflow-visualiser/actions/remove-lane-action
     expect(getModalHeader().querySelector('h1').textContent.trim())
       .to.equal('Remove lane');
     expect(getModalBody().textContent.trim()).to.contain(
-      `You are about to delete the lane "${laneName}".`
+      `You are about to delete the lane ${laneName}.`
     );
     const yesButton = getModalFooter().querySelector('.question-yes');
     expect(yesButton.textContent.trim()).to.equal('Remove');
