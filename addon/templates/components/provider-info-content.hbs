@@ -1,0 +1,47 @@
+<h1>
+  <span class="one-label">
+    {{tt this "title"}}
+  </span>
+</h1>
+<table class="table table-condensed table-info">
+  <tbody>
+    <tr class="row-with-text">
+      <td class="property-name">{{tt this "name"}}</td>
+      <td class="property-value">
+        {{one-clipboard-line
+          size="sm"
+          value=record.name
+          type="text"
+        }}
+      </td>
+    </tr>
+    {{#if record.domain}}
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "domain"}}</td>
+        <td class="property-value">
+          {{one-clipboard-line
+            size="sm"
+            value=record.domain
+            type="text"
+          }}
+        </td>
+      </tr>
+    {{/if}}
+    <tr class="row-with-text">
+      <td class="property-name">{{tt this "id"}}</td>
+      <td class="property-value id">
+        {{one-clipboard-line
+          size="sm"
+          value=record.entityId
+          type="text"
+        }}
+      </td>
+    </tr>
+    {{#if record.version}}
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "version"}}</td>
+        <td class="property-value">{{record.version}}</td>
+      </tr>
+    {{/if}}
+  </tbody>
+</table>
