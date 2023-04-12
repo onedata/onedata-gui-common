@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | one markdown to html', function () {
+describe('Integration | Component | one-markdown-to-html', function () {
   setupRenderingTest();
 
   describe('renders HTML generated from Markdown', function () {
