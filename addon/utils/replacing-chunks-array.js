@@ -136,21 +136,12 @@ export default ArraySlice.extend(Evented, {
     'loadMoreThreshold',
     'sourceArray.[]',
     function endChanged() {
-      if (!this.get('isReloading')) {
-        const {
-          _end,
-          _endReached,
-          loadMoreThreshold,
-          sourceArray,
-        } = this.getProperties(
-          '_end',
-          '_endReached',
-          'loadMoreThreshold',
-          'sourceArray',
-        );
-        if (!_endReached && _end + loadMoreThreshold >= get(sourceArray, 'length')) {
-          return this.scheduleTask('fetchNext');
-        }
+      if (
+        !this.isReloading &&
+        !this._endReached &&
+        this._end + this.loadMoreThreshold >= this.sourceArray.length
+      ) {
+        return this.scheduleTask('fetchNext');
       }
     }
   ),
@@ -202,13 +193,12 @@ export default ArraySlice.extend(Evented, {
   },
 
   /**
-   * @returns {{ arrayUpdate: Array, endReached: Boolean }}
+   * @returns {Promise<{ arrayUpdate: Array, endReached: boolean }>}
    */
-  fetchWrapper(index, size, offset) {
+  async fetchWrapper(index, size, offset) {
     const effOffset = (index == null && (!offset || offset < 0)) ? 0 : offset;
-    return this.get('fetch')(index, size, effOffset, this).then(result =>
-      this.handleFetchDataFetchResult(result)
-    );
+    const result = await this.fetch(index, size, effOffset, this);
+    return this.handleFetchDataFetchResult(result);
   },
 
   getIndex(record) {
@@ -384,7 +374,7 @@ export default ArraySlice.extend(Evented, {
    * to prevent issues with async array modification.
    * @returns {Promise}
    */
-  _reload({ head = false, minSize = this.get('chunkSize'), offset = 0 } = {}) {
+  async _reload({ head = false, minSize = this.chunkSize, offset = 0 } = {}) {
     const {
       _start,
       _end,
@@ -422,19 +412,33 @@ export default ArraySlice.extend(Evented, {
       fetchStartIndex = null;
     }
 
-    return this.fetchWrapper(
+    // when reload from head is done, set length explicitly, no matter what chunk size is
+    const targetLength = this.length || (this.endIndex - this.startIndex);
+
+    try {
+      const { arrayUpdate, endReached } = await this.fetchWrapper(
         fetchStartIndex,
         size,
         offset,
-      )
-      .then(({ arrayUpdate, endReached }) => {
-        const fetchedCount = get(arrayUpdate, 'length');
-        const updatedEnd = _start + fetchedCount;
-        safeExec(this, 'setProperties', {
-          _startReached: false,
-          _endReached: Boolean(endReached),
-          error: undefined,
+      );
+      const fetchedCount = get(arrayUpdate, 'length');
+      const updatedEnd = _start + fetchedCount;
+      safeExec(this, 'setProperties', {
+        _startReached: Boolean(head),
+        _endReached: Boolean(endReached),
+        error: undefined,
+      });
+      if (head) {
+        // clear array without notify
+        sourceArray.splice(0, get(sourceArray, 'length'));
+        sourceArray.push(...arrayUpdate);
+        this.setProperties({
+          emptyIndex: -1,
+          startIndex: 0,
+          endIndex: targetLength <= 0 ?
+            fetchedCount : Math.min(targetLength, fetchedCount),
         });
+      } else {
         this.setEmptyIndex(_start - 1);
         if (updatedEnd < get(sourceArray, 'length')) {
           set(sourceArray, 'length', updatedEnd);
@@ -443,19 +447,18 @@ export default ArraySlice.extend(Evented, {
         for (let i = 0; i < updateBoundary; ++i) {
           sourceArray[i + _start] = arrayUpdate[i];
         }
-        sourceArray.arrayContentDidChange(_start);
-        return this;
-      })
-      .catch(error => {
-        safeExec(this, 'set', 'error', error);
-        throw error;
-      })
-      .finally(() => {
-        safeExec(this, () => {
-          this.set('_isReloading', false);
-          this.notifyPropertyChange('[]');
-        });
+      }
+      sourceArray.arrayContentDidChange(this._start);
+      return this;
+    } catch (error) {
+      safeExec(this, 'set', 'error', error);
+      throw error;
+    } finally {
+      safeExec(this, () => {
+        this.set('_isReloading', false);
+        this.notifyPropertyChange('[]');
       });
+    }
   },
 
   scheduleReload({ head, minSize, offset } = {}) {
@@ -540,7 +543,8 @@ export default ArraySlice.extend(Evented, {
    *     parameter, but chunk shoud be considered as last if the `isLast` flag is true
    *   - if the result is not an array nor object, then chunk is considered as empty
    *     and as last
-   * @returns {{ arrayUpdate: Array, endReached: Boolean }}
+   *
+   * @returns {Promise<{ arrayUpdate: Array, endReached: boolean }>}
    */
   handleFetchDataFetchResult(fetchResult) {
     let arrayUpdate;
@@ -591,7 +595,6 @@ export default ArraySlice.extend(Evented, {
       initialJumpIndex ?
       this.scheduleJump(initialJumpIndex) :
       this.scheduleReload({ head: true }).then(() => {
-        this.set('_startReached', this.get('_start') === 0);
         return this.startEndChanged();
       })
     );

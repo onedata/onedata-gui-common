@@ -12,6 +12,7 @@
 import { helper } from '@ember/component/helper';
 import moment from 'moment';
 
+export const dateFormatter = 'D MMM YYYY';
 export const certFormatter = 'YYYY-MM-DD [at] H:mm ([UTC]Z)';
 export const reportFormatter = 'D MMM YYYY H:mm:ss';
 export const detailedReportFormatter = 'D MMM YYYY H:mm:ss.SSS';
@@ -24,6 +25,7 @@ const blanks = {
 
 const formatters = {
   default: certFormatter,
+  date: dateFormatter,
   cert: certFormatter,
   report: reportFormatter,
   detailedReport: detailedReportFormatter,

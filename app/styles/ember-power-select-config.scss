@@ -69,12 +69,16 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
 }
 
 .ember-power-select-trigger {
-  .ember-power-select-selected-item .option-container {
-    .one-icon {
-      left: 5px;
-    }
-    .one-icon + .text {
-      padding-left: 28px;
+  .ember-power-select-selected-item {
+    display: block;
+    width: 100%;
+    .option-container {
+      .one-icon {
+        left: 5px;
+      }
+      .one-icon + .text {
+        padding-left: 28px;
+      }
     }
   }
 
@@ -83,9 +87,6 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
     display: flex;
     align-items: center;
     .ember-power-select-selected-item {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       .option-container {
         .one-icon {
           left: 11px;
@@ -141,8 +142,9 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
 }
 
 .ember-power-select-trigger {
+  --ember-power-select-trigger-padding-right: 3em;
   padding-left: $ember-power-select-option-large-padding-horizontal;
-  padding-right: 3em;
+  padding-right: var(--ember-power-select-trigger-padding-right);
   transition: transition-ease(all);
   min-height: $line-height-computed + 2 * $padding-base-vertical + 2px;
   white-space: nowrap;
@@ -175,9 +177,10 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
   }
 
   &.small, .form-group-sm & {
-    padding: $ember-power-select-option-small-padding;
+    --ember-power-select-trigger-padding-right: 2em;
+    padding-top: $ember-power-select-option-small-padding-vertical;
+    padding-bottom: $ember-power-select-option-small-padding-vertical;
     padding-left: $ember-power-select-option-small-padding-horizontal;
-    padding-right: 2em;
     min-height: $input-height-small;
 
     .one-icon {

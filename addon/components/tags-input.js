@@ -35,6 +35,8 @@ import $ from 'jquery';
  * @typedef {Object} Tag
  * @property {string} label
  * @property {string} [icon]
+ * @property {string} [className]
+ * @property {string} [tip]
  */
 
 export default Component.extend(I18n, {
@@ -64,6 +66,12 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.tagsInput',
 
   /**
+   * @virtual
+   * @type {Array<Tag>}
+   */
+  tags: computed(() => []),
+
+  /**
    * @virtual optional
    * @type {ComputedProperty<number>}
    */
@@ -88,10 +96,10 @@ export default Component.extend(I18n, {
   isClearButtonVisible: false,
 
   /**
-   * @virtual
-   * @type {Array<Tag>}
+   * @virtual optional
+   * @type {SafeString|string}
    */
-  tags: computed(() => []),
+  editPlaceholder: undefined,
 
   /**
    * If provided, limits number of tags. When the number of existing tags
@@ -104,9 +112,15 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual optional
-   * @type {Array<String>}
+   * @type {string}
    */
   tagEditorComponentName: 'tags-input/text-editor',
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  startTagCreationOnInit: false,
 
   /**
    * Value passed to the tag editor component through `settings` property.
@@ -182,6 +196,13 @@ export default Component.extend(I18n, {
     'allowModification'
   ),
 
+  isPlaceholderEffectivelyVisible: and(
+    'allowModification',
+    'editPlaceholder',
+    not('tags.length'),
+    not('isCreatingTag'),
+  ),
+
   /**
    * @type {ComputedProperty<Number|undefined>}
    */
@@ -241,6 +262,14 @@ export default Component.extend(I18n, {
       this.endTagCreation();
     }
   }),
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (this.startTagCreationOnInit) {
+      this.startTagCreation();
+    }
+  },
 
   click(event) {
     this._super(...arguments);

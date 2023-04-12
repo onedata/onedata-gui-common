@@ -60,6 +60,15 @@ strong {
   @include fill-flex-using-column;
 }
 
+// Adding this class to top-level .fill-flex-using-column element of containers chain,
+// allows to add `min-height: 0` to some flex element and prevent flex containers to make
+// scrolled overflow content.
+.fill-flex-limited {
+  .fill-flex-using-column {
+    min-height: 0;
+  }
+}
+
 .flex-vertical-center {
   display: flex;
   align-items: center;

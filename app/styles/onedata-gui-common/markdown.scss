@@ -1,0 +1,63 @@
+.rendered-markdown {
+  table {
+    @extend .table;
+    @extend .table-striped;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    text-transform: none !important;
+    font-weight: normal !important;
+    line-height: normal !important;
+    letter-spacing: normal !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    &:first-child {
+      margin-top: 0.6em !important;
+    }
+  }
+
+  h1 {
+    font-family: $one-font-family-regular !important;
+    font-weight: bold !important;
+  }
+
+  h2, h3, h4, h5, h6 {
+    font-family: $one-font-family-semibold !important;
+    font-weight: normal !important;
+  }
+
+  @mixin markdown-header($level) {
+    h#{$level} {
+      $additional-length: (6 - $level) * 0.15;
+      font-size: 1em + $additional-length !important;
+      margin-top: 0.4em + $additional-length !important;
+      margin-bottom: 0.1em + $additional-length !important;
+    }
+  }
+
+  @for $i from 1 through 6 {
+    @include markdown-header($i);
+  }
+
+  // keep minimum size of header margins
+  h4, h5, h6 {
+    margin-top: 1.1em !important;
+    margin-bottom: 1em !important;
+  }
+
+  a {
+    @extend .azure;
+  }
+  p {
+    font-size: $font-size-base !important;
+    padding: 0 !important;
+  }
+}
+
+// Optional container to separate visually markdown from rest of view
+.markdown-container {
+  --markdown-container-background-color: #{$main-tabbed-content-background};
+
+  background-color: var(--markdown-container-background-color);
+  border: 1px solid #{$main-border-color};
+  border-radius: #{$border-radius-base};
+}
