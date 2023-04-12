@@ -276,8 +276,8 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       name: 'axis2',
       minInterval: null,
     }]);
-    expect(state.yAxes[0].valueFormatter(123)).to.equal('123');
-    expect(state.yAxes[1].valueFormatter(123)).to.equal('123');
+    expect(String(state.yAxes[0].valueFormatter(123))).to.equal('123');
+    expect(String(state.yAxes[1].valueFormatter(123))).to.equal('123');
   });
 
   it('calculates y axis state with custom value provider', async function () {
@@ -326,8 +326,8 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       name: 'axis2',
       minInterval: null,
     }]);
-    expect(state.yAxes[0].valueFormatter(-123)).to.equal('246');
-    expect(state.yAxes[1].valueFormatter(-123)).to.equal('-123');
+    expect(String(state.yAxes[0].valueFormatter(-123))).to.equal('246');
+    expect(String(state.yAxes[1].valueFormatter(-123))).to.equal('-123');
   });
 
   it('calculates y axis state with custom unit', async function () {
@@ -351,7 +351,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       name: 'axis1',
       minInterval: null,
     }]);
-    expect(state.yAxes[0].valueFormatter(1000)).to.equal('1 kB');
+    expect(String(state.yAxes[0].valueFormatter(1000))).to.equal('1 kB');
   });
 
   it('calculates y axis state with both custom unit and value provider', async function () {
@@ -383,7 +383,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       name: 'axis1',
       minInterval: null,
     }]);
-    expect(state.yAxes[0].valueFormatter(-1000)).to.equal('1 kB');
+    expect(String(state.yAxes[0].valueFormatter(-1000))).to.equal('1 kB');
   });
 
   it('calculates x axis state', async function () {
