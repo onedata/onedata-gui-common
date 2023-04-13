@@ -26,7 +26,6 @@ import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw'
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
-import { resolve } from 'rsvp';
 import ActionResult from 'onedata-gui-common/utils/action-result';
 
 /**
@@ -168,39 +167,46 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @param {boolean} undo
    * @returns {Promise<Utils.ActionResult>}
    */
-  internalExecute(undo = false) {
+  async internalExecute(undo = false) {
     if (this.disabled) {
       return;
     }
 
-    return resolve(undo ? this.onExecuteUndo() : this.onExecute())
-      .then(result => (!result || !result.interceptPromise) ? ActionResult.create({
-        status: 'done',
-        result,
-      }) : result)
-      .catch(result => (!result || !result.interceptPromise) ? ActionResult.create({
-        status: 'failed',
-        error: result,
-      }) : result)
-      .then(result => {
-        set(result, 'undo', Boolean(undo));
-        const executeHooksPromise = (this.executeHooks || []).reduce(
-          (hooksPromise, hook) => hooksPromise.then(() => hook(result, this)),
-          resolve()
-        );
+    let result;
+    try {
+      result = await (undo ? this.onExecuteUndo() : this.onExecute());
+      if (!result?.interceptPromise) {
+        result = ActionResult.create({
+          status: 'done',
+          result,
+        });
+      }
+    } catch (error) {
+      if (!error?.interceptPromise) {
+        result = ActionResult.create({
+          status: 'failed',
+          error,
+        });
+      } else {
+        result = error;
+      }
+    }
+    set(result, 'undo', undo);
 
-        return executeHooksPromise
-          .then(() => result)
-          .catch(error => ActionResult.create({
-            status: 'failed',
-            error,
-            undo,
-          }))
-          .then(result => {
-            this.notifyResult(result);
-            return result;
-          });
+    try {
+      for (const executeHook of this.executeHooks) {
+        await executeHook(result, this);
+      }
+    } catch (error) {
+      result = ActionResult.create({
+        status: 'failed',
+        error,
+        undo,
       });
+    }
+
+    this.notifyResult(result);
+    return result;
   },
 
   /**
