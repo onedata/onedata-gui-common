@@ -9,7 +9,6 @@
 import Action from 'onedata-gui-common/utils/action';
 import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import { ElementType } from '../common';
 
@@ -28,8 +27,6 @@ import { ElementType } from '../common';
  */
 
 export default Action.extend({
-  i18n: service(),
-
   /**
    * @virtual
    * @type {MoveElementActionContext}
@@ -94,13 +91,14 @@ export default Action.extend({
    */
   onExecute() {
     const oldParent = this.movedElement.parentSection;
+    const oldParentCollection = oldParent[this.collectionName];
     const movedElementOldIdx =
-      oldParent[this.collectionName].indexOf(this.movedElement);
+      oldParentCollection.indexOf(this.movedElement);
     let oldPosition = null;
-    if (movedElementOldIdx < oldParent[this.collectionName].length - 1) {
+    if (movedElementOldIdx < oldParentCollection.length - 1) {
       oldPosition = {
         placement: 'before',
-        referenceElement: oldParent[this.collectionName][movedElementOldIdx + 1],
+        referenceElement: oldParentCollection[movedElementOldIdx + 1],
       };
     }
     this.setProperties({
@@ -132,8 +130,9 @@ export default Action.extend({
       )
     );
 
+    const newParentCollection = newParent[this.collectionName];
     const referenceElementIdx = newPosition ?
-      newParent[this.collectionName].indexOf(newPosition.referenceElement) :
+      newParentCollection.indexOf(newPosition.referenceElement) :
       -1;
     let newElementIdx;
     if (referenceElementIdx > -1) {
@@ -143,12 +142,12 @@ export default Action.extend({
         newElementIdx = referenceElementIdx + 1;
       }
     } else {
-      newElementIdx = newParent[this.collectionName].length;
+      newElementIdx = newParentCollection.length;
     }
     set(newParent, this.collectionName, [
-      ...newParent[this.collectionName].slice(0, newElementIdx),
+      ...newParentCollection.slice(0, newElementIdx),
       this.movedElement,
-      ...newParent[this.collectionName].slice(newElementIdx),
+      ...newParentCollection.slice(newElementIdx),
     ]);
     set(this.movedElement, 'parentSection', newParent);
   },

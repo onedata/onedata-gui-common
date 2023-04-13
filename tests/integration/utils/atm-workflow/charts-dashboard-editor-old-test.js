@@ -11,6 +11,8 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-old';
 import { set } from '@ember/object';
 
+// TODO: VFS-10649 remove this file and use new editor component
+
 describe('Integration | Utility | atm-workflow/charts-dashboard-editor-old', function () {
   setupRenderingTest();
 

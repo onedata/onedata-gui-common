@@ -4,7 +4,7 @@
  * How to use:
  * - register done actions by calling `addActionToHistory(action)`,
  * - when you want to undo latest action, call `undo()`. You can do it multiple
- *   time and undo manu operations,
+ *   times and undo many operations,
  * - when you want to redo previously undone action, call `redo()`. You can
  *   do as many times as `undo` method was called.
  * - if you have reach the beginning of operation history, `undo()` will do
@@ -65,7 +65,7 @@ export default EmberObject.extend({
   willDestroy() {
     try {
       this.history.forEach((action) => action.destroy());
-      this.history.splice(0, this.history.length);
+      this.set('history', []);
     } finally {
       this._super(...arguments);
     }

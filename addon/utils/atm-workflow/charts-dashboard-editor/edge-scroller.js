@@ -123,6 +123,8 @@ export default class EdgeScroller {
       return;
     }
 
+    // Filtering out events with incorrect mouse coordinates. These may
+    // sometimes happen when the mouse pointer exits the browser window.
     if (event.pageX === 0 && event.pageY === 0) {
       this.changeVelocity(0);
       return;

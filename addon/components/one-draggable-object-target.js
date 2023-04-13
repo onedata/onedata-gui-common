@@ -6,9 +6,21 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { inject as service } from '@ember/service';
 import DraggableObjectTarget from 'ember-drag-drop/components/draggable-object-target';
 
 export default DraggableObjectTarget.extend({
+  dragDrop: service(),
+
+  /**
+   * @override
+   */
+  async handlePayload(payload, event) {
+    const obj = this.coordinator.getObject(payload, { target: this });
+    await this.dragDrop.latestDragPromise;
+    this.action?.(obj, { target: this, event: event });
+  },
+
   /**
    * @override
    */

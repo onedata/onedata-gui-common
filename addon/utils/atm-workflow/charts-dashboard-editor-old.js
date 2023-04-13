@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+// TODO: VFS-10649 remove this file and use new editor component
+
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 
 /**

@@ -9,7 +9,6 @@
 import Action from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { inject as service } from '@ember/service';
 import { ElementType } from '../common';
 
 /**
@@ -18,8 +17,6 @@ import { ElementType } from '../common';
  */
 
 export default Action.extend({
-  i18n: service(),
-
   /**
    * @virtual
    * @type {RemoveElementActionContext}

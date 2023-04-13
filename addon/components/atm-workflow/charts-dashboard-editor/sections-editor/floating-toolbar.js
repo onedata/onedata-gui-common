@@ -39,7 +39,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Array<{ name: string, icon: string }>>}
    */
-  actionsToRender: computed('model.elementType', function actionsArray() {
+  actionsToRender: computed('model.elementType', function actionsToRender() {
     const actions = [{
       name: 'duplicate',
       icon: 'browser-copy',

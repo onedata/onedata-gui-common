@@ -9,7 +9,6 @@
 import Action from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { inject as service } from '@ember/service';
 import {
   createNewChart,
   createNewSection,
@@ -23,11 +22,9 @@ import { ElementType } from '../common';
  */
 
 export default Action.extend({
-  i18n: service(),
-
   /**
    * @virtual
-   * @type {AddSubsectionActionContext}
+   * @type {AddElementActionContext}
    */
   context: undefined,
 
@@ -77,8 +74,10 @@ export default Action.extend({
    */
   onExecute() {
     if (!this.newElement) {
+      const elementOwner = this.targetSection.elementOwner;
       this.set('newElement', this.newElementType === ElementType.Section ?
-        createNewSection(this.i18n) : createNewChart(this.i18n)
+        createNewSection(this.i18n, elementOwner) :
+        createNewChart(this.i18n, elementOwner)
       );
     }
     set(this.newElement, 'parentSection', this.targetSection);

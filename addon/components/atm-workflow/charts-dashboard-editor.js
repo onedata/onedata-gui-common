@@ -31,7 +31,7 @@ export default Component.extend({
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Model>}
    */
   model: computed('dashboardSpec', function model() {
-    return createModelFromSpec(this.dashboardSpec);
+    return createModelFromSpec(this.dashboardSpec, this);
   }),
 
   /**
@@ -54,7 +54,7 @@ export default Component.extend({
         return;
       }
 
-      set(this.model, 'rootSection', createNewSection(this.i18n, true));
+      set(this.model, 'rootSection', createNewSection(this.i18n, this, true));
     },
 
     /**

@@ -1,6 +1,15 @@
 <div class="canvas-area">
-
+  <div class="no-config-info info-box">
+    <h2 class="header">{{tt this "noConfig.header"}}</h2>
+    <p class="description">
+      <a
+        class="clickable underlined azure edit-chart-content-trigger"
+      >{{tt this "noConfig.description.editContent"}}</a>
+      {{tt this "noConfig.description.toDefineConfig"}}
+    </p>
+  </div>
 </div>
+
 {{#if chart.title}}
   <div class="title-area">
     <span class="title-content">{{chart.title}}</span>

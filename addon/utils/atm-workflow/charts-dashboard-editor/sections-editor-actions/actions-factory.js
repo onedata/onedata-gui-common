@@ -1,5 +1,7 @@
 /**
- * Creates actions used by sections editor.
+ * Creates actions used by sections editor. Internally monitors each action
+ * execution and notifies about every such event through execute listeners (see
+ * `addExecuteListener` and `removeExecuteListeners`).
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH

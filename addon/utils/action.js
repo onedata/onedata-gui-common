@@ -12,12 +12,15 @@
  * 3. notifyResult() - notifies user using data from ActionResult. Notification can be
  *    changed/cancelled by simple overriding that method.
  *
+ * For undoing action (executeUndo()) algorithm is basically the same except
+ * calling `onExecuteUndo()` in the first step.
+ *
  * @author Michał Borzęcki
- * @copyright (C) 2019-2020 ACK CYFRONET AGH
+ * @copyright (C) 2019-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed, get } from '@ember/object';
+import EmberObject, { computed, get, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -26,65 +29,69 @@ import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import { resolve } from 'rsvp';
 import ActionResult from 'onedata-gui-common/utils/action-result';
 
+/**
+ * @typedef {(result: Utils.ActionResult, action: Utils.Action) => Promise<void>} ActionExecuteHook
+ */
+
 export default EmberObject.extend(I18n, OwnerInjector, {
   i18n: service(),
   globalNotify: service(),
 
   /**
-   * @virtual
-   * @type {Function}
-   * @returns {Promise<Utils.ActionResult>}
    * Performs action
+   * @virtual
+   * @private
+   * @type {() => Promise<Utils.ActionResult|undefined>)}
    */
   onExecute: notImplementedThrow,
 
   /**
-   * @virtual
-   * @type {Function}
-   * @returns {Promise<Utils.ActionResult>}
    * Performs action undo
+   * @virtual
+   * @private
+   * @type {() => Promise<Utils.ActionResult|undefined>)}
    */
   onExecuteUndo: notImplementedThrow,
 
   /**
    * @virtual optional
+   * @public
    * @type {string}
    */
   icon: undefined,
 
   /**
    * @virtual optional
+   * @public
    * @type {string}
    */
   tip: undefined,
 
   /**
    * @virtual optional
+   * @public
    * @type {string}
    */
   className: undefined,
 
   /**
    * @virtual optional
+   * @public
    * @type {boolean}
    */
   disabled: false,
 
   /**
-   * @virtual optional
-   * @type {any}
    * Action context. Can be used as a data source for execute().
+   * @virtual optional
+   * @public
+   * @type {any}
    */
   context: null,
 
   /**
-   * If true, then execution should be reversed (undone).
-   * @type {boolean}
-   */
-  undo: false,
-
-  /**
    * @virtual optional
+   * @public
    * @type {ComputedProperty<String>}
    */
   title: computed('i18nPrefix', function title() {
@@ -95,35 +102,78 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * Will be called just after the onExecute[Undo]() method. Are executed in
    * order and if some of them fails, then the following rest is not called.
    * Errors change action result.
-   * @type {ComputedProperty<Array<Function>>}
+   * @type {ComputedProperty<Array<ActionExecuteHook>>}
    */
   executeHooks: computed(() => []),
 
   /**
-   * @type {Ember.ComputedProperty<Function>}
    * Callback ready to use inside hbs action helper
+   * @public
+   * @readonly
+   * @type {Ember.ComputedProperty<() => Promise<Utils.ActionResult>>}
    */
   executeCallback: computed(function executeCallback() {
     return () => this.execute();
   }),
 
   /**
-   * @type {Ember.ComputedProperty<Function>}
    * An alias to `executeCallback` to preserve compatibility with old usages of
    * action object. Maybe to remove in future.
+   * @public
+   * @readonly
+   * @type {Ember.ComputedProperty<() => Promise<Utils.ActionResult>>}
    */
   action: reads('executeCallback'),
 
   /**
    * Executes action (onExecute and then execute hooks)
+   * @public
    * @returns {Promise<Utils.ActionResult>}
    */
-  execute() {
+  async execute() {
+    return await this.internalExecute();
+  },
+
+  /**
+   * Executes action (onExecuteUndo and then execute hooks)
+   * @public
+   * @returns {Promise<Utils.ActionResult>}
+   */
+  async executeUndo() {
+    return await this.internalExecute(true);
+  },
+
+  /**
+   * Adds new execute hook at the end of the hooks list
+   * @public
+   * @param {ActionExecuteHook} hookCallback
+   * @returns {void}
+   */
+  addExecuteHook(hookCallback) {
+    this.get('executeHooks').push(hookCallback);
+  },
+
+  /**
+   * Removes registered execute hook
+   * @public
+   * @param {ActionExecuteHook} hookCallback
+   * @returns {void}
+   */
+  removeExecuteHook(hookCallback) {
+    this.set('executeHooks', this.get('executeHooks').without(hookCallback));
+  },
+
+  /**
+   * @private
+   * @param {boolean} undo
+   * @returns {Promise<Utils.ActionResult>}
+   */
+  internalExecute(undo = false) {
     if (this.disabled) {
       return;
     }
 
-    return resolve(this.undo ? this.onExecuteUndo() : this.onExecute())
+    return resolve(undo ? this.onExecuteUndo() : this.onExecute())
       .then(result => (!result || !result.interceptPromise) ? ActionResult.create({
         status: 'done',
         result,
@@ -133,6 +183,7 @@ export default EmberObject.extend(I18n, OwnerInjector, {
         error: result,
       }) : result)
       .then(result => {
+        set(result, 'undo', Boolean(undo));
         const executeHooksPromise = (this.executeHooks || []).reduce(
           (hooksPromise, hook) => hooksPromise.then(() => hook(result, this)),
           resolve()
@@ -143,6 +194,7 @@ export default EmberObject.extend(I18n, OwnerInjector, {
           .catch(error => ActionResult.create({
             status: 'failed',
             error,
+            undo,
           }))
           .then(result => {
             this.notifyResult(result);
@@ -152,34 +204,8 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   },
 
   /**
-   * Executes action (onExecuteUndo and then execute hooks)
-   * @returns {Promise<Utils.ActionResult>}
-   */
-  async executeUndo() {
-    this.set('undo', true);
-    const result = await this.execute();
-    this.set('undo', false);
-    return result;
-  },
-
-  /**
-   * Adds new execute hook at the end of the hooks list
-   * @param {Function} hookCallback
-   */
-  addExecuteHook(hookCallback) {
-    this.get('executeHooks').push(hookCallback);
-  },
-
-  /**
-   * Removes registered execute hook
-   * @param {Function} hookCallback
-   */
-  removeExecuteHook(hookCallback) {
-    this.set('executeHooks', this.get('executeHooks').without(hookCallback));
-  },
-
-  /**
    * Returns text used to notify action success (passed to global-notify).
+   * @private
    * @param {Utils.ActionResult} [actionResult]
    * @returns {HtmlSafe}
    */
@@ -193,6 +219,7 @@ export default EmberObject.extend(I18n, OwnerInjector, {
 
   /**
    * Returns action name used notify action failure (passed to global-notify).
+   * @private
    * @param {Utils.ActionResult} [actionResult]
    * @returns {HtmlSafe}
    */
@@ -208,7 +235,9 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   },
 
   /**
+   * @private
    * @param {Utils.ActionResult} [actionResult]
+   * @returns {void}
    */
   notifySuccess(actionResult) {
     const successText = this.getSuccessNotificationText(actionResult);
@@ -218,7 +247,9 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   },
 
   /**
+   * @private
    * @param {Utils.ActionResult} [actionResult]
+   * @returns {void}
    */
   notifyFailure(actionResult) {
     const failureActionName = this.getFailureNotificationActionName(actionResult);
@@ -229,7 +260,9 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   },
 
   /**
+   * @private
    * @param {Utils.ActionResult} actionResult
+   * @returns {void}
    */
   notifyResult(actionResult) {
     switch (get(actionResult || {}, 'status')) {

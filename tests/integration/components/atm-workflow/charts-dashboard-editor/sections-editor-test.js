@@ -16,7 +16,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 
   beforeEach(function () {
     this.setProperties({
-      rootSection: createNewSection(this.owner.lookup('service:i18n'), true),
+      rootSection: createNewSection(this.owner.lookup('service:i18n'), null, true),
       onRemoveDashboard: sinon.spy(),
     });
   });

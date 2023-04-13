@@ -43,6 +43,18 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     expect(find('.floating-toolbar')).to.exist;
   });
 
+  it('shows information about lack of configuration', async function () {
+    await renderComponent();
+
+    expect(find('.no-config-info .header'))
+      .to.contain.text('This chart is not configured yet.');
+    // Using innerText as the element text contains extra whitespaces
+    expect(find('.no-config-info .description').innerText)
+      .to.equal('Edit content to define series and axes.');
+    expect(find('.no-config-info .description .edit-chart-content-trigger'))
+      .to.contain.text('Edit content');
+  });
+
   it('triggers action on action trigger click in floating toolbar', async function () {
     const executeSpy = sinon.spy();
     this.actionsFactory.createRemoveElementAction = sinon.spy(() => ({

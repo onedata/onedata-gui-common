@@ -19,6 +19,13 @@ const Chart = EmberObject.extend({
 
   /**
    * @public
+   * @readonly
+   * @type {unknown}
+   */
+  elementOwner: null,
+
+  /**
+   * @public
    * @virtual optional
    * @type {string}
    */
@@ -43,6 +50,9 @@ const Chart = EmberObject.extend({
    */
   willDestroy() {
     try {
+      if (this.elementOwner) {
+        this.set('elementOwner', null);
+      }
       if (this.parentSection) {
         this.set('parentSection', null);
       }
@@ -57,6 +67,7 @@ const Chart = EmberObject.extend({
    */
   clone() {
     return Chart.create({
+      elementOwner: this.elementOwner,
       title: this.title,
       titleTip: this.titleTip,
       parentSection: this.parentSection,

@@ -11,6 +11,17 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 
+const duplicateActionSpec = {
+  className: 'duplicate-action',
+  icon: 'browser-copy',
+  tip: 'Duplicate',
+};
+const removeActionSpec = {
+  className: 'remove-action',
+  icon: 'browser-delete',
+  tip: 'Remove',
+};
+
 describe('Integration | Component | atm-workflow/charts-dashboard-editor/sections-editor/floating-toolbar',
   function () {
     setupRenderingTest();
@@ -30,21 +41,10 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
         this.set('model', createSection(this));
       });
 
-      it('shows "duplicate" and "remove" actions for section model', async function () {
-        await renderComponent();
-
-        const actions = findAll('.action');
-        expect(actions).to.have.length(2);
-        expect(actions[0]).to.have.class('duplicate-action');
-        expect(actions[0]).to.contain('.oneicon-browser-copy');
-        expect(await new OneTooltipHelper(actions[0]).getText())
-          .to.equal('Duplicate');
-        expect(actions[1]).to.have.class('remove-action');
-        expect(actions[1]).to.contain('.oneicon-browser-delete');
-        expect(await new OneTooltipHelper(actions[1]).getText())
-          .to.equal('Remove');
-      });
-
+      itShowsActions('section', [
+        duplicateActionSpec,
+        removeActionSpec,
+      ]);
       itTriggersDuplicateAction();
       itTriggersRemoveAction();
     });
@@ -54,21 +54,10 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
         this.set('model', createChart(this));
       });
 
-      it('shows "duplicate" and "remove" actions for section model', async function () {
-        await renderComponent();
-
-        const actions = findAll('.action');
-        expect(actions).to.have.length(2);
-        expect(actions[0]).to.have.class('duplicate-action');
-        expect(actions[0]).to.contain('.oneicon-browser-copy');
-        expect(await new OneTooltipHelper(actions[0]).getText())
-          .to.equal('Duplicate');
-        expect(actions[1]).to.have.class('remove-action');
-        expect(actions[1]).to.contain('.oneicon-browser-delete');
-        expect(await new OneTooltipHelper(actions[1]).getText())
-          .to.equal('Remove');
-      });
-
+      itShowsActions('chart', [
+        duplicateActionSpec,
+        removeActionSpec,
+      ]);
       itTriggersDuplicateAction();
       itTriggersRemoveAction();
     });
@@ -125,5 +114,20 @@ function itTriggersRemoveAction() {
     expect(this.actionsFactory.createRemoveElementAction).to.be.calledOnce
       .and.calledWith({ elementToRemove: this.model });
     expect(executeSpy).to.be.calledOnce;
+  });
+}
+
+function itShowsActions(modelType, actions) {
+  it(`shows actions for ${modelType} model`, async function () {
+    await renderComponent();
+
+    const actionElements = findAll('.action');
+    expect(actionElements).to.have.length(actions.length);
+    for (let i = 0; i < actions.length; i++) {
+      expect(actionElements[i]).to.have.class(actions[i].className);
+      expect(actionElements[i]).to.contain(`.oneicon-${actions[i].icon}`);
+      expect(await new OneTooltipHelper(actionElements[i]).getText())
+        .to.equal(actions[i].tip);
+    }
   });
 }

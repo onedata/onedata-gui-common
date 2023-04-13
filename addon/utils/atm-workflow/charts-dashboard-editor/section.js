@@ -18,6 +18,13 @@ const Section = EmberObject.extend({
   elementType: ElementType.Section,
 
   /**
+   * @public
+   * @readonly
+   * @type {unknown}
+   */
+  elementOwner: null,
+
+  /**
    * If this is `true` then this section is a root (top) section. There is only
    * one root section in the dashboard and it contains all other sections and
    * charts.
@@ -87,6 +94,9 @@ const Section = EmberObject.extend({
    */
   willDestroy() {
     try {
+      if (this.elementOwner) {
+        this.set('elementOwner', null);
+      }
       if (this.charts.length) {
         this.charts.forEach((chart) => chart.destroy());
         this.set('charts', []);
@@ -109,6 +119,7 @@ const Section = EmberObject.extend({
    */
   clone() {
     return Section.create({
+      elementOwner: this.elementOwner,
       isRoot: this.isRoot,
       title: this.title,
       titleTip: this.titleTip,

@@ -65,13 +65,20 @@ export default OneDraggableObject.extend(I18n, {
   /**
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null>}
    */
-  draggedChart: computed('dragDrop.draggedElementModel', function draggedChart() {
-    if (this.dragDrop.draggedElementModel?.elementType === ElementType.Chart) {
-      return this.dragDrop.draggedElementModel;
-    } else {
-      return null;
+  draggedChart: computed(
+    'dragDrop.draggedElementModel',
+    'chart.elementOwner',
+    function draggedChart() {
+      if (
+        this.dragDrop.draggedElementModel?.elementType === ElementType.Chart &&
+        this.dragDrop.draggedElementModel?.elementOwner === this.chart.elementOwner
+      ) {
+        return this.dragDrop.draggedElementModel;
+      } else {
+        return null;
+      }
     }
-  }),
+  ),
 
   /**
    * @type {ComputedProperty<boolean>}
@@ -111,9 +118,6 @@ export default OneDraggableObject.extend(I18n, {
      * @returns {void}
      */
     async acceptDraggedElement(placement, draggedElement) {
-      // Wait for drag promise to resolve. It allows to execute `dragend`
-      // handlers before unmounting components (by action below).
-      await this.dragDrop.latestDragPromise;
       const action = this.actionsFactory.createMoveElementAction({
         movedElement: draggedElement,
         newParent: this.chart.parentSection,

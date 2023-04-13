@@ -9,7 +9,6 @@
 import Action from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { inject as service } from '@ember/service';
 import { ElementType } from '../common';
 
 /**
@@ -18,8 +17,6 @@ import { ElementType } from '../common';
  */
 
 export default Action.extend({
-  i18n: service(),
-
   /**
    * @virtual
    * @type {DuplicateElementActionContext}
@@ -74,12 +71,13 @@ export default Action.extend({
     }
 
     const parent = this.elementToDuplicate.parentSection;
+    const parentCollection = parent[this.collectionName];
     const elementIndexInParent =
-      parent[this.collectionName].indexOf(this.elementToDuplicate);
+      parentCollection.indexOf(this.elementToDuplicate);
     set(parent, this.collectionName, [
-      ...parent[this.collectionName].slice(0, elementIndexInParent),
+      ...parentCollection.slice(0, elementIndexInParent),
       this.createdDuplicate,
-      ...parent[this.collectionName].slice(elementIndexInParent),
+      ...parentCollection.slice(elementIndexInParent),
     ]);
     set(this.createdDuplicate, 'parentSection', parent);
   },

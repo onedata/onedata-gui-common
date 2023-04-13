@@ -26,6 +26,10 @@
 
   .sections-editor {
     $section-padding: 1em;
+    $edge-drag-target-trigger-size: 2 * $section-padding;
+    $edge-drag-target-trigger-offset: $section-padding;
+    $edge-drag-target-box-size: 0.5 * $section-padding;
+    $edge-drag-target-box-offset: 0.25 * $section-padding;
     display: grid;
     min-height: 0;
     grid-template-columns: 1fr 15em;
@@ -67,64 +71,78 @@
         position: absolute;
         top: 0;
         height: 100%;
-        width: 2 * $section-padding;
+        width: $edge-drag-target-trigger-size;
 
         &.accepts-drag::before {
           top: 0;
           height: 100%;
-          width: 0.5 * $section-padding;
+          width: $edge-drag-target-box-size;
         }
       }
 
       > .before-drag-target {
         left: 0;
-        transform: translateX(-1px) translateX(#{-$section-padding});
+        transform: translateX(-1px) translateX(#{-$edge-drag-target-trigger-offset});
 
         &.accepts-drag::before {
-          left: 0.25 * $section-padding;
+          left: $edge-drag-target-box-offset;
         }
       }
 
       > .after-drag-target {
         right: 0;
-        transform: translateX(1px) translateX(#{$section-padding});
+        transform: translateX(1px) translateX(#{$edge-drag-target-trigger-offset});
 
         &.accepts-drag::before {
-          right: 0.25 * $section-padding;
+          right: $edge-drag-target-box-offset;
         }
       }
     }
 
     .section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $section-padding;
+
+      .section-header,
+      .section-charts,
+      .section-subsections {
+        flex-basis: 100%;
+      }
+
+      > * {
+        margin: 0;
+      }
+
       > .before-drag-target,
       > .after-drag-target {
         position: absolute;
         left: 0;
         width: 100%;
-        height: 2 * $section-padding;
+        height: $edge-drag-target-trigger-size;
 
         &.accepts-drag::before {
           left: 0;
           width: 100%;
-          height: 0.5 * $section-padding;
+          height: $edge-drag-target-box-size;
         }
       }
 
       > .before-drag-target {
         top: 0;
-        transform: translateY(-1px) translateY(#{-$section-padding});
+        transform: translateY(-1px) translateY(#{-$edge-drag-target-trigger-offset});
 
         &.accepts-drag::before {
-          top: 0.25 * $section-padding;
+          top: $edge-drag-target-box-offset;
         }
       }
 
       > .after-drag-target {
         bottom: 0;
-        transform: translateY(1px) translateY(#{$section-padding});
+        transform: translateY(1px) translateY(#{$edge-drag-target-trigger-offset});
 
         &.accepts-drag::before {
-          bottom: 0.25 * $section-padding;
+          bottom: $edge-drag-target-box-offset;
         }
       }
 
@@ -198,7 +216,8 @@
 
       .action {
         padding: 0.1em;
-        line-height: 0;
+        height: 1.2em;
+        line-height: 1;
         font-size: 130%;
 
         &:hover {
@@ -230,8 +249,8 @@
 
     .large-trigger {
       display: inline-grid;
-      padding: 2em;
-      border: 1px dashed $block-border-transparent-color;
+      padding: 1em 2em;
+      border: 1px dashed rgba(0, 0, 0, 0.2);;
       border-radius: $border-radius-base;
 
       .one-icon {
