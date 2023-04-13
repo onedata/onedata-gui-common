@@ -49,21 +49,21 @@ export default EmberObject.extend(Evented, {
 
   //#endregion
 
-  init() {
-    this._super(...arguments);
-    this.intervalObserver();
-  },
-
   intervalObserver: observer('interval', function intervalObserver() {
     if (this.interval === this.lastInterval) {
       return;
     }
     this.set('lastInterval', this.interval);
     this.restartInterval();
-    if (this.interval && this.interval > 0 && this.immediate) {
+    if (this.interval > 0 && this.immediate) {
       this.notify();
     }
   }),
+
+  init() {
+    this._super(...arguments);
+    this.intervalObserver();
+  },
 
   destroy() {
     try {
