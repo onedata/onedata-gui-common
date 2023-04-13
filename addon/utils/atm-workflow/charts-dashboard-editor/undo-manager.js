@@ -11,6 +11,10 @@
  *   nothing. The same when you have reached the newest operation and called
  *   `redo()`.
  *
+ * NOTE: This implementation assumes that actions are executed immediately.
+ * In case of appearance of any async action execution, there will be a need of
+ * refactor.
+ *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
