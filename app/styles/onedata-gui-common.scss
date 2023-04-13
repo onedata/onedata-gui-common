@@ -71,6 +71,7 @@ $one-list-item-active-left-border-width: 8px;
 
 $sidemenu-header-height: 90px;
 $content-col-padding: 30px;
+$content-col-padding-tablet: $padding-large-horizontal;
 $content-header-font-size: 1.25em;
 $onedata-logo-height: 35px;
 $onedata-logo-margin-top: $content-col-padding;
@@ -91,8 +92,10 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 @import 'onedata-gui-common/spin-spinner-extensions';
 @import 'onedata-gui-common/jvectormap-overrides';
 @import 'onedata-gui-common/public-route';
+@import 'onedata-gui-common/markdown';
 
 @import 'ember-power-select-config';
+@import 'ace-config';
 
 // Utils
 
@@ -204,6 +207,7 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 @import 'onedata-gui-common/components/one-file-icon';
 @import 'onedata-gui-common/components/error-inline';
 @import 'onedata-gui-common/components/record-info-popover';
+@import 'onedata-gui-common/components/one-markdown-to-html';
 @import 'onedata-gui-common/components/record-info-with-icon';
 @import 'onedata-gui-common/components/flippable-icons';
 @import 'onedata-gui-common/components/record-name';

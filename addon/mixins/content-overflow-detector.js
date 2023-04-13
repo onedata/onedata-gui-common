@@ -1,7 +1,8 @@
 /**
  * Mixin for element overflow detection. It checks, if there is enough
  * place for a given element. Overflow status is available via hasOverflow field.
- * It works using algorithm (pseudo-code):
+ * It can detect overflow only in one dimension: width or height.
+ * It works using algorithm (pseudo-code) - assuming, that the dimension is width:
  *
  * ```
  * if (window.width < minimumFullWindowSize) hasOverflow = true
@@ -9,8 +10,9 @@
  *    overflowElement.width + overflowSiblingsElements.widthSum + additionalOverflowMargin
  * ```
  *
- * @author Michał Borzęcki
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @module mixins/content-overflow-detector
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2017-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -18,6 +20,7 @@ import Mixin from '@ember/object/mixin';
 
 import { run } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import { camelize } from '@ember/string';
 import dom from 'onedata-gui-common/utils/dom';
 
 export default Mixin.create({
@@ -30,6 +33,11 @@ export default Mixin.create({
   onOverflowRecomputed: undefined,
 
   /**
+   * @type {'width'|'height'}
+   */
+  overflowDimension: 'width',
+
+  /**
    * Element, whose overflow is being checked
    * To inject.
    * @type {HTMLElement}
@@ -37,14 +45,14 @@ export default Mixin.create({
   overflowElement: null,
 
   /**
-   * Container element, whose width is taken as an available place for the
+   * Container element, whose size is taken as an available place for the
    * checked element. Default is overflowElement.parentElement
    * @type {HTMLElement}
    */
   overflowParentElement: null,
 
   /**
-   * Elements that takes space (width) in container
+   * Elements that takes space (in selected dimension) in container
    * (parent) and must be taken into account while
    * calculating space for checked element.
    * Default is overflowElement sibling elements.
@@ -60,7 +68,7 @@ export default Mixin.create({
 
   /**
    * Additional margin for checked element.
-   * If element.width + additionalOverflowMargin < available place, then
+   * If element.width (or height) + additionalOverflowMargin < available place, then
    * hasOverflow = true
    * @type {number}
    */
@@ -73,7 +81,8 @@ export default Mixin.create({
   overflowDetectionDelay: 50,
 
   /**
-   * For any window width less than this value, hasOverflow will always be true
+   * For any window width (or height) less than this value, hasOverflow will always be
+   * true.
    * @type {number}
    */
   minimumFullWindowSize: 0,
@@ -158,29 +167,33 @@ export default Mixin.create({
       '_window'
     );
 
-    if (minimumFullWindowSize && _window.innerWidth < minimumFullWindowSize) {
+    const sizeProperty = this.overflowDimension;
+    const innerSizeProperty = camelize(`inner-${sizeProperty}`);
+    const sizeFunction = dom[sizeProperty];
+
+    if (minimumFullWindowSize && _window[innerSizeProperty] < minimumFullWindowSize) {
       this.changeHasOverflow(true);
       return;
     }
 
-    let elementWidth = dom.width(overflowElement, dom.LayoutBox.MarginBox);
+    let elementSize = sizeFunction(overflowElement, dom.LayoutBox.MarginBox);
     if (dom.isHidden(overflowElement)) {
       const previousCss = overflowElement.getAttribute('style');
       const newCss = previousCss +
         ';position: absolute !important; visibility: hidden !important; display: block !important;';
       // shows element using standard display:block (but it is hidden from user)
-      // after that we can measure its width as if it was visible and
+      // after that we can measure its size as if it was visible and
       // then we fallback to previous styles
       overflowElement.setAttribute('style', newCss);
-      elementWidth = dom.width(overflowElement, dom.LayoutBox.MarginBox);
+      elementSize = sizeFunction(overflowElement, dom.LayoutBox.MarginBox);
       overflowElement.setAttribute('style', previousCss ? previousCss : '');
     }
-    const parentWidth = dom.width(overflowParentElement, dom.LayoutBox.ContentBox);
-    const siblingsWidth = overflowSiblingsElements
-      .map(sibling => dom.width(sibling, dom.LayoutBox.MarginBox))
+    const parentSize = sizeFunction(overflowParentElement, dom.LayoutBox.ContentBox);
+    const siblingsSize = overflowSiblingsElements
+      .map(sibling => sizeFunction(sibling, dom.LayoutBox.MarginBox))
       .reduce((prev, curr) => prev + curr, 0);
     const newHasOverflow =
-      parentWidth - siblingsWidth < elementWidth + additionalOverflowMargin;
+      parentSize - siblingsSize < elementSize + additionalOverflowMargin;
     this.changeHasOverflow(newHasOverflow);
   },
 
