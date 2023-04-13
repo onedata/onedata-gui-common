@@ -440,7 +440,7 @@ $brand-info-height: $one-list-item-line-height;
     padding: $content-col-padding;
 
     @media (max-width: $screen-sm-max) {
-      padding: $padding-large-horizontal;
+      padding: $content-col-padding-tablet;
     }
 
     @media (max-width: $screen-xs-max) {

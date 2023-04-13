@@ -54,13 +54,21 @@
     cursor: pointer;
   }
 
-  @media (max-width: $screen-sm-max) {
-    .collapsible-toolbar-toggle {
-      display: none;
+  // By default, the `with-menu` class is intended to use with the menu that is always
+  // collapsed (there are no collapsible buttons) and should not be presented in tablet
+  // mode. This is typical situation, when actions are moved to main three-dots menu on
+  // the top. If you want to use buttons, that are collapsed into menu when there is no
+  // space and buttons/menu should be always visible, use special class
+  // `with-visible-collapsible-menu`.
+  &:not(.with-visible-collapsible-menu) {
+    @media (max-width: $screen-sm-max) {
+      .collapsible-toolbar-toggle {
+        display: none;
+      }
     }
-  }
-  @media (min-width: $screen-md-min) {
-    padding-right: 30px;
+    @media (min-width: $screen-md-min) {
+      padding-right: 30px;
+    }
   }
 
   .icon-dot {
