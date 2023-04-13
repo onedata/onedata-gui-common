@@ -412,8 +412,7 @@ export default ArraySlice.extend(Evented, {
       fetchStartIndex = null;
     }
 
-    // when reload from head is done, set length explicitly, no matter what chunk size is
-    const targetLength = this.length || (this.endIndex - this.startIndex);
+    const lengthBeforeFetch = this.length || (this.endIndex - this.startIndex);
 
     try {
       const { arrayUpdate, endReached } = await this.fetchWrapper(
@@ -435,8 +434,8 @@ export default ArraySlice.extend(Evented, {
         this.setProperties({
           emptyIndex: -1,
           startIndex: 0,
-          endIndex: targetLength <= 0 ?
-            fetchedCount : Math.min(targetLength, fetchedCount),
+          endIndex: lengthBeforeFetch <= 0 ?
+            fetchedCount : Math.min(lengthBeforeFetch, fetchedCount),
         });
       } else {
         this.setEmptyIndex(_start - 1);
