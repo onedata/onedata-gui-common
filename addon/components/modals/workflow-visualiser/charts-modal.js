@@ -18,7 +18,7 @@ import {
   default as ChartsDashboardEditor,
   formValueToChartsDashboardSpec,
   chartsDashboardSpecToFormValue,
-} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-old';
 import { tag, not } from 'ember-awesome-macros';
 
 /**

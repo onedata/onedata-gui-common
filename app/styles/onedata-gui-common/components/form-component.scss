@@ -147,7 +147,8 @@ $form-component-view-margin: $padding-base-vertical;
       padding-top: initial;
     }
 
-    &.dropdown-field-renderer {
+    &.dropdown-field-renderer,
+    &.custom-value-dropdown-field-renderer {
       .dropdown-field .oneicon {
         font-size: 2.2em;
         vertical-align: middle;
@@ -158,7 +159,8 @@ $form-component-view-margin: $padding-base-vertical;
 
     &.text-like-field-renderer,
     &.textarea-field-renderer,
-    &.dropdown-field-renderer {
+    &.dropdown-field-renderer,
+    &.custom-value-dropdown-field-renderer {
       .field-component {
         word-wrap: break-word;
       }
@@ -329,4 +331,92 @@ $form-component-view-margin: $padding-base-vertical;
 
 .dropdown-field-dropdown {
   max-height: 300px;
+}
+
+.custom-value-dropdown-field-dropdown {
+  .ember-power-select-options {
+    .custom-value-trigger-input {
+      display: none;
+    }
+    .custom-option-label-prefix {
+      font-style: italic;
+    }
+    .custom-option-label-prefix + .custom-option-value {
+      margin-left: 0.5em;
+    }
+    .custom-option-value {
+      opacity: $disabled-opacity;
+    }
+  }
+}
+
+.custom-value-dropdown-field-trigger {
+  --dropdown-arrow-separator-spacing: #{$ember-power-select-trigger-ltr-padding};
+  .ember-power-select-selected-item {
+    padding-right: var(--dropdown-arrow-separator-spacing);
+
+    .custom-value-dropdown-option-content {
+      display: none;
+    }
+    .custom-value-option {
+      position: relative;
+      margin-top: -$ember-power-select-trigger-ltr-padding;
+      padding-top: $ember-power-select-trigger-ltr-padding;
+      margin-bottom: -$ember-power-select-trigger-ltr-padding;
+      padding-bottom: $ember-power-select-trigger-ltr-padding;
+      margin-left: -$ember-power-select-option-large-padding-horizontal;
+      padding-left: $ember-power-select-option-large-padding-horizontal;
+      cursor: text;
+
+      &::before {
+        $vertical-spacing: 8px;
+        position: absolute;
+        content: '';
+        right: 0;
+        top: $vertical-spacing;
+        bottom: $vertical-spacing;
+        border-right: 1px solid $main-border-color;
+      }
+
+      .one-icon {
+        margin-left: $ember-power-select-option-large-padding-horizontal;
+      }
+    }
+    input.custom-value-trigger-input {
+      position: relative;
+      outline: none;
+      border: none;
+      background: none;
+      padding: 0;
+      margin: 0;
+      padding-left: 0;
+      padding-right: var(--dropdown-arrow-separator-spacing);
+      width: 100%;
+    }
+  }
+}
+
+.ember-power-select-trigger.custom-value-dropdown-field-trigger.small,
+.form-group-sm .ember-power-select-trigger.custom-value-dropdown-field-trigger {
+  --dropdown-arrow-separator-spacing: 8px;
+  .ember-power-select-selected-item {
+    .custom-value-option {
+      // adding 2px becasue of top/bottom 1px border
+      margin: #{-$ember-power-select-option-small-padding-vertical - 1px} #{-$ember-power-select-option-small-padding-horizontal - 1px};
+      padding: #{$ember-power-select-option-small-padding-vertical + 1px} #{$ember-power-select-option-small-padding-horizontal + 1px};
+      min-height: $input-height-small - 2px;
+      margin-right: 0;
+      padding-right: 0;
+
+      .one-icon {
+        margin-left: $ember-power-select-option-small-padding-horizontal;
+      }
+
+      &::before {
+        $vertical-spacing: 6px;
+        top: $vertical-spacing;
+        bottom: $vertical-spacing;
+      }
+    }
+  }
 }

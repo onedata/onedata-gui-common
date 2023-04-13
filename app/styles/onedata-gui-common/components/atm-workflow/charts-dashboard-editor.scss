@@ -1,0 +1,286 @@
+.charts-dashboard-editor {
+  display: grid;
+  min-height: 0;
+  border: 1px solid $main-border-color;
+  border-radius: $border-radius-base;
+  background-color: $color-one-white;
+
+  .info-box {
+    align-self: center;
+    text-align: center;
+
+    > * {
+      margin-top: 1em;
+      margin-bottom: 0;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    h2 {
+      @include font-semibold();
+      font-size: 1.2em;
+    }
+  }
+
+  .sections-editor {
+    $section-padding: 1em;
+    $edge-drag-target-trigger-size: 2 * $section-padding;
+    $edge-drag-target-trigger-offset: $section-padding;
+    $edge-drag-target-box-size: 0.5 * $section-padding;
+    $edge-drag-target-box-offset: 0.25 * $section-padding;
+    display: grid;
+    min-height: 0;
+    grid-template-columns: 1fr 15em;
+    grid-template-rows: min-content 1fr;
+
+    .editor-toolbar {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0.3em;
+      gap: 0.3em;
+      border-bottom: 1px solid $main-border-color;
+    }
+
+    .dashboard-visualiser {
+      padding: 3em;
+      background-image: linear-gradient(
+        135deg,
+        $color-one-white 25%,
+        $block-background-color 25%,
+        $block-background-color 50%,
+        $color-one-white 50%,
+        $color-one-white 75%,
+        $block-background-color 75%,
+        $block-background-color 100%,
+      );
+      background-size: 1em 1em;
+      border-bottom-left-radius: $border-radius-base;
+    }
+
+    .chart,
+    .section {
+      position: relative;
+    }
+
+    .chart {
+      > .before-drag-target,
+      > .after-drag-target {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: $edge-drag-target-trigger-size;
+
+        &.accepts-drag::before {
+          top: 0;
+          height: 100%;
+          width: $edge-drag-target-box-size;
+        }
+      }
+
+      > .before-drag-target {
+        left: 0;
+        transform: translateX(-1px) translateX(#{-$edge-drag-target-trigger-offset});
+
+        &.accepts-drag::before {
+          left: $edge-drag-target-box-offset;
+        }
+      }
+
+      > .after-drag-target {
+        right: 0;
+        transform: translateX(1px) translateX(#{$edge-drag-target-trigger-offset});
+
+        &.accepts-drag::before {
+          right: $edge-drag-target-box-offset;
+        }
+      }
+    }
+
+    .section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $section-padding;
+
+      .section-header,
+      .section-charts,
+      .section-subsections {
+        flex-basis: 100%;
+      }
+
+      > * {
+        margin: 0;
+      }
+
+      > .before-drag-target,
+      > .after-drag-target {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: $edge-drag-target-trigger-size;
+
+        &.accepts-drag::before {
+          left: 0;
+          width: 100%;
+          height: $edge-drag-target-box-size;
+        }
+      }
+
+      > .before-drag-target {
+        top: 0;
+        transform: translateY(-1px) translateY(#{-$edge-drag-target-trigger-offset});
+
+        &.accepts-drag::before {
+          top: $edge-drag-target-box-offset;
+        }
+      }
+
+      > .after-drag-target {
+        bottom: 0;
+        transform: translateY(1px) translateY(#{$edge-drag-target-trigger-offset});
+
+        &.accepts-drag::before {
+          bottom: $edge-drag-target-box-offset;
+        }
+      }
+
+      > .inside-drag-target {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        &.accepts-drag {
+          &::before {
+            top: -1px;
+            bottom: -1px;
+            left: -1px;
+            right: -1px;
+          }
+
+          & ~ * .chart:not(.is-dragging-object) {
+            opacity: 0.5;
+            pointer-events: none;
+
+            .draggable-object-target {
+              pointer-events: initial;
+            }
+          }
+        }
+
+        + * {
+          margin-top: 0;
+        }
+      }
+    }
+
+    .draggable-object-target {
+      margin: 0;
+
+      &::before {
+        content: '';
+        display: none;
+        position: absolute;
+        background-color: rgba(#000, 0.1);
+        border: 0.2em dashed rgba(#000, 0.2);
+        border-radius: $border-radius-base;
+        pointer-events: none;
+      }
+
+      &.accepts-drag::before {
+        display: block;
+      }
+    }
+
+    .root-section {
+      background-color: $block-background-color;
+      border-color: $block-border-color;
+    }
+
+    .floating-toolbar {
+      position: absolute;
+      top: 0;
+      right: 1em;
+      transform: translateY(-50%);
+      margin: 0;
+      display: flex;
+      border: 1px solid $main-border-color;
+      border-radius: $border-radius-base;
+      background-color: $color-one-white;
+      opacity: 0;
+      pointer-events: none;
+      transition: transition-ease(opacity);
+
+      .action {
+        padding: 0.1em;
+        height: 1.2em;
+        line-height: 1;
+        font-size: 130%;
+
+        &:hover {
+          color: $color-one-azure;
+        }
+
+        & + .action {
+          border-left: 1px solid $main-border-color;
+        }
+      }
+
+      .remove-action:hover {
+        color: $color-one-danger;
+      }
+    }
+
+    .hovered > .floating-toolbar {
+      opacity: 0.75;
+      pointer-events: initial;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .is-dragging-object > .floating-toolbar {
+      display: none;
+    }
+
+    .large-trigger {
+      display: inline-grid;
+      padding: 1em 2em;
+      border: 1px dashed rgba(0, 0, 0, 0.2);;
+      border-radius: $border-radius-base;
+
+      .one-icon {
+        margin-right: 0.4em;
+        font-size: 1.5em;
+        line-height: 0;
+        vertical-align: -0.3em;
+      }
+
+      &:hover {
+        background-color: $block-background-transparent-color;
+      }
+    }
+
+    .editor-sidebar {
+      border-left: 1px solid $main-border-color;
+    }
+
+    @media (max-width: $screen-xs-max) {
+      grid-template-columns: 1fr;
+      grid-template-rows: min-content 1fr min-content;
+
+      .dashboard-visualiser {
+        border-radius: 0;
+      }
+
+      .editor-sidebar {
+        border-top: 1px solid $main-border-color;
+        border-left: 0;
+      }
+    }
+  }
+}

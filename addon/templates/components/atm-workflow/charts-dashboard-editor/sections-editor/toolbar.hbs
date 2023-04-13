@@ -1,0 +1,41 @@
+{{#one-button
+  class="undo-btn"
+  type="default"
+  size="sm"
+  disabled=(not undoManager.canUndo)
+  onClick=(action "undo")
+}}
+  {{one-icon icon="undo"}}
+  <span class="text">{{tt this "undo"}}</span>
+{{/one-button}}
+
+{{#one-button
+  class="redo-btn"
+  type="default"
+  size="sm"
+  disabled=(not undoManager.canRedo)
+  onClick=(action "redo")
+}}
+  {{one-icon icon="redo"}}
+  <span class="text">{{tt this "redo"}}</span>
+{{/one-button}}
+
+{{#one-button
+  class="remove-dashboard-btn"
+  type="danger"
+  size="sm"
+  onClick=(action
+    (mut isRemoveDashboardConfirmationOpened)
+    (not isRemoveDashboardConfirmationOpened)
+  )
+}}
+  {{one-icon icon="browser-delete"}}
+  <span class="text">{{tt this "removeDashboard"}}</span>
+  {{remove-ack-popover
+    triggerSelector=(local-selector elementId ".remove-dashboard-btn")
+    isOpened=isRemoveDashboardConfirmationOpened
+    question=(tt this "removeDashboardConfirmation")
+    onConfirm=(action "removeDashboard")
+    onClose=(action (mut isRemoveDashboardConfirmationOpened) false)
+  }}
+{{/one-button}}

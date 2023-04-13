@@ -1,0 +1,38 @@
+<div class="canvas-area">
+  <div class="no-config-info info-box">
+    <h2 class="header">{{tt this "noConfig.header"}}</h2>
+    <p class="description">
+      <a
+        class="clickable underlined azure edit-chart-content-trigger"
+      >{{tt this "noConfig.description.editContent"}}</a>
+      {{tt this "noConfig.description.toDefineConfig"}}
+    </p>
+  </div>
+</div>
+
+{{#if chart.title}}
+  <div class="title-area">
+    <span class="title-content">{{chart.title}}</span>
+    {{#if chart.titleTip}}
+      <span class="space"></span>
+      {{one-label-tip class="title-tip" title=chart.titleTip}}
+    {{/if}}
+  </div>
+{{/if}}
+
+{{atm-workflow/charts-dashboard-editor/sections-editor/floating-toolbar
+  model=chart
+  actionsFactory=actionsFactory
+}}
+
+{{#if (and draggedChart (not isMeDragged))}}
+  {{one-draggable-object-target
+    class="before-drag-target"
+    action=(action "acceptDraggedElement" "before")
+  }}
+
+  {{one-draggable-object-target
+    class="after-drag-target"
+    action=(action "acceptDraggedElement" "after")
+  }}
+{{/if}}

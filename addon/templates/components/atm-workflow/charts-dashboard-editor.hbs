@@ -1,0 +1,10 @@
+{{#if model.rootSection}}
+  {{atm-workflow/charts-dashboard-editor/sections-editor
+    rootSection=model.rootSection
+    onRemoveDashboard=(action "removeDashboard")
+  }}
+{{else}}
+  {{atm-workflow/charts-dashboard-editor/no-dashboard-info
+    onCreateDashboard=(action "createDashboard")
+  }}
+{{/if}}

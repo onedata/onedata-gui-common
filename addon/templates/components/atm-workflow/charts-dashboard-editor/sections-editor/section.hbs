@@ -1,0 +1,84 @@
+{{#if (or draggedChart (and draggedSection (not isMeOrParentDragged)))}}
+  {{one-draggable-object-target
+    class="inside-drag-target"
+    action=(action "acceptDraggedElement" "inside")
+  }}
+{{/if}}
+
+{{#if (or section.title section.titleTip)}}
+  <div class="section-header">
+    {{#if section.title}}
+      <h3 class="section-title">{{section.title}}</h3>
+    {{/if}}
+    {{#if section.titleTip}}
+      {{#one-label-tip class="section-title-tip" tooltipClass="tooltip-lg"}}
+        {{section.titleTip}}
+      {{/one-label-tip}}
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if section.description}}
+  <p class="section-description">{{section.description}}</p>
+{{/if}}
+
+{{#if section.charts.length}}
+  <div class="section-charts">
+    {{#each section.charts as |chart|}}
+      {{atm-workflow/charts-dashboard-editor/sections-editor/chart
+        chart=chart
+        actionsFactory=actionsFactory
+      }}
+    {{/each}}
+  </div>
+{{/if}}
+
+<div
+  class="large-trigger add-chart clickable"
+  onclick={{action "addChart"}}
+>
+  <span class="content">
+    {{one-icon icon="plus"}}
+    {{tt this "addChart"}}
+  </span>
+</div>
+
+{{#if section.sections.length}}
+  <div class="section-subsections">
+    {{#each section.sections as |subsection|}}
+      {{atm-workflow/charts-dashboard-editor/sections-editor/section
+        section=subsection
+        actionsFactory=actionsFactory
+      }}
+    {{/each}}
+  </div>
+{{/if}}
+
+<div
+  class="large-trigger add-subsection clickable"
+  onclick={{action "addSubsection"}}
+>
+  <span class="content">
+    {{one-icon icon="plus"}}
+    {{tt this "addSubsection"}}
+  </span>
+</div>
+
+{{#if (not section.isRoot)}}
+  {{atm-workflow/charts-dashboard-editor/sections-editor/floating-toolbar
+    model=section
+    actionsFactory=actionsFactory
+  }}
+{{/if}}
+
+{{#if (and (not section.isRoot) draggedSection (not isMeOrParentDragged))}}
+  {{one-draggable-object-target
+    class="before-drag-target"
+    action=(action "acceptDraggedElement" "before")
+  }}
+
+  {{one-draggable-object-target
+    class="after-drag-target"
+    action=(action "acceptDraggedElement" "after")
+  }}
+{{/if}}

@@ -277,8 +277,7 @@ export default Component.extend(I18n, {
       schedule('afterRender', this, () => {
         window.requestAnimationFrame(() => {
           safeExec(this, () => {
-            const scrollableContainer = this.getScrollableContainer();
-            scrollableContainer?.scroll(0, 0);
+            this.infiniteScroll.scrollHandler.scrollTo(0, 0);
           });
         });
       });
@@ -313,15 +312,6 @@ export default Component.extend(I18n, {
       endIndex: 50,
       indexMargin: 10,
     });
-    entries.on(
-      'willChangeArrayBeginning',
-      async ({ updatePromise, newItemsCount }) => {
-        await updatePromise;
-        safeExec(this, () => {
-          this.adjustScrollAfterBeginningChange(newItemsCount);
-        });
-      }
-    );
 
     const infiniteScroll = InfiniteScroll.create({
       entries,
@@ -343,7 +333,10 @@ export default Component.extend(I18n, {
   didInsertElement() {
     this._super(...arguments);
 
-    this.infiniteScroll.mount(this.element.querySelector('.entries-table'));
+    this.infiniteScroll.mount(
+      this.element.querySelector('.entries-table'),
+      this.getScrollableContainer()
+    );
     this.setupResizeObserver();
 
     this.entries.initialLoad.then(() =>
@@ -361,35 +354,6 @@ export default Component.extend(I18n, {
     } finally {
       this._super(...arguments);
     }
-  },
-
-  /**
-   * When entries array gets expanded on the beginning (items are unshifted into
-   * array), we need to compensate scroll because new content is added on top.
-   * Currently (as of 2021) not all browsers support scroll anchoring and
-   * `perfect-scrollbar` has issues with it (anchoring is disabled), so we need to do
-   * scroll correction manually.
-   * @param {number} newItemsCount how many items have been added to the beginning
-   *   of the list
-   * @returns {void}
-   */
-  adjustScrollAfterBeginningChange(newEntriesCount = 0) {
-    const topDiff = newEntriesCount * this.rowHeight;
-    if (topDiff <= 0) {
-      return;
-    }
-
-    schedule('afterRender', this, () => {
-      window.requestAnimationFrame(() => {
-        safeExec(this, () => {
-          const scrollableContainer = this.getScrollableContainer();
-          scrollableContainer?.scrollTo(
-            null,
-            scrollableContainer?.scrollTop + topDiff
-          );
-        });
-      });
-    });
   },
 
   /**

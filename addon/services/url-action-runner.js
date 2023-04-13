@@ -5,15 +5,17 @@
  * them in `init` method).
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Service from '@ember/service';
+import Service, { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import { resolve } from 'rsvp';
 
 export default Service.extend({
+  router: service(),
+
   /**
    * @type {Map<String,Function>}
    */
@@ -67,7 +69,24 @@ export default Service.extend({
 
     const actionRunner = this.getActionRunner(actionName);
     const actionResult = (typeof actionRunner === 'function') ?
-      actionRunner(queryParams) : resolve();
+      actionRunner(queryParams, transition) : resolve();
     return actionResult && actionResult.then ? actionResult : resolve(actionResult);
+  },
+
+  /**
+   * @param {Transition} transition
+   */
+  clearActionQueryParams(transition) {
+    const queryParams = transition.to.queryParams;
+    const queryParamsNames = Object.keys(queryParams);
+    if (queryParamsNames.find(name => name.startsWith('action_'))) {
+      const queryParamsWithoutAction = Object.keys(queryParams)
+        .reduce((params, key) => {
+          params[key] = key.startsWith('action_') ?
+            undefined : queryParams[key];
+          return params;
+        }, {});
+      this.router.transitionTo({ queryParams: queryParamsWithoutAction });
+    }
   },
 });

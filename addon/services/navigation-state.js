@@ -121,7 +121,7 @@ export default Service.extend(I18n, {
 
   /**
    * If true, then activeResourceId is a special id not related to any model.
-   * Examples: 'empty', 'new'
+   * Examples: 'empty', 'new'. See `SpecialResourceId` type.
    * @type {boolean}
    */
   isActiveResourceIdSpecial: false,
