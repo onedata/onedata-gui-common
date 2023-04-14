@@ -19,6 +19,7 @@ import { next } from '@ember/runloop';
 import ListWatcher from 'onedata-gui-common/utils/list-watcher';
 import $ from 'jquery';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default EmberObject.extend({
   /**
@@ -57,11 +58,6 @@ export default EmberObject.extend({
    */
   onScroll: undefined,
 
-  /**
-   * @type {Window}
-   */
-  _window: window,
-
   fallbackEndIndex: 50,
 
   //#region state
@@ -92,14 +88,12 @@ export default EmberObject.extend({
     }
 
     const {
-      _window,
       listContainerElement,
       fallbackEndIndex,
       entries,
       firstRowModel,
       onScroll,
     } = this.getProperties(
-      '_window',
       'listContainerElement',
       'fallbackEndIndex',
       'entries',
@@ -125,7 +119,7 @@ export default EmberObject.extend({
       const $firstRow = $(listContainerElement.querySelector('.first-row'));
       const firstRowTop = $firstRow.offset().top;
       const blankStart = firstRowTop * -1;
-      const blankEnd = blankStart + _window.innerHeight;
+      const blankEnd = blankStart + globals.window.innerHeight;
       startIndex = firstRowTop < 0 ?
         Math.floor(blankStart / rowHeight) : 0;
       endIndex = Math.floor(blankEnd / rowHeight);

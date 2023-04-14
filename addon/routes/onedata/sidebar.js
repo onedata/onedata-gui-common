@@ -13,6 +13,7 @@ import config from 'ember-get-config';
 import { scheduleOnce } from '@ember/runloop';
 import { camelize } from '@ember/string';
 import findRouteInfo from 'onedata-gui-common/utils/find-route-info';
+import globals from 'onedata-gui-common/utils/globals';
 
 const {
   onedataTabs,
@@ -71,7 +72,7 @@ export default Route.extend({
   },
 
   scrollSidebarToTop() {
-    const sidebar = document.querySelector('.col-sidebar');
+    const sidebar = globals.document.querySelector('.col-sidebar');
     if (sidebar) {
       sidebar.scrollTop = 0;
     }

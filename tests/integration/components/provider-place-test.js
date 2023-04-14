@@ -15,6 +15,7 @@ import { registerService } from '../../helpers/stub-service';
 import Service from '@ember/service';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import { promiseArray } from 'onedata-gui-common/utils/ember/promise-array';
+import globals from 'onedata-gui-common/utils/globals';
 
 const COPY_SUCCESS_MSG = 'copySuccess';
 const COPY_ERROR_MSG = 'copyError';
@@ -151,7 +152,7 @@ describe('Integration | Component | provider-place', function () {
 
     const spaces = this.get('spaces');
     await click('.circle');
-    const drop = document.querySelector('.provider-place-drop');
+    const drop = globals.document.querySelector('.provider-place-drop');
     expect(drop.querySelectorAll('.provider-place-drop-space'))
       .to.have.length(spaces.length);
     spaces.forEach((space) => {
@@ -166,7 +167,7 @@ describe('Integration | Component | provider-place', function () {
         provider=providers}}`);
 
     await click('.circle');
-    const dropContainer = document.querySelector('.provider-place-drop-container');
+    const dropContainer = globals.document.querySelector('.provider-place-drop-container');
     expect(dropContainer.querySelectorAll('.oneproviders-list-item'))
       .to.have.length(2);
     expect(dropContainer.querySelector('.oneproviders-list-item.active')).to.exist;

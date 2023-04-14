@@ -7,6 +7,7 @@
  */
 
 import config from 'ember-get-config';
+import globals from 'onedata-gui-common/utils/globals';
 
 const nonIframeRedirectFlag = 'oneprovider-non-iframe-redirect';
 
@@ -33,9 +34,9 @@ export default Object.freeze({
    * @return {void}
    */
   redirectToOnezone(path) {
-    const url = window.origin + (path || '');
+    const url = globals.window.origin + (path || '');
     this.setNonIframeRedirectFlag(true);
-    window.location.replace(url);
+    globals.location.replace(url);
   },
 
   /**
@@ -49,7 +50,7 @@ export default Object.freeze({
   },
 
   isInIframe() {
-    return window.parent !== window;
+    return globals.window.parent !== globals.window;
   },
 
   isNonDummyEnvironment() {
@@ -62,7 +63,7 @@ export default Object.freeze({
    * @returns {boolean}
    */
   getNonIframeRedirectFlag() {
-    return Boolean(window.sessionStorage.getItem(nonIframeRedirectFlag));
+    return Boolean(globals.sessionStorage.getItem(nonIframeRedirectFlag));
   },
 
   /**
@@ -71,9 +72,9 @@ export default Object.freeze({
    */
   setNonIframeRedirectFlag(willRedirect = true) {
     if (willRedirect) {
-      window.sessionStorage.setItem(nonIframeRedirectFlag, 'true');
+      globals.sessionStorage.setItem(nonIframeRedirectFlag, 'true');
     } else {
-      window.sessionStorage.removeItem(nonIframeRedirectFlag);
+      globals.sessionStorage.removeItem(nonIframeRedirectFlag);
     }
   },
 });

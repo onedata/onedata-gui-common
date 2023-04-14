@@ -26,6 +26,7 @@ import { Promise, resolve } from 'rsvp';
 import { get, setProperties } from '@ember/object';
 import isRecord from 'onedata-gui-common/utils/is-record';
 import { scheduleOnce } from '@ember/runloop';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * @typedef {'empty'|'add'|'new'|'join'|'not-selected'|'null'} SpecialResourceId
@@ -176,9 +177,9 @@ export default Route.extend({
   },
 
   scrollSidebarToActiveSidebarItem() {
-    const sidebar = document.querySelector('.col-sidebar');
+    const sidebar = globals.document.querySelector('.col-sidebar');
     const sidebarActiveItemNode =
-      document.querySelector('.col-sidebar .resource-item.active .item-header');
+      globals.document.querySelector('.col-sidebar .resource-item.active .item-header');
     if (!sidebarActiveItemNode) {
       return;
     }

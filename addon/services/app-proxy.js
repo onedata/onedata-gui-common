@@ -22,6 +22,7 @@ import {
 } from 'onedata-gui-common/utils/one-embedded-common';
 import createThrottledFunction from '../utils/create-throttled-function';
 import { defer } from 'rsvp';
+import globals from 'onedata-gui-common/utils/globals';
 
 export const throttleTimeout = 50;
 
@@ -29,7 +30,7 @@ export default Service.extend({
   /**
    * @type {Window}
    */
-  _window: window,
+  _window: globals.window,
 
   /**
    * Accumulates shared properties that should be read from `appProxy`

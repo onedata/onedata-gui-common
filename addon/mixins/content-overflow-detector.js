@@ -17,11 +17,11 @@
  */
 
 import Mixin from '@ember/object/mixin';
-
 import { run } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { camelize } from '@ember/string';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Mixin.create({
   /**
@@ -94,12 +94,6 @@ export default Mixin.create({
 
   _overflowDetectionListener: null,
 
-  /**
-   * Window property (mainly for testing purposes)
-   * @type {Window}
-   */
-  _window: window,
-
   addOverflowDetectionListener() {
     if (!this.get('isOverflowDetectionAttached')) {
       const {
@@ -107,13 +101,11 @@ export default Mixin.create({
         overflowParentElement,
         overflowSiblingsElements,
         overflowDetectionDelay,
-        _window,
       } = this.getProperties(
         'overflowElement',
         'overflowParentElement',
         'overflowSiblingsElements',
         'overflowDetectionDelay',
-        '_window'
       );
 
       if (!overflowParentElement) {
@@ -130,18 +122,14 @@ export default Mixin.create({
         _overflowDetectionListener: overflowDetectionListener,
         isOverflowDetectionAttached: true,
       });
-      _window.addEventListener('resize', overflowDetectionListener);
+      globals.window.addEventListener('resize', overflowDetectionListener);
       this.detectOverflow();
     }
   },
 
   removeOverflowDetectionListener() {
     if (this.get('isOverflowDetectionAttached')) {
-      const {
-        _window,
-        _overflowDetectionListener,
-      } = this.getProperties('_window', '_overflowDetectionListener');
-      _window.removeEventListener('resize', _overflowDetectionListener);
+      globals.window.removeEventListener('resize', this._overflowDetectionListener);
       this.set('isOverflowDetectionAttached', false);
     }
   },
@@ -157,21 +145,22 @@ export default Mixin.create({
       overflowSiblingsElements,
       additionalOverflowMargin,
       minimumFullWindowSize,
-      _window,
     } = this.getProperties(
       'overflowElement',
       'overflowParentElement',
       'overflowSiblingsElements',
       'additionalOverflowMargin',
       'minimumFullWindowSize',
-      '_window'
     );
 
     const sizeProperty = this.overflowDimension;
     const innerSizeProperty = camelize(`inner-${sizeProperty}`);
     const sizeFunction = dom[sizeProperty];
 
-    if (minimumFullWindowSize && _window[innerSizeProperty] < minimumFullWindowSize) {
+    if (
+      minimumFullWindowSize &&
+      globals.window[innerSizeProperty] < minimumFullWindowSize
+    ) {
       this.changeHasOverflow(true);
       return;
     }

@@ -15,6 +15,7 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import timeSeriesMeasurementEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/time-series-measurement';
 import { get } from '@ember/object';
 import { lookupService } from '../../../../../helpers/stub-service';
+import globals from 'onedata-gui-common/utils/globals';
 
 const nameMatcherTypeOptions = [{
   value: 'exact',
@@ -124,7 +125,8 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       await click('.add-field-button');
       await clickTrigger('.nameMatcherType-field');
 
-      const optionElements = document.querySelectorAll('.ember-power-select-option');
+      const optionElements =
+        globals.document.querySelectorAll('.ember-power-select-option');
       expect(optionElements).to.have.length(nameMatcherTypeOptions.length);
       nameMatcherTypeOptions.forEach(({ label }, idx) =>
         expect(optionElements[idx].textContent.trim()).to.equal(label)
@@ -148,7 +150,8 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       await click('.add-field-button');
       await clickTrigger('.unit-field');
 
-      const optionElements = document.querySelectorAll('.ember-power-select-option');
+      const optionElements =
+        globals.document.querySelectorAll('.ember-power-select-option');
       expect(optionElements).to.have.length(unitOptions.length);
       unitOptions.forEach(({ label }, idx) =>
         expect(optionElements[idx].textContent.trim()).to.equal(label)

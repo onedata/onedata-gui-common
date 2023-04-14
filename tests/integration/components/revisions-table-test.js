@@ -5,6 +5,7 @@ import { render, click, findAll, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import Action from 'onedata-gui-common/utils/action';
+import globals from 'onedata-gui-common/utils/globals';
 
 const componentClass = 'revisions-table';
 
@@ -81,7 +82,7 @@ describe('Integration | Component | revisions-table', function () {
       const actionsTrigger = revisionEntry.querySelector('.revision-actions-trigger');
       await click(actionsTrigger);
       const actions =
-        document.querySelector('.webui-popover.in .actions-popover-content a');
+        globals.document.querySelector('.webui-popover.in .actions-popover-content a');
       expect(actions).to.have.length(1);
       expect(actions.textContent).to.contain(`testAction ${revisionNumber}`);
     }

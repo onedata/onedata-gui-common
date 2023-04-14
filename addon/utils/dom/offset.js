@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import globals from 'onedata-gui-common/utils/globals';
+
 /**
  * @typedef {Object} DomOffsetResult
  * @param {number} top
@@ -19,7 +21,7 @@
 export default function offset(element) {
   const boundingClientRect = element.getBoundingClientRect();
   return {
-    top: boundingClientRect.top + window.pageYOffset,
-    left: boundingClientRect.left + window.pageXOffset,
+    top: boundingClientRect.top + globals.window.pageYOffset,
+    left: boundingClientRect.left + globals.window.pageXOffset,
   };
 }

@@ -14,6 +14,7 @@ import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-res
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { inject as service } from '@ember/service';
 import { next } from '@ember/runloop';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * @typedef {Object} ECOption An object, that is passed to `setOption` Echarts
@@ -103,7 +104,7 @@ export default Component.extend(WindowResizeHandler, {
 
   async setupChart() {
     const echarts = await this.echartsLibraryProxy;
-    next(() => window.requestAnimationFrame(() => safeExec(this, () => {
+    next(() => globals.window.requestAnimationFrame(() => safeExec(this, () => {
       if (!this.element || !echarts || this.chart) {
         return;
       }

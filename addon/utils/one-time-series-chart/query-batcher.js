@@ -20,6 +20,7 @@
 import { defer, all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 import config from 'ember-get-config';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * @typedef {Object} TimeSeriesQuery
@@ -71,8 +72,8 @@ export default class QueryBatcher {
    */
   constructor({
     fetchData,
-    setTimeout = window.setTimeout.bind(window),
-    clearTimeout = window.clearTimeout.bind(window),
+    setTimeout = globals.window.setTimeout.bind(globals.window),
+    clearTimeout = globals.window.clearTimeout.bind(globals.window),
   }) {
     /**
      * @public

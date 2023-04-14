@@ -3,6 +3,7 @@
 
 import { settled, click, focus } from '@ember/test-helpers';
 import sinon from 'sinon';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default class OneDatetimePickerHelper {
   constructor(trigger) {
@@ -34,11 +35,11 @@ export default class OneDatetimePickerHelper {
 
   selectToday() {
     return this.openPicker()
-      .then(() => click(document.querySelector('.datetime-picker .xdsoft_today')));
+      .then(() => click(globals.document.querySelector('.datetime-picker .xdsoft_today')));
   }
 
   getPickerElement() {
-    return document.querySelector('.xdsoft_datetimepicker');
+    return globals.document.querySelector('.xdsoft_datetimepicker');
   }
 
   createFakeClock() {

@@ -21,6 +21,7 @@ import layout from 'onedata-gui-common/templates/components/one-sidebar';
 import { array, raw } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { camelize } from '@ember/string';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Component.extend(I18n, {
   layout,
@@ -217,11 +218,6 @@ export default Component.extend(I18n, {
     }
   ),
 
-  /**
-   * @type {Storage}
-   */
-  _localStorage: localStorage,
-
   contextUpdater: observer(
     'sortedCollection',
     'filteredCollection',
@@ -250,12 +246,10 @@ export default Component.extend(I18n, {
       sortedCollection,
       secondLevelItems,
       sidebarType,
-      _localStorage,
     } = this.getProperties(
       'sortedCollection',
       'secondLevelItems',
       'sidebarType',
-      '_localStorage'
     );
 
     // if we want to show second level items, we should have a sidebarType
@@ -263,7 +257,9 @@ export default Component.extend(I18n, {
       throw new Error('component:one-sidebar: sidebarType is not defined');
     }
 
-    if (_localStorage.getItem('oneSidebar.areAdvancedFiltersVisible') === 'false') {
+    if (
+      globals.localStorage.getItem('oneSidebar.areAdvancedFiltersVisible') === 'false'
+    ) {
       this.set('areAdvancedFiltersVisible', false);
     }
 
@@ -274,14 +270,9 @@ export default Component.extend(I18n, {
     toggleAdvancedFilters() {
       this.toggleProperty('areAdvancedFiltersVisible');
 
-      const {
-        areAdvancedFiltersVisible,
-        _localStorage,
-      } = this.getProperties('areAdvancedFiltersVisible', '_localStorage');
-
-      _localStorage.setItem(
+      globals.localStorage.setItem(
         'oneSidebar.areAdvancedFiltersVisible',
-        String(areAdvancedFiltersVisible)
+        String(this.areAdvancedFiltersVisible)
       );
     },
   },

@@ -124,6 +124,7 @@ import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
 import layout from 'onedata-gui-common/templates/components/infinite-scroll-table';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Component.extend(I18n, {
   layout,
@@ -275,7 +276,7 @@ export default Component.extend(I18n, {
       // Jump does not scroll directly to the beginning of the table. We have to
       // do it manually.
       schedule('afterRender', this, () => {
-        window.requestAnimationFrame(() => {
+        globals.window.requestAnimationFrame(() => {
           safeExec(this, () => {
             this.infiniteScroll.scrollHandler.scrollTo(0, 0);
           });

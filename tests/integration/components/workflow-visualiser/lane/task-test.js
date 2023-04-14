@@ -23,6 +23,7 @@ import { set, setProperties } from '@ember/object';
 import sinon from 'sinon';
 import { getModalFooter } from '../../../../helpers/modal';
 import CopyRecordIdAction from 'onedata-gui-common/utils/clipboard-actions/copy-record-id-action';
+import globals from 'onedata-gui-common/utils/globals';
 
 const taskActionsSpec = [{
   className: 'modify-task-action-trigger',
@@ -197,7 +198,7 @@ describe('Integration | Component | workflow-visualiser/lane/task', function () 
       await click(actionsTrigger);
 
       const actions =
-        document.querySelectorAll('.webui-popover.in .actions-popover-content a');
+        globals.document.querySelectorAll('.webui-popover.in .actions-popover-content a');
       expect(actions).to.have.length(taskActionsSpec.length);
       taskActionsSpec.forEach(({ className, label, icon }, index) => {
         const action = actions[index];
@@ -218,7 +219,7 @@ describe('Integration | Component | workflow-visualiser/lane/task', function () 
 
       await click('.task-actions-trigger');
       await click(
-        document.querySelector('.webui-popover.in .modify-task-action-trigger')
+        globals.document.querySelector('.webui-popover.in .modify-task-action-trigger')
       );
 
       expect(detailsProviderStub).to.be.calledWith({
@@ -236,7 +237,7 @@ describe('Integration | Component | workflow-visualiser/lane/task', function () 
 
       await click('.task-actions-trigger');
       await click(
-        document.querySelector('body .webui-popover.in .remove-task-action-trigger')
+        globals.document.querySelector('body .webui-popover.in .remove-task-action-trigger')
       );
       await click(getModalFooter().querySelector('.question-yes'));
 

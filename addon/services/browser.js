@@ -8,6 +8,7 @@
 
 import Service from '@ember/service';
 import { computed } from '@ember/object';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * @typedef {'opera'|'ie'|'chrome'|'safari'|'firefox'|'other'} BrowserName
@@ -32,16 +33,10 @@ const userAgentBrowserNameMatchers = [{
 
 export default Service.extend({
   /**
-   * @type {Window}
-   */
-  window,
-
-  /**
    * @type {ComputedProperty<BrowserName>}
    */
-  browserName: computed('window', function browserName() {
-    const userAgentLowerCase =
-      (this.get('window.navigator.userAgent') || '').toLowerCase();
+  browserName: computed(function browserName() {
+    const userAgentLowerCase = (globals.navigator.userAgent || '').toLowerCase();
 
     for (const { matcher, browserName: name } of userAgentBrowserNameMatchers) {
       if (userAgentLowerCase.includes(matcher)) {

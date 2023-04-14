@@ -11,6 +11,7 @@
  */
 
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default function legendColors(options) {
   return (chart) => {
@@ -26,7 +27,7 @@ export default function legendColors(options) {
           return;
         }
 
-        const colorRect = document.createElement('div');
+        const colorRect = globals.document.createElement('div');
         colorRect.classList.add('custom-color');
         dom.setStyles(colorRect, {
           position: 'absolute',

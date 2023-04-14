@@ -16,6 +16,7 @@ import { inject as service } from '@ember/service';
 import computedT from 'onedata-gui-common/utils/computed-t';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
   layout,
@@ -92,7 +93,7 @@ export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
 
   mouseDown() {
     // prevent from selected text drag-n-drop while panMove
-    document.getSelection().removeAllRanges();
+    globals.document.getSelection().removeAllRanges();
   },
 
   click(event) {
@@ -125,7 +126,7 @@ export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
       'element'
     );
 
-    document.getSelection().removeAllRanges();
+    globals.document.getSelection().removeAllRanges();
 
     const toggleElement = element.querySelector('.one-way-toggle-control');
     if (!toggleElement) {

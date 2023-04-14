@@ -18,6 +18,7 @@ import OneDropdownHelper from '../../../helpers/one-dropdown';
 import _ from 'lodash';
 import { resolve } from 'rsvp';
 import { findInElementsByText } from '../../../helpers/find';
+import globals from 'onedata-gui-common/utils/globals';
 
 const models = [{
   name: 'user',
@@ -481,5 +482,5 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
 });
 
 function getSelector() {
-  return document.querySelector('.webui-popover.in .tags-selector');
+  return globals.document.querySelector('.webui-popover.in .tags-selector');
 }

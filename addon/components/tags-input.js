@@ -30,6 +30,7 @@ import config from 'ember-get-config';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import $ from 'jquery';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * @typedef {Object} Tag
@@ -343,7 +344,7 @@ export default Component.extend(I18n, {
       if (isCreatingTag) {
         // Focus editor - send focus to the root element of the editor and
         // let the editor to handle that focus on its own
-        const event = document.createEvent('Event');
+        const event = globals.document.createEvent('Event');
         event.initEvent('focus', true, true);
         element.querySelector('.tag-creator > *').dispatchEvent(event);
       } else {

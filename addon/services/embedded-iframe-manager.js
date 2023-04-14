@@ -12,19 +12,15 @@ import { computed, observer } from '@ember/object';
 import { A } from '@ember/array';
 import _ from 'lodash';
 import WindowResizeHandler from 'onedata-gui-common/mixins/window-resize-handler';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Service.extend(WindowResizeHandler, {
-  /**
-   * @type {Document}
-   */
-  _document: document,
-
   /**
    * @type {Ember.ComputedProperty<HTMLElement>}
    * All iframe nodes are placed inside this element.
    */
   embeddedIframesContainer: computed(function embeddedIframesContainer() {
-    return this.get('_document').querySelector('.embedded-iframes-container');
+    return globals.document.querySelector('.embedded-iframes-container');
   }),
 
   /**

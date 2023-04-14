@@ -11,13 +11,13 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/one-tile';
-
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import { debounce, next } from '@ember/runloop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import $ from 'jquery';
 import computedT from 'onedata-gui-common/utils/computed-t';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Component.extend(I18n, {
   layout,
@@ -132,12 +132,6 @@ export default Component.extend(I18n, {
   sizeClass: '',
 
   /**
-   * Window object (for testing purposes only)
-   * @type {Window}
-   */
-  _window: window,
-
-  /**
    * @type {Ember.ComputedProperty<boolean>}
    */
   _isLink: computed('isLink', 'aspect', 'route', 'customLink', function _isLink() {
@@ -210,23 +204,12 @@ export default Component.extend(I18n, {
 
   didInsertElement() {
     this._super(...arguments);
-
-    const {
-      windowResizeHandler,
-      _window,
-    } = this.getProperties('windowResizeHandler', '_window');
-
-    _window.addEventListener('resize', windowResizeHandler);
+    globals.window.addEventListener('resize', this.windowResizeHandler);
   },
 
   willDestroyElement() {
     try {
-      const {
-        windowResizeHandler,
-        _window,
-      } = this.getProperties('onScroll', 'windowResizeHandler', '_window');
-
-      _window.removeEventListener('resize', windowResizeHandler);
+      globals.window.removeEventListener('resize', this.windowResizeHandler);
     } finally {
       this._super(...arguments);
     }
@@ -243,7 +226,7 @@ export default Component.extend(I18n, {
       const newWindowClick = clickEvent.button === 1 ||
         clickEvent.ctrlKey || clickEvent.shiftKey || clickEvent.metaKey;
       const target = newWindowClick ? '_blank' : '_self';
-      this.get('_window').open(customLink, target);
+      globals.window.open(customLink, target);
     } else {
       const {
         router,
@@ -273,9 +256,8 @@ export default Component.extend(I18n, {
       const {
         x2Breakpoint,
         x4Breakpoint,
-        _window,
-      } = this.getProperties('x2Breakpoint', 'x4Breakpoint', '_window');
-      const windowWidth = _window.innerWidth;
+      } = this.getProperties('x2Breakpoint', 'x4Breakpoint');
+      const windowWidth = globals.window.innerWidth;
       let sizeClass = '';
       if (x4Breakpoint != null && windowWidth >= x4Breakpoint) {
         sizeClass = 'x4';
@@ -284,7 +266,7 @@ export default Component.extend(I18n, {
       }
       if (this.get('sizeClass') !== sizeClass) {
         this.set('sizeClass', sizeClass);
-        next(() => _window.dispatchEvent(new Event('resize')));
+        next(() => globals.window.dispatchEvent(new Event('resize')));
       }
     }
   },

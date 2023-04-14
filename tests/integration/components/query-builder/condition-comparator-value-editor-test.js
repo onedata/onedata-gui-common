@@ -13,6 +13,7 @@ import {
   triggerKeyEvent,
   find,
 } from '@ember/test-helpers';
+import globals from 'onedata-gui-common/utils/globals';
 
 const mathOperators = ['eq', 'lt', 'lte', 'gt', 'gte'];
 
@@ -109,7 +110,7 @@ describe('Integration | Component | query-builder/condition-comparator-value-edi
             }}`);
 
             expect(find('.comparator-value'), '.comparator-value is active')
-              .to.equal(document.activeElement);
+              .to.equal(globals.document.activeElement);
           }
         );
 
@@ -307,7 +308,7 @@ function itShowsPowerSelectWithOptions(
       expect(find('.dropdown-editor-trigger.comparator-value'), 'dropdown trigger')
         .to.exist;
       await clickTrigger('.dropdown-editor');
-      const options = document.querySelectorAll('.ember-power-select-option');
+      const options = globals.document.querySelectorAll('.ember-power-select-option');
       expect(options).to.have.length(expectedOptionValues.length);
       expect(Array.from(options).map(opt => opt.textContent.trim()).sort())
         .to.deep.equal(expectedOptionValues.sort());

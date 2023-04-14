@@ -4,6 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, triggerEvent, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | remove-icon', function () {
   setupRenderingTest();
@@ -60,7 +61,7 @@ describe('Integration | Component | remove-icon', function () {
 
     return triggerEvent('.remove-icon', 'mouseenter')
       .then(() =>
-        expect(document.querySelector('.tooltip.in').textContent)
+        expect(globals.document.querySelector('.tooltip.in').textContent)
         .to.contain(tooltipText)
       );
   });
@@ -69,6 +70,6 @@ describe('Integration | Component | remove-icon', function () {
     await render(hbs `{{remove-icon}}`);
 
     return triggerEvent('.remove-icon', 'mouseenter')
-      .then(() => expect(document.querySelector('.tooltip.in')).to.not.exist);
+      .then(() => expect(globals.document.querySelector('.tooltip.in')).to.not.exist);
   });
 });
