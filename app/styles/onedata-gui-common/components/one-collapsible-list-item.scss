@@ -30,3 +30,9 @@
 a.one-collapsible-list-item {
   color: inherit !important;
 }
+
+@include animation-bg-color-change(
+  pulse-bg-opened-list-item-header,
+  $collapsible-list-item-header-opened,
+  lighten($color-one-mint, 30%)
+);

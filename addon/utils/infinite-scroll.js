@@ -20,7 +20,7 @@ import { reads } from '@ember/object/computed';
 export default EmberObject.extend({
   /**
    * @virtual
-   * @type {ReplacingChunksArray<RecallLogEntry>}
+   * @type {ReplacingChunksArray<Object>}
    */
   entries: undefined,
 
@@ -79,9 +79,16 @@ export default EmberObject.extend({
   /**
    * @public
    * @param {HTMLElement} listContainerElement
+   * @param {HTMLElement} [scrollableContainerElement]
    */
-  mount(listContainerElement) {
-    this.set('listContainerElement', listContainerElement);
+  mount(
+    listContainerElement,
+    scrollableContainerElement = listContainerElement?.closest('.ps')
+  ) {
+    this.setProperties({
+      listContainerElement,
+      scrollableContainerElement,
+    });
     this.initScrollHandler();
   },
 
@@ -126,18 +133,24 @@ export default EmberObject.extend({
 
   initScrollHandler() {
     const {
+      scrollableContainerElement,
       listContainerElement,
       entries,
       firstRowModel,
+      singleRowHeight,
     } = this.getProperties(
+      'scrollableContainerElement',
       'listContainerElement',
       'entries',
       'firstRowModel',
+      'singleRowHeight',
     );
     this.set('scrollHandler', ScrollHandler.create({
+      scrollableContainerElement,
       listContainerElement,
       entries,
       firstRowModel,
+      singleRowHeight,
       onScroll: this.get('onScroll'),
     }));
   },

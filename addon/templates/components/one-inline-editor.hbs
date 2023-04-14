@@ -1,33 +1,74 @@
 {{#if _inEditionMode}}
-  <input
-    type="text"
-    class={{concat-classes "form-control" inputClasses}}
-    value={{_inputValue}}
-    disabled={{_whileSaving}}
-    placeholder={{inputPlaceholder}}
-    oninput={{action (mut _inputValue) value="target.value"}}
-    onkeydown={{invoke-on-key (hash
-      Enter=(action "saveEdition")
-      Escape=(action "cancelEdition")
-    )}}
-    onblur={{action onLostFocus}}
-  />
+  {{#if (eq editorType "tags")}}
+    {{tags-input
+      tags=_inputValue
+      class=(concat-classes "form-control" inputClasses)
+      tagEditorComponentName=(or
+        editorSettings.tagEditorComponentName
+        "tags-input/text-editor"
+      )
+      tagEditorSettings=editorSettings.tagEditorSettings
+      readonly=false
+      startTagCreationOnInit=editorSettings.startTagCreationOnInit
+      onChange=(action (mut _inputValue))
+      onFocusLost=(action onLostFocus)
+    }}
+  {{else if (eq editorType "custom")}}
+    {{yield editorApi}}
+  {{else}}
+    <input
+      type="text"
+      class={{concat-classes "form-control" inputClasses}}
+      value={{_inputValue}}
+      disabled={{_whileSaving}}
+      placeholder={{inputPlaceholder}}
+      oninput={{action (mut _inputValue) value="target.value"}}
+      onkeydown={{invoke-on-key (hash
+        Enter=(action "saveEdition")
+        Escape=(action "cancelEdition")
+      )}}
+      onblur={{action onLostFocus}}
+    />
+  {{/if}}
   <span class="action-icons">
     {{#if _whileSaving}}
       {{spin-spinner-block sizeClass="xs"}}
     {{else if (not hideEditIcons)}}
-      {{one-icon icon="checked" class="save-icon" click=(action "saveEdition")}}
+      {{#one-icon
+        icon="checked"
+        class=(concat-classes "save-icon" (if isSaveDisabled "disabled"))
+        click=(action "saveEdition")
+      }}
+        {{#if saveButtonTip}}
+          {{one-tooltip title=saveButtonTip}}
+        {{/if}}
+      {{/one-icon}}
       {{one-icon icon="ban-left" class="cancel-icon" click=(action "cancelEdition")}}
     {{/if}}
   </span>
 {{else}}
-  {{#truncated-string tagName="span" class="one-label" click=(action "startEdition")}}
-    {{#if value}}
-      {{value}}
-    {{else if showEmptyInfo}}
-      <span class="empty-value">{{staticPlaceholder}}</span>
+  {{#if (eq editorType "tags")}}
+    {{#if (and isValueEmpty showEmptyInfo)}}
+      <span class="one-label" onclick={{action "startEdition"}}>
+        <span class="empty-value">{{staticPlaceholder}}</span>
+      </span>
+    {{else}}
+      <div class="tags-input-container" onclick={{action "startEdition"}}>
+        {{tags-input
+          tags=value
+          readonly=true
+        }}
+      </div>
     {{/if}}
-  {{/truncated-string}}
+  {{else}}
+    {{#truncated-string tagName="span" class="one-label" click=(action "startEdition")}}
+      {{#if (and isValueEmpty showEmptyInfo)}}
+        <span class="empty-value">{{staticPlaceholder}}</span>
+      {{else}}
+        {{value}}
+      {{/if}}
+    {{/truncated-string}}
+  {{/if}}
   <span class="action-icons">
     {{#if (not hideViewIcons)}}
       {{one-icon icon="rename" class="edit-icon" click=(action "startEdition")}}
