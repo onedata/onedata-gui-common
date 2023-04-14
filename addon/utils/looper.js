@@ -90,7 +90,7 @@ export default EmberObject.extend(Evented, {
     if (this._intervalId != null) {
       clearInterval(this._intervalId);
     }
-    if (this.interval && this.interval > 0) {
+    if (this.interval > 0) {
       this.set(
         '_intervalId',
         setInterval(this.notify.bind(this), this.interval)
