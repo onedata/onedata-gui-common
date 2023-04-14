@@ -141,7 +141,15 @@ export class Globals {
 
     const nativeGlobal = this.getNativeGlobal(globalName);
     if (typeof nativeGlobal === 'object') {
-      this.mocks[globalName] = new Proxy(nativeGlobal, {
+      // Cannot use `nativeGlobal` directly as a target of the proxy, because
+      // some globals have properties (like location.reload) which cannot be
+      // mocked due to limitations of proxies on read-only fields. Using native
+      // global directly will cause errors like:
+      // ```
+      // xyz is a read-only and non-configurable data property on the proxy
+      // target but the proxy did not return its actual value
+      // ```
+      this.mocks[globalName] = new Proxy({}, {
         get(target, propertyName) {
           if (propertyName in mock) {
             return mock[propertyName];
