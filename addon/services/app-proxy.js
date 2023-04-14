@@ -14,7 +14,6 @@ import EmberObject, {
   observer,
   setProperties,
 } from '@ember/object';
-import { reads } from '@ember/object/computed';
 import {
   sharedObjectName,
   sharedDataPropertyName,
@@ -27,10 +26,6 @@ import globals from 'onedata-gui-common/utils/globals';
 export const throttleTimeout = 50;
 
 export default Service.extend({
-  /**
-   * @type {Window}
-   */
-  _window: globals.window,
 
   /**
    * Accumulates shared properties that should be read from `appProxy`
@@ -48,7 +43,7 @@ export default Service.extend({
   /**
    * @type {Ember.ComputedProperty<Object>}
    */
-  appProxy: reads(`_window.frameElement.${sharedObjectName}`),
+  appProxy: computed(() => globals.window.frameElement?.[sharedObjectName]),
 
   /**
    * @type {Ember.ComputedProperty<EmberObject>}
