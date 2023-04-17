@@ -139,7 +139,7 @@ export default Component.extend({
 
   getUnitForBytes(bytes) {
     const sortedSizeUnits = this.get('sizeUnits').sortBy('multiplicator');
-    return sortedSizeUnits.reverse().find(sizeUnit => sizeUnit.multiplicator <= bytes) ||
+    return sortedSizeUnits.findLast(sizeUnit => sizeUnit.multiplicator <= bytes) ||
       sortedSizeUnits[0];
   },
 
