@@ -5,6 +5,72 @@
  * `Globals` is intended to be a singleton. You should use the already created
  * instance exported from this module.
  *
+ * HOW TO MOCK IN TESTS?
+ *
+ * WARNING: Always remember to add `globals.unmock()` to the global `afterEach`
+ * hook of your testing environment to isolate tests properly!.
+ *
+ * Mocking uses native Proxy mechanism, which allows to preserve the original
+ * behavior of the mocked object except fields, which are overwritten by mock.
+ *
+ * Example 1:
+ * ```
+ * globals.mock('window', {
+ *   innerWidth: 1234,
+ * });
+ * ```
+ * This mock will change `innerWidth` property value of `window` to `1234`
+ * without changing any other `window` property/method. What's important,
+ * `innerWidth` will be changed ONLY FOR `global.window`. Native `window`
+ * object will still have it's original `innerWidth` value.
+ *
+ * Doing this:
+ * ```
+ * globals.window.innerWidth = 4567;
+ * ```
+ * will change value of the mocked property only. Native `window.innerWidth`
+ * will still be untouched. But doing this:
+ * ```
+ * globals.window.innerHeight = 8901;
+ * ```
+ * will influence native `window.innerHeight` (as this property was not mocked)
+ * and probably cause an error.
+ *
+ * WARNING: You can modify only these properties of the mock, which were mocked
+ * from the beginning. Any modification outside mocked properties will change
+ * native object property and unmocking will not revert them!
+ *
+ * Example 2:
+ * ```
+ * globals.mock('window', {
+ *   resizeListeners: new Set(),
+ *   addEventListener(event, listener) {
+ *     if (event === 'resize') {
+ *       this.resizeListeners.add(listener);
+ *     } else {
+ *       globals.nativeWindow.addEventListener(...arguments);
+ *     }
+ *   },
+ *   removeEventListener(event, listener) {
+ *     if (event === 'resize') {
+ *       this.resizeListeners.delete(listener);
+ *     } else {
+ *       globals.nativeWindow.removeEventListener(...arguments);
+ *     }
+ *   },
+ *   triggerResize() {
+ *     this.resizeListeners.forEach((listener) => listener());
+ *   },
+ * });
+ * ```
+ * This mock intercepts any registrations of resize event listeners on `window`
+ * and passes through any other event registrations to the native `window`.
+ * It also adds a custom method `triggerResize` to our mocked `window`, which
+ * allows to manually launch all intercepted resize listeners.
+ *
+ * That approach allows to simulate some particular type of events leaving
+ * other event types handling untouched.
+ *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -149,7 +215,7 @@ export class Globals {
    * @returns {void}
    */
   mock(globalName, mock) {
-    if (config.environment !== 'test') {
+    if (!isTestingEnv) {
       throw new Error(
         `Mocking global object ${globalName} in a non-testing environment is not allowed.`
       );
@@ -165,6 +231,9 @@ export class Globals {
       // xyz is a read-only and non-configurable data property on the proxy
       // target but the proxy did not return its actual value
       // ```
+      // To solve this, we use an empty object `{}` as a fake target and
+      // redirect any get/set to the native global (as if it was a real proxy
+      // target).
       this.mocks[globalName] = new Proxy({}, {
         get(target, propertyName) {
           if (propertyName in mock) {

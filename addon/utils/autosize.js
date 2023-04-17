@@ -109,7 +109,7 @@ function assign(ta) {
     ta.style.height = '';
     ta.style.height = (ta.scrollHeight + heightOffset) + 'px';
 
-    // used to check if an update is actually necessary on globals..resize
+    // used to check if an update is actually necessary on window.resize
     clientWidth = ta.clientWidth;
 
     // prevents scroll-position jumping
@@ -138,18 +138,18 @@ function assign(ta) {
       if (computed.overflowY === 'hidden') {
         changeOverflow('scroll');
         resize();
-        actualHeight = computed.boxSizing === 'content-box' ? Math.round(parseFloat(globals.window.getComputedStyle(ta,
-            null)
-          .height)) : ta.offsetHeight;
+        actualHeight = computed.boxSizing === 'content-box' ?
+          Math.round(parseFloat(globals.window.getComputedStyle(ta, null).height)) :
+          ta.offsetHeight;
       }
     } else {
       // Normally keep overflow set to hidden, to avoid flash of scrollbar as the textarea expands.
       if (computed.overflowY !== 'hidden') {
         changeOverflow('hidden');
         resize();
-        actualHeight = computed.boxSizing === 'content-box' ? Math.round(parseFloat(globals.window.getComputedStyle(ta,
-            null)
-          .height)) : ta.offsetHeight;
+        actualHeight = computed.boxSizing === 'content-box' ?
+          Math.round(parseFloat(globals.window.getComputedStyle(ta, null).height)) :
+          ta.offsetHeight;
       }
     }
 
