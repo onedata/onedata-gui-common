@@ -13,7 +13,7 @@
 import config from 'ember-get-config';
 
 /**
- * @typedef {'window' | 'document' | 'location' | 'navigator' | 'localStorage' | 'sessionStorage'} GlobalName
+ * @typedef {'window' | 'document' | 'location' | 'navigator' | 'localStorage' | 'sessionStorage' | 'fetch'} GlobalName
  */
 
 const isTestingEnv = config.environment === 'test';
@@ -69,6 +69,14 @@ export class Globals {
 
   /**
    * @public
+   * @type {typeof fetch}
+   */
+  get fetch() {
+    return this.getGlobal('fetch');
+  }
+
+  /**
+   * @public
    * @type {Window}
    */
   get nativeWindow() {
@@ -113,6 +121,14 @@ export class Globals {
    */
   get nativeSessionStorage() {
     return this.getNativeGlobal('sessionStorage');
+  }
+
+  /**
+   * @public
+   * @type {typeof fetch}
+   */
+  get nativeFetch() {
+    return this.getNativeGlobal('fetch');
   }
 
   /**

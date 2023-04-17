@@ -10,6 +10,7 @@ const nativeGlobals = [
   ['location', location],
   ['localStorage', localStorage],
   ['sessionStorage', sessionStorage],
+  ['fetch', fetch],
 ];
 
 describe('Unit | Utility | globals', function () {
