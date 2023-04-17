@@ -292,7 +292,9 @@ export class Globals {
    */
   getNativeGlobal(globalName) {
     /* eslint-disable-next-line no-restricted-globals */
-    return window[globalName];
+    const nativeGlobal = window[globalName];
+    /* eslint-disable-next-line no-restricted-globals */
+    return typeof nativeGlobal === 'function' ? nativeGlobal.bind(window) : nativeGlobal;
   }
 }
 

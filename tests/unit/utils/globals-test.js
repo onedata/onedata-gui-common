@@ -14,12 +14,12 @@ const nativeGlobals = [
 ];
 
 describe('Unit | Utility | globals', function () {
-  nativeGlobals.forEach(([globalName, nativeGlobal], idx) => {
+  nativeGlobals.forEach(([globalName], idx) => {
     const otherNativeGlobals = nativeGlobals
       .filter((elem) => elem !== nativeGlobals[idx]);
 
     it(`provides ${globalName} global`, function () {
-      expect(globals[globalName]).to.equal(nativeGlobal);
+      expectIsNative(globalName, globals[globalName]);
     });
 
     it(`allows to mock ${globalName} global`, function () {
@@ -31,8 +31,8 @@ describe('Unit | Utility | globals', function () {
         expect(globals[globalName][propName]).to.equal(mock[propName]);
         expect(globals[`native${_.upperFirst(globalName)}`][propName]).to.be.undefined;
       });
-      otherNativeGlobals.forEach(([otherGlobalName, otherNativeGlobal]) => {
-        expect(globals[otherGlobalName]).to.equal(otherNativeGlobal);
+      otherNativeGlobals.forEach(([otherGlobalName]) => {
+        expectIsNative(otherGlobalName, globals[otherGlobalName]);
       });
     });
 
@@ -44,7 +44,7 @@ describe('Unit | Utility | globals', function () {
 
       globals.unmock(globalName);
 
-      expect(globals[globalName]).to.equal(nativeGlobal);
+      expectIsNative(globalName, globals[globalName]);
       otherNativeGlobals.forEach(([otherGlobalName]) => {
         expect(globals[otherGlobalName].a).to.equal(1);
       });
@@ -59,8 +59,17 @@ describe('Unit | Utility | globals', function () {
 
     globals.unmock();
 
-    nativeGlobals.forEach(([globalName, nativeGlobal]) => {
-      expect(globals[globalName]).to.equal(nativeGlobal);
+    nativeGlobals.forEach(([globalName]) => {
+      expectIsNative(globalName, globals[globalName]);
     });
   });
 });
+
+function expectIsNative(globalName, varToCheck) {
+  const [, nativeGlobal] = nativeGlobals.find(([name]) => name === globalName);
+  if (typeof nativeGlobal === 'function') {
+    expect(varToCheck.name).to.equal(`bound ${nativeGlobal.name}`);
+  } else {
+    expect(varToCheck).to.equal(nativeGlobal);
+  }
+}
