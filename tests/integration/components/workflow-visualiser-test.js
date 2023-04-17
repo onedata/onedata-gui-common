@@ -554,16 +554,6 @@ function createWindowStub() {
       }
     },
   };
-  // return new Proxy(globals.nativeWindow, {
-  //   get(target, propertyName) {
-  //     if (propertyName in stubbedElements) {
-  //       return stubbedElements[propertyName];
-  //     } else {
-  //       const value = globals.nativeWindow[propertyName];
-  //       return typeof value === 'function' ? value.bind(globals.nativeWindow) : value;
-  //     }
-  //   },
-  // });
 }
 
 function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
