@@ -183,7 +183,7 @@ function formatEchartTooltipSeriesGroup({
       if (seriesGroup.showSum) {
         sumValueFormatter = sumValueFormatter || defaultValueFormatter;
         sumHtml =
-          `<span class="tooltip-value tooltip-series-group-sum">${escapeValue(sumValueFormatter(seriesSum))}</span>`;
+          `<span class="tooltip-value tooltip-series-group-sum">${renderableValue(sumValueFormatter(seriesSum))}</span>`;
       }
       groupHeaderHtml +=
         `<div class="tooltip-series-group-header"><span class="tooltip-label tooltip-series-group-label">${_.escape(seriesGroup.name)}</span> ${sumHtml}</div>`;
@@ -220,7 +220,7 @@ function formatEchartTooltipSeries({
     const valueFormatter = yAxis ? yAxis.valueFormatter : defaultValueFormatter;
     usedValueFormatters.add(valueFormatter);
     htmlContent +=
-      `<div class="tooltip-series"><span class="tooltip-label tooltip-series-label">${marker} <span class="tooltip-label-text">${_.escape(seriesName)}</span></span> <span class="tooltip-value tooltip-series-value">${escapeValue(valueFormatter(yValue))}</span></div>`;
+      `<div class="tooltip-series"><span class="tooltip-label tooltip-series-label">${marker} <span class="tooltip-label-text">${_.escape(seriesName)}</span></span> <span class="tooltip-value tooltip-series-value">${renderableValue(valueFormatter(yValue))}</span></div>`;
     seriesSum += yValue;
   });
 
@@ -301,6 +301,6 @@ function getEchartSeries(state) {
   return orderedEchartSeries;
 }
 
-function escapeValue(value) {
+function renderableValue(value) {
   return isHTMLSafe(value) ? value : _.escape(value);
 }
