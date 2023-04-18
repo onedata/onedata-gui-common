@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import UndoManager from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/undo-manager';
+import { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 
 describe('Unit | Utility | atm-workflow/charts-dashboard-editor/undo-manager', function () {
   it('has nothing to undo and redo at the beginning', function () {
@@ -129,6 +130,46 @@ describe('Unit | Utility | atm-workflow/charts-dashboard-editor/undo-manager', f
       'redo-4',
     ]);
   });
+
+  it('ignores actions with "undoPossibility" equal to "notApplicable"', function () {
+    const tracking = [];
+    const manager = UndoManager.create();
+    manager.addActionToHistory(new FakeAction('1', tracking));
+    manager.addActionToHistory(new FakeAction('2', tracking));
+    manager.undo();
+
+    manager.addActionToHistory(
+      new FakeAction('3', tracking, ActionUndoPossibility.NotApplicable)
+    );
+
+    expect(tracking).to.deep.equal(['undo-2']);
+    expectUndoRedo(manager, true, true);
+    manager.undo();
+    expect(tracking).to.deep.equal(['undo-2', 'undo-1']);
+    expectUndoRedo(manager, false, true);
+    manager.redo();
+    manager.redo();
+    expect(tracking).to.deep.equal([
+      'undo-2',
+      'undo-1',
+      'redo-1',
+      'redo-2',
+    ]);
+    expectUndoRedo(manager, true, false);
+  });
+
+  it('resests history for actions with "undoPossibility" equal to "impossible"', function () {
+    const manager = UndoManager.create();
+    manager.addActionToHistory(new FakeAction('1'));
+    manager.addActionToHistory(new FakeAction('2'));
+    manager.undo();
+
+    manager.addActionToHistory(
+      new FakeAction('3', [], ActionUndoPossibility.Impossible)
+    );
+
+    expectUndoRedo(manager, false, false);
+  });
 });
 
 class FakeAction {
@@ -136,9 +177,10 @@ class FakeAction {
    * @param {string} id
    * @param {Array<string>} tracking
    */
-  constructor(id, tracking = []) {
+  constructor(id, tracking = [], undoPossibility = ActionUndoPossibility.Possible) {
     this.id = id;
     this.tracking = tracking;
+    this.undoPossibility = undoPossibility;
   }
 
   execute() {

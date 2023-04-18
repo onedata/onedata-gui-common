@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Action from 'onedata-gui-common/utils/action';
+import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { ElementType } from '../common';
@@ -14,9 +14,16 @@ import { ElementType } from '../common';
 /**
  * @typedef {Object} DuplicateElementActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} elementToDuplicate
+ * @property {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void} onSelectElement
+ * @property {(elementToDeselect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section) => void} onDeselectElement
  */
 
 export default Action.extend({
+  /**
+   * @override
+   */
+  undoPossibility: ActionUndoPossibility.Possible,
+
   /**
    * @virtual
    * @type {DuplicateElementActionContext}
@@ -27,6 +34,16 @@ export default Action.extend({
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
    */
   elementToDuplicate: reads('context.elementToDuplicate'),
+
+  /**
+   * @type {ComputedProperty<DuplicateElementActionContext['onSelectElement']>}
+   */
+  onSelectElement: reads('context.onSelectElement'),
+
+  /**
+   * @type {ComputedProperty<AddElementActionContext['onDeselectElement']>}
+   */
+  onDeselectElement: reads('context.onDeselectElement'),
 
   /**
    * Becomes defined during action execution
@@ -75,11 +92,12 @@ export default Action.extend({
     const elementIndexInParent =
       parentCollection.indexOf(this.elementToDuplicate);
     set(parent, this.collectionName, [
-      ...parentCollection.slice(0, elementIndexInParent),
+      ...parentCollection.slice(0, elementIndexInParent + 1),
       this.createdDuplicate,
-      ...parentCollection.slice(elementIndexInParent),
+      ...parentCollection.slice(elementIndexInParent + 1),
     ]);
     set(this.createdDuplicate, 'parentSection', parent);
+    this.onSelectElement(this.createdDuplicate);
   },
 
   /**
@@ -92,6 +110,10 @@ export default Action.extend({
       parent,
       this.collectionName,
       parent[this.collectionName].filter((element) => element !== this.createdDuplicate)
+    );
+    this.onDeselectElement(this.createdDuplicate);
+    [...this.createdDuplicate.getNestedElements()].forEach((element) =>
+      this.onDeselectElement(element)
     );
   },
 });

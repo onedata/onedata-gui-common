@@ -63,6 +63,16 @@
     .chart,
     .section {
       position: relative;
+
+      &.selected {
+        outline: 3px solid $color-one-azure;
+      }
+    }
+
+    .dashboard-visualiser,
+    .chart,
+    .section {
+      cursor: default !important;
     }
 
     .chart {

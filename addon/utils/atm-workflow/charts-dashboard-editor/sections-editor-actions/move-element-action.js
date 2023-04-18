@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Action from 'onedata-gui-common/utils/action';
+import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { computed } from '@ember/object';
@@ -18,6 +18,7 @@ import { ElementType } from '../common';
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Section} newParent
  * @property {MoveElementActionNewPosition | null} newPosition
  *   `null` will place `movedElement` at the end
+ * @property {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void} onSelectElement
  */
 
 /**
@@ -27,6 +28,11 @@ import { ElementType } from '../common';
  */
 
 export default Action.extend({
+  /**
+   * @override
+   */
+  undoPossibility: ActionUndoPossibility.Possible,
+
   /**
    * @virtual
    * @type {MoveElementActionContext}
@@ -47,6 +53,11 @@ export default Action.extend({
    * @type {ComputedProperty<MoveElementActionContext['newPosition']>}
    */
   newPosition: reads('context.newPosition'),
+
+  /**
+   * @type {ComputedProperty<MoveElementActionContext['onSelectElement']>}
+   */
+  onSelectElement: reads('context.onSelectElement'),
 
   /**
    * Becomes defined during action execution
@@ -107,6 +118,7 @@ export default Action.extend({
     });
 
     this.moveElement(this.newParent, this.newPosition);
+    this.onSelectElement(this.movedElement);
   },
 
   /**
@@ -114,6 +126,7 @@ export default Action.extend({
    */
   onExecuteUndo() {
     this.moveElement(this.oldParent, this.oldPosition);
+    this.onSelectElement(this.movedElement);
   },
 
   /**

@@ -3,7 +3,10 @@
   undoManager=undoManager
   onRemoveDashboard=onRemoveDashboard
 }}
-{{#perfect-scrollbar-element class="dashboard-visualiser"}}
+{{#perfect-scrollbar-element
+  class="dashboard-visualiser"
+  click=(action "workspaceClick")
+}}
   {{atm-workflow/charts-dashboard-editor/sections-editor/section
     section=rootSection
     actionsFactory=actionsFactory

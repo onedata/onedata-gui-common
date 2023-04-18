@@ -22,6 +22,7 @@
 
 import EmberObject from '@ember/object';
 import { lt, gt, raw } from 'ember-awesome-macros';
+import { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 
 export default EmberObject.extend({
   /**
@@ -89,16 +90,34 @@ export default EmberObject.extend({
       return;
     }
 
-    // If we are in the past (positionInHistory > 0) and new action arrives,
-    // then invalidate all undone actions. It will never be possible to redo
-    // them as we started a new history "branch".
-    const historyToCutOff = this.history.slice(0, this.positionInHistory);
-    historyToCutOff.forEach((action) => action.destroy());
+    switch (action.undoPossibility) {
+      case ActionUndoPossibility.Possible: {
+        // If we are in the past (positionInHistory > 0) and new action arrives,
+        // then invalidate all undone actions. It will never be possible to redo
+        // them as we started a new history "branch".
+        const historyToCutOff = this.history.slice(0, this.positionInHistory);
+        historyToCutOff.forEach((action) => action.destroy());
 
-    this.setProperties({
-      history: [action, ...this.history.slice(this.positionInHistory)],
-      positionInHistory: 0,
-    });
+        this.setProperties({
+          history: [action, ...this.history.slice(this.positionInHistory)],
+          positionInHistory: 0,
+        });
+        break;
+      }
+      case ActionUndoPossibility.Impossible:
+        // We have to reset the whole history, as it is not possible to undo
+        // incoming action and so every other action in the past is not
+        // available to us now.
+        this.setProperties({
+          history: [],
+          positionInHistory: 0,
+        });
+        break;
+      case ActionUndoPossibility.NotApplicable:
+        // In this case action doesn't change anything so we don't have to
+        // track its execution.
+        break;
+    }
   },
 
   /**

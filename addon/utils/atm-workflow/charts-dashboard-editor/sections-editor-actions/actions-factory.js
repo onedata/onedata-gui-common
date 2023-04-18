@@ -12,21 +12,41 @@ import AddElementAction from './add-element-action';
 import MoveElementAction from './move-element-action';
 import DuplicateElementAction from './duplicate-element-action';
 import RemoveElementAction from './remove-element-action';
+import SelectElementAction from './select-element-action';
 
 /**
  * @typedef {(action: Utils.Action) => void} ActionExecuteListener
  */
 
+/**
+ * @typedef {Object} ActionsFactoryInitOptions
+ * @property {unknown} ownerSource
+ * @property {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void} onSelectElement
+ * @property {(elementToDeselect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section) => void} onDeselectElement
+ */
+
 export default class ActionsFactory {
   /**
-   * @param {unknown} ownerSource
+   * @param {ActionsFactoryInitOptions} initOptions
    */
-  constructor(ownerSource) {
+  constructor({ ownerSource, onSelectElement, onDeselectElement } = {}) {
     /**
      * @private
      * @type {unknown}
      */
     this.ownerSource = ownerSource;
+
+    /**
+     * @private
+     * @type {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void}
+     */
+    this.onSelectElement = onSelectElement;
+
+    /**
+     * @private
+     * @type {(elementToDeselect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section) => void}
+     */
+    this.onDeselectElement = onDeselectElement;
 
     /**
      * @private
@@ -40,8 +60,9 @@ export default class ActionsFactory {
    * @returns {void}
    */
   destroy() {
-    this.executeListeners.clear();
     this.ownerSource = null;
+    this.onSelectElement = () => {};
+    this.executeListeners.clear();
   }
 
   /**
@@ -64,49 +85,78 @@ export default class ActionsFactory {
 
   /**
    * @public
-   * @param {AddElementActionContext} context
+   * @param {Omit<AddElementActionContext, 'onSelectElement' | 'onDeselectElement'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.AddElementAction}
    */
   createAddElementAction(context) {
     return this.attachExecuteListener(AddElementAction.create({
       ownerSource: this.ownerSource,
-      context,
+      context: {
+        onSelectElement: this.onSelectElement,
+        onDeselectElement: this.onDeselectElement,
+        ...context,
+      },
     }));
   }
 
   /**
    * @public
-   * @param {MoveElementActionContext} context
+   * @param {Omit<MoveElementActionContext, 'onSelectElement'} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.MoveElementAction}
    */
   createMoveElementAction(context) {
     return this.attachExecuteListener(MoveElementAction.create({
       ownerSource: this.ownerSource,
-      context,
+      context: {
+        onSelectElement: this.onSelectElement,
+        ...context,
+      },
     }));
   }
 
   /**
    * @public
-   * @param {DuplicateElementActionContext} context
+   * @param {Omit<DuplicateElementActionContext, 'onSelectElement' | 'onDeselectElement'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.DuplicateElementAction}
    */
   createDuplicateElementAction(context) {
     return this.attachExecuteListener(DuplicateElementAction.create({
       ownerSource: this.ownerSource,
-      context,
+      context: {
+        onSelectElement: this.onSelectElement,
+        onDeselectElement: this.onDeselectElement,
+        ...context,
+      },
     }));
   }
 
   /**
    * @public
-   * @param {RemoveElementActionContext} context
+   * @param {Omit<RemoveElementActionContext, 'onDeselectElement'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.RemoveElementAction}
    */
   createRemoveElementAction(context) {
     return this.attachExecuteListener(RemoveElementAction.create({
       ownerSource: this.ownerSource,
-      context,
+      context: {
+        onDeselectElement: this.onDeselectElement,
+        ...context,
+      },
+    }));
+  }
+
+  /**
+   * @public
+   * @param {Omit<SelectElementActionContext, 'onSelectElement'>} context
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.SelectElementAction}
+   */
+  createSelectElementAction(context) {
+    return this.attachExecuteListener(SelectElementAction.create({
+      ownerSource: this.ownerSource,
+      context: {
+        onSelectElement: this.onSelectElement,
+        ...context,
+      },
     }));
   }
 

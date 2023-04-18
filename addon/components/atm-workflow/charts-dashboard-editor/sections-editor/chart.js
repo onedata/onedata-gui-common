@@ -14,6 +14,7 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 
 export default OneDraggableObject.extend(I18n, {
   layout,
@@ -22,8 +23,12 @@ export default OneDraggableObject.extend(I18n, {
     'section-chart',
     'one-time-series-chart-plot',
     'has-floating-toolbar',
+    'clickable',
   ],
-  classNameBindings: ['isHovered:hovered'],
+  classNameBindings: [
+    'chart.isSelected:selected',
+    'isHovered:hovered',
+  ],
 
   i18n: service(),
   dragDrop: service(),
@@ -99,6 +104,17 @@ export default OneDraggableObject.extend(I18n, {
   mouseMove() {
     this._super(...arguments);
     this.changeHoverState(true);
+  },
+
+  /**
+   * @override
+   */
+  click(event) {
+    if (isDirectlyClicked(event)) {
+      const action = this.actionsFactory
+        .createSelectElementAction({ elementToSelect: this.chart });
+      action.execute();
+    }
   },
 
   /**

@@ -129,6 +129,18 @@ const Section = EmberObject.extend({
       parentSection: this.parentSection,
     });
   },
+
+  /**
+   * @public
+   * @returns {Generator<Utils.AtmWorkflow.ChartsDashboardEditor.Section | Utils.AtmWorkflow.ChartsDashboardEditor.Chart>}
+   */
+  * getNestedElements() {
+    for (const section of this.sections) {
+      yield section;
+      yield* section.getNestedElements();
+    }
+    yield* this.charts;
+  },
 });
 
 export default Section;

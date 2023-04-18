@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Action from 'onedata-gui-common/utils/action';
+import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import {
@@ -19,9 +19,16 @@ import { ElementType } from '../common';
  * @typedef {Object} AddElementActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType} newElementType
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Section} targetSection
+ * @property {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void} onSelectElement
+ * @property {(elementToDeselect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section) => void} onDeselectElement
  */
 
 export default Action.extend({
+  /**
+   * @override
+   */
+  undoPossibility: ActionUndoPossibility.Possible,
+
   /**
    * @virtual
    * @type {AddElementActionContext}
@@ -37,6 +44,16 @@ export default Action.extend({
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
    */
   targetSection: reads('context.targetSection'),
+
+  /**
+   * @type {ComputedProperty<AddElementActionContext['onSelectElement']>}
+   */
+  onSelectElement: reads('context.onSelectElement'),
+
+  /**
+   * @type {ComputedProperty<AddElementActionContext['onDeselectElement']>}
+   */
+  onDeselectElement: reads('context.onDeselectElement'),
 
   /**
    * Becomes defined during action execution
@@ -85,6 +102,7 @@ export default Action.extend({
       ...this.targetSection[this.collectionName],
       this.newElement,
     ]);
+    this.onSelectElement(this.newElement);
   },
 
   /**
@@ -98,5 +116,9 @@ export default Action.extend({
       .filter((element) => element !== this.newElement)
     );
     set(this.newElement, 'parentSection', null);
+    this.onDeselectElement(this.newElement);
+    [...this.newElement.getNestedElements()].forEach((element) =>
+      this.onDeselectElement(element)
+    );
   },
 });

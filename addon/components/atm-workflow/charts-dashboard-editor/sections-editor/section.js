@@ -14,16 +14,19 @@ import OneDraggableObject from 'onedata-gui-common/components/one-draggable-obje
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor/section';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 
 export default OneDraggableObject.extend(I18n, {
   layout,
   classNames: [
     'section',
+    'clickable',
     'one-time-series-charts-section',
     'has-floating-toolbar',
   ],
   classNameBindings: [
     'section.isRoot:root-section',
+    'section.isSelected:selected',
     'isHovered:hovered',
   ],
 
@@ -134,6 +137,17 @@ export default OneDraggableObject.extend(I18n, {
     const containsHoveredElement =
       event.target.closest('.has-floating-toolbar') !== this.element;
     this.changeHoverState(!containsHoveredElement);
+  },
+
+  /**
+   * @override
+   */
+  click(event) {
+    if (isDirectlyClicked(event)) {
+      const action = this.actionsFactory
+        .createSelectElementAction({ elementToSelect: this.section });
+      action.execute();
+    }
   },
 
   /**

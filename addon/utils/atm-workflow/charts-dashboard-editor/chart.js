@@ -73,6 +73,12 @@ const Chart = EmberObject.extend({
       parentSection: this.parentSection,
     });
   },
+
+  /**
+   * @public
+   * @returns {Generator<void>}
+   */
+  * getNestedElements() {},
 });
 
 export default Chart;
