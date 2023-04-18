@@ -1,17 +1,21 @@
 <form class="form form-horizontal form-component">
   {{form-component/field-renderer field=rootFieldsGroup}}
 
-  <p>Duplicated second field separated from the rest:</p>
-  {{form-component/field-renderer field=rootFieldsGroup.fields.[1]}}
+  {{#if isDuplicatedFieldShown}}
+    <p>Duplicated second field separated from the rest:</p>
+    {{form-component/field-renderer field=rootFieldsGroup.fields.[1]}}
+  {{/if}}
 </form>
-<p>
-  isValid: {{isFormValid}}<br/>
-  lastChangedField: {{lastChangedField}}<br/>
-  lastChangedValue: {{lastChangedValue}}<br/>
-  values:<br/>
-  <ul>
-    {{#each-in values as |key value|}}
-      <li>{{key}}:  {{value}}</li>
-    {{/each-in}}
-  </ul>
-</p>
+{{#if isFormInfoShown}}
+  <p>
+    isValid: {{isFormValid}}<br/>
+    lastChangedField: {{lastChangedField}}<br/>
+    lastChangedValue: {{lastChangedValue}}<br/>
+    values:<br/>
+    <ul>
+      {{#each-in values as |key value|}}
+        <li>{{key}}:  {{value}}</li>
+      {{/each-in}}
+    </ul>
+  </p>
+{{/if}}

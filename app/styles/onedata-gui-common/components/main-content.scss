@@ -61,6 +61,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
 
     &.header-row {
       height: $content-header-row-mobile-height;
+      min-height: $content-header-row-mobile-height;
       @media (min-width: $screen-sm-min) {
         padding-top: 0;
         h1 {
@@ -77,6 +78,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       }
       @media (min-width: $screen-md-min) {
         height: $content-header-row-height;
+        min-height: $content-header-row-height;
       }
     }
 

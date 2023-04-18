@@ -27,7 +27,14 @@ import { get, setProperties } from '@ember/object';
 import isRecord from 'onedata-gui-common/utils/is-record';
 import { scheduleOnce } from '@ember/runloop';
 
+/**
+ * @typedef {'empty'|'add'|'new'|'join'|'not-selected'|'null'} SpecialResourceId
+ */
+
 // TODO: refactor to create route-, or application-specific special ids
+/**
+ * @type {Array<SpecialResourceId>}
+ */
 const SPECIAL_IDS = [
   'empty',
   'add',

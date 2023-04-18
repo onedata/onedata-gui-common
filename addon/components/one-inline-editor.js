@@ -3,14 +3,16 @@
  * as plain text. After click (direct on text or via 'start edition' button)
  * it changes to editor which triggers `onSave` action on edition approval.
  *
- * @author Michał Borzęcki
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @module components/one-inline-editor
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2018-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 import { run, next } from '@ember/runloop';
-import { observer, computed } from '@ember/object';
+import EmberObject, { set, observer, computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import layout from '../templates/components/one-inline-editor';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -20,6 +22,48 @@ import $ from 'jquery';
 import { Promise, resolve } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import dom from 'onedata-gui-common/utils/dom';
+import { isEmpty } from 'ember-awesome-macros';
+
+/**
+ * @typedef {Object} OneInlineEditorSettings
+ * @param {'text'|'tags'|'custom'} type See discriminated types descriptions.
+ */
+
+/**
+ * Classic type of `one-inline-editor` that is suitable for editing plain text in
+ * single-line input.
+ * @typedef {Object} OneInlineTextEditorSettings
+ * @param {'text'} type
+ */
+
+/**
+ * When using `'tags'` editor type, the editor uses tags-input to show and edit tags.
+ * @typedef {OneInlineEditorSettings} OneInlineTagsEditorSettings
+ * @param {'tags'} type
+ * @param {string} tagEditorComponentName See `tagEditorComponentName` in `tags-input`.
+ * @param {Object} tagEditorSettings See `tagEditorSettings` in `tags-input`.
+ * @param {boolean} startTagCreationOnInit If true, tag editor (selector) will appear
+ *   right after the tags input goes into edit mode.
+ */
+
+/**
+ * In this mode the `one-inline-editor` yields a block to render own component in
+ * edit mode with API object for integrating it with `one-inline-editor`. The API object
+ * is of type `OneInlineCustomEditorApi`
+ * @typedef {Object} OneInlineCustomEditorSettings
+ * @param {'custom'} type
+ */
+
+/**
+ * @typedef {Object} OneInlineCustomEditorApi
+ * @param {string} value Current edited value in editor.
+ * @param {(value: string) => void} onChange Callback to inform the inline-editor about
+ *   custom editor value change.
+ * @param {() => void} onLostFocus Callback to inform the inline-editor that the custom
+ *   editor lost focus.
+ * @param {() => void} onSave Callback to invoke save on inline-editor.
+ * @param {() => void} onCancel Callback to invoke edit cancel on inline-editor.
+ */
 
 export default Component.extend(I18n, {
   layout,
@@ -30,6 +74,7 @@ export default Component.extend(I18n, {
     'controlledManually:manual',
     'hideEditIcons:without-edit-icons',
     'hideViewIcons:without-view-icons',
+    'isSaveDisabled:save-disabled',
   ],
 
   i18n: service(),
@@ -57,6 +102,12 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   editHint: undefined,
+
+  /**
+   * @virtual optional
+   * @type {OneInlineEditorSettings}
+   */
+  editorSettings: undefined,
 
   /**
    * @type {boolean}
@@ -146,6 +197,12 @@ export default Component.extend(I18n, {
   onLostFocus: notImplementedIgnore,
 
   /**
+   * Action called for custom type editor, passing API object
+   * @type {(api: OneInlineCustomEditorApi) => void}
+   */
+  onApiRegister: notImplementedIgnore,
+
+  /**
    * Automatically set to true if the component is rendered in one-collapsible-toolbar
    * @type {boolean}
    */
@@ -158,9 +215,12 @@ export default Component.extend(I18n, {
   isAfterInitialRender: false,
 
   /**
+   * Placeholder used in text input.
    * @type {string}
    */
   inputPlaceholder: undefined,
+
+  editorType: reads('editorSettings.type'),
 
   /**
    * @type {Ember.ComputedProperty<string>}
@@ -169,11 +229,35 @@ export default Component.extend(I18n, {
     return this.t('notSet');
   }),
 
+  isValueEmpty: isEmpty('value'),
+
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
   controlledManually: computed('isEditing', function () {
     return typeof this.get('isEditing') === 'boolean';
+  }),
+
+  editorApi: computed(function editorApi() {
+    return EmberObject
+      .extend({
+        value: reads('editor._inputValue'),
+        onChange(value) {
+          set(this.editor, '_inputValue', value);
+        },
+        onLostFocus() {
+          this.editor.onLostFocus(...arguments);
+        },
+        onSave() {
+          this.editor.saveEdition();
+        },
+        onCancel() {
+          this.editor.cancelEdition();
+        },
+      })
+      .create({
+        editor: this,
+      });
   }),
 
   resizeOnEdit: observer('_inEditionMode', function resizeOnEdit() {
@@ -192,7 +276,6 @@ export default Component.extend(I18n, {
       this.stopEdition();
     }
   }),
-
   inputValueChangedObserver: observer(
     '_inputValue',
     function inputValueChangedObserver() {
@@ -212,6 +295,9 @@ export default Component.extend(I18n, {
   },
 
   didInsertElement() {
+    if (this.editorType === 'custom') {
+      this.onApiRegister(this.editorApi);
+    }
     if (this.get('isInToolbar')) {
       $(window).on(`resize.${this.element.id}`, () => {
         run(() => {
@@ -300,12 +386,16 @@ export default Component.extend(I18n, {
   },
 
   getEditedValue() {
-    const {
-      _inputValue,
-      trimString,
-    } = this.getProperties('_inputValue', 'trimString');
-    const stringValue = _inputValue || '';
-    return trimString ? stringValue.trim() : stringValue;
+    if (this.editorType === 'tags') {
+      return this._inputValue ?? [];
+    } else {
+      const {
+        _inputValue,
+        trimString,
+      } = this.getProperties('_inputValue', 'trimString');
+      const stringValue = _inputValue || '';
+      return trimString ? stringValue.trim() : stringValue;
+    }
   },
 
   actions: {
@@ -345,7 +435,10 @@ export default Component.extend(I18n, {
         }
       }
     },
-    saveEdition() {
+    async saveEdition() {
+      if (this.isSaveDisabled) {
+        return;
+      }
       const {
         onSave,
         controlledManually,

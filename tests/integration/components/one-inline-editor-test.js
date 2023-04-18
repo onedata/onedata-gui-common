@@ -7,10 +7,12 @@ import {
   fillIn,
   settled,
   find,
+  findAll,
 } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { Promise } from 'rsvp';
 import sinon from 'sinon';
+import OneTooltipHelper from '../../helpers/one-tooltip';
 
 describe('Integration | Component | one-inline-editor', function () {
   setupRenderingTest();
@@ -84,5 +86,56 @@ describe('Integration | Component | one-inline-editor', function () {
     expect(onInputChanged).to.be.calledTwice;
     expect(onInputChanged).to.be.calledWith('asdf');
     expect(onInputChanged).to.be.calledWith('anotherValue');
+  });
+
+  it('has save button disabled if isSaveDisabled flag is true', async function () {
+    const value = 'asdf';
+    const saveSpy = sinon.spy();
+    this.setProperties({
+      value,
+      save: saveSpy,
+    });
+
+    await render(hbs`{{one-inline-editor
+      value=value
+      isSaveDisabled=true
+      onSave=(action save)
+    }}`);
+    await click('.one-label');
+    await fillIn('input', 'another value');
+
+    expect(find('.save-icon')).to.have.class('disabled');
+    await click('.save-icon');
+    expect(saveSpy).to.have.not.been.called;
+  });
+
+  it('has tooltip on save button hover if saveButtonTip is set', async function () {
+    this.setProperties({
+      value: 'asfg',
+    });
+
+    await render(hbs`{{one-inline-editor
+      value=value
+      saveButtonTip="foo bar"
+    }}`);
+    await click('.one-label');
+    const tooltip = new OneTooltipHelper('.save-icon');
+
+    expect(await tooltip.getText()).to.contain('foo bar');
+  });
+
+  it('renders tags with icon and text for "tags" editorType', async function () {
+    this.set('value', [
+      { icon: 'space', label: 'hello' },
+      { icon: 'provider', label: 'world' },
+    ]);
+
+    await render(hbs`{{one-inline-editor value=value editorType="tags"}}`);
+
+    const tagItems = findAll('.tag-item');
+    expect(tagItems[0]).to.contain.text('hello');
+    expect(tagItems[1]).to.contain.text('world');
+    expect(tagItems[0].querySelector('.oneicon-space')).to.exist;
+    expect(tagItems[1].querySelector('.oneicon-provider')).to.exist;
   });
 });

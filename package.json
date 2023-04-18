@@ -39,6 +39,7 @@
     "perfect-scrollbar": "1.5.5",
     "pupa": "2.1.1",
     "round10": "1.0.3",
+    "showdown": "1.9.1",
     "smoothscroll-polyfill": "git+https://github.com/michalborzecki/smoothscroll.git#d875d528259e928aa815afd1fc46fb91c18d7282",
     "spin.js": "4.1.1"
   },
