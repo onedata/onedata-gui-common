@@ -16,7 +16,7 @@ import SelectElementAction from './select-element-action';
 import ChangeElementPropertyAction from './change-element-property-action';
 
 /**
- * @typedef {(action: Utils.Action) => void} ActionExecuteListener
+ * @typedef {(action: Utils.Action, result: Utils.ActionResult) => void} ActionExecuteListener
  */
 
 /**
@@ -235,7 +235,7 @@ export default class ActionsFactory {
   attachExecuteListener(action) {
     action.addExecuteHook((result) => {
       if (result?.status === 'done') {
-        this.executeListeners.forEach((listener) => listener(action));
+        this.executeListeners.forEach((listener) => listener(action, result));
       }
     });
     return action;

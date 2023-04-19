@@ -83,9 +83,11 @@ export default Component.extend({
       onDeselectElement: (element) => this.deselectElement(element),
     });
     const undoManager = UndoManager.create();
-    actionsFactory.addExecuteListener((action) =>
-      undoManager.addActionToHistory(action)
-    );
+    actionsFactory.addExecuteListener((action, result) => {
+      if (!result.undo) {
+        undoManager.addActionToHistory(action);
+      }
+    });
 
     this.setProperties({
       actionsFactory,

@@ -7,13 +7,14 @@
  *   times and undo many operations,
  * - when you want to redo previously undone action, call `redo()`. You can
  *   do as many times as `undo` method was called.
- * - if you have reach the beginning of operation history, `undo()` will do
+ * - if you have reached the beginning of operation history, `undo()` will do
  *   nothing. The same when you have reached the newest operation and called
  *   `redo()`.
  *
  * NOTE: This implementation assumes that actions are executed immediately.
  * In case of appearance of any async action execution, there will be a need of
  * refactor.
+ *
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -108,6 +109,7 @@ export default EmberObject.extend({
         // We have to reset the whole history, as it is not possible to undo
         // incoming action and so every other action in the past is not
         // available to us now.
+        this.history.forEach((action) => action.destroy());
         this.setProperties({
           history: [],
           positionInHistory: 0,
