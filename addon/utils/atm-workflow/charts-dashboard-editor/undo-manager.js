@@ -82,7 +82,7 @@ export default EmberObject.extend({
    * @returns {void}
    */
   addActionToHistory(action) {
-    if (this.history.includes(action)) {
+    if (this.history.slice(this.positionInHistory).includes(action)) {
       // This action is already present in history. It may happen when action is
       // undone/redone (so it is executed again and tries to register into
       // history) or action is reused multiple times (e.g. action triggered
@@ -147,8 +147,8 @@ export default EmberObject.extend({
 
     const actionToRedo = this.history[this.positionInHistory - 1];
     if (actionToRedo) {
-      actionToRedo.execute();
       this.set('positionInHistory', this.positionInHistory - 1);
+      actionToRedo.execute();
     }
   },
 });

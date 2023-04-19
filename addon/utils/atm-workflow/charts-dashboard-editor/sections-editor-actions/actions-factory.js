@@ -13,6 +13,7 @@ import MoveElementAction from './move-element-action';
 import DuplicateElementAction from './duplicate-element-action';
 import RemoveElementAction from './remove-element-action';
 import SelectElementAction from './select-element-action';
+import ChangeElementPropertyAction from './change-element-property-action';
 
 /**
  * @typedef {(action: Utils.Action) => void} ActionExecuteListener
@@ -53,6 +54,13 @@ export default class ActionsFactory {
      * @type {Set<ActionExecuteListener>}
      */
     this.executeListeners = new Set();
+
+    /**
+     * May contain only action with `changeType` equal to `'continuous'`
+     * @private
+     * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.ChangeElementPropertyAction | null}
+     */
+    this.activeChangeElementPropertyAction = null;
   }
 
   /**
@@ -158,6 +166,65 @@ export default class ActionsFactory {
         ...context,
       },
     }));
+  }
+
+  /**
+   * @public
+   * @param {Omit<ChangeElementPropertyActionContext, 'onSelectElement'>} context
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.ChangeElementPropertyAction}
+   */
+  createChangeElementPropertyAction(context) {
+    let action = this.activeChangeElementPropertyAction;
+    if (action) {
+      const previousValueLength = String(action.previousValue).length;
+      const latestValueLength = String(action.newValue).length;
+      const newValueLength = String(context.newValue).length;
+      if (
+        // different element
+        action.element !== context.element ||
+        // different property
+        action.propertyName !== context.propertyName ||
+        // non-continuous change type
+        context.changeType !== 'continuous' ||
+        // value replaced with content of the same length
+        latestValueLength === newValueLength ||
+        // different change kind, like insertion after previous deletion (and reversed)
+        Math.sign(latestValueLength - previousValueLength) !==
+        Math.sign(newValueLength - latestValueLength)
+      ) {
+        action = null;
+      }
+    }
+
+    if (!action) {
+      action = this.attachExecuteListener(ChangeElementPropertyAction.create({
+        ownerSource: this.ownerSource,
+        context: {
+          onSelectElement: this.onSelectElement,
+          ...context,
+        },
+      }));
+      if (action.changeType === 'continuous') {
+        setTimeout(() => {
+          if (this.activeChangeElementPropertyAction === action) {
+            this.activeChangeElementPropertyAction = null;
+          }
+        }, 2000);
+      }
+    }
+
+    this.activeChangeElementPropertyAction =
+      action.changeType === 'continuous' ? action : null;
+
+    return action;
+  }
+
+  /**
+   * @public
+   * @returns {void}
+   */
+  interruptActiveChangeElementPropertyAction() {
+    this.activeChangeElementPropertyAction = null;
   }
 
   /**
