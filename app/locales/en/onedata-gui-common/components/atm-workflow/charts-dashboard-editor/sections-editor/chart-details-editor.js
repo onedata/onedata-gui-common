@@ -9,4 +9,5 @@ export default {
       placeholder: 'No title tip',
     },
   },
+  editContent: 'Edit content',
 };

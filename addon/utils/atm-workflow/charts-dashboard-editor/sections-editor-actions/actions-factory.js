@@ -15,6 +15,7 @@ import DuplicateElementAction from './duplicate-element-action';
 import RemoveElementAction from './remove-element-action';
 import SelectElementAction from './select-element-action';
 import ChangeElementPropertyAction from './change-element-property-action';
+import EditChartContentAction from './edit-chart-content-action';
 
 /**
  * @typedef {(action: Utils.Action, result: Utils.ActionResult) => void} ActionExecuteListener
@@ -25,13 +26,19 @@ import ChangeElementPropertyAction from './change-element-property-action';
  * @property {unknown} ownerSource
  * @property {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void} onSelectElement
  * @property {(elementToDeselect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section) => void} onDeselectElement
+ * @property {(chart: Utils.AtmWorkflow.ChartsDashboardEditor.Chart) => void} onOpenChartEditor
  */
 
 export default class ActionsFactory {
   /**
    * @param {ActionsFactoryInitOptions} initOptions
    */
-  constructor({ ownerSource, onSelectElement, onDeselectElement } = {}) {
+  constructor({
+    ownerSource,
+    onSelectElement,
+    onDeselectElement,
+    onOpenChartEditor,
+  } = {}) {
     /**
      * @private
      * @type {unknown}
@@ -49,6 +56,12 @@ export default class ActionsFactory {
      * @type {(elementToDeselect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section) => void}
      */
     this.onDeselectElement = onDeselectElement;
+
+    /**
+     * @private
+     * @type {(chart: Utils.AtmWorkflow.ChartsDashboardEditor.Chart) => void}
+     */
+    this.onOpenChartEditor = onOpenChartEditor;
 
     /**
      * @private
@@ -231,6 +244,21 @@ export default class ActionsFactory {
    */
   interruptActiveChangeElementPropertyAction() {
     this.activeChangeElementPropertyAction = null;
+  }
+
+  /**
+   * @public
+   * @param {Omit<EditChartContentActionContext, 'onOpenChartEditor'>} context
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.EditChartContentAction}
+   */
+  createEditChartContentAction(context) {
+    return this.attachExecuteListener(EditChartContentAction.create({
+      ownerSource: this.ownerSource,
+      context: {
+        onOpenChartEditor: this.onOpenChartEditor,
+        ...context,
+      },
+    }));
   }
 
   /**

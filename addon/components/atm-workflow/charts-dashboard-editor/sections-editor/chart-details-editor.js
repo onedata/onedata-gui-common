@@ -94,6 +94,18 @@ export default Component.extend(I18n, {
   onEditionInterrupted() {
     this.actionsFactory.interruptActiveChangeElementPropertyAction();
   },
+
+  actions: {
+    /**
+     * @returns {void}
+     */
+    editContent() {
+      const action = this.actionsFactory.createEditChartContentAction({
+        chart: this.chart,
+      });
+      action.execute();
+    },
+  },
 });
 
 const disableValidation = {

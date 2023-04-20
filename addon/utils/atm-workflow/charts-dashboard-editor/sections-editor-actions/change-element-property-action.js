@@ -3,7 +3,7 @@
  *
  * When change type is `'continuous'`, then an instance of this actions is intended
  * to be used (executed) multiple times. When executed again and again it will
- * preserverprevious value from the first execution. Undoing this action
+ * preserve previous value from the first execution. Undoing this action
  * will reassign that first value back (so one undo will revert all executions).
  * This approach allows to simulate undo/redo for text inputs in a way similar
  * to text editors (like undoing launches disappearing phrase-by-phrase instead

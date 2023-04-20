@@ -144,5 +144,15 @@ export default OneDraggableObject.extend(I18n, {
       });
       action.execute();
     },
+
+    /**
+     * @returns {void}
+     */
+    editContent() {
+      const action = this.actionsFactory.createEditChartContentAction({
+        chart: this.chart,
+      });
+      action.execute();
+    },
   },
 });

@@ -303,6 +303,10 @@
       .description-field textarea {
         height: 10em;
       }
+
+      form:not(:last-child) {
+        margin-bottom: 1em;
+      }
     }
 
     @media (max-width: $screen-xs-max) {
