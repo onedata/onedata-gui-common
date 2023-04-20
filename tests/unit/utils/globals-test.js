@@ -4,72 +4,91 @@ import { describe, it } from 'mocha';
 import globals from 'onedata-gui-common/utils/globals';
 import _ from 'lodash';
 
-const nativeGlobals = [
-  ['window', window],
-  ['document', document],
-  ['location', location],
-  ['localStorage', localStorage],
-  ['sessionStorage', sessionStorage],
-  ['fetch', fetch],
-];
+const nativeGlobals = [{
+  name: 'window',
+  global: window,
+  exampleProperty: 'document',
+}, {
+  name: 'document',
+  global: document,
+  exampleProperty: 'body',
+}, {
+  name: 'location',
+  global: location,
+  exampleProperty: 'hostname',
+}, {
+  name: 'localStorage',
+  global: localStorage,
+  exampleProperty: 'length',
+}, {
+  name: 'sessionStorage',
+  global: sessionStorage,
+  exampleProperty: 'length',
+}, {
+  name: 'fetch',
+  global: fetch,
+}];
 
 describe('Unit | Utility | globals', function () {
-  nativeGlobals.forEach(([globalName], idx) => {
+  nativeGlobals.forEach(({ name, global, exampleProperty }, idx) => {
     const otherNativeGlobals = nativeGlobals
       .filter((elem) => elem !== nativeGlobals[idx]);
 
-    it(`provides ${globalName} global`, function () {
-      expectIsNative(globalName, globals[globalName]);
+    it(`provides ${name} global`, function () {
+      expectIsNative(name, globals[name]);
     });
 
-    it(`allows to mock ${globalName} global`, function () {
+    it(`allows to mock ${name} global`, function () {
       const mock = { a: 1 };
-      globals.mock(globalName, mock);
+      globals.mock(name, mock);
       mock.b = 2;
 
-      Object.keys((propName) => {
-        expect(globals[globalName][propName]).to.equal(mock[propName]);
-        expect(globals[`native${_.upperFirst(globalName)}`][propName]).to.be.undefined;
+      Object.keys(mock).forEach((propName) => {
+        expect(globals[name][propName]).to.equal(mock[propName]);
+        expect(globals[`native${_.upperFirst(name)}`][propName]).to.be.undefined;
+        if (exampleProperty) {
+          expect(globals[name][exampleProperty]).to.equal(global[exampleProperty]);
+        }
       });
-      otherNativeGlobals.forEach(([otherGlobalName]) => {
-        expectIsNative(otherGlobalName, globals[otherGlobalName]);
+      otherNativeGlobals.forEach(({ name: otherName }) => {
+        expectIsNative(otherName, globals[otherName]);
       });
     });
 
-    it(`allows to unmock ${globalName} global only`, function () {
+    it(`allows to unmock ${name} global only`, function () {
       const mock = { a: 1 };
-      nativeGlobals.forEach(([anyGlobalName]) => {
-        globals.mock(anyGlobalName, mock);
+      nativeGlobals.forEach(({ name: anyName }) => {
+        globals.mock(anyName, mock);
       });
 
-      globals.unmock(globalName);
+      globals.unmock(name);
 
-      expectIsNative(globalName, globals[globalName]);
-      otherNativeGlobals.forEach(([otherGlobalName]) => {
-        expect(globals[otherGlobalName].a).to.equal(1);
+      expectIsNative(name, globals[name]);
+      otherNativeGlobals.forEach(({ name: otherName }) => {
+        expect(globals[otherName].a).to.equal(1);
       });
     });
   });
 
   it('allows to unmock all globals', function () {
     const mock = {};
-    nativeGlobals.forEach(([globalName]) => {
-      globals.mock(globalName, mock);
+    nativeGlobals.forEach(({ name }) => {
+      globals.mock(name, mock);
     });
 
     globals.unmock();
 
-    nativeGlobals.forEach(([globalName]) => {
-      expectIsNative(globalName, globals[globalName]);
+    nativeGlobals.forEach(({ name }) => {
+      expectIsNative(name, globals[name]);
     });
   });
 });
 
 function expectIsNative(globalName, varToCheck) {
-  const [, nativeGlobal] = nativeGlobals.find(([name]) => name === globalName);
-  if (typeof nativeGlobal === 'function') {
-    expect(varToCheck.name).to.equal(`bound ${nativeGlobal.name}`);
+  const { global } = nativeGlobals.find(({ name }) => name === globalName);
+  if (typeof global === 'function') {
+    expect(varToCheck.name).to.equal(`bound ${global.name}`);
   } else {
-    expect(varToCheck).to.equal(nativeGlobal);
+    expect(varToCheck).to.equal(global);
   }
 }

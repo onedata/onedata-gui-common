@@ -14,6 +14,7 @@ import layout from '../templates/components/one-way-capacity';
 import { computed, observer } from '@ember/object';
 import { iecUnits } from 'onedata-gui-common/utils/bytes-to-string';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import _ from 'lodash';
 
 export default Component.extend({
   layout,
@@ -139,7 +140,7 @@ export default Component.extend({
 
   getUnitForBytes(bytes) {
     const sortedSizeUnits = this.get('sizeUnits').sortBy('multiplicator');
-    return sortedSizeUnits.findLast(sizeUnit => sizeUnit.multiplicator <= bytes) ||
+    return _.findLast(sortedSizeUnits, (sizeUnit) => sizeUnit.multiplicator <= bytes) ||
       sortedSizeUnits[0];
   },
 
