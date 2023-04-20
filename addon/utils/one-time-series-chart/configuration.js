@@ -546,7 +546,7 @@ import transformFunctionsIndex from './transform-functions';
 import seriesFunctionsIndex from './series-functions';
 import seriesBuildersIndex from './series-builders';
 import seriesGroupBuildersIndex from './series-group-builders';
-import formatValueFromUnit from './format-value-with-unit';
+import formatValueWithUnit from './format-value-with-unit';
 import _ from 'lodash';
 import { all as allFulfilled } from 'rsvp';
 import moment from 'moment';
@@ -1070,12 +1070,13 @@ export default class Configuration {
         rawYAxis.valueProvider : {
           functionName: 'currentValue',
         };
-      const valueFormatter = (value) => formatValueFromUnit({
+      const valueFormatter = (value, allowHtml = true) => formatValueWithUnit({
         value: this.evaluateTransformFunction({
           currentValue: value,
         }, rawValueProvider),
         unitName: rawYAxis.unitName,
         unitOptions: rawYAxis.unitOptions,
+        allowHtml,
       });
 
       return {
