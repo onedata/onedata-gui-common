@@ -7,6 +7,7 @@ import sinon from 'sinon';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import { set } from '@ember/object';
 import { render, focus, blur, fillIn, find } from '@ember/test-helpers';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | form-component/capacity-field', function () {
   setupRenderingTest();
@@ -121,7 +122,7 @@ describe('Integration | Component | form-component/capacity-field', function () 
 async function expectUnits(expectedUnits) {
   await clickTrigger('.capacity-field');
 
-  const options = document.querySelectorAll('.ember-power-select-option');
+  const options = globals.document.querySelectorAll('.ember-power-select-option');
   expect(options).to.have.length(expectedUnits.length);
   expectedUnits.forEach((unit, idx) => {
     expect(options[idx].textContent.trim()).to.equal(unit);

@@ -15,6 +15,7 @@ import {
   blur,
   find,
 } from '@ember/test-helpers';
+import globals from 'onedata-gui-common/utils/globals';
 
 const componentClass = 'lane-form';
 
@@ -157,7 +158,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
 
       await clickTrigger('.sourceStore-field');
 
-      const options = document.querySelectorAll('.ember-power-select-option');
+      const options = globals.document.querySelectorAll('.ember-power-select-option');
       const definedStores = this.get('definedStores');
       expect(options).to.have.length(definedStores.length + 1);
       expect(options[0].textContent.trim()).to.equal('Create store...');

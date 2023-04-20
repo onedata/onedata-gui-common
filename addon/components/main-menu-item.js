@@ -11,6 +11,7 @@ import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/main-menu-item';
 import { inject as service } from '@ember/service';
 import { dasherize } from '@ember/string';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Component.extend({
   layout,
@@ -81,7 +82,7 @@ export default Component.extend({
   },
 
   openInNewTab() {
-    window.open(
+    globals.window.open(
       this.get('router').urlFor('onedata.sidebar', dasherize(this.get('item.id'))),
       '_blank'
     );

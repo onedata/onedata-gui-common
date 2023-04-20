@@ -5,6 +5,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { render, find } from '@ember/test-helpers';
 import { htmlSafe } from '@ember/template';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 // WARNING: Tests below are fragile to zoom < 100%.
 
@@ -71,7 +72,7 @@ describe('Integration | Utility | dom/height', function () {
     await render(hbs`<div class="div" style={{style}}></div>`);
     const div = find('.div');
 
-    const emSize = parseFloat(window.getComputedStyle(div).fontSize);
+    const emSize = parseFloat(globals.window.getComputedStyle(div).fontSize);
 
     expectHeight(div, {
       [dom.LayoutBox.ContentBox]: emSize,

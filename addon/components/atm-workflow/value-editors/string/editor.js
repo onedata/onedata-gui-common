@@ -16,6 +16,7 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/string/editor';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default EditorBase.extend({
   layout,
@@ -31,7 +32,7 @@ export default EditorBase.extend({
    * @override
    */
   didInsertElement() {
-    const textarea = document.querySelector(
+    const textarea = globals.document.querySelector(
       `[data-editor-id="${this.editorState.id}"] textarea`
     );
     if (textarea) {

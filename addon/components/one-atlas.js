@@ -32,6 +32,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-atlas';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 // Atlas image aspect ratio - needed when recomputing new atlas size
 const ATLAS_AR = 1.361111111112;
@@ -59,12 +60,6 @@ export default Component.extend({
   _sizeRatio: ATLAS_AR,
 
   /**
-   * Window property for testing purposes
-   * @type {Window}
-   */
-  _window: window,
-
-  /**
    * Window resize event handler
    */
   _resizeEventHandler: computed(function () {
@@ -74,22 +69,13 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const {
-      _resizeEventHandler,
-      _window,
-    } = this.getProperties('_resizeEventHandler', '_window');
-
     this.resizeToFit();
-    _window.addEventListener('resize', _resizeEventHandler);
+    globals.window.addEventListener('resize', this._resizeEventHandler);
   },
 
   willDestroyElement() {
     try {
-      const {
-        _resizeEventHandler,
-        _window,
-      } = this.getProperties('_resizeEventHandler', '_window');
-      _window.removeEventListener('resize', _resizeEventHandler);
+      globals.window.removeEventListener('resize', this._resizeEventHandler);
     } finally {
       this._super(...arguments);
     }

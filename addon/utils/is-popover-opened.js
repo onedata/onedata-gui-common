@@ -6,8 +6,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import globals from 'onedata-gui-common/utils/globals';
+
 export default function isPopoverOpened() {
-  return Boolean(document.querySelector(
+  return Boolean(globals.document.querySelector(
     '.webui-popover.in'
   ));
 }

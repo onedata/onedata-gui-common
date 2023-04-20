@@ -1,13 +1,14 @@
 import { afterEach } from 'mocha';
 import resetStorages from 'ember-local-storage/test-support/reset-storage';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default function clearStore() {
   resetStorages();
-  if (window.localStorage) {
-    window.localStorage.clear();
+  if (globals.localStorage) {
+    globals.localStorage.clear();
   }
-  if (window.sessionStorage) {
-    window.sessionStorage.clear();
+  if (globals.sessionStorage) {
+    globals.sessionStorage.clear();
   }
 }
 

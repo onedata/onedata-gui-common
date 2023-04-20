@@ -4,6 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | tags-input/selector-editor', function () {
   setupRenderingTest();
@@ -141,5 +142,5 @@ describe('Integration | Component | tags-input/selector-editor', function () {
 });
 
 function getSelector() {
-  return document.querySelector('.webui-popover.in .tags-selector');
+  return globals.document.querySelector('.webui-popover.in .tags-selector');
 }

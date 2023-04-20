@@ -35,6 +35,7 @@ import legendColors from 'onedata-gui-common/utils/chartist/legend-colors';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import $ from 'jquery';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 const INACTIVE_SERIES_OPACITY = 0.3;
 const SERIES_HOVER_TRANSITION_TIME = 0.3;
@@ -228,7 +229,7 @@ export default Component.extend({
       _windowResizeHandler,
     } = this.getProperties('element', '_windowResizeHandler');
 
-    $(window).on('resize', _windowResizeHandler);
+    $(globals.window).on('resize', _windowResizeHandler);
     this._windowResized();
     $(element).mousemove((event) => {
       let parentGroup = event.target.closest('.ct-series');
@@ -251,7 +252,7 @@ export default Component.extend({
 
   willDestroyElement() {
     try {
-      $(window).off('resize', this.get('_windowResizeHandler'));
+      $(globals.window).off('resize', this.get('_windowResizeHandler'));
     } finally {
       this._super(...arguments);
     }
@@ -498,6 +499,6 @@ export default Component.extend({
    * Checks if the browser window has mobile width or not
    */
   _windowResized() {
-    safeExec(this, 'set', '_mobileMode', window.innerWidth < 768);
+    safeExec(this, 'set', '_mobileMode', globals.window.innerWidth < 768);
   },
 });

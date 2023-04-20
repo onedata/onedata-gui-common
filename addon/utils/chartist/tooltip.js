@@ -32,6 +32,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import dynamicRound from 'onedata-gui-common/utils/dynamic-round';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 const TOOLTIP_HTML = `
   <div class="chart-tooltip">
@@ -102,7 +103,7 @@ export default function tooltip(options) {
         });
       } else {
         if (chartEntry.x !== null) {
-          const element = document.elementFromPoint(chartEntry.x, chartEntry.y);
+          const element = globals.document.elementFromPoint(chartEntry.x, chartEntry.y);
           const elementIndex = chartEntry.showCallbacksTargets.indexOf(element);
           if (elementIndex > -1) {
             chartEntry.showCallbacks[elementIndex](chartEntry.x, chartEntry.y);
@@ -257,7 +258,7 @@ function getChartRenderEntry(chart) {
     };
     // remove not existing charts renders
     chartsIndex = chartsIndex.filter((existingChartRender) => {
-      return $.contains(document.documentElement, existingChartRender.node);
+      return $.contains(globals.document.documentElement, existingChartRender.node);
     });
     chartsIndex.push(chartRender);
   }

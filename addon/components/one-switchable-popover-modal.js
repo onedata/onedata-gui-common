@@ -31,7 +31,6 @@
  */
 
 import Component from '@ember/component';
-
 import { debounce, next } from '@ember/runloop';
 import { observer, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-switchable-popover-modal';
@@ -39,6 +38,7 @@ import ClickOutside from 'ember-click-outside/mixin';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { resolve } from 'rsvp';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Component.extend(ClickOutside, {
   layout,
@@ -213,12 +213,6 @@ export default Component.extend(ClickOutside, {
   _triggersConfigurationOld: Object.freeze([]),
 
   /**
-   * Property for testing purposes
-   * @type {Window}
-   */
-  _window: window,
-
-  /**
    * If true, component will handle open/close actions on its own.
    * @type {computed.boolean}
    */
@@ -367,7 +361,7 @@ export default Component.extend(ClickOutside, {
     // bind neccessary event listeners
     this.bindTriggerListeners();
     next(this, () => safeExec(this, 'addClickOutsideListener'));
-    this.get('_window').addEventListener('resize', _windowResizeHandler);
+    globals.window.addEventListener('resize', _windowResizeHandler);
 
     this.handleManualTriggering();
   },
@@ -380,7 +374,7 @@ export default Component.extend(ClickOutside, {
     // unbind event listeners
     this.unbindTriggerListeners();
     this.removeClickOutsideListener();
-    this.get('_window').removeEventListener('resize', _windowResizeHandler);
+    globals.window.removeEventListener('resize', _windowResizeHandler);
   },
 
   clickOutside(event) {
@@ -498,11 +492,9 @@ export default Component.extend(ClickOutside, {
     const {
       switchBreakpoint,
       _activeTriggerConfiguration,
-      _window,
     } = this.getProperties(
       'switchBreakpoint',
       '_activeTriggerConfiguration',
-      '_window'
     );
 
     if (!_activeTriggerConfiguration) {
@@ -510,7 +502,7 @@ export default Component.extend(ClickOutside, {
       return;
     }
 
-    const inModalSize = _window.innerWidth < switchBreakpoint;
+    const inModalSize = globals.window.innerWidth < switchBreakpoint;
     const confMode = _activeTriggerConfiguration.mode;
     if (confMode === 'modal' || (confMode === 'dynamic' && inModalSize)) {
       this.set('_renderMode', 'modal');

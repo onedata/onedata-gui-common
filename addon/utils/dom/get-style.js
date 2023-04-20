@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import globals from 'onedata-gui-common/utils/globals';
+
 /**
  * @param {HTMLElement} element
  * @param {keyof CSSStyleDeclaration} stylePropertyName CSS property name in
@@ -13,6 +15,6 @@
  * @returns {string}
  */
 export default function getStyle(element, stylePropertyName) {
-  const computedStyles = window.getComputedStyle(element);
+  const computedStyles = globals.window.getComputedStyle(element);
   return computedStyles?.[stylePropertyName] ?? '';
 }

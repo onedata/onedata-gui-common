@@ -8,16 +8,18 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import globals from 'onedata-gui-common/utils/globals';
+
 export default function browserPost(path, params, method = 'post') {
   // The rest of this code assumes you are not using a library.
   // It can be made less wordy if you use one.
-  const form = document.createElement('form');
+  const form = globals.document.createElement('form');
   form.setAttribute('method', method);
   form.setAttribute('action', path);
 
   for (const key in params) {
     if (params.hasOwnProperty(key)) {
-      const hiddenField = document.createElement('input');
+      const hiddenField = globals.document.createElement('input');
       hiddenField.setAttribute('type', 'hidden');
       hiddenField.setAttribute('name', key);
       hiddenField.setAttribute('value', params[key]);
@@ -26,6 +28,6 @@ export default function browserPost(path, params, method = 'post') {
     }
   }
 
-  document.body.appendChild(form);
+  globals.document.body.appendChild(form);
   form.submit();
 }

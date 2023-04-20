@@ -8,18 +8,19 @@
 
 import $ from 'jquery';
 import { next } from '@ember/runloop';
+import globals from 'onedata-gui-common/utils/globals';
 
 export function initialize(applicationInstance) {
   // Fix for Firefox
-  window.addEventListener('unload', function () {});
+  globals.window.addEventListener('unload', function () {});
 
   // Hack to not use Safari cache
   const browser = applicationInstance.lookup('service:browser');
   const isSafari = browser.get('browserName') === 'safari';
   if (isSafari) {
-    $(window).bind('pagehide', function () {
-      window.onedataIsReloadingApp = 1;
-      next(() => window.location.reload());
+    $(globals.window).bind('pagehide', function () {
+      globals.window.onedataIsReloadingApp = 1;
+      next(() => globals.location.reload());
     });
   }
 }

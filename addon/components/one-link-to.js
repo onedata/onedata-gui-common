@@ -17,6 +17,7 @@
 import LinkComponent from '@ember/routing/link-component';
 import { inject as service } from '@ember/service';
 import { equal, raw } from 'ember-awesome-macros';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default LinkComponent.extend({
   attributeBindings: ['draggable'],
@@ -47,7 +48,7 @@ export default LinkComponent.extend({
 
   dragStart(event) {
     const nestedInputs = [...this.get('element').querySelectorAll('input')];
-    if (nestedInputs.includes(document.activeElement)) {
+    if (nestedInputs.includes(globals.document.activeElement)) {
       event.preventDefault();
       return;
     }

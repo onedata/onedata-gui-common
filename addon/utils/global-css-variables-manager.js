@@ -28,6 +28,7 @@
  */
 
 import config from 'ember-get-config';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * @typedef {unknown} CssVariableOwner It's an entity which asked manager to
@@ -199,8 +200,8 @@ export class GlobalCssVariablesManager {
    * @returns {HTMLStyleElement}
    */
   createStyleElement() {
-    const style = document.createElement('style');
-    document.head.appendChild(style);
+    const style = globals.document.createElement('style');
+    globals.document.head.appendChild(style);
     return style;
   }
 

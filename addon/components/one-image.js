@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/one-image';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * Inserts an image with optional - dynamicly sized - text.
@@ -53,13 +54,13 @@ export default Component.extend({
       element,
     } = this.getProperties('_onResizeHandler', 'element');
 
-    window.addEventListener('resize', _onResizeHandler);
+    globals.window.addEventListener('resize', _onResizeHandler);
     element.querySelector('.image').addEventListener('load', _onResizeHandler);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    window.removeEventListener('resize', this.get('_onResizeHandler'));
+    globals.window.removeEventListener('resize', this.get('_onResizeHandler'));
   },
 
   _recalculateImageFontSize() {

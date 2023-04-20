@@ -117,6 +117,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { or, neq, array, raw } from 'ember-awesome-macros';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 import config from 'ember-get-config';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * @typedef {Object} RunsListVisibleRunsPosition
@@ -547,7 +548,7 @@ export default Component.extend({
       // Using requestAnimationFrame to be sure, that changes are painted in the
       // browser. Without this callback, chrome-like browsers sometimes break
       // down transition animations.
-      window.requestAnimationFrame(() => {
+      globals.window.requestAnimationFrame(() => {
         safeExec(this, () => {
           this.performActionOnAnimationFsm(actionName, actionData);
         });
