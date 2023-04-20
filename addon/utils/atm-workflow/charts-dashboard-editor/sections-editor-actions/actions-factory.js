@@ -8,6 +8,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { set } from '@ember/object';
 import AddElementAction from './add-element-action';
 import MoveElementAction from './move-element-action';
 import DuplicateElementAction from './duplicate-element-action';
@@ -211,6 +212,11 @@ export default class ActionsFactory {
           }
         }, 2000);
       }
+    } else {
+      set(action, 'context', {
+        ...action.context,
+        ...context,
+      });
     }
 
     this.activeChangeElementPropertyAction =

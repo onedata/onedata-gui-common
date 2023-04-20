@@ -32,7 +32,7 @@
     $edge-drag-target-box-offset: 0.25 * $section-padding;
     display: grid;
     min-height: 0;
-    grid-template-columns: 1fr 15em;
+    grid-template-columns: 1fr 20em;
     grid-template-rows: min-content 1fr;
 
     .editor-toolbar {
@@ -115,6 +115,7 @@
       gap: $section-padding;
 
       .section-header,
+      .section-description,
       .section-charts,
       .section-subsections {
         flex-basis: 100%;
@@ -277,6 +278,31 @@
 
     .editor-sidebar {
       border-left: 1px solid $main-border-color;
+      padding: 1em;
+      min-height: 0;
+
+      .control-label {
+        text-align: left;
+        width: 100%;
+        padding: 0;
+        padding-bottom: 0.2em;
+      }
+
+      .form-group {
+        margin-bottom: 1em;
+      }
+
+      .field-renderer:last-child {
+        margin-bottom: 0;
+      }
+
+      .titleTip-field textarea {
+        height: 7em;
+      }
+
+      .description-field textarea {
+        height: 10em;
+      }
     }
 
     @media (max-width: $screen-xs-max) {
