@@ -30,7 +30,7 @@ export default Action.extend({
   context: undefined,
 
   /**
-   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
+   * @type {ComputedProperty<RemoveElementActionContext['elementToRemove']>}
    */
   elementToRemove: reads('context.elementToRemove'),
 

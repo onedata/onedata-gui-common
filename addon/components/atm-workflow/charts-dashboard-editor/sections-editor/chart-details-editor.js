@@ -1,3 +1,12 @@
+/**
+ * Allows edition of chart details - title and title tip. It has also a trigger
+ * to enter the chart editor.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed, observer, set } from '@ember/object';
 import { reads } from '@ember/object/computed';

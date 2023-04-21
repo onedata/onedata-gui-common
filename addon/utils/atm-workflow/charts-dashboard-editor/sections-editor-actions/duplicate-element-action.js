@@ -31,7 +31,7 @@ export default Action.extend({
   context: undefined,
 
   /**
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
+   * @type {ComputedProperty<DuplicateElementActionContext['elementToDuplicate']>}
    */
   elementToDuplicate: reads('context.elementToDuplicate'),
 
@@ -41,13 +41,13 @@ export default Action.extend({
   onSelectElement: reads('context.onSelectElement'),
 
   /**
-   * @type {ComputedProperty<AddElementActionContext['onDeselectElement']>}
+   * @type {ComputedProperty<DuplicateElementActionContext['onDeselectElement']>}
    */
   onDeselectElement: reads('context.onDeselectElement'),
 
   /**
    * Becomes defined during action execution
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
+   * @type {DuplicateElementActionContext['elementToDuplicate'] | null}
    */
   createdDuplicate: null,
 

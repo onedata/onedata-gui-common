@@ -36,12 +36,12 @@ export default Action.extend({
   context: undefined,
 
   /**
-   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.ElementType>}
+   * @type {ComputedProperty<AddElementActionContext['newElementType']>}
    */
   newElementType: reads('context.newElementType'),
 
   /**
-   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
+   * @type {ComputedProperty<AddElementActionContext['targetSection']>}
    */
   targetSection: reads('context.targetSection'),
 

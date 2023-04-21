@@ -1,3 +1,11 @@
+/**
+ * Sidebar for sections editor. Contains details of selected element.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import PerfectScrollbarElement from 'onedata-gui-common/components/perfect-scrollbar-element';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor/sidebar';

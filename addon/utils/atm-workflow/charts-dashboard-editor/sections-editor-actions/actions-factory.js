@@ -41,25 +41,25 @@ export default class ActionsFactory {
   } = {}) {
     /**
      * @private
-     * @type {unknown}
+     * @type {ActionsFactoryInitOptions['ownerSource']}
      */
     this.ownerSource = ownerSource;
 
     /**
      * @private
-     * @type {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void}
+     * @type {ActionsFactoryInitOptions['onSelectElement']}
      */
     this.onSelectElement = onSelectElement;
 
     /**
      * @private
-     * @type {(elementToDeselect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section) => void}
+     * @type {ActionsFactoryInitOptions['onDeselectElement']}
      */
     this.onDeselectElement = onDeselectElement;
 
     /**
      * @private
-     * @type {(chart: Utils.AtmWorkflow.ChartsDashboardEditor.Chart) => void}
+     * @type {ActionsFactoryInitOptions['onOpenChartEditor']}
      */
     this.onOpenChartEditor = onOpenChartEditor;
 

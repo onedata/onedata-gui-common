@@ -110,6 +110,7 @@ export default OneDraggableObject.extend(I18n, {
    * @override
    */
   click(event) {
+    this._super(...arguments);
     if (isDirectlyClicked(event)) {
       const action = this.actionsFactory
         .createSelectElementAction({ elementToSelect: this.chart });
