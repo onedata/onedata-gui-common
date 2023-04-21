@@ -41,9 +41,40 @@ const Chart = EmberObject.extend({
   /**
    * @public
    * @virtual optional
+   * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.Axis>}
+   */
+  axes: undefined,
+
+  /**
+   * @public
+   * @virtual optional
+   * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup>}
+   */
+  seriesGroups: undefined,
+
+  /**
+   * @public
+   * @virtual optional
+   * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.Series>}
+   */
+  series: undefined,
+
+  /**
+   * @public
+   * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
    */
   parentSection: null,
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    if (!this.axes) {
+      this.set('axes', []);
+    }
+  },
 
   /**
    * @override
@@ -52,6 +83,18 @@ const Chart = EmberObject.extend({
     try {
       if (this.elementOwner) {
         this.set('elementOwner', null);
+      }
+      if (this.axes.length) {
+        this.axes.forEach((axis) => axis.destroy());
+        this.set('axes', []);
+      }
+      if (this.seriesGroups.length) {
+        this.seriesGroups.forEach((group) => group.destroy());
+        this.set('seriesGroups', []);
+      }
+      if (this.series.length) {
+        this.series.forEach((series) => series.destroy());
+        this.set('series', []);
       }
       if (this.parentSection) {
         this.set('parentSection', null);
@@ -70,6 +113,9 @@ const Chart = EmberObject.extend({
       elementOwner: this.elementOwner,
       title: this.title,
       titleTip: this.titleTip,
+      axes: this.axes.map((axis) => axis.clone()),
+      seriesGroups: this.seriesGroups.map((group) => group.clone()),
+      series: this.series.map((series) => series.clone()),
       parentSection: this.parentSection,
     });
   },

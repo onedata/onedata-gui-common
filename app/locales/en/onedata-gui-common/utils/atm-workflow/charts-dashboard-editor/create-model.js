@@ -5,4 +5,13 @@ export default {
   newSection: {
     title: 'Untitled section',
   },
+  newAxis: {
+    name: 'Value',
+  },
+  newGroup: {
+    name: 'Group',
+  },
+  newSeries: {
+    name: 'Series',
+  },
 };
