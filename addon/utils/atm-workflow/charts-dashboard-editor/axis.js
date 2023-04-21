@@ -120,13 +120,12 @@ const Axis = EmberObject.extend({
       elementOwner: this.elementOwner,
       id: generateId(),
       name: this.name,
-      titleTip: this.titleTip,
       unitName: this.unitName,
       unitOptions: this.unitOptions ?
         EmberObject.create(this.unitOptions) : this.unitOptions,
       minInterval: this.minInterval,
       series: [],
-      parentChart: this.parentSection,
+      parentChart: this.parentChart,
     });
   },
 });

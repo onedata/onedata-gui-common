@@ -74,6 +74,12 @@ const Chart = EmberObject.extend({
     if (!this.axes) {
       this.set('axes', []);
     }
+    if (!this.seriesGroups) {
+      this.set('seriesGroups', []);
+    }
+    if (!this.series) {
+      this.set('series', []);
+    }
   },
 
   /**

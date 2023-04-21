@@ -139,7 +139,7 @@ function createChartModelFromSpec(chartSpec, elementOwner = null) {
     titleTip: chartSpec.title?.tip ?? '',
     axes: chartSpec.yAxes
       ?.filter(Boolean)
-      .map((axisSpec) => createAxisModelFromSpec(axisSpec, elementOwner)),
+      .map((axisSpec) => createAxisModelFromSpec(axisSpec, elementOwner)) ?? [],
     seriesGroups: chartSpec.seriesGroupBuilders
       ?.filter((builder) =>
         builder?.builderType === 'static' &&

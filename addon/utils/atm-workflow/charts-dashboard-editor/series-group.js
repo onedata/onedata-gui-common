@@ -137,7 +137,7 @@ const SeriesGroup = EmberObject.extend({
       subgroups: this.subgroups.map((subgroup) => subgroup.clone()),
       series: [],
       parentGroup: this.parentGroup,
-      parentChart: this.parentSection,
+      parentChart: this.parentChart,
     });
   },
 

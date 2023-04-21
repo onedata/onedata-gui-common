@@ -146,7 +146,7 @@ const Series = EmberObject.extend({
       axis: this.axis,
       color: this.color,
       group: this.group,
-      parentChart: this.parentSection,
+      parentChart: this.parentChart,
     });
   },
 });
