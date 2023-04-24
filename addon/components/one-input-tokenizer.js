@@ -13,6 +13,7 @@ import { computed, observer } from '@ember/object';
 import { scheduleOnce, debounce } from '@ember/runloop';
 import notImplementedWarn from 'onedata-gui-common/utils/not-implemented-ignore';
 import $ from 'jquery';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Component.extend({
   layout,
@@ -91,13 +92,16 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     this.initInputTokenizer();
-    $(window).on(`resize.${this.elementId}`, () => debounce(this, 'adjustHeight', 100));
+    $(globals.window).on(
+      `resize.${this.elementId}`,
+      () => debounce(this, 'adjustHeight', 100)
+    );
     scheduleOnce('afterRender', () => this.adjustHeight());
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    $(window).off(`.${this.elementId}`);
+    $(globals.window).off(`.${this.elementId}`);
   },
 
   // TODO: currently only makes input larger, not smaller
@@ -111,7 +115,7 @@ export default Component.extend({
       return;
     }
     if (inputWrapper.offsetTop + inputWrapper.offsetHeight > wrapper.offsetHeight) {
-      const currentHeight = parseInt(window.getComputedStyle(wrapper).height);
+      const currentHeight = parseInt(globals.window.getComputedStyle(wrapper).height);
       wrapper.style.height = currentHeight + 24 + 'px';
     }
   },

@@ -1,11 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import animateCss from 'onedata-gui-common/utils/animate-css';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Unit | Utility | animate-css', function () {
   it('adds and removes animation classes', function () {
-    const element = document.createElement('div');
-    const div = document.body.appendChild(element);
+    const element = globals.document.createElement('div');
+    const div = globals.document.body.appendChild(element);
 
     const animatePromise = animateCss(div, 'pulse-mint', 'fast');
     expect(div).to.have.class('animated');

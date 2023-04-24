@@ -13,6 +13,7 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import ModalInstance from 'onedata-gui-common/utils/modal-manager/modal-instance';
 import { set } from '@ember/object';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | global-modal', function () {
   setupRenderingTest();
@@ -500,7 +501,7 @@ describe('Integration | Component | global-modal', function () {
 });
 
 function getGlobalModal() {
-  return document.querySelector('.modal.global-modal');
+  return globals.document.querySelector('.modal.global-modal');
 }
 
 function isGlobalModalOpened() {

@@ -13,6 +13,7 @@ import { resolve } from 'rsvp';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import $ from 'jquery';
 import config from 'ember-get-config';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * Checks if we are in environment that needs to create development model.
@@ -41,7 +42,7 @@ export const mockGuiContext = {
   clusterType: 'oneprovider',
   clusterId: 'oneprovider1',
   browserDebugLogs: true,
-  apiOrigin: location.origin,
+  apiOrigin: globals.location.origin,
 };
 
 export function initialize(application) {

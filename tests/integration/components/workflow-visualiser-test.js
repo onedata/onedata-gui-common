@@ -25,6 +25,7 @@ import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions
 import { resolve, Promise } from 'rsvp';
 import { schedule } from '@ember/runloop';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 const laneWidth = 300;
 
@@ -535,18 +536,24 @@ describe('Integration | Component | workflow-visualiser', function () {
   });
 });
 
-class WindowStub {
-  constructor() {
-    this.resizeListeners = [];
-  }
-
-  addEventListener(eventName, listener) {
-    if (eventName === 'resize') {
-      this.resizeListeners.push(listener);
-    }
-  }
-
-  removeEventListener() {}
+function createWindowStub() {
+  return {
+    resizeListeners: new Set(),
+    addEventListener(eventName, listener) {
+      if (eventName === 'resize') {
+        this.resizeListeners.add(listener);
+      } else {
+        globals.nativeWindow.addEventListener(...arguments);
+      }
+    },
+    removeEventListener(eventName, listener) {
+      if (eventName === 'resize') {
+        this.resizeListeners.delete(listener);
+      } else {
+        globals.nativeWindow.removeEventListener(...arguments);
+      }
+    },
+  };
 }
 
 function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
@@ -872,9 +879,9 @@ async function renderWithRawData(testCase, rawData) {
 }
 
 async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
+  globals.mock('window', createWindowStub());
   testCase.setProperties({
     rawData: generateExample(lanesNumber, 0, 0),
-    _window: new WindowStub(),
   });
   await changeContainerWidthForScrollTest(testCase, containerWidth);
 
@@ -883,7 +890,6 @@ async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
       {{workflow-visualiser
         mode="view"
         rawData=rawData
-        _window=_window
       }}
     </div>
   `);
@@ -895,7 +901,7 @@ async function changeContainerWidthForScrollTest(testCase, newWidth) {
     htmlSafe(`min-width: ${newWidth}px; max-width: ${newWidth}px`)
   );
   await settled();
-  testCase.get('_window').resizeListeners.forEach(f => f());
+  globals.window.resizeListeners.forEach(f => f());
   await settled();
 }
 
@@ -903,7 +909,7 @@ async function getActionTrigger(elementType, elementPath, actionName) {
   const elementTypeForClasses = dasherize(elementType);
   const elementId = idGenerators[elementType](...elementPath);
   await click(`[data-visualiser-element-id="${elementId}"] .${elementTypeForClasses}-actions-trigger`);
-  return document.querySelector(
+  return globals.document.querySelector(
     `.webui-popover.in .${actionName}-${elementTypeForClasses}-action-trigger`
   );
 }

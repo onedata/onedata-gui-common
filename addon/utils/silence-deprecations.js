@@ -12,6 +12,7 @@
  */
 
 import { registerDeprecationHandler } from '@ember/debug';
+import globals from 'onedata-gui-common/utils/globals';
 
 let wasCalled = false;
 let deprecationsOccurred = false;
@@ -23,8 +24,8 @@ export default function silenceDeprecations() {
   wasCalled = true;
 
   registerDeprecationHandler((message) => {
-    if (!Array.isArray(window.emberDeprecations)) {
-      window.emberDeprecations = [];
+    if (!Array.isArray(globals.window.emberDeprecations)) {
+      globals.window.emberDeprecations = [];
     }
 
     // First deprecation occurred
@@ -33,6 +34,6 @@ export default function silenceDeprecations() {
       deprecationsOccurred = true;
     }
 
-    window.emberDeprecations.push(message);
+    globals.window.emberDeprecations.push(message);
   });
 }

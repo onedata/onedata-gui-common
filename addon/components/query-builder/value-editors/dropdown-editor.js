@@ -13,6 +13,7 @@ import { guidFor } from '@ember/object/internals';
 import { computed } from '@ember/object';
 import { next } from '@ember/runloop';
 import { array } from 'ember-awesome-macros';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default EditorBaseComponent.extend(I18n, {
   layout,
@@ -49,7 +50,8 @@ export default EditorBaseComponent.extend(I18n, {
     this._super(...arguments);
     if (this.get('initiallyFocused')) {
       next(() => {
-        const trigger = document.querySelector(`.${this.get('guid')}.ember-power-select-trigger`);
+        const trigger = globals.document
+          .querySelector(`.${this.get('guid')}.ember-power-select-trigger`);
         const mouseDownEvent = new MouseEvent('mousedown');
         trigger.dispatchEvent(mouseDownEvent);
       });

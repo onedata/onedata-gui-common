@@ -3,6 +3,7 @@ import { describe, it, beforeEach, afterEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | one-markdown-to-html', function () {
   setupRenderingTest();
@@ -71,7 +72,7 @@ Some text
     const propertyName = 'markdownSecurityTest';
 
     function clearWindowEnv() {
-      delete window[propertyName];
+      delete globals.window[propertyName];
     }
 
     beforeEach(function () {
@@ -92,7 +93,7 @@ Some text
       await click('a');
 
       const html = this.element.innerHTML;
-      expect(window[propertyName], `window.${propertyName}`).to.be.undefined;
+      expect(globals.window[propertyName], `window.${propertyName}`).to.be.undefined;
       expect(html).to.not.contain(js);
     });
 
@@ -105,7 +106,7 @@ Some text
       await click('a');
 
       const html = this.element.innerHTML;
-      expect(window[propertyName], `window.${propertyName}`).to.be.undefined;
+      expect(globals.window[propertyName], `window.${propertyName}`).to.be.undefined;
       expect(html).to.not.contain(js);
     });
 
@@ -119,7 +120,7 @@ Some text
       await render(hbs `{{one-markdown-to-html markdown=markdown}}`);
 
       const html = this.element.innerHTML;
-      expect(window[propertyName], `window.${propertyName}`).to.be.undefined;
+      expect(globals.window[propertyName], `window.${propertyName}`).to.be.undefined;
       expect(html).to.not.contain(js);
     });
   });

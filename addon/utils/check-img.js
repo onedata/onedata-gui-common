@@ -7,9 +7,10 @@
  */
 
 import { Promise } from 'rsvp';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default function checkImg(url) {
-  const img = document.body.appendChild(document.createElement('img'));
+  const img = globals.document.body.appendChild(globals.document.createElement('img'));
   img.classList.add('hidden');
   return new Promise((resolve, reject) => {
     try {
@@ -19,5 +20,5 @@ export default function checkImg(url) {
     } catch (error) {
       reject(error);
     }
-  }).finally(() => document.body.removeChild(img));
+  }).finally(() => globals.document.body.removeChild(img));
 }

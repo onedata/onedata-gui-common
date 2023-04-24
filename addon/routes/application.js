@@ -16,6 +16,7 @@ import { get } from '@ember/object';
 import _ from 'lodash';
 import smoothscroll from 'smoothscroll-polyfill';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Route.extend(ApplicationRouteMixin, {
   guiUtils: service(),
@@ -82,7 +83,7 @@ export default Route.extend(ApplicationRouteMixin, {
     // smooth scroll for perfect scrollbar. As Firefox + Chrome cover most of
     // the GUI users, we enforce smooth scroll polyfill in every browser
     // for simplicity.
-    window.__forceSmoothScrollPolyfill__ = true;
+    globals.window.__forceSmoothScrollPolyfill__ = true;
     smoothscroll.polyfill();
   },
 

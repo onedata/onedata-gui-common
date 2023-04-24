@@ -1,4 +1,5 @@
 import { triggerEvent } from '@ember/test-helpers';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default class OneTooltipHelper {
   /**
@@ -26,7 +27,7 @@ export default class OneTooltipHelper {
    * @returns {HTMLElement}
    */
   getTooltip() {
-    return document.querySelector('.tooltip.in');
+    return globals.document.querySelector('.tooltip.in');
   }
 
   /**

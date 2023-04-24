@@ -4,6 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { hbs } from 'ember-cli-htmlbars';
 import { render, find } from '@ember/test-helpers';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Utility | dom/is-hidden', function () {
   setupRenderingTest();
@@ -39,7 +40,7 @@ describe('Integration | Utility | dom/is-hidden', function () {
   });
 
   it('returns true for a button detached from the document', async function () {
-    const button = document.createElement('button');
+    const button = globals.document.createElement('button');
 
     expect(dom.isHidden(button)).to.be.true;
   });

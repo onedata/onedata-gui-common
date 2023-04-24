@@ -1,7 +1,8 @@
 import { click } from '@ember/test-helpers';
+import globals from 'onedata-gui-common/utils/globals';
 
 export function getModal(modalClass) {
-  return document.querySelector(`.modal.in${modalClass ? `.${modalClass}` : ''}`);
+  return globals.document.querySelector(`.modal.in${modalClass ? `.${modalClass}` : ''}`);
 }
 
 export function getModalHeader(modalClass) {
@@ -24,5 +25,5 @@ export function isModalOpened(modalClass) {
 }
 
 export async function closeModalUsingBackground() {
-  await click(document.querySelector('.modal'));
+  await click(globals.document.querySelector('.modal'));
 }

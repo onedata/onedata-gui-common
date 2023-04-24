@@ -5,6 +5,7 @@ import layout from 'onedata-gui-common/templates/components/basic-table';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import $ from 'jquery';
 import 'basictable';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * Creates a table element which uses JQuery Basic Table to handle with small devices.
@@ -52,7 +53,7 @@ export default Component.extend({
       );
     }
 
-    $(window).on(
+    $(globals.window).on(
       `resize.${elementId}`,
       () => debounce(this, '_updateState', 1)
     );
@@ -68,7 +69,7 @@ export default Component.extend({
     } = this.getProperties('element', 'elementId');
 
     $(element).basictable('destroy');
-    $(window).off(`resize.${elementId}`);
+    $(globals.window).off(`resize.${elementId}`);
   },
 
   _initBasictable() {
@@ -94,7 +95,7 @@ export default Component.extend({
       this,
       'set',
       '_isMobile',
-      window.innerWidth <= this.get('breakpoint')
+      globals.window.innerWidth <= this.get('breakpoint')
     );
   },
 

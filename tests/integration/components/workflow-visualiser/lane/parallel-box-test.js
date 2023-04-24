@@ -17,6 +17,7 @@ import { Promise } from 'rsvp';
 import { set, setProperties } from '@ember/object';
 import sinon from 'sinon';
 import { getModalFooter } from '../../../../helpers/modal';
+import globals from 'onedata-gui-common/utils/globals';
 
 const blockActionsSpec = [{
   className: 'move-up-parallel-box-action-trigger',
@@ -109,7 +110,7 @@ describe('Integration | Component | workflow-visualiser/lane/parallel-box', func
       await click(actionsTrigger);
 
       const actions =
-        document.querySelectorAll('.webui-popover.in .actions-popover-content a');
+        globals.document.querySelectorAll('.webui-popover.in .actions-popover-content a');
       expect(actions).to.have.length(blockActionsSpec.length);
       blockActionsSpec.forEach(({ className, label, icon }, index) => {
         const action = actions[index];
@@ -129,7 +130,7 @@ describe('Integration | Component | workflow-visualiser/lane/parallel-box', func
         await render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
         await click('.parallel-box-actions-trigger');
-        await click(document.querySelector(
+        await click(globals.document.querySelector(
           `body .webui-popover.in .move-${direction}-parallel-box-action-trigger`
         ));
 
@@ -142,7 +143,7 @@ describe('Integration | Component | workflow-visualiser/lane/parallel-box', func
         await render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
         await click('.parallel-box-actions-trigger');
-        const actionParent = document.querySelector(
+        const actionParent = globals.document.querySelector(
           `.webui-popover.in .move-${direction}-parallel-box-action-trigger`
         ).parentElement;
 
@@ -159,7 +160,7 @@ describe('Integration | Component | workflow-visualiser/lane/parallel-box', func
       `);
 
       await click('.parallel-box-actions-trigger');
-      await click(document.querySelector(
+      await click(globals.document.querySelector(
         '.webui-popover.in .remove-parallel-box-action-trigger'
       ));
       await click(getModalFooter().querySelector('.question-yes'));

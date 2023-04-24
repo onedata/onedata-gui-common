@@ -10,6 +10,7 @@
 import Mixin from '@ember/object/mixin';
 import { scheduleOnce } from '@ember/runloop';
 import WindowResizeHandler from 'onedata-gui-common/mixins/window-resize-handler';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Mixin.create(WindowResizeHandler, {
   /**
@@ -21,18 +22,10 @@ export default Mixin.create(WindowResizeHandler, {
   didInsertElement() {
     this._super(...arguments);
 
-    const {
-      _window,
-      callWindowResizeHandlerOnInsert,
-    } = this.getProperties(
-      '_window',
-      'callWindowResizeHandlerOnInsert'
-    );
-
     this.attachWindowResizeHandler();
-    if (callWindowResizeHandlerOnInsert) {
+    if (this.callWindowResizeHandlerOnInsert) {
       scheduleOnce('afterRender', this, 'onWindowResize', {
-        target: _window,
+        target: globals.window,
       });
     }
   },

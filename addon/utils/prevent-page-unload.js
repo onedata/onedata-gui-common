@@ -15,6 +15,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import globals from 'onedata-gui-common/utils/globals';
+
 /**
  * @param {BeforeUnloadEvent} beforeUnloadEvent
  * @param {String} confirmationMessage
@@ -27,6 +29,6 @@ export default function preventPageUnload(
   if (beforeUnloadEvent) {
     beforeUnloadEvent.preventDefault();
   }
-  (beforeUnloadEvent || window.event).returnValue = confirmationMessage;
+  (beforeUnloadEvent || globals.window.event).returnValue = confirmationMessage;
   return confirmationMessage;
 }

@@ -26,6 +26,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { resolve } from 'rsvp';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Component.extend({
   layout,
@@ -221,7 +222,7 @@ export default Component.extend({
       placement: this.getPlacement(),
       style: (popoverStyle || '') + (isInModal ? ' over-modals' : ''),
       padding,
-      container: document.querySelector('.ember-application'),
+      container: globals.document.querySelector('.ember-application'),
       multi,
       arrow,
       onShow: () => this.onShow(),
@@ -230,7 +231,7 @@ export default Component.extend({
 
     this.set('popoverInstance', $triggerElement.data('plugin_webuiPopover'));
 
-    window.addEventListener(windowEvent, _resizeHandler);
+    globals.window.addEventListener(windowEvent, _resizeHandler);
   },
 
   willDestroyElement() {
@@ -241,7 +242,7 @@ export default Component.extend({
       _resizeHandler,
       windowEvent,
     } = this.getProperties('_resizeHandler', 'windowEvent');
-    window.removeEventListener(windowEvent, _resizeHandler);
+    globals.window.removeEventListener(windowEvent, _resizeHandler);
   },
 
   _popover() {

@@ -4,6 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | one-collapsible-toolbar', function () {
   setupRenderingTest();
@@ -82,7 +83,7 @@ describe('Integration | Component | one-collapsible-toolbar', function () {
     `);
 
     await click('.collapsible-toolbar-toggle');
-    const popovers = document.querySelectorAll('.webui-popover.in');
+    const popovers = globals.document.querySelectorAll('.webui-popover.in');
     expect(popovers.length, 'shows popover after click').to.equal(1);
     const item = popovers[0].querySelector('a');
     expect(item, 'dropdown item has trigger class')

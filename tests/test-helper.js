@@ -6,6 +6,7 @@ import Application from '../app';
 import config from '../config/environment';
 import { unsuppressRejections } from './helpers/suppress-rejections';
 import handleHidepassed from './handle-hidepassed';
+import globals from 'onedata-gui-common/utils/globals';
 import sinon from 'sinon';
 
 mocha.setup({
@@ -16,6 +17,7 @@ setApplication(Application.create(config.APP));
 
 afterEach(unsuppressRejections);
 afterEach(() => sinon.restore());
+afterEach(() => globals.unmock());
 
 handleHidepassed();
 start();
