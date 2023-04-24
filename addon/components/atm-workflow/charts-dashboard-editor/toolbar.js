@@ -7,6 +7,7 @@
  */
 
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/toolbar';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -30,6 +31,18 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   */
+  actionsFactory: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
+   */
+  editedChart: null,
+
+  /**
+   * @virtual
    * @type {() => void}
    */
   onRemoveDashboard: undefined,
@@ -39,7 +52,28 @@ export default Component.extend(I18n, {
    */
   isRemoveDashboardConfirmationOpened: false,
 
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  title: computed('editedChart.title', function title() {
+    if (this.editedChart) {
+      return this.editedChart.title ?
+        this.t('chartEditor', { chartTitle: this.editedChart.title }) :
+        this.t('chartEditorUnnamed');
+    } else {
+      return this.t('dashboardOverview');
+    }
+  }),
+
   actions: {
+    /**
+     * @returns {void}
+     */
+    back() {
+      const action = this.actionsFactory.createEndChartContentEditionAction();
+      action.execute();
+    },
+
     /**
      * @returns {void}
      */

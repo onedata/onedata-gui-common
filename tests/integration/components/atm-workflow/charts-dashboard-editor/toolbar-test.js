@@ -4,6 +4,10 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find, findAll, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
+import {
+  createNewChart,
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import { set } from '@ember/object';
 
 describe('Integration | Component | atm-workflow/charts-dashboard-editor/toolbar', function () {
   setupRenderingTest();
@@ -121,11 +125,71 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/toolbar
 
     expect(this.onRemoveDashboard).to.be.calledOnce;
   });
+
+  it('shows "dashboard overview" title when chart editor is not active', async function () {
+    await renderComponent();
+
+    expect(find('.view-title')).to.have.text('Dashboard overview');
+  });
+
+  it('shows "chart X editor" title when chart editor is active and chart has a title',
+    async function () {
+      const editedChart = this.set(
+        'editedChart',
+        createNewChart(this.owner.lookup('service:i18n'))
+      );
+      set(editedChart, 'title', 'abc');
+
+      await renderComponent();
+
+      expect(find('.view-title')).to.have.text('Chart "abc" editor');
+    }
+  );
+
+  it('shows "chart editor" title when chart editor is active and chart has no title',
+    async function () {
+      const editedChart = this.set(
+        'editedChart',
+        createNewChart(this.owner.lookup('service:i18n'))
+      );
+      set(editedChart, 'title', '');
+
+      await renderComponent();
+
+      expect(find('.view-title')).to.have.text('Chart editor');
+    }
+  );
+
+  it('shows no "back" button when chart editor is not active', async function () {
+    await renderComponent();
+
+    expect(find('.back-btn')).to.not.exist;
+  });
+
+  it('shows working "back" button when chart editor is active', async function () {
+    const executeSpy = sinon.spy();
+    this.setProperties({
+      editedChart: createNewChart(this.owner.lookup('service:i18n')),
+      actionsFactory: {
+        createEndChartContentEditionAction: () => ({ execute: executeSpy }),
+      },
+    });
+    await renderComponent();
+
+    expect(find('.back-btn')).to.exist.and.to.have.trimmed.text('Back');
+    expect(executeSpy).to.be.not.called;
+
+    await click('.back-btn');
+
+    expect(executeSpy).to.be.calledOnce;
+  });
 });
 
 async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/toolbar
     undoManager=undoManager
+    actionsFactory=actionsFactory
+    editedChart=editedChart
     onRemoveDashboard=onRemoveDashboard
   }}`);
 }

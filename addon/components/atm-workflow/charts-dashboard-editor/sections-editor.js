@@ -24,12 +24,6 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ViewState}
-   */
-  viewState: undefined,
-
-  /**
-   * @virtual
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section}
    */
   rootSection: undefined,
@@ -39,6 +33,12 @@ export default Component.extend({
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionElement | null}
+   */
+  selectedElement: undefined,
 
   /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EdgeScroller}

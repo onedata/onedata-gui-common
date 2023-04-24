@@ -16,6 +16,7 @@ import RemoveElementAction from './actions/remove-element-action';
 import SelectElementAction from './actions/select-element-action';
 import ChangeElementPropertyAction from './actions/change-element-property-action';
 import EditChartContentAction from './actions/edit-chart-content-action';
+import EndChartContentEditionAction from './actions/end-chart-content-edition-action';
 
 /**
  * @typedef {(action: Utils.Action, result: Utils.ActionResult) => void} ActionExecuteListener
@@ -56,7 +57,7 @@ export default class ActionsFactory {
     /**
      * May contain only action with `changeType` equal to `'continuous'`
      * @private
-     * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.ChangeElementPropertyAction | null}
+     * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.ChangeElementPropertyAction | null}
      */
     this.activeChangeElementPropertyAction = null;
   }
@@ -92,7 +93,7 @@ export default class ActionsFactory {
   /**
    * @public
    * @param {Omit<AddElementActionContext, 'changeViewState'>} context
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.AddElementAction}
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.AddElementAction}
    */
   createAddElementAction(context) {
     return this.attachExecuteListener(AddElementAction.create({
@@ -107,7 +108,7 @@ export default class ActionsFactory {
   /**
    * @public
    * @param {Omit<MoveElementActionContext, 'changeViewState'} context
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.MoveElementAction}
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.MoveElementAction}
    */
   createMoveElementAction(context) {
     return this.attachExecuteListener(MoveElementAction.create({
@@ -122,7 +123,7 @@ export default class ActionsFactory {
   /**
    * @public
    * @param {Omit<DuplicateElementActionContext, 'changeViewState'>} context
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.DuplicateElementAction}
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.DuplicateElementAction}
    */
   createDuplicateElementAction(context) {
     return this.attachExecuteListener(DuplicateElementAction.create({
@@ -137,7 +138,7 @@ export default class ActionsFactory {
   /**
    * @public
    * @param {Omit<RemoveElementActionContext, 'changeViewState'>} context
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.RemoveElementAction}
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.RemoveElementAction}
    */
   createRemoveElementAction(context) {
     return this.attachExecuteListener(RemoveElementAction.create({
@@ -152,7 +153,7 @@ export default class ActionsFactory {
   /**
    * @public
    * @param {Omit<SelectElementActionContext, 'changeViewState'>} context
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.SelectElementAction}
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.SelectElementAction}
    */
   createSelectElementAction(context) {
     return this.attachExecuteListener(SelectElementAction.create({
@@ -167,7 +168,7 @@ export default class ActionsFactory {
   /**
    * @public
    * @param {Omit<ChangeElementPropertyActionContext, 'changeViewState'>} context
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.ChangeElementPropertyAction}
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.ChangeElementPropertyAction}
    */
   createChangeElementPropertyAction(context) {
     let action = this.activeChangeElementPropertyAction;
@@ -231,10 +232,25 @@ export default class ActionsFactory {
   /**
    * @public
    * @param {Omit<EditChartContentActionContext, 'changeViewState'>} context
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.EditChartContentAction}
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.EditChartContentAction}
    */
   createEditChartContentAction(context) {
     return this.attachExecuteListener(EditChartContentAction.create({
+      ownerSource: this.ownerSource,
+      context: {
+        changeViewState: this.changeViewState,
+        ...context,
+      },
+    }));
+  }
+
+  /**
+   * @public
+   * @param {Omit<EndChartContentEditionActionContext, 'changeViewState'>} [context]
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.EndChartContentEditionAction}
+   */
+  createEndChartContentEditionAction(context = {}) {
+    return this.attachExecuteListener(EndChartContentEditionAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,

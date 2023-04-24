@@ -1,3 +1,17 @@
+{{#if editedChart}}
+  {{#one-button
+    class="back-btn"
+    type="default"
+    size="sm"
+    onClick=(action "back")
+  }}
+    {{one-icon icon="arrow-left"}}
+    <span class="text">{{tt this "back"}}</span>
+  {{/one-button}}
+{{/if}}
+
+{{#truncated-string class="view-title"}}{{title}}{{/truncated-string}}
+
 {{#one-button
   class="undo-btn"
   type="default"

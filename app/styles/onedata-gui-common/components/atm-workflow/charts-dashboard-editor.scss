@@ -3,6 +3,7 @@
   grid-template-columns: 1fr;
   grid-template-rows: min-content 1fr;
   min-height: 0;
+  min-width: 0;
   border: 1px solid $main-border-color;
   border-radius: $border-radius-base;
   background-color: $color-one-white;
@@ -34,8 +35,19 @@
     display: flex;
     justify-content: flex-end;
     padding: 0.3em;
+    min-width: 0;
     gap: 0.3em;
+    align-items: center;
     border-bottom: 1px solid $main-border-color;
+
+    .view-title {
+      @include font-semibold();
+      text-transform: uppercase;
+      text-align: center;
+      flex-grow: 1;
+      min-width: 0;
+      padding: 0 1em;
+    }
   }
 
   .sections-editor {
@@ -44,6 +56,8 @@
     $edge-drag-target-trigger-offset: $section-padding;
     $edge-drag-target-box-size: 0.5 * $section-padding;
     $edge-drag-target-box-offset: 0.25 * $section-padding;
+    grid-row: 2;
+    grid-column: 1;
     display: grid;
     min-height: 0;
     grid-template-columns: 1fr 20em;
@@ -315,11 +329,30 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 1em;
+
+      .form-component {
+        width: 100%;
+      }
+    }
+  }
+
+  .chart-editor {
+    grid-row: 2;
+    grid-column: 1;
+    // assigning dummy z-index as it allows to render chart-editor
+    // above sections-editor
+    z-index: 0;
+    background-color: $color-one-white;
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .editor-toolbar {
+      flex-wrap: wrap;
     }
 
-    @media (max-width: $screen-xs-max) {
+    .sections-editor {
       grid-template-columns: 1fr;
-      grid-template-rows: min-content 1fr min-content;
+      grid-template-rows: 1fr 40%;
 
       .dashboard-visualiser {
         border-radius: 0;

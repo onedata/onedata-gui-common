@@ -175,6 +175,7 @@ export function getElementsStructure(sectionElement) {
     removeTrigger: sectionElement.querySelector(':scope > .floating-toolbar .remove-action'),
     addChartTrigger: sectionElement.querySelector(':scope > .add-chart'),
     addSubsectionTrigger: sectionElement.querySelector(':scope > .add-subsection'),
+    editContentTrigger: sectionElement.querySelector('.edit-chart-content-trigger'),
     sections: [
       ...sectionElement.querySelectorAll(':scope > .section-subsections > .section'),
     ].map((subsectionElement) => getElementsStructure(subsectionElement)),
