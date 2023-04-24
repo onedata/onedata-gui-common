@@ -11,9 +11,9 @@ import { reads } from '@ember/object/computed';
 
 /**
  * @typedef {Object} SelectElementActionContext
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null} elementToSelect
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null} elementToSelect
  *   `null` means that we want to deselect existing selection
- * @property {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void} onSelectElement
+ * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
 export default Action.extend({
@@ -34,9 +34,9 @@ export default Action.extend({
   elementToSelect: reads('context.elementToSelect'),
 
   /**
-   * @type {ComputedProperty<SelectElementActionContext['onSelectElement']>}
+   * @type {ComputedProperty<SelectElementActionContext['changeViewState']>}
    */
-  onSelectElement: reads('context.onSelectElement'),
+  changeViewState: reads('context.changeViewState'),
 
   /**
    * @override
@@ -53,6 +53,6 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    this.onSelectElement(this.elementToSelect);
+    this.changeViewState({ elementToSelect: this.elementToSelect });
   },
 });

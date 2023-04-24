@@ -14,6 +14,7 @@ import Chart from './chart';
 import Axis from './axis';
 import SeriesGroup from './series-group';
 import Series from './series';
+import { ElementType } from './common';
 
 /**
  * @type {string}
@@ -159,10 +160,12 @@ function createChartModelFromSpec(chartSpec, elementOwner = null) {
   chart.seriesGroups.forEach((seriesGroup) => {
     groupsMap[seriesGroup.id] = seriesGroup;
     set(seriesGroup, 'parentChart', chart);
-    [...seriesGroup.getNestedGroups()].forEach((subgroup) => {
-      groupsMap[subgroup.id] = subgroup;
-      set(subgroup, 'parentChart', chart);
-    });
+    [...seriesGroup.getNestedElements()]
+    .filter((element) => element.elementType === ElementType.SeriesGroup)
+      .forEach((subgroup) => {
+        groupsMap[subgroup.id] = subgroup;
+        set(subgroup, 'parentChart', chart);
+      });
   });
 
   set(

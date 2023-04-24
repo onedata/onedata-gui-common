@@ -1,5 +1,7 @@
 .charts-dashboard-editor {
   display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content 1fr;
   min-height: 0;
   border: 1px solid $main-border-color;
   border-radius: $border-radius-base;
@@ -24,6 +26,18 @@
     }
   }
 
+  .no-dashboard-info  {
+    grid-row: 1 / -1;
+  }
+
+  .editor-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.3em;
+    gap: 0.3em;
+    border-bottom: 1px solid $main-border-color;
+  }
+
   .sections-editor {
     $section-padding: 1em;
     $edge-drag-target-trigger-size: 2 * $section-padding;
@@ -33,16 +47,6 @@
     display: grid;
     min-height: 0;
     grid-template-columns: 1fr 20em;
-    grid-template-rows: min-content 1fr;
-
-    .editor-toolbar {
-      grid-column: 1 / -1;
-      display: flex;
-      justify-content: flex-end;
-      padding: 0.3em;
-      gap: 0.3em;
-      border-bottom: 1px solid $main-border-color;
-    }
 
     .dashboard-visualiser {
       padding: 3em;

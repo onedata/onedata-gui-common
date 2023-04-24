@@ -1,5 +1,5 @@
 /**
- * Creates actions used by sections editor. Internally monitors each action
+ * Creates actions used by dashboard editor. Internally monitors each action
  * execution and notifies about every such event through execute listeners (see
  * `addExecuteListener` and `removeExecuteListeners`).
  *
@@ -9,13 +9,13 @@
  */
 
 import { set } from '@ember/object';
-import AddElementAction from './add-element-action';
-import MoveElementAction from './move-element-action';
-import DuplicateElementAction from './duplicate-element-action';
-import RemoveElementAction from './remove-element-action';
-import SelectElementAction from './select-element-action';
-import ChangeElementPropertyAction from './change-element-property-action';
-import EditChartContentAction from './edit-chart-content-action';
+import AddElementAction from './actions/add-element-action';
+import MoveElementAction from './actions/move-element-action';
+import DuplicateElementAction from './actions/duplicate-element-action';
+import RemoveElementAction from './actions/remove-element-action';
+import SelectElementAction from './actions/select-element-action';
+import ChangeElementPropertyAction from './actions/change-element-property-action';
+import EditChartContentAction from './actions/edit-chart-content-action';
 
 /**
  * @typedef {(action: Utils.Action, result: Utils.ActionResult) => void} ActionExecuteListener
@@ -24,9 +24,7 @@ import EditChartContentAction from './edit-chart-content-action';
 /**
  * @typedef {Object} ActionsFactoryInitOptions
  * @property {unknown} ownerSource
- * @property {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void} onSelectElement
- * @property {(elementToDeselect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section) => void} onDeselectElement
- * @property {(chart: Utils.AtmWorkflow.ChartsDashboardEditor.Chart) => void} onOpenChartEditor
+ * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
 export default class ActionsFactory {
@@ -35,9 +33,7 @@ export default class ActionsFactory {
    */
   constructor({
     ownerSource,
-    onSelectElement,
-    onDeselectElement,
-    onOpenChartEditor,
+    changeViewState,
   } = {}) {
     /**
      * @private
@@ -47,21 +43,9 @@ export default class ActionsFactory {
 
     /**
      * @private
-     * @type {ActionsFactoryInitOptions['onSelectElement']}
+     * @type {ActionsFactoryInitOptions['changeViewState']}
      */
-    this.onSelectElement = onSelectElement;
-
-    /**
-     * @private
-     * @type {ActionsFactoryInitOptions['onDeselectElement']}
-     */
-    this.onDeselectElement = onDeselectElement;
-
-    /**
-     * @private
-     * @type {ActionsFactoryInitOptions['onOpenChartEditor']}
-     */
-    this.onOpenChartEditor = onOpenChartEditor;
+    this.changeViewState = changeViewState;
 
     /**
      * @private
@@ -107,15 +91,14 @@ export default class ActionsFactory {
 
   /**
    * @public
-   * @param {Omit<AddElementActionContext, 'onSelectElement' | 'onDeselectElement'>} context
+   * @param {Omit<AddElementActionContext, 'changeViewState'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.AddElementAction}
    */
   createAddElementAction(context) {
     return this.attachExecuteListener(AddElementAction.create({
       ownerSource: this.ownerSource,
       context: {
-        onSelectElement: this.onSelectElement,
-        onDeselectElement: this.onDeselectElement,
+        changeViewState: this.changeViewState,
         ...context,
       },
     }));
@@ -123,14 +106,14 @@ export default class ActionsFactory {
 
   /**
    * @public
-   * @param {Omit<MoveElementActionContext, 'onSelectElement'} context
+   * @param {Omit<MoveElementActionContext, 'changeViewState'} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.MoveElementAction}
    */
   createMoveElementAction(context) {
     return this.attachExecuteListener(MoveElementAction.create({
       ownerSource: this.ownerSource,
       context: {
-        onSelectElement: this.onSelectElement,
+        changeViewState: this.changeViewState,
         ...context,
       },
     }));
@@ -138,15 +121,14 @@ export default class ActionsFactory {
 
   /**
    * @public
-   * @param {Omit<DuplicateElementActionContext, 'onSelectElement' | 'onDeselectElement'>} context
+   * @param {Omit<DuplicateElementActionContext, 'changeViewState'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.DuplicateElementAction}
    */
   createDuplicateElementAction(context) {
     return this.attachExecuteListener(DuplicateElementAction.create({
       ownerSource: this.ownerSource,
       context: {
-        onSelectElement: this.onSelectElement,
-        onDeselectElement: this.onDeselectElement,
+        changeViewState: this.changeViewState,
         ...context,
       },
     }));
@@ -154,14 +136,14 @@ export default class ActionsFactory {
 
   /**
    * @public
-   * @param {Omit<RemoveElementActionContext, 'onDeselectElement'>} context
+   * @param {Omit<RemoveElementActionContext, 'changeViewState'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.RemoveElementAction}
    */
   createRemoveElementAction(context) {
     return this.attachExecuteListener(RemoveElementAction.create({
       ownerSource: this.ownerSource,
       context: {
-        onDeselectElement: this.onDeselectElement,
+        changeViewState: this.changeViewState,
         ...context,
       },
     }));
@@ -169,14 +151,14 @@ export default class ActionsFactory {
 
   /**
    * @public
-   * @param {Omit<SelectElementActionContext, 'onSelectElement'>} context
+   * @param {Omit<SelectElementActionContext, 'changeViewState'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.SelectElementAction}
    */
   createSelectElementAction(context) {
     return this.attachExecuteListener(SelectElementAction.create({
       ownerSource: this.ownerSource,
       context: {
-        onSelectElement: this.onSelectElement,
+        changeViewState: this.changeViewState,
         ...context,
       },
     }));
@@ -184,7 +166,7 @@ export default class ActionsFactory {
 
   /**
    * @public
-   * @param {Omit<ChangeElementPropertyActionContext, 'onSelectElement'>} context
+   * @param {Omit<ChangeElementPropertyActionContext, 'changeViewState'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.ChangeElementPropertyAction}
    */
   createChangeElementPropertyAction(context) {
@@ -214,7 +196,7 @@ export default class ActionsFactory {
       action = this.attachExecuteListener(ChangeElementPropertyAction.create({
         ownerSource: this.ownerSource,
         context: {
-          onSelectElement: this.onSelectElement,
+          changeViewState: this.changeViewState,
           ...context,
         },
       }));
@@ -248,14 +230,14 @@ export default class ActionsFactory {
 
   /**
    * @public
-   * @param {Omit<EditChartContentActionContext, 'onOpenChartEditor'>} context
+   * @param {Omit<EditChartContentActionContext, 'changeViewState'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActions.EditChartContentAction}
    */
   createEditChartContentAction(context) {
     return this.attachExecuteListener(EditChartContentAction.create({
       ownerSource: this.ownerSource,
       context: {
-        onOpenChartEditor: this.onOpenChartEditor,
+        changeViewState: this.changeViewState,
         ...context,
       },
     }));

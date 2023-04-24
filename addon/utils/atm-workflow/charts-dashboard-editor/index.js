@@ -1,7 +1,12 @@
-export { ElementType } from './common';
+export {
+  ElementType,
+  isSectionElementType,
+  isChartElementType,
+}
+from './common';
 export { default as UndoManager } from './undo-manager';
 export { default as EdgeScroller } from './edge-scroller';
-export { default as SectionsEditorActionsFactory } from './sections-editor-actions/actions-factory';
+export { default as ActionsFactory } from './actions-factory';
 export {
   createModelFromSpec,
   createNewSection,

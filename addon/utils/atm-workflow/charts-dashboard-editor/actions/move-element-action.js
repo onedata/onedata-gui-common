@@ -18,7 +18,7 @@ import { ElementType } from '../common';
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Section} newParent
  * @property {MoveElementActionNewPosition | null} newPosition
  *   `null` will place `movedElement` at the end
- * @property {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void} onSelectElement
+ * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
 /**
@@ -55,9 +55,9 @@ export default Action.extend({
   newPosition: reads('context.newPosition'),
 
   /**
-   * @type {ComputedProperty<MoveElementActionContext['onSelectElement']>}
+   * @type {ComputedProperty<MoveElementActionContext['changeViewState']>}
    */
-  onSelectElement: reads('context.onSelectElement'),
+  changeViewState: reads('context.changeViewState'),
 
   /**
    * Becomes defined during action execution
@@ -118,7 +118,7 @@ export default Action.extend({
     });
 
     this.moveElement(this.newParent, this.newPosition);
-    this.onSelectElement(this.movedElement);
+    this.changeViewState({ elementToSelect: this.movedElement });
   },
 
   /**
@@ -126,7 +126,7 @@ export default Action.extend({
    */
   onExecuteUndo() {
     this.moveElement(this.oldParent, this.oldPosition);
-    this.onSelectElement(this.movedElement);
+    this.changeViewState({ elementToSelect: this.movedElement });
   },
 
   /**

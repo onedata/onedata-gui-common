@@ -1,5 +1,5 @@
 /**
- * Toolbar for sections editor. Contains actions global for the whole editor.
+ * Toolbar for dashboard editor. Contains actions global for the whole editor.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -8,7 +8,7 @@
 
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
-import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor/toolbar';
+import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/toolbar';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 export default Component.extend(I18n, {
@@ -20,7 +20,7 @@ export default Component.extend(I18n, {
   /**
    * @override
    */
-  i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.sectionsEditor.toolbar',
+  i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.toolbar',
 
   /**
    * @virtual

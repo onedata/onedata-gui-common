@@ -14,7 +14,7 @@ import { ElementType } from '../common';
 /**
  * @typedef {Object} RemoveElementActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} elementToRemove
- * @property {(elementToDeselect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section) => void} onDeselectElement
+ * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
 export default Action.extend({
@@ -35,9 +35,9 @@ export default Action.extend({
   elementToRemove: reads('context.elementToRemove'),
 
   /**
-   * @type {ComputedProperty<RemoveElementActionContext['onDeselectElement']>}
+   * @type {ComputedProperty<RemoveElementActionContext['changeViewState']>}
    */
-  onDeselectElement: reads('context.onDeselectElement'),
+  changeViewState: reads('context.changeViewState'),
 
   /**
    * Becomes defined during action execution
@@ -95,10 +95,12 @@ export default Action.extend({
       parent[this.collectionName].filter((element) => element !== this.elementToRemove)
     );
     set(this.elementToRemove, 'parentSection', null);
-    this.onDeselectElement(this.elementToRemove);
-    [...this.elementToRemove.getNestedElements()].forEach((element) =>
-      this.onDeselectElement(element)
-    );
+    this.changeViewState({
+      elementsToDeselect: [
+        this.elementToRemove,
+        ...this.elementToRemove.getNestedElements(),
+      ],
+    });
   },
 
   /**

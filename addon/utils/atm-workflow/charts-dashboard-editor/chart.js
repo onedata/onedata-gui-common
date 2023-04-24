@@ -6,23 +6,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import ElementBase from './element-base';
 import { ElementType } from './common';
 
-const Chart = EmberObject.extend({
+const Chart = ElementBase.extend({
   /**
-   * @public
-   * @readonly
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType.Chart}
+   * @override
    */
   elementType: ElementType.Chart,
-
-  /**
-   * @public
-   * @readonly
-   * @type {unknown}
-   */
-  elementOwner: null,
 
   /**
    * @public
@@ -87,9 +78,6 @@ const Chart = EmberObject.extend({
    */
   willDestroy() {
     try {
-      if (this.elementOwner) {
-        this.set('elementOwner', null);
-      }
       if (this.axes.length) {
         this.axes.forEach((axis) => axis.destroy());
         this.set('axes', []);
@@ -111,8 +99,7 @@ const Chart = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Chart}
+   * @override
    */
   clone() {
     return Chart.create({
@@ -127,10 +114,13 @@ const Chart = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Generator<void>}
+   * @override
    */
-  * getNestedElements() {},
+  * getNestedElements() {
+    yield* this.axes;
+    yield* this.seriesGroups;
+    yield* this.series;
+  },
 });
 
 export default Chart;

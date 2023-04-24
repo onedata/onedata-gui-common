@@ -12,7 +12,7 @@ import { reads } from '@ember/object/computed';
 /**
  * @typedef {Object} EditChartContentActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart} chart
- * @property {(chart: Utils.AtmWorkflow.ChartsDashboardEditor.Chart) => void} onOpenChartEditor
+ * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
 export default Action.extend({
@@ -34,10 +34,9 @@ export default Action.extend({
   chart: reads('context.chart'),
 
   /**
-   * @private
-   * @type {ComputedProperty<EditChartContentActionContext['onOpenChartEditor']>}
+   * @type {ComputedProperty<EditChartContentActionContext['changeViewState']>}
    */
-  onOpenChartEditor: reads('context.onOpenChartEditor'),
+  changeViewState: reads('context.changeViewState'),
 
   /**
    * @override
@@ -54,6 +53,9 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    this.onOpenChartEditor(this.chart);
+    this.changeViewState({
+      elementToSelect: this.chart,
+      isChartEditorActive: true,
+    });
   },
 });

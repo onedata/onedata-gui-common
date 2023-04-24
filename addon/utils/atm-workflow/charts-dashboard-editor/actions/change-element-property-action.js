@@ -28,7 +28,7 @@ import { reads } from '@ember/object/computed';
  * @property {string} propertyName
  * @property {unknown} newValue
  * @property {PropertyChangeType} changeType
- * @property {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void} onSelectElement
+ * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
 /**
@@ -78,10 +78,9 @@ export default Action.extend({
   changeType: reads('context.changeType'),
 
   /**
-   * @public
-   * @type {ComputedProperty<ChangeElementPropertyActionContext['onSelectElement']>}
+   * @type {ComputedProperty<ChangeElementPropertyActionContext['changeViewState']>}
    */
-  onSelectElement: reads('context.onSelectElement'),
+  changeViewState: reads('context.changeViewState'),
 
   /**
    * @public
@@ -110,7 +109,7 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    this.onSelectElement(this.element);
+    this.changeViewState({ elementToSelect: this.element });
     if (!this.wasExecuted) {
       this.set('previousValue', this.element[this.propertyName]);
     }
@@ -122,7 +121,7 @@ export default Action.extend({
    * @override
    */
   onExecuteUndo() {
-    this.onSelectElement(this.element);
+    this.changeViewState({ elementToSelect: this.element });
     set(this.element, this.propertyName, this.previousValue);
   },
 });

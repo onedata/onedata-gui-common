@@ -7,23 +7,15 @@
  */
 
 import EmberObject from '@ember/object';
+import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
 
-const Axis = EmberObject.extend({
+const Axis = ElementBase.extend({
   /**
-   * @public
-   * @readonly
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType.Axis}
+   * @override
    */
   elementType: ElementType.Axis,
-
-  /**
-   * @public
-   * @readonly
-   * @type {unknown}
-   */
-  elementOwner: null,
 
   /**
    * @public
@@ -93,9 +85,6 @@ const Axis = EmberObject.extend({
    */
   willDestroy() {
     try {
-      if (this.elementOwner) {
-        this.set('elementOwner', null);
-      }
       if (this.unitOptions) {
         this.unitOptions.destroy();
         this.set('unitOptions', null);
@@ -112,8 +101,7 @@ const Axis = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Axis}
+   * @override
    */
   clone() {
     return Axis.create({

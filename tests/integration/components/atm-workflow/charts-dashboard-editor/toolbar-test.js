@@ -5,7 +5,7 @@ import { render, find, findAll, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-describe('Integration | Component | atm-workflow/charts-dashboard-editor/sections-editor/toolbar', function () {
+describe('Integration | Component | atm-workflow/charts-dashboard-editor/toolbar', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -124,7 +124,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/charts-dashboard-editor/sections-editor/toolbar
+  await render(hbs`{{atm-workflow/charts-dashboard-editor/toolbar
     undoManager=undoManager
     onRemoveDashboard=onRemoveDashboard
   }}`);

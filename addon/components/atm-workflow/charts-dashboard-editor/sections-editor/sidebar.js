@@ -22,7 +22,7 @@ export default PerfectScrollbarElement.extend({
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,
 

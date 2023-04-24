@@ -6,24 +6,15 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
 
-const SeriesGroup = EmberObject.extend({
+const SeriesGroup = ElementBase.extend({
   /**
-   * @public
-   * @readonly
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType.SeriesGroup}
+   * @override
    */
   elementType: ElementType.SeriesGroup,
-
-  /**
-   * @public
-   * @readonly
-   * @type {unknown}
-   */
-  elementOwner: null,
 
   /**
    * @public
@@ -102,9 +93,6 @@ const SeriesGroup = EmberObject.extend({
    */
   willDestroy() {
     try {
-      if (this.elementOwner) {
-        this.set('elementOwner', null);
-      }
       if (this.subgroups.length) {
         this.subgroups.forEach((subgroup) => subgroup.destroy());
         this.set('subgroups', []);
@@ -124,8 +112,7 @@ const SeriesGroup = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup}
+   * @override
    */
   clone() {
     return SeriesGroup.create({
@@ -142,13 +129,12 @@ const SeriesGroup = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Generator<Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup>}
+   * @override
    */
-  * getNestedGroups() {
+  * getNestedElements() {
     for (const subgroup of this.subgroups) {
       yield subgroup;
-      yield* subgroup.getNestedGroups();
+      yield* subgroup.getNestedElements();
     }
   },
 });

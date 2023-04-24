@@ -7,6 +7,7 @@
  */
 
 import EmberObject from '@ember/object';
+import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
 
@@ -17,20 +18,11 @@ import { ElementType } from './common';
  * @property {Array<string>} metricNames
  */
 
-const Series = EmberObject.extend({
+const Series = ElementBase.extend({
   /**
-   * @public
-   * @readonly
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType.Series}
+   * @override
    */
   elementType: ElementType.Series,
-
-  /**
-   * @public
-   * @readonly
-   * @type {unknown}
-   */
-  elementOwner: null,
 
   /**
    * @public
@@ -109,9 +101,6 @@ const Series = EmberObject.extend({
    */
   willDestroy() {
     try {
-      if (this.elementOwner) {
-        this.set('elementOwner', null);
-      }
       if (this.prefixedTimeSeriesRef) {
         this.prefixedTimeSeriesRef.destroy();
         this.set('prefixedTimeSeriesRef', null);
@@ -131,8 +120,7 @@ const Series = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Series}
+   * @override
    */
   clone() {
     return Series.create({

@@ -6,23 +6,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import ElementBase from './element-base';
 import { ElementType } from './common';
 
-const Section = EmberObject.extend({
+const Section = ElementBase.extend({
   /**
-   * @public
-   * @readonly
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType.Section}
+   * @override
    */
   elementType: ElementType.Section,
-
-  /**
-   * @public
-   * @readonly
-   * @type {unknown}
-   */
-  elementOwner: null,
 
   /**
    * If this is `true` then this section is a root (top) section. There is only
@@ -94,9 +85,6 @@ const Section = EmberObject.extend({
    */
   willDestroy() {
     try {
-      if (this.elementOwner) {
-        this.set('elementOwner', null);
-      }
       if (this.charts.length) {
         this.charts.forEach((chart) => chart.destroy());
         this.set('charts', []);
@@ -114,8 +102,7 @@ const Section = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Section}
+   * @override
    */
   clone() {
     return Section.create({
@@ -131,8 +118,7 @@ const Section = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Generator<Utils.AtmWorkflow.ChartsDashboardEditor.Section | Utils.AtmWorkflow.ChartsDashboardEditor.Chart>}
+   * @override
    */
   * getNestedElements() {
     for (const section of this.sections) {

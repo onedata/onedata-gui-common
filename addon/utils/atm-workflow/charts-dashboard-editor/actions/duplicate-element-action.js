@@ -14,8 +14,7 @@ import { ElementType } from '../common';
 /**
  * @typedef {Object} DuplicateElementActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} elementToDuplicate
- * @property {(elementToSelect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null) => void} onSelectElement
- * @property {(elementToDeselect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section) => void} onDeselectElement
+ * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
 export default Action.extend({
@@ -36,14 +35,9 @@ export default Action.extend({
   elementToDuplicate: reads('context.elementToDuplicate'),
 
   /**
-   * @type {ComputedProperty<DuplicateElementActionContext['onSelectElement']>}
+   * @type {ComputedProperty<DuplicateElementActionContext['changeViewState']>}
    */
-  onSelectElement: reads('context.onSelectElement'),
-
-  /**
-   * @type {ComputedProperty<DuplicateElementActionContext['onDeselectElement']>}
-   */
-  onDeselectElement: reads('context.onDeselectElement'),
+  changeViewState: reads('context.changeViewState'),
 
   /**
    * Becomes defined during action execution
@@ -97,7 +91,7 @@ export default Action.extend({
       ...parentCollection.slice(elementIndexInParent + 1),
     ]);
     set(this.createdDuplicate, 'parentSection', parent);
-    this.onSelectElement(this.createdDuplicate);
+    this.changeViewState({ elementToSelect: this.createdDuplicate });
   },
 
   /**
@@ -111,9 +105,11 @@ export default Action.extend({
       this.collectionName,
       parent[this.collectionName].filter((element) => element !== this.createdDuplicate)
     );
-    this.onDeselectElement(this.createdDuplicate);
-    [...this.createdDuplicate.getNestedElements()].forEach((element) =>
-      this.onDeselectElement(element)
-    );
+    this.changeViewState({
+      elementsToDeselect: [
+        this.createdDuplicate,
+        ...this.createdDuplicate.getNestedElements(),
+      ],
+    });
   },
 });
