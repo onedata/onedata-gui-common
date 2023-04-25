@@ -342,7 +342,51 @@
     // assigning dummy z-index as it allows to render chart-editor
     // above sections-editor
     z-index: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     background-color: $color-one-white;
+
+    .chart-editor-elements {
+      display: grid;
+      grid-template-rows: min-content 1fr;
+      border-right: 1px solid $main-border-color;
+      border-bottom: 1px solid $main-border-color;
+      padding: 0.5em;
+
+      h2 {
+        @include font-semibold();
+        font-size: 1em;
+        text-transform: uppercase;
+        margin: 0 0 0.5em 0;
+      }
+    }
+
+    .bs-tab-onedata {
+      display: grid;
+      grid-template-rows: min-content 1fr;
+
+      .nav-link {
+        @include font-semibold();
+        font-size: 90%;
+        padding: 0.5em 1em;
+        color: $main-text-color;
+
+        .one-icon {
+          font-size: 1.5em;
+          line-height: 0;
+          vertical-align: -0.25em;
+          margin-right: 0.25em;
+        }
+      }
+
+      .tab-content {
+        display: grid;
+        padding: 0.5em;
+        border: 1px solid $main-border-color;
+        border-top: 0;
+      }
+    }
   }
 
   @media (max-width: $screen-xs-max) {

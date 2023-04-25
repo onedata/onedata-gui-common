@@ -1,0 +1,40 @@
+<h2>{{tt this "header"}}</h2>
+{{#bs-tab
+  activeId=activeTabId
+  class="only-tab-bar bs-tab-onedata"
+  fade=false
+  customTabs=true
+  as |tab|
+}}
+  {{#bs-nav type="tabs" as |nav|}}
+    {{#nav.item active=(eq activeTabId tabIds.series)}}
+      <a class="nav-link" role="tab" {{action (mut activeTabId) tabIds.series}}>
+        {{one-icon icon="chart"}}
+        {{tt this "tabNames.series"}}
+      </a>
+    {{/nav.item}}
+    {{#nav.item active=(eq activeTabId tabIds.seriesGroups)}}
+      <a class="nav-link" role="tab" {{action (mut activeTabId) tabIds.seriesGroups}}>
+        {{one-icon icon="items-grid"}}
+        {{tt this "tabNames.seriesGroups"}}
+      </a>
+    {{/nav.item}}
+    {{#nav.item active=(eq activeTabId tabIds.axes)}}
+      <a class="nav-link" role="tab" {{action (mut activeTabId) tabIds.axes}}>
+        {{one-icon icon="axes"}}
+        {{tt this "tabNames.axes"}}
+      </a>
+    {{/nav.item}}
+  {{/bs-nav}}
+  <div class="tab-content">
+    {{#tab.pane elementId=tabIds.series}}
+
+    {{/tab.pane}}
+    {{#tab.pane elementId=tabIds.seriesGroups}}
+
+    {{/tab.pane}}
+    {{#tab.pane elementId=tabIds.axes}}
+
+    {{/tab.pane}}
+  </div>
+{{/bs-tab}}
