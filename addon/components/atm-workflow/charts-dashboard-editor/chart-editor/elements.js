@@ -17,6 +17,18 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.chartEditor.elements',
 
   /**
+   * @virtual
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart}
+   */
+  chart: undefined,
+
+  /**
+   * @virtual
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   */
+  actionsFactory: undefined,
+
+  /**
    * @type {string}
    */
   activeTabId: undefined,

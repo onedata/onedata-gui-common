@@ -168,7 +168,7 @@ export default OneDraggableObject.extend(I18n, {
     addChart() {
       const action = this.actionsFactory.createAddElementAction({
         newElementType: ElementType.Chart,
-        targetSection: this.section,
+        targetElement: this.section,
       });
       action.execute();
     },
@@ -179,7 +179,7 @@ export default OneDraggableObject.extend(I18n, {
     addSubsection() {
       const action = this.actionsFactory.createAddElementAction({
         newElementType: ElementType.Section,
-        targetSection: this.section,
+        targetElement: this.section,
       });
       action.execute();
     },

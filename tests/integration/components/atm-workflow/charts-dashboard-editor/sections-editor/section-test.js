@@ -76,7 +76,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     expect(this.actionsFactory.createAddElementAction).to.be.calledOnce
       .and.calledWith({
         newElementType: ElementType.Chart,
-        targetSection: this.section,
+        targetElement: this.section,
       });
     expect(executeSpy).to.be.calledOnce;
   });
@@ -94,7 +94,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     expect(this.actionsFactory.createAddElementAction).to.be.calledOnce
       .and.calledWith({
         newElementType: ElementType.Section,
-        targetSection: this.section,
+        targetElement: this.section,
       });
     expect(executeSpy).to.be.calledOnce;
   });

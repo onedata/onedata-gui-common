@@ -385,7 +385,16 @@
         padding: 0.5em;
         border: 1px solid $main-border-color;
         border-top: 0;
+
+        .tab-pane.active {
+          display: grid;
+        }
       }
+    }
+
+    .chart-elements-list-container {
+      display: grid;
+      grid-template-rows: min-content 1fr;
     }
   }
 

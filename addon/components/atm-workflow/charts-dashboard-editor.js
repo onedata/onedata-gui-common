@@ -17,7 +17,7 @@ import {
   createNewSection,
   isChartElementType,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
-import { ElementType } from '../../utils/atm-workflow/charts-dashboard-editor';
+import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 
 export default Component.extend({
   layout,

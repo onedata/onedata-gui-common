@@ -34,7 +34,10 @@
 
     {{/tab.pane}}
     {{#tab.pane elementId=tabIds.axes}}
-
+      {{atm-workflow/charts-dashboard-editor/chart-editor/axes-list
+        chart=chart
+        actionsFactory=actionsFactory
+      }}
     {{/tab.pane}}
   </div>
 {{/bs-tab}}

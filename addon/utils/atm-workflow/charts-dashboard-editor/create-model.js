@@ -8,6 +8,7 @@
  */
 
 import EmberObject, { set, setProperties } from '@ember/object';
+import generateId from 'onedata-gui-common/utils/generate-id';
 import Model from './model';
 import Section from './section';
 import Chart from './chart';
@@ -62,6 +63,10 @@ export function createNewChart(i18n, elementOwner = null) {
     title: {
       content: String(i18n.t(`${i18nPrefix}.newChart.title`)),
     },
+    yAxes: [{
+      id: generateId(),
+      name: String(i18n.t(`${i18nPrefix}.newAxis.name`)),
+    }],
   }, elementOwner);
 }
 
@@ -73,6 +78,7 @@ export function createNewChart(i18n, elementOwner = null) {
  */
 export function createNewAxis(i18n, elementOwner = null) {
   return createAxisModelFromSpec({
+    id: generateId(),
     name: String(i18n.t(`${i18nPrefix}.newAxis.name`)),
   }, elementOwner);
 }
@@ -85,6 +91,7 @@ export function createNewAxis(i18n, elementOwner = null) {
  */
 export function createNewSeriesGroup(i18n, elementOwner = null) {
   return createSeriesGroupModelFromSpec({
+    id: generateId(),
     name: String(i18n.t(`${i18nPrefix}.newSeriesGroup.name`)),
   }, elementOwner);
 }
@@ -97,7 +104,13 @@ export function createNewSeriesGroup(i18n, elementOwner = null) {
  */
 export function createNewSeries(i18n, elementOwner = null) {
   return createSeriesModelFromSpec({
-    name: String(i18n.t(`${i18nPrefix}.newSeries.name`)),
+    builderType: 'static',
+    builderRecipe: {
+      seriesTemplate: {
+        id: generateId(),
+        name: String(i18n.t(`${i18nPrefix}.newSeries.name`)),
+      },
+    },
   }, elementOwner);
 }
 
@@ -200,10 +213,10 @@ function createAxisModelFromSpec(axisSpec, elementOwner = null) {
     elementOwner,
     id: axisSpec.id,
     name: axisSpec.name,
-    unitName: axisSpec.unitName,
+    unitName: axisSpec.unitName ?? 'none',
     unitOptions: axisSpec.unitOptions ?
       EmberObject.create(axisSpec.unitOptions) : null,
-    minInterval: axisSpec.minInterval,
+    minInterval: axisSpec.minInterval ?? null,
   });
   return axis;
 }

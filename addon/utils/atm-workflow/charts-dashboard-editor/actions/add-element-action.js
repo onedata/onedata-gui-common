@@ -7,18 +7,21 @@
  */
 
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
-import { set, computed } from '@ember/object';
+import { set, setProperties, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import {
-  createNewChart,
   createNewSection,
+  createNewChart,
+  createNewAxis,
+  createNewSeriesGroup,
+  createNewSeries,
 } from '../create-model';
-import { ElementType } from '../common';
+import { ElementType, isSectionElementType } from '../common';
 
 /**
  * @typedef {Object} AddElementActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType} newElementType
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Section} targetSection
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} targetElement
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
@@ -40,9 +43,10 @@ export default Action.extend({
   newElementType: reads('context.newElementType'),
 
   /**
-   * @type {ComputedProperty<AddElementActionContext['targetSection']>}
+   * @type {ComputedProperty<AddElementActionContext['targetElement']>}
    */
-  targetSection: reads('context.targetSection'),
+  targetElement: reads('context.targetElement'),
+
   /**
    * @type {ComputedProperty<AddElementActionContext['changeViewState']>}
    */
@@ -50,17 +54,32 @@ export default Action.extend({
 
   /**
    * Becomes defined during action execution
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null}
    */
   newElement: null,
 
   /**
-   * @type {ComputedProperty<'sections' | 'charts'>}
+   * @type {ComputedProperty<'sections' | 'charts' | 'axes' | 'seriesGroups' | 'subgroups' | 'series'>}
    */
-  collectionName: computed('newElementType', function collectionName() {
-    return this.newElementType === ElementType.Section ?
-      'sections' : 'charts';
-  }),
+  collectionName: computed(
+    'newElementType',
+    'targetElement.elementType',
+    function collectionName() {
+      switch (this.newElementType) {
+        case ElementType.Section:
+          return 'sections';
+        case ElementType.Chart:
+          return 'charts';
+        case ElementType.Axis:
+          return 'axes';
+        case ElementType.SeriesGroup:
+          return this.targetElement.elementType === ElementType.SeriesGroup ?
+            'subgroups' : 'seriesGroups';
+        case ElementType.Series:
+          return 'series';
+      }
+    }
+  ),
 
   /**
    * @override
@@ -83,18 +102,44 @@ export default Action.extend({
    * @override
    */
   onExecute() {
+    // Create new element
     if (!this.newElement) {
-      const elementOwner = this.targetSection.elementOwner;
-      this.set('newElement', this.newElementType === ElementType.Section ?
-        createNewSection(this.i18n, elementOwner) :
-        createNewChart(this.i18n, elementOwner)
-      );
+      this.set('newElement', this.createNewElement());
+      if (!this.newElement) {
+        return;
+      }
     }
-    set(this.newElement, 'parentSection', this.targetSection);
-    set(this.targetSection, this.collectionName, [
-      ...this.targetSection[this.collectionName],
+
+    // Assign parent
+    if (isSectionElementType(this.newElementType)) {
+      set(this.newElement, 'parentSection', this.targetElement);
+    } else if (this.targetElement.elementType === ElementType.SeriesGroup) {
+      setProperties(this.newElement, {
+        parentChart: this.targetElement.parentChart,
+        parentGroup: this.targetElement,
+      });
+    } else {
+      set(this.newElement, 'parentChart', this.targetElement);
+    }
+
+    // If new element is of type "series", try to assign an axis to it
+    if (this.newElementType === ElementType.Series) {
+      const firstAxis = this.targetElement.axes?.[0];
+      if (firstAxis) {
+        set(this.newElement, 'axis', firstAxis);
+        set(firstAxis, 'series', [
+          ...firstAxis.series,
+          this.newElement,
+        ]);
+      }
+    }
+
+    // Add element to parent's collection
+    set(this.targetElement, this.collectionName, [
+      ...this.targetElement[this.collectionName],
       this.newElement,
     ]);
+
     this.changeViewState({ elementToSelect: this.newElement });
   },
 
@@ -102,15 +147,61 @@ export default Action.extend({
    * @override
    */
   onExecuteUndo() {
+    if (!this.newElement) {
+      return;
+    }
+
     set(
-      this.targetSection,
+      this.targetElement,
       this.collectionName,
-      this.targetSection[this.collectionName]
+      this.targetElement[this.collectionName]
       .filter((element) => element !== this.newElement)
     );
-    set(this.newElement, 'parentSection', null);
+    if (this.newElement.parentSection) {
+      set(this.newElement, 'parentSection', null);
+    } else if (this.newElement.parentChart) {
+      set(this.newElement, 'parentChart', null);
+      if (this.newElement.parentGroup) {
+        set(this.newElement, 'parentGroup', null);
+      }
+    }
+
+    if (this.newElementType === ElementType.Series && this.newElement.axis) {
+      set(
+        this.newElement.axis,
+        'series',
+        this.newElement.axis.series.filter((series) => series !== this.newElement)
+      );
+      set(this.newElement, 'axis', null);
+    }
+
     this.changeViewState({
       elementsToDeselect: [this.newElement, ...this.newElement.getNestedElements()],
     });
+  },
+
+  /**
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null}
+   */
+  createNewElement() {
+    const elementOwner = this.targetElement.elementOwner;
+
+    switch (this.newElementType) {
+      case ElementType.Section:
+        return createNewSection(this.i18n, elementOwner);
+      case ElementType.Chart:
+        return createNewChart(this.i18n, elementOwner);
+      case ElementType.Axis:
+        return createNewAxis(this.i18n, elementOwner);
+      case ElementType.SeriesGroup:
+        return createNewSeriesGroup(this.i18n, elementOwner);
+      case ElementType.Series:
+        return createNewSeries(this.i18n, elementOwner);
+      default:
+        console.error(
+          `Could not create charts dashboard element of type "${this.newElementType}" - type not recognized.`
+        );
+        return null;
+    }
   },
 });
