@@ -1,0 +1,8 @@
+<ol class="list-items">
+  {{#each itemModels as |itemModel|}}
+    {{atm-workflow/charts-dashboard-editor/chart-editor/elements-list-item
+      itemModel=itemModel
+      onItemClick=onItemClick
+    }}
+  {{/each}}
+</ol>

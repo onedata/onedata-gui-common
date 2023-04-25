@@ -395,6 +395,45 @@
     .chart-elements-list-container {
       display: grid;
       grid-template-rows: min-content 1fr;
+      gap: 0.5em;
+    }
+
+    .elements-list {
+      .list-items {
+        border-top: 1px solid $main-border-color;
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+      }
+    }
+
+    .elements-list-item {
+      border-bottom: 1px solid $main-border-color;
+
+      .list-item-header {
+        padding: 0.5em;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.03);
+        }
+      }
+
+      .one-icon {
+        margin-right: 0.3em;
+        line-height: 0;
+        vertical-align: -0.3em;
+        font-size: 1.5em;
+      }
+
+      .elements-list-item:last-child {
+        border: none;
+      }
+
+      .additional-info {
+        margin-left: 1em;
+        font-size: 85%;
+        color: $main-text-color-disabled;
+      }
     }
   }
 

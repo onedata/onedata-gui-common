@@ -9,4 +9,7 @@
     <span class="text">{{tt this "addAxis"}}</span>
   {{/one-button}}
 </div>
-
+{{atm-workflow/charts-dashboard-editor/chart-editor/elements-list
+  itemModels=itemModels
+  onItemClick=(action "selectAxis")
+}}
