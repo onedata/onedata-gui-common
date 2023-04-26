@@ -20,3 +20,13 @@
     {{/one-icon}}
   </div>
 </div>
+{{#if itemModel.nestedModels.length}}
+  <div class="nested-items">
+    {{#each itemModel.nestedModels as |subitemModel|}}
+      {{atm-workflow/charts-dashboard-editor/chart-editor/elements-list-item
+        itemModel=subitemModel
+        actionsFactory=actionsFactory
+      }}
+    {{/each}}
+  </div>
+{{/if}}

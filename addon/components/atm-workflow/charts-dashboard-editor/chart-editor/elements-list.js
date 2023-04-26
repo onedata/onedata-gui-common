@@ -1,5 +1,5 @@
 import PerfectScrollbarElement from 'onedata-gui-common/components/perfect-scrollbar-element';
-import EmberObject, { computed, observer } from '@ember/object';
+import EmberObject, { observer } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
@@ -31,9 +31,19 @@ export const ElementsListItemModel = EmberObject.extend({
   renderer: undefined,
 
   /**
-   * @type {ComputedProperty<ElementsListItemModel>}
+   * @type {ElementsListItemModel}
    */
-  nestedModels: computed(() => []),
+  nestedModels: undefined,
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    if (!this.nestedModels) {
+      this.set('nestedModels', []);
+    }
+  },
 
   /**
    * @returns {Array<Utils.AtmWorkflow.ChartsDashboardEditor.ChartElement>}
@@ -204,7 +214,6 @@ export default PerfectScrollbarElement.extend({
           referenceElement: element,
           placement: 'before',
         });
-        console.log(scrollUnawarePosition, scrollAwarePosition);
       }
 
       // Element at the end or followed by a valid drop target
@@ -230,7 +239,6 @@ export default PerfectScrollbarElement.extend({
     }
 
     this.set('dropZones', dropZones);
-    console.log(dropZones);
   },
 
   /**

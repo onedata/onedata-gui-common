@@ -7,6 +7,9 @@ import { ElementsListItemModel } from './elements-list';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-list';
 
 const SeriesListItemModel = ElementsListItemModel.extend({
+  /**
+   * @override
+   */
   renderer: 'atm-workflow/charts-dashboard-editor/chart-editor/series-list-item',
 });
 

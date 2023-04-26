@@ -480,6 +480,15 @@
           margin-left: -0.2em;
         }
       }
+
+      .nested-items {
+        padding-left: 1em;
+      }
+    }
+
+    .is-dragging-object {
+      position: relative;
+      z-index: 1;
     }
 
     .drop-zone-container {

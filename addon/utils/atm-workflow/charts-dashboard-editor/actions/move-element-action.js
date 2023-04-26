@@ -9,7 +9,6 @@
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { ElementType } from '../common';
 import { getCollectionFieldName } from './utils';
 
 /**
@@ -156,14 +155,6 @@ export default Action.extend({
       ...newParentCollection.slice(newElementIdx),
     ]);
 
-    if (this.movedElement.elementType === ElementType.SeriesGroup) {
-      if (newParent.elementType === ElementType.SeriesGroup) {
-        set(this.movedElement, 'parentGroup', newParent);
-      } else {
-        set(this.movedElement, 'parentGroup', null);
-      }
-    } else {
-      set(this.movedElement, 'parent', newParent);
-    }
+    set(this.movedElement, 'parent', newParent);
   },
 });
