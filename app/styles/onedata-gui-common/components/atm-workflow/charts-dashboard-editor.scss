@@ -475,6 +475,10 @@
         margin-left: 1em;
         font-size: 85%;
         color: $main-text-color-disabled;
+
+        .one-icon {
+          margin-left: -0.2em;
+        }
       }
     }
 
@@ -502,6 +506,14 @@
       &.accepts-drag::before {
         opacity: 1;
       }
+    }
+
+    .color-mark {
+      display: inline-block;
+      height: 0.8em;
+      width: 0.8em;
+      border-radius: 50%;
+      background-color: var(--series-color);
     }
   }
 

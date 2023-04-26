@@ -28,7 +28,10 @@
   {{/bs-nav}}
   <div class="tab-content">
     {{#tab.pane elementId=tabIds.series}}
-
+      {{atm-workflow/charts-dashboard-editor/chart-editor/series-list
+        chart=chart
+        actionsFactory=actionsFactory
+      }}
     {{/tab.pane}}
     {{#tab.pane elementId=tabIds.seriesGroups}}
 

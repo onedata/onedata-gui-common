@@ -4,22 +4,22 @@ import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import { ElementsListItemModel } from './elements-list';
-import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/axes-list';
+import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-list';
 
-const AxesListItemModel = ElementsListItemModel.extend({
-  renderer: 'atm-workflow/charts-dashboard-editor/chart-editor/axes-list-item',
+const SeriesListItemModel = ElementsListItemModel.extend({
+  renderer: 'atm-workflow/charts-dashboard-editor/chart-editor/series-list-item',
 });
 
 export default Component.extend(I18n, {
   layout,
-  classNames: ['axes-list', 'chart-elements-list-container'],
+  classNames: ['series-list', 'chart-elements-list-container'],
 
   i18n: service(),
 
   /**
    * @override
    */
-  i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.chartEditor.axesList',
+  i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.chartEditor.seriesList',
 
   /**
    * @virtual
@@ -34,11 +34,11 @@ export default Component.extend(I18n, {
   actionsFactory: undefined,
 
   /**
-   * @type {Array<AxesListItemModel>}
+   * @type {Array<SeriesListItemModel>}
    */
   itemModels: undefined,
 
-  itemModelsSetter: observer('chart.axes.[]', function itemModelsSetter() {
+  itemModelsSetter: observer('chart.series.[]', function itemModelsSetter() {
     this.calculateItemModels();
   }),
 
@@ -54,13 +54,13 @@ export default Component.extend(I18n, {
     const existingModels = this.itemModels ?? [];
     const existingModelsMap = new Map(existingModels.map((model) => [model.item, model]));
 
-    const newModels = this.chart.axes.map((axis) => {
-      const existingModel = existingModelsMap.get(axis);
+    const newModels = this.chart.series.map((series) => {
+      const existingModel = existingModelsMap.get(series);
       if (existingModel) {
-        existingModelsMap.delete(axis);
+        existingModelsMap.delete(series);
         return existingModel;
       } else {
-        return AxesListItemModel.create({ item: axis });
+        return SeriesListItemModel.create({ item: series });
       }
     });
 
@@ -72,9 +72,9 @@ export default Component.extend(I18n, {
     /**
      * @returns {void}
      */
-    addAxis() {
+    addSeries() {
       const action = this.actionsFactory.createAddElementAction({
-        newElementType: ElementType.Axis,
+        newElementType: ElementType.Series,
         targetElement: this.chart,
       });
       action.execute();

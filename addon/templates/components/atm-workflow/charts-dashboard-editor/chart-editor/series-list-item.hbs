@@ -1,0 +1,11 @@
+{{one-icon icon="chart"}} <span class="name">{{item.name}}</span>
+<span class="additional-info">
+  {{#if colorStyle}}
+    <span class="color-mark" style={{colorStyle}}></span>
+  {{/if}}
+  {{typeTranslation}} |
+  {{#if item.seriesGroup}}
+    {{one-icon icon="items-grid"}} {{item.seriesGroup.name}} |
+  {{/if}}
+  {{one-icon icon="axes"}} {{item.axis.name}}
+</span>
