@@ -27,6 +27,16 @@
     }
   }
 
+  .action {
+    &:hover {
+      color: $color-one-azure;
+    }
+  }
+
+  .remove-action:hover {
+    color: $color-one-danger;
+  }
+
   .no-dashboard-info  {
     grid-row: 1 / -1;
   }
@@ -249,17 +259,9 @@
         line-height: 1;
         font-size: 130%;
 
-        &:hover {
-          color: $color-one-azure;
-        }
-
         & + .action {
           border-left: 1px solid $main-border-color;
         }
-      }
-
-      .remove-action:hover {
-        color: $color-one-danger;
       }
     }
 
@@ -342,12 +344,14 @@
     // assigning dummy z-index as it allows to render chart-editor
     // above sections-editor
     z-index: 0;
+    min-height: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     background-color: $color-one-white;
 
     .chart-editor-elements {
+      min-height: 0;
       display: grid;
       grid-template-rows: min-content 1fr;
       border-right: 1px solid $main-border-color;
@@ -363,6 +367,7 @@
     }
 
     .bs-tab-onedata {
+      min-height: 0;
       display: grid;
       grid-template-rows: min-content 1fr;
 
@@ -381,26 +386,40 @@
       }
 
       .tab-content {
+        min-height: 0;
         display: grid;
         padding: 0.5em;
         border: 1px solid $main-border-color;
         border-top: 0;
 
         .tab-pane.active {
+          min-height: 0;
           display: grid;
         }
       }
     }
 
     .chart-elements-list-container {
+      min-height: 0;
       display: grid;
       grid-template-rows: min-content 1fr;
       gap: 0.5em;
     }
 
     .elements-list {
+      position: relative;
+      min-height: 0;
+      border-top: 1px solid $main-border-color;
+
+      > .ps__rail-y {
+        // .elements-list has 1px border-top. It causes infinite scroll-down
+        // possibility as perfectscrollbar rail doesn't take into account
+        // that 1px during size measurement. We have to fake that there is
+        // no border - hence -1px on Y axis.
+        transform: translateY(-1px);
+      }
+
       .list-items {
-        border-top: 1px solid $main-border-color;
         padding: 0;
         margin: 0;
         list-style-type: none;
@@ -411,18 +430,41 @@
       border-bottom: 1px solid $main-border-color;
 
       .list-item-header {
+        display: flex;
         padding: 0.5em;
+        white-space: nowrap;
 
         &:hover {
           background-color: rgba(0, 0, 0, 0.03);
+
+          .actions {
+            opacity: 1;
+          }
         }
       }
 
+      .list-item-header-content {
+        flex-shrink: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 1em;
+      }
+
+      .actions {
+        margin-left: auto;
+        opacity: 0;
+        white-space: nowrap;
+      }
+
       .one-icon {
-        margin-right: 0.3em;
         line-height: 0;
         vertical-align: -0.3em;
         font-size: 1.5em;
+
+        &:not(:last-child) {
+          margin-right: 0.3em;
+        }
       }
 
       .elements-list-item:last-child {
@@ -433,6 +475,32 @@
         margin-left: 1em;
         font-size: 85%;
         color: $main-text-color-disabled;
+      }
+    }
+
+    .drop-zone-container {
+      position: absolute;
+      display: grid;
+    }
+
+    .drop-zone {
+      display: grid;
+      padding: 2px 0;
+
+      &.drop-zone-inside {
+        padding: 0;
+      }
+
+      &::before {
+        content: '';
+        background-color: rgba(#000, 0.1);
+        border: 2px dashed rgba(#000, 0.2);
+        border-radius: $border-radius-small;
+        opacity: 0;
+      }
+
+      &.accepts-drag::before {
+        opacity: 1;
       }
     }
   }
@@ -453,6 +521,16 @@
       .editor-sidebar {
         border-top: 1px solid $main-border-color;
         border-left: 0;
+      }
+    }
+  }
+
+  @media (hover: none) {
+    .chart-editor {
+      .elements-list-item {
+        .actions {
+          opacity: 1;
+        }
       }
     }
   }

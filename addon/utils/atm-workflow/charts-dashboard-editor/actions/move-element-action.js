@@ -9,13 +9,13 @@
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { computed } from '@ember/object';
 import { ElementType } from '../common';
+import { getCollectionFieldName } from './utils';
 
 /**
  * @typedef {Object} MoveElementActionContext
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} movedElement
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Section} newParent
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} movedElement
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} newParent
  * @property {MoveElementActionNewPosition | null} newPosition
  *   `null` will place `movedElement` at the end
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
@@ -24,7 +24,7 @@ import { ElementType } from '../common';
 /**
  * @typedef {Object} MoveElementActionNewPosition
  * @property {'before' | 'after'} placement
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} referenceElement
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} referenceElement
  */
 
 export default Action.extend({
@@ -72,17 +72,6 @@ export default Action.extend({
   oldPosition: null,
 
   /**
-   * @type {ComputedProperty<'sections' | 'charts'>}
-   */
-  collectionName: computed(
-    'movedElement.elementType',
-    function collectionName() {
-      return this.movedElement.elementType === ElementType.Section ?
-        'sections' : 'charts';
-    }
-  ),
-
-  /**
    * @override
    */
   willDestroy() {
@@ -101,20 +90,22 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    const oldParent = this.movedElement.parentSection;
-    const oldParentCollection = oldParent[this.collectionName];
-    const movedElementOldIdx =
-      oldParentCollection.indexOf(this.movedElement);
-    let oldPosition = null;
-    if (movedElementOldIdx < oldParentCollection.length - 1) {
-      oldPosition = {
+    const currentParent = this.movedElement.parent;
+    const currentParentCollection =
+      currentParent[getCollectionFieldName(this.movedElement.elementType)];
+    const movedElementIdx =
+      currentParentCollection.indexOf(this.movedElement);
+    let currentPosition = null;
+    if (movedElementIdx < currentParentCollection.length - 1) {
+      currentPosition = {
         placement: 'before',
-        referenceElement: oldParentCollection[movedElementOldIdx + 1],
+        referenceElement: currentParentCollection[movedElementIdx + 1],
       };
     }
+
     this.setProperties({
-      oldParent,
-      oldPosition,
+      oldParent: currentParent,
+      oldPosition: currentPosition,
     });
 
     this.moveElement(this.newParent, this.newPosition);
@@ -135,15 +126,17 @@ export default Action.extend({
    * @returns {void}
    */
   moveElement(newParent, newPosition) {
+    const currentParent = this.movedElement.parent;
+    const parentCollectionName = getCollectionFieldName(this.movedElement.elementType);
+    const currentParentCollection = currentParent[parentCollectionName];
     set(
-      this.movedElement.parentSection,
-      this.collectionName,
-      this.movedElement.parentSection[this.collectionName].filter((element) =>
-        element !== this.movedElement
-      )
+      currentParent,
+      parentCollectionName,
+      currentParentCollection.filter((element) => element !== this.movedElement)
     );
 
-    const newParentCollection = newParent[this.collectionName];
+    const newParentCollection = newParent[parentCollectionName];
+
     const referenceElementIdx = newPosition ?
       newParentCollection.indexOf(newPosition.referenceElement) :
       -1;
@@ -157,11 +150,20 @@ export default Action.extend({
     } else {
       newElementIdx = newParentCollection.length;
     }
-    set(newParent, this.collectionName, [
+    set(newParent, parentCollectionName, [
       ...newParentCollection.slice(0, newElementIdx),
       this.movedElement,
       ...newParentCollection.slice(newElementIdx),
     ]);
-    set(this.movedElement, 'parentSection', newParent);
+
+    if (this.movedElement.elementType === ElementType.SeriesGroup) {
+      if (newParent.elementType === ElementType.SeriesGroup) {
+        set(this.movedElement, 'parentGroup', newParent);
+      } else {
+        set(this.movedElement, 'parentGroup', null);
+      }
+    } else {
+      set(this.movedElement, 'parent', newParent);
+    }
   },
 });

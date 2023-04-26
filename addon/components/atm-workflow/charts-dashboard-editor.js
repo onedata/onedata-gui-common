@@ -130,7 +130,7 @@ export default Component.extend({
         newViewState.isChartEditorActive = false;
         newViewState.selectedChartElement = null;
       } else if (isChartElementType(viewStateChange.elementToSelect.elementType)) {
-        newViewState.selectedSectionElement = viewStateChange.elementToSelect.parentChart;
+        newViewState.selectedSectionElement = viewStateChange.elementToSelect.parent;
         newViewState.isChartEditorActive = true;
         newViewState.selectedChartElement = viewStateChange.elementToSelect;
       } else {

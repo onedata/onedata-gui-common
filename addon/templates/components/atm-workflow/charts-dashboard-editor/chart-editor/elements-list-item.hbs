@@ -1,3 +1,22 @@
-<div class="list-item-header clickable" onClick={{action onItemClick itemModel}}>
-  {{component itemModel.renderer item=itemModel.item}}
+<div class="list-item-header clickable" onClick={{action "select"}}>
+  {{component itemModel.renderer
+    class="list-item-header-content"
+    item=itemModel.item
+  }}
+  <div class="actions">
+    {{#one-icon
+      class="action duplicate-action clickable"
+      icon="browser-copy"
+      click=(action "duplicate")
+    }}
+      {{one-tooltip title=(tt this "actions.duplicate")}}
+    {{/one-icon}}
+    {{#one-icon
+      class="action remove-action clickable"
+      icon="browser-delete"
+      click=(action "remove")
+    }}
+      {{one-tooltip title=(tt this "actions.remove")}}
+    {{/one-icon}}
+  </div>
 </div>

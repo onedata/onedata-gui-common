@@ -7,7 +7,7 @@
  */
 
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
-import { set, setProperties, computed } from '@ember/object';
+import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import {
   createNewSection,
@@ -16,7 +16,8 @@ import {
   createNewSeriesGroup,
   createNewSeries,
 } from '../create-model';
-import { ElementType, isSectionElementType } from '../common';
+import { ElementType } from '../common';
+import { getCollectionFieldName } from './utils';
 
 /**
  * @typedef {Object} AddElementActionContext
@@ -59,34 +60,21 @@ export default Action.extend({
   newElement: null,
 
   /**
-   * @type {ComputedProperty<'sections' | 'charts' | 'axes' | 'seriesGroups' | 'subgroups' | 'series'>}
+   * @type {ComputedProperty<string>}
    */
-  collectionName: computed(
-    'newElementType',
-    'targetElement.elementType',
-    function collectionName() {
-      switch (this.newElementType) {
-        case ElementType.Section:
-          return 'sections';
-        case ElementType.Chart:
-          return 'charts';
-        case ElementType.Axis:
-          return 'axes';
-        case ElementType.SeriesGroup:
-          return this.targetElement.elementType === ElementType.SeriesGroup ?
-            'subgroups' : 'seriesGroups';
-        case ElementType.Series:
-          return 'series';
-      }
-    }
-  ),
+  collectionName: computed('newElementType', function collectionName() {
+    return getCollectionFieldName(this.newElementType);
+  }),
 
   /**
    * @override
    */
   willDestroy() {
     try {
-      if (this.newElement && !this.newElement.parentSection) {
+      if (
+        this.newElement &&
+        (!this.newElement.parent || !this.newElement.parent)
+      ) {
         this.newElement.destroy();
       }
       this.setProperties({
@@ -111,16 +99,7 @@ export default Action.extend({
     }
 
     // Assign parent
-    if (isSectionElementType(this.newElementType)) {
-      set(this.newElement, 'parentSection', this.targetElement);
-    } else if (this.targetElement.elementType === ElementType.SeriesGroup) {
-      setProperties(this.newElement, {
-        parentChart: this.targetElement.parentChart,
-        parentGroup: this.targetElement,
-      });
-    } else {
-      set(this.newElement, 'parentChart', this.targetElement);
-    }
+    set(this.newElement, 'parent', this.targetElement);
 
     // If new element is of type "series", try to assign an axis to it
     if (this.newElementType === ElementType.Series) {
@@ -157,14 +136,7 @@ export default Action.extend({
       this.targetElement[this.collectionName]
       .filter((element) => element !== this.newElement)
     );
-    if (this.newElement.parentSection) {
-      set(this.newElement, 'parentSection', null);
-    } else if (this.newElement.parentChart) {
-      set(this.newElement, 'parentChart', null);
-      if (this.newElement.parentGroup) {
-        set(this.newElement, 'parentGroup', null);
-      }
-    }
+    set(this.newElement, 'parent', null);
 
     if (this.newElementType === ElementType.Series && this.newElement.axis) {
       set(

@@ -49,7 +49,7 @@ const SeriesGroup = ElementBase.extend({
    * @virtual optional
    * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup>}
    */
-  subgroups: undefined,
+  seriesGroups: undefined,
 
   /**
    * @public
@@ -61,16 +61,9 @@ const SeriesGroup = ElementBase.extend({
   /**
    * @public
    * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup | null}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup | null}
    */
-  parentGroup: null,
-
-  /**
-   * @public
-   * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
-   */
-  parentChart: null,
+  parent: null,
 
   /**
    * @override
@@ -80,8 +73,8 @@ const SeriesGroup = ElementBase.extend({
     if (!this.id) {
       this.set('id', generateId());
     }
-    if (!this.subgroups) {
-      this.set('subgroups', []);
+    if (!this.seriesGroups) {
+      this.set('seriesGroups', []);
     }
     if (!this.series) {
       this.set('series', []);
@@ -93,18 +86,15 @@ const SeriesGroup = ElementBase.extend({
    */
   willDestroy() {
     try {
-      if (this.subgroups.length) {
-        this.subgroups.forEach((subgroup) => subgroup.destroy());
-        this.set('subgroups', []);
+      if (this.seriesGroups.length) {
+        this.seriesGroups.forEach((subgroup) => subgroup.destroy());
+        this.set('seriesGroups', []);
       }
       if (this.series.length) {
         this.set('series', []);
       }
-      if (this.parentGroup) {
-        this.set('parentGroup', null);
-      }
-      if (this.parentChart) {
-        this.set('parentChart', null);
+      if (this.parent) {
+        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);
@@ -121,10 +111,9 @@ const SeriesGroup = ElementBase.extend({
       name: this.name,
       stacked: this.stacked,
       showSum: this.showSum,
-      subgroups: this.subgroups.map((subgroup) => subgroup.clone()),
+      seriesGroups: this.seriesGroups.map((subgroup) => subgroup.clone()),
       series: [],
-      parentGroup: this.parentGroup,
-      parentChart: this.parentChart,
+      parent: this.parent,
     });
   },
 
@@ -132,7 +121,7 @@ const SeriesGroup = ElementBase.extend({
    * @override
    */
   * getNestedElements() {
-    for (const subgroup of this.subgroups) {
+    for (const subgroup of this.seriesGroups) {
       yield subgroup;
       yield* subgroup.getNestedElements();
     }

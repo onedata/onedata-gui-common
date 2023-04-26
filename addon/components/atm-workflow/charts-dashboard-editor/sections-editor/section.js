@@ -112,11 +112,11 @@ export default OneDraggableObject.extend(I18n, {
     }
 
     let section = this.section;
-    while (section.parentSection) {
-      if (section.parentSection === this.draggedSection) {
+    while (section.parent) {
+      if (section.parent === this.draggedSection) {
         return true;
       }
-      section = section.parentSection;
+      section = section.parent;
     }
     return false;
   }),
@@ -193,7 +193,7 @@ export default OneDraggableObject.extend(I18n, {
       const action = this.actionsFactory.createMoveElementAction({
         movedElement: draggedElement,
         newParent: placement === 'inside' ?
-          this.section : this.section.parentSection,
+          this.section : this.section.parent,
         newPosition: placement === 'inside' ? null : {
           placement,
           referenceElement: this.section,

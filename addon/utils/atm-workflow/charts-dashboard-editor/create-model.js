@@ -136,8 +136,8 @@ function createSectionModelFromSpec(sectionSpec, elementOwner = null, isRoot = f
         createSectionModelFromSpec(subsectionSpec, elementOwner)
       ) ?? [],
   });
-  section.charts.forEach((chart) => set(chart, 'parentSection', section));
-  section.sections.forEach((subsection) => set(subsection, 'parentSection', section));
+  section.charts.forEach((chart) => set(chart, 'parent', section));
+  section.sections.forEach((subsection) => set(subsection, 'parent', section));
   return section;
 }
 
@@ -168,16 +168,16 @@ function createChartModelFromSpec(chartSpec, elementOwner = null) {
   const groupsMap = {};
   chart.axes.forEach((axis) => {
     axesMap[axis.id] = axis;
-    set(axis, 'parentChart', chart);
+    set(axis, 'parent', chart);
   });
   chart.seriesGroups.forEach((seriesGroup) => {
     groupsMap[seriesGroup.id] = seriesGroup;
-    set(seriesGroup, 'parentChart', chart);
+    set(seriesGroup, 'parent', chart);
     [...seriesGroup.getNestedElements()]
     .filter((element) => element.elementType === ElementType.SeriesGroup)
       .forEach((subgroup) => {
         groupsMap[subgroup.id] = subgroup;
-        set(subgroup, 'parentChart', chart);
+        set(subgroup, 'parent', chart);
       });
   });
 
@@ -191,7 +191,7 @@ function createChartModelFromSpec(chartSpec, elementOwner = null) {
     ) ?? []
   );
   chart.series.forEach((series) => {
-    set(series, 'parentChart', chart);
+    set(series, 'parent', chart);
     if (series.axis) {
       set(series.axis, 'series', [...series.axis.series, series]);
     }
@@ -233,14 +233,14 @@ function createSeriesGroupModelFromSpec(seriesGroupSpec, elementOwner = null) {
     name: seriesGroupSpec.name,
     stacked: Boolean(seriesGroupSpec.stacked),
     showSum: Boolean(seriesGroupSpec.showSum),
-    subgroups: seriesGroupSpec.subgroups
+    seriesGroups: seriesGroupSpec.subgroups
       ?.filter(Boolean)
       .map((subgroupSpec) =>
         createSeriesGroupModelFromSpec(subgroupSpec, elementOwner)
       ) ?? [],
   });
-  seriesGroup.subgroups.forEach((subgroup) =>
-    set(subgroup, 'parentGroup', seriesGroup)
+  seriesGroup.seriesGroups.forEach((subgroup) =>
+    set(subgroup, 'parent', seriesGroup)
   );
   return seriesGroup;
 }

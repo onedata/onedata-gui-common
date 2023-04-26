@@ -84,7 +84,7 @@ const Series = ElementBase.extend({
    * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
    */
-  parentChart: null,
+  parent: null,
 
   /**
    * @override
@@ -111,8 +111,8 @@ const Series = ElementBase.extend({
       if (this.group) {
         this.set('group', null);
       }
-      if (this.parentChart) {
-        this.set('parentChart', null);
+      if (this.parent) {
+        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);
@@ -134,7 +134,7 @@ const Series = ElementBase.extend({
       axis: this.axis,
       color: this.color,
       group: this.group,
-      parentChart: this.parentChart,
+      parent: this.parent,
     });
   },
 });

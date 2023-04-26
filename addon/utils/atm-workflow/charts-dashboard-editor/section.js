@@ -65,7 +65,7 @@ const Section = ElementBase.extend({
    * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
    */
-  parentSection: null,
+  parent: null,
 
   /**
    * @override
@@ -93,8 +93,8 @@ const Section = ElementBase.extend({
         this.sections.forEach((section) => section.destroy());
         this.set('sections', []);
       }
-      if (this.parentSection) {
-        this.set('parentSection', null);
+      if (this.parent) {
+        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);
@@ -113,7 +113,7 @@ const Section = ElementBase.extend({
       description: this.description,
       charts: this.charts.map((chart) => chart.clone()),
       sections: this.sections.map((section) => section.clone()),
-      parentSection: this.parentSection,
+      parent: this.parent,
     });
   },
 

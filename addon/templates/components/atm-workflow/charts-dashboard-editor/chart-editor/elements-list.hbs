@@ -2,7 +2,19 @@
   {{#each itemModels as |itemModel|}}
     {{atm-workflow/charts-dashboard-editor/chart-editor/elements-list-item
       itemModel=itemModel
-      onItemClick=onItemClick
+      actionsFactory=actionsFactory
     }}
   {{/each}}
 </ol>
+{{#if dropZones.length}}
+  <div class="drop-zones-container">
+    {{#each dropZones as |dropZone|}}
+      <div class="drop-zone-container" style={{dropZone.style}}>
+        {{one-draggable-object-target
+          class=(concat "drop-zone drop-zone-" dropZone.placement)
+          action=(action "acceptDrop" dropZone.referenceElement dropZone.placement)
+        }}
+      </div>
+    {{/each}}
+  </div>
+{{/if}}

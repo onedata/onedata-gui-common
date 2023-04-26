@@ -137,7 +137,7 @@ export default OneDraggableObject.extend(I18n, {
     async acceptDraggedElement(placement, draggedElement) {
       const action = this.actionsFactory.createMoveElementAction({
         movedElement: draggedElement,
-        newParent: this.chart.parentSection,
+        newParent: this.chart.parent,
         newPosition: {
           placement,
           referenceElement: this.chart,

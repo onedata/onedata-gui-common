@@ -9,11 +9,11 @@
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { ElementType } from '../common';
+import { getCollectionFieldName } from './utils';
 
 /**
  * @typedef {Object} DuplicateElementActionContext
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} elementToDuplicate
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} elementToDuplicate
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
@@ -46,13 +46,12 @@ export default Action.extend({
   createdDuplicate: null,
 
   /**
-   * @type {ComputedProperty<'sections' | 'charts'>}
+   * @type {ComputedProperty<string>}
    */
   collectionName: computed(
     'elementToDuplicate.elementType',
     function collectionName() {
-      return this.elementToDuplicate.elementType === ElementType.Section ?
-        'sections' : 'charts';
+      return getCollectionFieldName(this.elementToDuplicate.elementType);
     }
   ),
 
@@ -61,7 +60,7 @@ export default Action.extend({
    */
   willDestroy() {
     try {
-      if (this.createdDuplicate && !this.createdDuplicate.parentSection) {
+      if (this.createdDuplicate && !this.createdDuplicate.parent) {
         this.createdDuplicate.destroy();
       }
       this.setProperties({
@@ -81,7 +80,7 @@ export default Action.extend({
       this.set('createdDuplicate', this.elementToDuplicate.clone());
     }
 
-    const parent = this.elementToDuplicate.parentSection;
+    const parent = this.elementToDuplicate.parent;
     const parentCollection = parent[this.collectionName];
     const elementIndexInParent =
       parentCollection.indexOf(this.elementToDuplicate);
@@ -90,7 +89,7 @@ export default Action.extend({
       this.createdDuplicate,
       ...parentCollection.slice(elementIndexInParent + 1),
     ]);
-    set(this.createdDuplicate, 'parentSection', parent);
+    set(this.createdDuplicate, 'parent', parent);
     this.changeViewState({ elementToSelect: this.createdDuplicate });
   },
 
@@ -98,8 +97,8 @@ export default Action.extend({
    * @override
    */
   onExecuteUndo() {
-    const parent = this.createdDuplicate.parentSection;
-    set(this.createdDuplicate, 'parentSection', null);
+    const parent = this.createdDuplicate.parent;
+    set(this.createdDuplicate, 'parent', null);
     set(
       parent,
       this.collectionName,

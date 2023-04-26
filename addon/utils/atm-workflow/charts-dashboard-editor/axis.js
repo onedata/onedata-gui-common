@@ -65,7 +65,7 @@ const Axis = ElementBase.extend({
    * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
    */
-  parentChart: null,
+  parent: null,
 
   /**
    * @override
@@ -92,8 +92,8 @@ const Axis = ElementBase.extend({
       if (this.series.length) {
         this.set('series', []);
       }
-      if (this.parentChart) {
-        this.set('parentChart', null);
+      if (this.parent) {
+        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);
@@ -113,7 +113,7 @@ const Axis = ElementBase.extend({
         EmberObject.create(this.unitOptions) : this.unitOptions,
       minInterval: this.minInterval,
       series: [],
-      parentChart: this.parentChart,
+      parent: this.parent,
     });
   },
 });
