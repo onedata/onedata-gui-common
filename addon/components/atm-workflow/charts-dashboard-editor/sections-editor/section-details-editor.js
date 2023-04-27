@@ -32,7 +32,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section}
    */
-  section: null,
+  section: undefined,
 
   /**
    * @virtual
@@ -120,7 +120,7 @@ const TitleField = TextField.extend({
 });
 
 /**
- * @type {Utils.FormComponent.TextField}
+ * @type {Utils.FormComponent.TextareaField}
  */
 const TitleTipField = TextareaField.extend({
   ...disableValidation,
@@ -139,6 +139,11 @@ const DescriptionField = TextareaField.extend({
 
 const DetailsForm = FormFieldsRootGroup.extend({
   /**
+   * @override
+   */
+  i18nPrefix: tag `${'component.i18nPrefix'}.fields`,
+
+  /**
    * @virtual
    * @type {Components.AtmWorkflow.ChartsDashboardEditor.SectionsEditor.SectionDetailsEditor}
    */
@@ -148,11 +153,6 @@ const DetailsForm = FormFieldsRootGroup.extend({
    * @override
    */
   ownerSource: reads('component'),
-
-  /**
-   * @override
-   */
-  i18nPrefix: tag `${'component.i18nPrefix'}.fields`,
 
   /**
    * @override
