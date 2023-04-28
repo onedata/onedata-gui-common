@@ -7,7 +7,13 @@
  */
 
 /**
- * @typedef {'chartsDashboardEditorChart' | 'chartsDashboardEditorSection'} ElementType
+ * @typedef {
+ *   'chartsDashboardEditorSection' |
+ *   'chartsDashboardEditorChart' |
+ *   'chartsDashboardEditorAxis' |
+ *   'chartsDashboardEditorSeriesGroup' |
+ *   'chartsDashboardEditorSeries'
+ * } ElementType
  * Values are so long because are used to distinguish dragged elements from
  * other elements in the GUI.
  */
@@ -16,6 +22,9 @@
  * @typedef {Object<string, ElementType>}
  */
 export const ElementType = Object.freeze({
-  Chart: 'chartsDashboardEditorChart',
   Section: 'chartsDashboardEditorSection',
+  Chart: 'chartsDashboardEditorChart',
+  Axis: 'chartsDashboardEditorAxis',
+  SeriesGroup: 'chartsDashboardEditorSeriesGroup',
+  Series: 'chartsDashboardEditorSeries',
 });
