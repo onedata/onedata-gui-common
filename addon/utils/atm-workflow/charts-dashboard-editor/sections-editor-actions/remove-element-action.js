@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Action from 'onedata-gui-common/utils/action';
+import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { ElementType } from '../common';
@@ -14,9 +14,15 @@ import { ElementType } from '../common';
 /**
  * @typedef {Object} RemoveElementActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} elementToRemove
+ * @property {(elementToDeselect: Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section) => void} onDeselectElement
  */
 
 export default Action.extend({
+  /**
+   * @override
+   */
+  undoPossibility: ActionUndoPossibility.Possible,
+
   /**
    * @virtual
    * @type {RemoveElementActionContext}
@@ -24,9 +30,14 @@ export default Action.extend({
   context: undefined,
 
   /**
-   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section>}
+   * @type {ComputedProperty<RemoveElementActionContext['elementToRemove']>}
    */
   elementToRemove: reads('context.elementToRemove'),
+
+  /**
+   * @type {ComputedProperty<RemoveElementActionContext['onDeselectElement']>}
+   */
+  onDeselectElement: reads('context.onDeselectElement'),
 
   /**
    * Becomes defined during action execution
@@ -84,6 +95,10 @@ export default Action.extend({
       parent[this.collectionName].filter((element) => element !== this.elementToRemove)
     );
     set(this.elementToRemove, 'parentSection', null);
+    this.onDeselectElement(this.elementToRemove);
+    [...this.elementToRemove.getNestedElements()].forEach((element) =>
+      this.onDeselectElement(element)
+    );
   },
 
   /**

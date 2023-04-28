@@ -1,0 +1,11 @@
+{{#if (eq selectedElement.elementType ElementType.Section)}}
+  {{atm-workflow/charts-dashboard-editor/sections-editor/section-details-editor
+    section=selectedElement
+    actionsFactory=actionsFactory
+  }}
+{{else if (eq selectedElement.elementType ElementType.Chart)}}
+  {{atm-workflow/charts-dashboard-editor/sections-editor/chart-details-editor
+    chart=selectedElement
+    actionsFactory=actionsFactory
+  }}
+{{/if}}

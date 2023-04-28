@@ -1,0 +1,12 @@
+<form class="form form-horizontal form-component">
+  {{form-component/field-renderer field=detailsForm}}
+</form>
+{{#one-button
+  class="edit-content"
+  type="default"
+  size="sm"
+  onClick=(action "editContent")
+}}
+  {{one-icon icon="rename"}}
+  <span class="text">{{tt this "editContent"}}</span>
+{{/one-button}}

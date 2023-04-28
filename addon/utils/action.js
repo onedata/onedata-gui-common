@@ -29,6 +29,26 @@ import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import ActionResult from 'onedata-gui-common/utils/action-result';
 
 /**
+ * @typedef {'possible' | 'impossible' | 'notApplicable'} ActionUndoPossibility
+ * - `'possible'` means, that execution of an action can fully be undone,
+ * - `'impossible'` means, that execution of an action can't be undone,
+ * - `'notApplicable'` means, that execution of an action does not introduce any
+ *   changes, that can be considered in terms of modification, so effectively
+ *   there is nothing to undo. Main example of such action is an action, which
+ *   only changes state of some model presentation and doesn't change properties
+ *   of the model itself (like element selection, changing tab, etc.).
+ */
+
+/**
+ * @type {Object<string, ActionUndoPossibility>}
+ */
+export const ActionUndoPossibility = Object.freeze({
+  Possible: 'possible',
+  Impossible: 'impossible',
+  NotApplicable: 'notApplicable',
+});
+
+/**
  * @typedef {(result: Utils.ActionResult, action: Utils.Action) => Promise<void>} ActionExecuteHook
  */
 
@@ -46,11 +66,18 @@ export default EmberObject.extend(I18n, OwnerInjector, {
 
   /**
    * Performs action undo
-   * @virtual
+   * @virtual optional
    * @private
    * @type {() => Promise<Utils.ActionResult|undefined>)}
    */
   onExecuteUndo: notImplementedThrow,
+
+  /**
+   * @virtual optional
+   * @public
+   * @type {ActionUndoPossibility}
+   */
+  undoPossibility: ActionUndoPossibility.Impossible,
 
   /**
    * @virtual optional

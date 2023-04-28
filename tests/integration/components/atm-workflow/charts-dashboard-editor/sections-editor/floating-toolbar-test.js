@@ -11,6 +11,11 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 
+const editContentActionSpec = {
+  className: 'editContent-action',
+  icon: 'rename',
+  tip: 'Edit content',
+};
 const duplicateActionSpec = {
   className: 'duplicate-action',
   icon: 'browser-copy',
@@ -55,9 +60,11 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       });
 
       itShowsActions('chart', [
+        editContentActionSpec,
         duplicateActionSpec,
         removeActionSpec,
       ]);
+      itTriggersEditContentAction();
       itTriggersDuplicateAction();
       itTriggersRemoveAction();
     });
@@ -81,6 +88,23 @@ function createChart(testCase, props = {}) {
   const chart = createNewChart(testCase.owner.lookup('service:i18n'));
   setProperties(chart, props);
   return chart;
+}
+
+function itTriggersEditContentAction() {
+  it('triggers editor on "edit content" click', async function () {
+    const executeSpy = sinon.spy();
+    this.actionsFactory.createEditChartContentAction = sinon.spy(() => ({
+      execute: executeSpy,
+    }));
+    await renderComponent();
+    expect(this.actionsFactory.createEditChartContentAction).to.be.not.called;
+
+    await click('.editContent-action');
+
+    expect(this.actionsFactory.createEditChartContentAction).to.be.calledOnce
+      .and.calledWith({ chart: this.model });
+    expect(executeSpy).to.be.calledOnce;
+  });
 }
 
 function itTriggersDuplicateAction() {

@@ -49,13 +49,26 @@ export default Component.extend(I18n, {
     }];
 
     if (this.model?.elementType === ElementType.Chart) {
-      // add edit action
+      actions.unshift({
+        name: 'editContent',
+        icon: 'rename',
+      });
     }
 
     return actions;
   }),
 
   actions: {
+    /**
+     * @returns {void}
+     */
+    editContent() {
+      const action = this.actionsFactory.createEditChartContentAction({
+        chart: this.model,
+      });
+      action.execute();
+    },
+
     /**
      * @returns {void}
      */

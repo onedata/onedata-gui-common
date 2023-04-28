@@ -8,7 +8,7 @@
  */
 
 import Component from '@ember/component';
-import { observer } from '@ember/object';
+import { observer, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor';
 import ActionsFactory from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor/sections-editor-actions/actions-factory';
@@ -35,6 +35,11 @@ export default Component.extend({
    * @type {() => void}
    */
   onRemoveDashboard: undefined,
+
+  /**
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
+   */
+  selectedElement: null,
 
   /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActionsFactory}
@@ -72,16 +77,26 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    const actionsFactory = new ActionsFactory(this);
+    const actionsFactory = new ActionsFactory({
+      ownerSource: this,
+      onSelectElement: (element) => this.selectElement(element),
+      onDeselectElement: (element) => this.deselectElement(element),
+    });
     const undoManager = UndoManager.create();
-    actionsFactory.addExecuteListener((action) =>
-      undoManager.addActionToHistory(action)
-    );
+    actionsFactory.addExecuteListener((action, result) => {
+      if (!result.undo) {
+        undoManager.addActionToHistory(action);
+      }
+    });
 
     this.setProperties({
       actionsFactory,
       undoManager,
     });
+
+    this.actionsFactory
+      .createSelectElementAction({ elementToSelect: this.rootSection })
+      .execute();
 
     this.edgeScrollerEnabler();
   },
@@ -112,5 +127,54 @@ export default Component.extend({
     } finally {
       this._super(...arguments);
     }
+  },
+
+  /**
+   * @param {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section | null} elementToSelect
+   * @returns {void}
+   */
+  selectElement(elementToSelect) {
+    if (this.selectedElement === elementToSelect) {
+      return;
+    }
+
+    if (this.selectedElement) {
+      set(this.selectedElement, 'isSelected', false);
+    }
+    if (elementToSelect) {
+      set(elementToSelect, 'isSelected', true);
+    }
+    this.set('selectedElement', elementToSelect);
+  },
+
+  /**
+   * @param {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} elementToDeselect
+   * @returns {void}
+   */
+  deselectElement(elementToDeselect) {
+    if (this.selectedElement === elementToDeselect) {
+      this.selectElement(null);
+    }
+  },
+
+  /**
+   * @returns {HTMLDivElement | null}
+   */
+  getWorkspaceElement() {
+    return this.element?.querySelector('.dashboard-visualiser') ?? null;
+  },
+
+  actions: {
+    /**
+     * @param {MouseEvent} event
+     * @returns {void}
+     */
+    workspaceClick(event) {
+      if (event.target === this.getWorkspaceElement()) {
+        const action = this.actionsFactory
+          .createSelectElementAction({ elementToSelect: null });
+        action.execute();
+      }
+    },
   },
 });

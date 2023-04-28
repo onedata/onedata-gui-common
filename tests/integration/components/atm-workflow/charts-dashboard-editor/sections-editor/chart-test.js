@@ -69,6 +69,21 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       .and.calledWith({ elementToRemove: this.chart });
     expect(executeSpy).to.be.calledOnce;
   });
+
+  it('triggers editor on "edit content" link click', async function () {
+    const executeSpy = sinon.spy();
+    this.actionsFactory.createEditChartContentAction = sinon.spy(() => ({
+      execute: executeSpy,
+    }));
+    await renderComponent();
+    expect(this.actionsFactory.createEditChartContentAction).to.be.not.called;
+
+    await click('.edit-chart-content-trigger');
+
+    expect(this.actionsFactory.createEditChartContentAction).to.be.calledOnce
+      .and.calledWith({ chart: this.chart });
+    expect(executeSpy).to.be.calledOnce;
+  });
 });
 
 async function renderComponent() {

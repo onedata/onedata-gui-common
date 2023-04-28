@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, find, findAll, click } from '@ember/test-helpers';
+import { render, find, findAll, click, fillIn } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { set } from '@ember/object';
 import sinon from 'sinon';
@@ -10,6 +10,7 @@ import {
   createNewSection,
   createModelFromSpec,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import OneTooltipHelper from '../../../../helpers/one-tooltip';
 
 describe('Integration | Component | atm-workflow/charts-dashboard-editor/sections-editor', function () {
   setupRenderingTest();
@@ -54,52 +55,67 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 
   it('allows to add nested sections', async function () {
     await renderComponent();
+    let structure = getElementsStructure();
 
     // Add first nested subsection
-    await click('.root-section > .add-subsection');
+    await click(structure.addSubsectionTrigger);
 
-    const sections = findAll('.section');
-    expect(sections).to.have.length(2);
-    expect(sections[1]).to.contain.text('Untitled section');
+    structure = getElementsStructure();
+    expect(structure.sections).to.have.length(1);
+    expect(structure.sections[0].title).to.equal('Untitled section');
+    expect(structure.sections[0].isSelected).to.be.true;
 
     // Add second nested subsection (after first one)
-    await click('.root-section > .add-subsection');
+    await click(structure.addSubsectionTrigger);
 
-    expect(findAll('.section')).to.have.length(3);
+    structure = getElementsStructure();
+    expect(structure.sections).to.have.length(2);
+    expect(structure.sections[1].isSelected).to.be.true;
 
     // Add first nested subsubsection (inside first one)
-    await click('.add-subsection');
+    await click(structure.sections[0].addSubsectionTrigger);
 
-    expect(findAll('.section')).to.have.length(4);
-    expect(findAll('.section .section .section')).to.have.length(1);
+    structure = getElementsStructure();
+    expect(structure.sections[0].sections).to.have.length(1);
+    expect(structure.sections[0].sections[0].isSelected).to.be.true;
   });
 
   it('allows to undo and redo section creation', async function () {
     await renderComponent();
+    let structure = getElementsStructure();
 
     // Add nested subsection
-    await click('.add-subsection');
+    await click(structure.addSubsectionTrigger);
     // Add nested subsubsection (inside first one)
-    await click('.add-subsection');
+    structure = getElementsStructure();
+    await click(structure.sections[0].addSubsectionTrigger);
     // Undo subsubsection creation
     await click('.undo-btn');
 
-    expect(findAll('.section')).to.have.length(2);
+    structure = getElementsStructure();
+    expect(structure.sections[0].sections).to.have.length(0);
+    expect(find('.selected')).to.not.exist;
 
     // Undo subsection creation
     await click('.undo-btn');
 
-    expect(findAll('.section')).to.have.length(1);
+    structure = getElementsStructure();
+    expect(structure.sections).to.have.length(0);
+    expect(find('.selected')).to.not.exist;
 
     // Redo subsection creation
     await click('.redo-btn');
 
-    expect(findAll('.section')).to.have.length(2);
+    structure = getElementsStructure();
+    expect(structure.sections[0].sections).to.have.length(0);
+    expect(structure.sections[0].isSelected).to.be.true;
 
     // Redo subsubsection creation
     await click('.redo-btn');
 
-    expect(findAll('.section')).to.have.length(3);
+    structure = getElementsStructure();
+    expect(structure.sections[0].sections).to.have.length(1);
+    expect(structure.sections[0].sections[0].isSelected).to.be.true;
   });
 
   it('does not render any drop places when nothing is dragged', async function () {
@@ -181,6 +197,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       expect(structure.sections[0].title).to.equal('2');
       expect(structure.sections[0].sections).to.have.length(1);
       expect(structure.sections[0].sections[0].title).to.equal('1');
+      expect(structure.sections[0].sections[0].isSelected).to.be.true;
 
       await click('.undo-btn');
 
@@ -190,6 +207,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       expect(structure.sections[1].title).to.equal('2');
       expect(structure.sections[0].sections).to.have.length(0);
       expect(structure.sections[1].sections).to.have.length(0);
+      expect(structure.sections[0].isSelected).to.be.true;
 
       await click('.redo-btn');
 
@@ -198,6 +216,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       expect(structure.sections[0].title).to.equal('2');
       expect(structure.sections[0].sections).to.have.length(1);
       expect(structure.sections[0].sections[0].title).to.equal('1');
+      expect(structure.sections[0].sections[0].isSelected).to.be.true;
     }
   );
 
@@ -225,18 +244,21 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       structure = getElementsStructure();
       expect(structure.sections.map(({ title }) => title))
         .to.deep.equal(['1', '3', '2']);
+      expect(structure.sections[1].isSelected).to.be.true;
 
       await click('.undo-btn');
 
       structure = getElementsStructure();
       expect(structure.sections.map(({ title }) => title))
         .to.deep.equal(['1', '2', '3']);
+      expect(structure.sections[2].isSelected).to.be.true;
 
       await click('.redo-btn');
 
       structure = getElementsStructure();
       expect(structure.sections.map(({ title }) => title))
         .to.deep.equal(['1', '3', '2']);
+      expect(structure.sections[1].isSelected).to.be.true;
     }
   );
 
@@ -264,18 +286,21 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       structure = getElementsStructure();
       expect(structure.sections.map(({ title }) => title))
         .to.deep.equal(['2', '1', '3']);
+      expect(structure.sections[1].isSelected).to.be.true;
 
       await click('.undo-btn');
 
       structure = getElementsStructure();
       expect(structure.sections.map(({ title }) => title))
         .to.deep.equal(['1', '2', '3']);
+      expect(structure.sections[0].isSelected).to.be.true;
 
       await click('.redo-btn');
 
       structure = getElementsStructure();
       expect(structure.sections.map(({ title }) => title))
         .to.deep.equal(['2', '1', '3']);
+      expect(structure.sections[1].isSelected).to.be.true;
     }
   );
 
@@ -340,6 +365,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       .to.deep.equal(['1.1']);
     expect(structure.sections[1].sections.map(({ title }) => title))
       .to.deep.equal(['1.1']);
+    expect(structure.sections[1].isSelected).to.be.true;
 
     await click('.undo-btn');
 
@@ -348,6 +374,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       .to.deep.equal(['1', '2']);
     expect(structure.sections[0].sections.map(({ title }) => title))
       .to.deep.equal(['1.1']);
+    expect(find('.selected')).to.not.exist;
 
     await click('.redo-btn');
 
@@ -358,6 +385,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       .to.deep.equal(['1.1']);
     expect(structure.sections[1].sections.map(({ title }) => title))
       .to.deep.equal(['1.1']);
+    expect(structure.sections[1].isSelected).to.be.true;
   });
 
   it('duplicates section deeply', async function () {
@@ -397,17 +425,20 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     structure = getElementsStructure();
     expect(structure.charts.map(({ title }) => title))
       .to.deep.equal(['Untitled chart']);
+    expect(structure.charts[0].isSelected).to.be.true;
 
     await click('.undo-btn');
 
     structure = getElementsStructure();
     expect(structure.charts).to.have.length(0);
+    expect(find('.selected')).to.not.exist;
 
     await click('.redo-btn');
 
     structure = getElementsStructure();
     expect(structure.charts.map(({ title }) => title))
       .to.deep.equal(['Untitled chart']);
+    expect(structure.charts[0].isSelected).to.be.true;
   });
 
   it('renders all possible drop places when chart is dragged', async function () {
@@ -489,6 +520,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       expect(structure.charts).to.have.length(0);
       expect(structure.sections[0].charts).to.have.length(1);
       expect(structure.sections[0].charts[0].title).to.equal('c1');
+      expect(structure.sections[0].charts[0].isSelected).to.be.true;
 
       await click('.undo-btn');
 
@@ -496,6 +528,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       expect(structure.charts).to.have.length(1);
       expect(structure.charts[0].title).to.equal('c1');
       expect(structure.sections[0].charts).to.have.length(0);
+      expect(structure.charts[0].isSelected).to.be.true;
 
       await click('.redo-btn');
 
@@ -503,6 +536,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       expect(structure.charts).to.have.length(0);
       expect(structure.sections[0].charts).to.have.length(1);
       expect(structure.sections[0].charts[0].title).to.equal('c1');
+      expect(structure.sections[0].charts[0].isSelected).to.be.true;
     }
   );
 
@@ -530,18 +564,21 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       structure = getElementsStructure();
       expect(structure.charts.map(({ title }) => title))
         .to.deep.equal(['1', '3', '2']);
+      expect(structure.charts[1].isSelected).to.be.true;
 
       await click('.undo-btn');
 
       structure = getElementsStructure();
       expect(structure.charts.map(({ title }) => title))
         .to.deep.equal(['1', '2', '3']);
+      expect(structure.charts[2].isSelected).to.be.true;
 
       await click('.redo-btn');
 
       structure = getElementsStructure();
       expect(structure.charts.map(({ title }) => title))
         .to.deep.equal(['1', '3', '2']);
+      expect(structure.charts[1].isSelected).to.be.true;
     }
   );
 
@@ -569,18 +606,21 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
       structure = getElementsStructure();
       expect(structure.charts.map(({ title }) => title))
         .to.deep.equal(['2', '1', '3']);
+      expect(structure.charts[1].isSelected).to.be.true;
 
       await click('.undo-btn');
 
       structure = getElementsStructure();
       expect(structure.charts.map(({ title }) => title))
         .to.deep.equal(['1', '2', '3']);
+      expect(structure.charts[0].isSelected).to.be.true;
 
       await click('.redo-btn');
 
       structure = getElementsStructure();
       expect(structure.charts.map(({ title }) => title))
         .to.deep.equal(['2', '1', '3']);
+      expect(structure.charts[1].isSelected).to.be.true;
     }
   );
 
@@ -638,18 +678,222 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     structure = getElementsStructure();
     expect(structure.charts.map(({ title }) => title))
       .to.deep.equal(['1', '1', '2']);
+    expect(structure.charts[1].isSelected).to.be.true;
 
     await click('.undo-btn');
 
     structure = getElementsStructure();
     expect(structure.charts.map(({ title }) => title))
       .to.deep.equal(['1', '2']);
+    expect(find('.selected')).to.not.exist;
 
     await click('.redo-btn');
 
     structure = getElementsStructure();
     expect(structure.charts.map(({ title }) => title))
       .to.deep.equal(['1', '1', '2']);
+    expect(structure.charts[1].isSelected).to.be.true;
+  });
+
+  it('has selected root section by default', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: { content: 'root' },
+        charts: [{
+          title: { content: 'c1' },
+        }],
+        sections: [{
+          title: { content: '1' },
+        }],
+      },
+    }).rootSection);
+
+    await renderComponent();
+
+    const structure = getElementsStructure();
+    expect(structure.isSelected).to.be.true;
+    expect(findAll('.selected')).to.have.length(1);
+  });
+
+  it('allows to select section and see its details', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: { content: 'root' },
+        sections: [{
+          title: { content: '1' },
+          sections: [{
+            title: { content: '1.1' },
+          }],
+        }],
+      },
+    }).rootSection);
+    await renderComponent();
+    let structure = getElementsStructure();
+
+    await click(structure.sections[0].sections[0].element);
+
+    structure = getElementsStructure();
+    expect(structure.sections[0].sections[0].isSelected).to.be.true;
+    expect(findAll('.selected')).to.have.length(1);
+    expect(find('.section-details-editor')).to.exist;
+    expect(find('.section-details-editor .title-field .form-control'))
+      .to.have.value('1.1');
+  });
+
+  it('allows to select chart and see its details', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: { content: 'root' },
+        sections: [{
+          title: { content: '1' },
+          charts: [{
+            title: { content: '1.1' },
+          }],
+        }],
+      },
+    }).rootSection);
+    await renderComponent();
+    let structure = getElementsStructure();
+
+    await click(structure.sections[0].charts[0].element);
+
+    structure = getElementsStructure();
+    expect(structure.sections[0].charts[0].isSelected).to.be.true;
+    expect(findAll('.selected')).to.have.length(1);
+    expect(find('.chart-details-editor')).to.exist;
+    expect(find('.chart-details-editor .title-field .form-control'))
+      .to.have.value('1.1');
+  });
+
+  it('removes selection from element nested inside removed element', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: { content: 'root' },
+        sections: [{
+          title: { content: '1' },
+          sections: [{
+            title: { content: '1.1' },
+            charts: [{
+              title: { content: '1.1.1' },
+            }],
+          }],
+        }],
+      },
+    }).rootSection);
+    await renderComponent();
+    const structure = getElementsStructure();
+
+    await click(structure.sections[0].sections[0].charts[0].element);
+    await click(structure.sections[0].removeTrigger);
+
+    expect(findAll('.selected')).to.have.length(0);
+  });
+
+  it('removes selection from element nested inside duplicated element after undo', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        title: { content: 'root' },
+        sections: [{
+          title: { content: '1' },
+          sections: [{
+            title: { content: '1.1' },
+            charts: [{
+              title: { content: '1.1.1' },
+            }],
+          }],
+        }],
+      },
+    }).rootSection);
+    await renderComponent();
+    let structure = getElementsStructure();
+
+    await click(structure.sections[0].duplicateTrigger);
+    structure = getElementsStructure();
+    await click(structure.sections[1].sections[0].charts[0].element);
+    await click('.undo-btn');
+
+    expect(findAll('.selected')).to.have.length(0);
+  });
+
+  it('allows to modify selected section properties, undo it and redo it again', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        sections: [{}],
+      },
+    }).rootSection);
+    await renderComponent();
+    const structure = getElementsStructure();
+    const sectionElement = structure.sections[0].element;
+    await click(sectionElement);
+
+    await fillIn('.title-field .form-control', 'abc');
+    expect(sectionElement.querySelector('.section-title')).to.contain.text('abc');
+
+    await fillIn('.titleTip-field .form-control', 'def');
+    expect(
+      await new OneTooltipHelper(sectionElement.querySelector('.section-title-tip .one-icon'))
+      .getText()
+    ).to.equal('def');
+
+    await fillIn('.description-field .form-control', 'ghi');
+    expect(sectionElement.querySelector('.section-description')).to.contain.text('ghi');
+
+    await click('.undo-btn');
+    expect(sectionElement.querySelector('.section-description')).to.not.exist;
+
+    await click('.undo-btn');
+    expect(sectionElement.querySelector('.section-title-tip')).to.not.exist;
+
+    await click('.undo-btn');
+    expect(sectionElement.querySelector('.section-title')).to.not.exist;
+
+    await click('.redo-btn');
+    expect(sectionElement.querySelector('.section-title')).to.contain.text('abc');
+
+    await click('.redo-btn');
+    expect(
+      await new OneTooltipHelper(sectionElement.querySelector('.section-title-tip .one-icon'))
+      .getText()
+    ).to.equal('def');
+
+    await click('.redo-btn');
+    expect(sectionElement.querySelector('.section-description')).to.contain.text('ghi');
+  });
+
+  it('allows to modify selected chart properties, undo it and redo it again', async function () {
+    this.set('rootSection', createModelFromSpec({
+      rootSection: {
+        charts: [{}],
+      },
+    }).rootSection);
+    await renderComponent();
+    const structure = getElementsStructure();
+    const chartElement = structure.charts[0].element;
+    await click(chartElement);
+
+    await fillIn('.title-field .form-control', 'abc');
+    expect(chartElement.querySelector('.title-content')).to.contain.text('abc');
+
+    await fillIn('.titleTip-field .form-control', 'def');
+    expect(
+      await new OneTooltipHelper(chartElement.querySelector('.title-tip .one-icon'))
+      .getText()
+    ).to.equal('def');
+
+    await click('.undo-btn');
+    expect(chartElement.querySelector('.title-tip')).to.not.exist;
+
+    await click('.undo-btn');
+    expect(chartElement.querySelector('.title-content')).to.not.exist;
+
+    await click('.redo-btn');
+    expect(chartElement.querySelector('.title-content')).to.contain.text('abc');
+
+    await click('.redo-btn');
+    expect(
+      await new OneTooltipHelper(chartElement.querySelector('.title-tip .one-icon'))
+      .getText()
+    ).to.equal('def');
   });
 });
 
@@ -676,6 +920,7 @@ function getElementsStructure(sectionElement) {
     title: sectionElement.querySelector(
       ':scope > .section-header > .section-title, :scope > .title-area .title-content'
     )?.textContent.trim() ?? null,
+    isSelected: sectionElement.matches('.selected'),
     insideDragTarget: sectionElement.querySelector(':scope > .inside-drag-target'),
     beforeDragTarget: sectionElement.querySelector(':scope > .before-drag-target'),
     afterDragTarget: sectionElement.querySelector(':scope > .after-drag-target'),
