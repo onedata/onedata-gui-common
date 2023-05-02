@@ -31,6 +31,22 @@ class MockFullArray {
   }
 }
 
+class MockBrokenFetchArray extends MockArray {
+  constructor(size, maxFetchCount = 1) {
+    super(size);
+    this.maxFetchCount = maxFetchCount;
+  }
+  /** @override */
+  async fetch() {
+    const { array: superArray, isLast: superIsLast } = await super.fetch(...arguments);
+    return {
+      // simulate incomplete list as can occur on backend
+      array: superArray.slice(0, this.maxFetchCount),
+      isLast: superIsLast,
+    };
+  }
+}
+
 const gteMatcher = (compareValue) => {
   return sinon.match(
     value => value >= compareValue,
@@ -496,12 +512,13 @@ describe('Unit | Utility | replacing-chunks-array', function () {
   });
 
   it('handles object-format output from fetch when going forth', async function () {
-    const baseFetch = MockArray.prototype.fetch.bind(this.mockArray);
-    this.mockArray.fetch = function fetchWithObject() {
-      return baseFetch(...arguments).then(array => ({
+    const baseFetch = this.mockArray.fetch.bind(this.mockArray);
+    this.mockArray.fetch = async function fetchWithObject() {
+      const { array } = await baseFetch(...arguments);
+      return {
         array,
         isLast: this.forceIsLast,
-      }));
+      };
     };
     this.fetch = this.mockArray.fetch.bind(this.mockArray);
     const fetchSpy = sinon.spy(this.fetch);
@@ -550,5 +567,35 @@ describe('Unit | Utility | replacing-chunks-array', function () {
     expect(fetchSpy).to.have.not.been.called;
     expect(get(array, 'sourceArray').toArray())
       .to.deep.equal(recordRange(0, 50 + 30 * 3));
+  });
+
+  it('performs multiple fetches if single fetch resolves less items than requested', async function () {
+    const brokenChunkSize = 10;
+    this.mockArray = new MockBrokenFetchArray(100, brokenChunkSize);
+    this.fetch = this.mockArray.fetch.bind(this.mockArray);
+
+    const fetchSpy = sinon.spy(this.fetch);
+    const chunkSize = 40;
+    const array = ReplacingChunksArray.create({
+      fetch: fetchSpy,
+      startIndex: 0,
+      endIndex: 20,
+      indexMargin: 0,
+      chunkSize,
+    });
+    await settled();
+
+    // expected call count because of initial fetch
+    const minCallCount = 4;
+    expect(fetchSpy.callCount).to.be.greaterThanOrEqual(minCallCount);
+    expect(fetchSpy.firstCall).to.be.calledWith(null, chunkSize, 0);
+    let lastChunkEndIndex;
+    for (let i = 1; i <= minCallCount; ++i) {
+      lastChunkEndIndex = get(array, 'sourceArray')[brokenChunkSize * i - 1].index;
+      expect(fetchSpy.getCall(i)).to.be.calledWith(lastChunkEndIndex, chunkSize, 1);
+    }
+    expect(get(array, '_start')).to.equal(0);
+    expect(get(array, '_end')).to.equal(20);
+    expect(array.toArray()).to.deep.equal(recordRange(0, 20));
   });
 });
