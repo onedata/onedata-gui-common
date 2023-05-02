@@ -193,12 +193,38 @@ export default ArraySlice.extend(Evented, {
   },
 
   /**
+   * Uses raw fetch method to achieve unified-formatted results. Can invoke fetch multiple
+   * times if single fetch result doesn't resolve needed amount of items and backend does
+   * not report list end.
    * @returns {Promise<{ arrayUpdate: Array, endReached: boolean }>}
    */
   async fetchWrapper(index, size, offset) {
-    const effOffset = (index == null && (!offset || offset < 0)) ? 0 : offset;
-    const result = await this.fetch(index, size, effOffset, this);
-    return this.handleFetchDataFetchResult(result);
+    let effIndex = index;
+    let effOffset = (effIndex == null && !(offset > 0)) ? 0 : offset;
+    const totalArrayUpdate = [];
+    let totalEndReached = false;
+    while (!totalEndReached && totalArrayUpdate.length < size) {
+      const result = await this.fetch(effIndex, size, effOffset, this);
+      const { arrayUpdate, endReached } = this.handleFetchDataFetchResult(result, size);
+      if (this.isDestroyed || this.isDestroying) {
+        return {
+          arrayUpdate: totalArrayUpdate,
+          endReached: totalEndReached,
+        };
+      }
+      if (!arrayUpdate?.length) {
+        totalEndReached = true;
+      } else {
+        effIndex = get(_.last(arrayUpdate), 'index');
+        effOffset = 1;
+        totalArrayUpdate.push(...arrayUpdate);
+        totalEndReached = endReached;
+      }
+    }
+    return {
+      arrayUpdate: totalArrayUpdate,
+      endReached: totalEndReached,
+    };
   },
 
   getIndex(record) {
@@ -542,14 +568,16 @@ export default ArraySlice.extend(Evented, {
    *     parameter, but chunk shoud be considered as last if the `isLast` flag is true
    *   - if the result is not an array nor object, then chunk is considered as empty
    *     and as last
-   *
+   * @param {number} targetSize
    * @returns {Promise<{ arrayUpdate: Array, endReached: boolean }>}
    */
-  handleFetchDataFetchResult(fetchResult) {
+  handleFetchDataFetchResult(fetchResult, targetSize) {
     let arrayUpdate;
     let endReached;
     if (isArray(fetchResult)) {
       arrayUpdate = fetchResult;
+      endReached = typeof targetSize === 'number' ?
+        arrayUpdate.length < targetSize : true;
     } else if (typeof fetchResult === 'object') {
       arrayUpdate = fetchResult.array;
       endReached = fetchResult.isLast;
