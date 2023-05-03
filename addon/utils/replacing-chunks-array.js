@@ -215,7 +215,7 @@ export default ArraySlice.extend(Evented, {
       if (!arrayUpdate?.length) {
         totalEndReached = true;
       } else {
-        effIndex = get(_.last(arrayUpdate), 'index');
+        effIndex = this.getIndex(_.last(arrayUpdate));
         effOffset = 1;
         totalArrayUpdate.push(...arrayUpdate);
         totalEndReached = endReached;
