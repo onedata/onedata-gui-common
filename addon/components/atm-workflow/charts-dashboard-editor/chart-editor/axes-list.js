@@ -57,7 +57,7 @@ export default Component.extend(I18n, {
     const existingModels = this.itemModels ?? [];
     const existingModelsMap = new Map(existingModels.map((model) => [model.item, model]));
 
-    const newModels = this.chart.axes.map((axis) => {
+    const newModels = this.chart?.axes.map((axis) => {
       const existingModel = existingModelsMap.get(axis);
       if (existingModel) {
         existingModelsMap.delete(axis);
@@ -65,7 +65,7 @@ export default Component.extend(I18n, {
       } else {
         return AxesListItemModel.create({ item: axis });
       }
-    });
+    }) ?? [];
 
     existingModelsMap.forEach((model) => model.destroy());
     this.set('itemModels', newModels);

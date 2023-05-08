@@ -22,7 +22,7 @@ import { getCollectionFieldName } from './utils';
 /**
  * @typedef {Object} AddElementActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType} newElementType
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} targetElement
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup} targetElement
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 

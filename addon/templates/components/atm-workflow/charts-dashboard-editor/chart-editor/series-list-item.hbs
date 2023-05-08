@@ -3,9 +3,13 @@
   {{#if colorStyle}}
     <span class="color-mark" style={{colorStyle}}></span>
   {{/if}}
-  {{typeTranslation}} |
-  {{#if item.seriesGroup}}
-    {{one-icon icon="items-grid"}} {{item.seriesGroup.name}} |
+  <span class="type">{{typeTranslation}}</span> |
+  {{#if item.group}}
+    {{one-icon icon="items-grid"}}
+    <span class="series-group-name">{{item.group.name}}</span>
+    {{#if item.axis}}|{{/if}}
   {{/if}}
-  {{one-icon icon="axes"}} {{item.axis.name}}
+  {{#if item.axis}}
+    {{one-icon icon="axes"}} <span class="axis-name">{{item.axis.name}}</span>
+  {{/if}}
 </span>

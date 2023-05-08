@@ -817,6 +817,645 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     expect(find('.view-title')).to.have.text('Dashboard overview');
     expect(helper.sectionsEditorStructure.charts[0].isSelected).to.be.true;
   });
+
+  it('fills new chart with preconfigured elements', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+
+    expect(helper.chartEditorStructure.elements.series.items).to.have.length(0);
+    expect(helper.chartEditorStructure.elements.seriesGroups.items).to.have.length(0);
+    const axes = helper.chartEditorStructure.elements.axes.items;
+    expect(axes).to.have.length(1);
+    expect(axes[0].name).to.equal('Value');
+    expect(axes[0].unitName).to.equal('None');
+  });
+
+  it('allows to create new chart series, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+
+    await click(helper.chartEditorStructure.elements.series.addTrigger);
+
+    const series = helper.chartEditorStructure.elements.series.items;
+    expect(series).to.have.length(1);
+    expect(series[0].name).to.equal('Series');
+    expect(series[0].type).to.equal('Line');
+    expect(series[0].axisName).to.equal('Value');
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.series.items).to.have.length(0);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.series.items).to.have.length(1);
+  });
+
+  it('allows to move chart series to the end, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.series.addTrigger);
+    await click(helper.chartEditorStructure.elements.series.addTrigger);
+    await click(helper.chartEditorStructure.elements.series.addTrigger);
+    const seriesIds =
+      helper.chartEditorStructure.elements.series.items.map(({ id }) => id);
+
+    await drag(`#${helper.chartEditorStructure.elements.series.items[0].element.id}`, {
+      drop: getDropTargetSelector(seriesIds[2], 'after'),
+    });
+
+    const newSeriesIds =
+      helper.chartEditorStructure.elements.series.items.map(({ id }) => id);
+    expect(newSeriesIds).to.deep.equal([seriesIds[1], seriesIds[2], seriesIds[0]]);
+
+    await click('.undo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.series.items.map(({ id }) => id)
+    ).to.deep.equal(seriesIds);
+
+    await click('.redo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.series.items.map(({ id }) => id)
+    ).to.deep.equal(newSeriesIds);
+  });
+
+  it('allows to move chart series to the beginning, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.series.addTrigger);
+    await click(helper.chartEditorStructure.elements.series.addTrigger);
+    await click(helper.chartEditorStructure.elements.series.addTrigger);
+    const seriesIds =
+      helper.chartEditorStructure.elements.series.items.map(({ id }) => id);
+
+    await drag(`#${helper.chartEditorStructure.elements.series.items[2].element.id}`, {
+      drop: getDropTargetSelector(seriesIds[0], 'before'),
+    });
+
+    const newSeriesIds =
+      helper.chartEditorStructure.elements.series.items.map(({ id }) => id);
+    expect(newSeriesIds).to.deep.equal([seriesIds[2], seriesIds[0], seriesIds[1]]);
+
+    await click('.undo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.series.items.map(({ id }) => id)
+    ).to.deep.equal(seriesIds);
+
+    await click('.redo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.series.items.map(({ id }) => id)
+    ).to.deep.equal(newSeriesIds);
+  });
+
+  it('allows to duplicate chart series, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.series.addTrigger);
+    const seriesId = helper.chartEditorStructure.elements.series.items[0].id;
+
+    await click(helper.chartEditorStructure.elements.series.items[0].duplicateTrigger);
+
+    const newSeries = helper.chartEditorStructure.elements.series.items;
+    expect(newSeries).to.have.length(2);
+    expect(newSeries[0].id).to.equal(seriesId);
+    expect(newSeries[1].id).to.not.equal(seriesId);
+    expect(newSeries[1].name).to.equal(newSeries[0].name);
+    expect(newSeries[1].type).to.equal(newSeries[0].type);
+    expect(newSeries[1].axisName).to.equal(newSeries[0].axisName);
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.series.items).to.have.length(1);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.series.items).to.have.length(2);
+  });
+
+  it('allows to remove chart series, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.series.addTrigger);
+    await click(helper.chartEditorStructure.elements.series.addTrigger);
+    const seriesIds =
+      helper.chartEditorStructure.elements.series.items.map(({ id }) => id);
+
+    await click(helper.chartEditorStructure.elements.series.items[1].removeTrigger);
+
+    const newSeriesId =
+      helper.chartEditorStructure.elements.series.items.map(({ id }) => id);
+    expect(newSeriesId).to.deep.equal([seriesIds[0]]);
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.series.items).to.have.length(2);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.series.items).to.have.length(1);
+  });
+
+  it('allows to create new chart series group, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+
+    const seriesGroups = helper.chartEditorStructure.elements.seriesGroups.items;
+    expect(seriesGroups).to.have.length(1);
+    expect(seriesGroups[0].name).to.equal('Group');
+    expect(seriesGroups[0].seriesCount).to.equal(0);
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items).to.have.length(0);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items).to.have.length(1);
+  });
+
+  it('allows to create new nested chart series group, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+
+    await click(helper.chartEditorStructure.elements.seriesGroups.items[0].addTrigger);
+
+    const seriesSubgroups =
+      helper.chartEditorStructure.elements.seriesGroups.items[0].items;
+    expect(seriesSubgroups).to.have.length(1);
+    expect(seriesSubgroups[0].name).to.equal('Group');
+    expect(seriesSubgroups[0].seriesCount).to.equal(0);
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].items)
+      .to.have.length(0);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].items)
+      .to.have.length(1);
+  });
+
+  it('allows to move chart series group to the end, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    const seriesGroupsIds =
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id);
+
+    await drag(`#${helper.chartEditorStructure.elements.seriesGroups.items[0].element.id}`, {
+      drop: getDropTargetSelector(seriesGroupsIds[2], 'after'),
+    });
+
+    const newSeriesGroupsIds =
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id);
+    expect(newSeriesGroupsIds).to.deep.equal([
+      seriesGroupsIds[1],
+      seriesGroupsIds[2],
+      seriesGroupsIds[0],
+    ]);
+
+    await click('.undo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id)
+    ).to.deep.equal(seriesGroupsIds);
+
+    await click('.redo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id)
+    ).to.deep.equal(newSeriesGroupsIds);
+  });
+
+  it('allows to move chart series group to the beginning, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    const seriesGroupsIds =
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id);
+
+    await drag(`#${helper.chartEditorStructure.elements.seriesGroups.items[2].element.id}`, {
+      drop: getDropTargetSelector(seriesGroupsIds[0], 'before'),
+    });
+
+    const newSeriesGroupsIds =
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id);
+    expect(newSeriesGroupsIds).to.deep.equal([
+      seriesGroupsIds[2],
+      seriesGroupsIds[0],
+      seriesGroupsIds[1],
+    ]);
+
+    await click('.undo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id)
+    ).to.deep.equal(seriesGroupsIds);
+
+    await click('.redo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id)
+    ).to.deep.equal(newSeriesGroupsIds);
+  });
+
+  it('allows to move chart series group into another group, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.items[0].addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    const seriesGroupsIds =
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id);
+    const nestedSeriesGroupsIds =
+      helper.chartEditorStructure.elements.seriesGroups.items[0]
+      .items.map(({ id }) => id);
+
+    await drag(`#${helper.chartEditorStructure.elements.seriesGroups.items[1].element.id}`, {
+      drop: getDropTargetSelector(seriesGroupsIds[0], 'inside'),
+    });
+
+    const newSeriesGroupsIds =
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id);
+    const newNestedSeriesGroupsIds =
+      helper.chartEditorStructure.elements.seriesGroups.items[0]
+      .items.map(({ id }) => id);
+    expect(newSeriesGroupsIds).to.deep.equal([seriesGroupsIds[0]]);
+    expect(newNestedSeriesGroupsIds).to.deep.equal([
+      nestedSeriesGroupsIds[0],
+      seriesGroupsIds[1],
+    ]);
+
+    await click('.undo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id)
+    ).to.deep.equal(seriesGroupsIds);
+    expect(
+      helper.chartEditorStructure.elements.seriesGroups.items[0].items.map(({ id }) => id)
+    ).to.deep.equal(nestedSeriesGroupsIds);
+
+    await click('.redo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id)
+    ).to.deep.equal(newSeriesGroupsIds);
+    expect(
+      helper.chartEditorStructure.elements.seriesGroups.items[0].items.map(({ id }) => id)
+    ).to.deep.equal(newNestedSeriesGroupsIds);
+  });
+
+  it('allows to move chart series group from nesting back to the root level, undo it and redo it again',
+    async function () {
+      const helper = new Helper(this, emptyDashboard);
+      await helper.render();
+      await click(helper.sectionsEditorStructure.addChartTrigger);
+      await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+      await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+      await click(helper.chartEditorStructure.elements.seriesGroups.items[0].addTrigger);
+      await click(helper.chartEditorStructure.elements.seriesGroups.items[0].addTrigger);
+      const seriesGroupsIds =
+        helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id);
+      const nestedSeriesGroupsIds =
+        helper.chartEditorStructure.elements.seriesGroups.items[0]
+        .items.map(({ id }) => id);
+
+      await drag(`#${helper.chartEditorStructure.elements.seriesGroups.items[0].items[0].element.id}`, {
+        drop: getDropTargetSelector(seriesGroupsIds[0], 'after'),
+      });
+
+      const newSeriesGroupsIds =
+        helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id);
+      const newNestedSeriesGroupsIds =
+        helper.chartEditorStructure.elements.seriesGroups.items[0]
+        .items.map(({ id }) => id);
+      expect(newSeriesGroupsIds).to.deep.equal([
+        seriesGroupsIds[0],
+        nestedSeriesGroupsIds[0],
+      ]);
+      expect(newNestedSeriesGroupsIds).to.deep.equal([nestedSeriesGroupsIds[1]]);
+
+      await click('.undo-btn');
+
+      expect(
+        helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id)
+      ).to.deep.equal(seriesGroupsIds);
+      expect(
+        helper.chartEditorStructure.elements.seriesGroups
+        .items[0].items.map(({ id }) => id)
+      ).to.deep.equal(nestedSeriesGroupsIds);
+
+      await click('.redo-btn');
+
+      expect(
+        helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id)
+      ).to.deep.equal(newSeriesGroupsIds);
+      expect(
+        helper.chartEditorStructure.elements.seriesGroups
+        .items[0].items.map(({ id }) => id)
+      ).to.deep.equal(newNestedSeriesGroupsIds);
+    }
+  );
+
+  it('allows to duplicate chart series group, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.items[0].addTrigger);
+    const seriesGroupId = helper.chartEditorStructure.elements.seriesGroups.items[0].id;
+    const nestedSeriesGroupId = helper.chartEditorStructure.elements.seriesGroups
+      .items[0].items[0].id;
+
+    await click(
+      helper.chartEditorStructure.elements.seriesGroups.items[0].duplicateTrigger
+    );
+
+    const newSeriesGroups = helper.chartEditorStructure.elements.seriesGroups.items;
+    expect(newSeriesGroups).to.have.length(2);
+    expect(newSeriesGroups[0].id).to.equal(seriesGroupId);
+    expect(newSeriesGroups[1].id).to.not.equal(seriesGroupId);
+    expect(newSeriesGroups[1].name).to.equal(newSeriesGroups[0].name);
+    expect(newSeriesGroups[1].seriesCount).to.equal(0);
+    expect(newSeriesGroups[0].items).to.have.length(1);
+    expect(newSeriesGroups[1].items).to.have.length(1);
+    expect(newSeriesGroups[0].items[0].id).to.equal(nestedSeriesGroupId);
+    expect(newSeriesGroups[1].items[0].id).to.not.equal(nestedSeriesGroupId);
+    expect(newSeriesGroups[1].items[0].name).to.equal(newSeriesGroups[0].items[0].name);
+    expect(newSeriesGroups[1].items[0].seriesCount).to.equal(0);
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items).to.have.length(1);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items).to.have.length(2);
+  });
+
+  it('allows to duplicate nested chart series group, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.items[0].addTrigger);
+    const seriesGroupId = helper.chartEditorStructure.elements.seriesGroups.items[0].id;
+    const nestedSeriesGroupId = helper.chartEditorStructure.elements.seriesGroups
+      .items[0].items[0].id;
+
+    await click(
+      helper.chartEditorStructure.elements.seriesGroups.items[0].items[0].duplicateTrigger
+    );
+
+    const newSeriesGroups = helper.chartEditorStructure.elements.seriesGroups.items;
+    expect(newSeriesGroups).to.have.length(1);
+    expect(newSeriesGroups[0].id).to.equal(seriesGroupId);
+    expect(newSeriesGroups[0].items).to.have.length(2);
+    expect(newSeriesGroups[0].items[0].id).to.equal(nestedSeriesGroupId);
+    expect(newSeriesGroups[0].items[1].id).to.not.equal(nestedSeriesGroupId);
+    expect(newSeriesGroups[0].items[1].name).to.equal(newSeriesGroups[0].items[0].name);
+    expect(newSeriesGroups[0].items[1].seriesCount).to.equal(0);
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].items)
+      .to.have.length(1);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].items)
+      .to.have.length(2);
+  });
+
+  it('allows to remove chart series group, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.items[0].addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    const seriesGroupsIds =
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id);
+
+    await click(helper.chartEditorStructure.elements.seriesGroups.items[0].removeTrigger);
+
+    const newSeriesGroupsId =
+      helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id);
+    expect(newSeriesGroupsId).to.deep.equal([seriesGroupsIds[1]]);
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items).to.have.length(2);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items).to.have.length(1);
+  });
+
+  it('allows to remove nested chart series group, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.items[0].addTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.items[0].addTrigger);
+    const nestedSeriesGroupIds =
+      helper.chartEditorStructure.elements.seriesGroups
+      .items[0].items.map(({ id }) => id);
+
+    await click(
+      helper.chartEditorStructure.elements.seriesGroups.items[0].items[0].removeTrigger
+    );
+
+    const newNestedSeriesGroupsId =
+      helper.chartEditorStructure.elements.seriesGroups
+      .items[0].items.map(({ id }) => id);
+    expect(newNestedSeriesGroupsId).to.deep.equal([nestedSeriesGroupIds[1]]);
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].items)
+      .to.have.length(2);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].items)
+      .to.have.length(1);
+  });
+
+  it('allows to create new chart axis, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+
+    await click(helper.chartEditorStructure.elements.axes.addTrigger);
+
+    const axes = helper.chartEditorStructure.elements.axes.items;
+    expect(axes).to.have.length(2);
+    expect(axes[1].name).to.equal('Value');
+    expect(axes[1].unitName).to.equal('None');
+    expect(axes[1].seriesCount).to.equal(0);
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.axes.items).to.have.length(1);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.axes.items).to.have.length(2);
+  });
+
+  it('allows to move chart axis to the end, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.axes.addTrigger);
+    await click(helper.chartEditorStructure.elements.axes.addTrigger);
+    const axesIds =
+      helper.chartEditorStructure.elements.axes.items.map(({ id }) => id);
+
+    await drag(`#${helper.chartEditorStructure.elements.axes.items[0].element.id}`, {
+      drop: getDropTargetSelector(axesIds[2], 'after'),
+    });
+
+    const newAxesIds =
+      helper.chartEditorStructure.elements.axes.items.map(({ id }) => id);
+    expect(newAxesIds).to.deep.equal([axesIds[1], axesIds[2], axesIds[0]]);
+
+    await click('.undo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.axes.items.map(({ id }) => id)
+    ).to.deep.equal(axesIds);
+
+    await click('.redo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.axes.items.map(({ id }) => id)
+    ).to.deep.equal(newAxesIds);
+  });
+
+  it('allows to move chart axis to the beginning, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.axes.addTrigger);
+    await click(helper.chartEditorStructure.elements.axes.addTrigger);
+    const axesIds =
+      helper.chartEditorStructure.elements.axes.items.map(({ id }) => id);
+
+    await drag(`#${helper.chartEditorStructure.elements.axes.items[2].element.id}`, {
+      drop: getDropTargetSelector(axesIds[0], 'before'),
+    });
+
+    const newAxesIds =
+      helper.chartEditorStructure.elements.axes.items.map(({ id }) => id);
+    expect(newAxesIds).to.deep.equal([axesIds[2], axesIds[0], axesIds[1]]);
+
+    await click('.undo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.axes.items.map(({ id }) => id)
+    ).to.deep.equal(axesIds);
+
+    await click('.redo-btn');
+
+    expect(
+      helper.chartEditorStructure.elements.axes.items.map(({ id }) => id)
+    ).to.deep.equal(newAxesIds);
+  });
+
+  it('allows to duplicate chart axis, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    const axisId = helper.chartEditorStructure.elements.axes.items[0].id;
+
+    await click(helper.chartEditorStructure.elements.axes.items[0].duplicateTrigger);
+
+    const newAxes = helper.chartEditorStructure.elements.axes.items;
+    expect(newAxes).to.have.length(2);
+    expect(newAxes[0].id).to.equal(axisId);
+    expect(newAxes[1].id).to.not.equal(axisId);
+    expect(newAxes[1].name).to.equal(newAxes[0].name);
+    expect(newAxes[1].unitName).to.equal(newAxes[0].unitName);
+    expect(newAxes[1].seriesCount).to.equal(0);
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.axes.items).to.have.length(1);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.axes.items).to.have.length(2);
+  });
+
+  it('allows to remove chart axis, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.axes.addTrigger);
+    const axesIds =
+      helper.chartEditorStructure.elements.axes.items.map(({ id }) => id);
+
+    await click(helper.chartEditorStructure.elements.axes.items[1].removeTrigger);
+
+    const newAxisId =
+      helper.chartEditorStructure.elements.axes.items.map(({ id }) => id);
+    expect(newAxisId).to.deep.equal([axesIds[0]]);
+
+    await click('.undo-btn');
+
+    expect(helper.chartEditorStructure.elements.axes.items).to.have.length(2);
+
+    await click('.redo-btn');
+
+    expect(helper.chartEditorStructure.elements.axes.items).to.have.length(1);
+  });
 });
 
 class Helper {
@@ -844,6 +1483,10 @@ class Helper {
     return getElementsStructure();
   }
 
+  get chartEditorStructure() {
+    return getChartEditorStructure();
+  }
+
   constructor(testContext, dashboardSpec = {}) {
     this.testContext = testContext;
     this.dashboardSpec = dashboardSpec;
@@ -854,4 +1497,92 @@ class Helper {
       dashboardSpec=dashboardSpec
     }}`);
   }
+}
+
+function getChartEditorStructure() {
+  const chartEditor = find('.chart-editor');
+
+  const structure = {
+    isActive: Boolean(chartEditor),
+    elements: {
+      series: {},
+      seriesGroups: {},
+      axes: {},
+    },
+  };
+  if (!structure.isActive) {
+    return structure;
+  }
+
+  const elements = chartEditor.querySelector('.chart-editor-elements');
+  const elementsTabs = elements.querySelectorAll('.nav-link');
+  structure.elements.series.tab = elementsTabs[0];
+  structure.elements.seriesGroups.tab = elementsTabs[1];
+  structure.elements.axes.tab = elementsTabs[2];
+
+  const seriesList = elements.querySelector('.series-list');
+  structure.elements.series.addTrigger = seriesList.querySelector('.add-series-btn');
+  structure.elements.series.items = [...seriesList.querySelectorAll('.elements-list-item')].map((element) => {
+    return getElementsListItemDetails(element, (element, details) => {
+      const colorMark = element.querySelector('.color-mark');
+      details.color = colorMark ?
+        getComputedStyle(colorMark).getPropertyValue('--series-color')?.trim() : null;
+      details.type = element.querySelector('.type')?.innerText ?? null;
+      details.axisName = element.querySelector('.axis-name')?.innerText ?? null;
+      details.seriesGroupName = element.querySelector('.series-group-name')?.innerText ?? null;
+      details.seriesCount =
+        Number.parseInt(element.querySelector('.series-count')?.innerText ?? 0);
+    });
+  });
+
+  const seriesGroupsList = elements.querySelector('.series-groups-list');
+  structure.elements.seriesGroups.addTrigger =
+    seriesGroupsList.querySelector('.add-series-group-btn');
+  structure.elements.seriesGroups.items = [
+    ...seriesGroupsList.querySelectorAll('ol > .elements-list-item'),
+  ].map((element) => {
+    return getElementsListItemDetails(
+      element,
+      (element, details, customPropsGetter) => {
+        details.stacked = element.innerText.includes('Stack');
+        details.showSum = element.innerText.includes('Sum');
+        details.seriesCount =
+          Number.parseInt(element.querySelector('.series-count')?.innerText ?? 0);
+        details.items = [...element.querySelectorAll(':scope > .nested-items > .elements-list-item')]
+          .map((subelement) =>
+            getElementsListItemDetails(subelement, customPropsGetter)
+          );
+      }
+    );
+  });
+
+  const axesList = elements.querySelector('.axes-list');
+  structure.elements.axes.addTrigger = axesList.querySelector('.add-axis-btn');
+  structure.elements.axes.items = [...axesList.querySelectorAll('.elements-list-item')].map((element) => {
+    return getElementsListItemDetails(element, (element, details) => {
+      details.unitName = element.querySelector('.unit-name')?.innerText ?? null;
+      details.seriesCount =
+        Number.parseInt(element.querySelector('.series-count')?.innerText ?? 0);
+    });
+  });
+
+  return structure;
+}
+
+function getElementsListItemDetails(element, customPropsGetter) {
+  const details = {
+    id: element.dataset.elementId,
+    element,
+    headerElement: element.querySelector('.list-item-header'),
+    name: element.querySelector('.name').innerText,
+    addTrigger: element.querySelector('.add-action'),
+    duplicateTrigger: element.querySelector('.duplicate-action'),
+    removeTrigger: element.querySelector('.remove-action'),
+  };
+  customPropsGetter(element, details, customPropsGetter);
+  return details;
+}
+
+function getDropTargetSelector(id, placement) {
+  return `[data-reference-element-id="${id}"][data-placement="${placement}"] .drop-zone`;
 }

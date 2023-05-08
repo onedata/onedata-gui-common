@@ -31,6 +31,12 @@ export default OneDraggableObject.extend(I18n, {
   actionsFactory: undefined,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  allowNesting: false,
+
+  /**
    * For one-draggable-object
    * @override
    */
@@ -43,6 +49,17 @@ export default OneDraggableObject.extend(I18n, {
       }
       const action = this.actionsFactory.createSelectElementAction({
         elementToSelect: this.itemModel.item,
+      });
+      action.execute();
+    },
+    add() {
+      if (!this.allowNesting) {
+        return;
+      }
+
+      const action = this.actionsFactory.createAddElementAction({
+        newElementType: this.itemModel.item.elementType,
+        targetElement: this.itemModel.item,
       });
       action.execute();
     },

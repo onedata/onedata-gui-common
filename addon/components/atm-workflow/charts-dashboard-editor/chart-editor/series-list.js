@@ -57,7 +57,7 @@ export default Component.extend(I18n, {
     const existingModels = this.itemModels ?? [];
     const existingModelsMap = new Map(existingModels.map((model) => [model.item, model]));
 
-    const newModels = this.chart.series.map((series) => {
+    const newModels = this.chart?.series.map((series) => {
       const existingModel = existingModelsMap.get(series);
       if (existingModel) {
         existingModelsMap.delete(series);
@@ -65,7 +65,7 @@ export default Component.extend(I18n, {
       } else {
         return SeriesListItemModel.create({ item: series });
       }
-    });
+    }) ?? [];
 
     existingModelsMap.forEach((model) => model.destroy());
     this.set('itemModels', newModels);

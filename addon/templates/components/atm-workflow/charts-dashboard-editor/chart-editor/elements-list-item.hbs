@@ -4,6 +4,15 @@
     item=itemModel.item
   }}
   <div class="actions">
+    {{#if allowNesting}}
+      {{#one-icon
+        class="action add-action clickable"
+        icon="plus"
+        click=(action "add")
+      }}
+        {{one-tooltip title=(tt this (concat "actions.add." itemModel.item.elementType))}}
+      {{/one-icon}}
+    {{/if}}
     {{#one-icon
       class="action duplicate-action clickable"
       icon="browser-copy"
@@ -25,6 +34,7 @@
     {{#each itemModel.nestedModels as |subitemModel|}}
       {{atm-workflow/charts-dashboard-editor/chart-editor/elements-list-item
         itemModel=subitemModel
+        allowNesting=allowNesting
         actionsFactory=actionsFactory
       }}
     {{/each}}
