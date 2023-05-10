@@ -26,6 +26,10 @@
   actionsFactory=actionsFactory
 }}
 
+{{#if validationErrorsMessage}}
+  {{warning-icon tooltipText=validationErrorsMessage}}
+{{/if}}
+
 {{#if (and draggedChart (not isMeDragged))}}
   {{one-draggable-object-target
     class="before-drag-target"

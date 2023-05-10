@@ -1,8 +1,10 @@
+import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
+import { translateValidationErrorsBatch } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/elements-list-item';
 
 export default OneDraggableObject.extend(I18n, {
@@ -41,6 +43,19 @@ export default OneDraggableObject.extend(I18n, {
    * @override
    */
   content: reads('itemModel.item'),
+
+  /**
+   * @type {ComputedProperty<SafeString | null>}
+   */
+  validationErrorsMessage: computed(
+    'itemModel.item.validationErrors',
+    function validationErrorsMessage() {
+      return translateValidationErrorsBatch(
+        this.i18n,
+        this.itemModel.item.validationErrors,
+      );
+    }
+  ),
 
   actions: {
     select(event) {

@@ -2,6 +2,8 @@ export {
   ElementType,
   isSectionElementType,
   isChartElementType,
+  translateValidationError,
+  translateValidationErrorsBatch,
 }
 from './common';
 export { default as UndoManager } from './undo-manager';

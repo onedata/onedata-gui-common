@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
@@ -16,6 +16,11 @@ import { ElementType } from './common';
  * @property {string | null} collectionRef
  * @property {string} timeSeriesNameGenerator
  * @property {Array<string>} metricNames
+ */
+
+/**
+ * @typedef {DashboardElementValidationError} SeriesAxisNotAssignedValidationError
+ * @property {'seriesAxisNotAssigned'} errorId
  */
 
 const Series = ElementBase.extend({
@@ -89,11 +94,31 @@ const Series = ElementBase.extend({
   /**
    * @override
    */
+  referencingPropertyNames: Object.freeze(['parent', 'axis', 'group']),
+
+  /**
+   * @override
+   */
+  directValidationErrors: computed('axis', function directValidationErrors() {
+    if (!this.axis) {
+      return [{
+        element: this,
+        errorId: 'seriesAxisNotAssigned',
+      }];
+    } else {
+      return [];
+    }
+  }),
+
+  /**
+   * @override
+   */
   init() {
-    this._super(...arguments);
     if (!this.id) {
       this.set('id', generateId());
     }
+
+    this._super(...arguments);
   },
 
   /**
@@ -136,6 +161,21 @@ const Series = ElementBase.extend({
       group: this.group,
       parent: this.parent,
     });
+  },
+
+  /**
+   * @override
+   */
+  * getReferencingElements() {
+    if (this.parent) {
+      yield this.parent;
+    }
+    if (this.axis) {
+      yield this.axis;
+    }
+    if (this.group) {
+      yield this.group;
+    }
   },
 });
 

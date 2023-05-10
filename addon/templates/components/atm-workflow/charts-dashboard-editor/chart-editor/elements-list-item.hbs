@@ -3,6 +3,9 @@
     class="list-item-header-content"
     item=itemModel.item
   }}
+  {{#if validationErrorsMessage}}
+    {{warning-icon tooltipText=validationErrorsMessage}}
+  {{/if}}
   <div class="actions">
     {{#if allowNesting}}
       {{#one-icon

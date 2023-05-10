@@ -6,13 +6,6 @@ import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashbo
 import { ElementsListItemModel } from './elements-list';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-list';
 
-const SeriesListItemModel = ElementsListItemModel.extend({
-  /**
-   * @override
-   */
-  renderer: 'atm-workflow/charts-dashboard-editor/chart-editor/series-list-item',
-});
-
 export default Component.extend(I18n, {
   layout,
   classNames: ['series-list', 'chart-elements-list-container'],
@@ -83,4 +76,11 @@ export default Component.extend(I18n, {
       action.execute();
     },
   },
+});
+
+const SeriesListItemModel = ElementsListItemModel.extend({
+  /**
+   * @override
+   */
+  renderer: 'atm-workflow/charts-dashboard-editor/chart-editor/series-list-item',
 });

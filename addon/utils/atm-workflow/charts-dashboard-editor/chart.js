@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { computed } from '@ember/object';
+import _ from 'lodash';
 import ElementBase from './element-base';
 import { ElementType } from './common';
 
@@ -60,8 +62,27 @@ const Chart = ElementBase.extend({
   /**
    * @override
    */
+  referencingPropertyNames: Object.freeze(['axes', 'seriesGroups', 'series', 'parent']),
+
+  /**
+   * @override
+   */
+  nestedValidationErrors: computed(
+    'axes.@each.validationErrors',
+    'seriesGroups.@each.validationErrors',
+    'series.@each.validationErrors',
+    function nestedValidationErrors() {
+      return _.flatten(
+        [...this.axes, ...this.seriesGroups, ...this.series]
+        .map(({ validationErrors }) => validationErrors)
+      );
+    }
+  ),
+
+  /**
+   * @override
+   */
   init() {
-    this._super(...arguments);
     if (!this.axes) {
       this.set('axes', []);
     }
@@ -71,6 +92,8 @@ const Chart = ElementBase.extend({
     if (!this.series) {
       this.set('series', []);
     }
+
+    this._super(...arguments);
   },
 
   /**
@@ -120,6 +143,15 @@ const Chart = ElementBase.extend({
     yield* this.axes;
     yield* this.seriesGroups;
     yield* this.series;
+  },
+
+  /**
+   * @override
+   */
+  * getReferencingElements() {
+    if (this.parent) {
+      yield this.parent;
+    }
   },
 });
 

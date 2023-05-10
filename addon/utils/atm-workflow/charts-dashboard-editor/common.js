@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+const i18nPrefix = 'utils.atmWorkflow.chartsDashboardEditor.common';
+
 /**
  * @typedef {
  *   'chartsDashboardEditorSection' |
@@ -34,7 +36,7 @@ export const ElementType = Object.freeze({
  */
 
 /**
- * @param {DashboardElement} elementType
+ * @param {ElementType} elementType
  * @returns {boolean}
  */
 export function isSectionElementType(elementType) {
@@ -47,7 +49,7 @@ export function isSectionElementType(elementType) {
  */
 
 /**
- * @param {DashboardElement} elementType
+ * @param {ElementType} elementType
  * @returns {boolean}
  */
 export function isChartElementType(elementType) {
@@ -59,6 +61,48 @@ export function isChartElementType(elementType) {
 /**
  * @typedef {SectionElement | ChartElement} DashboardElement
  */
+
+/**
+ * @typedef {Object} DashboardElementValidationError
+ * @property {DashboardElement} element
+ * @property {string} errorId
+ * @property {unknown} errorDetails
+ */
+
+/**
+ * @param {Ember.Service} i18n
+ * @param {DashboardElementValidationError} validationError
+ * @returns {SafeString}
+ */
+export function translateValidationError(i18n, validationError) {
+  return i18n.t(
+    `${i18nPrefix}.validationErrors.${validationError.errorId}`,
+    validationError
+  );
+}
+
+/**
+ * @param {Ember.Service} i18n
+ * @param {Array<DashboardElementValidationError>} validationErrors
+ * @returns {SafeString | null}
+ */
+export function translateValidationErrorsBatch(i18n, validationErrors) {
+  if (!validationErrors.length) {
+    return null;
+  }
+  const firstErrorTranslation = translateValidationError(i18n, validationErrors[0]);
+  if (validationErrors.length > 1) {
+    return i18n.t(`${i18nPrefix}.validationErrorsBatch.message`, {
+      firstError: firstErrorTranslation,
+      otherErrorsCount: validationErrors.length - 1,
+      errorsNoun: i18n.t(
+        `${i18nPrefix}.validationErrorsBatch.errorNoun${validationErrors.length > 2 ? 'Plural' : 'Singular'}`
+      ),
+    });
+  } else {
+    return firstErrorTranslation;
+  }
+}
 
 /**
  * @typedef {Object} ViewState

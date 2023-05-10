@@ -9,3 +9,9 @@
     actionsFactory=actionsFactory
   }}
 {{/if}}
+{{#if hasValidationErrors}}
+  <div class="global-validation-error">
+    {{warning-icon}}
+    {{tt this "globalValidationError"}}
+  </div>
+{{/if}}

@@ -13,7 +13,10 @@ import { equal } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor/chart';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
-import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import {
+  ElementType,
+  translateValidationErrorsBatch,
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 
 export default OneDraggableObject.extend(I18n, {
@@ -66,6 +69,19 @@ export default OneDraggableObject.extend(I18n, {
    * @override
    */
   content: reads('chart'),
+
+  /**
+   * @type {ComputedProperty<SafeString | null>}
+   */
+  validationErrorsMessage: computed(
+    'chart.validationErrors',
+    function validationErrorsMessage() {
+      return translateValidationErrorsBatch(
+        this.i18n,
+        this.chart.validationErrors,
+      );
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null>}

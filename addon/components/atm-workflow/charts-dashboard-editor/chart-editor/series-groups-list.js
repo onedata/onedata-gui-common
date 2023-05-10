@@ -6,44 +6,6 @@ import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashbo
 import { ElementsListItemModel } from './elements-list';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-groups-list';
 
-const SeriesGroupListItemModel = ElementsListItemModel.extend({
-  /**
-   * @override
-   */
-  renderer: 'atm-workflow/charts-dashboard-editor/chart-editor/series-groups-list-item',
-
-  nestedModelsSetter: observer(
-    'item.seriesGroups.[]',
-    function nestedModelsSetter() {
-      const existingModels = this.nestedModels;
-      const existingModelsMap = new Map(
-        existingModels.map((model) => [model.item, model])
-      );
-
-      const newModels = this.item.seriesGroups.map((seriesGroup) => {
-        const existingModel = existingModelsMap.get(seriesGroup);
-        if (existingModel) {
-          existingModelsMap.delete(seriesGroup);
-          return existingModel;
-        } else {
-          return SeriesGroupListItemModel.create({ item: seriesGroup });
-        }
-      });
-
-      existingModelsMap.forEach((model) => model.destroy());
-      this.set('nestedModels', newModels);
-    }
-  ),
-
-  /**
-   * @override
-   */
-  init() {
-    this._super(...arguments);
-    this.nestedModelsSetter();
-  },
-});
-
 export default Component.extend(I18n, {
   layout,
   classNames: ['series-groups-list', 'chart-elements-list-container'],
@@ -113,5 +75,43 @@ export default Component.extend(I18n, {
       });
       action.execute();
     },
+  },
+});
+
+const SeriesGroupListItemModel = ElementsListItemModel.extend({
+  /**
+   * @override
+   */
+  renderer: 'atm-workflow/charts-dashboard-editor/chart-editor/series-groups-list-item',
+
+  nestedModelsSetter: observer(
+    'item.seriesGroups.[]',
+    function nestedModelsSetter() {
+      const existingModels = this.nestedModels;
+      const existingModelsMap = new Map(
+        existingModels.map((model) => [model.item, model])
+      );
+
+      const newModels = this.item.seriesGroups.map((seriesGroup) => {
+        const existingModel = existingModelsMap.get(seriesGroup);
+        if (existingModel) {
+          existingModelsMap.delete(seriesGroup);
+          return existingModel;
+        } else {
+          return SeriesGroupListItemModel.create({ item: seriesGroup });
+        }
+      });
+
+      existingModelsMap.forEach((model) => model.destroy());
+      this.set('nestedModels', newModels);
+    }
+  ),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    this.nestedModelsSetter();
   },
 });

@@ -7,9 +7,8 @@
  */
 
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
-import { set, computed } from '@ember/object';
+import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { getCollectionFieldName } from './utils';
 
 /**
  * @typedef {Object} RemoveElementActionContext
@@ -47,19 +46,9 @@ export default Action.extend({
 
   /**
    * Becomes defined during action execution
-   * @type {number | null}
+   * @type {Array<DashboardElementReference> | null}
    */
-  oldIndexInParent: null,
-
-  /**
-   * @type {ComputedProperty<string>}
-   */
-  collectionName: computed(
-    'elementToRemove.elementType',
-    function collectionName() {
-      return getCollectionFieldName(this.elementToRemove.elementType);
-    }
-  ),
+  removedReferences: null,
 
   /**
    * @override
@@ -82,18 +71,11 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    const parent = this.elementToRemove.parent;
-    this.setProperties({
-      oldParent: parent,
-      oldIndexInParent: parent[this.collectionName].indexOf(this.elementToRemove),
-    });
+    this.set('oldParent', this.elementToRemove.parent);
 
-    set(
-      parent,
-      this.collectionName,
-      parent[this.collectionName].filter((element) => element !== this.elementToRemove)
-    );
+    this.removeReferences();
     set(this.elementToRemove, 'parent', null);
+
     this.changeViewState({
       elementsToDeselect: [
         this.elementToRemove,
@@ -107,10 +89,31 @@ export default Action.extend({
    */
   onExecuteUndo() {
     set(this.elementToRemove, 'parent', this.oldParent);
-    set(this.oldParent, this.collectionName, [
-      ...this.oldParent[this.collectionName].slice(0, this.oldIndexInParent),
+    this.rollbackReferencesRemoval();
+  },
+
+  removeReferences() {
+    const elementsToRemove = new Set([
       this.elementToRemove,
-      ...this.oldParent[this.collectionName].slice(this.oldIndexInParent),
+      ...this.elementToRemove.getNestedElements(),
     ]);
+    const allRemovedReferences = [];
+    for (const elementToRemove of elementsToRemove) {
+      for (const referencingElement of elementToRemove.getReferencingElements()) {
+        if (elementsToRemove.has(referencingElement)) {
+          continue;
+        }
+        allRemovedReferences.push(
+          ...referencingElement.removeElementReferences(elementToRemove)
+        );
+      }
+    }
+    this.set('removedReferences', allRemovedReferences);
+  },
+
+  rollbackReferencesRemoval() {
+    this.removedReferences?.forEach((removedReference) => {
+      removedReference.referencingElement.rollbackReferenceRemoval(removedReference);
+    });
   },
 });

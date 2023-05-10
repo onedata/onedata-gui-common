@@ -70,14 +70,20 @@ const Axis = ElementBase.extend({
   /**
    * @override
    */
+  referencingPropertyNames: Object.freeze(['series', 'parent']),
+
+  /**
+   * @override
+   */
   init() {
-    this._super(...arguments);
     if (!this.id) {
       this.set('id', generateId());
     }
     if (!this.series) {
       this.set('series', []);
     }
+
+    this._super(...arguments);
   },
 
   /**
@@ -115,6 +121,16 @@ const Axis = ElementBase.extend({
       series: [],
       parent: this.parent,
     });
+  },
+
+  /**
+   * @override
+   */
+  * getReferencingElements() {
+    if (this.parent) {
+      yield this.parent;
+    }
+    yield* this.series;
   },
 });
 

@@ -171,6 +171,7 @@ export default PerfectScrollbarElement.extend({
     const allItemsMap = this.getAllItemsMap();
 
     const dropZones = [];
+    const sideDropZoneHeight = 12;
     for (const elementNode of elementNodesForDrop) {
       const element = allItemsMap.get(elementNode.dataset.elementId);
       if (!element) {
@@ -184,8 +185,6 @@ export default PerfectScrollbarElement.extend({
           Number.parseFloat(dom.getStyle(this.element, 'borderTopWidth')),
         left: scrollUnawarePosition.left,
       };
-
-      const sideDropZoneHeight = 12;
 
       if (this.allowNesting) {
         const top = scrollAwarePosition.top;
@@ -235,6 +234,44 @@ export default PerfectScrollbarElement.extend({
           referenceElement: element,
           placement: 'after',
         });
+      }
+    }
+
+    if (
+      // if there is something to render
+      this.itemModels.length &&
+      // and there is no Y overflow
+      this.element?.scrollHeight <= this.element?.clientHeight
+    ) {
+      // Find last element node and its "after" drop zone
+      const lastElement = this.itemModels[this.itemModels.length - 1]?.item;
+      const lastElementNode = this.element
+        ?.querySelector(`.elements-list-item[data-element-id="${lastElement.id}"`);
+      const afterDropZone = dropZones.find(({ referenceElement, placement }) =>
+        referenceElement === lastElement && placement === 'after'
+      );
+      if (afterDropZone && lastElementNode) {
+        const lastElementPosition = dom.position(lastElementNode, this.element);
+        const lastElementHeight = dom.height(lastElementNode);
+        const lastElementBottomEdge = lastElementPosition.top + lastElementHeight;
+        // space between the last element and the bottom edge of this component
+        const spaceLeftAfter = dom.height(this.element, dom.LayoutBox.ContentBox) -
+          lastElementBottomEdge;
+        if (spaceLeftAfter > sideDropZoneHeight * 2) {
+          // Having enough space we can render a higher drop zone which would
+          // better show that dragged element will end up at the end of the
+          // list.
+          const lastDropZoneHeight = Math.min(
+            spaceLeftAfter - sideDropZoneHeight,
+            dom.height(lastElementNode.querySelector('.list-item-header'))
+          );
+          afterDropZone.style = htmlSafe(
+            `top: ${lastElementBottomEdge + sideDropZoneHeight / 2}px; ` +
+            `left: ${lastElementPosition.left}px; ` +
+            `height: ${lastDropZoneHeight}px; ` +
+            `width: ${dom.width(lastElementNode)}px;`
+          );
+        }
       }
     }
 

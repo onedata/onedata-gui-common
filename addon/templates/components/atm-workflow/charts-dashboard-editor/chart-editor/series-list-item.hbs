@@ -3,7 +3,8 @@
   {{#if colorStyle}}
     <span class="color-mark" style={{colorStyle}}></span>
   {{/if}}
-  <span class="type">{{typeTranslation}}</span> |
+  <span class="type">{{typeTranslation}}</span>
+  {{#if (or item.group item.axis)}}|{{/if}}
   {{#if item.group}}
     {{one-icon icon="items-grid"}}
     <span class="series-group-name">{{item.group.name}}</span>

@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { computed } from '@ember/object';
+import _ from 'lodash';
 import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
@@ -68,8 +70,24 @@ const SeriesGroup = ElementBase.extend({
   /**
    * @override
    */
+  referencingPropertyNames: Object.freeze(['parent', 'seriesGroups', 'series']),
+
+  /**
+   * @override
+   */
+  nestedValidationErrors: computed(
+    'seriesGroups.@each.validationErrors',
+    function nestedValidationErrors() {
+      return _.flatten(
+        this.seriesGroups.map(({ validationErrors }) => validationErrors)
+      );
+    }
+  ),
+
+  /**
+   * @override
+   */
   init() {
-    this._super(...arguments);
     if (!this.id) {
       this.set('id', generateId());
     }
@@ -79,6 +97,8 @@ const SeriesGroup = ElementBase.extend({
     if (!this.series) {
       this.set('series', []);
     }
+
+    this._super(...arguments);
   },
 
   /**
@@ -125,6 +145,16 @@ const SeriesGroup = ElementBase.extend({
       yield subgroup;
       yield* subgroup.getNestedElements();
     }
+  },
+
+  /**
+   * @override
+   */
+  * getReferencingElements() {
+    if (this.parent) {
+      yield this.parent;
+    }
+    yield* this.series;
   },
 });
 
