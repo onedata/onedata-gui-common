@@ -58,7 +58,7 @@ export default Component.extend({
   /**
    * @type {number}
    */
-  tsDataReloadInterval: 5,
+  tsDataReloadInterval: 3,
 
   /**
    * @type {{ map: AtmTimeSeriesCollectionReferencesMap, lastUpdateTimestamp: number|null } | undefined}
@@ -159,7 +159,7 @@ export default Component.extend({
    */
   async queryBatcherFetchData({ batchedQuery }) {
     const store = this.getStoreByCollectionRef(batchedQuery.collectionRef);
-    if (!store) {
+    if (!store?.instanceId) {
       return {};
     }
 
@@ -267,7 +267,7 @@ export default Component.extend({
    */
   async getTimeSeriesCollectionLayout(collectionRef) {
     const store = this.getStoreByCollectionRef(collectionRef);
-    if (!store) {
+    if (!store?.instanceId) {
       return {};
     }
 
