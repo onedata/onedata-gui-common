@@ -12,6 +12,8 @@ import EmberObject, { get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { reject } from 'rsvp';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import generateId from 'onedata-gui-common/utils/generate-id';
 
 /**
  * @typedef {`store-${string}`} AtmStoreTimeSeriesCollectionReference
@@ -126,7 +128,18 @@ export default EmberObject.extend({
         const sortedRuns = runsRegistryToSortedArray(task.runsRegistry || {});
         run = sortedRuns[sortedRuns.length - 1];
       }
-      const timeSeriesStore = run?.timeSeriesStore;
+      let timeSeriesStore = run?.timeSeriesStore;
+      if (!timeSeriesStore && task.timeSeriesStoreConfig) {
+        // If store is not available yet, but we know, that it might exist
+        // in the future, then we create a "mock" of it. It allows to provide
+        // information about time series schemas ahead of time to draw an empty
+        // chart.
+        timeSeriesStore = Store.create({
+          id: generateId(),
+          type: 'timeSeries',
+          config: task.timeSeriesStoreConfig,
+        });
+      }
       if (timeSeriesStore) {
         referencesMap.set(`task-${task.schemaId}`, timeSeriesStore);
       }
