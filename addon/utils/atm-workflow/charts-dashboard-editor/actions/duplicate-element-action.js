@@ -1,5 +1,5 @@
 /**
- * Duplicates element (section or chart).
+ * Duplicates dashboard element.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH

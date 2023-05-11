@@ -1,5 +1,21 @@
+/**
+ * A collection of utils commonly used by dashboard actions code.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { ElementType } from '../common';
 
+/**
+ * Returns name of a field, which is responsible for aggregating elements of
+ * provided type. These fields are present in elements which act as a parent
+ * for aggregated items. Example returns `'axes'` from `ElementType.Axis`
+ * because axes are aggregated inside chart objects in `'axes'` field.
+ * @param {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType} childElementType
+ * @returns {string | null}
+ */
 export function getCollectionFieldName(childElementType) {
   switch (childElementType) {
     case ElementType.Section:
@@ -12,5 +28,7 @@ export function getCollectionFieldName(childElementType) {
       return 'seriesGroups';
     case ElementType.Series:
       return 'series';
+    default:
+      return null;
   }
 }

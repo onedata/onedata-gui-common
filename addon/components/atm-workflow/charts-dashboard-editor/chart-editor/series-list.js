@@ -1,3 +1,15 @@
+/**
+ * Shows series list and allows to perform operations on its items (creation,
+ * removal, duplication etc.).
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
+// TODO: VFS-10649 Consider to join series, series-group and axes lists
+// into a single generic component.
+
 import Component from '@ember/component';
 import { observer } from '@ember/object';
 import { inject as service } from '@ember/service';

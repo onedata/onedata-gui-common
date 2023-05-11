@@ -7,43 +7,24 @@
   as |tab|
 }}
   {{#bs-nav type="tabs" as |nav|}}
-    {{#nav.item active=(eq activeTabId tabIds.series)}}
-      <a class="nav-link" role="tab" {{action (mut activeTabId) tabIds.series}}>
-        {{one-icon icon="chart"}}
-        {{tt this "tabNames.series"}}
-      </a>
-    {{/nav.item}}
-    {{#nav.item active=(eq activeTabId tabIds.seriesGroups)}}
-      <a class="nav-link" role="tab" {{action (mut activeTabId) tabIds.seriesGroups}}>
-        {{one-icon icon="items-grid"}}
-        {{tt this "tabNames.seriesGroups"}}
-      </a>
-    {{/nav.item}}
-    {{#nav.item active=(eq activeTabId tabIds.axes)}}
-      <a class="nav-link" role="tab" {{action (mut activeTabId) tabIds.axes}}>
-        {{one-icon icon="axes"}}
-        {{tt this "tabNames.axes"}}
-      </a>
-    {{/nav.item}}
+    {{#each tabs as |tabSpec|}}
+      {{#nav.item active=(eq activeTabId tabSpec.id)}}
+        <a class="nav-link" role="tab" {{action (mut activeTabId) tabSpec.id}}>
+          {{one-icon icon=tabSpec.icon}}
+          {{tt this (concat "tabNames." tabSpec.name)}}
+        </a>
+      {{/nav.item}}
+    {{/each}}
   {{/bs-nav}}
   <div class="tab-content">
-    {{#tab.pane elementId=tabIds.series}}
-      {{atm-workflow/charts-dashboard-editor/chart-editor/series-list
-        chart=chart
-        actionsFactory=actionsFactory
-      }}
-    {{/tab.pane}}
-    {{#tab.pane elementId=tabIds.seriesGroups}}
-      {{atm-workflow/charts-dashboard-editor/chart-editor/series-groups-list
-        chart=chart
-        actionsFactory=actionsFactory
-      }}
-    {{/tab.pane}}
-    {{#tab.pane elementId=tabIds.axes}}
-      {{atm-workflow/charts-dashboard-editor/chart-editor/axes-list
-        chart=chart
-        actionsFactory=actionsFactory
-      }}
-    {{/tab.pane}}
+    {{#each tabs as |tabSpec|}}
+      {{#tab.pane elementId=tabSpec.id}}
+        {{component
+          (concat "atm-workflow/charts-dashboard-editor/chart-editor/" tabSpec.componentName)
+          chart=chart
+          actionsFactory=actionsFactory
+        }}
+      {{/tab.pane}}
+    {{/each}}
   </div>
 {{/bs-tab}}

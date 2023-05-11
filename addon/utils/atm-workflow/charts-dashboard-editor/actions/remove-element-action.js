@@ -1,5 +1,5 @@
 /**
- * Removes element (section or chart).
+ * Removes dashboard element.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -61,6 +61,7 @@ export default Action.extend({
       this.setProperties({
         context: null,
         oldParent: null,
+        removedReferences: null,
       });
     } finally {
       this._super(...arguments);
@@ -92,6 +93,11 @@ export default Action.extend({
     this.rollbackReferencesRemoval();
   },
 
+  /**
+   * Removes all references to the removed element and all its nested elements.
+   * @private
+   * @returns {void}
+   */
   removeReferences() {
     const elementsToRemove = new Set([
       this.elementToRemove,
@@ -111,6 +117,11 @@ export default Action.extend({
     this.set('removedReferences', allRemovedReferences);
   },
 
+  /**
+   * Rollbacks changes made by `removeReferences`.
+   * @private
+   * @returns {void}
+   */
   rollbackReferencesRemoval() {
     this.removedReferences?.forEach((removedReference) => {
       removedReference.referencingElement.rollbackReferenceRemoval(removedReference);

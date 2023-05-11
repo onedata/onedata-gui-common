@@ -1,5 +1,5 @@
 /**
- * Adds new element to specific section.
+ * Adds new element to specific target.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -25,6 +25,14 @@ import { getCollectionFieldName } from './utils';
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup} targetElement
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
+
+const creatorFunctions = Object.freeze({
+  [ElementType.Section]: createNewSection,
+  [ElementType.Chart]: createNewChart,
+  [ElementType.Axis]: createNewAxis,
+  [ElementType.SeriesGroup]: createNewSeriesGroup,
+  [ElementType.Series]: createNewSeries,
+});
 
 export default Action.extend({
   /**
@@ -71,10 +79,7 @@ export default Action.extend({
    */
   willDestroy() {
     try {
-      if (
-        this.newElement &&
-        (!this.newElement.parent || !this.newElement.parent)
-      ) {
+      if (this.newElement && !this.newElement.parent) {
         this.newElement.destroy();
       }
       this.setProperties({
@@ -158,22 +163,14 @@ export default Action.extend({
   createNewElement() {
     const elementOwner = this.targetElement.elementOwner;
 
-    switch (this.newElementType) {
-      case ElementType.Section:
-        return createNewSection(this.i18n, elementOwner);
-      case ElementType.Chart:
-        return createNewChart(this.i18n, elementOwner);
-      case ElementType.Axis:
-        return createNewAxis(this.i18n, elementOwner);
-      case ElementType.SeriesGroup:
-        return createNewSeriesGroup(this.i18n, elementOwner);
-      case ElementType.Series:
-        return createNewSeries(this.i18n, elementOwner);
-      default:
-        console.error(
-          `Could not create charts dashboard element of type "${this.newElementType}" - type not recognized.`
-        );
-        return null;
+    const creatorFunction = creatorFunctions[this.newElementType];
+    if (creatorFunction) {
+      return creatorFunction(this.i18n, elementOwner);
+    } else {
+      console.error(
+        `Could not create charts dashboard element of type "${this.newElementType}" - type not recognized.`
+      );
+      return null;
     }
   },
 });

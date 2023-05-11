@@ -1539,7 +1539,7 @@ function getChartEditorStructure() {
   structure.elements.seriesGroups.addTrigger =
     seriesGroupsList.querySelector('.add-series-group-btn');
   structure.elements.seriesGroups.items = [
-    ...seriesGroupsList.querySelectorAll('ol > .elements-list-item'),
+    ...seriesGroupsList.querySelectorAll('.elements-list > .list-items > .elements-list-item'),
   ].map((element) => {
     return getElementsListItemDetails(
       element,

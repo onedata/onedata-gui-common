@@ -114,8 +114,11 @@ export default Component.extend({
       selectedChartElement: null,
     };
 
+    // Deselect specified elements
     viewStateChange.elementsToDeselect?.forEach((elementToDeselect) => {
       if (newViewState.selectedSectionElement === elementToDeselect) {
+        // Deselection of section-level element causes chart editor close
+        // automatically.
         newViewState.selectedSectionElement = null;
         newViewState.isChartEditorActive = false;
         newViewState.selectedChartElement = null;
@@ -126,20 +129,26 @@ export default Component.extend({
 
     if (viewStateChange.elementToSelect !== undefined) {
       if (!viewStateChange.elementToSelect) {
+        // `elementToSelect` was intentionally set to `null` - clear selection
         newViewState.selectedSectionElement = null;
         newViewState.isChartEditorActive = false;
         newViewState.selectedChartElement = null;
       } else if (isChartElementType(viewStateChange.elementToSelect.elementType)) {
+        // Chart element selection. We need to find parent chart...
         let chart = viewStateChange.elementToSelect.parent;
         while (chart && chart.elementType !== ElementType.Chart) {
           chart = chart.parent;
         }
         if (chart) {
+          // ... to select that chart and its inner element.
           newViewState.selectedSectionElement = chart;
           newViewState.isChartEditorActive = true;
           newViewState.selectedChartElement = viewStateChange.elementToSelect;
         }
       } else {
+        // Section-level element selection. We deselect chart-level element
+        // (if there was any). Chart editor is opened only if it was directly
+        // requested `viewStateChange.isChartEditorActive`.
         newViewState.selectedSectionElement = viewStateChange.elementToSelect;
         newViewState.isChartEditorActive =
           viewStateChange.elementToSelect.elementType === ElementType.Chart &&
@@ -147,6 +156,7 @@ export default Component.extend({
         newViewState.selectedChartElement = null;
       }
     } else if (viewStateChange.isChartEditorActive !== undefined) {
+      // Only state of the chart editor visibility is changing.
       if (newViewState.selectedSectionElement?.elementType === ElementType.Chart) {
         newViewState.isChartEditorActive = Boolean(viewStateChange.isChartEditorActive);
       } else {

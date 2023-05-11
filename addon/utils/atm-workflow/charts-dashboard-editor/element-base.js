@@ -1,5 +1,5 @@
 /**
- * Base class for every dashboard model element.
+ * Base class for every dashboard element model.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -46,6 +46,8 @@ const ElementBase = EmberObject.extend({
   nestedValidationErrors: undefined,
 
   /**
+   * An array of properties, which may contain references to other dashboard
+   * elements.
    * @private
    * @virtual optional
    * @type {Array<string>}
@@ -108,8 +110,11 @@ const ElementBase = EmberObject.extend({
   * getReferencingElements() {},
 
   /**
+   * Removes any references to `element` from this object.
+   * NOTE: it does it only on the top level - does not analyze nested objects!
    * @param {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} element
-   * @returns {Array<DashboardElementReference>}
+   * @returns {Array<DashboardElementReference>} Array of reference specs of
+   * removed `element` occurrences.
    */
   removeElementReferences(element) {
     const removedReferences = [];
@@ -152,6 +157,7 @@ const ElementBase = EmberObject.extend({
   },
 
   /**
+   * Rollbacks reference removal according to reference spec passed via argument.
    * @param {DashboardElementReference} removedReference
    * @returns {void}
    */

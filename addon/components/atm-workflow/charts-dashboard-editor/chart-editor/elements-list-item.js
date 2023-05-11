@@ -1,3 +1,12 @@
+/**
+ * A single item of `elements-list` component. Renders single dashboard element
+ * with possible actions (like adding nested element, duplication, removal).
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';

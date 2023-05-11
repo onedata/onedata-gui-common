@@ -1,3 +1,11 @@
+/**
+ * Contains typedefs, constants and functions related to time series dashboard.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 const i18nPrefix = 'utils.timeSeriesDashboard';
 
 /**
@@ -26,6 +34,5 @@ export const seriesTypes = Object.freeze([
  * @returns {SafeString}
  */
 export function translateSeriesType(i18n, seriesType) {
-  const i18nPath = `${i18nPrefix}.seriesTypes.${seriesType}`;
-  return i18n.t(i18nPath, {}, { defaultValue: '' });
+  return i18n.t(`${i18nPrefix}.seriesTypes.${seriesType}`);
 }

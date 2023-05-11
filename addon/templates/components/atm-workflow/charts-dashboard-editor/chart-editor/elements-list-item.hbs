@@ -13,7 +13,9 @@
         icon="plus"
         click=(action "add")
       }}
-        {{one-tooltip title=(tt this (concat "actions.add." itemModel.item.elementType))}}
+        {{one-tooltip
+          title=(tt this (concat "actions.add." itemModel.item.elementType))
+        }}
       {{/one-icon}}
     {{/if}}
     {{#one-icon
@@ -33,7 +35,7 @@
   </div>
 </div>
 {{#if itemModel.nestedModels.length}}
-  <div class="nested-items">
+  <ol class="list-items nested-items">
     {{#each itemModel.nestedModels as |subitemModel|}}
       {{atm-workflow/charts-dashboard-editor/chart-editor/elements-list-item
         itemModel=subitemModel
@@ -41,5 +43,5 @@
         actionsFactory=actionsFactory
       }}
     {{/each}}
-  </div>
+  </ol>
 {{/if}}

@@ -1,3 +1,14 @@
+/**
+ * Shows a list of chart elements according to data passed via
+ * `ElementsListItemModel`-based models. Every chart element you want to include
+ * as a list item, should be contained by dedicated `ElementsListItemModel`
+ * instance.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import PerfectScrollbarElement from 'onedata-gui-common/components/perfect-scrollbar-element';
 import EmberObject, { observer } from '@ember/object';
 import { inject as service } from '@ember/service';

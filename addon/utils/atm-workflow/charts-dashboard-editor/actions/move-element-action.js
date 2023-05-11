@@ -1,5 +1,5 @@
 /**
- * Moves section or chart to another place.
+ * Moves dashboard element to another place.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
