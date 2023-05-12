@@ -35,6 +35,12 @@ const ElementBase = EmberObject.extend({
 
   /**
    * @public
+   * @type {boolean}
+   */
+  isRemoved: false,
+
+  /**
+   * @public
    * @type {Array<DashboardElementValidationError>}
    */
   directValidationErrors: undefined,

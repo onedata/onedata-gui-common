@@ -1,7 +1,7 @@
 /**
  * Shows "chart elements" section of chart editor. Contains three types of
  * elements (grouped in separate tabs):
- * - seriesx
+ * - series,
  * - series groups,
  * - axes.
  *
@@ -15,6 +15,7 @@ import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import { guidFor } from '@ember/object/internals';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { ElementType, chartElementIcons } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/elements';
 
 export default Component.extend(I18n, {
@@ -64,17 +65,17 @@ export default Component.extend(I18n, {
     return [{
       id: this.tabIds.series,
       name: 'series',
-      icon: 'chart',
+      icon: chartElementIcons[ElementType.Series],
       componentName: 'series-list',
     }, {
       id: this.tabIds.seriesGroups,
       name: 'seriesGroups',
-      icon: 'items-grid',
+      icon: chartElementIcons[ElementType.SeriesGroup],
       componentName: 'series-groups-list',
     }, {
       id: this.tabIds.axes,
       name: 'axes',
-      icon: 'axes',
+      icon: chartElementIcons[ElementType.Axis],
       componentName: 'axes-list',
     }];
   }),

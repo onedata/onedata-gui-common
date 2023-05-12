@@ -4,6 +4,7 @@ export {
   isChartElementType,
   translateValidationError,
   translateValidationErrorsBatch,
+  chartElementIcons,
 }
 from './common';
 export { default as UndoManager } from './undo-manager';

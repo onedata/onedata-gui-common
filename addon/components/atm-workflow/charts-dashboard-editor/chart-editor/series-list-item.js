@@ -12,6 +12,7 @@ import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
 import { translateSeriesType } from 'onedata-gui-common/utils/time-series-dashboard';
+import { ElementType, chartElementIcons } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-list-item';
 
 export default Component.extend({
@@ -25,6 +26,21 @@ export default Component.extend({
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Series}
    */
   item: undefined,
+
+  /**
+   * @type {string}
+   */
+  icon: chartElementIcons[ElementType.Series],
+
+  /**
+   * @type {string}
+   */
+  seriesGroupIcon: chartElementIcons[ElementType.SeriesGroup],
+
+  /**
+   * @type {string}
+   */
+  axisIcon: chartElementIcons[ElementType.Axis],
 
   /**
    * @type {ComputedProperty<SafeString | null>}

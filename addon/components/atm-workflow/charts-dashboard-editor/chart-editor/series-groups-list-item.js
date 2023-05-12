@@ -9,6 +9,7 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { ElementType, chartElementIcons } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-groups-list-item';
 
 export default Component.extend(I18n, {
@@ -27,4 +28,14 @@ export default Component.extend(I18n, {
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup}
    */
   item: undefined,
+
+  /**
+   * @type {string}
+   */
+  icon: chartElementIcons[ElementType.SeriesGroup],
+
+  /**
+   * @type {string}
+   */
+  seriesIcon: chartElementIcons[ElementType.Series],
 });

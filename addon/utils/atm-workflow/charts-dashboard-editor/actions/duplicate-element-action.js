@@ -78,6 +78,9 @@ export default Action.extend({
   onExecute() {
     if (!this.createdDuplicate) {
       this.set('createdDuplicate', this.elementToDuplicate.clone());
+    } else {
+      [this.createdDuplicate, ...this.createdDuplicate.getNestedElements()]
+      .forEach((element) => set(element, 'isRemoved', false));
     }
 
     const parent = this.elementToDuplicate.parent;
@@ -104,6 +107,8 @@ export default Action.extend({
       this.collectionName,
       parent[this.collectionName].filter((element) => element !== this.createdDuplicate)
     );
+    [this.createdDuplicate, ...this.createdDuplicate.getNestedElements()]
+    .forEach((element) => set(element, 'isRemoved', true));
     this.changeViewState({
       elementsToDeselect: [
         this.createdDuplicate,

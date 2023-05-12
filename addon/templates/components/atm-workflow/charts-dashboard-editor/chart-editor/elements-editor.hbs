@@ -1,0 +1,42 @@
+<h2>{{tt this "header"}}</h2>
+{{#bs-tab
+  activeId=selectedTab.id
+  class="only-tab-bar bs-tab-onedata"
+  fade=false
+  customTabs=true
+  as |tab|
+}}
+  {{#perfect-scrollbar-element suppressScrollY=true}}
+    {{#bs-nav type="tabs" as |nav|}}
+      {{#each tabs as |tabSpec|}}
+        {{#nav.item active=(eq selectedTab tabSpec)}}
+          <a
+            class={{concat-classes
+              "nav-link"
+              (if (not-eq selectedTab tabSpec) "clickable")
+              (if tabSpec.isTemporary "temporary")
+            }}
+            role="tab"
+            onclick={{action "openTab" tabSpec}}
+            ondblclick={{action "openAndPreserveTab" tabSpec}}
+          >
+            {{one-icon icon=tabSpec.icon}}
+            {{#truncated-string}}{{tabSpec.element.name}}{{/truncated-string}}
+            {{one-icon
+              icon="close"
+              click=(action "closeTab" tabSpec)
+              class="close-trigger clickable"
+            }}
+          </a>
+        {{/nav.item}}
+      {{/each}}
+    {{/bs-nav}}
+  {{/perfect-scrollbar-element}}
+  <div class="tab-content">
+    {{#each tabs as |tabSpec|}}
+      {{#tab.pane elementId=tabSpec.id}}
+        {{tabSpec.element.name}} editor
+      {{/tab.pane}}
+    {{/each}}
+  </div>
+{{/bs-tab}}

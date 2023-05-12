@@ -374,20 +374,30 @@
     grid-template-rows: 1fr 1fr;
     background-color: $color-one-white;
 
+    h2 {
+      @include font-semibold();
+      font-size: 1em;
+      text-transform: uppercase;
+      margin: 0 0 0.5em 0;
+    }
+
     .chart-editor-elements {
+      grid-row: 1;
+      grid-column: 1;
       min-height: 0;
       display: grid;
       grid-template-rows: min-content 1fr;
       border-right: 1px solid $main-border-color;
       border-bottom: 1px solid $main-border-color;
       padding: 0.5em;
+    }
 
-      h2 {
-        @include font-semibold();
-        font-size: 1em;
-        text-transform: uppercase;
-        margin: 0 0 0.5em 0;
-      }
+    .chart-editor-elements-editor {
+      grid-row: 2;
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-rows: min-content 1fr;
+      padding: 0.5em;
     }
 
     .bs-tab-onedata {
@@ -395,17 +405,47 @@
       display: grid;
       grid-template-rows: min-content 1fr;
 
+      .nav-tabs {
+        display: flex;
+      }
+
       .nav-link {
         @include font-semibold();
         font-size: 90%;
-        padding: 0.5em 1em;
+        padding: 0.5em 0.7em;
+        max-width: 20em;
         color: $main-text-color;
+        display: inline-flex;
+        align-items: center;
+        user-select: none;
 
         .one-icon {
-          font-size: 1.5em;
           line-height: 0;
           vertical-align: -0.25em;
-          margin-right: 0.25em;
+
+          &:first-child {
+            font-size: 1.5em;
+            margin-right: 0.25em;
+            margin-left: -0.2em;
+          }
+        }
+
+        &.temporary {
+          font-style: italic;
+        }
+
+        .truncated-string {
+          padding-right: 0.3em;
+        }
+
+        .close-trigger {
+          font-size: 80%;
+          font-weight: bold;
+          margin-left: 0.2em;
+          color: $main-text-color-inactive;
+          &:hover {
+            color: $color-one-danger;
+          }
         }
       }
 

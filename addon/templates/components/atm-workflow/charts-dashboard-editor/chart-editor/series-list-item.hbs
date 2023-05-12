@@ -1,4 +1,4 @@
-{{one-icon icon="chart"}} <span class="name">{{item.name}}</span>
+{{one-icon icon=icon}} <span class="name">{{item.name}}</span>
 <span class="additional-info">
   {{#if colorStyle}}
     <span class="color-mark" style={{colorStyle}}></span>
@@ -6,11 +6,11 @@
   <span class="type">{{typeTranslation}}</span>
   {{#if (or item.group item.axis)}}|{{/if}}
   {{#if item.group}}
-    {{one-icon icon="items-grid"}}
+    {{one-icon icon=seriesGroupIcon}}
     <span class="series-group-name">{{item.group.name}}</span>
     {{#if item.axis}}|{{/if}}
   {{/if}}
   {{#if item.axis}}
-    {{one-icon icon="axes"}} <span class="axis-name">{{item.axis.name}}</span>
+    {{one-icon icon=axisIcon}} <span class="axis-name">{{item.axis.name}}</span>
   {{/if}}
 </span>

@@ -101,6 +101,10 @@ export default Action.extend({
       if (!this.newElement) {
         return;
       }
+    } else {
+      [this.newElement, ...this.newElement.getNestedElements()].forEach((element) =>
+        set(element, 'isRemoved', false)
+      );
     }
 
     // Assign parent
@@ -151,6 +155,10 @@ export default Action.extend({
       );
       set(this.newElement, 'axis', null);
     }
+
+    [this.newElement, ...this.newElement.getNestedElements()].forEach((element) =>
+      set(element, 'isRemoved', true)
+    );
 
     this.changeViewState({
       elementsToDeselect: [this.newElement, ...this.newElement.getNestedElements()],
