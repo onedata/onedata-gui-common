@@ -4,8 +4,14 @@ import { reads } from '@ember/object/computed';
 import { guidFor } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { chartElementIcons } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import { chartElementIcons, ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/elements-editor';
+
+const editorComponents = Object.freeze({
+  [ElementType.Series]: 'series-editor',
+  [ElementType.SeriesGroup]: 'series-group-editor',
+  [ElementType.Axis]: 'axis-editor',
+});
 
 export default Component.extend(I18n, {
   layout,
@@ -189,11 +195,23 @@ const ElementsEditorTab = EmberObject.extend({
   /**
    * @public
    * @virtual
-   * @type {string | null}
+   * @type {ComputedProperty<string | null>}
    */
   icon: computed('element.elementType', function icon() {
     return chartElementIcons[this.element.elementType] ?? null;
   }),
+
+  /**
+   * @public
+   * @virtual
+   * @type {ComputedProperty<string | null>}
+   */
+  editorComponentName: computed(
+    'element.elementType',
+    function editorComponentName() {
+      return editorComponents[this.element.elementType] ?? null;
+    }
+  ),
 
   /**
    * @public

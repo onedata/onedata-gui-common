@@ -35,7 +35,11 @@
   <div class="tab-content">
     {{#each tabs as |tabSpec|}}
       {{#tab.pane elementId=tabSpec.id}}
-        {{tabSpec.element.name}} editor
+        {{component
+          (concat "atm-workflow/charts-dashboard-editor/chart-editor/" tabSpec.editorComponentName)
+          chartElement=tabSpec.element
+          actionsFactory=actionsFactory
+        }}
       {{/tab.pane}}
     {{/each}}
   </div>

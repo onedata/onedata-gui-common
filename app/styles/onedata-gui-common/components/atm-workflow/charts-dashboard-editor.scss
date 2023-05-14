@@ -591,6 +591,12 @@
       border-radius: 50%;
       background-color: var(--series-color);
     }
+
+    .element-editor {
+      display: grid;
+      grid-template-rows: 1fr;
+      grid-template-columns: 20em 1fr;
+    }
   }
 
   @media (max-width: $screen-xs-max) {
