@@ -167,6 +167,14 @@ export default Component.extend(I18n, {
       tab.destroy();
       this.set('tabs', this.tabs.filter((t) => t !== tab));
     },
+
+    /**
+     * @param {ElementsEditorTab} tab
+     * @returns {void}
+     */
+    pinTab(tab) {
+      set(tab, 'isTemporary', false);
+    },
   },
 });
 

@@ -37,6 +37,37 @@
     color: $color-one-danger;
   }
 
+  .form-component {
+    .control-label {
+      text-align: left;
+      width: auto;
+      padding: 0;
+      padding-bottom: 0.2em;
+      flex-grow: 1;
+    }
+
+    .toggle-field-renderer {
+      flex-wrap: nowrap;
+      align-items: center;
+
+      .control-label {
+        padding-bottom: 0;
+      }
+
+      .field-component {
+        flex-grow: 0;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1em;
+    }
+
+    .field-renderer:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   .no-dashboard-info  {
     grid-row: 1 / -1;
   }
@@ -312,20 +343,6 @@
       padding: 1em;
       min-height: 0;
 
-      .control-label {
-        text-align: left;
-        width: 100%;
-        padding: 0;
-        padding-bottom: 0.2em;
-      }
-
-      .form-group {
-        margin-bottom: 1em;
-      }
-
-      .field-renderer:last-child {
-        margin-bottom: 0;
-      }
 
       .titleTip-field textarea {
         height: 7em;
@@ -595,7 +612,16 @@
     .element-editor {
       display: grid;
       grid-template-rows: 1fr;
-      grid-template-columns: 20em 1fr;
+      grid-template-columns: 15em 1fr;
+
+      .form-column {
+        padding-right: 0.5em;
+        border-right: 1px solid $main-border-color;
+      }
+
+      .details-column {
+        padding-left: 0.5em;
+      }
     }
   }
 
@@ -615,6 +641,26 @@
       .editor-sidebar {
         border-top: 1px solid $main-border-color;
         border-left: 0;
+      }
+    }
+
+    .chart-editor {
+      .element-editor {
+        display: grid;
+        grid-template-rows: min-content minmax(auto, 15em);
+        grid-template-columns: 1fr;
+
+        .form-column {
+          padding-right: 0;
+          padding-bottom: 0.5em;
+          border-right: 0;
+          border-bottom: 1px solid $main-border-color;
+        }
+
+        .details-column {
+          padding-left: 0;
+          padding-top: 0.5em;
+        }
       }
     }
   }

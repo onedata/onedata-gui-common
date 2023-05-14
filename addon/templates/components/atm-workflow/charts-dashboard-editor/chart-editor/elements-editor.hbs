@@ -39,6 +39,7 @@
           (concat "atm-workflow/charts-dashboard-editor/chart-editor/" tabSpec.editorComponentName)
           chartElement=tabSpec.element
           actionsFactory=actionsFactory
+          onChange=(action "pinTab" tabSpec)
         }}
       {{/tab.pane}}
     {{/each}}

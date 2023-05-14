@@ -12,6 +12,11 @@ import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
 
+/**
+ * @typedef {DashboardElementValidationError} SeriesGroupNameEmptyValidationError
+ * @property {'seriesGroupNameEmpty'} errorId
+ */
+
 const SeriesGroup = ElementBase.extend({
   /**
    * @override
@@ -71,6 +76,20 @@ const SeriesGroup = ElementBase.extend({
    * @override
    */
   referencingPropertyNames: Object.freeze(['parent', 'seriesGroups', 'series']),
+
+  /**
+   * @override
+   */
+  directValidationErrors: computed('name', function directValidationErrors() {
+    if (!this.name) {
+      return [{
+        element: this,
+        errorId: 'seriesGroupNameEmpty',
+      }];
+    } else {
+      return [];
+    }
+  }),
 
   /**
    * @override

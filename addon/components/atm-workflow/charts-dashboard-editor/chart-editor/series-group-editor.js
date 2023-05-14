@@ -16,4 +16,10 @@ export default Component.extend({
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,
+
+  /**
+   * @virtual optional
+   * @type {() => void | null}
+   */
+  onChange: null,
 });
