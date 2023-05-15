@@ -787,7 +787,9 @@ export default Component.extend(I18n, {
 
     const currentRevision = this.atmLambda?.revisionRegistry?.[currentRevisionNumber];
     const newRevision = this.atmLambda?.revisionRegistry?.[newRevisionNumber];
-    const propsToUpdateInCurrentRevision = {};
+    const propsToUpdateInCurrentRevision = {
+      atmLambda: newRevPlainValues.atmLambda,
+    };
 
     const newArgumentMappings = migrateArgResRevision(
       currentRevision?.argumentSpecs ?? [],

@@ -371,6 +371,15 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
       &:last-of-type {
         margin-right: 0;
       }
+      &.tag-item-plaintext {
+        border: none;
+        background-color: transparent;
+        padding-top: $tags-input-tag-vertical-padding + $tags-input-tag-border-size;
+        padding-bottom: $tags-input-tag-vertical-padding + $tags-input-tag-border-size;
+        + .tag-item-plaintext {
+          margin-left: -$padding-xs-horizontal * 0.5;
+        }
+      }
       .tag-label {
         display: inline;
       }
