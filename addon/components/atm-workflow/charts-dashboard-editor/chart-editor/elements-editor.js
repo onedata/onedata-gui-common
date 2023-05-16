@@ -1,10 +1,16 @@
 import Component from '@ember/component';
-import EmberObject, { observer, computed, set } from '@ember/object';
+import EmberObject, { observer, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { guidFor } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { chartElementIcons, ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import {
+  chartElementIcons,
+  ElementType,
+  getUnnamedElementNamePlaceholder,
+  translateValidationErrorsBatch,
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/elements-editor';
 
 const editorComponents = Object.freeze({
@@ -45,6 +51,13 @@ export default Component.extend(I18n, {
    * @type {ElementsEditorTab | null}
    */
   selectedTab: null,
+
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  namePlaceholder: computed(function namePlaceholder() {
+    return getUnnamedElementNamePlaceholder(this.i18n);
+  }),
 
   selectedElementObserver: observer(
     'selectedElement',
@@ -87,13 +100,7 @@ export default Component.extend(I18n, {
       this.tabs.find(({ element }) => element === this.selectedElement);
     if (!tabForSelectedElement) {
       tabForSelectedElement = this.createTabForElement(this.selectedElement);
-      let newTabs = this.tabs;
-      const temporaryTab = this.tabs.find((tab) => tab.isTemporary);
-      if (temporaryTab) {
-        temporaryTab.destroy();
-        newTabs = newTabs.filter((tab) => tab !== temporaryTab);
-      }
-      this.set('tabs', [...newTabs, tabForSelectedElement]);
+      this.set('tabs', [...this.tabs, tabForSelectedElement]);
     }
 
     if (this.selectedTab !== tabForSelectedElement) {
@@ -106,7 +113,10 @@ export default Component.extend(I18n, {
    * @returns {ElementsEditorTab}
    */
   createTabForElement(element) {
-    return ElementsEditorTab.create({ element });
+    return ElementsEditorTab.create({
+      ownerSource: this,
+      element,
+    });
   },
 
   /**
@@ -146,15 +156,6 @@ export default Component.extend(I18n, {
      * @param {ElementsEditorTab} tab
      * @returns {void}
      */
-    openAndPreserveTab(tab) {
-      this.openTab(tab);
-      set(tab, 'isTemporary', false);
-    },
-
-    /**
-     * @param {ElementsEditorTab} tab
-     * @returns {void}
-     */
     closeTab(tab) {
       if (this.selectedTab === tab) {
         const nextSelectedTabCandidate = this.findNextSelectedTabCandidate();
@@ -167,31 +168,18 @@ export default Component.extend(I18n, {
       tab.destroy();
       this.set('tabs', this.tabs.filter((t) => t !== tab));
     },
-
-    /**
-     * @param {ElementsEditorTab} tab
-     * @returns {void}
-     */
-    pinTab(tab) {
-      set(tab, 'isTemporary', false);
-    },
   },
 });
 
-const ElementsEditorTab = EmberObject.extend({
+const ElementsEditorTab = EmberObject.extend(OwnerInjector, {
+  i18n: service(),
+
   /**
    * @public
    * @virtual
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ChartElement}
    */
   element: undefined,
-
-  /**
-   * @public
-   * @virtual
-   * @type {boolean}
-   */
-  isTemporary: true,
 
   /**
    * @type {ComputedProperty<string>}
@@ -208,6 +196,19 @@ const ElementsEditorTab = EmberObject.extend({
   icon: computed('element.elementType', function icon() {
     return chartElementIcons[this.element.elementType] ?? null;
   }),
+
+  /**
+   * @type {ComputedProperty<SafeString | null>}
+   */
+  validationErrorsMessage: computed(
+    'element.validationErrors',
+    function validationErrorsMessage() {
+      return translateValidationErrorsBatch(
+        this.i18n,
+        this.element.validationErrors,
+      );
+    }
+  ),
 
   /**
    * @public

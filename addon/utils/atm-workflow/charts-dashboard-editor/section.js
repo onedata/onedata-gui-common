@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import { computed, set } from '@ember/object';
 import _ from 'lodash';
 import ElementBase from './element-base';
 import { ElementType } from './common';
@@ -127,7 +127,7 @@ const Section = ElementBase.extend({
    * @override
    */
   clone() {
-    return Section.create({
+    const clonedInstance = Section.create({
       elementOwner: this.elementOwner,
       isRoot: this.isRoot,
       title: this.title,
@@ -137,17 +137,20 @@ const Section = ElementBase.extend({
       sections: this.sections.map((section) => section.clone()),
       parent: this.parent,
     });
+    [...clonedInstance.sections, ...clonedInstance.charts].forEach((element) => {
+      set(element, 'parent', clonedInstance);
+    });
+    return clonedInstance;
   },
 
   /**
    * @override
    */
   * getNestedElements() {
-    for (const section of this.sections) {
-      yield section;
-      yield* section.getNestedElements();
+    for (const element of [...this.sections, ...this.charts]) {
+      yield element;
+      yield* element.getNestedElements();
     }
-    yield* this.charts;
   },
 
   /**

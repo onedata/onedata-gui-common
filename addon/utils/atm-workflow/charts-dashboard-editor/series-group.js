@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import { computed, set } from '@ember/object';
 import _ from 'lodash';
 import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
@@ -144,7 +144,7 @@ const SeriesGroup = ElementBase.extend({
    * @override
    */
   clone() {
-    return SeriesGroup.create({
+    const clonedInstance = SeriesGroup.create({
       elementOwner: this.elementOwner,
       id: generateId(),
       name: this.name,
@@ -154,6 +154,10 @@ const SeriesGroup = ElementBase.extend({
       series: [],
       parent: this.parent,
     });
+    clonedInstance.seriesGroups.forEach((element) => {
+      set(element, 'parent', clonedInstance);
+    });
+    return clonedInstance;
   },
 
   /**

@@ -6,7 +6,6 @@
  * - `unitName` - must be of type UnitName.
  * - `unitOptions` - must be of type (depending on used `unitName`):
  *     - BytesUnitOptions,
- *     - BitsUnitFormat,
  *     - CustomUnitOptions.
  *
  * The function will return stringified number in a format appropriate for a choosen unit.
@@ -26,7 +25,7 @@ import _ from 'lodash';
  * @typedef {Object} OTSCFormatValueWithUnitFunctionArguments
  * @property {number} value
  * @property {UnitName|undefined|null} unitName
- * @property {BytesUnitOptions|BitsUnitFormat|CustomUnitOptions|undefined|null} unitOptions
+ * @property {BytesUnitOptions|CustomUnitOptions|undefined|null} unitOptions
  */
 
 /**
@@ -36,10 +35,6 @@ import _ from 'lodash';
 /**
  * @typedef {Object} BytesUnitOptions
  * @property {'si'|'iec'} format
- */
-
-/**
- * @typedef {BytesUnitOptions} BitsUnitOptions
  */
 
 /**

@@ -12,7 +12,7 @@ import generateId from 'onedata-gui-common/utils/generate-id';
 import Model from './model';
 import Section from './section';
 import Chart from './chart';
-import Axis from './axis';
+import Axis, { getUnitOptionsTypeForUnitName } from './axis';
 import SeriesGroup from './series-group';
 import Series from './series';
 import { ElementType } from './common';
@@ -209,13 +209,25 @@ function createChartModelFromSpec(chartSpec, elementOwner = null) {
  * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Axis}
  */
 function createAxisModelFromSpec(axisSpec, elementOwner = null) {
+  const unitOptionsType = getUnitOptionsTypeForUnitName(axisSpec.unitName);
+  let unitOptions = null;
+  if (unitOptionsType === 'BytesUnitOptions') {
+    unitOptions = EmberObject.create({
+      format: axisSpec.unitOptions?.format ?? 'iec',
+    });
+  } else if (unitOptionsType === 'CustomUnitOptions') {
+    unitOptions = EmberObject.create({
+      customName: axisSpec.unitOptions?.customName ?? '',
+      useMetricSuffix: axisSpec.unitOptions?.useMetricSuffix ?? false,
+    });
+  }
+
   const axis = Axis.create({
     elementOwner,
     id: axisSpec.id,
     name: axisSpec.name,
     unitName: axisSpec.unitName ?? 'none',
-    unitOptions: axisSpec.unitOptions ?
-      EmberObject.create(axisSpec.unitOptions) : null,
+    unitOptions,
     minInterval: axisSpec.minInterval ?? null,
   });
   return axis;

@@ -1574,7 +1574,7 @@ function getElementsListItemDetails(element, customPropsGetter) {
     id: element.dataset.elementId,
     element,
     headerElement: element.querySelector('.list-item-header'),
-    name: element.querySelector('.name').innerText,
+    name: element.querySelector('.name').innerText.trim(),
     addTrigger: element.querySelector('.add-action'),
     duplicateTrigger: element.querySelector('.duplicate-action'),
     removeTrigger: element.querySelector('.remove-action'),

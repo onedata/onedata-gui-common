@@ -1,4 +1,11 @@
-{{one-icon icon=icon}} <span class="name">{{item.name}}</span>
+{{one-icon icon=icon}}
+<span class="name">
+  {{#if item.name}}
+    {{item.name}}
+  {{else}}
+    <em>{{namePlaceholder}}</em>
+  {{/if}}
+</span>
 <span class="additional-info">
   {{#if item.stacked}}
     {{tt this "stack"}} |

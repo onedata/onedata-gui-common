@@ -16,7 +16,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
       expect(find('.series-group-editor-form')).to.exist;
     });
 
-    it('has two fields - "name" and "stack series" and "show series sum"', async function () {
+    it('has three fields - "name", "stack series" and "show series sum"', async function () {
       await renderComponent();
 
       const fields = findAll('.field-renderer:not(.form-fields-group-renderer)');
@@ -81,6 +81,5 @@ function createSeriesGroup(testCase, props = {}) {
 async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/chart-editor/series-group-editor-form
     seriesGroup=seriesGroup
-    actionsFactory=actionsFactory
   }}`);
 }

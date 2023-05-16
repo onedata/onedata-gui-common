@@ -114,6 +114,14 @@ export const chartElementIcons = Object.freeze({
 });
 
 /**
+ * @param {Ember.Service} i18n
+ * @returns {SafeString}
+ */
+export function getUnnamedElementNamePlaceholder(i18n) {
+  return i18n.t(`${i18nPrefix}.namePlaceholder`);
+}
+
+/**
  * @typedef {Object} ViewState
  * @property {SectionElement | null} selectedSectionElement
  * @property {boolean} isChartEditorActive

@@ -32,13 +32,6 @@ export default Component.extend(I18n, {
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,
-
-  /**
-   * @virtual optional
-   * @type {() => void | null}
-   */
-  onChange: null,
-
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
@@ -57,6 +50,8 @@ export default Component.extend(I18n, {
           set(this.form.valuesSource, fieldName, newValue);
         }
       });
+
+      this.form.invalidFields.forEach((field) => field.markAsModified());
     }
   ),
 
@@ -94,7 +89,6 @@ export default Component.extend(I18n, {
       changeType,
     });
     action.execute();
-    this.onChange?.();
   },
 
   /**
@@ -117,6 +111,7 @@ const NameField = TextField.extend({
  */
 const StackedField = ToggleField.extend({
   name: 'stacked',
+  defaultValue: false,
 });
 
 /**
@@ -124,6 +119,7 @@ const StackedField = ToggleField.extend({
  */
 const ShowSumField = ToggleField.extend({
   name: 'showSum',
+  defaultValue: false,
 });
 
 const Form = FormFieldsRootGroup.extend({

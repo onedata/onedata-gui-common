@@ -14,14 +14,21 @@
             class={{concat-classes
               "nav-link"
               (if (not-eq selectedTab tabSpec) "clickable")
-              (if tabSpec.isTemporary "temporary")
             }}
             role="tab"
             onclick={{action "openTab" tabSpec}}
-            ondblclick={{action "openAndPreserveTab" tabSpec}}
           >
             {{one-icon icon=tabSpec.icon}}
-            {{#truncated-string}}{{tabSpec.element.name}}{{/truncated-string}}
+            {{#truncated-string}}
+              {{#if tabSpec.element.name}}
+                {{tabSpec.element.name}}
+              {{else}}
+                <em>{{namePlaceholder}}</em>
+              {{/if}}
+            {{/truncated-string}}
+            {{#if tabSpec.validationErrorsMessage}}
+              {{warning-icon tooltipText=tabSpec.validationErrorsMessage}}
+            {{/if}}
             {{one-icon
               icon="close"
               click=(action "closeTab" tabSpec)
@@ -39,7 +46,6 @@
           (concat "atm-workflow/charts-dashboard-editor/chart-editor/" tabSpec.editorComponentName)
           chartElement=tabSpec.element
           actionsFactory=actionsFactory
-          onChange=(action "pinTab" tabSpec)
         }}
       {{/tab.pane}}
     {{/each}}
