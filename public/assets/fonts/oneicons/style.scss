@@ -742,6 +742,11 @@
     content: $oneicon-qos;
   }
 }
+.oneicon-redo {
+  &:before {
+    content: $oneicon-redo;
+  }
+}
 .oneicon-refresh {
   &:before {
     content: $oneicon-refresh;
@@ -1060,6 +1065,11 @@
 .oneicon-transfers {
   &:before {
     content: $oneicon-transfers;
+  }
+}
+.oneicon-undo {
+  &:before {
+    content: $oneicon-undo;
   }
 }
 .oneicon-unit {
