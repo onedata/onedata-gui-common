@@ -15,7 +15,7 @@
 
 import Mixin from '@ember/object/mixin';
 import { isPresent } from '@ember/utils';
-import PerfectScrollbar from 'perfect-scrollbar';
+import PerfectScrollbar from 'onedata-gui-common/utils/perfect-scrollbar';
 import { computed } from '@ember/object';
 
 export default Mixin.create({

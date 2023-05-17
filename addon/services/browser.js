@@ -36,14 +36,18 @@ export default Service.extend({
    * @type {ComputedProperty<BrowserName>}
    */
   browserName: computed(function browserName() {
-    const userAgentLowerCase = (globals.navigator.userAgent || '').toLowerCase();
-
-    for (const { matcher, browserName: name } of userAgentBrowserNameMatchers) {
-      if (userAgentLowerCase.includes(matcher)) {
-        return name;
-      }
-    }
-
-    return 'other';
+    return getBrowserName();
   }),
 });
+
+export function getBrowserName() {
+  const userAgentLowerCase = (globals.navigator.userAgent || '').toLowerCase();
+
+  for (const { matcher, browserName: name } of userAgentBrowserNameMatchers) {
+    if (userAgentLowerCase.includes(matcher)) {
+      return name;
+    }
+  }
+
+  return 'other';
+}
