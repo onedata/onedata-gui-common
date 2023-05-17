@@ -1,5 +1,6 @@
 export default {
   validationErrors: {
+    seriesNameEmpty: 'Series has no name.',
     seriesAxisNotAssigned: 'Series "{{element.name}}" has no axis assigned.',
     seriesGroupNameEmpty: 'Series group has no name.',
     axisNameEmpty: 'Axis has no name.',

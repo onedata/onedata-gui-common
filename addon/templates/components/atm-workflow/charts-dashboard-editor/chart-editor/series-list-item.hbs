@@ -1,4 +1,11 @@
-{{one-icon icon=icon}} <span class="name">{{item.name}}</span>
+{{one-icon icon=icon}}
+<span class="name">
+  {{#if name}}
+    {{name}}
+  {{else}}
+    <em>{{namePlaceholder}}</em>
+  {{/if}}
+</span>
 <span class="additional-info">
   {{#if colorStyle}}
     <span class="color-mark" style={{colorStyle}}></span>

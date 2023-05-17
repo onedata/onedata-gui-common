@@ -18,6 +18,8 @@ import {
   getUnnamedElementNamePlaceholder,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 
+// TODO: VFS-10649 Handle dynamic series names
+
 const noneGroup = Object.freeze({});
 
 export default Component.extend(I18n, {

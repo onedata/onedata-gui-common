@@ -19,6 +19,11 @@ import { ElementType } from './common';
  */
 
 /**
+ * @typedef {DashboardElementValidationError} SeriesNameEmptyValidationError
+ * @property {'seriesNameEmpty'} errorId
+ */
+
+/**
  * @typedef {DashboardElementValidationError} SeriesAxisNotAssignedValidationError
  * @property {'seriesAxisNotAssigned'} errorId
  */
@@ -99,16 +104,27 @@ const Series = ElementBase.extend({
   /**
    * @override
    */
-  directValidationErrors: computed('axis', function directValidationErrors() {
-    if (!this.axis) {
-      return [{
-        element: this,
-        errorId: 'seriesAxisNotAssigned',
-      }];
-    } else {
-      return [];
+  directValidationErrors: computed(
+    'repeatPerPrefixedTimeSeries',
+    'name',
+    'axis',
+    function directValidationErrors() {
+      const errors = [];
+      if (!this.repeatPerPrefixedTimeSeries && !this.name) {
+        errors.push({
+          element: this,
+          errorId: 'seriesNameEmpty',
+        });
+      }
+      if (!this.axis) {
+        errors.push({
+          element: this,
+          errorId: 'seriesAxisNotAssigned',
+        });
+      }
+      return errors;
     }
-  }),
+  ),
 
   /**
    * @override
