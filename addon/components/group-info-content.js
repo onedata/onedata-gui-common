@@ -32,6 +32,12 @@ export default Component.extend(I18n, {
   record: undefined,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  showDetails: true,
+
+  /**
    * Promise proxy used to load group members
    * @type {Ember.ComputedProperty<PromiseArray>}
    */

@@ -22,64 +22,68 @@
           }}
         </td>
       </tr>
-      <tr class="row-with-text">
-        <td class="property-name">{{tt this "type"}}</td>
-        <td class="property-value">
-          {{record-icon record=record useSubtypeIcon=true}}
-          <span class="capitalized-text record-name">{{groupType}}</span>
-        </td>
-      </tr>
-      <tr class="row-with-text">
-        <td class="property-name">{{tt this "userMembers"}}</td>
-        <td class="property-value">
-          {{#promise-proxy-container
-            proxy=userMembersLoadingProxy
-            sizeClass="xs"
-            centered=false
-          }}
-            {{#if (eq record.effUserList.content null)}}
-              —
-            {{else}}
-              <span class="effective-members-number">
-                {{record.effUserList.length}}
-              </span>
-              <span class="direct-members-number">
-                ({{tt this "ofWhichDirect" directCount=record.userList.length}})
-              </span>
-            {{/if}}
-          {{/promise-proxy-container}}
-        </td>
-      </tr>
-      <tr class="row-with-text">
-        <td class="property-name">{{tt this "groupMembers"}}</td>
-        <td class="property-value">
-          {{#promise-proxy-container
-            proxy=groupMembersLoadingProxy
-            sizeClass="xs"
-            centered=false
-          }}
-            {{#if (eq record.effGroupList.content null)}}
-              —
-            {{else}}
-              <span class="effective-members-number">
-                {{record.effGroupList.content.length}}
-              </span>
-              <span class="direct-members-number">
-                ({{tt this "ofWhichDirect" directCount=record.groupList.content.length}})
-              </span>
-            {{/if}}
-          {{/promise-proxy-container}}
-        </td>
-      </tr>
+      {{#if showDetails}}
+        <tr class="row-with-text">
+          <td class="property-name">{{tt this "type"}}</td>
+          <td class="property-value">
+            {{record-icon record=record useSubtypeIcon=true}}
+            <span class="capitalized-text record-name">{{groupType}}</span>
+          </td>
+        </tr>
+        <tr class="row-with-text">
+          <td class="property-name">{{tt this "userMembers"}}</td>
+          <td class="property-value">
+            {{#promise-proxy-container
+              proxy=userMembersLoadingProxy
+              sizeClass="xs"
+              centered=false
+            }}
+              {{#if (eq record.effUserList.content null)}}
+                —
+              {{else}}
+                <span class="effective-members-number">
+                  {{record.effUserList.length}}
+                </span>
+                <span class="direct-members-number">
+                  ({{tt this "ofWhichDirect" directCount=record.userList.length}})
+                </span>
+              {{/if}}
+            {{/promise-proxy-container}}
+          </td>
+        </tr>
+        <tr class="row-with-text">
+          <td class="property-name">{{tt this "groupMembers"}}</td>
+          <td class="property-value">
+            {{#promise-proxy-container
+              proxy=groupMembersLoadingProxy
+              sizeClass="xs"
+              centered=false
+            }}
+              {{#if (eq record.effGroupList.content null)}}
+                —
+              {{else}}
+                <span class="effective-members-number">
+                  {{record.effGroupList.content.length}}
+                </span>
+                <span class="direct-members-number">
+                  ({{tt this "ofWhichDirect" directCount=record.groupList.content.length}})
+                </span>
+              {{/if}}
+            {{/promise-proxy-container}}
+          </td>
+        </tr>
+      {{/if}}
     </tbody>
   </table>
-  <div class="links-container">
-    <a
-      href={{linkToGroup}}
-      class="info-link clickable"
-    >
-      <span>{{tt this "openGroup"}}</span>
-      {{one-icon icon="link-external"}}
-    </a>
-  </div>
+  {{#if showDetails}}
+    <div class="links-container">
+      <a
+        href={{linkToGroup}}
+        class="info-link clickable"
+      >
+        <span>{{tt this "openGroup"}}</span>
+        {{one-icon icon="link-external"}}
+      </a>
+    </div>
+  {{/if}}
 {{/if}}
