@@ -13,6 +13,7 @@ import LoadingField from 'onedata-gui-common/utils/form-component/loading-field'
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import StaticUserField from 'onedata-gui-common/utils/form-component/static-user-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
+import ColorField from 'onedata-gui-common/utils/form-component/color-field';
 import CustomValueDropdownField from 'onedata-gui-common/utils/form-component/custom-value-dropdown-field';
 import {
   Tag as RecordTag,
@@ -49,6 +50,7 @@ export default Component.extend({
   //#endregion
 
   valuesSource: computed(() => ({
+    color: '#000000',
     customValueDropdown: 'hello@world.com',
   })),
 
@@ -71,6 +73,7 @@ export default Component.extend({
         fields: [
           this.nameField,
           this.surnameField,
+          this.colorField,
           this.dropdownField,
           this.customValueDropdownField,
           this.radioField,
@@ -99,6 +102,14 @@ export default Component.extend({
       ownerSource: this,
       name: 'surname',
       label: 'Surname',
+    });
+  }),
+
+  colorField: computed(function colorField() {
+    return ColorField.create({
+      ownerSource: this,
+      name: 'color',
+      label: 'Color',
     });
   }),
 

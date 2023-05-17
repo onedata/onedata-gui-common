@@ -32,6 +32,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart}
+   */
+  chart: undefined,
+
+  /**
+   * @virtual
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ChartElement | null}
    */
   selectedElement: null,

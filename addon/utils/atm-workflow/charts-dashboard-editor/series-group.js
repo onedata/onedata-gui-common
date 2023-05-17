@@ -104,6 +104,20 @@ const SeriesGroup = ElementBase.extend({
   ),
 
   /**
+   * @type {ComputedProperty<Array<Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup>>}
+   */
+  deepSeriesGroups: computed(
+    'seriesGroups.@each.deepSeriesGroups',
+    function deepSeriesGroups() {
+      const groups = [];
+      this.seriesGroups.forEach((group) => {
+        groups.push(group, ...group.deepSeriesGroups);
+      });
+      return groups;
+    }
+  ),
+
+  /**
    * @override
    */
   init() {

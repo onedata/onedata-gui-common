@@ -13,6 +13,12 @@ export default Component.extend({
 
   /**
    * @virtual
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart}
+   */
+  chart: undefined,
+
+  /**
+   * @virtual
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,

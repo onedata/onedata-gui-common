@@ -42,6 +42,7 @@ $form-component-view-margin: $padding-base-vertical;
   .static-text-field-renderer,
   .radio-field-renderer,
   .toggle-field-renderer,
+  // .color-field-renderer,
   .loading-field-renderer,
   .static-user-field-renderer,
   .no-label-top-padding {
@@ -70,6 +71,20 @@ $form-component-view-margin: $padding-base-vertical;
 
     .field-component {
       flex-shrink: 0;
+    }
+  }
+
+  .color-field-renderer {
+    align-items: center;
+
+    .form-control {
+      padding: 0.3em;
+      width: 4em;
+    }
+
+    .control-label {
+      padding-top: 0;
+      margin: 0;
     }
   }
 
@@ -232,7 +247,8 @@ $form-component-view-margin: $padding-base-vertical;
       width: 100%;
     }
 
-    .toggle-field-renderer {
+    .toggle-field-renderer,
+    .color-field-renderer {
       flex-wrap: nowrap;
 
       .control-label {
