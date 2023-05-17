@@ -1,4 +1,5 @@
 .one-icon-tagged {
+  $default-one-icon-tagged-icon-scale: 0.5;
   position: relative;
   line-height: 1;
   .one-icon-tag {
@@ -10,9 +11,9 @@
   .one-icon-tag-icon {
     // important is used to force use relative size to main icon
     // thus ignore one-icon sizes defined contextually
-    font-size: 50% !important;
-    bottom: 0px;
-    left: 0px;
+    font-size: calc(var(--one-icon-tagged-icon-scale, $default-one-icon-tagged-icon-scale) * 100%) !important;
+    bottom: calc(($default-one-icon-tagged-icon-scale - var(--one-icon-tagged-icon-scale, $default-one-icon-tagged-icon-scale)) * 1em);
+    left: calc(($default-one-icon-tagged-icon-scale - var(--one-icon-tagged-icon-scale, $default-one-icon-tagged-icon-scale)) * 1em);
     right: auto;
   }
   &.tag-right {
@@ -20,7 +21,7 @@
     .one-icon-tag-shadow,
     .one-icon-tag-circle {
       left: auto;
-      right: 0;
+      right: calc(($default-one-icon-tagged-icon-scale - var(--one-icon-tagged-icon-scale, $default-one-icon-tagged-icon-scale)) * 1em);
     }
 
     .one-icon-tag-shadow {
@@ -36,12 +37,12 @@
   }
   .one-icon-tag-circle {
     position: absolute;
-    width: 0.5em;
-    height: 0.5em;
+    width: calc(var(--one-icon-tagged-icon-scale, $default-one-icon-tagged-icon-scale) * 1em);
+    height: calc(var(--one-icon-tagged-icon-scale, $default-one-icon-tagged-icon-scale) * 1em);
     border-radius: 50%;
     border-width: 0;
-    bottom: 0;
-    left: 0;
+    bottom: calc(($default-one-icon-tagged-icon-scale - var(--one-icon-tagged-icon-scale, $default-one-icon-tagged-icon-scale)) * 1em);
+    left: calc(($default-one-icon-tagged-icon-scale - var(--one-icon-tagged-icon-scale, $default-one-icon-tagged-icon-scale)) * 1em);
     background-color: $color-one-white;
   }
 
