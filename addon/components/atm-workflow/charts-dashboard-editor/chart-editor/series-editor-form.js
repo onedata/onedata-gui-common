@@ -144,7 +144,7 @@ export default Component.extend(I18n, {
    * @returns {void}
    */
   onEditionInterrupted() {
-    this.actionsFactory.interruptActiveChangeElementPropertyAction();
+    this.actionsFactory?.interruptActiveChangeElementPropertyAction();
   },
 });
 
@@ -189,10 +189,10 @@ const CustomColorField = ColorField.extend({
 const AxisField = DropdownField.extend({
   name: 'axis',
   options: computed('parent.chart.axes.@each.name', function options() {
-    return this.parent.chart.axes.map((axis) => ({
+    return this.parent.chart?.axes.map((axis) => ({
       value: axis,
       label: normalizeName(this.i18n, axis.name),
-    }));
+    })) ?? [];
   }),
 });
 
@@ -202,7 +202,7 @@ const AxisField = DropdownField.extend({
 const GroupField = DropdownField.extend({
   name: 'group',
   options: computed('parent.chart.deepSeriesGroups.@each.name', function options() {
-    const groupOptions = this.parent.chart.deepSeriesGroups.map((group) => {
+    const groupOptions = this.parent.chart?.deepSeriesGroups.map((group) => {
       const parentGroups = [];
       let parent = group.parent;
       while (parent.elementType === ElementType.SeriesGroup) {
@@ -223,7 +223,7 @@ const GroupField = DropdownField.extend({
         value: group,
         label: htmlSafe(`${_.escape(group.name)}${pathTranslation}`),
       };
-    });
+    }) ?? [];
 
     return [{
       value: noneGroup,
