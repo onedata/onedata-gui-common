@@ -15,7 +15,7 @@ export default class PerfectScrollbar extends OriginalPerfectScrollbar {
   constructor(element, userSettings = {}) {
     const effUserSettings = { ...userSettings };
     // There is a bug (or conscious implementation) on Safari (v16) that causes
-    // scrollWidth or srcollHeight to be rounded in an unexpected way for original
+    // scrollWidth or scrollHeight to be rounded in an unexpected way for original
     // perfect-scrollbar implementation when the browser window has zoom greater
     // than 100%. Invalid size rounding causes scrollbar to appear (container is
     // considered as 1px smaller than content). Adding 1px to tolerate difference between
