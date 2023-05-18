@@ -46,7 +46,7 @@ export default OneDraggableObject.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,
 
@@ -112,11 +112,11 @@ export default OneDraggableObject.extend(I18n, {
     }
 
     let section = this.section;
-    while (section.parentSection) {
-      if (section.parentSection === this.draggedSection) {
+    while (section.parent) {
+      if (section.parent === this.draggedSection) {
         return true;
       }
-      section = section.parentSection;
+      section = section.parent;
     }
     return false;
   }),
@@ -168,7 +168,7 @@ export default OneDraggableObject.extend(I18n, {
     addChart() {
       const action = this.actionsFactory.createAddElementAction({
         newElementType: ElementType.Chart,
-        targetSection: this.section,
+        targetElement: this.section,
       });
       action.execute();
     },
@@ -179,7 +179,7 @@ export default OneDraggableObject.extend(I18n, {
     addSubsection() {
       const action = this.actionsFactory.createAddElementAction({
         newElementType: ElementType.Section,
-        targetSection: this.section,
+        targetElement: this.section,
       });
       action.execute();
     },
@@ -193,7 +193,7 @@ export default OneDraggableObject.extend(I18n, {
       const action = this.actionsFactory.createMoveElementAction({
         movedElement: draggedElement,
         newParent: placement === 'inside' ?
-          this.section : this.section.parentSection,
+          this.section : this.section.parent,
         newPosition: placement === 'inside' ? null : {
           placement,
           referenceElement: this.section,

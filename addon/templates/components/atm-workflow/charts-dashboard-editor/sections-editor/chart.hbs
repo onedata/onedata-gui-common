@@ -13,7 +13,9 @@
 
 {{#if chart.title}}
   <div class="title-area">
-    <span class="title-content">{{chart.title}}</span>
+    {{#truncated-string tagName="span" class="title-content"}}
+      {{chart.title}}
+    {{/truncated-string}}
     {{#if chart.titleTip}}
       <span class="space"></span>
       {{one-label-tip class="title-tip" title=chart.titleTip}}
@@ -25,6 +27,10 @@
   model=chart
   actionsFactory=actionsFactory
 }}
+
+{{#if validationErrorsMessage}}
+  {{warning-icon tooltipText=validationErrorsMessage}}
+{{/if}}
 
 {{#if (and draggedChart (not isMeDragged))}}
   {{one-draggable-object-target

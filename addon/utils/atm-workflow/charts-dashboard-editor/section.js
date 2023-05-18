@@ -6,23 +6,16 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import { computed } from '@ember/object';
+import _ from 'lodash';
+import ElementBase from './element-base';
 import { ElementType } from './common';
 
-const Section = EmberObject.extend({
+const Section = ElementBase.extend({
   /**
-   * @public
-   * @readonly
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType.Section}
+   * @override
    */
   elementType: ElementType.Section,
-
-  /**
-   * @public
-   * @readonly
-   * @type {unknown}
-   */
-  elementOwner: null,
 
   /**
    * If this is `true` then this section is a root (top) section. There is only
@@ -74,19 +67,39 @@ const Section = EmberObject.extend({
    * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
    */
-  parentSection: null,
+  parent: null,
+
+  /**
+   * @override
+   */
+  referencingPropertyNames: Object.freeze(['charts', 'sections', 'parent']),
+
+  /**
+   * @override
+   */
+  nestedValidationErrors: computed(
+    'sections.@each.validationErrors',
+    'charts.@each.validationErrors',
+    function nestedValidationErrors() {
+      return _.flatten(
+        [...this.sections, ...this.charts]
+        .map(({ validationErrors }) => validationErrors)
+      );
+    }
+  ),
 
   /**
    * @override
    */
   init() {
-    this._super(...arguments);
     if (!this.charts) {
       this.set('charts', []);
     }
     if (!this.sections) {
       this.set('sections', []);
     }
+
+    this._super(...arguments);
   },
 
   /**
@@ -94,9 +107,6 @@ const Section = EmberObject.extend({
    */
   willDestroy() {
     try {
-      if (this.elementOwner) {
-        this.set('elementOwner', null);
-      }
       if (this.charts.length) {
         this.charts.forEach((chart) => chart.destroy());
         this.set('charts', []);
@@ -105,8 +115,8 @@ const Section = EmberObject.extend({
         this.sections.forEach((section) => section.destroy());
         this.set('sections', []);
       }
-      if (this.parentSection) {
-        this.set('parentSection', null);
+      if (this.parent) {
+        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);
@@ -114,8 +124,7 @@ const Section = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Section}
+   * @override
    */
   clone() {
     return Section.create({
@@ -126,20 +135,28 @@ const Section = EmberObject.extend({
       description: this.description,
       charts: this.charts.map((chart) => chart.clone()),
       sections: this.sections.map((section) => section.clone()),
-      parentSection: this.parentSection,
+      parent: this.parent,
     });
   },
 
   /**
-   * @public
-   * @returns {Generator<Utils.AtmWorkflow.ChartsDashboardEditor.Section | Utils.AtmWorkflow.ChartsDashboardEditor.Chart>}
+   * @override
    */
-  * getNestedElements() {
+  * nestedElements() {
     for (const section of this.sections) {
       yield section;
-      yield* section.getNestedElements();
+      yield* section.nestedElements();
     }
     yield* this.charts;
+  },
+
+  /**
+   * @override
+   */
+  * referencingElements() {
+    if (this.parent) {
+      yield this.parent;
+    }
   },
 });
 

@@ -26,13 +26,14 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.sectionsEditor.floatingToolbar',
 
   /**
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section}
+   * @virtual
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement}
    */
   model: undefined,
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionsEditorActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,
 

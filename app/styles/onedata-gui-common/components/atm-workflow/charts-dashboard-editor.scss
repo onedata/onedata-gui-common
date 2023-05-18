@@ -1,7 +1,10 @@
 .charts-dashboard-editor {
   display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content 1fr;
   min-height: 0;
-  border: 1px solid $main-border-color;
+  min-width: 0;
+  border: $main-border;
   border-radius: $border-radius-base;
   background-color: $color-one-white;
 
@@ -24,25 +27,50 @@
     }
   }
 
+  .action {
+    &:hover {
+      color: $color-one-azure;
+    }
+  }
+
+  .remove-action:hover {
+    color: $color-one-danger;
+  }
+
+  .no-dashboard-info  {
+    grid-row: 1 / -1;
+  }
+
+  .editor-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.3em;
+    min-width: 0;
+    gap: 0.3em;
+    align-items: center;
+    border-bottom: $main-border;
+
+    .view-title {
+      @include font-semibold();
+      text-transform: uppercase;
+      text-align: center;
+      flex-grow: 1;
+      min-width: 0;
+      padding: 0 1em;
+    }
+  }
+
   .sections-editor {
     $section-padding: 1em;
     $edge-drag-target-trigger-size: 2 * $section-padding;
     $edge-drag-target-trigger-offset: $section-padding;
     $edge-drag-target-box-size: 0.5 * $section-padding;
     $edge-drag-target-box-offset: 0.25 * $section-padding;
+    grid-row: 2;
+    grid-column: 1;
     display: grid;
     min-height: 0;
     grid-template-columns: 1fr 20em;
-    grid-template-rows: min-content 1fr;
-
-    .editor-toolbar {
-      grid-column: 1 / -1;
-      display: flex;
-      justify-content: flex-end;
-      padding: 0.3em;
-      gap: 0.3em;
-      border-bottom: 1px solid $main-border-color;
-    }
 
     .dashboard-visualiser {
       padding: 3em;
@@ -106,6 +134,14 @@
         &.accepts-drag::before {
           right: $edge-drag-target-box-offset;
         }
+      }
+
+      .warning-icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+        transform: translateX(50%) translateY(-50%);
+        font-size: 150%;
       }
     }
 
@@ -218,7 +254,7 @@
       transform: translateY(-50%);
       margin: 0;
       display: flex;
-      border: 1px solid $main-border-color;
+      border: $main-border;
       border-radius: $border-radius-base;
       background-color: $color-one-white;
       opacity: 0;
@@ -231,17 +267,9 @@
         line-height: 1;
         font-size: 130%;
 
-        &:hover {
-          color: $color-one-azure;
-        }
-
         & + .action {
-          border-left: 1px solid $main-border-color;
+          border-left: $main-border;
         }
-      }
-
-      .remove-action:hover {
-        color: $color-one-danger;
       }
     }
 
@@ -277,9 +305,21 @@
     }
 
     .editor-sidebar {
-      border-left: 1px solid $main-border-color;
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      border-left: $main-border;
       padding: 1em;
       min-height: 0;
+
+      > :first-child {
+        margin-bottom: auto;
+      }
+
+      .no-selection-info {
+        margin-top: auto;
+        text-align: center;
+      }
 
       .control-label {
         text-align: left;
@@ -303,6 +343,18 @@
       .description-field textarea {
         height: 10em;
       }
+
+      .global-validation-error {
+        display: grid;
+        grid-template-columns: min-content 1fr;
+        gap: 1em;
+        padding-top: 1em;
+        border-top: $main-border;
+
+        .warning-icon {
+          font-size: 160%;
+        }
+      }
     }
 
     .section-details-editor,
@@ -311,19 +363,238 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 1em;
+
+      .form-component {
+        width: 100%;
+      }
+    }
+  }
+
+  .chart-editor {
+    grid-row: 2;
+    grid-column: 1;
+    // assigning dummy z-index as it allows to render chart-editor
+    // above sections-editor
+    z-index: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    background-color: $color-one-white;
+
+    .chart-editor-elements {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: min-content 1fr;
+      border-right: $main-border;
+      border-bottom: $main-border;
+      padding: 0.5em;
+      background-color: $block-background-color;
+
+      h2 {
+        @include font-semibold();
+        font-size: 1em;
+        text-transform: uppercase;
+        margin: 0 0 0.5em 0;
+      }
     }
 
-    @media (max-width: $screen-xs-max) {
+    .bs-tab-onedata {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: min-content 1fr;
+
+      .nav-link {
+        @include font-semibold();
+        font-size: 90%;
+        padding: 0.5em 1em;
+        color: $main-text-color;
+        border-top-width: 3px;
+
+        .one-icon {
+          font-size: 1.5em;
+          line-height: 0;
+          vertical-align: -0.25em;
+          margin-right: 0.25em;
+        }
+      }
+
+      .active > .nav-link {
+        border-top-color: $color-one-default;
+      }
+
+      .tab-content {
+        min-height: 0;
+        display: grid;
+        padding: 1em;
+        padding-bottom: 0;
+        border: $main-border;
+        border-top: 0;
+
+        .tab-pane.active {
+          min-height: 0;
+          display: grid;
+        }
+      }
+    }
+
+    .chart-elements-list-container {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: min-content 1fr;
+      gap: 1em;
+    }
+
+    .elements-list {
+      position: relative;
+      min-height: 0;
+      border-top: $main-border;
+      padding-bottom: 1em;
+
+      > .ps__rail-y {
+        // .elements-list has 1px border-top. It causes infinite scroll-down
+        // possibility as perfectscrollbar rail doesn't take into account
+        // that 1px during size measurement. We have to fake that there is
+        // no border - hence -1px on Y axis.
+        transform: translateY(-1px);
+      }
+
+      .list-items {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+      }
+    }
+
+    .elements-list-item {
+      .list-item-header {
+        display: flex;
+        padding: 0.5em 0.75em;
+        white-space: nowrap;
+        border-bottom: $main-border;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.03);
+
+          .actions {
+            opacity: 1;
+          }
+        }
+      }
+
+      .warning-icon {
+        margin-right: 1em;
+      }
+
+      .list-item-header-content {
+        flex-shrink: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 1em;
+      }
+
+      .actions {
+        margin-left: auto;
+        opacity: 0;
+        white-space: nowrap;
+      }
+
+      .one-icon {
+        line-height: 0;
+        vertical-align: -0.3em;
+        font-size: 1.5em;
+
+        &:not(:last-child) {
+          margin-right: 0.3em;
+        }
+      }
+
+      .elements-list-item:last-child {
+        border-bottom: none;
+      }
+
+      .additional-info {
+        margin-left: 1em;
+        font-size: 85%;
+        color: $main-text-color-disabled;
+
+        .one-icon {
+          margin-left: -0.2em;
+        }
+      }
+
+      .nested-items {
+        padding-left: 1em;
+      }
+    }
+
+    .is-dragging-object {
+      position: relative;
+      z-index: 1;
+    }
+
+    .drop-zone-container {
+      position: absolute;
+      display: grid;
+    }
+
+    .drop-zone {
+      display: grid;
+      padding: 2px 0;
+
+      &.drop-zone-inside {
+        padding: 0;
+      }
+
+      &::before {
+        content: '';
+        background-color: rgba(#000, 0.1);
+        border: 2px dashed rgba(#000, 0.2);
+        border-radius: $border-radius-small;
+        opacity: 0;
+      }
+
+      &.accepts-drag::before {
+        opacity: 1;
+      }
+    }
+
+    .color-mark {
+      display: inline-block;
+      height: 0.8em;
+      width: 0.8em;
+      border-radius: 50%;
+      background-color: var(--series-color);
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .editor-toolbar {
+      flex-wrap: wrap;
+    }
+
+    .sections-editor {
       grid-template-columns: 1fr;
-      grid-template-rows: min-content 1fr min-content;
+      grid-template-rows: 1fr 40%;
 
       .dashboard-visualiser {
         border-radius: 0;
       }
 
       .editor-sidebar {
-        border-top: 1px solid $main-border-color;
+        border-top: $main-border;
         border-left: 0;
+      }
+    }
+  }
+
+  @media (hover: none) {
+    .chart-editor {
+      .elements-list-item {
+        .actions {
+          opacity: 1;
+        }
       }
     }
   }

@@ -6,23 +6,16 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import { computed } from '@ember/object';
+import _ from 'lodash';
+import ElementBase from './element-base';
 import { ElementType } from './common';
 
-const Chart = EmberObject.extend({
+const Chart = ElementBase.extend({
   /**
-   * @public
-   * @readonly
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType.Chart}
+   * @override
    */
   elementType: ElementType.Chart,
-
-  /**
-   * @public
-   * @readonly
-   * @type {unknown}
-   */
-  elementOwner: null,
 
   /**
    * @public
@@ -64,13 +57,32 @@ const Chart = EmberObject.extend({
    * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
    */
-  parentSection: null,
+  parent: null,
+
+  /**
+   * @override
+   */
+  referencingPropertyNames: Object.freeze(['axes', 'seriesGroups', 'series', 'parent']),
+
+  /**
+   * @override
+   */
+  nestedValidationErrors: computed(
+    'axes.@each.validationErrors',
+    'seriesGroups.@each.validationErrors',
+    'series.@each.validationErrors',
+    function nestedValidationErrors() {
+      return _.flatten(
+        [...this.axes, ...this.seriesGroups, ...this.series]
+        .map(({ validationErrors }) => validationErrors)
+      );
+    }
+  ),
 
   /**
    * @override
    */
   init() {
-    this._super(...arguments);
     if (!this.axes) {
       this.set('axes', []);
     }
@@ -80,6 +92,8 @@ const Chart = EmberObject.extend({
     if (!this.series) {
       this.set('series', []);
     }
+
+    this._super(...arguments);
   },
 
   /**
@@ -87,9 +101,6 @@ const Chart = EmberObject.extend({
    */
   willDestroy() {
     try {
-      if (this.elementOwner) {
-        this.set('elementOwner', null);
-      }
       if (this.axes.length) {
         this.axes.forEach((axis) => axis.destroy());
         this.set('axes', []);
@@ -102,8 +113,8 @@ const Chart = EmberObject.extend({
         this.series.forEach((series) => series.destroy());
         this.set('series', []);
       }
-      if (this.parentSection) {
-        this.set('parentSection', null);
+      if (this.parent) {
+        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);
@@ -111,8 +122,7 @@ const Chart = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Chart}
+   * @override
    */
   clone() {
     return Chart.create({
@@ -122,15 +132,27 @@ const Chart = EmberObject.extend({
       axes: this.axes.map((axis) => axis.clone()),
       seriesGroups: this.seriesGroups.map((group) => group.clone()),
       series: this.series.map((series) => series.clone()),
-      parentSection: this.parentSection,
+      parent: this.parent,
     });
   },
 
   /**
-   * @public
-   * @returns {Generator<void>}
+   * @override
    */
-  * getNestedElements() {},
+  * nestedElements() {
+    yield* this.axes;
+    yield* this.seriesGroups;
+    yield* this.series;
+  },
+
+  /**
+   * @override
+   */
+  * referencingElements() {
+    if (this.parent) {
+      yield this.parent;
+    }
+  },
 });
 
 export default Chart;

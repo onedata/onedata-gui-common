@@ -7,23 +7,15 @@
  */
 
 import EmberObject from '@ember/object';
+import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
 
-const Axis = EmberObject.extend({
+const Axis = ElementBase.extend({
   /**
-   * @public
-   * @readonly
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType.Axis}
+   * @override
    */
   elementType: ElementType.Axis,
-
-  /**
-   * @public
-   * @readonly
-   * @type {unknown}
-   */
-  elementOwner: null,
 
   /**
    * @public
@@ -73,19 +65,25 @@ const Axis = EmberObject.extend({
    * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
    */
-  parentChart: null,
+  parent: null,
+
+  /**
+   * @override
+   */
+  referencingPropertyNames: Object.freeze(['series', 'parent']),
 
   /**
    * @override
    */
   init() {
-    this._super(...arguments);
     if (!this.id) {
       this.set('id', generateId());
     }
     if (!this.series) {
       this.set('series', []);
     }
+
+    this._super(...arguments);
   },
 
   /**
@@ -93,9 +91,6 @@ const Axis = EmberObject.extend({
    */
   willDestroy() {
     try {
-      if (this.elementOwner) {
-        this.set('elementOwner', null);
-      }
       if (this.unitOptions) {
         this.unitOptions.destroy();
         this.set('unitOptions', null);
@@ -103,8 +98,8 @@ const Axis = EmberObject.extend({
       if (this.series.length) {
         this.set('series', []);
       }
-      if (this.parentChart) {
-        this.set('parentChart', null);
+      if (this.parent) {
+        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);
@@ -112,8 +107,7 @@ const Axis = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Axis}
+   * @override
    */
   clone() {
     return Axis.create({
@@ -125,8 +119,18 @@ const Axis = EmberObject.extend({
         EmberObject.create(this.unitOptions) : this.unitOptions,
       minInterval: this.minInterval,
       series: [],
-      parentChart: this.parentChart,
+      parent: this.parent,
     });
+  },
+
+  /**
+   * @override
+   */
+  * referencingElements() {
+    if (this.parent) {
+      yield this.parent;
+    }
+    yield* this.series;
   },
 });
 

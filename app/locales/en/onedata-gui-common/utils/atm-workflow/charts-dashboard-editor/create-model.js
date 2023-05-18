@@ -8,7 +8,7 @@ export default {
   newAxis: {
     name: 'Value',
   },
-  newGroup: {
+  newSeriesGroup: {
     name: 'Group',
   },
   newSeries: {

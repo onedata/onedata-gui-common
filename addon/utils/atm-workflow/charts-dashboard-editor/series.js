@@ -6,7 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
+import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
 
@@ -17,20 +18,16 @@ import { ElementType } from './common';
  * @property {Array<string>} metricNames
  */
 
-const Series = EmberObject.extend({
+/**
+ * @typedef {DashboardElementValidationError} SeriesAxisNotAssignedValidationError
+ * @property {'seriesAxisNotAssigned'} errorId
+ */
+
+const Series = ElementBase.extend({
   /**
-   * @public
-   * @readonly
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType.Series}
+   * @override
    */
   elementType: ElementType.Series,
-
-  /**
-   * @public
-   * @readonly
-   * @type {unknown}
-   */
-  elementOwner: null,
 
   /**
    * @public
@@ -92,16 +89,36 @@ const Series = EmberObject.extend({
    * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
    */
-  parentChart: null,
+  parent: null,
+
+  /**
+   * @override
+   */
+  referencingPropertyNames: Object.freeze(['parent', 'axis', 'group']),
+
+  /**
+   * @override
+   */
+  directValidationErrors: computed('axis', function directValidationErrors() {
+    if (!this.axis) {
+      return [{
+        element: this,
+        errorId: 'seriesAxisNotAssigned',
+      }];
+    } else {
+      return [];
+    }
+  }),
 
   /**
    * @override
    */
   init() {
-    this._super(...arguments);
     if (!this.id) {
       this.set('id', generateId());
     }
+
+    this._super(...arguments);
   },
 
   /**
@@ -109,9 +126,6 @@ const Series = EmberObject.extend({
    */
   willDestroy() {
     try {
-      if (this.elementOwner) {
-        this.set('elementOwner', null);
-      }
       if (this.prefixedTimeSeriesRef) {
         this.prefixedTimeSeriesRef.destroy();
         this.set('prefixedTimeSeriesRef', null);
@@ -122,8 +136,8 @@ const Series = EmberObject.extend({
       if (this.group) {
         this.set('group', null);
       }
-      if (this.parentChart) {
-        this.set('parentChart', null);
+      if (this.parent) {
+        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);
@@ -131,8 +145,7 @@ const Series = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Series}
+   * @override
    */
   clone() {
     return Series.create({
@@ -146,8 +159,23 @@ const Series = EmberObject.extend({
       axis: this.axis,
       color: this.color,
       group: this.group,
-      parentChart: this.parentChart,
+      parent: this.parent,
     });
+  },
+
+  /**
+   * @override
+   */
+  * referencingElements() {
+    if (this.parent) {
+      yield this.parent;
+    }
+    if (this.axis) {
+      yield this.axis;
+    }
+    if (this.group) {
+      yield this.group;
+    }
   },
 });
 

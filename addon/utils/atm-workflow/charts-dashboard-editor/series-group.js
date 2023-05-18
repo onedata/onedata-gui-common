@@ -6,24 +6,17 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import { computed } from '@ember/object';
+import _ from 'lodash';
+import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
 
-const SeriesGroup = EmberObject.extend({
+const SeriesGroup = ElementBase.extend({
   /**
-   * @public
-   * @readonly
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType.SeriesGroup}
+   * @override
    */
   elementType: ElementType.SeriesGroup,
-
-  /**
-   * @public
-   * @readonly
-   * @type {unknown}
-   */
-  elementOwner: null,
 
   /**
    * @public
@@ -58,7 +51,7 @@ const SeriesGroup = EmberObject.extend({
    * @virtual optional
    * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup>}
    */
-  subgroups: undefined,
+  seriesGroups: undefined,
 
   /**
    * @public
@@ -70,31 +63,42 @@ const SeriesGroup = EmberObject.extend({
   /**
    * @public
    * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup | null}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup | null}
    */
-  parentGroup: null,
+  parent: null,
 
   /**
-   * @public
-   * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
+   * @override
    */
-  parentChart: null,
+  referencingPropertyNames: Object.freeze(['parent', 'seriesGroups', 'series']),
+
+  /**
+   * @override
+   */
+  nestedValidationErrors: computed(
+    'seriesGroups.@each.validationErrors',
+    function nestedValidationErrors() {
+      return _.flatten(
+        this.seriesGroups.map(({ validationErrors }) => validationErrors)
+      );
+    }
+  ),
 
   /**
    * @override
    */
   init() {
-    this._super(...arguments);
     if (!this.id) {
       this.set('id', generateId());
     }
-    if (!this.subgroups) {
-      this.set('subgroups', []);
+    if (!this.seriesGroups) {
+      this.set('seriesGroups', []);
     }
     if (!this.series) {
       this.set('series', []);
     }
+
+    this._super(...arguments);
   },
 
   /**
@@ -102,21 +106,15 @@ const SeriesGroup = EmberObject.extend({
    */
   willDestroy() {
     try {
-      if (this.elementOwner) {
-        this.set('elementOwner', null);
-      }
-      if (this.subgroups.length) {
-        this.subgroups.forEach((subgroup) => subgroup.destroy());
-        this.set('subgroups', []);
+      if (this.seriesGroups.length) {
+        this.seriesGroups.forEach((subgroup) => subgroup.destroy());
+        this.set('seriesGroups', []);
       }
       if (this.series.length) {
         this.set('series', []);
       }
-      if (this.parentGroup) {
-        this.set('parentGroup', null);
-      }
-      if (this.parentChart) {
-        this.set('parentChart', null);
+      if (this.parent) {
+        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);
@@ -124,8 +122,7 @@ const SeriesGroup = EmberObject.extend({
   },
 
   /**
-   * @public
-   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup}
+   * @override
    */
   clone() {
     return SeriesGroup.create({
@@ -134,22 +131,30 @@ const SeriesGroup = EmberObject.extend({
       name: this.name,
       stacked: this.stacked,
       showSum: this.showSum,
-      subgroups: this.subgroups.map((subgroup) => subgroup.clone()),
+      seriesGroups: this.seriesGroups.map((subgroup) => subgroup.clone()),
       series: [],
-      parentGroup: this.parentGroup,
-      parentChart: this.parentChart,
+      parent: this.parent,
     });
   },
 
   /**
-   * @public
-   * @returns {Generator<Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup>}
+   * @override
    */
-  * getNestedGroups() {
-    for (const subgroup of this.subgroups) {
+  * nestedElements() {
+    for (const subgroup of this.seriesGroups) {
       yield subgroup;
-      yield* subgroup.getNestedGroups();
+      yield* subgroup.nestedElements();
     }
+  },
+
+  /**
+   * @override
+   */
+  * referencingElements() {
+    if (this.parent) {
+      yield this.parent;
+    }
+    yield* this.series;
   },
 });
 

@@ -32,7 +32,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 
     await renderComponent();
 
-    expect(find('.title-content')).to.have.text('title1');
+    expect(find('.title-content')).to.contain.text('title1');
     expect(await new OneTooltipHelper('.title-tip .one-icon').getText())
       .to.equal('tip1');
   });

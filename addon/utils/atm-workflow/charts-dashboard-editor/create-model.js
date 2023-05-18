@@ -8,12 +8,14 @@
  */
 
 import EmberObject, { set, setProperties } from '@ember/object';
+import generateId from 'onedata-gui-common/utils/generate-id';
 import Model from './model';
 import Section from './section';
 import Chart from './chart';
 import Axis from './axis';
 import SeriesGroup from './series-group';
 import Series from './series';
+import { ElementType } from './common';
 
 /**
  * @type {string}
@@ -61,6 +63,10 @@ export function createNewChart(i18n, elementOwner = null) {
     title: {
       content: String(i18n.t(`${i18nPrefix}.newChart.title`)),
     },
+    yAxes: [{
+      id: generateId(),
+      name: String(i18n.t(`${i18nPrefix}.newAxis.name`)),
+    }],
   }, elementOwner);
 }
 
@@ -72,6 +78,7 @@ export function createNewChart(i18n, elementOwner = null) {
  */
 export function createNewAxis(i18n, elementOwner = null) {
   return createAxisModelFromSpec({
+    id: generateId(),
     name: String(i18n.t(`${i18nPrefix}.newAxis.name`)),
   }, elementOwner);
 }
@@ -84,6 +91,7 @@ export function createNewAxis(i18n, elementOwner = null) {
  */
 export function createNewSeriesGroup(i18n, elementOwner = null) {
   return createSeriesGroupModelFromSpec({
+    id: generateId(),
     name: String(i18n.t(`${i18nPrefix}.newSeriesGroup.name`)),
   }, elementOwner);
 }
@@ -96,7 +104,13 @@ export function createNewSeriesGroup(i18n, elementOwner = null) {
  */
 export function createNewSeries(i18n, elementOwner = null) {
   return createSeriesModelFromSpec({
-    name: String(i18n.t(`${i18nPrefix}.newSeries.name`)),
+    builderType: 'static',
+    builderRecipe: {
+      seriesTemplate: {
+        id: generateId(),
+        name: String(i18n.t(`${i18nPrefix}.newSeries.name`)),
+      },
+    },
   }, elementOwner);
 }
 
@@ -122,8 +136,8 @@ function createSectionModelFromSpec(sectionSpec, elementOwner = null, isRoot = f
         createSectionModelFromSpec(subsectionSpec, elementOwner)
       ) ?? [],
   });
-  section.charts.forEach((chart) => set(chart, 'parentSection', section));
-  section.sections.forEach((subsection) => set(subsection, 'parentSection', section));
+  section.charts.forEach((chart) => set(chart, 'parent', section));
+  section.sections.forEach((subsection) => set(subsection, 'parent', section));
   return section;
 }
 
@@ -154,15 +168,17 @@ function createChartModelFromSpec(chartSpec, elementOwner = null) {
   const groupsMap = {};
   chart.axes.forEach((axis) => {
     axesMap[axis.id] = axis;
-    set(axis, 'parentChart', chart);
+    set(axis, 'parent', chart);
   });
   chart.seriesGroups.forEach((seriesGroup) => {
     groupsMap[seriesGroup.id] = seriesGroup;
-    set(seriesGroup, 'parentChart', chart);
-    [...seriesGroup.getNestedGroups()].forEach((subgroup) => {
-      groupsMap[subgroup.id] = subgroup;
-      set(subgroup, 'parentChart', chart);
-    });
+    set(seriesGroup, 'parent', chart);
+    [...seriesGroup.nestedElements()]
+    .filter((element) => element.elementType === ElementType.SeriesGroup)
+      .forEach((subgroup) => {
+        groupsMap[subgroup.id] = subgroup;
+        set(subgroup, 'parent', chart);
+      });
   });
 
   set(
@@ -175,7 +191,7 @@ function createChartModelFromSpec(chartSpec, elementOwner = null) {
     ) ?? []
   );
   chart.series.forEach((series) => {
-    set(series, 'parentChart', chart);
+    set(series, 'parent', chart);
     if (series.axis) {
       set(series.axis, 'series', [...series.axis.series, series]);
     }
@@ -197,10 +213,10 @@ function createAxisModelFromSpec(axisSpec, elementOwner = null) {
     elementOwner,
     id: axisSpec.id,
     name: axisSpec.name,
-    unitName: axisSpec.unitName,
+    unitName: axisSpec.unitName ?? 'none',
     unitOptions: axisSpec.unitOptions ?
       EmberObject.create(axisSpec.unitOptions) : null,
-    minInterval: axisSpec.minInterval,
+    minInterval: axisSpec.minInterval ?? null,
   });
   return axis;
 }
@@ -217,14 +233,14 @@ function createSeriesGroupModelFromSpec(seriesGroupSpec, elementOwner = null) {
     name: seriesGroupSpec.name,
     stacked: Boolean(seriesGroupSpec.stacked),
     showSum: Boolean(seriesGroupSpec.showSum),
-    subgroups: seriesGroupSpec.subgroups
+    seriesGroups: seriesGroupSpec.subgroups
       ?.filter(Boolean)
       .map((subgroupSpec) =>
         createSeriesGroupModelFromSpec(subgroupSpec, elementOwner)
       ) ?? [],
   });
-  seriesGroup.subgroups.forEach((subgroup) =>
-    set(subgroup, 'parentGroup', seriesGroup)
+  seriesGroup.seriesGroups.forEach((subgroup) =>
+    set(subgroup, 'parent', seriesGroup)
   );
   return seriesGroup;
 }
