@@ -76,13 +76,13 @@ export default Action.extend({
 
     this.removeReferences();
     set(this.elementToRemove, 'parent', null);
-    [this.elementToRemove, ...this.elementToRemove.getNestedElements()]
+    [this.elementToRemove, ...this.elementToRemove.nestedElements()]
     .forEach((element) => set(element, 'isRemoved', true));
 
     this.changeViewState({
       elementsToDeselect: [
         this.elementToRemove,
-        ...this.elementToRemove.getNestedElements(),
+        ...this.elementToRemove.nestedElements(),
       ],
     });
   },
@@ -92,7 +92,7 @@ export default Action.extend({
    */
   onExecuteUndo() {
     set(this.elementToRemove, 'parent', this.oldParent);
-    [this.elementToRemove, ...this.elementToRemove.getNestedElements()]
+    [this.elementToRemove, ...this.elementToRemove.nestedElements()]
     .forEach((element) => set(element, 'isRemoved', false));
     this.rollbackReferencesRemoval();
   },
@@ -105,11 +105,11 @@ export default Action.extend({
   removeReferences() {
     const elementsToRemove = new Set([
       this.elementToRemove,
-      ...this.elementToRemove.getNestedElements(),
+      ...this.elementToRemove.nestedElements(),
     ]);
     const allRemovedReferences = [];
     for (const elementToRemove of elementsToRemove) {
-      for (const referencingElement of elementToRemove.getReferencingElements()) {
+      for (const referencingElement of elementToRemove.referencingElements()) {
         if (elementsToRemove.has(referencingElement)) {
           continue;
         }

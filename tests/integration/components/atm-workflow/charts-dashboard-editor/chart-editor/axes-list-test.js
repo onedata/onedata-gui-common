@@ -123,7 +123,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     await renderComponent();
     expect(find('.drop-zone-container')).to.not.exist;
 
-    await drag('[data-element-id="2"]');
+    await drag('[data-chart-element-id="2"]');
 
     const dropZones = findAll('.drop-zone-container');
     [

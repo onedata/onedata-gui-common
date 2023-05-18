@@ -42,7 +42,8 @@ export const ElementsListItemModel = EmberObject.extend({
   renderer: undefined,
 
   /**
-   * @type {ElementsListItemModel}
+   * @virtual optional
+   * @type {Array<ElementsListItemModel>}
    */
   nestedModels: undefined,
 
@@ -61,7 +62,7 @@ export const ElementsListItemModel = EmberObject.extend({
    */
   getAllNestedItems() {
     const elementTypeToReturn = this.item.elementType;
-    return [...this.item.getNestedElements()]
+    return [...this.item.nestedElements()]
       .filter((element) => element.elementType === elementTypeToReturn);
   },
 });
@@ -156,14 +157,14 @@ export default PerfectScrollbarElement.extend({
   },
 
   recalculateDropZones() {
-    const draggedElement = this.dragDrop.draggedElementModel;
+    const draggedChartElement = this.dragDrop.draggedElementModel;
     const firstItem = this.itemModels[0]?.item;
     if (
       !this.allowDragDrop ||
-      !draggedElement ||
+      !draggedChartElement ||
       !firstItem ||
-      firstItem.elementOwner !== draggedElement.elementOwner ||
-      firstItem.elementType !== draggedElement.elementType
+      firstItem.elementOwner !== draggedChartElement.elementOwner ||
+      firstItem.elementType !== draggedChartElement.elementType
     ) {
       this.set('dropZones', []);
       return;
@@ -172,20 +173,20 @@ export default PerfectScrollbarElement.extend({
     const elementNodes = [
       ...(this.element?.querySelectorAll('.elements-list-item') ?? []),
     ];
-    const elementIdsWithoutDrop = new Set([
-      draggedElement.id,
-      ...[...draggedElement.getNestedElements()].map((elem) => elem.id),
+    const chartElementIdsWithoutDrop = new Set([
+      draggedChartElement.id,
+      ...[...draggedChartElement.nestedElements()].map((elem) => elem.id),
     ]);
     const elementNodesForDrop = elementNodes.filter((node) =>
-      !elementIdsWithoutDrop.has(node.dataset.elementId)
+      !chartElementIdsWithoutDrop.has(node.dataset.chartElementId)
     );
     const allItemsMap = this.getAllItemsMap();
 
     const dropZones = [];
     const sideDropZoneHeight = 12;
     for (const elementNode of elementNodesForDrop) {
-      const element = allItemsMap.get(elementNode.dataset.elementId);
-      if (!element) {
+      const chartElement = allItemsMap.get(elementNode.dataset.chartElementId);
+      if (!chartElement) {
         continue;
       }
 
@@ -206,7 +207,7 @@ export default PerfectScrollbarElement.extend({
           style: htmlSafe(
             `top: ${top}px; left: ${left}px; height: ${height}px; width: ${width}px;`
           ),
-          referenceElement: element,
+          referenceElement: chartElement,
           placement: 'inside',
         });
       }
@@ -221,7 +222,7 @@ export default PerfectScrollbarElement.extend({
           style: htmlSafe(
             `top: ${top}px; left: ${left}px; height: ${height}px; width: ${width}px;`
           ),
-          referenceElement: element,
+          referenceElement: chartElement,
           placement: 'before',
         });
       }
@@ -242,7 +243,7 @@ export default PerfectScrollbarElement.extend({
           style: htmlSafe(
             `top: ${top}px; left: ${left}px; height: ${height}px; width: ${width}px;`
           ),
-          referenceElement: element,
+          referenceElement: chartElement,
           placement: 'after',
         });
       }
@@ -255,11 +256,12 @@ export default PerfectScrollbarElement.extend({
       this.element?.scrollHeight <= this.element?.clientHeight
     ) {
       // Find last element node and its "after" drop zone
-      const lastElement = this.itemModels[this.itemModels.length - 1]?.item;
-      const lastElementNode = this.element
-        ?.querySelector(`.elements-list-item[data-element-id="${lastElement.id}"`);
+      const lastChartElement = this.itemModels[this.itemModels.length - 1]?.item;
+      const lastElementNode = this.element?.querySelector(
+        `.elements-list-item[data-chart-element-id="${lastChartElement.id}"`
+      );
       const afterDropZone = dropZones.find(({ referenceElement, placement }) =>
-        referenceElement === lastElement && placement === 'after'
+        referenceElement === lastChartElement && placement === 'after'
       );
       if (afterDropZone && lastElementNode) {
         const lastElementPosition = dom.position(lastElementNode, this.element);

@@ -8,7 +8,9 @@
 {{#if (or section.title section.titleTip)}}
   <div class="section-header">
     {{#if section.title}}
-      <h3 class="section-title">{{section.title}}</h3>
+      {{#truncated-string tagName="h3" class="section-title"}}
+        {{section.title}}
+      {{/truncated-string}}
     {{/if}}
     {{#if section.titleTip}}
       {{#one-label-tip class="section-title-tip" tooltipClass="tooltip-lg"}}

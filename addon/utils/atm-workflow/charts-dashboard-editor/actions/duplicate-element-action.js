@@ -79,7 +79,7 @@ export default Action.extend({
     if (!this.createdDuplicate) {
       this.set('createdDuplicate', this.elementToDuplicate.clone());
     } else {
-      [this.createdDuplicate, ...this.createdDuplicate.getNestedElements()]
+      [this.createdDuplicate, ...this.createdDuplicate.nestedElements()]
       .forEach((element) => set(element, 'isRemoved', false));
     }
 
@@ -107,12 +107,12 @@ export default Action.extend({
       this.collectionName,
       parent[this.collectionName].filter((element) => element !== this.createdDuplicate)
     );
-    [this.createdDuplicate, ...this.createdDuplicate.getNestedElements()]
+    [this.createdDuplicate, ...this.createdDuplicate.nestedElements()]
     .forEach((element) => set(element, 'isRemoved', true));
     this.changeViewState({
       elementsToDeselect: [
         this.createdDuplicate,
-        ...this.createdDuplicate.getNestedElements(),
+        ...this.createdDuplicate.nestedElements(),
       ],
     });
   },

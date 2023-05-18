@@ -30,7 +30,7 @@ export default PerfectScrollbarElement.extend(I18n, {
   selectedElement: null,
 
   /**
-   * @virtual optional
+   * @virtual
    * @type {boolean}
    */
   hasValidationErrors: false,

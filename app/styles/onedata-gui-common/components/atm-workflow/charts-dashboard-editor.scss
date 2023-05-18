@@ -4,7 +4,7 @@
   grid-template-rows: min-content 1fr;
   min-height: 0;
   min-width: 0;
-  border: 1px solid $main-border-color;
+  border: $main-border;
   border-radius: $border-radius-base;
   background-color: $color-one-white;
 
@@ -85,7 +85,7 @@
     min-width: 0;
     gap: 0.3em;
     align-items: center;
-    border-bottom: 1px solid $main-border-color;
+    border-bottom: $main-border;
 
     .view-title {
       @include font-semibold();
@@ -291,7 +291,7 @@
       transform: translateY(-50%);
       margin: 0;
       display: flex;
-      border: 1px solid $main-border-color;
+      border: $main-border;
       border-radius: $border-radius-base;
       background-color: $color-one-white;
       opacity: 0;
@@ -305,7 +305,7 @@
         font-size: 130%;
 
         & + .action {
-          border-left: 1px solid $main-border-color;
+          border-left: $main-border;
         }
       }
     }
@@ -345,10 +345,33 @@
       display: flex;
       flex-direction: column;
       gap: 1em;
-      border-left: 1px solid $main-border-color;
+      border-left: $main-border;
       padding: 1em;
       min-height: 0;
 
+      > :first-child {
+        margin-bottom: auto;
+      }
+
+      .no-selection-info {
+        margin-top: auto;
+        text-align: center;
+      }
+
+      .control-label {
+        text-align: left;
+        width: 100%;
+        padding: 0;
+        padding-bottom: 0.2em;
+      }
+
+      .form-group {
+        margin-bottom: 1em;
+      }
+
+      .field-renderer:last-child {
+        margin-bottom: 0;
+      }
 
       .titleTip-field textarea {
         height: 7em;
@@ -362,9 +385,8 @@
         display: grid;
         grid-template-columns: min-content 1fr;
         gap: 1em;
-        margin-top: auto;
         padding-top: 1em;
-        border-top: 1px solid $main-border-color;
+        border-top: $main-border;
 
         .warning-icon {
           font-size: 160%;
@@ -410,9 +432,10 @@
       min-height: 0;
       display: grid;
       grid-template-rows: min-content 1fr;
-      border-right: 1px solid $main-border-color;
-      border-bottom: 1px solid $main-border-color;
+      border-right: $main-border;
+      border-bottom: $main-border;
       padding: 0.5em;
+      background-color: $block-background-color;
     }
 
     .chart-editor-elements-editor {
@@ -442,6 +465,7 @@
         display: inline-flex;
         align-items: center;
         user-select: none;
+        border-top-width: 3px;
 
         .one-icon {
           line-height: 0;
@@ -475,11 +499,16 @@
         }
       }
 
+      .active > .nav-link {
+        border-top-color: $color-one-default;
+      }
+
       .tab-content {
         min-height: 0;
         display: grid;
-        padding: 0.5em;
-        border: 1px solid $main-border-color;
+        padding: 1em;
+        padding-bottom: 0;
+        border: $main-border;
         border-top: 0;
 
         .tab-pane.active {
@@ -493,13 +522,14 @@
       min-height: 0;
       display: grid;
       grid-template-rows: min-content 1fr;
-      gap: 0.5em;
+      gap: 1em;
     }
 
     .elements-list {
       position: relative;
       min-height: 0;
-      border-top: 1px solid $main-border-color;
+      border-top: $main-border;
+      padding-bottom: 1em;
 
       > .ps__rail-y {
         // .elements-list has 1px border-top. It causes infinite scroll-down
@@ -519,9 +549,9 @@
     .elements-list-item {
       .list-item-header {
         display: flex;
-        padding: 0.5em;
+        padding: 0.5em 0.75em;
         white-space: nowrap;
-        border-bottom: 1px solid $main-border-color;
+        border-bottom: $main-border;
 
         &:hover {
           background-color: rgba(0, 0, 0, 0.03);
@@ -660,7 +690,7 @@
       }
 
       .editor-sidebar {
-        border-top: 1px solid $main-border-color;
+        border-top: $main-border;
         border-left: 0;
       }
     }

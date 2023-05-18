@@ -182,7 +182,7 @@ const Series = ElementBase.extend({
   /**
    * @override
    */
-  * getReferencingElements() {
+  * referencingElements() {
     if (this.parent) {
       yield this.parent;
     }

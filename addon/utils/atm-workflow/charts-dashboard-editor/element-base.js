@@ -20,7 +20,7 @@ import { array } from 'ember-awesome-macros';
 const ElementBase = EmberObject.extend({
   /**
    * @public
-   * @abstract
+   * @virtual
    * @readonly
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType}
    */
@@ -98,7 +98,7 @@ const ElementBase = EmberObject.extend({
 
   /**
    * @public
-   * @abstract
+   * @virtual
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement}
    */
   clone() {},
@@ -107,20 +107,20 @@ const ElementBase = EmberObject.extend({
    * @public
    * @returns {Generator<Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement>}
    */
-  * getNestedElements() {},
+  * nestedElements() {},
 
   /**
    * @public
    * @returns {Generator<Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement>}
    */
-  * getReferencingElements() {},
+  * referencingElements() {},
 
   /**
    * Removes any references to `element` from this object.
    * NOTE: it does it only on the top level - does not analyze nested objects!
    * @param {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} element
    * @returns {Array<DashboardElementReference>} Array of reference specs of
-   * removed `element` occurrences.
+   *   removed `element` occurrences.
    */
   removeElementReferences(element) {
     const removedReferences = [];

@@ -196,7 +196,7 @@ const Axis = ElementBase.extend({
   /**
    * @override
    */
-  * getReferencingElements() {
+  * referencingElements() {
     if (this.parent) {
       yield this.parent;
     }

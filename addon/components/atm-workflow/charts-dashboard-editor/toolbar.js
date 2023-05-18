@@ -36,7 +36,7 @@ export default Component.extend(I18n, {
   actionsFactory: undefined,
 
   /**
-   * @virtual optional
+   * @virtual
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
    */
   editedChart: null,

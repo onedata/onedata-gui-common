@@ -146,17 +146,17 @@ const Section = ElementBase.extend({
   /**
    * @override
    */
-  * getNestedElements() {
+  * nestedElements() {
     for (const element of [...this.sections, ...this.charts]) {
       yield element;
-      yield* element.getNestedElements();
+      yield* element.nestedElements();
     }
   },
 
   /**
    * @override
    */
-  * getReferencingElements() {
+  * referencingElements() {
     if (this.parent) {
       yield this.parent;
     }

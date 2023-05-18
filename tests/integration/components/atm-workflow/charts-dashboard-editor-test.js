@@ -1571,7 +1571,7 @@ function getChartEditorStructure() {
 
 function getElementsListItemDetails(element, customPropsGetter) {
   const details = {
-    id: element.dataset.elementId,
+    id: element.dataset.chartElementId,
     element,
     headerElement: element.querySelector('.list-item-header'),
     name: element.querySelector('.name').innerText.trim(),

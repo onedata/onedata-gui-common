@@ -161,17 +161,17 @@ const Chart = ElementBase.extend({
   /**
    * @override
    */
-  * getNestedElements() {
+  * nestedElements() {
     for (const element of [...this.axes, ...this.seriesGroups, ...this.series]) {
       yield element;
-      yield* element.getNestedElements();
+      yield* element.nestedElements();
     }
   },
 
   /**
    * @override
    */
-  * getReferencingElements() {
+  * referencingElements() {
     if (this.parent) {
       yield this.parent;
     }
