@@ -173,7 +173,7 @@ function createChartModelFromSpec(chartSpec, elementOwner = null) {
   chart.seriesGroups.forEach((seriesGroup) => {
     groupsMap[seriesGroup.id] = seriesGroup;
     set(seriesGroup, 'parent', chart);
-    [...seriesGroup.getNestedElements()]
+    [...seriesGroup.nestedElements()]
     .filter((element) => element.elementType === ElementType.SeriesGroup)
       .forEach((subgroup) => {
         groupsMap[subgroup.id] = subgroup;

@@ -140,17 +140,17 @@ const SeriesGroup = ElementBase.extend({
   /**
    * @override
    */
-  * getNestedElements() {
+  * nestedElements() {
     for (const subgroup of this.seriesGroups) {
       yield subgroup;
-      yield* subgroup.getNestedElements();
+      yield* subgroup.nestedElements();
     }
   },
 
   /**
    * @override
    */
-  * getReferencingElements() {
+  * referencingElements() {
     if (this.parent) {
       yield this.parent;
     }

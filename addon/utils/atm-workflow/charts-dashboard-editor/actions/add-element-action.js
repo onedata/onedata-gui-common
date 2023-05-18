@@ -153,7 +153,7 @@ export default Action.extend({
     }
 
     this.changeViewState({
-      elementsToDeselect: [this.newElement, ...this.newElement.getNestedElements()],
+      elementsToDeselect: [this.newElement, ...this.newElement.nestedElements()],
     });
   },
 

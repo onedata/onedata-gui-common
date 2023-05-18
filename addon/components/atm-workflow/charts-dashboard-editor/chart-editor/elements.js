@@ -1,7 +1,7 @@
 /**
  * Shows "chart elements" section of chart editor. Contains three types of
  * elements (grouped in separate tabs):
- * - seriesx
+ * - series,
  * - series groups,
  * - axes.
  *

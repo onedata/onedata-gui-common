@@ -8,6 +8,8 @@
     chart=selectedElement
     actionsFactory=actionsFactory
   }}
+{{else}}
+  <p class="no-selection-info">{{tt this "selectElementForMore"}}</p>
 {{/if}}
 {{#if hasValidationErrors}}
   <div class="global-validation-error">

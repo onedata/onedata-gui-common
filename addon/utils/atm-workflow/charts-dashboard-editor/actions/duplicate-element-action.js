@@ -107,7 +107,7 @@ export default Action.extend({
     this.changeViewState({
       elementsToDeselect: [
         this.createdDuplicate,
-        ...this.createdDuplicate.getNestedElements(),
+        ...this.createdDuplicate.nestedElements(),
       ],
     });
   },

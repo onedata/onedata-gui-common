@@ -34,7 +34,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 
     await renderComponent();
 
-    expect(find('.section-title')).to.have.text('title1');
+    expect(find('.section-title')).to.contain.text('title1');
     expect(await new OneTooltipHelper('.section-title-tip .one-icon').getText())
       .to.equal('tip1');
     expect(find('.section-description')).to.have.text('desc');

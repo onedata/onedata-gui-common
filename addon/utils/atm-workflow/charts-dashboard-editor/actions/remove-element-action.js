@@ -80,7 +80,7 @@ export default Action.extend({
     this.changeViewState({
       elementsToDeselect: [
         this.elementToRemove,
-        ...this.elementToRemove.getNestedElements(),
+        ...this.elementToRemove.nestedElements(),
       ],
     });
   },
@@ -101,11 +101,11 @@ export default Action.extend({
   removeReferences() {
     const elementsToRemove = new Set([
       this.elementToRemove,
-      ...this.elementToRemove.getNestedElements(),
+      ...this.elementToRemove.nestedElements(),
     ]);
     const allRemovedReferences = [];
     for (const elementToRemove of elementsToRemove) {
-      for (const referencingElement of elementToRemove.getReferencingElements()) {
+      for (const referencingElement of elementToRemove.referencingElements()) {
         if (elementsToRemove.has(referencingElement)) {
           continue;
         }

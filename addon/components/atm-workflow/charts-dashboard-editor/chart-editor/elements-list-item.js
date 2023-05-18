@@ -20,7 +20,7 @@ export default OneDraggableObject.extend(I18n, {
   layout,
   tagName: 'li',
   classNames: ['elements-list-item'],
-  attributeBindings: ['itemModel.item.id:data-element-id'],
+  attributeBindings: ['itemModel.item.id:data-chart-element-id'],
 
   i18n: service(),
 
