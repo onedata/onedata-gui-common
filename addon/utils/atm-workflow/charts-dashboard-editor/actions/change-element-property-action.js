@@ -78,6 +78,7 @@ export default Action.extend({
   changeType: reads('context.changeType'),
 
   /**
+   * @private
    * @type {ComputedProperty<ChangeElementPropertyActionContext['changeViewState']>}
    */
   changeViewState: reads('context.changeViewState'),

@@ -139,6 +139,28 @@ export default Component.extend(I18n, {
       newValue: normalizedValue,
       changeType,
     });
+
+    // This hook is responsible for adding/removing this series from axis/group.
+    // Changing axis/group property in series is not enough - we have to update
+    // also series references list of axis/group itself.
+    action.addExecuteHook((actionResult) => {
+      if (normalizedFieldName !== 'axis' && normalizedFieldName !== 'group') {
+        return;
+      }
+      const addSeriesTo = actionResult.undo ? action.previousValue : normalizedValue;
+      const removeSeriesFrom = actionResult.undo ? normalizedValue : action.previousValue;
+      if (addSeriesTo) {
+        set(addSeriesTo, 'series', [...addSeriesTo.series, this.series]);
+      }
+      if (removeSeriesFrom) {
+        set(
+          removeSeriesFrom,
+          'series',
+          removeSeriesFrom.series.filter((series) => series !== this.series)
+        );
+      }
+    });
+
     action.execute();
   },
 

@@ -40,6 +40,14 @@
     {{/bs-nav}}
   {{/perfect-scrollbar-element}}
   <div class="tab-content">
+    {{#if (not tabs.length)}}
+      <div class="no-elements-info info-box">
+        <h3 class="header">{{tt this "noElements.header"}}</h3>
+        <p class="description">
+          {{tt this "noElements.description"}}
+        </p>
+      </div>
+    {{/if}}
     {{#each tabs as |tabSpec|}}
       {{#tab.pane elementId=tabSpec.id}}
         {{component

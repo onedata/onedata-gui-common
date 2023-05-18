@@ -21,7 +21,7 @@
       }
     }
 
-    h2 {
+    h3 {
       @include font-semibold();
       font-size: 1.2em;
     }
@@ -445,6 +445,11 @@
       display: grid;
       grid-template-rows: min-content 1fr;
       padding: 0.5em;
+      background-color: $block-background-color;
+
+      > .bs-tab-onedata > .tab-content {
+        padding: 0;
+      }
     }
 
     .bs-tab-onedata {
@@ -652,15 +657,15 @@
       min-height: 0;
       display: grid;
       grid-template-rows: 1fr;
-      grid-template-columns: 15em 1fr;
+      grid-template-columns: 17em 1fr;
 
       .form-column {
-        padding-right: 0.5em;
+        padding: 1em;
         border-right: 1px solid $main-border-color;
       }
 
       .details-column {
-        padding-left: 0.5em;
+        padding: 1em;
       }
 
       .unit-options-group {
@@ -703,14 +708,14 @@
 
         .form-column {
           padding-right: 0;
-          padding-bottom: 0.5em;
+          padding-bottom: 1em;
           border-right: 0;
           border-bottom: 1px solid $main-border-color;
         }
 
         .details-column {
           padding-left: 0;
-          padding-top: 0.5em;
+          padding-top: 1em;
         }
       }
     }
