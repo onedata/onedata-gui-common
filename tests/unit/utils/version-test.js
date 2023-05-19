@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import version from 'onedata-gui-common/utils/version';
+import Version from 'onedata-gui-common/utils/version';
 
 describe('Unit | Utility | version', function () {
   it('returns true if a version comforms stable version requirement', function () {
@@ -14,7 +14,7 @@ describe('Unit | Utility | version', function () {
     ];
     for (const checkedVersion of testedVersions) {
       expect(
-        version.isRequiredVersion(checkedVersion, requiredVersion),
+        Version.isRequiredVersion(checkedVersion, requiredVersion),
         `checked version: ${checkedVersion} for required ${requiredVersion}`
       ).to.be.true;
     }
@@ -31,7 +31,7 @@ describe('Unit | Utility | version', function () {
     ];
     for (const checkedVersion of testedVersions) {
       expect(
-        version.isRequiredVersion(checkedVersion, requiredVersion),
+        Version.isRequiredVersion(checkedVersion, requiredVersion),
         `checked version: ${checkedVersion} for required ${requiredVersion}`
       ).to.be.true;
     }
@@ -45,7 +45,7 @@ describe('Unit | Utility | version', function () {
     ];
     for (const checkedVersion of testedVersions) {
       expect(
-        version.isRequiredVersion(checkedVersion, requiredVersion),
+        Version.isRequiredVersion(checkedVersion, requiredVersion),
         `checked version: ${checkedVersion} for required: ${requiredVersion}`
       ).to.be.false;
     }
@@ -59,7 +59,7 @@ describe('Unit | Utility | version', function () {
     ];
     for (const checkedVersion of testedVersions) {
       expect(
-        version.isRequiredVersion(checkedVersion, requiredVersion),
+        Version.isRequiredVersion(checkedVersion, requiredVersion),
         `checked version: ${checkedVersion} for required: ${requiredVersion}`
       ).to.be.false;
     }
