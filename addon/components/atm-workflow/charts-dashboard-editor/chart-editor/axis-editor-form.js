@@ -1,3 +1,11 @@
+/**
+ * A form with all basic properties of a chart axis.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed, observer, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -182,6 +190,9 @@ const UnitNameField = DropdownField.extend({
   }),
 });
 
+/**
+ * @type {Utils.FormComponent.DropdownField}
+ */
 const BytesUnitFormatField = DropdownField.extend({
   name: 'format',
   defaultValue: 'iec',
@@ -195,6 +206,9 @@ const BytesUnitFormatField = DropdownField.extend({
   }]),
 });
 
+/**
+ * @type {Utils.FormComponent.FormFieldsGroup}
+ */
 const BytesUnitOptionsFieldsGroup = FormFieldsGroup.extend({
   name: 'bytesUnitOptions',
   addColonToLabel: false,
@@ -205,16 +219,25 @@ const BytesUnitOptionsFieldsGroup = FormFieldsGroup.extend({
   ]),
 });
 
+/**
+ * @type {Utils.FormComponent.TextField}
+ */
 const CustomUnitNameField = TextField.extend({
   name: 'customName',
   isOptional: true,
 });
 
+/**
+ * @type {Utils.FormComponent.ToggleField}
+ */
 const CustomUnitUseMetricSuffixField = ToggleField.extend({
   name: 'useMetricSuffix',
   defaultValue: false,
 });
 
+/**
+ * @type {Utils.FormComponent.FormFieldsGroup}
+ */
 const CustomUnitOptionsFieldsGroup = FormFieldsGroup.extend({
   name: 'customUnitOptions',
   addColonToLabel: false,
@@ -236,6 +259,9 @@ const MinIntervalField = NumberField.extend({
   inputType: 'text',
 });
 
+/**
+ * @type {Utils.FormComponent.FormFieldsRootGroup}
+ */
 const Form = FormFieldsRootGroup.extend({
   /**
    * @virtual

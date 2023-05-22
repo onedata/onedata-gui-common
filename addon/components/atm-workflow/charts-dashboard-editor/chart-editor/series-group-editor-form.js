@@ -1,3 +1,11 @@
+/**
+ * A form with all basic properties of a chart series group.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed, observer, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -123,6 +131,9 @@ const ShowSumField = ToggleField.extend({
   defaultValue: false,
 });
 
+/**
+ * @type {Utils.FormComponent.FormFieldsRootGroup}
+ */
 const Form = FormFieldsRootGroup.extend({
   /**
    * @virtual

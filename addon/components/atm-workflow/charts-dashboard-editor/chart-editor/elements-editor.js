@@ -1,3 +1,12 @@
+/**
+ * Shows a list of chart elements editors in a form of tabbed editor.
+ * Changing `selectedElement` will show editor dedicated for that element.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import EmberObject, { observer, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -143,6 +152,10 @@ export default Component.extend(I18n, {
     return null;
   },
 
+  /**
+   * @param {ElementsEditorTab} tab
+   * @returns {void}
+   */
   openTab(tab) {
     const selectAction = this.actionsFactory.createSelectElementAction({
       elementToSelect: tab.element,
@@ -192,6 +205,7 @@ const ElementsEditorTab = EmberObject.extend(OwnerInjector, {
   element: undefined,
 
   /**
+   * @public
    * @type {ComputedProperty<string>}
    */
   id: computed(function id() {
@@ -200,7 +214,6 @@ const ElementsEditorTab = EmberObject.extend(OwnerInjector, {
 
   /**
    * @public
-   * @virtual
    * @type {ComputedProperty<string | null>}
    */
   icon: computed('element.elementType', function icon() {
@@ -208,6 +221,7 @@ const ElementsEditorTab = EmberObject.extend(OwnerInjector, {
   }),
 
   /**
+   * @public
    * @type {ComputedProperty<SafeString | null>}
    */
   validationErrorsMessage: computed(
@@ -222,7 +236,6 @@ const ElementsEditorTab = EmberObject.extend(OwnerInjector, {
 
   /**
    * @public
-   * @virtual
    * @type {ComputedProperty<string | null>}
    */
   editorComponentName: computed(
