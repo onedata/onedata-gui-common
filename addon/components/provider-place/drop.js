@@ -3,7 +3,7 @@
  * visible when clicked. Contains information about provider and its spaces.
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -39,7 +39,7 @@ export default Component.extend(I18n, {
    */
   i18nPrefix: 'components.providerPlace.drop',
 
-  providerVersion: reads('provider.versionProxy.content'),
+  providerVersion: reads('provider.version'),
 
   oneproviderStatusClass: conditional(
     'provider.online',
