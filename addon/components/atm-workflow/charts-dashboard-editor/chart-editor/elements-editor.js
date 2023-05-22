@@ -11,6 +11,7 @@ import {
   translateValidationErrorsBatch,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/elements-editor';
 
 const editorComponents = Object.freeze({
@@ -152,10 +153,13 @@ export default Component.extend(I18n, {
   actions: {
     /**
      * @param {ElementsEditorTab} tab
+     * @param {MouseEvent} event
      * @returns {void}
      */
-    openTab(tab) {
-      this.openTab(tab);
+    openTab(tab, event) {
+      if (isDirectlyClicked(event)) {
+        this.openTab(tab);
+      }
     },
 
     /**
