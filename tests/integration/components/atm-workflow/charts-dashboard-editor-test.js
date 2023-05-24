@@ -1655,7 +1655,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     await unitDropdownHelper.selectOptionByText('Bytes');
     expect(helper.chartEditorStructure.elements.axes.items[0].unitName)
       .to.equal('Bytes');
-    expect(bytesFormatDropdownHelper.getTrigger()).to.exist;
+    expect(bytesFormatDropdownHelper.doesExist()).to.be.true;
 
     await bytesFormatDropdownHelper.selectOptionByText('SI');
 
@@ -1671,7 +1671,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     expect(helper.chartEditorStructure.elements.axes.items[0].unitName)
       .to.equal('None');
     expect(unitDropdownHelper.getSelectedOptionText()).to.equal('None');
-    expect(bytesFormatDropdownHelper.getTrigger()).to.not.exist;
+    expect(bytesFormatDropdownHelper.doesExist()).to.be.false;
 
     await click('.undo-btn');
     expect(find('.name-field .form-control')).to.have.value('Value');
@@ -1686,7 +1686,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     await click('.redo-btn');
     expect(helper.chartEditorStructure.elements.axes.items[0].unitName)
       .to.equal('Bytes');
-    expect(bytesFormatDropdownHelper.getTrigger()).to.exist;
+    expect(bytesFormatDropdownHelper.doesExist()).to.be.true;
 
     await click('.redo-btn');
     expect(bytesFormatDropdownHelper.getSelectedOptionText()).to.equal('SI');

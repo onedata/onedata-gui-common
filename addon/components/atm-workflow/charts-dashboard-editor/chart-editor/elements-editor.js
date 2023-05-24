@@ -141,13 +141,10 @@ export default Component.extend(I18n, {
   findNextSelectedTabCandidate() {
     const selectedTabIndex = this.tabs.indexOf(this.selectedTab);
     if (selectedTabIndex > -1) {
-      const newSelectedTabCandidates = [
+      return [
         ...this.tabs.slice(0, selectedTabIndex).reverse(),
         ...this.tabs.slice(selectedTabIndex + 1),
-      ].filter((tab) => !tab.isElementRemoved);
-      if (newSelectedTabCandidates[0]) {
-        return newSelectedTabCandidates[0];
-      }
+      ].find((tab) => !tab.isElementRemoved) ?? null;
     }
     return null;
   },

@@ -112,33 +112,37 @@ const Axis = ElementBase.extend({
     }
   ),
 
-  unitOptionsConfigurator: observer('unitName', 'unitOptions', function unitOptionsConfigurator() {
-    const unitOptionsType = getUnitOptionsTypeForUnitName(this.unitName);
-    if (!unitOptionsType) {
-      if (this.unitOptions) {
-        this.set('unitOptions', null);
+  unitOptionsConfigurator: observer(
+    'unitName',
+    'unitOptions',
+    function unitOptionsConfigurator() {
+      const unitOptionsType = getUnitOptionsTypeForUnitName(this.unitName);
+      if (!unitOptionsType) {
+        if (this.unitOptions) {
+          this.set('unitOptions', null);
+        }
+        return;
       }
-      return;
-    }
 
-    let unitOptions = null;
-    const currentUnitOptionsType = Object.keys(this.usedUnitOptions)
-      .find((type) => this.usedUnitOptions[type] === this.unitOptions);
+      let newUnitOptions = null;
+      const currentUnitOptionsType = Object.keys(this.usedUnitOptions)
+        .find((type) => this.usedUnitOptions[type] === this.unitOptions);
 
-    if (
-      !this.unitOptions ||
-      (currentUnitOptionsType && currentUnitOptionsType !== unitOptionsType)
-    ) {
-      unitOptions = this.usedUnitOptions[unitOptionsType] ??
-        createUnitOptions(unitOptionsType);
-    } else {
-      unitOptions = this.unitOptions;
+      if (
+        !this.unitOptions ||
+        (currentUnitOptionsType && currentUnitOptionsType !== unitOptionsType)
+      ) {
+        newUnitOptions = this.usedUnitOptions[unitOptionsType] ??
+          createUnitOptions(unitOptionsType);
+      } else {
+        newUnitOptions = this.unitOptions;
+      }
+      this.usedUnitOptions[unitOptionsType] = newUnitOptions;
+      if (this.unitOptions !== newUnitOptions) {
+        this.set('unitOptions', newUnitOptions);
+      }
     }
-    this.usedUnitOptions[unitOptionsType] = unitOptions;
-    if (this.unitOptions !== unitOptions) {
-      this.set('unitOptions', unitOptions);
-    }
-  }),
+  ),
 
   /**
    * @override

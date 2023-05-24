@@ -23,10 +23,8 @@ export default class OneDropdownHelper {
       element = this.elementOrSelector;
     }
 
-    const trigger = element?.matches('.ember-power-select-trigger') ?
-      element : element?.querySelector('.ember-power-select-trigger');
-
-    return trigger ?? null;
+    return element.matches('.ember-power-select-trigger') ?
+      element : element.querySelector('.ember-power-select-trigger');
   }
 
   /**
@@ -35,7 +33,7 @@ export default class OneDropdownHelper {
    */
   getSelectedOptionText() {
     const trigger = this.getTrigger();
-    return trigger?.querySelector('.ember-power-select-selected-item')
+    return trigger.querySelector('.ember-power-select-selected-item')
       ?.textContent?.trim() ?? null;
   }
 
@@ -45,7 +43,7 @@ export default class OneDropdownHelper {
    */
   getPlaceholder() {
     const trigger = this.getTrigger();
-    return trigger?.querySelector('.ember-power-select-placeholder')
+    return trigger.querySelector('.ember-power-select-placeholder')
       ?.textContent?.trim() ?? null;
   }
 
@@ -55,7 +53,7 @@ export default class OneDropdownHelper {
    */
   isDisabled() {
     const trigger = this.getTrigger();
-    return trigger?.getAttribute('aria-disabled') === 'true';
+    return trigger.getAttribute('aria-disabled') === 'true';
   }
 
   /**
@@ -65,7 +63,7 @@ export default class OneDropdownHelper {
   async getOptionsContainer() {
     await this.open();
     const trigger = this.getTrigger();
-    const containerId = trigger?.getAttribute('aria-owns');
+    const containerId = trigger.getAttribute('aria-owns');
     return (containerId && find(`#${containerId}`)) ?? null;
   }
 
@@ -76,7 +74,7 @@ export default class OneDropdownHelper {
   async getSearchInput() {
     await this.open();
     const optionsContainer = await this.getOptionsContainer();
-    return optionsContainer?.querySelector('.ember-power-select-search-input');
+    return optionsContainer.querySelector('.ember-power-select-search-input');
   }
 
   /**
@@ -112,9 +110,21 @@ export default class OneDropdownHelper {
    * @public
    * @returns {boolean}
    */
+  doesExist() {
+    try {
+      return Boolean(this.getTrigger());
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * @public
+   * @returns {boolean}
+   */
   isOpened() {
     const trigger = this.getTrigger();
-    return trigger?.getAttribute('aria-expanded') === 'true';
+    return trigger.getAttribute('aria-expanded') === 'true';
   }
 
   /**
@@ -123,7 +133,7 @@ export default class OneDropdownHelper {
    */
   async getOptions() {
     const optionsContainer = await this.getOptionsContainer();
-    return [...(optionsContainer?.querySelectorAll('li[aria-selected]') ?? [])];
+    return [...(optionsContainer.querySelectorAll('li[aria-selected]') ?? [])];
   }
 
   /**

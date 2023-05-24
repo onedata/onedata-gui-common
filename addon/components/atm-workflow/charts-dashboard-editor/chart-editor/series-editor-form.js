@@ -29,6 +29,7 @@ import {
 // TODO: VFS-10649 Handle dynamic series names
 
 const noneGroup = Object.freeze({});
+const defaultSeriesColor = '#000000';
 
 export default Component.extend(I18n, {
   layout,
@@ -134,7 +135,8 @@ export default Component.extend(I18n, {
     let normalizedValue = value;
     if (fieldName === 'colorType') {
       normalizedFieldName = 'color';
-      normalizedValue = value === 'auto' ? null : (this.series.color ?? '#000000');
+      normalizedValue = value === 'auto' ?
+        null : (this.series.color ?? defaultSeriesColor);
     } else if (fieldName === 'customColor') {
       normalizedFieldName = 'color';
     } else if (normalizedValue === noneGroup) {
@@ -148,26 +150,27 @@ export default Component.extend(I18n, {
       changeType,
     });
 
-    // This hook is responsible for adding/removing this series from axis/group.
-    // Changing axis/group property in series is not enough - we have to update
-    // also series references list of axis/group itself.
-    action.addExecuteHook((actionResult) => {
-      if (normalizedFieldName !== 'axis' && normalizedFieldName !== 'group') {
-        return;
-      }
-      const addSeriesTo = actionResult.undo ? action.previousValue : normalizedValue;
-      const removeSeriesFrom = actionResult.undo ? normalizedValue : action.previousValue;
-      if (addSeriesTo) {
-        set(addSeriesTo, 'series', [...addSeriesTo.series, this.series]);
-      }
-      if (removeSeriesFrom) {
-        set(
-          removeSeriesFrom,
-          'series',
-          removeSeriesFrom.series.filter((series) => series !== this.series)
-        );
-      }
-    });
+    if (normalizedFieldName === 'axis' || normalizedFieldName === 'group') {
+      // This hook is responsible for adding/removing this series from
+      // axis/group. Changing axis/group property in series is not enough - we
+      // have to update also series references list of axis/group itself.
+      action.addExecuteHook((actionResult) => {
+        const addSeriesTo = actionResult.undo ?
+          action.previousValue : normalizedValue;
+        const removeSeriesFrom = actionResult.undo ?
+          normalizedValue : action.previousValue;
+        if (addSeriesTo) {
+          set(addSeriesTo, 'series', [...addSeriesTo.series, this.series]);
+        }
+        if (removeSeriesFrom) {
+          set(
+            removeSeriesFrom,
+            'series',
+            removeSeriesFrom.series.filter((series) => series !== this.series)
+          );
+        }
+      });
+    }
 
     action.execute();
   },
@@ -211,7 +214,7 @@ const ColorTypeField = RadioField.extend({
 
 const CustomColorField = ColorField.extend({
   name: 'customColor',
-  defaultValue: '#000000',
+  defaultValue: defaultSeriesColor,
   isVisible: eq('valuesSource.colorType', raw('custom')),
 });
 

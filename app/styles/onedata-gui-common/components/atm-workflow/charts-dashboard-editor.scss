@@ -661,7 +661,7 @@
 
       .form-column {
         padding: 1em;
-        border-right: 1px solid $main-border-color;
+        border-right: $main-border;
       }
 
       .details-column {
@@ -669,7 +669,7 @@
       }
 
       .unit-options-group {
-        border: 1px solid $main-border-color;
+        border: $main-border;
         padding: 0.5em;
         border-radius: $border-radius-base;
 
@@ -710,7 +710,7 @@
           padding-right: 0;
           padding-bottom: 1em;
           border-right: 0;
-          border-bottom: 1px solid $main-border-color;
+          border-bottom: $main-border;
         }
 
         .details-column {
@@ -729,5 +729,12 @@
         }
       }
     }
+  }
+}
+
+.unitName-field-dropdown,
+.unitName-field {
+  .option-custom {
+    font-style: italic;
   }
 }

@@ -29,7 +29,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     });
   });
 
-  it('has class "chart-editor-elements-editor', async function () {
+  it('has class "chart-editor-elements-editor"', async function () {
     await renderComponent();
 
     expect(find('.chart-editor-elements-editor')).to.exist;
