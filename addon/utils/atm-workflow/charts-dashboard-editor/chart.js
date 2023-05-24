@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import { computed, set } from '@ember/object';
 import _ from 'lodash';
 import ElementBase from './element-base';
 import { ElementType } from './common';
@@ -80,6 +80,20 @@ const Chart = ElementBase.extend({
   ),
 
   /**
+   * @type {ComputedProperty<Array<Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup>>}
+   */
+  deepSeriesGroups: computed(
+    'seriesGroups.@each.deepSeriesGroups',
+    function deepSeriesGroups() {
+      const groups = [];
+      this.seriesGroups.forEach((group) => {
+        groups.push(group, ...group.deepSeriesGroups);
+      });
+      return groups;
+    }
+  ),
+
+  /**
    * @override
    */
   init() {
@@ -125,7 +139,7 @@ const Chart = ElementBase.extend({
    * @override
    */
   clone() {
-    return Chart.create({
+    const clonedInstance = Chart.create({
       elementOwner: this.elementOwner,
       title: this.title,
       titleTip: this.titleTip,
@@ -134,15 +148,24 @@ const Chart = ElementBase.extend({
       series: this.series.map((series) => series.clone()),
       parent: this.parent,
     });
+    [
+      ...clonedInstance.axes,
+      ...clonedInstance.seriesGroups,
+      ...clonedInstance.series,
+    ].forEach((element) => {
+      set(element, 'parent', clonedInstance);
+    });
+    return clonedInstance;
   },
 
   /**
    * @override
    */
   * nestedElements() {
-    yield* this.axes;
-    yield* this.seriesGroups;
-    yield* this.series;
+    for (const element of [...this.axes, ...this.seriesGroups, ...this.series]) {
+      yield element;
+      yield* element.nestedElements();
+    }
   },
 
   /**

@@ -10,9 +10,7 @@ import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { reads } from '@ember/object/computed';
 
 /**
- * @typedef {Object} SelectElementActionContext
- * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null} elementToSelect
- *   `null` means that we want to deselect existing selection
+ * @typedef {ViewStateChange} SelectElementActionContext
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
@@ -34,6 +32,16 @@ export default Action.extend({
   elementToSelect: reads('context.elementToSelect'),
 
   /**
+   * @type {ComputedProperty<SelectElementActionContext['isChartEditorActive']>}
+   */
+  isChartEditorActive: reads('context.isChartEditorActive'),
+
+  /**
+   * @type {ComputedProperty<SelectElementActionContext['elementsToDeselect']>}
+   */
+  elementsToDeselect: reads('context.elementsToDeselect'),
+
+  /**
    * @type {ComputedProperty<SelectElementActionContext['changeViewState']>}
    */
   changeViewState: reads('context.changeViewState'),
@@ -53,6 +61,10 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    this.changeViewState({ elementToSelect: this.elementToSelect });
+    this.changeViewState({
+      elementToSelect: this.elementToSelect,
+      isChartEditorActive: this.isChartEditorActive,
+      elementsToDeselect: this.elementsToDeselect,
+    });
   },
 });

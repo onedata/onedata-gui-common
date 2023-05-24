@@ -12,10 +12,9 @@ import generateId from 'onedata-gui-common/utils/generate-id';
 import Model from './model';
 import Section from './section';
 import Chart from './chart';
-import Axis from './axis';
+import Axis, { getUnitOptionsTypeForUnitName } from './axis';
 import SeriesGroup from './series-group';
 import Series from './series';
-import { ElementType } from './common';
 
 /**
  * @type {string}
@@ -120,7 +119,11 @@ export function createNewSeries(i18n, elementOwner = null) {
  * @param {boolean} [isRoot]
  * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Section}
  */
-function createSectionModelFromSpec(sectionSpec, elementOwner = null, isRoot = false) {
+export function createSectionModelFromSpec(
+  sectionSpec,
+  elementOwner = null,
+  isRoot = false
+) {
   const section = Section.create({
     elementOwner,
     isRoot,
@@ -146,7 +149,7 @@ function createSectionModelFromSpec(sectionSpec, elementOwner = null, isRoot = f
  * @param {unknown} [elementOwner]
  * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Chart}
  */
-function createChartModelFromSpec(chartSpec, elementOwner = null) {
+export function createChartModelFromSpec(chartSpec, elementOwner = null) {
   const chart = Chart.create({
     elementOwner,
     title: chartSpec.title?.content ?? '',
@@ -171,14 +174,10 @@ function createChartModelFromSpec(chartSpec, elementOwner = null) {
     set(axis, 'parent', chart);
   });
   chart.seriesGroups.forEach((seriesGroup) => {
-    groupsMap[seriesGroup.id] = seriesGroup;
     set(seriesGroup, 'parent', chart);
-    [...seriesGroup.nestedElements()]
-    .filter((element) => element.elementType === ElementType.SeriesGroup)
-      .forEach((subgroup) => {
-        groupsMap[subgroup.id] = subgroup;
-        set(subgroup, 'parent', chart);
-      });
+  });
+  chart.deepSeriesGroups.forEach((seriesGroup) => {
+    groupsMap[seriesGroup.id] = seriesGroup;
   });
 
   set(
@@ -209,13 +208,25 @@ function createChartModelFromSpec(chartSpec, elementOwner = null) {
  * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Axis}
  */
 function createAxisModelFromSpec(axisSpec, elementOwner = null) {
+  const unitOptionsType = getUnitOptionsTypeForUnitName(axisSpec.unitName);
+  let unitOptions = null;
+  if (unitOptionsType === 'BytesUnitOptions') {
+    unitOptions = EmberObject.create({
+      format: axisSpec.unitOptions?.format ?? 'iec',
+    });
+  } else if (unitOptionsType === 'CustomUnitOptions') {
+    unitOptions = EmberObject.create({
+      customName: axisSpec.unitOptions?.customName ?? '',
+      useMetricSuffix: axisSpec.unitOptions?.useMetricSuffix ?? false,
+    });
+  }
+
   const axis = Axis.create({
     elementOwner,
     id: axisSpec.id,
     name: axisSpec.name,
     unitName: axisSpec.unitName ?? 'none',
-    unitOptions: axisSpec.unitOptions ?
-      EmberObject.create(axisSpec.unitOptions) : null,
+    unitOptions,
     minInterval: axisSpec.minInterval ?? null,
   });
   return axis;

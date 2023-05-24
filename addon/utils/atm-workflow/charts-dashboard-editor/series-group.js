@@ -6,11 +6,16 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import { computed, set } from '@ember/object';
 import _ from 'lodash';
 import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
+
+/**
+ * @typedef {DashboardElementValidationError} SeriesGroupNameEmptyValidationError
+ * @property {'seriesGroupNameEmpty'} errorId
+ */
 
 const SeriesGroup = ElementBase.extend({
   /**
@@ -75,12 +80,40 @@ const SeriesGroup = ElementBase.extend({
   /**
    * @override
    */
+  directValidationErrors: computed('name', function directValidationErrors() {
+    if (!this.name) {
+      return [{
+        element: this,
+        errorId: 'seriesGroupNameEmpty',
+      }];
+    } else {
+      return [];
+    }
+  }),
+
+  /**
+   * @override
+   */
   nestedValidationErrors: computed(
     'seriesGroups.@each.validationErrors',
     function nestedValidationErrors() {
       return _.flatten(
         this.seriesGroups.map(({ validationErrors }) => validationErrors)
       );
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup>>}
+   */
+  deepSeriesGroups: computed(
+    'seriesGroups.@each.deepSeriesGroups',
+    function deepSeriesGroups() {
+      const groups = [];
+      this.seriesGroups.forEach((group) => {
+        groups.push(group, ...group.deepSeriesGroups);
+      });
+      return groups;
     }
   ),
 
@@ -125,7 +158,7 @@ const SeriesGroup = ElementBase.extend({
    * @override
    */
   clone() {
-    return SeriesGroup.create({
+    const clonedInstance = SeriesGroup.create({
       elementOwner: this.elementOwner,
       id: generateId(),
       name: this.name,
@@ -135,6 +168,10 @@ const SeriesGroup = ElementBase.extend({
       series: [],
       parent: this.parent,
     });
+    clonedInstance.seriesGroups.forEach((element) => {
+      set(element, 'parent', clonedInstance);
+    });
+    return clonedInstance;
   },
 
   /**

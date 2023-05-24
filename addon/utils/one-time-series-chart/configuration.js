@@ -582,7 +582,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @property {string} name will be visible as an axis label
  * @property {number} [minInterval] minimum gap between axis split lines.
  * @property {string} [unitName] for possible values see `formatValueWithUnit` util
- * @property {BytesUnitOptions|BitsUnitFormat|CustomUnitOptions} [unitOptions]
+ * @property {BytesUnitOptions|CustomUnitOptions} [unitOptions]
  * @property {OTSCRawFunction} [valueProvider] definition of a chart values
  * source to draw on the Y axis.
  */

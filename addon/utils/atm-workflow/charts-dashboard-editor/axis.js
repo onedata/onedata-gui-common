@@ -6,10 +6,20 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { computed, observer } from '@ember/object';
 import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
+
+/**
+ * @typedef {DashboardElementValidationError} AxisNameEmptyValidationError
+ * @property {'axisNameEmpty'} errorId
+ */
+
+/**
+ * @typedef {DashboardElementValidationError} AxisMinIntervalInvalidValidationError
+ * @property {'axisMinIntervalInvalid'} errorId
+ */
 
 const Axis = ElementBase.extend({
   /**
@@ -41,7 +51,7 @@ const Axis = ElementBase.extend({
   /**
    * @public
    * @virtual optional
-   * @type {EmberObject<BytesUnitOptions | BitsUnitFormat | CustomUnitOptions> | null}
+   * @type {EmberObject<BytesUnitOptions | CustomUnitOptions> | null}
    */
   unitOptions: null,
 
@@ -68,9 +78,71 @@ const Axis = ElementBase.extend({
   parent: null,
 
   /**
+   * @private
+   * @type {{ BytesUnitOptions?: BytesUnitOptions, CustomUnitOptions?: CustomUnitOptions }}
+   */
+  usedUnitOptions: undefined,
+
+  /**
    * @override
    */
   referencingPropertyNames: Object.freeze(['series', 'parent']),
+
+  /**
+   * @override
+   */
+  directValidationErrors: computed(
+    'name',
+    'minInterval',
+    function directValidationErrors() {
+      const errors = [];
+      if (!this.name) {
+        errors.push({
+          element: this,
+          errorId: 'axisNameEmpty',
+        });
+      }
+      if (typeof this.minInterval === 'string') {
+        errors.push({
+          element: this,
+          errorId: 'axisMinIntervalInvalid',
+        });
+      }
+      return errors;
+    }
+  ),
+
+  unitOptionsConfigurator: observer(
+    'unitName',
+    'unitOptions',
+    function unitOptionsConfigurator() {
+      const unitOptionsType = getUnitOptionsTypeForUnitName(this.unitName);
+      if (!unitOptionsType) {
+        if (this.unitOptions) {
+          this.set('unitOptions', null);
+        }
+        return;
+      }
+
+      let newUnitOptions = null;
+      const currentUnitOptionsType = Object.keys(this.usedUnitOptions)
+        .find((type) => this.usedUnitOptions[type] === this.unitOptions);
+
+      if (
+        !this.unitOptions ||
+        (currentUnitOptionsType && currentUnitOptionsType !== unitOptionsType)
+      ) {
+        newUnitOptions = this.usedUnitOptions[unitOptionsType] ??
+          createUnitOptions(unitOptionsType);
+      } else {
+        newUnitOptions = this.unitOptions;
+      }
+      this.usedUnitOptions[unitOptionsType] = newUnitOptions;
+      if (this.unitOptions !== newUnitOptions) {
+        this.set('unitOptions', newUnitOptions);
+      }
+    }
+  ),
 
   /**
    * @override
@@ -82,8 +154,10 @@ const Axis = ElementBase.extend({
     if (!this.series) {
       this.set('series', []);
     }
+    this.set('usedUnitOptions', {});
 
     this._super(...arguments);
+    this.unitOptionsConfigurator();
   },
 
   /**
@@ -135,3 +209,40 @@ const Axis = ElementBase.extend({
 });
 
 export default Axis;
+
+/**
+ * @param {TimeSeriesStandardUnit | 'custom'} unitName
+ * @returns {'BytesUnitOptions' | 'CustomUnitOptions' | null}
+ */
+export function getUnitOptionsTypeForUnitName(unitName) {
+  switch (unitName) {
+    case 'bytes':
+    case 'bytesPerSec':
+    case 'bits':
+    case 'bitsPerSec':
+      return 'BytesUnitOptions';
+    case 'custom':
+      return 'CustomUnitOptions';
+    default:
+      return null;
+  }
+}
+
+/**
+ *
+ * @param {'BytesUnitOptions' | 'CustomUnitOptions'} unitOptionsType
+ * @returns {EmberObject<BytesUnitOptions | CustomUnitOptions>}
+ */
+function createUnitOptions(unitOptionsType) {
+  switch (unitOptionsType) {
+    case 'BytesUnitOptions':
+      return EmberObject.create({
+        format: 'iec',
+      });
+    case 'CustomUnitOptions':
+      return EmberObject.create({
+        customName: '',
+        useMetricSuffix: false,
+      });
+  }
+}

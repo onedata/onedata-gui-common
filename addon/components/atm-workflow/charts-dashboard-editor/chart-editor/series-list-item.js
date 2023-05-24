@@ -12,6 +12,11 @@ import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
 import { translateSeriesType } from 'onedata-gui-common/utils/time-series-dashboard';
+import {
+  ElementType,
+  chartElementIcons,
+  getUnnamedElementNamePlaceholder,
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-list-item';
 
 export default Component.extend({
@@ -27,6 +32,29 @@ export default Component.extend({
   item: undefined,
 
   /**
+   * @type {string}
+   */
+  icon: chartElementIcons[ElementType.Series],
+
+  /**
+   * @type {string}
+   */
+  seriesGroupIcon: chartElementIcons[ElementType.SeriesGroup],
+
+  /**
+   * @type {string}
+   */
+  axisIcon: chartElementIcons[ElementType.Axis],
+
+  /**
+   * @type {ComputedProperty<string | null>}
+   */
+  name: computed('item.{repeatPerPrefixedTimeSeries,name}', function name() {
+    // TODO: VFS-10649 Handle dynamic series names
+    return this.item.repeatPerPrefixedTimeSeries ? null : this.item.name ?? null;
+  }),
+
+  /**
    * @type {ComputedProperty<SafeString | null>}
    */
   colorStyle: computed('item.color', function colorStyle() {
@@ -40,5 +68,12 @@ export default Component.extend({
    */
   typeTranslation: computed('item.type', function typeTranslation() {
     return translateSeriesType(this.i18n, this.item.type);
+  }),
+
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  namePlaceholder: computed(function namePlaceholder() {
+    return getUnnamedElementNamePlaceholder(this.i18n);
   }),
 });

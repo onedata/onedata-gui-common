@@ -12,6 +12,9 @@
         <a class="nav-link" role="tab" {{action (mut activeTabId) tabSpec.id}}>
           {{one-icon icon=tabSpec.icon}}
           {{tt this (concat "tabNames." tabSpec.name)}}
+          {{#if tabSpec.validationErrorsMessage}}
+            {{warning-icon tooltipText=tabSpec.validationErrorsMessage}}
+          {{/if}}
         </a>
       {{/nav.item}}
     {{/each}}

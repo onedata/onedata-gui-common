@@ -105,6 +105,23 @@ export function translateValidationErrorsBatch(i18n, validationErrors) {
 }
 
 /**
+ * @type {Object<ElementType, string>}
+ */
+export const chartElementIcons = Object.freeze({
+  [ElementType.Series]: 'chart',
+  [ElementType.SeriesGroup]: 'items-grid',
+  [ElementType.Axis]: 'axes',
+});
+
+/**
+ * @param {Ember.Service} i18n
+ * @returns {SafeString}
+ */
+export function getUnnamedElementNamePlaceholder(i18n) {
+  return i18n.t(`${i18nPrefix}.namePlaceholder`);
+}
+
+/**
  * @typedef {Object} ViewState
  * @property {SectionElement | null} selectedSectionElement
  * @property {boolean} isChartEditorActive
@@ -113,7 +130,7 @@ export function translateValidationErrorsBatch(i18n, validationErrors) {
 
 /**
  * @typedef {Object} ViewStateChange
- * @property {DashboardElement} [elementToSelect]
+ * @property {DashboardElement | null} [elementToSelect]
  * @property {boolean} [isChartEditorActive] If provided `elementToSelect` is a
  *   chart and you want to open its editor, then set this flag to `true`.
  * @property {Array<DashboardElement>} [elementsToDeselect]

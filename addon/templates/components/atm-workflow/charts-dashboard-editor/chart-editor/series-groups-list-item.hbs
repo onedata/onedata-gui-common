@@ -1,4 +1,11 @@
-{{one-icon icon="items-grid"}} <span class="name">{{item.name}}</span>
+{{one-icon icon=icon}}
+<span class="name">
+  {{#if item.name}}
+    {{item.name}}
+  {{else}}
+    <em>{{namePlaceholder}}</em>
+  {{/if}}
+</span>
 <span class="additional-info">
   {{#if item.stacked}}
     {{tt this "stack"}} |
@@ -6,6 +13,6 @@
   {{#if item.showSum}}
     {{tt this "sum"}} |
   {{/if}}
-  {{one-icon icon="chart"}}
+  {{one-icon icon=seriesIcon}}
   <span class="series-count">{{item.series.length}}</span>
 </span>

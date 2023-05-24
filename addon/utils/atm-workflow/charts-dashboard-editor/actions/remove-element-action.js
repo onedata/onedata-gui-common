@@ -76,6 +76,8 @@ export default Action.extend({
 
     this.removeReferences();
     set(this.elementToRemove, 'parent', null);
+    [this.elementToRemove, ...this.elementToRemove.nestedElements()]
+    .forEach((element) => set(element, 'isRemoved', true));
 
     this.changeViewState({
       elementsToDeselect: [
@@ -90,6 +92,8 @@ export default Action.extend({
    */
   onExecuteUndo() {
     set(this.elementToRemove, 'parent', this.oldParent);
+    [this.elementToRemove, ...this.elementToRemove.nestedElements()]
+    .forEach((element) => set(element, 'isRemoved', false));
     this.rollbackReferencesRemoval();
   },
 

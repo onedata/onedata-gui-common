@@ -1,11 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, find, click, settled, findAll, fillIn } from '@ember/test-helpers';
+import { render, find, click, settled, findAll, fillIn, triggerEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { getElementsStructure } from './charts-dashboard-editor/sections-editor-test';
 import { drag } from '../../../helpers/drag-drop';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
+import OneDropdownHelper from '../../../helpers/one-dropdown';
 
 const emptyDashboard = { rootSection: {} };
 
@@ -846,14 +847,17 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     expect(series[0].name).to.equal('Series');
     expect(series[0].type).to.equal('Line');
     expect(series[0].axisName).to.equal('Value');
+    expect(find('.chart-editor-elements-editor .nav-link')).to.contain.text('Series');
 
     await click('.undo-btn');
 
     expect(helper.chartEditorStructure.elements.series.items).to.have.length(0);
+    expect(find('.chart-editor-elements-editor .nav-link')).to.not.exist;
 
     await click('.redo-btn');
 
     expect(helper.chartEditorStructure.elements.series.items).to.have.length(1);
+    expect(find('.chart-editor-elements-editor .nav-link')).to.contain.text('Series');
   });
 
   it('allows to move chart series to the end, undo it and redo it again', async function () {
@@ -962,6 +966,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     const newSeriesId =
       helper.chartEditorStructure.elements.series.items.map(({ id }) => id);
     expect(newSeriesId).to.deep.equal([seriesIds[0]]);
+    expect(findAll('.chart-editor-elements-editor .nav-link')).to.have.length(1);
 
     await click('.undo-btn');
 
@@ -984,14 +989,17 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     expect(seriesGroups).to.have.length(1);
     expect(seriesGroups[0].name).to.equal('Group');
     expect(seriesGroups[0].seriesCount).to.equal(0);
+    expect(find('.chart-editor-elements-editor .nav-link')).to.contain.text('Group');
 
     await click('.undo-btn');
 
     expect(helper.chartEditorStructure.elements.seriesGroups.items).to.have.length(0);
+    expect(find('.chart-editor-elements-editor .nav-link')).to.not.exist;
 
     await click('.redo-btn');
 
     expect(helper.chartEditorStructure.elements.seriesGroups.items).to.have.length(1);
+    expect(find('.chart-editor-elements-editor .nav-link')).to.contain.text('Group');
   });
 
   it('allows to create new nested chart series group, undo it and redo it again', async function () {
@@ -1280,6 +1288,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     const newSeriesGroupsId =
       helper.chartEditorStructure.elements.seriesGroups.items.map(({ id }) => id);
     expect(newSeriesGroupsId).to.deep.equal([seriesGroupsIds[1]]);
+    expect(findAll('.chart-editor-elements-editor .nav-link')).to.have.length(1);
 
     await click('.undo-btn');
 
@@ -1310,6 +1319,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
       helper.chartEditorStructure.elements.seriesGroups
       .items[0].items.map(({ id }) => id);
     expect(newNestedSeriesGroupsId).to.deep.equal([nestedSeriesGroupIds[1]]);
+    expect(findAll('.chart-editor-elements-editor .nav-link')).to.have.length(2);
 
     await click('.undo-btn');
 
@@ -1335,14 +1345,17 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     expect(axes[1].name).to.equal('Value');
     expect(axes[1].unitName).to.equal('None');
     expect(axes[1].seriesCount).to.equal(0);
+    expect(find('.chart-editor-elements-editor .nav-link')).to.contain.text('Value');
 
     await click('.undo-btn');
 
     expect(helper.chartEditorStructure.elements.axes.items).to.have.length(1);
+    expect(find('.chart-editor-elements-editor .nav-link')).to.not.exist;
 
     await click('.redo-btn');
 
     expect(helper.chartEditorStructure.elements.axes.items).to.have.length(2);
+    expect(find('.chart-editor-elements-editor .nav-link')).to.contain.text('Value');
   });
 
   it('allows to move chart axis to the end, undo it and redo it again', async function () {
@@ -1447,6 +1460,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     const newAxisId =
       helper.chartEditorStructure.elements.axes.items.map(({ id }) => id);
     expect(newAxisId).to.deep.equal([axesIds[0]]);
+    expect(findAll('.chart-editor-elements-editor .nav-link')).to.have.length(0);
 
     await click('.undo-btn');
 
@@ -1455,6 +1469,230 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     await click('.redo-btn');
 
     expect(helper.chartEditorStructure.elements.axes.items).to.have.length(1);
+  });
+
+  it('allows to modify chart series properties, undo it and redo it again', async function () {
+    const helper = new Helper(this, {
+      rootSection: {
+        charts: [{
+          yAxes: [{
+            id: 'a1',
+            name: 'a1',
+          }, {
+            id: 'a2',
+            name: 'a2',
+          }],
+          seriesGroupBuilders: [{
+            builderType: 'static',
+            builderRecipe: {
+              seriesGroupTemplate: {
+                id: 'g1',
+                name: 'g1',
+              },
+            },
+          }],
+        }],
+      },
+    });
+    const typeDropdownHelper = new OneDropdownHelper('.type-field');
+    const axisDropdownHelper = new OneDropdownHelper('.axis-field');
+    const groupDropdownHelper = new OneDropdownHelper('.group-field');
+    await helper.render();
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.series.addTrigger);
+
+    await fillIn('.name-field .form-control', 'abc');
+    expect(find('.chart-editor-elements-editor .nav-link')).to.contain.text('abc');
+    expect(helper.chartEditorStructure.elements.series.items[0].name)
+      .to.equal('abc');
+
+    await typeDropdownHelper.selectOptionByText('Bar');
+    expect(helper.chartEditorStructure.elements.series.items[0].type)
+      .to.equal('Bar');
+
+    await click('.colorType-field .option-custom input');
+    expect(helper.chartEditorStructure.elements.series.items[0].color)
+      .to.equal('#000000');
+    expect(find('.customColor-field')).to.exist;
+
+    const colorInput = find('.customColor-field input');
+    colorInput.value = '#ff0000';
+    await triggerEvent(colorInput, 'input');
+    expect(helper.chartEditorStructure.elements.series.items[0].color)
+      .to.equal('#ff0000');
+
+    await axisDropdownHelper.selectOptionByText('a2');
+    expect(helper.chartEditorStructure.elements.series.items[0].axisName)
+      .to.equal('a2');
+
+    await groupDropdownHelper.selectOptionByText('g1');
+    expect(helper.chartEditorStructure.elements.series.items[0].seriesGroupName)
+      .to.equal('g1');
+
+    await click('.undo-btn');
+    expect(groupDropdownHelper.getSelectedOptionText()).to.equal('None');
+    expect(helper.chartEditorStructure.elements.series.items[0].seriesGroupName)
+      .to.equal(null);
+
+    await click('.undo-btn');
+    expect(axisDropdownHelper.getSelectedOptionText()).to.equal('a1');
+    expect(helper.chartEditorStructure.elements.series.items[0].axisName)
+      .to.equal('a1');
+
+    await click('.undo-btn');
+    expect(colorInput).to.have.value('#000000');
+    expect(helper.chartEditorStructure.elements.series.items[0].color)
+      .to.equal('#000000');
+
+    await click('.undo-btn');
+    expect(find('.colorType-field .option-auto input')).to.have.property('checked', true);
+    expect(helper.chartEditorStructure.elements.series.items[0].color)
+      .to.equal(null);
+    expect(find('.customColor-field input')).to.not.exist;
+
+    await click('.undo-btn');
+    expect(typeDropdownHelper.getSelectedOptionText()).to.equal('Line');
+    expect(helper.chartEditorStructure.elements.series.items[0].type)
+      .to.equal('Line');
+
+    await click('.undo-btn');
+    expect(find('.name-field .form-control')).to.have.value('Series');
+    expect(helper.chartEditorStructure.elements.series.items[0].name)
+      .to.equal('Series');
+
+    await click('.redo-btn');
+    expect(find('.name-field .form-control')).to.have.value('abc');
+    expect(helper.chartEditorStructure.elements.series.items[0].name)
+      .to.equal('abc');
+
+    await click('.redo-btn');
+    expect(typeDropdownHelper.getSelectedOptionText()).to.equal('Bar');
+    expect(helper.chartEditorStructure.elements.series.items[0].type)
+      .to.equal('Bar');
+
+    await click('.redo-btn');
+    expect(helper.chartEditorStructure.elements.series.items[0].color)
+      .to.equal('#000000');
+    expect(find('.customColor-field')).to.exist;
+
+    await click('.redo-btn');
+    expect(helper.chartEditorStructure.elements.series.items[0].color)
+      .to.equal('#ff0000');
+    expect(find('.customColor-field input')).to.have.value('#ff0000');
+
+    await click('.redo-btn');
+    expect(axisDropdownHelper.getSelectedOptionText()).to.equal('a2');
+    expect(helper.chartEditorStructure.elements.series.items[0].axisName)
+      .to.equal('a2');
+
+    await click('.redo-btn');
+    expect(groupDropdownHelper.getSelectedOptionText()).to.equal('g1');
+    expect(helper.chartEditorStructure.elements.series.items[0].seriesGroupName)
+      .to.equal('g1');
+  });
+
+  it('allows to modify chart series group properties, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.seriesGroups.addTrigger);
+
+    await fillIn('.name-field .form-control', 'abc');
+    expect(find('.chart-editor-elements-editor .nav-link')).to.contain.text('abc');
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].name)
+      .to.equal('abc');
+
+    await click('.stacked-field .one-way-toggle');
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].stacked).to.be.true;
+
+    await click('.showSum-field .one-way-toggle');
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].showSum).to.be.true;
+
+    await click('.undo-btn');
+    expect(find('.showSum-field .one-way-toggle')).to.not.have.class('checked');
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].showSum)
+      .to.be.false;
+
+    await click('.undo-btn');
+    expect(find('.stacked-field .one-way-toggle')).to.not.have.class('checked');
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].stacked)
+      .to.be.false;
+
+    await click('.undo-btn');
+    expect(find('.name-field .form-control')).to.have.value('Group');
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].name)
+      .to.equal('Group');
+
+    await click('.redo-btn');
+    expect(find('.name-field .form-control')).to.have.value('abc');
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].name)
+      .to.equal('abc');
+
+    await click('.redo-btn');
+    expect(find('.stacked-field .one-way-toggle')).to.have.class('checked');
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].stacked).to.be.true;
+
+    await click('.redo-btn');
+    expect(find('.showSum-field .one-way-toggle')).to.have.class('checked');
+    expect(helper.chartEditorStructure.elements.seriesGroups.items[0].showSum).to.be.true;
+  });
+
+  it('allows to modify chart axis properties, undo it and redo it again', async function () {
+    const helper = new Helper(this, emptyDashboard);
+    const unitDropdownHelper = new OneDropdownHelper('.unitName-field');
+    const bytesFormatDropdownHelper = new OneDropdownHelper('.bytesUnitOptions-field .format-field');
+    await helper.render();
+    await click(helper.sectionsEditorStructure.addChartTrigger);
+    await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
+    await click(helper.chartEditorStructure.elements.axes.items[0].headerElement);
+
+    await fillIn('.name-field .form-control', 'abc');
+    expect(find('.chart-editor-elements-editor .nav-link')).to.contain.text('abc');
+    expect(helper.chartEditorStructure.elements.axes.items[0].name)
+      .to.equal('abc');
+
+    await unitDropdownHelper.selectOptionByText('Bytes');
+    expect(helper.chartEditorStructure.elements.axes.items[0].unitName)
+      .to.equal('Bytes');
+    expect(bytesFormatDropdownHelper.doesExist()).to.be.true;
+
+    await bytesFormatDropdownHelper.selectOptionByText('SI');
+
+    await fillIn('.minInterval-field .form-control', '1');
+
+    await click('.undo-btn');
+    expect(find('.minInterval-field .form-control')).to.have.value('');
+
+    await click('.undo-btn');
+    expect(bytesFormatDropdownHelper.getSelectedOptionText()).to.equal('IEC');
+
+    await click('.undo-btn');
+    expect(helper.chartEditorStructure.elements.axes.items[0].unitName)
+      .to.equal('None');
+    expect(unitDropdownHelper.getSelectedOptionText()).to.equal('None');
+    expect(bytesFormatDropdownHelper.doesExist()).to.be.false;
+
+    await click('.undo-btn');
+    expect(find('.name-field .form-control')).to.have.value('Value');
+    expect(helper.chartEditorStructure.elements.axes.items[0].name)
+      .to.equal('Value');
+
+    await click('.redo-btn');
+    expect(find('.name-field .form-control')).to.have.value('abc');
+    expect(helper.chartEditorStructure.elements.axes.items[0].name)
+      .to.equal('abc');
+
+    await click('.redo-btn');
+    expect(helper.chartEditorStructure.elements.axes.items[0].unitName)
+      .to.equal('Bytes');
+    expect(bytesFormatDropdownHelper.doesExist()).to.be.true;
+
+    await click('.redo-btn');
+    expect(bytesFormatDropdownHelper.getSelectedOptionText()).to.equal('SI');
+
+    await click('.redo-btn');
+    expect(find('.minInterval-field .form-control')).to.have.value('1');
   });
 });
 
@@ -1574,7 +1812,7 @@ function getElementsListItemDetails(element, customPropsGetter) {
     id: element.dataset.chartElementId,
     element,
     headerElement: element.querySelector('.list-item-header'),
-    name: element.querySelector('.name').innerText,
+    name: element.querySelector('.name').innerText.trim(),
     addTrigger: element.querySelector('.add-action'),
     duplicateTrigger: element.querySelector('.duplicate-action'),
     removeTrigger: element.querySelector('.remove-action'),

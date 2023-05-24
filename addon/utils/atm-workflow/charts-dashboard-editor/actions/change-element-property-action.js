@@ -19,13 +19,13 @@
  */
 
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
-import { set } from '@ember/object';
+import { get, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 
 /**
  * @typedef {Object} ChangeElementPropertyActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.Section} element
- * @property {string} propertyName
+ * @property {string} propertyName may contain dots to indicate nested property
  * @property {unknown} newValue
  * @property {PropertyChangeType} changeType
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
@@ -78,6 +78,7 @@ export default Action.extend({
   changeType: reads('context.changeType'),
 
   /**
+   * @private
    * @type {ComputedProperty<ChangeElementPropertyActionContext['changeViewState']>}
    */
   changeViewState: reads('context.changeViewState'),
@@ -111,7 +112,7 @@ export default Action.extend({
   onExecute() {
     this.changeViewState({ elementToSelect: this.element });
     if (!this.wasExecuted) {
-      this.set('previousValue', this.element[this.propertyName]);
+      this.set('previousValue', get(this.element, this.propertyName));
     }
     this.set('wasExecuted', true);
     set(this.element, this.propertyName, this.newValue);
