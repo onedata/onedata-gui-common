@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import Version from 'onedata-gui-common/utils/version';
 
 describe('Unit | Utility | version', function () {
-  it('returns true if a version comforms stable version requirement', function () {
+  it('returns true if a version conforms stable version requirement', function () {
     const requiredVersion = '21.02.2';
     const testedVersions = [
       '21.02.2',
@@ -20,7 +20,7 @@ describe('Unit | Utility | version', function () {
     }
   });
 
-  it('returns true if a version comforms unstable version requirement', function () {
+  it('returns true if a version conforms unstable version requirement', function () {
     const requiredVersion = '21.02.0-alpha2';
     const testedVersions = [
       '21.02.1',
@@ -37,7 +37,7 @@ describe('Unit | Utility | version', function () {
     }
   });
 
-  it('returns false if a version does not comform stable version requirement', function () {
+  it('returns false if a version does not conform stable version requirement', function () {
     const requiredVersion = '21.02.4';
     const testedVersions = [
       '21.02.3',
@@ -51,7 +51,7 @@ describe('Unit | Utility | version', function () {
     }
   });
 
-  it('returns false if a version does not comform unstable version requirement', function () {
+  it('returns false if a version does not conform unstable version requirement', function () {
     const requiredVersion = '21.02.0-alpha11';
     const testedVersions = [
       '21.02.0-alpha4',

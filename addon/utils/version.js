@@ -18,15 +18,14 @@ export default {
  * @returns {boolean}
  */
 export function isRequiredVersion(version, minVersion) {
+  if (version === minVersion) {
+    return true;
+  }
   const parsedVersion = parseVersion(version);
   const parsedMinVersion = parseVersion(minVersion);
   if (!parsedVersion || !parsedMinVersion) {
-    throw new Error(
-      'isRequiredVersion: must specify both valid version and minRequiredVersion'
-    );
-  }
-  if (version === minVersion) {
-    return true;
+    console.error('isRequiredVersion: must specify both valid version and minVersion');
+    return false;
   }
   if (parsedVersion.major > parsedMinVersion.major) {
     return true;
@@ -34,7 +33,7 @@ export function isRequiredVersion(version, minVersion) {
   if (parsedVersion.major < parsedMinVersion.major) {
     return false;
   }
-  return compareMinorVersions(parsedVersion.minor, parsedMinVersion.minor) > 0;
+  return compareMinorVersions(parsedVersion.minor, parsedMinVersion.minor) >= 0;
 }
 
 export function parseVersion(version) {
@@ -60,7 +59,8 @@ export function compareMinorVersions(aVer, bVer) {
     const aInt = Number.parseInt(aVer);
     const bInt = Number.parseInt(bVer);
     if (Number.isNaN(aInt) || Number.isNaN(bInt)) {
-      throw new Error('compareMinorVersions: invalid version string');
+      console.error('compareMinorVersions: invalid version string');
+      return -1;
     }
     return Number.parseInt(aVer) - Number.parseInt(bVer);
   } else if (aUnstableResult && bUnstableResult) {
