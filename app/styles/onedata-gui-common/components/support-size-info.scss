@@ -52,9 +52,10 @@
     .supported-space-info-container {
       display: flex;
     }
-    .popover-info-trigger {
+    .record-info-trigger.popover-info-trigger {
       margin-top: -0.04em;
       margin-left: 0.15em;
+      margin-right: 0.3em;
       width: 0.9em;
       height: 0.9em;
     }
