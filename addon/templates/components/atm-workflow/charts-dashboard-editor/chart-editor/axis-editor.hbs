@@ -4,4 +4,32 @@
     actionsFactory=actionsFactory
   }}
 {{/perfect-scrollbar-element}}
-<div class="details-column"></div>
+<div class="details-column">
+  {{#bs-tab
+    activeId=activeTabId
+    class="only-tab-bar bs-tab-onedata"
+    fade=false
+    onChange=(action "changeTab")
+    as |tab|
+  }}
+    {{#tab.pane
+      elementId=tabIds.attachedSeries
+      title=(tt this "detailsTabNames.attachedSeries")
+    }}
+      {{#if chartElement.series.length}}
+        {{atm-workflow/charts-dashboard-editor/chart-editor/series-list
+          chart=chart
+          seriesSource=chartElement
+          actionsFactory=actionsFactory
+        }}
+      {{else}}
+        <p class="empty-details-info">{{tt this "noSeriesAttached"}}</p>
+      {{/if}}
+    {{/tab.pane}}
+    {{#tab.pane
+      elementId=tabIds.labelsFormatting
+      title=(tt this "detailsTabNames.labelsFormatting")
+    }}
+    {{/tab.pane}}
+  {{/bs-tab}}
+</div>

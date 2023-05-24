@@ -665,7 +665,20 @@
       }
 
       .details-column {
+        display: grid;
         padding: 1em;
+      }
+
+      .details-header {
+        @include font-semibold();
+        margin: 0;
+        font-size: 100%;
+        text-transform: uppercase;
+      }
+
+      .empty-details-info {
+        place-self: center;
+        color: $main-text-color-inactive;
       }
 
       .unit-options-group {
@@ -678,6 +691,11 @@
           margin: 0;
         }
       }
+    }
+
+    .series-group-editor .details-column {
+      grid-template-rows: min-content 1fr;
+      gap: 1em;
     }
   }
 
@@ -707,15 +725,13 @@
         grid-template-columns: 1fr;
 
         .form-column {
-          padding-right: 0;
-          padding-bottom: 1em;
+          padding: 1em;
           border-right: 0;
           border-bottom: $main-border;
         }
 
         .details-column {
-          padding-left: 0;
-          padding-top: 1em;
+          padding: 1em;
         }
       }
     }

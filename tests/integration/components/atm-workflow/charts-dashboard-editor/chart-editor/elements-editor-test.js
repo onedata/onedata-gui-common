@@ -38,7 +38,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
   it('shows placeholder text when no element is opened', async function () {
     await renderComponent();
 
-    expect(find('.nav-link')).to.not.exist;
+    expect(find('.element-editor-nav-link')).to.not.exist;
     const noElementInfo = find('.no-elements-info');
     expect(noElementInfo).to.exist
       .and.to.contain.text('You are not editing any element.')
@@ -57,8 +57,8 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     this.set('selectedElement', series);
     await settled();
 
-    let navLinks = findAll('.nav-link');
-    let tabPanes = findAll('.tab-pane');
+    let navLinks = findAll('.element-editor-nav-link');
+    let tabPanes = findAll('.element-editor-tab-pane');
     expect(navLinks).to.have.length(1);
     expect(navLinks[0].parentElement).to.have.class('active');
     expect(navLinks[0]).to.contain.text('s1');
@@ -70,8 +70,8 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     this.set('selectedElement', seriesGroup);
     await settled();
 
-    navLinks = findAll('.nav-link');
-    tabPanes = findAll('.tab-pane');
+    navLinks = findAll('.element-editor-nav-link');
+    tabPanes = findAll('.element-editor-tab-pane');
     expect(navLinks).to.have.length(2);
     expect(navLinks[1].parentElement).to.have.class('active');
     expect(navLinks[1]).to.contain.text('g1');
@@ -83,8 +83,8 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     this.set('selectedElement', axis);
     await settled();
 
-    navLinks = findAll('.nav-link');
-    tabPanes = findAll('.tab-pane');
+    navLinks = findAll('.element-editor-nav-link');
+    tabPanes = findAll('.element-editor-tab-pane');
     expect(navLinks).to.have.length(3);
     expect(navLinks[2].parentElement).to.have.class('active');
     expect(navLinks[2]).to.contain.text('a1');
@@ -110,7 +110,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
 
     expect(this.selectSpy).to.be.calledWith(seriesArr[1], [seriesArr[2]]);
     this.selectSpy.resetHistory();
-    let navLinks = findAll('.nav-link');
+    let navLinks = findAll('.element-editor-nav-link');
     expect(navLinks).to.have.length(2);
     expect(navLinks[0]).to.contain.text('s0');
     expect(navLinks[1]).to.contain.text('s1');
@@ -120,7 +120,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     await click('.close-trigger');
 
     expect(this.selectSpy).to.be.not.called;
-    navLinks = findAll('.nav-link');
+    navLinks = findAll('.element-editor-nav-link');
     expect(navLinks).to.have.length(1);
     expect(navLinks[0]).to.contain.text('s1');
     expect(navLinks[0].parentElement).to.have.class('active');
@@ -135,9 +135,9 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
       await settled();
     }
 
-    await click('.nav-link');
+    await click('.element-editor-nav-link');
 
-    expect(find('.nav-link').parentElement).to.have.class('active');
+    expect(find('.element-editor-nav-link').parentElement).to.have.class('active');
   });
 
   it('shows "unnamed" title for unnamed element', async function () {
@@ -147,7 +147,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     this.set('selectedElement', series);
     await settled();
 
-    expect(find('.nav-link')).to.contain.text('Unnamed');
+    expect(find('.element-editor-nav-link')).to.contain.text('Unnamed');
   });
 
   it('reacts to changing element name', async function () {
@@ -159,7 +159,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     set(series, 'name', 'test');
     await settled();
 
-    expect(find('.nav-link')).to.contain.text('test');
+    expect(find('.element-editor-nav-link')).to.contain.text('test');
   });
 
   it('removes tab when element is deleted', async function () {
@@ -176,7 +176,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     set(seriesArr[1], 'isRemoved', true);
     await settled();
 
-    const navLinks = findAll('.nav-link');
+    const navLinks = findAll('.element-editor-nav-link');
     expect(navLinks).to.have.length(1);
     expect(navLinks[0]).to.contain.text('s0');
     expect(navLinks[0].parentElement).to.have.class('active');
