@@ -358,16 +358,19 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   .tags-input {
     display: inline-block;
     padding: 0;
-    line-height: 2.4;
+    line-height: 1.8;
     min-height: auto;
     .tag-item {
-      display: inline;
+      display: inline-block;
       margin-right: $margin-base * 0.5;
       padding: $margin-base * 0.5 $margin-base;
       border-radius: $border-radius-base;
       border: $tags-input-tag-border-size solid #ffffff33;
       background: #ffffff22;
       white-space: nowrap;
+      max-width: 480px;
+      overflow: hidden;
+      text-overflow: ellipsis;
       &:last-of-type {
         margin-right: 0;
       }
