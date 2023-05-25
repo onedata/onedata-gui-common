@@ -70,11 +70,15 @@ export default Component.extend(I18n, {
    * @type {Ember.ComputedProperty<string>}
    */
   linkToGroup: computed('record', function linkToGroup() {
-    return this.router.urlFor(
-      'onedata.sidebar.content.aspect',
-      'groups',
-      this.guiUtils.getRoutableIdFor(this.record),
-      'members'
-    );
+    try {
+      return this.router.urlFor(
+        'onedata.sidebar.content.aspect',
+        'groups',
+        this.guiUtils.getRoutableIdFor(this.record),
+        'members'
+      );
+    } catch (error) {
+      return null;
+    }
   }),
 });
