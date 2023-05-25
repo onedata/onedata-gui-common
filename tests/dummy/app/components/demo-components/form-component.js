@@ -274,7 +274,7 @@ export default Component.extend({
   aceField: computed(function aceField() {
     return AceField.create({
       name: 'ace',
-      label: 'ACE markdown',
+      label: 'ACE JSON',
       lang: 'json',
     });
   }),
