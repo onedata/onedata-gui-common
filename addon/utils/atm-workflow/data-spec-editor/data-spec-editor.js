@@ -21,7 +21,7 @@ import {
   createDataTypeSelectorElement,
   createDataTypeElement,
 } from './editor-element-creators';
-import valueConstraintsEditors from './value-constraints-editors';
+import paramsEditors from './params-editors';
 import { validator } from 'ember-cp-validations';
 
 /**
@@ -133,7 +133,7 @@ export const FormElement = FormField.extend({
 
   /**
    * Contains contextual data for editor elements. For now it preserves only `formRootGroup`
-   * for each editor element with dedicated value constraints form. It allows
+   * for each editor element with dedicated params form. It allows
    * to have the same form state regardless element nesting manipulation and component
    * rerenders.
    * @type {ComputedProperty<Map<string, DataSpecEditorElementContext>>}
@@ -169,8 +169,8 @@ export const FormElement = FormField.extend({
             elementsToProcess.push(get(newElement, 'config.item'));
             break;
           default: {
-            const dataTypeEditorClass = dataType in valueConstraintsEditors &&
-              valueConstraintsEditors[dataType].FormElement;
+            const dataTypeEditorClass = dataType in paramsEditors &&
+              paramsEditors[dataType].FormElement;
             if (!mapValue.formRootGroup && dataTypeEditorClass) {
               mapValue.formRootGroup = EditorElementFormRootGroup.create({
                 ownerSource: this,
@@ -297,18 +297,17 @@ export function dataSpecToFormValues(dataSpec) {
   }
 
   const dataType = dataSpec.type;
-  const valueConstraints = dataSpec.valueConstraints || {};
 
-  if (dataType in valueConstraintsEditors) {
+  if (dataType in paramsEditors) {
     return createDataTypeElement(dataType, {
       formValues: createValuesContainer({
-        dataTypeEditor: valueConstraintsEditors[dataType]
-          .valueConstraintsToFormValues(valueConstraints),
+        dataTypeEditor: paramsEditors[dataType]
+          .atmDataSpecParamsToFormValues(dataSpec),
       }),
     });
   } else if (dataType === 'array') {
     return createDataTypeElement(dataType, {
-      item: dataSpecToFormValues(valueConstraints.itemDataSpec),
+      item: dataSpecToFormValues(dataSpec.itemDataSpec),
     });
   } else {
     return createDataTypeElement(dataType);
@@ -327,25 +326,21 @@ export function formValuesToDataSpec(values) {
 
   const dataType = values.config.dataType;
 
-  if (dataType in valueConstraintsEditors) {
+  if (dataType in paramsEditors) {
     const dataTypeEditorValues =
       get(values.config, 'formValues.dataTypeEditor');
     return {
       type: dataType,
-      valueConstraints: valueConstraintsEditors[dataType]
-        .formValuesToValueConstraints(dataTypeEditorValues),
+      ...paramsEditors[dataType].formValuesToAtmDataSpecParams(dataTypeEditorValues),
     };
   } else if (dataType === 'array') {
     return {
       type: dataType,
-      valueConstraints: {
-        itemDataSpec: formValuesToDataSpec(values.config.item),
-      },
+      itemDataSpec: formValuesToDataSpec(values.config.item),
     };
   } else {
     return {
       type: dataType,
-      valueConstraints: {},
     };
   }
 }

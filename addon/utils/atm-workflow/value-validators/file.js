@@ -1,8 +1,8 @@
 /**
  * `file` type value validator.
  *
- * NOTE: This validator does not check whether file type matches value
- * constraints from data spec. Atm file value (in JSON form) only requires
+ * NOTE: This validator does not check whether file type matches
+ * `fileType` param from data spec. Atm file value (in JSON form) only requires
  * existence of correct `file_id` field. File type validation must be done on
  * another level of checking (e.g. in file value editor itself).
  *

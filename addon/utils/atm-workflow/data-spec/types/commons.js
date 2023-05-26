@@ -11,13 +11,13 @@
  */
 export const typeDefinitionBase = Object.freeze({
   supertype: '',
-  isValueConstraintsCompatible() {
+  areAtmDataSpecParamsCompatible() {
     return true;
   },
-  getValueConstraintsConditions() {
+  getAtmDataSpecParamsConditions() {
     return null;
   },
-  isValueConstraintsMatchingFilters() {
+  isAtmDataSpecParamsMatchingFilters() {
     return true;
   },
 });

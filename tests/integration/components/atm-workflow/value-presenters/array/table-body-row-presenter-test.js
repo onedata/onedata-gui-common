@@ -23,14 +23,10 @@ describe('Integration | Component | atm-workflow/value-presenters/array/table-bo
       ],
       dataSpec: {
         type: 'array',
-        valueConstraints: {
+        itemDataSpec: {
+          type: 'array',
           itemDataSpec: {
-            type: 'array',
-            valueConstraints: {
-              itemDataSpec: {
-                type: 'string',
-              },
-            },
+            type: 'string',
           },
         },
       },

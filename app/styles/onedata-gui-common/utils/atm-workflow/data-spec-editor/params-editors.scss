@@ -1,4 +1,4 @@
-.value-constraints-editor {
+.data-spec-params-editor {
   .allowedValues-field {
     flex-wrap: wrap;
 
@@ -18,6 +18,6 @@
   }
 }
 
-@import './value-constraints-editors/file';
-@import './value-constraints-editors/number';
-@import './value-constraints-editors/time-series-measurement';
+@import './params-editors/file';
+@import './params-editors/number';
+@import './params-editors/time-series-measurement';

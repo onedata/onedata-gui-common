@@ -1,7 +1,7 @@
 /**
- * Provides a form element capable of showing, creating and modifying file data spec
- * value constraints. It also provides two methods for conversion between form values
- * and value constraints in both directions.
+ * Provides a form element capable of showing and modifying file data spec
+ * params. It also provides two methods for conversion between form values
+ * and data spec params in both directions.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -14,14 +14,14 @@ import { scheduleOnce } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
-import { getAtmValueConstraintsConditions } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
+import { getAtmDataSpecParamsConditions } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import {
   atmFileTypesArray,
   translateAtmFileType,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
-const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.file';
+const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.paramsEditors.file';
 
 const FormElement = FormFieldsGroup.extend({
   /**
@@ -34,14 +34,14 @@ const FormElement = FormFieldsGroup.extend({
    * @type {ComputedProperty<Array<AtmFileType>>}
    */
   allowedFileTypes: computed('dataSpecFilters', function allowedFileTypes() {
-    const conditions = getAtmValueConstraintsConditions(
+    const conditions = getAtmDataSpecParamsConditions(
       'file',
       this.dataSpecFilters ?? []
     );
     return conditions.allowedFileTypes;
   }),
 
-  classes: 'file-value-constraints-editor value-constraints-editor',
+  classes: 'file-data-spec-params-editor params-editors',
   i18nPrefix: `${i18nPrefix}.fields`,
   // Does not take parent fields group translation path into account
   translationPath: '',
@@ -82,9 +82,9 @@ const FileTypeDropdown = DropdownField.extend({
 
 /**
  * @param {Utils.FormComponent.ValuesContainer} values Values from file editor
- * @returns {AtmFileValueConstraints} value constraints
+ * @returns {Omit<AtmFileDataSpec, 'type'>}
  */
-function formValuesToValueConstraints(values) {
+function formValuesToAtmDataSpecParams(values) {
   const formFileType = values && get(values, 'fileType');
   const fileType = atmFileTypesArray.includes(formFileType) ?
     formFileType : atmFileTypesArray[0];
@@ -92,12 +92,11 @@ function formValuesToValueConstraints(values) {
 }
 
 /**
- * @param {AtmFileValueConstraints} valueConstraints value
- * constraints taken from the raw data spec
+ * @param {AtmFileDataSpec} atmDataSpec
  * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in a form
  */
-function valueConstraintsToFormValues(valueConstraints) {
-  const fileType = valueConstraints && valueConstraints.fileType || atmFileTypesArray[0];
+function atmDataSpecParamsToFormValues(atmDataSpec) {
+  const fileType = atmDataSpec?.fileType || atmFileTypesArray[0];
   return createValuesContainer({
     fileType,
   });
@@ -126,8 +125,8 @@ function shouldWarnOnRemove() {
 
 export default {
   FormElement,
-  formValuesToValueConstraints,
-  valueConstraintsToFormValues,
+  formValuesToAtmDataSpecParams,
+  atmDataSpecParamsToFormValues,
   summarizeFormValues,
   shouldWarnOnRemove,
 };

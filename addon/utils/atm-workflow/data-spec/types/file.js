@@ -13,42 +13,37 @@ import { FileType } from 'onedata-gui-common/utils/file';
 /**
  * @typedef {Object} AtmFileDataSpec
  * @property {'file'} type
- * @property {AtmFileValueConstraints} valueConstraints
- */
-
-/**
- * @typedef {Object} AtmFileValueConstraints
  * @property {AtmFileType} fileType
  */
 
 /**
- * @typedef {Object} AtmFileValueConstraintsConditions
+ * @typedef {Object} AtmFileDataSpecParamsConditions
  * @property {Array<AtmFileType>} allowedFileTypes
  */
 
 /**
- * @type {AtmDataSpecTypeDefinition<AtmFileValueConstraints, AtmFileValueConstraintsConditions>}
+ * @type {AtmDataSpecTypeDefinition<AtmFileDataSpec, AtmFileDataSpecParamsConditions>}
  */
 export const atmDataSpecTypeDefinition = Object.freeze({
   ...typeDefinitionBase,
   supertype: 'object',
-  isValueConstraintsCompatible(
-    referenceConstraints,
-    typeOrSubtypeConstraints,
+  areAtmDataSpecParamsCompatible(
+    referenceAtmDataSpec,
+    typeOrSubtypeAtmDataSpec,
     ignoreEmpty = false,
   ) {
-    if (!referenceConstraints?.fileType || !typeOrSubtypeConstraints?.fileType) {
+    if (!referenceAtmDataSpec?.fileType || !typeOrSubtypeAtmDataSpec?.fileType) {
       return ignoreEmpty;
     }
 
-    if (referenceConstraints.fileType === typeOrSubtypeConstraints.fileType) {
+    if (referenceAtmDataSpec.fileType === typeOrSubtypeAtmDataSpec.fileType) {
       return true;
     } else {
-      return atmFileTypeSupertypes[typeOrSubtypeConstraints.fileType]
-        ?.includes(referenceConstraints.fileType) || false;
+      return atmFileTypeSupertypes[typeOrSubtypeAtmDataSpec.fileType]
+        ?.includes(referenceAtmDataSpec.fileType) || false;
     }
   },
-  getValueConstraintsConditions(filters) {
+  getAtmDataSpecParamsConditions(filters) {
     const allowedFileTypesPerFilter = filters
       ?.map((filter) => {
         const filterFileDataSpecs = filter?.types
@@ -57,7 +52,7 @@ export const atmDataSpecTypeDefinition = Object.freeze({
           return atmFileTypesArray;
         }
         const filterFileTypes = filterFileDataSpecs
-          .map((type) => type?.valueConstraints?.fileType ?? AtmFileType.Any);
+          .map((type) => type?.fileType ?? AtmFileType.Any);
         switch (filter?.filterType) {
           case 'typeOrSupertype':
             return _.uniq(_.flatten(filterFileTypes.map((fileType) => [

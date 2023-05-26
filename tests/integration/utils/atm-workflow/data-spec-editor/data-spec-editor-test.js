@@ -96,7 +96,6 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
         await atmDataSpecTypeHelper.selectOptionByText(label);
         expect(getCreatedAtmDataSpec(this)).to.deep.equal({
           type,
-          valueConstraints: {},
         });
       });
     });
@@ -109,9 +108,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
       await click('.integersOnly-field .one-way-toggle');
       expect(getCreatedAtmDataSpec(this)).to.deep.equal({
         type: AtmDataSpecType.Number,
-        valueConstraints: {
-          integersOnly: true,
-        },
+        integersOnly: true,
       });
     });
 
@@ -123,9 +120,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
       await fileTypeHelper.selectOptionByText('Regular');
       expect(getCreatedAtmDataSpec(this)).to.deep.equal({
         type: AtmDataSpecType.File,
-        valueConstraints: {
-          fileType: AtmFileType.Regular,
-        },
+        fileType: AtmFileType.Regular,
       });
     });
 
@@ -138,13 +133,11 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
       await fillIn('.nameMatcher-field input', 'series1');
       expect(getCreatedAtmDataSpec(this)).to.deep.equal({
         type: AtmDataSpecType.TimeSeriesMeasurement,
-        valueConstraints: {
-          specs: [{
-            nameMatcherType: 'exact',
-            nameMatcher: 'series1',
-            unit: 'none',
-          }],
-        },
+        specs: [{
+          nameMatcherType: 'exact',
+          nameMatcher: 'series1',
+          unit: 'none',
+        }],
       });
     });
 
@@ -156,15 +149,10 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
       await atmDataSpecTypeHelper.selectOptionByText('String');
       expect(getCreatedAtmDataSpec(this)).to.deep.equal({
         type: AtmDataSpecType.Array,
-        valueConstraints: {
+        itemDataSpec: {
+          type: AtmDataSpecType.Array,
           itemDataSpec: {
-            type: AtmDataSpecType.Array,
-            valueConstraints: {
-              itemDataSpec: {
-                type: AtmDataSpecType.String,
-                valueConstraints: {},
-              },
-            },
+            type: AtmDataSpecType.String,
           },
         },
       });
@@ -184,10 +172,8 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
           type: AtmDataSpecType.Number,
         }, {
           type: AtmDataSpecType.Array,
-          valueConstraints: {
-            itemDataSpec: {
-              type: AtmDataSpecType.Dataset,
-            },
+          itemDataSpec: {
+            type: AtmDataSpecType.Dataset,
           },
         }],
       }];
@@ -208,10 +194,8 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
           type: AtmDataSpecType.Number,
         }, {
           type: AtmDataSpecType.Array,
-          valueConstraints: {
-            itemDataSpec: {
-              type: AtmDataSpecType.Object,
-            },
+          itemDataSpec: {
+            type: AtmDataSpecType.Object,
           },
         }],
       }];
@@ -257,10 +241,8 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
           type: AtmDataSpecType.Number,
         }, {
           type: AtmDataSpecType.Array,
-          valueConstraints: {
-            itemDataSpec: {
-              type: AtmDataSpecType.Dataset,
-            },
+          itemDataSpec: {
+            type: AtmDataSpecType.Dataset,
           },
         }],
       }, {
@@ -284,14 +266,10 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
         filterType: 'typeOrSubtype',
         types: [{
           type: AtmDataSpecType.File,
-          valueConstraints: {
-            fileType: AtmFileType.Regular,
-          },
+          fileType: AtmFileType.Regular,
         }, {
           type: AtmDataSpecType.File,
-          valueConstraints: {
-            fileType: AtmFileType.Directory,
-          },
+          fileType: AtmFileType.Directory,
         }],
       }];
       setFilters(this, filters);
@@ -321,7 +299,6 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
       it(`shows ${type} type data spec`, async function () {
         setVisibleAtmDataSpec(this, {
           type,
-          valueConstraints: {},
         });
         await renderForm();
 
@@ -332,9 +309,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
     it('shows file type data spec', async function () {
       setVisibleAtmDataSpec(this, {
         type: AtmDataSpecType.File,
-        valueConstraints: {
-          fileType: AtmFileType.Regular,
-        },
+        fileType: AtmFileType.Regular,
       });
       await renderForm();
       await click('.form-summary-toggle');
@@ -347,13 +322,11 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
     it('shows time series measurement type data spec', async function () {
       setVisibleAtmDataSpec(this, {
         type: AtmDataSpecType.TimeSeriesMeasurement,
-        valueConstraints: {
-          specs: [{
-            nameMatcherType: 'exact',
-            nameMatcher: 'series1',
-            unit: 'none',
-          }],
-        },
+        specs: [{
+          nameMatcherType: 'exact',
+          nameMatcher: 'series1',
+          unit: 'none',
+        }],
       });
       await renderForm();
       await click('.form-summary-toggle');
@@ -366,15 +339,10 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
     it('shows array type data spec', async function () {
       setVisibleAtmDataSpec(this, {
         type: AtmDataSpecType.Array,
-        valueConstraints: {
+        itemDataSpec: {
+          type: AtmDataSpecType.Array,
           itemDataSpec: {
-            type: AtmDataSpecType.Array,
-            valueConstraints: {
-              itemDataSpec: {
-                type: AtmDataSpecType.String,
-                valueConstraints: {},
-              },
-            },
+            type: AtmDataSpecType.String,
           },
         },
       });

@@ -15,17 +15,13 @@ describe('Integration | Component | atm-workflow/value-editors/file/array-item-c
   beforeEach(function () {
     const itemAtmDataSpec = {
       type: AtmDataSpecType.File,
-      valueConstraints: {
-        fileType: AtmFileType.Directory,
-      },
+      fileType: AtmFileType.Directory,
     };
     const editorContext = {};
     this.setProperties({
       stateManager: new ValueEditorStateManager({
         type: AtmDataSpecType.Array,
-        valueConstraints: {
-          itemDataSpec: itemAtmDataSpec,
-        },
+        itemDataSpec: itemAtmDataSpec,
       }, editorContext),
       editorContext,
       itemAtmDataSpec,

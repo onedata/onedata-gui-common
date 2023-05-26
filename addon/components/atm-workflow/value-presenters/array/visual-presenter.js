@@ -73,7 +73,7 @@ export default VisualPresenterBase.extend({
   /**
    * @type {ComputedProperty<AtmDataSpec>}
    */
-  itemDataSpec: reads('dataSpec.valueConstraints.itemDataSpec'),
+  itemDataSpec: reads('dataSpec.itemDataSpec'),
 
   /**
    * @type {ComputedProperty<string>}

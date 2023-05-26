@@ -169,9 +169,7 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-parameter-specs-ed
     expect(this.helper.isValid()).to.be.true;
     expectedValue[0].dataSpec = {
       type: AtmDataSpecType.Array,
-      valueConstraints: {
-        itemDataSpec: expectedValue[0].dataSpec,
-      },
+      itemDataSpec: expectedValue[0].dataSpec,
     };
     expectedValue[0].defaultValue = [];
     expect(this.helper.getValue()).to.deep.equal(expectedValue);
@@ -202,7 +200,6 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-parameter-specs-ed
       name: 'somename',
       dataSpec: {
         type: AtmDataSpecType.Number,
-        valueConstraints: {},
       },
       isOptional: true,
       defaultValue: 10,
@@ -299,9 +296,7 @@ class Helper {
       name: 'somename',
       dataSpec: {
         type: AtmDataSpecType.Number,
-        valueConstraints: {
-          integersOnly: false,
-        },
+        integersOnly: false,
       },
       isOptional: true,
       defaultValue: 10,

@@ -7,7 +7,7 @@
  */
 
 import generateId from 'onedata-gui-common/utils/generate-id';
-import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
+import paramsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/params-editors';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 /**
@@ -34,10 +34,10 @@ export function createDataTypeElement(dataType, config = {}) {
     completeConfig.item = createDataTypeSelectorElement();
   }
 
-  if (dataType in valueConstraintsEditors && !completeConfig.formValues) {
+  if (dataType in paramsEditors && !completeConfig.formValues) {
     completeConfig.formValues = createValuesContainer({
-      dataTypeEditor: valueConstraintsEditors[dataType]
-        .valueConstraintsToFormValues(null),
+      dataTypeEditor: paramsEditors[dataType]
+        .atmDataSpecParamsToFormValues(null),
     });
   }
 

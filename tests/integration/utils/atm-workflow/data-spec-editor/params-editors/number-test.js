@@ -4,11 +4,11 @@ import { setupRenderingTest } from 'ember-mocha';
 import { hbs } from 'ember-cli-htmlbars';
 import { find, render, settled, click, fillIn } from '@ember/test-helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
-import numberEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/number';
+import numberEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/params-editors/number';
 import { lookupService } from '../../../../../helpers/stub-service';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 
-describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraints-editors/number', function () {
+describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/number', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -16,7 +16,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       ownerSource: this.owner,
       fields: [
         numberEditor.FormElement.create({
-          name: 'valueConstraintsEditor',
+          name: 'paramsEditor',
         }),
       ],
     }));
@@ -50,7 +50,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
     expect(getIntegersOnlyValue(this)).to.equal(false);
   });
 
-  it('shows empty "allowed values" constraint', async function () {
+  it('shows empty "allowed values" param', async function () {
     await renderForm();
 
     expect(find('.allowedValues-field .control-label').textContent.trim())
@@ -61,7 +61,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       .to.deep.equal({ hasValue: false, value: null });
   });
 
-  it('allows to input number into "allowed values" constraint', async function () {
+  it('allows to input number into "allowed values" param', async function () {
     await renderForm();
 
     await click('.allowedValues-field .create-value-btn');
@@ -72,7 +72,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       .to.deep.equal({ hasValue: true, value: [123] });
   });
 
-  it('allows clear "allowed values" constraint', async function () {
+  it('allows clear "allowed values" param', async function () {
     await renderForm();
     await click('.allowedValues-field .create-value-btn');
     await click('.allowedValues-field .add-item-trigger');
@@ -85,7 +85,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       .to.deep.equal({ hasValue: false, value: null });
   });
 
-  it('allows to provide value constraints', async function () {
+  it('allows to provide data spec params', async function () {
     await renderForm();
 
     await click('.integersOnly-field .one-way-toggle');
@@ -93,24 +93,24 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
     await click('.allowedValues-field .add-item-trigger');
     await fillIn('.allowedValues-field input', '123');
 
-    const valueConstraints = numberEditor.formValuesToValueConstraints(
-      this.get('rootGroup.valuesSource.valueConstraintsEditor')
+    const params = numberEditor.formValuesToAtmDataSpecParams(
+      this.get('rootGroup.valuesSource.paramsEditor')
     );
-    expect(valueConstraints).to.deep.equal({
+    expect(params).to.deep.equal({
       integersOnly: true,
       allowedValues: [123],
     });
     expect(this.get('rootGroup.isValid')).to.be.true;
   });
 
-  it('allows to show existing value constraints', async function () {
-    const formValues = numberEditor.valueConstraintsToFormValues({
+  it('allows to show existing data spec params', async function () {
+    const formValues = numberEditor.atmDataSpecParamsToFormValues({
       integersOnly: true,
       allowedValues: [123],
     });
 
     await renderForm();
-    this.set('rootGroup.valuesSource.valueConstraintsEditor', formValues);
+    this.set('rootGroup.valuesSource.paramsEditor', formValues);
     await settled();
 
     expect(find('.integersOnly-field .one-way-toggle')).to.have.class('checked');
@@ -120,7 +120,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
 
   it('shows a valid summary when "integers only" toggle is unchecked and there are no "allowed values"',
     function () {
-      const formValues = numberEditor.valueConstraintsToFormValues({
+      const formValues = numberEditor.atmDataSpecParamsToFormValues({
         integersOnly: false,
         allowedValues: null,
       });
@@ -133,7 +133,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
   );
 
   it('shows a valid summary when "integers only" toggle is checked and there are no "allowed values"', function () {
-    const formValues = numberEditor.valueConstraintsToFormValues({
+    const formValues = numberEditor.atmDataSpecParamsToFormValues({
       integersOnly: true,
       allowedValues: null,
     });
@@ -145,7 +145,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
   });
 
   it('shows a valid summary when "integers only" toggle is unchecked and there are "allowed values"', function () {
-    const formValues = numberEditor.valueConstraintsToFormValues({
+    const formValues = numberEditor.atmDataSpecParamsToFormValues({
       integersOnly: false,
       allowedValues: [1, 1.5, 2],
     });
@@ -157,7 +157,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
   });
 
   it('shows a valid summary when "integers only" toggle is checked and there are "allowed values"', function () {
-    const formValues = numberEditor.valueConstraintsToFormValues({
+    const formValues = numberEditor.atmDataSpecParamsToFormValues({
       integersOnly: true,
       allowedValues: [1, 1.5, 2],
     });
@@ -170,7 +170,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
 
   it('shows a valid summary when "integers only" toggle is checked and there are only "allowed values" which are not integers',
     function () {
-      const formValues = numberEditor.valueConstraintsToFormValues({
+      const formValues = numberEditor.atmDataSpecParamsToFormValues({
         integersOnly: true,
         allowedValues: [1.5],
       });
@@ -188,9 +188,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
         filterType: 'typeOrSubtype',
         types: [{
           type: AtmDataSpecType.Number,
-          valueConstraints: {
-            integersOnly: true,
-          },
+          integersOnly: true,
         }],
       }]);
       await renderForm();
@@ -207,11 +205,11 @@ async function renderForm() {
 }
 
 function getIntegersOnlyValue(testCase) {
-  return testCase.get('rootGroup.valuesSource.valueConstraintsEditor.integersOnly');
+  return testCase.get('rootGroup.valuesSource.paramsEditor.integersOnly');
 }
 
 function getAllowedValuesValue(testCase) {
-  return testCase.get('rootGroup.valuesSource.valueConstraintsEditor.allowedValues');
+  return testCase.get('rootGroup.valuesSource.paramsEditor.allowedValues');
 }
 
 function setFilters(testCase, filters) {

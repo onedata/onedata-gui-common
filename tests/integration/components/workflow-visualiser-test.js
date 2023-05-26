@@ -115,7 +115,6 @@ describe('Integration | Component | workflow-visualiser', function () {
           config: {
             itemDataSpec: {
               type: 'string',
-              valueConstraints: {},
             },
           },
           defaultInitialContent: null,
@@ -216,7 +215,6 @@ describe('Integration | Component | workflow-visualiser', function () {
           config: {
             itemDataSpec: {
               type: 'string',
-              valueConstraints: {},
             },
           },
           defaultInitialContent: null,
@@ -305,7 +303,6 @@ describe('Integration | Component | workflow-visualiser', function () {
         config: {
           itemDataSpec: {
             type: 'string',
-            valueConstraints: {},
           },
         },
         defaultInitialContent: null,
@@ -1071,7 +1068,6 @@ function generateExample(
       config: {
         itemDataSpec: {
           type: 'string',
-          valueConstraints: {},
         },
       },
       defaultInitialContent: null,

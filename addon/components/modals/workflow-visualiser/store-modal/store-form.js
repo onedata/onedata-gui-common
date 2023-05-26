@@ -170,7 +170,7 @@ export default Component.extend(I18n, {
             storeTypesExpandingArrays.includes(storeType)
           ) {
             isOk = isDataSpecValidForStoreConfig(
-              get(allowedStoreWriteDataSpec, 'valueConstraints.itemDataSpec'),
+              allowedStoreWriteDataSpec.itemDataSpec,
               storeType
             );
           }
@@ -496,7 +496,7 @@ export default Component.extend(I18n, {
         types: [allowedStoreWriteDataSpec],
       };
       const arrayItemDataSpec = allowedStoreWriteDataSpec.type === 'array' &&
-        get(allowedStoreWriteDataSpec, 'valueConstraints.itemDataSpec');
+        allowedStoreWriteDataSpec?.itemDataSpec;
       if (arrayItemDataSpec && storeTypesExpandingArrays.includes(storeType)) {
         typeOrSupertypeFilter.types.push(arrayItemDataSpec);
       }

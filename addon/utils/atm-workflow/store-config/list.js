@@ -24,9 +24,7 @@ export function getDefaultValueDataSpec(storeConfig) {
 
   return {
     type: AtmDataSpecType.Array,
-    valueConstraints: {
-      itemDataSpec: storeConfig.itemDataSpec,
-    },
+    itemDataSpec: storeConfig.itemDataSpec,
   };
 }
 
@@ -61,9 +59,7 @@ export function getWriteDataSpecFilters(storeConfig) {
       filterType: 'typeOrSubtype',
       types: [itemDataSpec, {
         type: 'array',
-        valueConstraints: {
-          itemDataSpec,
-        },
+        itemDataSpec,
       }],
     });
   }

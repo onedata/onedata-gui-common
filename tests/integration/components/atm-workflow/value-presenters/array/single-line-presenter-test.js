@@ -20,10 +20,8 @@ describe('Integration | Component | atm-workflow/value-presenters/array/single-l
       value: [{ rootFilePath: '/spc1/abc' }, { rootFilePath: '/spc1/def' }],
       dataSpec: {
         type: 'array',
-        valueConstraints: {
-          itemDataSpec: {
-            type: 'dataset',
-          },
+        itemDataSpec: {
+          type: 'dataset',
         },
       },
     });
@@ -45,14 +43,10 @@ describe('Integration | Component | atm-workflow/value-presenters/array/single-l
       ],
       dataSpec: {
         type: 'array',
-        valueConstraints: {
+        itemDataSpec: {
+          type: 'array',
           itemDataSpec: {
-            type: 'array',
-            valueConstraints: {
-              itemDataSpec: {
-                type: 'string',
-              },
-            },
+            type: 'string',
           },
         },
       },
@@ -72,10 +66,8 @@ describe('Integration | Component | atm-workflow/value-presenters/array/single-l
       value: [],
       dataSpec: {
         type: 'array',
-        valueConstraints: {
-          itemDataSpec: {
-            type: 'dataset',
-          },
+        itemDataSpec: {
+          type: 'dataset',
         },
       },
     });
@@ -92,10 +84,8 @@ describe('Integration | Component | atm-workflow/value-presenters/array/single-l
       value: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
       dataSpec: {
         type: 'array',
-        valueConstraints: {
-          itemDataSpec: {
-            type: 'string',
-          },
+        itemDataSpec: {
+          type: 'string',
         },
       },
     });

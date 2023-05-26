@@ -68,13 +68,11 @@ describe('Integration | Component | atm-workflow/value-editors/number/editor', f
     }
   });
 
-  it('allows to input a float number, but with validation error when integersOnly constraint is true',
+  it('allows to input a float number, but with validation error when integersOnly param is true',
     async function () {
       this.set('stateManager', new ValueEditorStateManager({
         type: AtmDataSpecType.Number,
-        valueConstraints: {
-          integersOnly: true,
-        },
+        integersOnly: true,
       }));
       await renderComponent();
 
@@ -89,9 +87,7 @@ describe('Integration | Component | atm-workflow/value-editors/number/editor', f
   it('shows all allowed numbers in dropdown when "allowedValues" is set', async function () {
     this.set('stateManager', new ValueEditorStateManager({
       type: AtmDataSpecType.Number,
-      valueConstraints: {
-        allowedValues: [1, 2, 2.5],
-      },
+      allowedValues: [1, 2, 2.5],
     }));
 
     await renderComponent();
@@ -103,10 +99,8 @@ describe('Integration | Component | atm-workflow/value-editors/number/editor', f
     async function () {
       this.set('stateManager', new ValueEditorStateManager({
         type: AtmDataSpecType.Number,
-        valueConstraints: {
-          integersOnly: true,
-          allowedValues: [1, 2, 2.5],
-        },
+        integersOnly: true,
+        allowedValues: [1, 2, 2.5],
       }));
 
       await renderComponent();
@@ -117,9 +111,7 @@ describe('Integration | Component | atm-workflow/value-editors/number/editor', f
   it('selects 0 by default if 0 exists in non-empty "allowedValues"', async function () {
     this.set('stateManager', new ValueEditorStateManager({
       type: AtmDataSpecType.Number,
-      valueConstraints: {
-        allowedValues: [1, 0, 2],
-      },
+      allowedValues: [1, 0, 2],
     }));
 
     await renderComponent();
@@ -131,9 +123,7 @@ describe('Integration | Component | atm-workflow/value-editors/number/editor', f
   it('selects first allowed value by default if 0 does not exist in non-empty "allowedValues"', async function () {
     this.set('stateManager', new ValueEditorStateManager({
       type: AtmDataSpecType.Number,
-      valueConstraints: {
-        allowedValues: [1, 2],
-      },
+      allowedValues: [1, 2],
     }));
 
     await renderComponent();
@@ -145,9 +135,7 @@ describe('Integration | Component | atm-workflow/value-editors/number/editor', f
   it('allows to change selected number when "allowedValues" is not empty', async function () {
     this.set('stateManager', new ValueEditorStateManager({
       type: AtmDataSpecType.Number,
-      valueConstraints: {
-        allowedValues: [1, 2],
-      },
+      allowedValues: [1, 2],
     }));
     await renderComponent();
 

@@ -92,7 +92,6 @@ const taskAuditLogStore = Store.create({
   config: {
     logContentDataSpec: {
       type: 'object',
-      valueConstraints: {},
     },
   },
 });
@@ -102,7 +101,6 @@ const workflowAuditLogStore = Store.create({
   config: {
     logContentDataSpec: {
       type: 'object',
-      valueConstraints: {},
     },
   },
 });
