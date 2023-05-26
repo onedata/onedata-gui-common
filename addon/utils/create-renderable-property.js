@@ -1,3 +1,14 @@
+/**
+ * Creates a property with specified `renderablePropertyName` which value is updated
+ * automatically to the value of `propertyPath` in the `object` once for a render.
+ * It is useful when the original property (specifiec by `propertyPath`) is updated
+ * more than once for a render and this could cause "twice render modification" error.
+ *
+ * @author Jakub Liput
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import {
   get,
   set,
@@ -5,10 +16,6 @@ import {
 import { scheduleOnce } from '@ember/runloop';
 
 /**
- * Creates a property with specified `renderablePropertyName` which value is updated
- * automatically to the value of `propertyPath` in the `object` once for a render.
- * It is useful when the original property (specifiec by `propertyName`) is updated
- * more than once for a render and this could cause "twice render modification" error.
  * @param {EmberObject} object
  * @param {string} propertyPath
  * @param {string} renderablePropertyName
@@ -30,5 +37,6 @@ export default function createRenderableProperty(
   object.addObserver(propertyPath, this, () => {
     scheduleOnce('afterRender', updateRenderableProperty);
   });
+  // activate observer
   get(object, propertyPath);
 }
