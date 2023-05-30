@@ -20,7 +20,7 @@ import { scheduleOnce } from '@ember/runloop';
  * @param {string} propertyPath
  * @param {string} renderablePropertyName
  */
-export default function createRenderableProperty(
+export default function createRenderThrottledProperty(
   object,
   propertyPath,
   renderablePropertyName
