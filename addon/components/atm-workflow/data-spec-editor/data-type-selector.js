@@ -52,6 +52,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {DataSpecEditorElement}
+   */
+  editorElement: undefined,
+
+  /**
+   * @virtual
    * @type {DataSpecEditorElement|null}
    */
   parentEditorElement: undefined,
@@ -121,7 +127,9 @@ export default Component.extend(I18n, {
 
   actions: {
     dataTypeSelected({ value: dataType }) {
-      this.notifyElementChange(createDataTypeElement(dataType));
+      this.notifyElementChange(createDataTypeElement(dataType, {
+        includeExpandParams: this.editorElement.config.includeExpandParams,
+      }));
     },
   },
 });

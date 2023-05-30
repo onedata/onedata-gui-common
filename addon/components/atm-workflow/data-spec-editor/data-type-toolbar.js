@@ -148,7 +148,9 @@ export default Component.extend(I18n, {
         return;
       }
 
-      this.notifyElementChange(createDataTypeSelectorElement());
+      this.notifyElementChange(createDataTypeSelectorElement({
+        includeExpandParams: this.editorElement.config.includeExpandParams,
+      }));
     },
     toggleRemoveWarn(newState) {
       const calculatedState = newState !== undefined ?
@@ -166,7 +168,8 @@ export default Component.extend(I18n, {
       }
 
       this.notifyElementChange(createDataTypeElement('array', {
-        item: this.get('editorElement'),
+        includeExpandParams: this.editorElement.config.includeExpandParams,
+        item: this.editorElement,
       }));
     },
     unpackFromArray() {
@@ -175,7 +178,9 @@ export default Component.extend(I18n, {
       }
 
       this.notifyElementChange(
-        this.get('editorElement.config.item') || createDataTypeSelectorElement()
+        this.get('editorElement.config.item') || createDataTypeSelectorElement({
+          includeExpandParams: this.editorElement.config.includeExpandParams,
+        })
       );
     },
   },

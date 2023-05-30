@@ -32,6 +32,12 @@ import { validator } from 'ember-cp-validations';
 /**
  * @typedef {DataSpecEditorElementBase} DataSpecEditorDataTypeSelector
  * @property {'dataTypeSelector'} type
+ * @property {DataSpecEditorDataTypeSelectorConfig} config
+ */
+
+/**
+ * @typedef {Object} DataSpecEditorDataTypeSelectorConfig
+ * @property {boolean} includeExpandParams
  */
 
 /**
@@ -54,17 +60,20 @@ import { validator } from 'ember-cp-validations';
  *   'dataset' |
  *   'range'
  * } dataType
+ * @property {boolean} includeExpandParams
  */
 
 /**
  * @typedef {Object} DataSpecEditorDataTypeArrayConfig
  * @property {'array'} dataType
+ * @property {boolean} includeExpandParams
  * @property {DataSpecEditorDataTypeConfig} item
  */
 
 /**
  * @typedef {Object} DataSpecEditorDataTypeCustomConfig
  * @property {'file'|'timeSeriesMeasurement'} dataType
+ * @property {boolean} includeExpandParams
  * @property {Utils.FormComponent.ValuesContainer} formValues
  */
 
@@ -89,6 +98,12 @@ export const FormElement = FormField.extend({
    * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  showExpandParams: false,
 
   /**
    * @override
@@ -176,6 +191,7 @@ export const FormElement = FormField.extend({
                 ownerSource: this,
                 dataSpecEditorInstance: this,
                 dataTypeEditorClass,
+                showExpandParams: newElement.config.includeExpandParams,
               });
               mapValue.formRootGroup.changeMode(mode);
             }
@@ -199,11 +215,36 @@ export const FormElement = FormField.extend({
   }),
 
   /**
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
+   */
+  nestedForms: computed('editorElementsContextMap', function nestedForms() {
+    const forms = [];
+    for (const elementCtx of this.get('editorElementsContextMap').values()) {
+      if (elementCtx.formRootGroup) {
+        forms.push(elementCtx.formRootGroup);
+      }
+    }
+    return forms;
+  }),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  areNestedFormsValid: computed(
+    'nestedForms.@each.isValid',
+    function areNestedFormsValid() {
+      return !this.nestedForms.findBy('isValid', false);
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   nestedFormsValidator: computed(() => validator(function (value, options, model) {
     const field = get(model, 'field');
-    return !field.getNestedForms().findBy('isValid', false);
+    return field.areNestedFormsValid;
+  }, {
+    depependentKeys: ['model.field.areNestedFormsValid'],
   })),
 
   /**
@@ -240,7 +281,7 @@ export const FormElement = FormField.extend({
 
     const ownerSource = this.get('ownerSource');
     if (ownerSource) {
-      for (const form of this.getNestedForms()) {
+      for (const form of this.nestedForms) {
         if (!get(form, 'ownerSource')) {
           set(form, 'ownerSource', ownerSource);
         }
@@ -253,20 +294,7 @@ export const FormElement = FormField.extend({
    */
   changeMode(mode) {
     this._super(...arguments);
-    this.getNestedForms().forEach((form) => form.changeMode(mode));
-  },
-
-  /**
-   * @returns {Array<Utils.FormComponent.FormFieldsRootGroup>}
-   */
-  getNestedForms() {
-    const forms = [];
-    for (const elementCtx of this.get('editorElementsContextMap').values()) {
-      if (elementCtx.formRootGroup) {
-        forms.push(elementCtx.formRootGroup);
-      }
-    }
-    return forms;
+    this.nestedForms.forEach((form) => form.changeMode(mode));
   },
 });
 
@@ -278,6 +306,7 @@ const EditorElementFormRootGroup = FormFieldsRootGroup.extend({
     return [this.get('dataTypeEditorClass').create({ name: 'dataTypeEditor' })];
   }),
   isEnabled: reads('dataSpecEditorInstance.isEffectivelyEnabled'),
+  showExpandParams: false,
   onValueChange() {
     this._super(...arguments);
     const onNotifyAboutChange = this.get('onNotifyAboutChange');
@@ -291,26 +320,30 @@ const EditorElementFormRootGroup = FormFieldsRootGroup.extend({
   },
 });
 
-export function dataSpecToFormValues(dataSpec) {
+export function dataSpecToFormValues(dataSpec, includeExpandParams = false) {
   if (!dataSpec || !dataSpec.type) {
-    return createDataTypeSelectorElement();
+    return createDataTypeSelectorElement({
+      includeExpandParams,
+    });
   }
 
   const dataType = dataSpec.type;
 
   if (dataType in paramsEditors) {
     return createDataTypeElement(dataType, {
+      includeExpandParams,
       formValues: createValuesContainer({
         dataTypeEditor: paramsEditors[dataType]
-          .atmDataSpecParamsToFormValues(dataSpec),
+          .atmDataSpecParamsToFormValues(dataSpec, includeExpandParams),
       }),
     });
   } else if (dataType === 'array') {
     return createDataTypeElement(dataType, {
+      includeExpandParams,
       item: dataSpecToFormValues(dataSpec.itemDataSpec),
     });
   } else {
-    return createDataTypeElement(dataType);
+    return createDataTypeElement(dataType, { includeExpandParams });
   }
 }
 
@@ -331,7 +364,10 @@ export function formValuesToDataSpec(values) {
       get(values.config, 'formValues.dataTypeEditor');
     return {
       type: dataType,
-      ...paramsEditors[dataType].formValuesToAtmDataSpecParams(dataTypeEditorValues),
+      ...paramsEditors[dataType].formValuesToAtmDataSpecParams(
+        dataTypeEditorValues,
+        values.config.includeExpandParams
+      ),
     };
   } else if (dataType === 'array') {
     return {

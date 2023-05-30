@@ -13,10 +13,12 @@ import { createValuesContainer } from 'onedata-gui-common/utils/form-component/v
 /**
  * @returns {DataSpecEditorDataTypeSelector}
  */
-export function createDataTypeSelectorElement() {
+export function createDataTypeSelectorElement(config = {}) {
+  const completeConfig = Object.assign({ includeExpandParams: false }, config);
   return {
     id: generateId(),
     type: 'dataTypeSelector',
+    config: completeConfig,
   };
 }
 
@@ -26,18 +28,20 @@ export function createDataTypeSelectorElement() {
  * @returns {DataSpecEditorDataType}
  */
 export function createDataTypeElement(dataType, config = {}) {
-  const completeConfig = Object.assign({}, config, {
+  const completeConfig = Object.assign({ includeExpandParams: false }, config, {
     dataType,
   });
 
   if (dataType === 'array' && !completeConfig.item) {
-    completeConfig.item = createDataTypeSelectorElement();
+    completeConfig.item = createDataTypeSelectorElement({
+      includeExpandParams: completeConfig.includeExpandParams,
+    });
   }
 
   if (dataType in paramsEditors && !completeConfig.formValues) {
     completeConfig.formValues = createValuesContainer({
       dataTypeEditor: paramsEditors[dataType]
-        .atmDataSpecParamsToFormValues(null),
+        .atmDataSpecParamsToFormValues(null, completeConfig.includeExpandParams),
     });
   }
 

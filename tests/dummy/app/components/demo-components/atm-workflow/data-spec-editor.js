@@ -10,6 +10,8 @@ import {
   formValuesToDataSpec,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 
+const showExpandParams = true;
+
 export default Component.extend({
   rootGroup: computed(function rootGroup() {
     return RootGroup.create({
@@ -30,7 +32,7 @@ export default Component.extend({
     this._super(...arguments);
     const rootGroup = this.get('rootGroup');
     set(rootGroup, 'valuesSource', createValuesContainer({
-      dataSpec: dataSpecToFormValues(),
+      dataSpec: dataSpecToFormValues(null, showExpandParams),
     }));
     rootGroup.useCurrentValueAsDefault();
     console.log(rootGroup);
@@ -43,6 +45,7 @@ const RootGroup = FormFieldsRootGroup.extend({
     return [
       DataSpecEditor.create({
         name: 'dataSpec',
+        showExpandParams,
       }),
     ];
   }),

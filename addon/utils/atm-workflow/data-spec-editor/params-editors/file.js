@@ -8,16 +8,20 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { get, computed, observer } from '@ember/object';
+import { get, set, computed, observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
+import { hash, raw } from 'ember-awesome-macros';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
+import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import { getAtmDataSpecParamsConditions } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import {
   atmFileTypesArray,
   translateAtmFileType,
+  AtmFileAttribute,
+  atmFileAttributesArray,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
@@ -29,6 +33,11 @@ const FormElement = FormFieldsGroup.extend({
    * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  showExpandParams: reads('parent.showExpandParams'),
 
   /**
    * @type {ComputedProperty<Array<AtmFileType>>}
@@ -48,12 +57,13 @@ const FormElement = FormFieldsGroup.extend({
   size: 'sm',
   fields: computed(function fields() {
     return [
-      FileTypeDropdown.create(),
+      FileTypeField.create(),
+      FileAttributesField.create(),
     ];
   }),
 });
 
-const FileTypeDropdown = DropdownField.extend({
+const FileTypeField = DropdownField.extend({
   options: computed('parent.allowedFileTypes', function options() {
     const i18n = this.get('i18n');
     return this.get('parent.allowedFileTypes').map((fileType) => ({
@@ -80,26 +90,49 @@ const FileTypeDropdown = DropdownField.extend({
   },
 });
 
+const FileAttributesField = TagsField.extend({
+  name: 'fileAttributes',
+  tagEditorComponentName: 'tags-input/selector-editor',
+  sort: true,
+  isVisible: reads('parent.showExpandParams'),
+  allowedTags: computed(function allowedTags() {
+    return [...atmFileAttributesArray].sort().map((attrName) => ({ label: attrName }));
+  }),
+  tagEditorSettings: hash('allowedTags'),
+  defaultValue: raw([AtmFileAttribute.FileId]),
+});
+
 /**
  * @param {Utils.FormComponent.ValuesContainer} values Values from file editor
+ * @param {boolean} [includeExpandParams]
  * @returns {Omit<AtmFileDataSpec, 'type'>}
  */
-function formValuesToAtmDataSpecParams(values) {
+function formValuesToAtmDataSpecParams(values, includeExpandParams = false) {
   const formFileType = values && get(values, 'fileType');
   const fileType = atmFileTypesArray.includes(formFileType) ?
     formFileType : atmFileTypesArray[0];
-  return { fileType };
+  const params = { fileType };
+
+  if (includeExpandParams && Array.isArray(values.fileAttributes)) {
+    params.attributes = values.fileAttributes;
+  }
+
+  return params;
 }
 
 /**
  * @param {AtmFileDataSpec} atmDataSpec
+ * @param {boolean} [includeExpandParams]
  * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in a form
  */
-function atmDataSpecParamsToFormValues(atmDataSpec) {
-  const fileType = atmDataSpec?.fileType || atmFileTypesArray[0];
-  return createValuesContainer({
-    fileType,
-  });
+function atmDataSpecParamsToFormValues(atmDataSpec, includeExpandParams = false) {
+  const fileType = atmDataSpec?.fileType ?? atmFileTypesArray[0];
+  const valuesContainer = createValuesContainer({ fileType });
+  if (includeExpandParams) {
+    const fileAttributes = atmDataSpec?.attributes ?? [AtmFileAttribute.FileId];
+    set(valuesContainer, 'fileAttributes', fileAttributes);
+  }
+  return valuesContainer;
 }
 
 /**
@@ -111,8 +144,13 @@ function summarizeFormValues(i18n, values) {
   const formFileType = values && get(values, 'fileType');
   const fileType = atmFileTypesArray.includes(formFileType) ?
     formFileType : atmFileTypesArray[0];
-  return i18n.t(`${i18nPrefix}.summary`, {
+  let fileAttributes;
+  if (values.fileAttributes?.length) {
+    fileAttributes = values.fileAttributes.join(', ');
+  }
+  return i18n.t(`${i18nPrefix}.summary${fileAttributes ? 'WithAttrs' : ''}`, {
     fileType: translateAtmFileType(i18n, fileType, { upperFirst: true }),
+    fileAttributes,
   });
 }
 
