@@ -1,7 +1,7 @@
 /**
  * Creates a property with specified `renderablePropertyName` which value is updated
  * automatically to the value of `propertyPath` in the `object` once for a render.
- * It is useful when the original property (specifiec by `propertyPath`) is updated
+ * It is useful when the original property (specific by `propertyPath`) is updated
  * more than once for a render and this could cause "twice render modification" error.
  *
  * @author Jakub Liput
