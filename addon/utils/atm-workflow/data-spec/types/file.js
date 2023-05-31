@@ -9,6 +9,7 @@
 import _ from 'lodash';
 import { typeDefinitionBase } from './commons';
 import { FileType } from 'onedata-gui-common/utils/file';
+import { assert } from '@ember/debug';
 
 /**
  * @typedef {Object} AtmFileDataSpec
@@ -123,6 +124,11 @@ export const atmFileTypesArray = Object.freeze([
   AtmFileType.SymbolicLink,
 ]);
 
+assert(
+  'atmFileTypesArray must have the same items as AtmFileType enum.',
+  _.isEqual(Object.values(AtmFileType).sort(), [...atmFileTypesArray].sort())
+);
+
 /**
  * @type {Object<AtmFileType, Array<AtmFileType>>}
  */
@@ -132,6 +138,14 @@ export const atmFileTypeSupertypes = Object.freeze({
   [AtmFileType.Directory]: [AtmFileType.Any],
   [AtmFileType.SymbolicLink]: [AtmFileType.Any],
 });
+
+assert(
+  'Keys of atmFileTypeSupertypes must include all values from AtmFileType enum.',
+  _.isEqual(
+    Object.values(AtmFileType).sort(),
+    Object.keys(atmFileTypeSupertypes).sort()
+  )
+);
 
 /**
  * @type {Object<AtmFileType, Array<AtmFileType>>}
@@ -146,6 +160,14 @@ export const atmFileTypeSubtypes = Object.freeze({
   [AtmFileType.Directory]: [],
   [AtmFileType.SymbolicLink]: [],
 });
+
+assert(
+  'Keys of atmFileTypeSubtypes must include all values from AtmFileType enum.',
+  _.isEqual(
+    Object.values(AtmFileType).sort(),
+    Object.keys(atmFileTypeSupertypes).sort()
+  )
+);
 
 /**
  * @param {Ember.Service} i18n
@@ -227,3 +249,8 @@ export const atmFileAttributesArray = Object.freeze([
   AtmFileAttribute.HardlinksCount,
   AtmFileAttribute.Index,
 ]);
+
+assert(
+  'atmFileAttributesArray must have the same items as AtmFileAttribute enum.',
+  _.isEqual(Object.values(AtmFileAttribute).sort(), [...atmFileAttributesArray].sort())
+);

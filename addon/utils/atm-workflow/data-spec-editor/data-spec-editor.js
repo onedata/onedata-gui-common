@@ -60,20 +60,20 @@ import { validator } from 'ember-cp-validations';
  *   'dataset' |
  *   'range'
  * } dataType
- * @property {boolean} includeExpandParams
+ * @property {boolean} includeExpandParams see "showExpandParams" in DataSpecEditor field
  */
 
 /**
  * @typedef {Object} DataSpecEditorDataTypeArrayConfig
  * @property {'array'} dataType
- * @property {boolean} includeExpandParams
+ * @property {boolean} includeExpandParams see "showExpandParams" in DataSpecEditor field
  * @property {DataSpecEditorDataTypeConfig} item
  */
 
 /**
  * @typedef {Object} DataSpecEditorDataTypeCustomConfig
  * @property {'file'|'timeSeriesMeasurement'} dataType
- * @property {boolean} includeExpandParams
+ * @property {boolean} includeExpandParams see "showExpandParams" in DataSpecEditor field
  * @property {Utils.FormComponent.ValuesContainer} formValues
  */
 
@@ -100,6 +100,12 @@ export const FormElement = FormField.extend({
   dataSpecFilters: undefined,
 
   /**
+   * If set to true, it will show additional data spec options (each type has its
+   * own set), which are responsible for controlling the process of atm values
+   * expanding during atm execution. Value expanding fills a basic value
+   * representation with additional (optional) data. Example: for
+   * file atm value expanding will introduce additional file attributes into
+   * file the object.
    * @virtual optional
    * @type {boolean}
    */

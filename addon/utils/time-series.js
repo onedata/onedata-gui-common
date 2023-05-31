@@ -76,6 +76,7 @@
  * `addPrefix` is the best choice.
  */
 
+import { assert } from '@ember/debug';
 import _ from 'lodash';
 
 const i18nPrefix = 'utils.timeSeries';
@@ -266,6 +267,14 @@ export const timeSeriesMetricResolutions = [
   timeSeriesMetricResolutionsMap.year,
   timeSeriesMetricResolutionsMap.infinity,
 ];
+
+assert(
+  'timeSeriesMetricResolutions must have the same values as timeSeriesMetricResolutionsMap.',
+  _.isEqual(
+    Object.values(timeSeriesMetricResolutionsMap).sort(),
+    [...timeSeriesMetricResolutions].sort()
+  )
+);
 
 /**
  * @type {Object<TimeSeriesMetricResolution, string>}

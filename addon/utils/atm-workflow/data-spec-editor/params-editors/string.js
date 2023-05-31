@@ -83,7 +83,7 @@ const AllowedValuesEditor = AtmValueEditorField.extend({
 
 /**
  * @param {Utils.FormComponent.ValuesContainer} values Values from string editor
- * @returns {Omit<AtmStringDataSpec, 'type>'}
+ * @returns {Omit<AtmStringDataSpec, 'type'>}
  */
 function formValuesToAtmDataSpecParams(values) {
   const params = {};

@@ -8,5 +8,5 @@ export default {
     },
   },
   summary: 'File type: {{fileType}}',
-  summaryWithAttrs: 'File type: {{fileType}} <span class="pipe"></span> Carried file attributes: {{fileAttributes}}',
+  summaryWithAttrs: 'File type: {{fileType}} <span class="separator"></span> Carried file attributes: {{fileAttributes}}',
 };
