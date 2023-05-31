@@ -13,6 +13,7 @@
 import Component from '@ember/component';
 import { observer } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { neq, or, raw } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import { ElementsListItemModel } from './elements-list';
@@ -42,11 +43,27 @@ export default Component.extend(I18n, {
   actionsFactory: undefined,
 
   /**
+   * @virtual optional
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup | Utils.AtmWorkflow.ChartsDashboardEditor.Axis}
+   */
+  seriesSource: undefined,
+
+  /**
    * @type {Array<SeriesListItemModel>}
    */
   itemModels: undefined,
 
-  itemModelsSetter: observer('chart.series.[]', function itemModelsSetter() {
+  /**
+   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup | Utils.AtmWorkflow.ChartsDashboardEditor.Axis>}
+   */
+  effSeriesSource: or('seriesSource', 'chart'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  hideActions: neq('effSeriesSource.elementType', raw(ElementType.Chart)),
+
+  itemModelsSetter: observer('effSeriesSource.series.[]', function itemModelsSetter() {
     this.calculateItemModels();
   }),
 
@@ -62,7 +79,7 @@ export default Component.extend(I18n, {
     const existingModels = this.itemModels ?? [];
     const existingModelsMap = new Map(existingModels.map((model) => [model.item, model]));
 
-    const newModels = this.chart?.series.map((series) => {
+    const newModels = this.effSeriesSource?.series.map((series) => {
       const existingModel = existingModelsMap.get(series);
       if (existingModel) {
         existingModelsMap.delete(series);

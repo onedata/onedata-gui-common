@@ -7,11 +7,20 @@
  */
 
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-group-editor';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   classNames: ['series-group-editor', 'element-editor'],
   layout,
+
+  i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.chartEditor.seriesGroupEditor',
 
   /**
    * @virtual

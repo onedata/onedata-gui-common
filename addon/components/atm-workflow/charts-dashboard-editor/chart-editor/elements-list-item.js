@@ -48,6 +48,12 @@ export default OneDraggableObject.extend(I18n, {
   allowNesting: false,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  hideActions: false,
+
+  /**
    * For one-draggable-object
    * @override
    */
