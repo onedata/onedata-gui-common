@@ -9,15 +9,34 @@
 
 import { computed } from '@ember/object';
 
-export default function computedLastProxyContent(proxyPropertyName) {
+/**
+ * @typedef {Object} ComputedLastProxyContentOptions
+ * @property {boolean} nullOnReject When set to true, if promise fails, the computed
+ *   property returns null instead of last known value.
+ */
+
+/**
+ *
+ * @param {string} proxyPropertyName
+ * @param {ComputedLastProxyContentOptions} [options]
+ * @returns
+ */
+export default function computedLastProxyContent(proxyPropertyName, options = {}) {
   if (!proxyPropertyName) {
     throw new Error('util:computedLastProxyContent: proxyPropertyName cannot be empty');
   }
   const cacheName = `_${proxyPropertyName}Cache`;
   const contentPath = `${proxyPropertyName}.content`;
   const isFulfilledPath = `${proxyPropertyName}.isFulfilled`;
-  return computed(isFulfilledPath, function lastProxyContent() {
-    if (this.get(isFulfilledPath)) {
+  const isRejectedPath = `${proxyPropertyName}.isRejected`;
+  const observedProperties = [contentPath, isFulfilledPath];
+  if (options.nullOnReject) {
+    observedProperties.push(isRejectedPath);
+  }
+  return computed(...observedProperties, function lastProxyContent() {
+    if (options.nullOnReject && this.get(isRejectedPath)) {
+      return null;
+    } else if (this.get(isFulfilledPath)) {
       return this.set(cacheName, this.get(contentPath));
     } else {
       return this.get(cacheName);
