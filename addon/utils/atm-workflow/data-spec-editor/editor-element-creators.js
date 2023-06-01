@@ -7,16 +7,18 @@
  */
 
 import generateId from 'onedata-gui-common/utils/generate-id';
-import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
+import paramsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/params-editors';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 /**
  * @returns {DataSpecEditorDataTypeSelector}
  */
-export function createDataTypeSelectorElement() {
+export function createDataTypeSelectorElement(config = {}) {
+  const completeConfig = Object.assign({ includeExpandParams: false }, config);
   return {
     id: generateId(),
     type: 'dataTypeSelector',
+    config: completeConfig,
   };
 }
 
@@ -26,18 +28,20 @@ export function createDataTypeSelectorElement() {
  * @returns {DataSpecEditorDataType}
  */
 export function createDataTypeElement(dataType, config = {}) {
-  const completeConfig = Object.assign({}, config, {
+  const completeConfig = Object.assign({ includeExpandParams: false }, config, {
     dataType,
   });
 
   if (dataType === 'array' && !completeConfig.item) {
-    completeConfig.item = createDataTypeSelectorElement();
+    completeConfig.item = createDataTypeSelectorElement({
+      includeExpandParams: completeConfig.includeExpandParams,
+    });
   }
 
-  if (dataType in valueConstraintsEditors && !completeConfig.formValues) {
+  if (dataType in paramsEditors && !completeConfig.formValues) {
     completeConfig.formValues = createValuesContainer({
-      dataTypeEditor: valueConstraintsEditors[dataType]
-        .valueConstraintsToFormValues(null),
+      dataTypeEditor: paramsEditors[dataType]
+        .atmDataSpecParamsToFormValues(null, completeConfig.includeExpandParams),
     });
   }
 

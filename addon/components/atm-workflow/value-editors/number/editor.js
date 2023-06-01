@@ -78,7 +78,7 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   /**
    * @type {ComputedProperty<'text'|'dropdown'>}
    */
-  editorType: conditional('valueConstraints.allowedValues', raw('dropdown'), raw('text')),
+  editorType: conditional('atmDataSpec.allowedValues', raw('dropdown'), raw('text')),
 
   /**
    * @override
@@ -96,12 +96,12 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   isEnabled: not('component.isDisabled'),
 
   /**
-   * @type {ComputedProperty<AtmNumberValueConstraints>}
+   * @type {ComputedProperty<AtmNumberDataSpec>}
    */
-  valueConstraints: reads('component.editorState.atmDataSpec.valueConstraints'),
+  atmDataSpec: reads('component.editorState.atmDataSpec'),
 
   valueFieldSetter: observer(
-    'valueConstraints.allowedValues',
+    'atmDataSpec.allowedValues',
     function valueFieldSetter() {
       const valueField = this.getFieldByPath('value');
       const valueFieldIdx = valueField ? this.fields.indexOf(valueField) : 0;
@@ -159,10 +159,10 @@ const DropdownValueInput = DropdownField.extend({
    * @override
    */
   options: computed(
-    'parent.valueConstraints.{allowedValues,integersOnly}',
+    'parent.atmDataSpec.{allowedValues,integersOnly}',
     function options() {
-      const integersOnly = Boolean(this.parent?.valueConstraints?.integersOnly);
-      return this.parent?.valueConstraints?.allowedValues
+      const integersOnly = Boolean(this.parent?.atmDataSpec?.integersOnly);
+      return this.parent?.atmDataSpec?.allowedValues
         ?.filter((value) => !integersOnly || Number.isInteger(value))
         ?.map((value) => ({
           value: String(value),
@@ -191,5 +191,5 @@ const TextValueInput = NumberField.extend({
   /**
    * @override
    */
-  integer: bool('parent.valueConstraints.integersOnly'),
+  integer: bool('parent.atmDataSpec.integersOnly'),
 });

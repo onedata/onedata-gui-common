@@ -34,9 +34,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/editor', fun
     this.setProperties({
       stateManager: new ValueEditorStateManager({
         type: AtmDataSpecType.File,
-        valueConstraints: {
-          fileType: AtmFileType.Directory,
-        },
+        fileType: AtmFileType.Directory,
       }, editorContext),
       editorContext,
       selectFiles: ({ onSelected }) => onSelected([exampleFile]),

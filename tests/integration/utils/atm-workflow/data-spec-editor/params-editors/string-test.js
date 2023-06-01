@@ -5,10 +5,10 @@ import { hbs } from 'ember-cli-htmlbars';
 import { find, render, settled, click, fillIn } from '@ember/test-helpers';
 import _ from 'lodash';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
-import stringEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/string';
+import stringEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/params-editors/string';
 import { lookupService } from '../../../../../helpers/stub-service';
 
-describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraints-editors/string', function () {
+describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/string', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -16,13 +16,13 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       ownerSource: this.owner,
       fields: [
         stringEditor.FormElement.create({
-          name: 'valueConstraintsEditor',
+          name: 'paramsEditor',
         }),
       ],
     }));
   });
 
-  it('shows empty "allowed values" constraint', async function () {
+  it('shows empty "allowed values" param', async function () {
     await renderForm();
 
     expect(find('.allowedValues-field .control-label').textContent.trim())
@@ -33,7 +33,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       .to.deep.equal({ hasValue: false, value: null });
   });
 
-  it('allows to input string into "allowed values" constraint', async function () {
+  it('allows to input string into "allowed values" param', async function () {
     await renderForm();
 
     await click('.allowedValues-field .create-value-btn');
@@ -44,7 +44,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       .to.deep.equal({ hasValue: true, value: ['abc'] });
   });
 
-  it('allows clear "allowed values" constraint', async function () {
+  it('allows clear "allowed values" param', async function () {
     await renderForm();
     await click('.allowedValues-field .create-value-btn');
     await click('.allowedValues-field .add-item-trigger');
@@ -57,29 +57,29 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       .to.deep.equal({ hasValue: false, value: null });
   });
 
-  it('allows to provide value constraints', async function () {
+  it('allows to provide data spec params', async function () {
     await renderForm();
 
     await click('.allowedValues-field .create-value-btn');
     await click('.allowedValues-field .add-item-trigger');
     await fillIn('.allowedValues-field textarea', 'abc');
 
-    const valueConstraints = stringEditor.formValuesToValueConstraints(
-      this.get('rootGroup.valuesSource.valueConstraintsEditor')
+    const params = stringEditor.formValuesToAtmDataSpecParams(
+      this.get('rootGroup.valuesSource.paramsEditor')
     );
-    expect(valueConstraints).to.deep.equal({
+    expect(params).to.deep.equal({
       allowedValues: ['abc'],
     });
     expect(this.get('rootGroup.isValid')).to.be.true;
   });
 
-  it('allows to show existing value constraints', async function () {
-    const formValues = stringEditor.valueConstraintsToFormValues({
+  it('allows to show existing data spec params', async function () {
+    const formValues = stringEditor.atmDataSpecParamsToFormValues({
       allowedValues: ['abc'],
     });
 
     await renderForm();
-    this.set('rootGroup.valuesSource.valueConstraintsEditor', formValues);
+    this.set('rootGroup.valuesSource.paramsEditor', formValues);
     await settled();
 
     expect(find('.allowedValues-field textarea')).to.have.value('abc');
@@ -87,7 +87,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
   });
 
   it('shows a valid summary when there are no "allowed values"', function () {
-    const formValues = stringEditor.valueConstraintsToFormValues({
+    const formValues = stringEditor.atmDataSpecParamsToFormValues({
       allowedValues: null,
     });
     const i18n = lookupService(this, 'i18n');
@@ -98,7 +98,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
   });
 
   it('shows a valid summary when there are "allowed values"', function () {
-    const formValues = stringEditor.valueConstraintsToFormValues({
+    const formValues = stringEditor.atmDataSpecParamsToFormValues({
       allowedValues: ['a', 'b'],
     });
     const i18n = lookupService(this, 'i18n');
@@ -115,5 +115,5 @@ async function renderForm() {
 }
 
 function getAllowedValuesValue(testCase) {
-  return testCase.get('rootGroup.valuesSource.valueConstraintsEditor.allowedValues');
+  return testCase.get('rootGroup.valuesSource.paramsEditor.allowedValues');
 }

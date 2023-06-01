@@ -73,7 +73,6 @@ describe('Integration | Component | workflow-visualiser/stores-list', function (
         config: {
           itemDataSpec: {
             type: 'string',
-            valueConstraints: {},
           },
         },
         defaultInitialContent: null,

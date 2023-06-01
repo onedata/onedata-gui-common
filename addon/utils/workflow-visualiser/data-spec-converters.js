@@ -21,9 +21,9 @@ export function getStoreWriteDataSpec({ type, config }) {
     case 'treeForest':
       return config && config.itemDataSpec || null;
     case 'range':
-      return { type: 'range', valueConstraints: {} };
+      return { type: 'range' };
     case 'timeSeries':
-      return { type: 'timeSeriesMeasurement', valueConstraints: {} };
+      return { type: 'timeSeriesMeasurement' };
     default:
       return null;
   }
@@ -37,13 +37,13 @@ export function getStoreWriteDataSpec({ type, config }) {
 export function getStoreReadDataSpec({ type, config }) {
   switch (type) {
     case 'auditLog':
-      return { type: 'object', valueConstraints: {} };
+      return { type: 'object' };
     case 'list':
     case 'singleValue':
     case 'treeForest':
       return config && config.itemDataSpec || null;
     case 'range':
-      return { type: 'range', valueConstraints: {} };
+      return { type: 'range' };
     default:
       return null;
   }

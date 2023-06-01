@@ -1,6 +1,6 @@
-import valueConstraintsEditors from './data-spec-editor/value-constraints-editors';
+import paramsEditors from './data-spec-editor/params-editors';
 
 export default {
-  valueConstraintsEditors,
+  paramsEditors,
   label: 'Data type',
 };

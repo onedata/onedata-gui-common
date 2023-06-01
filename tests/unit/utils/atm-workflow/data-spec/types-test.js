@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import {
   AtmDataSpecType,
   atmDataSpecTypesArray,
-  getAtmValueConstraintsConditions,
+  getAtmDataSpecParamsConditions,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import {
   AtmFileType,
@@ -12,7 +12,7 @@ import {
 import _ from 'lodash';
 
 describe('Unit | Utility | atm-workflow/data-spec/types', function () {
-  describe('getAtmValueConstraintsConditions', function () {
+  describe('getAtmDataSpecParamsConditions', function () {
     _.difference(
       atmDataSpecTypesArray,
       [AtmDataSpecType.Array, AtmDataSpecType.File, AtmDataSpecType.Number]
@@ -24,13 +24,13 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
           [{ filterType: 'typeOrSubtype', types: [{ type: AtmDataSpecType.Object }] }],
           [{ filterType: 'forbiddenType', types: [{ type: AtmDataSpecType.Object }] }],
         ].forEach((filters) => {
-          expect(getAtmValueConstraintsConditions(atmDataSpecType, filters)).to.be.null;
+          expect(getAtmDataSpecParamsConditions(atmDataSpecType, filters)).to.be.null;
         });
       });
     });
 
     it('returns empty conditions for type array when filters are empty', function () {
-      expect(getAtmValueConstraintsConditions(AtmDataSpecType.Array, [])).to.deep.equal({
+      expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Array, [])).to.deep.equal({
         itemDataSpecFilters: [],
       });
     });
@@ -42,10 +42,8 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
           type: AtmDataSpecType.Dataset,
         }, {
           type: AtmDataSpecType.Array,
-          valueConstraints: {
-            itemDataSpec: {
-              type: AtmDataSpecType.Number,
-            },
+          itemDataSpec: {
+            type: AtmDataSpecType.Number,
           },
         }],
       }, {
@@ -54,10 +52,8 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
           type: AtmDataSpecType.File,
         }, {
           type: AtmDataSpecType.Array,
-          valueConstraints: {
-            itemDataSpec: {
-              type: AtmDataSpecType.String,
-            },
+          itemDataSpec: {
+            type: AtmDataSpecType.String,
           },
         }],
       }, {
@@ -66,14 +62,12 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
           type: AtmDataSpecType.Range,
         }, {
           type: AtmDataSpecType.Array,
-          valueConstraints: {
-            itemDataSpec: {
-              type: AtmDataSpecType.File,
-            },
+          itemDataSpec: {
+            type: AtmDataSpecType.File,
           },
         }],
       }];
-      expect(getAtmValueConstraintsConditions(AtmDataSpecType.Array, filters))
+      expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Array, filters))
         .to.deep.equal({
           itemDataSpecFilters: [{
             filterType: 'typeOrSupertype',
@@ -91,10 +85,8 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
               type: AtmDataSpecType.Range,
             }, {
               type: AtmDataSpecType.Array,
-              valueConstraints: {
-                itemDataSpec: {
-                  type: AtmDataSpecType.File,
-                },
+              itemDataSpec: {
+                type: AtmDataSpecType.File,
               },
             }, {
               type: AtmDataSpecType.File,
@@ -105,137 +97,121 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
 
     it('returns conditions containing all possible integersOnly values for type number when filters are empty',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, []))
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Number, []))
           .to.deep.equal({
-            integersOnlyConstraintValues: [false, true],
+            integersOnlyParamValues: [false, true],
           });
       }
     );
 
-    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSupertype filter without integersOnly constraint',
+    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSupertype filter without integersOnly param',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSupertype',
           types: [{ type: AtmDataSpecType.Number }],
         }])).to.deep.equal({
-          integersOnlyConstraintValues: [false],
+          integersOnlyParamValues: [false],
         });
       }
     );
 
-    it('returns conditions containing all possible integersOnly values for type number and typeOrSupertype filter with truthy integersOnly constraint',
+    it('returns conditions containing all possible integersOnly values for type number and typeOrSupertype filter with truthy integersOnly param',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSupertype',
           types: [{
             type: AtmDataSpecType.Number,
-            valueConstraints: {
-              integersOnly: true,
-            },
+            integersOnly: true,
           }],
         }])).to.deep.equal({
-          integersOnlyConstraintValues: [false, true],
+          integersOnlyParamValues: [false, true],
         });
       }
     );
 
-    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSupertype filter with falsy integersOnly constraint',
+    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSupertype filter with falsy integersOnly param',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSupertype',
           types: [{
             type: AtmDataSpecType.Number,
-            valueConstraints: {
-              integersOnly: false,
-            },
+            integersOnly: false,
           }],
         }])).to.deep.equal({
-          integersOnlyConstraintValues: [false],
+          integersOnlyParamValues: [false],
         });
       }
     );
 
-    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSupertype filter with mixed integersOnly constraints',
+    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSupertype filter with mixed integersOnly params',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSupertype',
           types: [{
             type: AtmDataSpecType.Number,
-            valueConstraints: {
-              integersOnly: false,
-            },
+            integersOnly: false,
           }, {
             type: AtmDataSpecType.Number,
-            valueConstraints: {
-              integersOnly: true,
-            },
+            integersOnly: true,
           }],
         }])).to.deep.equal({
-          integersOnlyConstraintValues: [false],
+          integersOnlyParamValues: [false],
         });
       }
     );
 
-    it('returns conditions containing all possible integersOnly values for type number and typeOrSubtype filter without integersOnly constraint',
+    it('returns conditions containing all possible integersOnly values for type number and typeOrSubtype filter without integersOnly param',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSubtype',
           types: [{ type: AtmDataSpecType.Number }],
         }])).to.deep.equal({
-          integersOnlyConstraintValues: [false, true],
+          integersOnlyParamValues: [false, true],
         });
       }
     );
 
-    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSubtype filter with truthy integersOnly constraint',
+    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSubtype filter with truthy integersOnly param',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSubtype',
           types: [{
             type: AtmDataSpecType.Number,
-            valueConstraints: {
-              integersOnly: true,
-            },
+            integersOnly: true,
           }],
         }])).to.deep.equal({
-          integersOnlyConstraintValues: [true],
+          integersOnlyParamValues: [true],
         });
       }
     );
 
-    it('returns conditions containing all possible integersOnly values for type number and typeOrSubtype filter with falsy integersOnly constraint',
+    it('returns conditions containing all possible integersOnly values for type number and typeOrSubtype filter with falsy integersOnly param',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSubtype',
           types: [{
             type: AtmDataSpecType.Number,
-            valueConstraints: {
-              integersOnly: false,
-            },
+            integersOnly: false,
           }],
         }])).to.deep.equal({
-          integersOnlyConstraintValues: [false, true],
+          integersOnlyParamValues: [false, true],
         });
       }
     );
 
-    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSubtype filter with mixed integersOnly constraints',
+    it('returns conditions containing narrowed selection of integersOnly values for type number and typeOrSubtype filter with mixed integersOnly params',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Number, [{
           filterType: 'typeOrSubtype',
           types: [{
             type: AtmDataSpecType.Number,
-            valueConstraints: {
-              integersOnly: false,
-            },
+            integersOnly: false,
           }, {
             type: AtmDataSpecType.Number,
-            valueConstraints: {
-              integersOnly: true,
-            },
+            integersOnly: true,
           }],
         }])).to.deep.equal({
-          integersOnlyConstraintValues: [true],
+          integersOnlyParamValues: [true],
         });
       }
     );
@@ -248,24 +224,20 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
           [true, false, [false, true]],
           [true, true, [true]],
         ].forEach(([integersOnlyForSupertype, integersOnlyForSubtype, result]) => {
-          expect(getAtmValueConstraintsConditions(AtmDataSpecType.Number, [{
+          expect(getAtmDataSpecParamsConditions(AtmDataSpecType.Number, [{
             filterType: 'typeOrSupertype',
             types: [{
               type: AtmDataSpecType.Number,
-              valueConstraints: {
-                integersOnly: integersOnlyForSupertype,
-              },
+              integersOnly: integersOnlyForSupertype,
             }],
           }, {
             filterType: 'typeOrSubtype',
             types: [{
               type: AtmDataSpecType.Number,
-              valueConstraints: {
-                integersOnly: integersOnlyForSubtype,
-              },
+              integersOnly: integersOnlyForSubtype,
             }],
           }])).to.deep.equal({
-            integersOnlyConstraintValues: result,
+            integersOnlyParamValues: result,
           });
         });
       }
@@ -273,15 +245,15 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
 
     it('returns conditions containing all possible file types for type file when filters are empty',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [])).to.deep.equal({
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.File, [])).to.deep.equal({
           allowedFileTypes: atmFileTypesArray,
         });
       }
     );
 
-    it('returns conditions containing narrowed selection of file types for typeOrSupertype filter with type file without value constraints',
+    it('returns conditions containing narrowed selection of file types for typeOrSupertype filter with type file without data spec params',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.File, [{
           filterType: 'typeOrSupertype',
           types: [{ type: AtmDataSpecType.File }],
         }])).to.deep.equal({
@@ -291,18 +263,14 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
     );
 
     it('returns conditions matching typeOrSupertype filter for type file', function () {
-      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+      expect(getAtmDataSpecParamsConditions(AtmDataSpecType.File, [{
         filterType: 'typeOrSupertype',
         types: [{
           type: AtmDataSpecType.File,
-          valueConstraints: {
-            fileType: AtmFileType.Regular,
-          },
+          fileType: AtmFileType.Regular,
         }, {
           type: AtmDataSpecType.File,
-          valueConstraints: {
-            fileType: AtmFileType.Directory,
-          },
+          fileType: AtmFileType.Directory,
         }],
       }])).to.deep.equal({
         allowedFileTypes: [
@@ -313,9 +281,9 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
       });
     });
 
-    it('returns conditions containing all possible file types for typeOrSubtype filter with type file without value constraints',
+    it('returns conditions containing all possible file types for typeOrSubtype filter with type file without data spec params',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.File, [{
           filterType: 'typeOrSubtype',
           types: [{ type: AtmDataSpecType.File }],
         }])).to.deep.equal({
@@ -325,18 +293,14 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
     );
 
     it('returns conditions matching typeOrSubtype filter for type file', function () {
-      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+      expect(getAtmDataSpecParamsConditions(AtmDataSpecType.File, [{
         filterType: 'typeOrSubtype',
         types: [{
           type: AtmDataSpecType.File,
-          valueConstraints: {
-            fileType: AtmFileType.Regular,
-          },
+          fileType: AtmFileType.Regular,
         }, {
           type: AtmDataSpecType.File,
-          valueConstraints: {
-            fileType: AtmFileType.Directory,
-          },
+          fileType: AtmFileType.Directory,
         }],
       }]), 'mixed typeOrSubtype of regular and directory').to.deep.equal({
         allowedFileTypes: [
@@ -344,27 +308,23 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
           AtmFileType.Directory,
         ],
       });
-      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+      expect(getAtmDataSpecParamsConditions(AtmDataSpecType.File, [{
         filterType: 'typeOrSubtype',
         types: [{
           type: AtmDataSpecType.File,
-          valueConstraints: {
-            fileType: AtmFileType.Any,
-          },
+          fileType: AtmFileType.Any,
         }, {
           type: AtmDataSpecType.File,
-          valueConstraints: {
-            fileType: AtmFileType.Directory,
-          },
+          fileType: AtmFileType.Directory,
         }],
       }]), 'mixed typeOrSubtype of any and directory').to.deep.equal({
         allowedFileTypes: atmFileTypesArray,
       });
     });
 
-    it('returns conditions containing no file types for forbiddenType filter with type file without value constraints',
+    it('returns conditions containing no file types for forbiddenType filter with type file without data spec params',
       function () {
-        expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+        expect(getAtmDataSpecParamsConditions(AtmDataSpecType.File, [{
           filterType: 'forbiddenType',
           types: [{ type: AtmDataSpecType.File }],
         }])).to.deep.equal({
@@ -374,18 +334,14 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
     );
 
     it('returns conditions matching forbiddenType filter for type file', function () {
-      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+      expect(getAtmDataSpecParamsConditions(AtmDataSpecType.File, [{
         filterType: 'forbiddenType',
         types: [{
           type: AtmDataSpecType.File,
-          valueConstraints: {
-            fileType: AtmFileType.Regular,
-          },
+          fileType: AtmFileType.Regular,
         }, {
           type: AtmDataSpecType.File,
-          valueConstraints: {
-            fileType: AtmFileType.Directory,
-          },
+          fileType: AtmFileType.Directory,
         }],
       }]), 'mixed forbiddenType of regular and directory').to.deep.equal({
         allowedFileTypes: [
@@ -393,13 +349,11 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
           AtmFileType.SymbolicLink,
         ],
       });
-      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+      expect(getAtmDataSpecParamsConditions(AtmDataSpecType.File, [{
         filterType: 'forbiddenType',
         types: [{
           type: AtmDataSpecType.File,
-          valueConstraints: {
-            fileType: AtmFileType.Any,
-          },
+          fileType: AtmFileType.Any,
         }],
       }]), 'forbiddenType of any').to.deep.equal({
         allowedFileTypes: [],
@@ -407,21 +361,17 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
     });
 
     it('returns conditions matching many different filters for type file', function () {
-      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+      expect(getAtmDataSpecParamsConditions(AtmDataSpecType.File, [{
           filterType: 'typeOrSubtype',
           types: [{
             type: AtmDataSpecType.File,
-            valueConstraints: {
-              fileType: AtmFileType.Any,
-            },
+            fileType: AtmFileType.Any,
           }],
         }, {
           filterType: 'forbiddenType',
           types: [{
             type: AtmDataSpecType.File,
-            valueConstraints: {
-              fileType: AtmFileType.SymbolicLink,
-            },
+            fileType: AtmFileType.SymbolicLink,
           }],
         }]), 'mixed typeOrSubtype if any and forbiddenType of symbolic link')
         .to.deep.equal({
@@ -431,21 +381,17 @@ describe('Unit | Utility | atm-workflow/data-spec/types', function () {
             AtmFileType.Directory,
           ],
         });
-      expect(getAtmValueConstraintsConditions(AtmDataSpecType.File, [{
+      expect(getAtmDataSpecParamsConditions(AtmDataSpecType.File, [{
           filterType: 'typeOrSupertype',
           types: [{
             type: AtmDataSpecType.File,
-            valueConstraints: {
-              fileType: AtmFileType.Regular,
-            },
+            fileType: AtmFileType.Regular,
           }],
         }, {
           filterType: 'forbiddenType',
           types: [{
             type: AtmDataSpecType.File,
-            valueConstraints: {
-              fileType: AtmFileType.Regular,
-            },
+            fileType: AtmFileType.Regular,
           }],
         }]), 'mixed typeOrSupertype if regular and forbiddenType of regular')
         .to.deep.equal({

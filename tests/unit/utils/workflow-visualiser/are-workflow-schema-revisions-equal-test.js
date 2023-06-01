@@ -12,14 +12,6 @@ describe('Unit | Utility | workflow-visualiser/are-workflow-schema-revisions-equ
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
 
-  it('returns true when config.itemDataSpec.valueConstraints changed from {} to empty', function () {
-    const revision1 = getExampleWorkflowSchemaRevision();
-    const revision2 = getExampleWorkflowSchemaRevision();
-    revision1.stores[0].config.itemDataSpec.valueConstraints = {};
-    delete revision2.stores[0].config.itemDataSpec.valueConstraints;
-    expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
-  });
-
   it('returns true when config changed from {} to empty', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
@@ -218,7 +210,6 @@ function getExampleWorkflowSchemaRevision() {
       defaultInitialContent: null,
       config: {
         itemDataSpec: {
-          valueConstraints: {},
           type: 'number',
         },
       },
@@ -231,7 +222,6 @@ function getExampleWorkflowSchemaRevision() {
       defaultInitialContent: null,
       config: {
         itemDataSpec: {
-          valueConstraints: {},
           type: 'number',
         },
       },
