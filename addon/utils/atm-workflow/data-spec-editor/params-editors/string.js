@@ -1,7 +1,7 @@
 /**
- * Provides a form element capable of showing, creating and modifying string
- * data spec value constraints. It also provides two methods for conversion
- * between form values and value constraints in both directions.
+ * Provides a form element capable of showing and modifying string
+ * data spec params. It also provides two methods for conversion
+ * between form values and data spec params in both directions.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -19,7 +19,7 @@ import {
   formValueToRawValue as atmFormValueToRawValue,
 } from 'onedata-gui-common/utils/atm-workflow/value-editors';
 
-const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.string';
+const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.paramsEditors.string';
 
 const FormElement = FormFieldsGroup.extend({
   /**
@@ -31,7 +31,7 @@ const FormElement = FormFieldsGroup.extend({
   /**
    * @override
    */
-  classes: 'string-value-constraints-editor value-constraints-editor',
+  classes: 'string-data-spec-params-editor params-editors',
 
   /**
    * @override
@@ -75,38 +75,35 @@ const AllowedValuesEditor = AtmValueEditorField.extend({
    */
   atmDataSpec: Object.freeze({
     type: AtmDataSpecType.Array,
-    valueConstraints: {
-      itemDataSpec: {
-        type: AtmDataSpecType.String,
-      },
+    itemDataSpec: {
+      type: AtmDataSpecType.String,
     },
   }),
 });
 
 /**
  * @param {Utils.FormComponent.ValuesContainer} values Values from string editor
- * @returns {AtmStringValueConstraints} value constraints
+ * @returns {Omit<AtmStringDataSpec, 'type'>}
  */
-function formValuesToValueConstraints(values) {
-  const constraints = {};
+function formValuesToAtmDataSpecParams(values) {
+  const params = {};
 
   const allowedValues = atmFormValueToRawValue(values?.allowedValues);
   if (Array.isArray(allowedValues)) {
-    constraints.allowedValues = allowedValues;
+    params.allowedValues = allowedValues;
   }
 
-  return constraints;
+  return params;
 }
 
 /**
- * @param {AtmStringValueConstraints} valueConstraints value constraints taken
- *   from the raw data spec
+ * @param {AtmStringDataSpec} atmDataSpec
  * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in
  *   a form
  */
-function valueConstraintsToFormValues(valueConstraints) {
+function atmDataSpecParamsToFormValues(atmDataSpec) {
   return createValuesContainer({
-    allowedValues: atmRawValueToFormValue(valueConstraints?.allowedValues, true),
+    allowedValues: atmRawValueToFormValue(atmDataSpec?.allowedValues, true),
   });
 }
 
@@ -147,8 +144,8 @@ function shouldWarnOnRemove(values) {
 
 export default {
   FormElement,
-  formValuesToValueConstraints,
-  valueConstraintsToFormValues,
+  formValuesToAtmDataSpecParams,
+  atmDataSpecParamsToFormValues,
   summarizeFormValues,
   shouldWarnOnRemove,
 };

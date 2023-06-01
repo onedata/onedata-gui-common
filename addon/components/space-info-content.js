@@ -36,6 +36,12 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {boolean}
    */
+  showDetails: true,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
   showLinkToRestApiModal: false,
 
   /**

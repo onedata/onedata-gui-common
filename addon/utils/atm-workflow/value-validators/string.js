@@ -16,7 +16,7 @@ export default function validate(value, atmDataSpec) {
     return false;
   }
 
-  const allowedValues = atmDataSpec?.valueConstraints?.allowedValues;
+  const allowedValues = atmDataSpec?.allowedValues;
   if (Array.isArray(allowedValues) && !allowedValues.includes(value)) {
     return false;
   }

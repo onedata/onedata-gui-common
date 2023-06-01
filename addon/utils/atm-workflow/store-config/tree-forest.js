@@ -24,9 +24,7 @@ export function getDefaultValueDataSpec(storeConfig) {
 
   return {
     type: AtmDataSpecType.Array,
-    valueConstraints: {
-      itemDataSpec: storeConfig.itemDataSpec,
-    },
+    itemDataSpec: storeConfig.itemDataSpec,
   };
 }
 
@@ -48,9 +46,7 @@ export function getReadDataSpecFilters(storeConfig) {
       filterType: 'typeOrSupertype',
       types: [{ type: 'dataset' }, {
         type: 'file',
-        valueConstraints: {
-          fileType: 'ANY',
-        },
+        fileType: 'ANY',
       }],
     });
   }
@@ -71,9 +67,7 @@ export function getWriteDataSpecFilters(storeConfig) {
       filterType: 'typeOrSubtype',
       types: [itemDataSpec, {
         type: 'array',
-        valueConstraints: {
-          itemDataSpec,
-        },
+        itemDataSpec,
       }],
     });
   } else {
@@ -81,23 +75,15 @@ export function getWriteDataSpecFilters(storeConfig) {
       filterType: 'typeOrSubtype',
       types: [{ type: 'dataset' }, {
         type: 'array',
-        valueConstraints: {
-          itemDataSpec: { type: 'dataset' },
-        },
+        itemDataSpec: { type: 'dataset' },
       }, {
         type: 'file',
-        valueConstraints: {
-          fileType: 'ANY',
-        },
+        fileType: 'ANY',
       }, {
         type: 'array',
-        valueConstraints: {
-          itemDataSpec: {
-            type: 'file',
-            valueConstraints: {
-              fileType: 'ANY',
-            },
-          },
+        itemDataSpec: {
+          type: 'file',
+          fileType: 'ANY',
         },
       }],
     });

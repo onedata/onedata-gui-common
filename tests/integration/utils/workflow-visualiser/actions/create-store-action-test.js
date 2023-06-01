@@ -73,7 +73,6 @@ describe('Integration | Utility | workflow-visualiser/actions/create-store-actio
         config: {
           itemDataSpec: {
             type: 'string',
-            valueConstraints: {},
           },
         },
         defaultInitialContent: null,

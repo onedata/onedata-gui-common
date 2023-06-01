@@ -24,7 +24,6 @@ describe('Integration | Utility | workflow-visualiser/actions/view-store-action'
       type: 'range',
       dataSpec: {
         type: 'number',
-        valueConstraints: {},
       },
       defaultInitialContent: {
         start: 1,

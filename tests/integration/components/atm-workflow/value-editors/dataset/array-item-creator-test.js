@@ -19,9 +19,7 @@ describe('Integration | Component | atm-workflow/value-editors/dataset/array-ite
     this.setProperties({
       stateManager: new ValueEditorStateManager({
         type: AtmDataSpecType.Array,
-        valueConstraints: {
-          itemDataSpec: itemAtmDataSpec,
-        },
+        itemDataSpec: itemAtmDataSpec,
       }, editorContext),
       editorContext,
       itemAtmDataSpec,

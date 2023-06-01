@@ -11,15 +11,10 @@ import { typeDefinitionBase } from './commons';
 /**
  * @typedef {Object} AtmObjectDataSpec
  * @property {'object'} type
- * @property {AtmObjectValueConstraints} valueConstraints
  */
 
 /**
- * @typedef {Object} AtmObjectValueConstraints
- */
-
-/**
- * @type {AtmDataSpecTypeDefinition<AtmObjectValueConstraints, null>}
+ * @type {AtmDataSpecTypeDefinition<AtmObjectDataSpec, null>}
  */
 export const atmDataSpecTypeDefinition = Object.freeze({
   ...typeDefinitionBase,

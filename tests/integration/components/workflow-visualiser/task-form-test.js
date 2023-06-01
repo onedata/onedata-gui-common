@@ -28,7 +28,6 @@ const dataSpecs = [{
   name: 'number',
   dataSpec: {
     type: 'number',
-    valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
   exampleConstValue: 10,
@@ -43,7 +42,6 @@ const dataSpecs = [{
   name: 'boolean',
   dataSpec: {
     type: 'boolean',
-    valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
   exampleConstValue: true,
@@ -60,7 +58,6 @@ const dataSpecs = [{
   name: 'string',
   dataSpec: {
     type: 'string',
-    valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
   exampleConstValue: 'abc',
@@ -75,7 +72,6 @@ const dataSpecs = [{
   name: 'object',
   dataSpec: {
     type: 'object',
-    valueConstraints: {},
   },
   valueBuilderTypes: [
     'iteratedItem',
@@ -101,9 +97,7 @@ const dataSpecs = [{
   name: 'file',
   dataSpec: {
     type: 'file',
-    valueConstraints: {
-      fileType: 'ANY',
-    },
+    fileType: 'ANY',
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
   exampleConstValue: { file_id: 'someid' },
@@ -122,7 +116,6 @@ const dataSpecs = [{
   name: 'dataset',
   dataSpec: {
     type: 'dataset',
-    valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
   exampleConstValue: { datasetId: 'someid' },
@@ -140,7 +133,6 @@ const dataSpecs = [{
   name: 'range',
   dataSpec: {
     type: 'range',
-    valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
   exampleConstValue: {
@@ -163,7 +155,6 @@ const dataSpecs = [{
   name: 'timeSeriesMeasurement',
   dataSpec: {
     type: 'timeSeriesMeasurement',
-    valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
   exampleConstValue: {
@@ -287,7 +278,6 @@ const taskAuditLogStore = {
   config: {
     logContentDataSpec: {
       type: 'object',
-      valueConstraints: {},
     },
   },
   requiresInitialContent: false,
@@ -299,7 +289,6 @@ const workflowAuditLogStore = {
   config: {
     logContentDataSpec: {
       type: 'object',
-      valueConstraints: {},
     },
   },
   requiresInitialContent: false,
@@ -331,14 +320,12 @@ const exampleAtmLambdaRevision = {
     name: 'argint',
     dataSpec: {
       type: 'number',
-      valueConstraints: {},
     },
     isOptional: true,
   }, {
     name: 'argstring',
     dataSpec: {
       type: 'string',
-      valueConstraints: {},
     },
     isOptional: true,
   }],
@@ -346,15 +333,12 @@ const exampleAtmLambdaRevision = {
     name: 'resstring',
     dataSpec: {
       type: 'string',
-      valueConstraints: {},
     },
   }, {
     name: 'resfile',
     dataSpec: {
       type: 'file',
-      valueConstraints: {
-        fileType: 'ANY',
-      },
+      fileType: 'ANY',
     },
   }],
   resourceSpec: {
@@ -1304,21 +1288,18 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
           name: 'arg1',
           dataSpec: {
             type: 'number',
-            valueConstraints: {},
           },
           isOptional: true,
         }, {
           name: 'arg2',
           dataSpec: {
             type: 'string',
-            valueConstraints: {},
           },
           isOptional: true,
         }, {
           name: 'arg3',
           dataSpec: {
             type: 'number',
-            valueConstraints: {},
           },
           isOptional: true,
         }],
@@ -1326,27 +1307,22 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
           name: 'res1',
           dataSpec: {
             type: 'string',
-            valueConstraints: {},
           },
         }, {
           name: 'res2',
           dataSpec: {
             type: 'file',
-            valueConstraints: {
-              fileType: 'ANY',
-            },
+            fileType: 'ANY',
           },
         }, {
           name: 'res3',
           dataSpec: {
             type: 'string',
-            valueConstraints: {},
           },
         }, {
           name: 'res4',
           dataSpec: {
             type: 'range',
-            valueConstraints: {},
           },
         }],
         configParameterSpecs: [{
@@ -1380,21 +1356,18 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
         name: 'arg2',
         dataSpec: {
           type: 'string',
-          valueConstraints: {},
         },
         isOptional: true,
       }, {
         name: 'arg1',
         dataSpec: {
           type: 'number',
-          valueConstraints: {},
         },
         isOptional: true,
       }, {
         name: 'arg3',
         dataSpec: {
           type: 'string',
-          valueConstraints: {},
         },
         isOptional: true,
       }];
@@ -1402,27 +1375,22 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
         name: 'res2',
         dataSpec: {
           type: 'file',
-          valueConstraints: {
-            fileType: 'ANY',
-          },
+          fileType: 'ANY',
         },
       }, {
         name: 'res1',
         dataSpec: {
           type: 'string',
-          valueConstraints: {},
         },
       }, {
         name: 'res3',
         dataSpec: {
           type: 'number',
-          valueConstraints: {},
         },
       }, {
         name: 'res4new',
         dataSpec: {
           type: 'range',
-          valueConstraints: {},
         },
       }];
       revision2.configParameterSpecs = [{

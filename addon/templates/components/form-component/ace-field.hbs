@@ -1,0 +1,13 @@
+{{ember-ace
+  value=value
+  mode=aceMode
+  theme="ace/theme/textmate"
+  tabSize=2
+  useWrapMode=true
+  highlightActiveLine=true
+  showLineNumbers=true
+  showPrintMargin=false
+  readOnly=(or isInViewMode (not isEffectivelyEnabled))
+  update=(action "valueChanged")
+  ready=(action "editorReady")
+}}

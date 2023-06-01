@@ -14,9 +14,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/selector', f
     this.setProperties({
       atmDataSpec: {
         type: AtmDataSpecType.File,
-        valueConstraints: {
-          fileType: AtmFileType.Any,
-        },
+        fileType: AtmFileType.Any,
       },
       editorContext: {
         selectFiles: sinon.spy(),
@@ -132,7 +130,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/selector', f
   );
 
   it('passes custom parameters to files selector', async function () {
-    this.set('atmDataSpec.valueConstraints.fileType', AtmFileType.Directory);
+    this.set('atmDataSpec.fileType', AtmFileType.Directory);
     this.set('allowManyFiles', true);
     await renderComponent();
 

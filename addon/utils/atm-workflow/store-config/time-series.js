@@ -37,10 +37,8 @@ export function getWriteDataSpecFilters() {
       type: 'timeSeriesMeasurement',
     }, {
       type: 'array',
-      valueConstraints: {
-        itemDataSpec: {
-          type: 'timeSeriesMeasurement',
-        },
+      itemDataSpec: {
+        type: 'timeSeriesMeasurement',
       },
     }],
   }];

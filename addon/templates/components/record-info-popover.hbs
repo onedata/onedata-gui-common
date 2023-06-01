@@ -3,6 +3,7 @@
     popoverStyle="record-info"
     open=isOpened
     triggerSelector=triggerSelector
+    placement=(if (media "isMobile") "bottom" "auto")
     as |popover|
   }}
     {{#click-outside

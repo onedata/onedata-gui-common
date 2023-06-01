@@ -1,7 +1,7 @@
 /**
- * Provides a form element capable of showing, creating and modifying number
- * data spec value constraints. It also provides two methods for conversion
- * between form values and value constraints in both directions.
+ * Provides a form element capable of showing and modifying number
+ * data spec params. It also provides two methods for conversion
+ * between form values and data spec params in both directions.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -17,7 +17,7 @@ import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import {
   AtmDataSpecType,
-  getAtmValueConstraintsConditions,
+  getAtmDataSpecParamsConditions,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import validate from 'onedata-gui-common/utils/atm-workflow/value-validators/number';
@@ -27,7 +27,7 @@ import {
   formValueToRawValue as atmFormValueToRawValue,
 } from 'onedata-gui-common/utils/atm-workflow/value-editors';
 
-const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.number';
+const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.paramsEditors.number';
 
 const FormElement = FormFieldsGroup.extend({
   /**
@@ -39,7 +39,7 @@ const FormElement = FormFieldsGroup.extend({
   /**
    * @override
    */
-  classes: 'number-value-constraints-editor value-constraints-editor',
+  classes: 'number-data-spec-params-editor params-editors',
 
   /**
    * @override
@@ -70,14 +70,14 @@ const FormElement = FormFieldsGroup.extend({
   /**
    * @type {ComputedProperty<Array<boolean>>}
    */
-  integersOnlyConstraintValues: computed(
+  integersOnlyParamValues: computed(
     'dataSpecFilters',
-    function integersOnlyConstraintValues() {
-      const conditions = getAtmValueConstraintsConditions(
+    function integersOnlyParamValues() {
+      const conditions = getAtmDataSpecParamsConditions(
         AtmDataSpecType.Number,
         this.dataSpecFilters ?? []
       );
-      return conditions.integersOnlyConstraintValues;
+      return conditions.integersOnlyParamValues;
     }
   ),
 });
@@ -91,24 +91,24 @@ const IntegersOnlyToggle = ToggleField.extend({
   /**
    * @override
    */
-  defaultValue: reads('parent.integersOnlyConstraintValues.0'),
+  defaultValue: reads('parent.integersOnlyParamValues.0'),
 
   /**
    * @override
    */
-  isEnabled: gt('parent.integersOnlyConstraintValues.length', raw(1)),
+  isEnabled: gt('parent.integersOnlyParamValues.length', raw(1)),
 
-  constraintValuesObserver: observer(
-    'parent.integersOnlyConstraintValues',
-    function constraintValuesObserver() {
-      scheduleOnce('afterRender', this, 'adjustValueForNewConstraintValues');
+  paramValuesObserver: observer(
+    'parent.integersOnlyParamValues',
+    function paramValuesObserver() {
+      scheduleOnce('afterRender', this, 'adjustValueForNewParamValues');
     }
   ),
 
-  adjustValueForNewConstraintValues() {
+  adjustValueForNewParamValues() {
     safeExec(this, () => {
-      if (!this.parent.integersOnlyConstraintValues.includes(this.value)) {
-        this.valueChanged(this.parent.integersOnlyConstraintValues[0]);
+      if (!this.parent.integersOnlyParamValues.includes(this.value)) {
+        this.valueChanged(this.parent.integersOnlyParamValues[0]);
       }
     });
   },
@@ -130,43 +130,40 @@ const AllowedValuesEditor = AtmValueEditorField.extend({
    */
   atmDataSpec: Object.freeze({
     type: AtmDataSpecType.Array,
-    valueConstraints: {
-      itemDataSpec: {
-        type: AtmDataSpecType.Number,
-      },
+    itemDataSpec: {
+      type: AtmDataSpecType.Number,
     },
   }),
 });
 
 /**
  * @param {Utils.FormComponent.ValuesContainer} values Values from number editor
- * @returns {AtmNumberValueConstraints} value constraints
+ * @returns {Omit<AtmNumberDataSpec, 'type'>}
  */
-function formValuesToValueConstraints(values) {
-  const constraints = {};
+function formValuesToAtmDataSpecParams(values) {
+  const params = {};
 
   if (typeof values?.integersOnly === 'boolean') {
-    constraints.integersOnly = values.integersOnly;
+    params.integersOnly = values.integersOnly;
   }
 
   const allowedValues = atmFormValueToRawValue(values?.allowedValues);
   if (Array.isArray(allowedValues)) {
-    constraints.allowedValues = allowedValues;
+    params.allowedValues = allowedValues;
   }
 
-  return constraints;
+  return params;
 }
 
 /**
- * @param {AtmNumberValueConstraints} valueConstraints value constraints taken
- *   from the raw data spec
+ * @param {AtmNumberDataSpec} atmDataSpec
  * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in
  *   a form
  */
-function valueConstraintsToFormValues(valueConstraints) {
+function atmDataSpecParamsToFormValues(atmDataSpec) {
   return createValuesContainer({
-    integersOnly: Boolean(valueConstraints?.integersOnly),
-    allowedValues: atmRawValueToFormValue(valueConstraints?.allowedValues, true),
+    integersOnly: Boolean(atmDataSpec?.integersOnly),
+    allowedValues: atmRawValueToFormValue(atmDataSpec?.allowedValues, true),
   });
 }
 
@@ -183,9 +180,7 @@ function summarizeFormValues(i18n, values) {
     const allowedValues = values.allowedValues.value;
     const validAllowedValues = allowedValues?.filter((value) => validate(value, {
       type: AtmDataSpecType.Number,
-      valueConstraints: {
-        integersOnly,
-      },
+      integersOnly,
     }));
     if (validAllowedValues?.length) {
       allowedNumbersText = validAllowedValues.join(', ');
@@ -212,8 +207,8 @@ function shouldWarnOnRemove(values) {
 
 export default {
   FormElement,
-  formValuesToValueConstraints,
-  valueConstraintsToFormValues,
+  formValuesToAtmDataSpecParams,
+  atmDataSpecParamsToFormValues,
   summarizeFormValues,
   shouldWarnOnRemove,
 };

@@ -1,7 +1,7 @@
 /**
- * Provides a form element capable of showing, creating and modifying time
- * series measurement data spec value constraints. It also provides two methods
- * for conversion between form values and value constraints in both directions.
+ * Provides a form element capable of showing and modifying time
+ * series measurement data spec params. It also provides two methods
+ * for conversion between form values and data spec params in both directions.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -25,13 +25,13 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/time-series-measurement';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
-const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.timeSeriesMeasurement';
+const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.paramsEditors.timeSeriesMeasurement';
 
 // A fake unit used to indicate that user provides some non-standard unit.
 const customPseudoUnit = 'custom';
 
 const FormElement = FormFieldsCollectionGroup.extend({
-  classes: 'time-series-measurement-value-constraints-editor value-constraints-editor boxes-collection-layout',
+  classes: 'time-series-measurement-data-spec-params-editor data-spec-params-editor boxes-collection-layout',
   isDefaultValueIgnored: false,
   i18nPrefix: `${i18nPrefix}.fields`,
   // Does not take parent fields group translation path into account
@@ -84,9 +84,9 @@ const FormElement = FormFieldsCollectionGroup.extend({
 
 /**
  * @param {Utils.FormComponent.ValuesContainer} values Values from time series measurement editor
- * @returns {AtmTimeSeriesMeasurementValueConstraints} value constraints
+ * @returns {Omit<AtmTimeSeriesMeasurementDataSpec, 'type'>}
  */
-function formValuesToValueConstraints(values) {
+function formValuesToAtmDataSpecParams(values) {
   const specs = get(values, '__fieldsValueNames')
     .map((valueName) => get(values, valueName))
     .filter(Boolean)
@@ -120,21 +120,20 @@ function formValuesToValueConstraints(values) {
 }
 
 /**
- * @param {AtmTimeSeriesMeasurementValueConstraints} valueConstraints value
- * constraints taken from the raw data spec
+ * @param {AtmTimeSeriesMeasurementDataSpec} atmDataSpec
  * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in a form
  */
-function valueConstraintsToFormValues(valueConstraints) {
+function atmDataSpecParamsToFormValues(atmDataSpec) {
   const __fieldsValueNames = [];
   const values = createValuesContainer({
     __fieldsValueNames,
   });
 
-  if (!valueConstraints || !Array.isArray(valueConstraints.specs)) {
+  if (!Array.isArray(atmDataSpec?.specs)) {
     return values;
   }
 
-  valueConstraints.specs.forEach((rawMeasurementSpec, idx) => {
+  atmDataSpec.specs.forEach((rawMeasurementSpec, idx) => {
     if (!rawMeasurementSpec) {
       return;
     }
@@ -186,8 +185,8 @@ function shouldWarnOnRemove(values) {
 
 export default {
   FormElement,
-  formValuesToValueConstraints,
-  valueConstraintsToFormValues,
+  formValuesToAtmDataSpecParams,
+  atmDataSpecParamsToFormValues,
   summarizeFormValues,
   shouldWarnOnRemove,
 };

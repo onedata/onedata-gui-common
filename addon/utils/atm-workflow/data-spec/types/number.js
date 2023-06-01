@@ -11,67 +11,62 @@ import { typeDefinitionBase } from './commons';
 /**
  * @typedef {Object} AtmNumberDataSpec
  * @property {'number'} type
- * @property {AtmNumberValueConstraints} valueConstraints
- */
-
-/**
- * @typedef {Object} AtmNumberValueConstraints
  * @property {boolean} [integersOnly]
  * @property {Array<number>|null} [allowedValues]
  */
 
 /**
- * @typedef {Object} AtmArrayValueConstraintsConditions
- * @property {Array<boolean>} integersOnlyConstraintValues
+ * @typedef {Object} AtmNumberDataSpecParamsConditions
+ * @property {Array<boolean>} integersOnlyParamValues
  */
 
 /**
- * @type {AtmDataSpecTypeDefinition<AtmNumberValueConstraints, AtmArrayValueConstraintsConditions>}
+ * @type {AtmDataSpecTypeDefinition<AtmNumberDataSpec, AtmNumberDataSpecParamsConditions>}
  */
 export const atmDataSpecTypeDefinition = Object.freeze({
   ...typeDefinitionBase,
-  isValueConstraintsCompatible(
-    referenceConstraints,
-    typeOrSubtypeConstraints,
+  areAtmDataSpecParamsCompatible(
+    referenceAtmDataSpec,
+    typeOrSubtypeAtmDataSpec,
   ) {
-    // `referenceConstraints` do not narrow values to integers or both
-    // of constraints allow only integers.
-    return !referenceConstraints?.integersOnly ||
-      typeOrSubtypeConstraints?.integersOnly;
+    // `referenceAtmDataSpec` do not narrow values to integers or both
+    // of specs allow only integers.
+    return !referenceAtmDataSpec?.integersOnly ||
+      typeOrSubtypeAtmDataSpec?.integersOnly;
   },
-  getValueConstraintsConditions(filters) {
-    const integersOnlyConstraintForbiddenValues = new Set();
+  getAtmDataSpecParamsConditions(filters) {
+    const integersOnlyParamForbiddenValues = new Set();
     filters?.forEach((filter) => {
-      const integersOnlyConstraintFilterValues = filter?.types
+      const integersOnlyParamFilterValues = filter?.types
         ?.map((dataSpec) =>
           dataSpec?.type === 'number' ?
-          Boolean(dataSpec?.valueConstraints?.integersOnly) : null
+          Boolean(dataSpec?.integersOnly) : null
         )
         ?.filter((value) => value !== null) ?? [];
       switch (filter.filterType) {
         case 'typeOrSupertype':
-          if (integersOnlyConstraintFilterValues.includes(false)) {
-            integersOnlyConstraintForbiddenValues.add(true);
+          if (integersOnlyParamFilterValues.includes(false)) {
+            integersOnlyParamForbiddenValues.add(true);
           }
           break;
         case 'typeOrSubtype':
-          if (integersOnlyConstraintFilterValues.includes(true)) {
-            integersOnlyConstraintForbiddenValues.add(false);
+          if (integersOnlyParamFilterValues.includes(true)) {
+            integersOnlyParamForbiddenValues.add(false);
           }
           break;
       }
     });
 
-    const integersOnlyConstraintValues = [false, true].filter((value) =>
-      !integersOnlyConstraintForbiddenValues.has(value)
+    const integersOnlyParamValues = [false, true].filter((value) =>
+      !integersOnlyParamForbiddenValues.has(value)
     );
 
     return {
-      integersOnlyConstraintValues,
+      integersOnlyParamValues,
     };
   },
   getDefaultValue(atmDataSpec) {
-    const allowedValues = atmDataSpec?.valueConstraints?.allowedValues;
+    const allowedValues = atmDataSpec?.allowedValues;
     return (!allowedValues?.length || allowedValues?.includes(0)) ? 0 : allowedValues[0];
   },
 });

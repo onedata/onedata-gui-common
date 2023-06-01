@@ -297,7 +297,7 @@ describe('Integration | Utility | atm-workflow/store-config-editors/time-series'
       expect(this.get('rootGroup.isValid')).to.be.true;
     });
 
-  it('allows to show existing measurement specs from value constraints', async function () {
+  it('allows to show existing measurement specs from store config', async function () {
     const formValues = timeSeriesEditor.storeConfigToFormValues({
       timeSeriesCollectionSchema: {
         timeSeriesSchemas: [{

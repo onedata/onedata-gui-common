@@ -75,37 +75,36 @@ export const atmDataSpecTypesArray = Object.freeze([
 ]);
 
 /**
- * @typedef {Object} AtmValueConstraintsConditions
- * Contains possible values and/or limitations for data spec value constraints
- * properties. These can be later used by value constraints editors to provide
+ * @typedef {Object} AtmDataSpecParamsConditions
+ * Contains possible values and/or limitations for data spec params.
+ * These can be later used by data spec editors editors to provide
  * autocompletion and validation, especially when there are some filters applied
  * and only a subset of the possible values is correct.
  *
  * Conditions format is different for each data spec type. For the majority of
- * types there are no specific conditions as there are no value constraints
+ * types there are no specific conditions as there are no additional params
  * available.
  */
 
 /**
- * @typedef {Object} AtmDataSpecTypeDefinition<T, U extends AtmValueConstraintsConditions>
+ * @typedef {Object} AtmDataSpecTypeDefinition<T extends AtmDataSpec, U extends AtmDataSpecParamsConditions>
  * @property {AtmDataSpecType|null} supertype The nearest supertype (type from
  * which this type derives) of this type. `null` when this type has
  * no supertype.
- * @property {(referenceConstraints: T, typeOrSubtypeConstraints: T, ignoreEmpty: boolean, context: IsValueConstraintsCompatibleFuncCtx) => boolean} isValueConstraintsCompatible
- * Returns `true` when `typeOrSubtypeConstraints` value constraints limit
- * allowed values at least as much as `referenceConstraints` value constraints
- * do. Practically it means that when this function returns `true`, then it is
- * always possible to assign any data fulfilling `typeOrSubtypeConstraints` to
- * an entity constrained by `referenceConstraints`.
- * When `ignoreEmpty` is `true`, then a lack of some constraints specification
+ * @property {(referenceAtmDataSpec: T, typeOrSubtypeAtmDataSpec: T, ignoreEmpty: boolean, context: AreAtmDataSpecParamsCompatibleFuncCtx) => boolean} areAtmDataSpecParamsCompatible
+ * Returns `true` when `typeOrSubtypeAtmDataSpec` data spec limits
+ * allowed values at least as much as `referenceAtmDataSpec` data spec
+ * does. Practically it means that when this function returns `true`, then it is
+ * always possible to assign any data fulfilling `typeOrSubtypeAtmDataSpec` to
+ * an entity constrained by `referenceAtmDataSpec`.
+ * When `ignoreEmpty` is `true`, then a lack of some params specification
  * is ignored and does not affect compatibility check. Only directly defined
  * incompatibilities will make function to return `false`.
- * @property {(filters: Array<AtmDataSpecFilter>) => U} getValueConstraintsConditions
+ * @property {(filters: Array<AtmDataSpecFilter>) => U} getAtmDataSpecParamsConditions
  * Converts passed filters to an object with possible values and/or limitations
- * for data spec value constraints properties. See more:
- * `AtmValueConstraintsConditions`
- * @property {(atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>, context: IsValueConstraintsMatchingFiltersFuncCtx) => boolean} isValueConstraintsMatchingFilters
- * Returns `true` when specific data spec value constraints fulfill all provided filters.
+ * for data spec properties. See more: `AtmDataSpecParamsConditions`
+ * @property {(atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>, context: IsAtmDataSpecParamsMatchingFiltersFuncCtx) => boolean} isAtmDataSpecParamsMatchingFilters
+ * Returns `true` when specific data spec params fulfill all provided filters.
  * @property {(atmDataSpec: AtmDataSpec) => unknown} getDefaultValue Returns
  * value default for this data type. WARNING: It doesn't have to be a valid
  * value! It represents a value being as close as possible to the simplest
@@ -113,12 +112,12 @@ export const atmDataSpecTypesArray = Object.freeze([
  */
 
 /**
- * @typedef {Object} IsValueConstraintsCompatibleFuncCtx
+ * @typedef {Object} AreAtmDataSpecParamsCompatibleFuncCtx
  * @property {(containerAtmDataSpec: AtmDataSpec, toContainAtmDataSpec: AtmDataSpec, ignoreEmpty: boolean) => boolean} isAtmDataSpecCompatible
  */
 
 /**
- * @typedef {Object} IsValueConstraintsMatchingFiltersFuncCtx
+ * @typedef {Object} IsAtmDataSpecParamsMatchingFiltersFuncCtx
  * @property {(atmDataSpec: AtmDataSpec, filters: Array<AtmDataSpecFilter>) => boolean} isAtmDataSpecMatchingFilters
  */
 
@@ -177,11 +176,11 @@ export function getAtmDataSpecTypeSubtypes(atmDataSpecType) {
 /**
  * @param {T extends AtmDataSpecType} atmDataSpecType
  * @param {Array<AtmDataSpecFilter>} filters
- * @returns {ReturnType<(typeof atmDataSpecTypeDefinitions)[T]['getValueConstraintsConditions']>|null}
+ * @returns {ReturnType<(typeof atmDataSpecTypeDefinitions)[T]['areAtmDataSpecParamsCompatible']>|null}
  */
-export function getAtmValueConstraintsConditions(atmDataSpecType, filters) {
+export function getAtmDataSpecParamsConditions(atmDataSpecType, filters) {
   return atmDataSpecTypeDefinitions[atmDataSpecType]
-    ?.getValueConstraintsConditions?.(filters) ?? null;
+    ?.getAtmDataSpecParamsConditions?.(filters) ?? null;
 }
 
 /**
@@ -205,7 +204,7 @@ export function translateAtmDataSpecType(i18n, dataSpecType) {
  * @param {AtmDataSpec} referenceAtmDataSpec
  * @param {AtmDataSpec} typeOrSubtypeAtmDataSpec
  * @param {boolean} [ignoreEmpty] When true, then a lack of type specification
- * (e.g. incomplete value constraints) is ignored and does not affect
+ * (e.g. incomplete params) is ignored and does not affect
  * compatibility check. Only directly defined incompatibilities will make
  * function to return `false`.
  * @returns {boolean}
@@ -223,9 +222,9 @@ export function isAtmDataSpecCompatible(
   if (referenceAtmDataSpec.type === typeOrSubtypeAtmDataSpec.type) {
     if (referenceAtmDataSpec.type in atmDataSpecTypeDefinitions) {
       const atmDataSpecDefinition = atmDataSpecTypeDefinitions[referenceAtmDataSpec.type];
-      return atmDataSpecDefinition.isValueConstraintsCompatible(
-        referenceAtmDataSpec.valueConstraints,
-        typeOrSubtypeAtmDataSpec.valueConstraints,
+      return atmDataSpecDefinition.areAtmDataSpecParamsCompatible(
+        referenceAtmDataSpec,
+        typeOrSubtypeAtmDataSpec,
         ignoreEmpty,
         context
       );

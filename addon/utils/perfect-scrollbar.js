@@ -9,7 +9,7 @@
  */
 
 import { default as OriginalPerfectScrollbar } from 'perfect-scrollbar';
-import { getBrowserName } from 'onedata-gui-common/services/browser';
+import browser, { BrowserName } from 'onedata-gui-common/utils/browser';
 
 export default class PerfectScrollbar extends OriginalPerfectScrollbar {
   constructor(element, userSettings = {}) {
@@ -23,7 +23,7 @@ export default class PerfectScrollbar extends OriginalPerfectScrollbar {
     // Note, that due to this fix, you could have 1px trimmed content on Safari, but
     // for various reasons, this is the best solution for this problem. Other solution
     // could be modifying internal implementation of library, but we don't want it.
-    if (getBrowserName() === 'safari') {
+    if (browser.name === BrowserName.Safari) {
       setDefaultSafariMarginOffset(effUserSettings, 'X');
       setDefaultSafariMarginOffset(effUserSettings, 'Y');
     }

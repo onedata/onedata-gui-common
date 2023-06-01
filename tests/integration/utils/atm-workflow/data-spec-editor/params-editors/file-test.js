@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { hbs } from 'ember-cli-htmlbars';
 import { find, render, settled } from '@ember/test-helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
-import fileEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/file';
+import fileEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/params-editors/file';
 import { lookupService } from '../../../../../helpers/stub-service';
 import OneDropdownHelper from '../../../../../helpers/one-dropdown';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
@@ -26,7 +26,7 @@ const fileTypeOptions = [{
 
 const fileTypeHelper = new OneDropdownHelper('.fileType-field');
 
-describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraints-editors/file', function () {
+describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/file', function () {
   setupRenderingTest();
 
   beforeEach(function () {
@@ -34,7 +34,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       ownerSource: this.owner,
       fields: [
         fileEditor.FormElement.create({
-          name: 'valueConstraintsEditor',
+          name: 'paramsEditor',
         }),
       ],
     }));
@@ -60,27 +60,27 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
     });
   }
 
-  it('allows to provide value constraints', async function () {
+  it('allows to provide data spec params', async function () {
     await renderForm();
 
     await fileTypeHelper.selectOptionByText('Regular');
 
-    const valueConstraints = fileEditor.formValuesToValueConstraints(
-      this.get('rootGroup.valuesSource.valueConstraintsEditor')
+    const params = fileEditor.formValuesToAtmDataSpecParams(
+      this.get('rootGroup.valuesSource.paramsEditor')
     );
-    expect(valueConstraints).to.deep.equal({
+    expect(params).to.deep.equal({
       fileType: AtmFileType.Regular,
     });
     expect(this.get('rootGroup.isValid')).to.be.true;
   });
 
-  it('allows to show existing value constraints', async function () {
-    const formValues = fileEditor.valueConstraintsToFormValues({
+  it('allows to show existing data spec params', async function () {
+    const formValues = fileEditor.atmDataSpecParamsToFormValues({
       fileType: AtmFileType.Regular,
     });
 
     await renderForm();
-    this.set('rootGroup.valuesSource.valueConstraintsEditor', formValues);
+    this.set('rootGroup.valuesSource.paramsEditor', formValues);
     await settled();
 
     expect(fileTypeHelper.getSelectedOptionText()).to.equal('Regular');
@@ -89,7 +89,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
 
   for (const { label, value } of fileTypeOptions) {
     it(`shows summary for selected "${label}" file type`, function () {
-      const formValues = fileEditor.valueConstraintsToFormValues({
+      const formValues = fileEditor.atmDataSpecParamsToFormValues({
         fileType: value,
       });
       const i18n = lookupService(this, 'i18n');
@@ -105,9 +105,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       filterType: 'typeOrSupertype',
       types: [{
         type: AtmDataSpecType.File,
-        valueConstraints: {
-          fileType: AtmFileType.Regular,
-        },
+        fileType: AtmFileType.Regular,
       }],
     }]);
     await renderForm();
@@ -121,9 +119,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       filterType: 'typeOrSubtype',
       types: [{
         type: AtmDataSpecType.File,
-        valueConstraints: {
-          fileType: AtmFileType.Regular,
-        },
+        fileType: AtmFileType.Regular,
       }],
     }]);
     await renderForm();
@@ -136,9 +132,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       filterType: 'forbiddenType',
       types: [{
         type: AtmDataSpecType.File,
-        valueConstraints: {
-          fileType: AtmFileType.Regular,
-        },
+        fileType: AtmFileType.Regular,
       }],
     }]);
     await renderForm();
@@ -152,17 +146,13 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       filterType: 'typeOrSupertype',
       types: [{
         type: AtmDataSpecType.File,
-        valueConstraints: {
-          fileType: AtmFileType.Regular,
-        },
+        fileType: AtmFileType.Regular,
       }],
     }, {
       filterType: 'forbiddenType',
       types: [{
         type: AtmDataSpecType.File,
-        valueConstraints: {
-          fileType: AtmFileType.Regular,
-        },
+        fileType: AtmFileType.Regular,
       }],
     }]);
     await renderForm();
@@ -176,7 +166,7 @@ async function renderForm() {
 }
 
 function getSelectedFileTypeValue(testCase) {
-  return testCase.get('rootGroup.valuesSource.valueConstraintsEditor.fileType');
+  return testCase.get('rootGroup.valuesSource.paramsEditor.fileType');
 }
 
 function setFilters(testCase, filters) {

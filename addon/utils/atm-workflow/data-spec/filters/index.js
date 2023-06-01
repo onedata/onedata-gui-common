@@ -76,10 +76,10 @@ export function isAtmDataSpecMatchingFilters(atmDataSpec, filters) {
     }
   }
 
-  const constraintsMatcher = atmDataSpecTypeDefinitions[atmDataSpec.type]
-    ?.isValueConstraintsMatchingFilters;
-  return constraintsMatcher?.(
-    atmDataSpec.valueConstraints,
+  const paramsMatcher = atmDataSpecTypeDefinitions[atmDataSpec.type]
+    ?.isAtmDataSpecParamsMatchingFilters;
+  return paramsMatcher?.(
+    atmDataSpec,
     filters, {
       isAtmDataSpecMatchingFilters,
     }

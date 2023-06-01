@@ -24,9 +24,7 @@ describe('Integration | Component | atm-workflow/value-editors/array/editor', fu
       setupStateManagerForItemType: (itemAtmDataSpec) => {
         this.set('stateManager', new ValueEditorStateManager({
           type: AtmDataSpecType.Array,
-          valueConstraints: {
-            itemDataSpec: itemAtmDataSpec,
-          },
+          itemDataSpec: itemAtmDataSpec,
         }, editorContext));
       },
       editorContext,

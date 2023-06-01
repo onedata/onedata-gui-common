@@ -24,7 +24,7 @@ export default function validate(value, atmDataSpec, context) {
     return true;
   }
 
-  const itemDataSpec = atmDataSpec?.valueConstraints?.itemDataSpec;
+  const itemDataSpec = atmDataSpec?.itemDataSpec;
   if (!itemDataSpec) {
     return false;
   }

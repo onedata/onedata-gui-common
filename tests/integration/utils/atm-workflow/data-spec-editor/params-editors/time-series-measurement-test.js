@@ -12,7 +12,7 @@ import {
 } from '@ember/test-helpers';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
-import timeSeriesMeasurementEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/time-series-measurement';
+import timeSeriesMeasurementEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/params-editors/time-series-measurement';
 import { get } from '@ember/object';
 import { lookupService } from '../../../../../helpers/stub-service';
 import globals from 'onedata-gui-common/utils/globals';
@@ -81,7 +81,7 @@ const unitOptions = [{
   label: 'Custom',
 }];
 
-describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraints-editors/time-series-measurement',
+describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/time-series-measurement',
   function () {
     setupRenderingTest();
 
@@ -90,7 +90,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
         ownerSource: this.owner,
         fields: [
           timeSeriesMeasurementEditor.FormElement.create({
-            name: 'valueConstraintsEditor',
+            name: 'paramsEditor',
           }),
         ],
       }));
@@ -193,7 +193,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       expect(find('.customUnit-field.has-error')).to.exist;
     });
 
-    it('allows to provide complete measurement specs and convert it to value constraints',
+    it('allows to provide complete measurement specs and convert it to data spec params',
       async function () {
         await renderForm();
 
@@ -207,11 +207,11 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
         await selectChoose('.collection-item:nth-child(2) .unit-field', 'Custom');
         await fillIn('.collection-item:nth-child(2) .customUnit-field .form-control', 'Liters');
 
-        const valueConstraints =
-          timeSeriesMeasurementEditor.formValuesToValueConstraints(
-            this.get('rootGroup.valuesSource.valueConstraintsEditor')
+        const params =
+          timeSeriesMeasurementEditor.formValuesToAtmDataSpecParams(
+            this.get('rootGroup.valuesSource.paramsEditor')
           );
-        expect(valueConstraints).to.deep.equal({
+        expect(params).to.deep.equal({
           specs: [{
             nameMatcherType: 'hasPrefix',
             nameMatcher: 'name_',
@@ -225,8 +225,8 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
         expect(this.get('rootGroup.isValid')).to.be.true;
       });
 
-    it('allows to show existing measurement specs from value constraints', async function () {
-      const formValues = timeSeriesMeasurementEditor.valueConstraintsToFormValues({
+    it('allows to show existing measurement specs from data spec', async function () {
+      const formValues = timeSeriesMeasurementEditor.atmDataSpecParamsToFormValues({
         specs: [{
           nameMatcherType: 'hasPrefix',
           nameMatcher: 'name_',
@@ -239,7 +239,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
       });
 
       await renderForm();
-      this.set('rootGroup.valuesSource.valueConstraintsEditor', formValues);
+      this.set('rootGroup.valuesSource.paramsEditor', formValues);
       await settled();
 
       expect(findAll('.collection-item')).to.have.length(2);
@@ -258,7 +258,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
     });
 
     it('shows summary when no measurements are specified', function () {
-      const formValues = timeSeriesMeasurementEditor.valueConstraintsToFormValues({
+      const formValues = timeSeriesMeasurementEditor.atmDataSpecParamsToFormValues({
         specs: [],
       });
       const i18n = lookupService(this, 'i18n');
@@ -270,7 +270,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/value-constraint
     });
 
     it('shows summary when two measurements are specified', function () {
-      const formValues = timeSeriesMeasurementEditor.valueConstraintsToFormValues({
+      const formValues = timeSeriesMeasurementEditor.atmDataSpecParamsToFormValues({
         specs: [{
           nameMatcherType: 'hasPrefix',
           nameMatcher: 'name_',
@@ -295,7 +295,7 @@ async function renderForm() {
 }
 
 function getSpecFormValues(testCase) {
-  const editorValues = testCase.get('rootGroup.valuesSource.valueConstraintsEditor');
+  const editorValues = testCase.get('rootGroup.valuesSource.paramsEditor');
   return get(editorValues, '__fieldsValueNames')
     .map((fieldName) => get(editorValues, fieldName));
 }
