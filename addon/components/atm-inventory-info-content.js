@@ -27,6 +27,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual optional
+   * @type {boolean}
+   */
+  showDetails: true,
+
+  /**
+   * @virtual optional
    * @type {string}
    */
   linkToAtmInventory: undefined,
