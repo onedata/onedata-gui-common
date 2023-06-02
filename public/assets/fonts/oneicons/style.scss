@@ -662,6 +662,26 @@
     content: $oneicon-overview;
   }
 }
+.oneicon-page-first {
+  &:before {
+    content: $oneicon-page-first;
+  }
+}
+.oneicon-page-last {
+  &:before {
+    content: $oneicon-page-last;
+  }
+}
+.oneicon-page-next {
+  &:before {
+    content: $oneicon-page-next;
+  }
+}
+.oneicon-page-prev {
+  &:before {
+    content: $oneicon-page-prev;
+  }
+}
 .oneicon-parents {
   &:before {
     content: $oneicon-parents;
@@ -740,11 +760,6 @@
 .oneicon-qos {
   &:before {
     content: $oneicon-qos;
-  }
-}
-.oneicon-redo {
-  &:before {
-    content: $oneicon-redo;
   }
 }
 .oneicon-refresh {
@@ -1065,11 +1080,6 @@
 .oneicon-transfers {
   &:before {
     content: $oneicon-transfers;
-  }
-}
-.oneicon-undo {
-  &:before {
-    content: $oneicon-undo;
   }
 }
 .oneicon-unit {
