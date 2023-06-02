@@ -86,6 +86,11 @@
     content: $oneicon-atm-workflow;
   }
 }
+.oneicon-axes {
+  &:before {
+    content: $oneicon-axes;
+  }
+}
 .oneicon-ban-left-thin {
   &:before {
     content: $oneicon-ban-left-thin;
@@ -235,6 +240,11 @@
 .oneicon-certificate {
   &:before {
     content: $oneicon-certificate;
+  }
+}
+.oneicon-chart {
+  &:before {
+    content: $oneicon-chart;
   }
 }
 .oneicon-checkbox-check {
@@ -632,6 +642,26 @@
     content: $oneicon-move;
   }
 }
+.oneicon-navigate-first {
+  &:before {
+    content: $oneicon-navigate-first;
+  }
+}
+.oneicon-navigate-last {
+  &:before {
+    content: $oneicon-navigate-last;
+  }
+}
+.oneicon-navigate-next {
+  &:before {
+    content: $oneicon-navigate-next;
+  }
+}
+.oneicon-navigate-prev {
+  &:before {
+    content: $oneicon-navigate-prev;
+  }
+}
 .oneicon-no-view {
   &:before {
     content: $oneicon-no-view;
@@ -660,26 +690,6 @@
 .oneicon-overview {
   &:before {
     content: $oneicon-overview;
-  }
-}
-.oneicon-page-first {
-  &:before {
-    content: $oneicon-page-first;
-  }
-}
-.oneicon-page-last {
-  &:before {
-    content: $oneicon-page-last;
-  }
-}
-.oneicon-page-next {
-  &:before {
-    content: $oneicon-page-next;
-  }
-}
-.oneicon-page-prev {
-  &:before {
-    content: $oneicon-page-prev;
   }
 }
 .oneicon-parents {
@@ -760,6 +770,11 @@
 .oneicon-qos {
   &:before {
     content: $oneicon-qos;
+  }
+}
+.oneicon-redo {
+  &:before {
+    content: $oneicon-redo;
   }
 }
 .oneicon-refresh {
@@ -1080,6 +1095,11 @@
 .oneicon-transfers {
   &:before {
     content: $oneicon-transfers;
+  }
+}
+.oneicon-undo {
+  &:before {
+    content: $oneicon-undo;
   }
 }
 .oneicon-unit {
