@@ -1,0 +1,30 @@
+.pages-control {
+  display: flex;
+  align-items: center;
+  > * {
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+  .pages-control-current-page {
+    max-width: 4.5em;
+  }
+  .pages-control-btn {
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: $main-text-color;
+    &:hover {
+      color: darken($color-one-mint, 20%);
+    }
+    &:disabled {
+      color: $main-text-color-inactive;
+    }
+  }
+  .pages-control-page-size {
+    margin-left: 1em;
+    color: $main-text-color-inactive;
+  }
+}
