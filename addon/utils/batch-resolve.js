@@ -17,7 +17,9 @@ import { all as allFulfilled } from 'rsvp';
 export default async function batchResolve(promiseFunctions, chunkSize = 10) {
   const allResults = [];
   for (const functionsChunk of arrayChunks(promiseFunctions, chunkSize)) {
-    allResults.push(...await allFulfilled(functionsChunk.map(fun => fun())));
+    (await allFulfilled(functionsChunk.map(fun => fun()))).forEach(promise => {
+      allResults.push(promise);
+    });
   }
   return allResults;
 }
