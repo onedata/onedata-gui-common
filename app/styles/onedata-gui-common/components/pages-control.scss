@@ -1,6 +1,11 @@
 .pages-control {
   display: flex;
   align-items: center;
+  &.without-page-number-input {
+    > .pages-control-current-page-prefix, > .pages-control-current-page {
+      margin-right: 0.3em;
+    }
+  }
   > * {
     &:not(:last-child) {
       margin-right: 10px;

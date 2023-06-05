@@ -13,12 +13,16 @@
   {{one-icon icon="navigate-prev"}}
 </button>
 <div class="pages-control-current-page-prefix">{{tt this "page"}}</div>
-<input
-  type="text"
-  oninput={{action "changePage" value="target.value"}}
-  class="pages-control-current-page form-control input-sm"
-  value={{activePageNumber}}
->
+{{#if hasPageNumberInput}}
+  <input
+    type="text"
+    oninput={{action "changePage" value="target.value"}}
+    class="pages-control-current-page form-control input-sm"
+    value={{activePageNumber}}
+  >
+{{else}}
+  <span class="pages-control-current-page">{{pagesCount}}</span>
+{{/if}}
 <div class="pages-control-pages-count">
   {{tt this "of"}}
   <span class="pages-control-pages-count-number">{{pagesCount}}</span>

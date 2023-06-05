@@ -14,6 +14,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 export default Component.extend(I18n, {
   layout,
   classNames: ['pages-control'],
+  classNameBindings: ['hasPageNumberInput::without-page-number-input'],
 
   /**
    * @override
@@ -43,6 +44,11 @@ export default Component.extend(I18n, {
    * @type {(pageNumber: number) => void}
    */
   onPageChange: undefined,
+
+  /**
+   * @type {number}
+   */
+  hasPageNumberInput: true,
 
   changePage(newPageNumber) {
     if (!this.isPageOutOfRange(newPageNumber)) {
