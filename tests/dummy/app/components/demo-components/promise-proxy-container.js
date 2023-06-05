@@ -32,9 +32,7 @@ export default Component.extend({
     }));
 
     this.set('infiniteProxy', PromiseObject.create({
-      promise: new Promise(resolve => {
-        run.later(resolve, Number.MAX_SAFE_INTEGER);
-      }),
+      promise: new Promise(() => {}),
     }));
   },
 

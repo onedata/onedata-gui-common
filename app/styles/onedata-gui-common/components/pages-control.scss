@@ -32,6 +32,11 @@
     margin-left: 1em;
     color: $main-text-color-inactive;
   }
+  // allow wrapping in mobile mode for safety - but you should handle styles
+  // in mobile mode specifically for view context, because wrapping looks bad anyway
+  @media (max-width: $screen-xs-max) {
+    flex-wrap: wrap;
+  }
 }
 
 /// Styles for pages-control in various common contexts

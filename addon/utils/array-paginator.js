@@ -31,8 +31,7 @@ export default EmberObject.extend({
    * @type {ComputedProperty<number>}
    */
   pagesCount: computed('array.length', function pagesCount() {
-    return Math.floor(this.array.length / this.pageSize) +
-      ((this.array.length % this.pageSize) ? 1 : 0);
+    return Math.ceil(this.array.length / this.pageSize);
   }),
 
   activePageArray: computed(

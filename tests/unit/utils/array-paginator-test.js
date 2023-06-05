@@ -42,7 +42,7 @@ describe('Unit | Utility | array-paginator', function () {
     expect(paginator.activePageArray).to.deep.equal([3, 4, 5]);
   });
 
-  it('returns valid page array after active page number change', function () {
+  it('returns valid page array after active page number change using property set', function () {
     const paginator = ArrayPaginator.create({
       array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       pageSize: 3,
@@ -50,6 +50,18 @@ describe('Unit | Utility | array-paginator', function () {
     });
 
     paginator.set('activePageNumber', 3);
+
+    expect(paginator.activePageArray).to.deep.equal([6, 7, 8]);
+  });
+
+  it('returns valid page array after active page number change using method', function () {
+    const paginator = ArrayPaginator.create({
+      array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      pageSize: 3,
+      activePageNumber: 2,
+    });
+
+    paginator.changeActivePageNumber(3);
 
     expect(paginator.activePageArray).to.deep.equal([6, 7, 8]);
   });

@@ -1,5 +1,5 @@
 <button
-  class="pages-control-btn pages-control-first-page-btn disabled"
+  class="pages-control-btn pages-control-first-page-btn"
   onclick={{action "firstPage"}}
   disabled={{disabledButtons.first}}
 >
@@ -15,7 +15,7 @@
 <div class="pages-control-current-page-prefix">{{tt this "page"}}</div>
 {{#if hasPageNumberInput}}
   <input
-    type="text"
+    type="number"
     oninput={{action "changePage" value="target.value"}}
     class="pages-control-current-page form-control input-sm"
     value={{activePageNumber}}

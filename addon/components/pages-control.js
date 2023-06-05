@@ -50,16 +50,6 @@ export default Component.extend(I18n, {
    */
   hasPageNumberInput: true,
 
-  changePage(newPageNumber) {
-    if (!this.isPageOutOfRange(newPageNumber)) {
-      this.onPageChange(newPageNumber);
-    }
-  },
-
-  isPageOutOfRange(page) {
-    return page < 1 || page > this.pagesCount;
-  },
-
   disabledButtons: computed(
     'pagesCount',
     'activePageNumber',
@@ -74,6 +64,16 @@ export default Component.extend(I18n, {
       };
     }
   ),
+
+  changePage(newPageNumber) {
+    if (!this.isPageOutOfRange(newPageNumber)) {
+      this.onPageChange(newPageNumber);
+    }
+  },
+
+  isPageOutOfRange(page) {
+    return page < 1 || page > this.pagesCount;
+  },
 
   actions: {
     firstPage() {
