@@ -1,0 +1,48 @@
+<button
+  class="pages-control-btn pages-control-first-page-btn"
+  onclick={{action "firstPage"}}
+  disabled={{disabledButtons.first}}
+>
+  {{one-icon icon="navigate-first"}}
+</button>
+<button
+  class="pages-control-btn pages-control-prev-page-btn"
+  onclick={{action "prevPage"}}
+  disabled={{disabledButtons.prev}}
+>
+  {{one-icon icon="navigate-prev"}}
+</button>
+<div class="pages-control-current-page-prefix">{{tt this "page"}}</div>
+{{#if hasPageNumberInput}}
+  <input
+    type="number"
+    oninput={{action "changePage" value="target.value"}}
+    class="pages-control-current-page form-control input-sm"
+    value={{activePageNumber}}
+  >
+{{else}}
+  <span class="pages-control-current-page">{{activePageNumber}}</span>
+{{/if}}
+<div class="pages-control-pages-count">
+  {{tt this "of"}}
+  <span class="pages-control-pages-count-number">{{pagesCount}}</span>
+</div>
+<button
+  class="pages-control-btn pages-control-next-page-btn"
+  onclick={{action "nextPage"}}
+  disabled={{disabledButtons.next}}
+>
+  {{one-icon icon="navigate-next"}}
+</button>
+<button
+  class="pages-control-btn pages-control-last-page-btn"
+  onclick={{action "lastPage"}}
+  disabled={{disabledButtons.last}}
+>
+  {{one-icon icon="navigate-last"}}
+</button>
+<div class="pages-control-page-size">
+  <span class="pages-control-page-size-number">{{pageSize}}</span>
+  {{tt this "perPage"}}
+</div>
+{{yield}}
