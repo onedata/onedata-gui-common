@@ -1,0 +1,16 @@
+<div class="row">
+  {{pages-control
+    activePageNumber=paginator.activePageNumber
+    pagesCount=paginator.pagesCount
+    pageSize=paginator.pageSize
+    onPageChange=paginator.changeActivePageNumber
+  }}
+</div>
+
+<div class="row" style="margin-top: 3em; border: 1px solid black;">
+  <ul>
+    {{#each paginator.activePageArray as |item|}}
+      <li>{{item}}</li>
+    {{/each}}
+  </ul>
+</div>

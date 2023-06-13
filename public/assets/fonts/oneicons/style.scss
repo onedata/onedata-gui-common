@@ -86,6 +86,11 @@
     content: $oneicon-atm-workflow;
   }
 }
+.oneicon-axes {
+  &:before {
+    content: $oneicon-axes;
+  }
+}
 .oneicon-ban-left-thin {
   &:before {
     content: $oneicon-ban-left-thin;
@@ -235,6 +240,11 @@
 .oneicon-certificate {
   &:before {
     content: $oneicon-certificate;
+  }
+}
+.oneicon-chart {
+  &:before {
+    content: $oneicon-chart;
   }
 }
 .oneicon-checkbox-check {
@@ -630,6 +640,26 @@
 .oneicon-move {
   &:before {
     content: $oneicon-move;
+  }
+}
+.oneicon-navigate-first {
+  &:before {
+    content: $oneicon-navigate-first;
+  }
+}
+.oneicon-navigate-last {
+  &:before {
+    content: $oneicon-navigate-last;
+  }
+}
+.oneicon-navigate-next {
+  &:before {
+    content: $oneicon-navigate-next;
+  }
+}
+.oneicon-navigate-prev {
+  &:before {
+    content: $oneicon-navigate-prev;
   }
 }
 .oneicon-no-view {
