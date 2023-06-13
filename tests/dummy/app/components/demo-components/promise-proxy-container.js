@@ -1,6 +1,6 @@
 /**
  * @author Jakub Liput
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -29,6 +29,10 @@ export default Component.extend({
       promise: new Promise((resolve, reject) => {
         run.later(() => reject({ message: 'some reason' }), 2000);
       }),
+    }));
+
+    this.set('infiniteProxy', PromiseObject.create({
+      promise: new Promise(() => {}),
     }));
   },
 
