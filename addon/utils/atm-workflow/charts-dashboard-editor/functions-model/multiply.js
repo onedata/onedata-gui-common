@@ -10,12 +10,10 @@ import { computed } from '@ember/object';
 import { FunctionDataType } from './common';
 import FunctionBase from './function-base';
 
-const attachableArgumentSpecsMap = Object.freeze({
-  operands: {
-    name: 'operands',
-    compatibleTypes: [FunctionDataType.Points, FunctionDataType.Number],
-    isArray: true,
-  },
+const operandsArgument = Object.freeze({
+  name: 'operands',
+  compatibleTypes: [FunctionDataType.Points, FunctionDataType.Number],
+  isArray: true,
 });
 
 const MultiplyFunction = FunctionBase.extend({
@@ -28,14 +26,14 @@ const MultiplyFunction = FunctionBase.extend({
   /**
    * @override
    */
-  attachableArgumentSpecs: Object.freeze([attachableArgumentSpecsMap.operands]),
+  attachableArgumentSpecs: Object.freeze([operandsArgument]),
 
   /**
    * @override
    */
   returnedTypes: computed('operands.@each.returnedTypes', function returnedTypes() {
     if (!this.operands?.length) {
-      return attachableArgumentSpecsMap.operands.compatibleTypes;
+      return operandsArgument.compatibleTypes;
     }
 
     const hasSomeOperandWithPoints = this.operands.some(({ returnedTypes }) =>
@@ -52,7 +50,7 @@ const MultiplyFunction = FunctionBase.extend({
       return [FunctionDataType.Number];
     }
 
-    return attachableArgumentSpecsMap.operands.compatibleTypes;
+    return operandsArgument.compatibleTypes;
   }),
 
   init() {

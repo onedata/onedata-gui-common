@@ -11,14 +11,15 @@ import ElementBase from '../element-base';
 export default ElementBase.extend({
   /**
    * @public
-   * @type {Array<FunctionAttachableArgumentSpec>}
-   */
-  attachableArgumentSpecs: Object.freeze([]),
-
-  /**
-   * @public
    * @virtual
    * @type {Array<FunctionDataType>}
    */
   returnedTypes: undefined,
+
+  /**
+   * @public
+   * @virtual optional
+   * @type {Array<FunctionAttachableArgumentSpec>}
+   */
+  attachableArgumentSpecs: Object.freeze([]),
 });

@@ -28,7 +28,7 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
  * @type {FunctionSpec<LoadRepeatedSeriesFunction>}
  */
 export default Object.freeze({
-  name: 'loadSeries',
+  name: 'loadRepeatedSeries',
   returnedTypes: [FunctionDataType.Points],
   onlyForRepeatedSeries: true,
   modelClass: LoadRepeatedSeriesFunction,

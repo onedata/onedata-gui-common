@@ -10,11 +10,9 @@ import { computed } from '@ember/object';
 import { FunctionDataType } from './common';
 import FunctionBase from './function-base';
 
-const attachableArgumentSpecsMap = Object.freeze({
-  data: {
-    name: 'data',
-    compatibleTypes: [FunctionDataType.Points, FunctionDataType.Number],
-  },
+const dataArgument = Object.freeze({
+  name: 'data',
+  compatibleTypes: [FunctionDataType.Points, FunctionDataType.Number],
 });
 
 const RateFunction = FunctionBase.extend({
@@ -33,14 +31,13 @@ const RateFunction = FunctionBase.extend({
   /**
    * @override
    */
-  attachableArgumentSpecs: Object.freeze([attachableArgumentSpecsMap.data]),
+  attachableArgumentSpecs: Object.freeze([dataArgument]),
 
   /**
    * @override
    */
   returnedTypes: computed('data.returnedTypes', function returnedTypes() {
-    return this.data?.returnedTypes ??
-      attachableArgumentSpecsMap.data.compatibleTypes;
+    return this.data?.returnedTypes ?? dataArgument.compatibleTypes;
   }),
 });
 
