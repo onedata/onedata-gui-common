@@ -9,12 +9,21 @@
 import BsModal from 'ember-bootstrap/components/bs-modal';
 import config from 'ember-get-config';
 import { guidFor } from '@ember/object/internals';
+import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import { or, tag } from 'ember-awesome-macros';
 import { scheduleOnce, next } from '@ember/runloop';
 
 export default BsModal.extend({
   tagName: '',
+
+  router: service(),
+
+  /**
+   * @virtual optional
+   * @type {boolean | (transition: Transition) => boolean}
+   */
+  shouldCloseOnTransition: true,
 
   /**
    * In original source code modalId depends on elementId which is null here,
@@ -28,7 +37,7 @@ export default BsModal.extend({
    * due to an empty tag.
    * @override
    */
-  backdropId: tag `${'componentGuid'}-backdrop`,
+  backdropId: tag`${'componentGuid'}-backdrop`,
 
   /**
    * @type {ComputedProperty<String>}
@@ -42,6 +51,13 @@ export default BsModal.extend({
    */
   recomputeScrollShadowFunction: computed(function recomputeScrollShadowFunction() {
     return this.recomputeScrollShadow.bind(this);
+  }),
+
+  /**
+   * @type {ComputedProperty<Function>}
+   */
+  routeChangeHandler: computed(function routeChangeHandler() {
+    return (transition) => this.handleRouteChange(transition);
   }),
 
   sizeObserver: observer('size', function sizeObserver() {
@@ -61,6 +77,7 @@ export default BsModal.extend({
         backdropTransitionDuration: 1,
       });
     }
+    this.registerRouteChangeHandler();
   },
 
   /**
@@ -77,6 +94,17 @@ export default BsModal.extend({
       if (scrollableArea) {
         scrollableArea.dispatchEvent(new Event('parentrender'));
       }
+    }
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.unregisterRouteChangeHandler();
+    } finally {
+      this._super(...arguments);
     }
   },
 
@@ -130,6 +158,26 @@ export default BsModal.extend({
           next(() => this.recomputeScrollShadow());
         }
       }
+    }
+  },
+
+  registerRouteChangeHandler() {
+    this.router.on('routeDidChange', this.routeChangeHandler);
+  },
+
+  unregisterRouteChangeHandler() {
+    this.router.off('routeDidChange', this.routeChangeHandler);
+  },
+
+  handleRouteChange(transition) {
+    if (transition.isAborted) {
+      return;
+    }
+    if (
+      typeof this.shouldCloseOnTransition === 'function' ?
+      this.shouldCloseOnTransition(transition) : this.shouldCloseOnTransition
+    ) {
+      this.send('close');
     }
   },
 });
