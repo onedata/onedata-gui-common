@@ -6,6 +6,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { assert } from '@ember/debug';
+import _ from 'lodash';
+
 /**
  * # WHAT IS AN AUDIT LOG
  *
@@ -227,6 +230,25 @@ export const EntrySeverity = Object.freeze({
   Critical: 'critical',
   Emergency: 'emergency',
 });
+
+/**
+ * @type {Array<AuditLogEntrySeverity>}
+ */
+export const entrySeveritiesArray = Object.freeze([
+  EntrySeverity.Debug,
+  EntrySeverity.Info,
+  EntrySeverity.Notice,
+  EntrySeverity.Warning,
+  EntrySeverity.Alert,
+  EntrySeverity.Error,
+  EntrySeverity.Critical,
+  EntrySeverity.Emergency,
+]);
+
+assert(
+  '`entrySeveritiesArray` should have the same values as `EntrySeverity` does.',
+  _.isEqual(Object.values(EntrySeverity).sort(), [...entrySeveritiesArray].sort())
+);
 
 /**
  * The most common severity level, which can be used as a default one and as
