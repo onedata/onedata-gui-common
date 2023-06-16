@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * Returns id for passed model, that can be used for routing purposes
  * (inside link-to helper, transitionTo function, etc).
@@ -17,6 +14,5 @@ import { get } from '@ember/object';
  * @returns {string}
  */
 export default function (model) {
-  model = model || {};
-  return typeof model === 'string' ? model : get(model, 'id');
+  return typeof model === 'string' ? model : get(model ?? {}, 'id');
 }

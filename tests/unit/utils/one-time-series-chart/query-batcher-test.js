@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 import { expect } from 'chai';
 import {
   describe,
@@ -22,31 +19,32 @@ const defaultBatchAccumulationTime = 5;
 
 describe('Unit | Utility | one-time-series-chart/query-batcher', function () {
   beforeEach(function () {
-    this.fetchData = sinon.stub().callsFake(({ collectionRef, layout, startTimestamp, windowLimit }) => {
-      let negativeValueOccurred = false;
-      const result = Object.keys(layout).reduce((seriesAcc, seriesName) => {
-        seriesAcc[seriesName] = layout[seriesName]
-          .reduce((metricsAcc, metricName) => {
-            const pointValue = pointValueFromMetricSpec({
-              collectionRef,
-              seriesName,
-              metricName,
-              startTimestamp,
-              windowLimit,
-            });
-            metricsAcc[metricName] = [{
-              timestamp: 1,
-              value: pointValue,
-            }];
-            if (pointValue < 0) {
-              negativeValueOccurred = true;
-            }
-            return metricsAcc;
-          }, {});
-        return seriesAcc;
-      }, {});
-      return negativeValueOccurred ? reject('err') : resolve(result);
-    });
+    this.fetchData = sinon.stub()
+      .callsFake(({ collectionRef, layout, startTimestamp, windowLimit }) => {
+        let negativeValueOccurred = false;
+        const result = Object.keys(layout).reduce((seriesAcc, seriesName) => {
+          seriesAcc[seriesName] = layout[seriesName]
+            .reduce((metricsAcc, metricName) => {
+              const pointValue = pointValueFromMetricSpec({
+                collectionRef,
+                seriesName,
+                metricName,
+                startTimestamp,
+                windowLimit,
+              });
+              metricsAcc[metricName] = [{
+                timestamp: 1,
+                value: pointValue,
+              }];
+              if (pointValue < 0) {
+                negativeValueOccurred = true;
+              }
+              return metricsAcc;
+            }, {});
+          return seriesAcc;
+        }, {});
+        return negativeValueOccurred ? reject('err') : resolve(result);
+      });
     this.fakeClock = sinon.useFakeTimers({
       now: Date.now(),
       shouldAdvanceTime: true,

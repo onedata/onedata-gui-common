@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Allows to batch multiple time-series data queries into a (usually) smaller
  * number of requests. It is possible, because backend API allows to fetch

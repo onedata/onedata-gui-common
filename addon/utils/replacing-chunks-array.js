@@ -1,7 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Array that fetches additional chunks of data if requesting indices
  * that are not currently loaded
@@ -371,10 +367,7 @@ export default ArraySlice.extend(Evented, {
         (lastItem ? 1 : 0),
       )
       .then(({ arrayUpdate, endReached }) => {
-        if (endReached === undefined) {
-          endReached = get(arrayUpdate, 'length') < chunkSize;
-        }
-        if (endReached) {
+        if (endReached ?? get(arrayUpdate, 'length') < chunkSize) {
           safeExec(this, 'set', '_endReached', true);
         }
         sourceArray.push(...arrayUpdate);

@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
@@ -553,7 +550,12 @@ function createWindowStub() {
   };
 }
 
-function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
+function itScrollsToLane(
+  message,
+  [overflowEdge, overflowLane],
+  operations,
+  [edgeToCheck, laneToCheck]
+) {
   it(message, async function () {
     await renderForScrollTest(this, 5, laneWidth * 0.6);
     await scrollToLane(overflowEdge, overflowLane, 10);
@@ -575,7 +577,8 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
       if (laneToCheck === 0) {
         expect(lanesContainer.scrollLeft).to.equal(0);
       } else {
-        expect(dom.offset(targetLane).left).to.be.closeTo(dom.offset(lanesContainer).left, 2);
+        expect(dom.offset(targetLane).left)
+          .to.be.closeTo(dom.offset(lanesContainer).left, 2);
       }
     } else {
       if (laneToCheck === lanes.length - 1) {
@@ -723,10 +726,11 @@ function itAddsNewTask(message, initialRawData, insertIndex) {
   itPerformsAction({
     description: message,
     actionTriggerGetter: () => find(addTriggerSelector),
-    applyUpdate: rawDump => rawDump.lanes[0].parallelBoxes[0].tasks.splice(insertIndex, 0, {
-      id: sinon.match.string,
-      name: 'Untitled task',
-    }),
+    applyUpdate: rawDump =>
+      rawDump.lanes[0].parallelBoxes[0].tasks.splice(insertIndex, 0, {
+        id: sinon.match.string,
+        name: 'Untitled task',
+      }),
     initialRawData,
   });
 }

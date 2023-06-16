@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Remove object keys that have specific values
  *
@@ -11,10 +8,15 @@
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
+
+/**
+ * @param {Object} orig
+ * @param {Array<unknown>} [falsyValues]
+ * @returns {Object};
+ */
 export default function stripObject(orig, falsyValues = [undefined, null]) {
   const stripped = {};
   let testForNan = false;
-  // TODO IMPORTANT ensure polyfill (work in IE)
   const nanIndex = falsyValues.findIndex(fv => Number.isNaN(fv));
   if (nanIndex !== -1) {
     testForNan = true;

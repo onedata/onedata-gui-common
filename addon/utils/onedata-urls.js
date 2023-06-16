@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Common utils for manipulating URLs used by Onedata unified and non-unified GUI.
  *
@@ -30,6 +27,7 @@ function normalizeEmberPath(emberPath) {
  * @param {string} origin
  * @param {string} emberPath must be path **without** leading slash, it will be
  *  automatically trimmed
+ * @returns {string}
  */
 export function getOnezoneUrl(origin, emberPath = '') {
   return `${origin}${onezoneDefaultRootPath}/i#/${normalizeEmberPath(emberPath)}`;

@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';

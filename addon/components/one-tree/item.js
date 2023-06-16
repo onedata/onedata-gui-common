@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * A component used by one-tree. It represents item of a tree. Yields content and
  * subtree components. Example of usage can be found in one-tree component comments.
@@ -202,12 +199,13 @@ export default Component.extend({
       assert('one-tree-item: Root tree key must be provided.',
         selectedRootKey !== undefined);
 
+      let normalizedSubtreeIsExpanded = subtreeIsExpanded;
       if (!_areParentsExpanded && subtreeIsExpanded !== false) {
-        subtreeIsExpanded = true;
+        normalizedSubtreeIsExpanded = true;
       }
 
       if (_rootKey === selectedRootKey && subtreeKey === key) {
-        this.send('show', key, subtreeIsExpanded);
+        this.send('show', key, normalizedSubtreeIsExpanded);
       }
     };
   }),
@@ -313,21 +311,22 @@ export default Component.extend({
         return;
       }
 
-      if (!isArray(subtreeKeys) || typeof subtreeKeys === 'string') {
-        subtreeKeys = [subtreeKeys];
+      let normalizedSubtreeKeys = subtreeKeys;
+      if (!isArray(normalizedSubtreeKeys) || typeof normalizedSubtreeKeys === 'string') {
+        normalizedSubtreeKeys = [normalizedSubtreeKeys];
         if (_areParentsExpanded && _isSubtreeExpanded &&
           subtreeIsExpanded !== false) {
           setLastExpandedKey(_parentKey);
         }
       }
 
-      if (subtreeKeys.indexOf(key) === -1) {
+      if (normalizedSubtreeKeys.indexOf(key) === -1) {
         if (subtreeIsExpanded && !_isSubtreeExpanded) {
-          subtreeKeys = subtreeKeys.concat(key);
+          normalizedSubtreeKeys = normalizedSubtreeKeys.concat(key);
         }
       }
       if (_showAction) {
-        _showAction(subtreeKeys, subtreeIsExpanded);
+        _showAction(normalizedSubtreeKeys, subtreeIsExpanded);
       }
     },
     hasTreeNotify(hasSubtree) {

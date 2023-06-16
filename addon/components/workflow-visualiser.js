@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Is responsible for showing and editing workflows.
  *
@@ -751,6 +748,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * Returns visualiser element for given raw data.
    * @param {Object} rawData element representation from backend
    * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBox} [parent=null]
+   * @returns {Utils.WorkflowVisualiser.VisualiserRecord}
    */
   getElementForRawData(type, rawData, parent = null) {
     switch (type) {

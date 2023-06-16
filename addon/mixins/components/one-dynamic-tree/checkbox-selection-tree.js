@@ -1,7 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * A mixin that provides 'select all' functionality to the one-dynamic-tree component.
  * It works using tree data structure (_checkboxSelectionTree property) to store
@@ -86,13 +82,12 @@ export default Mixin.create({
    * tree to fill
    */
   _fillCheckboxSelectionTree(checkboxSelectionTree) {
-    if (!checkboxSelectionTree) {
-      checkboxSelectionTree = this.get('_checkboxSelectionTree');
-      if (!checkboxSelectionTree) {
-        return;
-      }
+    const normalizedCheckboxSelectionTree =
+      checkboxSelectionTree ?? this._checkboxSelectionTree;
+    if (!normalizedCheckboxSelectionTree) {
+      return;
     }
-    this._fillCheckboxSelectionTreeNode(checkboxSelectionTree, '', '');
+    this._fillCheckboxSelectionTreeNode(normalizedCheckboxSelectionTree, '', '');
   },
 
   _fillCheckboxSelectionTreeNode(node, path) {
