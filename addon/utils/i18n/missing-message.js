@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * Defines what to do, when i18n message is missing. It is used by ember-i18n.
  * @see https://github.com/jamesarosen/ember-i18n/wiki/Doc:-Missing-Translations
@@ -18,8 +15,8 @@ export const missingMessagePrefixes = [
 
 export function isMissingMessage(message) {
   if (message) {
-    message = String(message);
-    return missingMessagePrefixes.any(prefix => message.startsWith(prefix));
+    const messageString = String(message);
+    return missingMessagePrefixes.any(prefix => messageString.startsWith(prefix));
   } else {
     return false;
   }

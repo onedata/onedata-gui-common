@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Creates mixin that will add methods and properties that provide data
  * got from some promise.
@@ -75,6 +72,7 @@ export default function createDataProxyMixin(name, options) {
      * falsy value as proxy content (`null`, `0` etc.) then `replaceEmpty = true`
      * must be specified. Otherwise replace will not work when empty value inside
      * proxy content occurs.
+     * @returns {Promise}
      */
     [updateDataProxyName]({
       replace = false,

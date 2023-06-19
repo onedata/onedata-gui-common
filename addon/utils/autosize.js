@@ -1,7 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-/* eslint-disable max-len */
-
 /**
  * Ported from https://github.com/jackmoore/autosize as don't want to use globals
  * and npm import doesn't work in Ember for this package.
@@ -53,7 +49,8 @@ function assign(ta) {
     if (style.boxSizing === 'content-box') {
       heightOffset = -(parseFloat(style.paddingTop) + parseFloat(style.paddingBottom));
     } else {
-      heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+      heightOffset =
+        parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
     }
     // Fix when a textarea is not on document body and heightOffset is Not a Number
     if (isNaN(heightOffset)) {
@@ -83,14 +80,15 @@ function assign(ta) {
   function getParentOverflows(el) {
     const arr = [];
 
-    while (el && el.parentNode && el.parentNode instanceof Element) {
-      if (el.parentNode.scrollTop) {
+    let elemToProcess = el;
+    while (elemToProcess?.parentNode instanceof Element) {
+      if (elemToProcess.parentNode.scrollTop) {
         arr.push({
-          node: el.parentNode,
-          scrollTop: el.parentNode.scrollTop,
+          node: elemToProcess.parentNode,
+          scrollTop: elemToProcess.parentNode.scrollTop,
         });
       }
-      el = el.parentNode;
+      elemToProcess = elemToProcess.parentNode;
     }
 
     return arr;

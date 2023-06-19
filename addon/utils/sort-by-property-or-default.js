@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Sorts the (Ember) objects of array in place by given property and place
  * default object in first place of array using entityId (if present).
@@ -17,6 +14,7 @@ import { get } from '@ember/object';
  * @param {Array<any>} array
  * @param {string} defaultEntityId
  * @param {string} [property]
+ * @returns {Array<any>}
  */
 export default function sortByPropertyOrDefault(array, defaultEntityId, property = 'name') {
   return array.sort((a, b) => {

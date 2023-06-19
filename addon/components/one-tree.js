@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * A component that displays content using nested lists - tree view.
  * Yields item components, which yields content and subtree components.
@@ -275,13 +272,12 @@ export default Component.extend({
       if (_isRoot) {
         const newActiveSubtreeKeys =
           _activeSubtreeKeys.filter(k => subtreeKeys.indexOf(k) === -1);
-        if (subtreeIsExpanded === undefined) {
-          subtreeIsExpanded = newActiveSubtreeKeys.length + subtreeKeys.length >
-            _activeSubtreeKeys.length;
-        }
-        this.set('_activeSubtreeKeys', subtreeIsExpanded ?
+        const normalizedSubtreeIsExpanded = subtreeIsExpanded === undefined ?
+          newActiveSubtreeKeys.length + subtreeKeys.length > _activeSubtreeKeys.length :
+          subtreeIsExpanded;
+        this.set('_activeSubtreeKeys', normalizedSubtreeIsExpanded ?
           _activeSubtreeKeys.concat(subtreeKeys) : newActiveSubtreeKeys);
-        if (subtreeIsExpanded) {
+        if (normalizedSubtreeIsExpanded) {
           this.set('lastExpandedKey', subtreeKeys[subtreeKeys.length - 1]);
         }
       } else if (_showAction) {

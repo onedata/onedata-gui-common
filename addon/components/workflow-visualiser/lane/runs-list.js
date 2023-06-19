@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 /**
  * Shows a list of lane runs.
  *
@@ -412,7 +409,9 @@ export default Component.extend({
     const runsToAddOnTheRight = availableRunsOnTheRight.splice(0, slotsOnTheRight);
     if (runsToAddOnTheLeft.length < slotsOnTheLeft) {
       const extraSlotsOnTheRight = slotsOnTheLeft - runsToAddOnTheLeft.length;
-      runsToAddOnTheRight.push(...availableRunsOnTheRight.splice(0, extraSlotsOnTheRight));
+      runsToAddOnTheRight.push(
+        ...availableRunsOnTheRight.splice(0, extraSlotsOnTheRight)
+      );
     } else if (runsToAddOnTheRight.length < slotsOnTheRight) {
       const extraSlotsOnTheLeft = slotsOnTheRight - runsToAddOnTheRight.length;
       runsToAddOnTheLeft.push(...availableRunsOnTheLeft.splice(

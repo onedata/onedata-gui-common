@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 /**
  * Builder function responsible for generating series from `dynamic`
  * raw builder configuration.
