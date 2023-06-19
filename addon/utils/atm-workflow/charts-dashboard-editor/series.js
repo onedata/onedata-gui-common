@@ -10,6 +10,7 @@ import EmberObject, { computed } from '@ember/object';
 import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
+import functions from './functions-model';
 
 /**
  * @typedef {Object} TimeSeriesGeneratorRef
@@ -92,6 +93,13 @@ const Series = ElementBase.extend({
   /**
    * @public
    * @virtual optional
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.SeriesOutput}
+   */
+  dataProvider: undefined,
+
+  /**
+   * @public
+   * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
    */
   parent: null,
@@ -99,7 +107,7 @@ const Series = ElementBase.extend({
   /**
    * @override
    */
-  referencingPropertyNames: Object.freeze(['parent', 'axis', 'group']),
+  referencingPropertyNames: Object.freeze(['parent', 'axis', 'group', 'dataProvider']),
 
   /**
    * @override
@@ -133,6 +141,12 @@ const Series = ElementBase.extend({
     if (!this.id) {
       this.set('id', generateId());
     }
+    if (!this.dataProvider) {
+      this.set('dataProvider', functions.seriesOutput.modelClass.create({
+        parent: this,
+        elementOwner: this.elementOwner,
+      }));
+    }
 
     this._super(...arguments);
   },
@@ -151,6 +165,10 @@ const Series = ElementBase.extend({
       }
       if (this.group) {
         this.set('group', null);
+      }
+      if (this.dataProvider) {
+        this.dataProvider.destroy();
+        this.set('dataProvider', null);
       }
       if (this.parent) {
         this.set('parent', null);

@@ -42,6 +42,21 @@ const LoadSeriesFunction = FunctionBase.extend({
    * @override
    */
   returnedTypes: Object.freeze([FunctionDataType.Points]),
+
+  willDestroy() {
+    try {
+      if (this.timeSeriesRef) {
+        this.timeSeriesRef.destroy();
+        this.set('timeSeriesRef', undefined);
+      }
+      if (this.replaceEmptyParameters) {
+        this.replaceEmptyParameters.destroy();
+        this.set('replaceEmptyParameters', null);
+      }
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });
 
 /**

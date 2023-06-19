@@ -14,7 +14,8 @@ const i18nPrefix = 'utils.atmWorkflow.chartsDashboardEditor.common';
  *   'chartsDashboardEditorChart' |
  *   'chartsDashboardEditorAxis' |
  *   'chartsDashboardEditorSeriesGroup' |
- *   'chartsDashboardEditorSeries'
+ *   'chartsDashboardEditorSeries' |
+ *   'chartsDashboardEditorFunction'
  * } ElementType
  * Values are so long because are used to distinguish dragged elements from
  * other elements in the GUI.
@@ -29,6 +30,7 @@ export const ElementType = Object.freeze({
   Axis: 'chartsDashboardEditorAxis',
   SeriesGroup: 'chartsDashboardEditorSeriesGroup',
   Series: 'chartsDashboardEditorSeries',
+  Function: 'chartsDashboardEditorFunction',
 });
 
 /**

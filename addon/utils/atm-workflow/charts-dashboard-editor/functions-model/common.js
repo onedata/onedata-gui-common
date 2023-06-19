@@ -20,6 +20,7 @@ export const FunctionDataType = Object.freeze({
  * @property {string} name
  * @property {Array<FunctionDataType>} returnedTypes
  * @property {boolean} [onlyForRepeatedSeries]
+ * @property {boolean} [isNotAvailableForUser]
  * @property {{ new (): T }} modelClass
  */
 

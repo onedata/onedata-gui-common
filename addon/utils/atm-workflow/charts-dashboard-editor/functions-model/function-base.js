@@ -7,6 +7,7 @@
  */
 
 import ElementBase from '../element-base';
+import { ElementType } from './common';
 
 export default ElementBase.extend({
   /**
@@ -22,4 +23,36 @@ export default ElementBase.extend({
    * @type {Array<FunctionAttachableArgumentSpec>}
    */
   attachableArgumentSpecs: Object.freeze([]),
+
+  /**
+   * @override
+   */
+  elementType: ElementType.Function,
+
+  /**
+   * @public
+   * @virtual optional
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Function | Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
+   */
+  parent: null,
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.attachableArgumentSpecs.forEach(({ name, isArray }) => {
+        if (this[name]) {
+          if (isArray) {
+            this[name].forEach((argElement) => argElement?.destroy?.());
+          } else {
+            this[name].destroy?.();
+          }
+          this.set(name, null);
+        }
+      });
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });
