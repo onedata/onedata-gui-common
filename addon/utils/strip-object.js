@@ -12,7 +12,7 @@
 /**
  * @param {Object} orig
  * @param {Array<unknown>} [falsyValues]
- * @returns {Object};
+ * @returns {Object}
  */
 export default function stripObject(orig, falsyValues = [undefined, null]) {
   const stripped = {};
