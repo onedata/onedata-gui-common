@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * A mixin that provides fields tree operations for the one-dynamic-tree
  * component. To store data about fields, a tree data structure is used.
@@ -52,6 +49,7 @@ export default Mixin.create({
 
   /**
    * Creates new fields tree from definition.
+   * @returns {EmberObject}
    */
   _buildFieldsTree() {
     const definition = this.get('definition');

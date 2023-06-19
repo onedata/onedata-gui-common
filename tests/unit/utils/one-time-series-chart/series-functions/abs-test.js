@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import abs from 'onedata-gui-common/utils/one-time-series-chart/series-functions/abs';
@@ -15,16 +12,17 @@ import {
   casesToCheck as transformCasesToCheck,
 } from '../transform-functions/abs-test';
 
-const normalizedTransformCasesToCheck = transformCasesToCheck.map(({ input, output }) => ({
-  input: {
-    type: 'basic',
-    data: input,
-  },
-  output: {
-    type: 'basic',
-    data: output,
-  },
-}));
+const normalizedTransformCasesToCheck = transformCasesToCheck
+  .map(({ input, output }) => ({
+    input: {
+      type: 'basic',
+      data: input,
+    },
+    output: {
+      type: 'basic',
+      data: output,
+    },
+  }));
 
 const casesToCheck = [...normalizedTransformCasesToCheck, {
   input: {

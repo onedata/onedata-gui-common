@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * Converts date in text or MomentJS to some predefined format
  *
@@ -34,9 +31,9 @@ const formatters = {
 };
 
 export function dateFormat([inputDate], { format, timezone, blank } = {}) {
-  format = format || 'default';
-  timezone = timezone || null;
-  blank = blank || blanks[format] || '';
+  const normalizedFormat = format || 'default';
+  const normalizedTimezone = timezone || null;
+  const normalizedBlank = blank || blanks[normalizedFormat] || '';
   if (inputDate) {
     /** @type {moment.Moment} */
     let dateMoment;
@@ -47,16 +44,16 @@ export function dateFormat([inputDate], { format, timezone, blank } = {}) {
     } else {
       dateMoment = moment(inputDate);
       if (!dateMoment.isValid()) {
-        return blank;
+        return normalizedBlank;
       }
     }
-    if (timezone) {
-      dateMoment = dateMoment.utcOffset(timezone);
+    if (normalizedTimezone) {
+      dateMoment = dateMoment.utcOffset(normalizedTimezone);
     }
-    const formatter = formatters[format] || formatters['default'];
+    const formatter = formatters[normalizedFormat] || formatters['default'];
     return dateMoment.format(formatter);
   } else {
-    return blank;
+    return normalizedBlank;
   }
 }
 

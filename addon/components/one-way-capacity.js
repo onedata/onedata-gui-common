@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Capacity one-way editor.
  *
@@ -129,6 +126,7 @@ export default Component.extend({
   /**
    * @param {string} scaledValue
    * @param {Object} sizeUnit
+   * @returns {number}
    */
   getValueInBytes(scaledValue, sizeUnit = undefined) {
     const multiplicator = (sizeUnit && sizeUnit.multiplicator) ||

@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * Replace properites of destination EmberObject with properties
  * of source object.
@@ -28,10 +25,8 @@ const fakeComputed = computed(() => {});
  * @returns {Ember.Object} returns source with modified properties
  */
 export default function emberObjectReplace(dest, source) {
-  if (typeOf(source) === 'instance') {
-    source = plainCopy(source);
-  }
-  const copy = _.clone(source);
+  const plainSource = typeOf(source) === 'instance' ? plainCopy(source) : source;
+  const copy = _.clone(plainSource);
   Object.keys(dest).forEach(k => {
     if (copy.hasOwnProperty(k)) {
       const newPropertyValue = copy[k];

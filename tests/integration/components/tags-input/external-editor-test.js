@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
@@ -67,7 +64,8 @@ describe('Integration | Component | tags-input/external-editor', function () {
   it('proxies tags addition via "onTagsAddedCallback"', async function () {
     let addTags;
     this.set('tagEditorSettings', {
-      startTagCreationCallback: ({ onTagsAddedCallback }) => addTags = onTagsAddedCallback,
+      startTagCreationCallback: ({ onTagsAddedCallback }) =>
+        addTags = onTagsAddedCallback,
     });
 
     await renderTagInput();
@@ -83,7 +81,8 @@ describe('Integration | Component | tags-input/external-editor', function () {
   it('proxies creation end via "onEndTagCreationCallback"', async function () {
     let endCreation;
     this.set('tagEditorSettings', {
-      startTagCreationCallback: ({ onEndTagCreationCallback }) => endCreation = onEndTagCreationCallback,
+      startTagCreationCallback: ({ onEndTagCreationCallback }) =>
+        endCreation = onEndTagCreationCallback,
     });
 
     await renderTagInput();

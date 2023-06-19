@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
@@ -143,7 +140,12 @@ function itIsOfType(type, parent, [elementBefore, elementAfter]) {
     });
 }
 
-function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementType, mode) {
+function itAllowsToAddElement(
+  parent,
+  [elementBefore, elementAfter],
+  newElementType,
+  mode
+) {
   it(
     `allows to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
     async function () {
@@ -170,7 +172,12 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementT
   );
 }
 
-function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], newElementType, mode) {
+function itDoesNotAllowToAddElement(
+  parent,
+  [elementBefore, elementAfter],
+  newElementType,
+  mode
+) {
   it(
     `does not allow to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
     async function () {

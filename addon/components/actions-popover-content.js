@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * A component that renders list of actions in dropdown-friendly form. Usually it
  * will be used inside dropdown popovers.
@@ -76,13 +73,10 @@ export default Component.extend(I18n, {
   }),
 
   toggleNestedActions(item, isOpened) {
-    if (item === null) {
-      item = this.get('nestedActionsOpened');
-    }
-    const nestedActionsOpened = this.get('nestedActionsOpened');
-    if (isOpened && nestedActionsOpened !== item) {
-      this.set('nestedActionsOpened', item);
-    } else if (!isOpened && nestedActionsOpened === item) {
+    const normalizedItem = item === null ? this.nestedActionsOpened : item;
+    if (isOpened && this.nestedActionsOpened !== normalizedItem) {
+      this.set('nestedActionsOpened', normalizedItem);
+    } else if (!isOpened && this.nestedActionsOpened === normalizedItem) {
       this.set('nestedActionsOpened', null);
     }
   },
