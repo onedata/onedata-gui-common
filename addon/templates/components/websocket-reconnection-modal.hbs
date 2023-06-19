@@ -44,6 +44,15 @@
     {{/if}}
   {{/modal.body}}
   {{#modal.footer class="btn-toolbar"}}
+    <div class="left-btn-container">
+      {{#one-button
+        type="warning"
+        onClick=(action "reload")
+      }}
+        {{tt this "reload"}}
+        {{one-tooltip title=(tt this "reloadWarning")}}
+      {{/one-button}}
+    </div>
     {{#one-button
       type="primary"
       buttonType="submit"
@@ -51,12 +60,6 @@
       isPending=(eq state "connecting")
     }}
       {{tt this (if (eq state "connecting") "reconnecting" "tryToConnectNow")}}
-    {{/one-button}}
-    {{#one-button
-      onClick=(action "reload")
-      disabled=(eq state "connecting")
-    }}
-      {{tt this "reload"}}
     {{/one-button}}
   {{/modal.footer}}
 {{/one-modal}}

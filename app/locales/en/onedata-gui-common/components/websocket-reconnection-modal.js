@@ -1,7 +1,7 @@
 export default {
-  header: 'WebSocket connection lost',
-  textWaitingIntro: 'The connection to Onezone server has been lost.',
-  textWaitingAttempting: 'Attempting to estabilish WebSocket connection',
+  header: 'Connection lost',
+  textWaitingIntro: 'The connection to the server has been lost.',
+  textWaitingAttempting: 'Attempting to establish a WebSocket connection',
   textWaitingTry: '(try {{currentAttempt}} of {{maxAttempts}})',
   textWaitingTimeout: 'Automatic reconnection failed – try to connect with the button below or reload the page.',
   textNextAttempt: 'Next attempt in',
@@ -16,4 +16,5 @@ export default {
   specialText: {
     safariCert: 'It may be caused by either server unavailability or invalid SSL certificate (eg. it\'s self-signed).',
   },
+  reloadWarning: 'You will lost any unsaved changes on full page reload.',
 };
