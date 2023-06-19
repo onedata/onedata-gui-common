@@ -1,7 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-/* eslint-disable max-len */
-
 /**
  * A series function, which loads series from the source specified by arguments.
  *
@@ -180,7 +176,8 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
   // Find out timestamp of globally oldest point
   let globallyOldestPointTimestamp = null;
   if (normalizedPoints.length && normalizedPoints.length < context.pointsCount + 1) {
-    globallyOldestPointTimestamp = normalizedPoints[normalizedPoints.length - 1].timestamp;
+    globallyOldestPointTimestamp =
+      normalizedPoints[normalizedPoints.length - 1].timestamp;
   }
 
   // Remove points, that do not describe times matching context.timeResolution
@@ -209,7 +206,8 @@ async function fitPointsToContext(context, replaceEmptyParameters, points) {
     context.lastPointTimestamp - context.timeResolution >= normalizedPoints[0].timestamp
   ) {
     const missingSeconds = context.lastPointTimestamp - normalizedPoints[0].timestamp;
-    const normalizedMissingSeconds = missingSeconds - (missingSeconds % context.timeResolution);
+    const normalizedMissingSeconds =
+      missingSeconds - (missingSeconds % context.timeResolution);
     let nextFakePointTimestamp = normalizedPoints[0].timestamp + normalizedMissingSeconds;
     const pointsToUnshift = [];
     while (

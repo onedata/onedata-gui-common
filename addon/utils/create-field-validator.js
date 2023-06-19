@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 import { validator } from 'ember-cp-validations';
 import { computed, get, getProperties } from '@ember/object';
 
@@ -44,6 +41,7 @@ function getValidatorCompareValue(validatorValue, operator) {
  * @param {Object} field
  * @param {string} type `type` argument of validator `message` function
  * @param {Ember.Service} i18n
+ * @returns {SafeString}
  */
 function getNumberMessage(field, type, i18n) {
   let message;

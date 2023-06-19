@@ -1,7 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-/* eslint-disable jsdoc/require-returns */
-
 import { get } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import { htmlSafe, isHTMLSafe } from '@ember/string';
@@ -75,6 +71,7 @@ export default Service.extend(I18n, {
   /**
    * Main method for reporting some information to user
    * @param {string} type one of: error, info
+   * @returns {unknown}
    */
   show(type, message, options = {}) {
     const notifyMessage = (typeof message === 'object' && !isHTMLSafe(message)) ?
@@ -90,19 +87,22 @@ export default Service.extend(I18n, {
         `<div class="message-icon"><span class="oneicon one-icon oneicon-${notifyMessage.oneIcon}"></span></div>`;
     }
     notifyMessage.html = `${messageIcon}<div class="message-body">${messageBody}</div>`;
-    switch (type) {
+    let normalizedType = type;
+    switch (normalizedType) {
       case 'error':
       case 'error-alert':
       case 'warning-alert':
         console.error('global-notify: Error reported: ' + notifyMessage.html);
-        if (_.endsWith(type, '-alert')) {
-          type = type.substring(0, get(type, 'length') - '-alert'.length);
+        if (_.endsWith(normalizedType, '-alert')) {
+          normalizedType =
+            normalizedType.substring(0, get(normalizedType, 'length') - '-alert'.length);
         }
-        return this.get('alert').show(type, htmlSafe(notifyMessage.html), options);
+        return this.get('alert')
+          .show(normalizedType, htmlSafe(notifyMessage.html), options);
       case 'warning':
       case 'info':
       case 'success':
-        return this.get('notify').show(type, notifyMessage, options);
+        return this.get('notify').show(normalizedType, notifyMessage, options);
       default:
         break;
     }

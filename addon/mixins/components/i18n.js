@@ -1,7 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-/* eslint-disable max-len */
-
 /**
  * The mixin adds a `t` method to facilitate use of translation function
  * using i18n service.
@@ -52,11 +48,14 @@ export default Mixin.create({
    * @param {object} placeholders
    * @param {boolean} options.usePrefix
    * @param {any} options.defaultValue
-   * @returns {string} string translated by 18n service
+   * @returns {SafeString} string translated by 18n service
    */
   t(
     translationKey,
-    placeholders = {}, { usePrefix, defaultValue } = { usePrefix: true, defaultValue: undefined }
+    placeholders = {}, { usePrefix, defaultValue } = {
+      usePrefix: true,
+      defaultValue: undefined,
+    }
   ) {
     const {
       i18n,
@@ -73,6 +72,7 @@ export default Mixin.create({
 
   /**
    * Alias to `t` method.
+   * @returns {SafeString}
    */
   tt() {
     return this.t(...arguments);
