@@ -9,6 +9,7 @@
 import Mixin from '@ember/object/mixin';
 import { inject as service } from '@ember/service';
 import { ReconnectorState } from 'onedata-gui-common/services/onedata-websocket-error-handler';
+import { gt } from 'ember-awesome-macros';
 
 /**
  * WebSocket close event code: GOING_AWAY
@@ -44,6 +45,8 @@ export default Mixin.create({
    * @type {boolean}
    */
   currentOpeningCompleted: undefined,
+
+  isConnectionProblem: gt('reconnectorState', ReconnectorState.closed),
 
   init() {
     this._super(...arguments);
