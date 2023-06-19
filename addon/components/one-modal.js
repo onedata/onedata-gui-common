@@ -14,14 +14,31 @@ import { computed, observer } from '@ember/object';
 import { or, tag } from 'ember-awesome-macros';
 import { scheduleOnce, next } from '@ember/runloop';
 
+/**
+ * @typedef {Object} RouterTransitionInfo
+ * @property {'transition'} type
+ * @property {Transition} data
+ */
+
+/**
+ * @typedef {Object} AppProxyTransitionInfo
+ * @property {'appProxy'} type
+ * @property {AppProxyPropertyChangeEvent} data
+ */
+
+/**
+ * @typedef {RouterTransitionInfo | AppProxyTransitionInfo} TransitionInfo
+ */
+
 export default BsModal.extend({
   tagName: '',
 
   router: service(),
+  appProxy: service(),
 
   /**
    * @virtual optional
-   * @type {boolean | (transition: Transition) => boolean}
+   * @type {boolean | (transitionInfo: TransitionInfo) => boolean}
    */
   shouldCloseOnTransition: true,
 
@@ -54,10 +71,17 @@ export default BsModal.extend({
   }),
 
   /**
-   * @type {ComputedProperty<Function>}
+   * @type {ComputedProperty<(transition: Transition) => void>}
    */
   routeChangeHandler: computed(function routeChangeHandler() {
     return (transition) => this.handleRouteChange(transition);
+  }),
+
+  /**
+   * @type {ComputedProperty<(event: AppProxyPropertyChangeEvent) => void>}
+   */
+  appProxyPropertyChangeHandler: computed(function appProxyPropertyChangeHandler() {
+    return (event) => this.handleAppProxyPropertyChange(event);
   }),
 
   sizeObserver: observer('size', function sizeObserver() {
@@ -78,6 +102,7 @@ export default BsModal.extend({
       });
     }
     this.registerRouteChangeHandler();
+    this.registerAppProxyPropertyChangeHandler();
   },
 
   /**
@@ -103,6 +128,7 @@ export default BsModal.extend({
   willDestroyElement() {
     try {
       this.unregisterRouteChangeHandler();
+      this.unregisterAppProxyPropertyChangeHandler();
     } finally {
       this._super(...arguments);
     }
@@ -169,15 +195,51 @@ export default BsModal.extend({
     this.router.off('routeDidChange', this.routeChangeHandler);
   },
 
+  registerAppProxyPropertyChangeHandler() {
+    this.appProxy.registerPropertyChangeListener(this.appProxyPropertyChangeHandler);
+  },
+
+  unregisterAppProxyPropertyChangeHandler() {
+    this.appProxy.unregisterPropertyChangeListener(this.appProxyPropertyChangeHandler);
+  },
+
+  /**
+   * @param {Transition} transition
+   * @returns {void}
+   */
   handleRouteChange(transition) {
     if (transition.isAborted) {
       return;
     }
-    if (
-      typeof this.shouldCloseOnTransition === 'function' ?
-      this.shouldCloseOnTransition(transition) : this.shouldCloseOnTransition
-    ) {
+
+    const transitionInfo = { type: 'transition', data: transition };
+    if (this.calculateShouldCloseOnTransition(transitionInfo)) {
       this.send('close');
     }
+  },
+
+  /**
+   * @param {AppProxyPropertyChangeEvent} event
+   * @returns {void}
+   */
+  handleAppProxyPropertyChange(event) {
+    const navigationProperties = this.appProxy.getNavigationProperties();
+    if (!navigationProperties.some((propName) => propName in event.changedProperties)) {
+      return;
+    }
+
+    const transitionInfo = { type: 'appProxy', data: event };
+    if (this.calculateShouldCloseOnTransition(transitionInfo)) {
+      this.send('close');
+    }
+  },
+
+  /**
+   * @param {TransitionInfo} transitionInfo
+   * @returns {boolean}
+   */
+  calculateShouldCloseOnTransition(transitionInfo) {
+    return typeof this.shouldCloseOnTransition === 'function' ?
+      this.shouldCloseOnTransition(transitionInfo) : this.shouldCloseOnTransition;
   },
 });

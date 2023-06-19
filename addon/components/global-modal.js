@@ -49,7 +49,7 @@ export default Component.extend({
 
   /**
    * @virtual optional
-   * @type {boolean | (transition: Transition) => boolean}
+   * @type {boolean | (transitionInfo: TransitionInfo) => boolean}
    */
   shouldCloseOnTransition: true,
 
