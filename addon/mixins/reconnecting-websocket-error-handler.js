@@ -32,13 +32,6 @@ export default Mixin.create({
   reconnectorState: undefined,
 
   /**
-   * Global variable accessible by reconnection modal: CloseEvent of WebSocket.
-   * Set in init.
-   * @type {CloseEvent}
-   */
-  currentCloseEvent: undefined,
-
-  /**
    * Global variable accessible by reconnection modal: was WebSocket opened
    * before close?
    * Set in init.
@@ -70,11 +63,24 @@ export default Mixin.create({
       if (this.reconnectorState === ReconnectorState.closed) {
         this.set('reconnectorState', ReconnectorState.init);
       }
-      this.setProperties({
-        currentCloseEvent: closeEvent,
-        currentOpeningCompleted: openingCompleted,
-      });
+      this.set('currentOpeningCompleted', openingCompleted);
     }
+  },
+
+  /**
+   * Invoked when WebSocket `onerror` occures.
+   * @override
+   * @param {any} errorEvent
+   * @param {boolean} openingCompleted
+   */
+  errorOccured(errorEvent, openingCompleted) {
+    console.warn(
+      `websocket error: WS was ${openingCompleted ? 'opened' : 'NOT opened'}`
+    );
+    if (this.reconnectorState === ReconnectorState.closed) {
+      this.set('reconnectorState', ReconnectorState.init);
+    }
+    this.set('currentOpeningCompleted', openingCompleted);
   },
 
   /**
@@ -91,7 +97,6 @@ export default Mixin.create({
   resetReconnectorState() {
     this.setProperties({
       reconnectorState: ReconnectorState.closed,
-      currentCloseEvent: null,
       currentOpeningCompleted: null,
     });
   },

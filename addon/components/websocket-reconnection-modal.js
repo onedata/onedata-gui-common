@@ -91,11 +91,6 @@ export default Component.extend(I18n, {
   reconnectorState: reads('onedataWebsocketErrorHandler.reconnectorState'),
 
   /**
-   * @type {CloseEvent}
-   */
-  currentCloseEvent: reads('onedataWebsocketErrorHandler.currentCloseEvent'),
-
-  /**
    * @type {boolean}
    */
   currentOpeningCompleted: reads(

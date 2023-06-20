@@ -40,12 +40,6 @@ export default Service.extend({
 
   /**
    * @virtual
-   * @type {Event}
-   */
-  currentCloseEvent: undefined,
-
-  /**
-   * @virtual
    * @type {boolean}
    */
   currentOpeningCompleted: undefined,
