@@ -45,6 +45,12 @@ export default Component.extend({
   allowClose: true,
 
   /**
+   * @virtual optional
+   * @type {boolean | (transitionInfo: TransitionInfo) => boolean}
+   */
+  shouldCloseOnTransition: true,
+
+  /**
    * Callback called on modal hide. If returns false, then modal hide is cancelled.
    * @virtual optional
    * @type {Function}
