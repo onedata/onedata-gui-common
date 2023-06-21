@@ -1212,6 +1212,8 @@ function getDispatchFunctionsForStoreType(storeType) {
     case 'list':
     case 'auditLog':
     case 'treeForest':
+      // We don't include exception store here, as it is a runtime-only store
+      // unavailable for user logic
       return ['append', 'extend'];
     default:
       return [];
