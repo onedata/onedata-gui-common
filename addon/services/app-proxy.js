@@ -2,8 +2,26 @@
  * Exposes parent application proxy API (available through
  * window.frameElement.appProxy)
  *
+ * # Navigation properties
+ *
+ * Some properties can be considered as "navigation properties".
+ * Such properties behave like routing parameters - every change
+ * to them defines what place of the GUI is visible to a user.
+ * Having such information can be handful when trying to react
+ * globally to any transition-like event - you'll have to use
+ * app proxy properties change listener and the current list of
+ * navigation properties.
+ *
+ * The list of navigation properties is not constant - it depends on the
+ * current context of the GUI. Hence app proxy has methods
+ * `registerNavigationProperties` and `unregisterNavigationProperties`
+ * which are responsible for marking specific properties as navigational
+ * from the outside. Registrations are counted - two registrations
+ * of some property will need two unregistrations to make that property
+ * non-navigational.
+ *
  * @author Michał Borzęcki, Jakub Liput
- * @copyright (C) 2019-2021 ACK CYFRONET AGH
+ * @copyright (C) 2019-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -25,8 +43,16 @@ import globals from 'onedata-gui-common/utils/globals';
 
 export const throttleTimeout = 50;
 
-export default Service.extend({
+/**
+ * @typedef {Object} AppProxyPropertyChangeEvent
+ * @property {Object<string, { prevValue: unknown, newValue: unknown }>} changedProperties
+ */
 
+/**
+ * @typedef {(event: AppProxyPropertyChangeEvent) => void} AppProxyPropertyChangeListener
+ */
+
+export default Service.extend({
   /**
    * Accumulates shared properties that should be read from `appProxy`
    * collectively and set collectively with throttling.
@@ -39,6 +65,19 @@ export default Service.extend({
    * @type {Object} RSVP's Deferred object
    */
   flushDefer: null,
+
+  /**
+   * Map (property name) -> (number of times that property was marked
+   * as navigation property). `0` or lack of property means no mark for specific
+   * property. See documentation at the top of the file for more information.
+   * @type {Map<string, number>}
+   */
+  navigationPropertyMarksCounter: undefined,
+
+  /**
+   * @type {Set<AppProxyPropertyChangeListener>}
+   */
+  propertyChangeListeners: undefined,
 
   /**
    * @type {Ember.ComputedProperty<Object>}
@@ -68,10 +107,15 @@ export default Service.extend({
     this.scheduleFlushCache = createThrottledFunction(() => {
       this.flushCache();
     }, throttleTimeout, false);
+    this.setProperties({
+      navigationPropertyMarksCounter: new Map(),
+      propertyChangeListeners: new Set(),
+    });
   },
 
   /**
    * Calls action in parent application
+   * @public
    * @param {string} methodName
    * @param  {Array<any>} args
    * @returns {any}
@@ -81,6 +125,80 @@ export default Service.extend({
     if (typeof callParentCallback === 'function') {
       return callParentCallback(methodName, ...args);
     }
+  },
+
+  /**
+   * Marks provided properties as navigation properties.
+   * @public
+   * @param {Array<string>} propertyNameArray
+   * @returns {void}
+   */
+  registerNavigationProperties(propertyNameArray) {
+    propertyNameArray.forEach((propertyName) => {
+      this.navigationPropertyMarksCounter.set(
+        propertyName,
+        (this.navigationPropertyMarksCounter.get(propertyName) ?? 0) + 1
+      );
+    });
+  },
+
+  /**
+   * Unmarks provided properties from being navigation properties.
+   * @public
+   * @param {Array<string>} propertyNameArray
+   * @returns {void}
+   */
+  unregisterNavigationProperties(propertyNameArray) {
+    propertyNameArray.forEach((propertyName) => {
+      const currentMarksCount = this.navigationPropertyMarksCounter.get(propertyName);
+      if (currentMarksCount) {
+        this.navigationPropertyMarksCounter.set(
+          propertyName,
+          currentMarksCount - 1
+        );
+      }
+    });
+  },
+
+  /**
+   * @public
+   * @returns {Array<string>}
+   */
+  getNavigationProperties() {
+    const navigationProperties = [];
+    for (const [propName, counter] of this.navigationPropertyMarksCounter) {
+      if (counter > 0) {
+        navigationProperties.push(propName);
+      }
+    }
+    return navigationProperties;
+  },
+
+  /**
+   * @public
+   * @property {AppProxyPropertyChangeListener} listener
+   * @return {void}
+   */
+  registerPropertyChangeListener(listener) {
+    this.propertyChangeListeners.add(listener);
+  },
+
+  /**
+   * @public
+   * @property {AppProxyPropertyChangeListener} listener
+   * @return {void}
+   */
+  unregisterPropertyChangeListener(listener) {
+    this.propertyChangeListeners.delete(listener);
+  },
+
+  /**
+   * @public
+   * @returns {Promise}
+   */
+  waitForNextFlush() {
+    this.scheduleFlushCache();
+    return this.getFlushPromise();
   },
 
   /**
@@ -105,25 +223,31 @@ export default Service.extend({
       'appProxy',
     );
     this.clearPropertiesToChangeCache();
-    const sharedData = Array.from(propertiesToChange.values())
-      .reduce((data, propertyName) => {
-        data[propertyName] = getSharedProperty(appProxy, propertyName);
-        return data;
-      }, {});
+    const newData = {};
+    const changeEvent = {
+      changedProperties: {},
+    };
+
+    for (const propertyName of propertiesToChange.values()) {
+      const newValue = getSharedProperty(appProxy, propertyName);
+      newData[propertyName] = newValue;
+      changeEvent.changedProperties[propertyName] = {
+        prevValue: injectedData[propertyName],
+        newValue,
+      };
+    }
+
     setProperties(
       injectedData,
-      sharedData
+      newData
     );
     this.resolveFlushDefer();
+
+    this.propertyChangeListeners.forEach((listener) => listener(changeEvent));
   },
 
   clearPropertiesToChangeCache() {
     this.set('propertiesToChange', new Set());
-  },
-
-  waitForNextFlush() {
-    this.scheduleFlushCache();
-    return this.getFlushPromise();
   },
 
   getFlushPromise() {
