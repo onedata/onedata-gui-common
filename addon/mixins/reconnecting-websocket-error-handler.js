@@ -17,7 +17,7 @@ import { gt } from 'ember-awesome-macros';
  * The endpoint is going away, either because of a server failure
  * or because the browser is navigating away from the page that opened the connection.
  *
- * https: //developer.mozilla.org/en-US/docs/Web/API/CloseEvent
+ * https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
  */
 const GOING_AWAY = 1001;
 
@@ -61,9 +61,11 @@ export default Mixin.create({
       );
     } else {
       if (this.reconnectorState === ReconnectorState.closed) {
-        this.set('reconnectorState', ReconnectorState.init);
+        this.setProperties({
+          reconnectorState: ReconnectorState.init,
+          currentOpeningCompleted: openingCompleted,
+        });
       }
-      this.set('currentOpeningCompleted', openingCompleted);
     }
   },
 
@@ -78,20 +80,20 @@ export default Mixin.create({
       `websocket error: WS was ${openingCompleted ? 'opened' : 'NOT opened'}`
     );
     if (this.reconnectorState === ReconnectorState.closed) {
-      this.set('reconnectorState', ReconnectorState.init);
+      this.setProperties({
+        reconnectorState: ReconnectorState.init,
+        currentOpeningCompleted: openingCompleted,
+      });
     }
-    this.set('currentOpeningCompleted', openingCompleted);
   },
 
   /**
    * @override
    */
-  reconnect() {
-    const isAuthenticated = this.get('session.isAuthenticated');
-    return this.forceCloseConnection()
-      .then(() =>
-        this.initWebSocketConnection(isAuthenticated ? 'authenticated' : 'anonymous')
-      );
+  async reconnect() {
+    const isAuthenticated = this.session?.isAuthenticated;
+    await this.forceCloseConnection();
+    await this.initWebSocketConnection(isAuthenticated ? 'authenticated' : 'anonymous');
   },
 
   resetReconnectorState() {

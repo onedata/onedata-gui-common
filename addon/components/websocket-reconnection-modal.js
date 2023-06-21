@@ -212,8 +212,7 @@ export default Component.extend(I18n, {
    * @returns {undefined}
    */
   reconnectFailure(error) {
-    const globalNotify = this.get('globalNotify');
-    globalNotify.warning(this.t('connectionFailed'));
+    this.globalNotify.warning(this.t('connectionFailed'));
 
     if (isInvalidSessionError(error)) {
       this.handleInvalidSessionReconnectFailure(error);
@@ -285,16 +284,15 @@ export default Component.extend(I18n, {
    * Start reconnection procedure
    * @returns {Promise} resolves when reconnected successfully
    */
-  reconnectAttempt() {
+  async reconnectAttempt() {
     this.setReconnectorState(ReconnectorState.connecting);
-    return this.onedataWebsocketErrorHandler.reconnect()
-      .then(() => {
-        this.reconnectSuccess();
-      })
-      .catch(error => {
-        this.reconnectFailure(error);
-        throw error;
-      });
+    try {
+      await this.onedataWebsocketErrorHandler.reconnect();
+      this.reconnectSuccess();
+    } catch (error) {
+      this.reconnectFailure(error);
+      throw error;
+    }
   },
 
   actions: {
