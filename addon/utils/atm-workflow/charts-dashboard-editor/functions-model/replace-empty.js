@@ -38,6 +38,11 @@ const ReplaceEmptyFunction = FunctionBase.extend({
   /**
    * @override
    */
+  name: 'replaceEmpty',
+
+  /**
+   * @override
+   */
   attachableArgumentSpecs: Object.freeze([dataArgument]),
 
   /**

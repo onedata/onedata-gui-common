@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { FunctionDataType } from './common';
+import { FunctionDataType, FunctionExecutionContext } from './common';
 import FunctionBase from './function-base';
 
 const dataArgument = Object.freeze({
@@ -21,6 +21,11 @@ const AxisOutputFunction = FunctionBase.extend({
    * @type {FunctionBase | null}
    */
   data: null,
+
+  /**
+   * @override
+   */
+  name: 'axisOutput',
 
   /**
    * @override
@@ -40,5 +45,6 @@ export default Object.freeze({
   name: 'axisOutput',
   returnedTypes: [FunctionDataType.Number],
   isNotAvailableForUser: true,
+  allowedContexts: [FunctionExecutionContext.Axis],
   modelClass: AxisOutputFunction,
 });

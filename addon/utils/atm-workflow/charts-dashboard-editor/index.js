@@ -28,3 +28,11 @@ export { default as Section } from './section';
 export { default as Axis, getUnitOptionsTypeForUnitName } from './axis';
 export { default as SeriesGroup } from './series-group';
 export { default as Series } from './series';
+export {
+  default as functions,
+  FunctionDataType,
+  FunctionExecutionContext,
+  getFunctionNameTranslation,
+  getFunctionArgumentNameTranslation,
+}
+from './functions-model';

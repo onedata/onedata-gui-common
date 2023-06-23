@@ -1,0 +1,39 @@
+<div class="function-block">
+  <div class="function-block-header">
+    <span class="function-name">{{readableName}}</span>
+  </div>
+</div>
+<div class="function-arguments-container">
+  {{#each functionArguments as |argumentInfo|}}
+    <div class="function-argument">
+      <div class="argument-start-line argument-line">
+        <div class="argument-name">{{argumentInfo.readableName}}</div>
+      </div>
+      <div class="function-argument-blocks">
+      {{#each argumentInfo.attachedFunctions as |func|}}
+        <div class="function-argument-block">
+          <div class="argument-middle-line argument-line"></div>
+          <div class="argument-end-line argument-line"></div>
+          {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
+            chartFunction=func
+            executionContext=executionContext
+            actionsFactory=actionsFactory
+          }}
+        </div>
+      {{/each}}
+      {{#if (or argumentInfo.isArray (not argumentInfo.attachedFunctions.length))}}
+        <div class="function-argument-block">
+          <div class="argument-middle-line argument-line"></div>
+          <div class="argument-end-line argument-line"></div>
+          {{atm-workflow/charts-dashboard-editor/function-editor/function-adder
+            executionContext=executionContext
+            actionsFactory=actionsFactory
+            parentFunction=chartFunction
+            parentFunctionArgumentName=argumentInfo.name
+          }}
+        </div>
+      {{/if}}
+      </div>
+    </div>
+  {{/each}}
+</div>

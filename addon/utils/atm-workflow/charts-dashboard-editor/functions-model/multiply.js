@@ -26,6 +26,11 @@ const MultiplyFunction = FunctionBase.extend({
   /**
    * @override
    */
+  name: 'multiply',
+
+  /**
+   * @override
+   */
   attachableArgumentSpecs: Object.freeze([operandsArgument]),
 
   /**
@@ -62,7 +67,7 @@ const MultiplyFunction = FunctionBase.extend({
 });
 
 /**
- * @type {FunctionSpec<AbsFunction>}
+ * @type {FunctionSpec<MultiplyFunction>}
  */
 export default Object.freeze({
   name: 'multiply',

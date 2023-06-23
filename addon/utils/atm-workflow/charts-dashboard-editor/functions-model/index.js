@@ -27,4 +27,10 @@ export default Object.freeze({
   timeDerivative,
 });
 
-export { FunctionDataType } from './common';
+export {
+  FunctionDataType,
+  FunctionExecutionContext,
+  getFunctionNameTranslation,
+  getFunctionArgumentNameTranslation,
+}
+from './common';

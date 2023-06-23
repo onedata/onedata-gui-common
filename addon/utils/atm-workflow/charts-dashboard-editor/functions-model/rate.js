@@ -31,6 +31,11 @@ const RateFunction = FunctionBase.extend({
   /**
    * @override
    */
+  name: 'rate',
+
+  /**
+   * @override
+   */
   attachableArgumentSpecs: Object.freeze([dataArgument]),
 
   /**

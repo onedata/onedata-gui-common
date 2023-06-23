@@ -7,9 +7,16 @@
  */
 
 import ElementBase from '../element-base';
-import { ElementType } from './common';
+import { ElementType } from '../common';
 
 export default ElementBase.extend({
+  /**
+   * @public
+   * @virtual
+   * @type {string}
+   */
+  name: undefined,
+
   /**
    * @public
    * @virtual

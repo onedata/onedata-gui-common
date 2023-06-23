@@ -31,6 +31,11 @@ const TimeDerivativeFunction = FunctionBase.extend({
   /**
    * @override
    */
+  name: 'timeDerivative',
+
+  /**
+   * @override
+   */
   attachableArgumentSpecs: Object.freeze([dataArgument]),
 
   /**

@@ -17,6 +17,7 @@ import SelectElementAction from './actions/select-element-action';
 import ChangeElementPropertyAction from './actions/change-element-property-action';
 import EditChartContentAction from './actions/edit-chart-content-action';
 import EndChartContentEditionAction from './actions/end-chart-content-edition-action';
+import AddFunctionAction from './actions/add-function-action';
 
 /**
  * @typedef {(action: Utils.Action, result: Utils.ActionResult) => void} ActionExecuteListener
@@ -251,6 +252,21 @@ export default class ActionsFactory {
    */
   createEndChartContentEditionAction(context = {}) {
     return this.attachExecuteListener(EndChartContentEditionAction.create({
+      ownerSource: this.ownerSource,
+      context: {
+        changeViewState: this.changeViewState,
+        ...context,
+      },
+    }));
+  }
+
+  /**
+   * @public
+   * @param {Omit<AddFunctionActionContext, 'changeViewState'>} context
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.AddFunctionAction}
+   */
+  createAddFunctionAction(context) {
+    return this.attachExecuteListener(AddFunctionAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,

@@ -25,6 +25,11 @@ const AbsFunction = FunctionBase.extend({
   /**
    * @override
    */
+  name: 'abs',
+
+  /**
+   * @override
+   */
   attachableArgumentSpecs: Object.freeze([dataArgument]),
 
   /**

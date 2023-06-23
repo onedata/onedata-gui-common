@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { FunctionDataType } from './common';
+import { FunctionDataType, FunctionExecutionContext } from './common';
 import FunctionBase from './function-base';
 
 /**
@@ -41,6 +41,11 @@ const LoadSeriesFunction = FunctionBase.extend({
   /**
    * @override
    */
+  name: 'loadSeries',
+
+  /**
+   * @override
+   */
   returnedTypes: Object.freeze([FunctionDataType.Points]),
 
   willDestroy() {
@@ -65,5 +70,9 @@ const LoadSeriesFunction = FunctionBase.extend({
 export default Object.freeze({
   name: 'loadSeries',
   returnedTypes: [FunctionDataType.Points],
+  allowedContexts: [
+    FunctionExecutionContext.Series,
+    FunctionExecutionContext.RepeatedSeries,
+  ],
   modelClass: LoadSeriesFunction,
 });
