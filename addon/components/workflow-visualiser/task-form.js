@@ -1208,12 +1208,13 @@ function getTargetStoresForDataSpec(availableStores, dataSpec) {
 }
 
 function getDispatchFunctionsForStoreType(storeType) {
+  // We don't include exception store here, as it is a runtime-only store
+  // unavailable for user logic. Other non-present stores simply don't have
+  // dispatch functions.
   switch (storeType) {
     case 'list':
     case 'auditLog':
     case 'treeForest':
-      // We don't include exception store here, as it is a runtime-only store
-      // unavailable for user logic
       return ['append', 'extend'];
     default:
       return [];
