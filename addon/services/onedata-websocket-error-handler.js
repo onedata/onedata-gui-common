@@ -34,7 +34,7 @@ export const ReconnectorState = Object.freeze({
 export default Service.extend({
   /**
    * @virtual
-   * @type {number}
+   * @type {ReconnectorState}
    */
   reconnectorState: undefined,
 

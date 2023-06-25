@@ -86,7 +86,7 @@ export default Component.extend(I18n, {
   modalTransitionDuration: 300,
 
   /**
-   * @type {number}
+   * @type {ReconnectorState}
    */
   reconnectorState: reads('onedataWebsocketErrorHandler.reconnectorState'),
 

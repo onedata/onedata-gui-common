@@ -27,7 +27,7 @@ export default Mixin.create({
   /**
    * Global state accessible by reconnector.
    * Set in init.
-   * @type {number}
+   * @type {ReconnectorState}
    */
   reconnectorState: undefined,
 
@@ -53,9 +53,9 @@ export default Mixin.create({
    */
   abnormalClose(closeEvent, openingCompleted) {
     console.warn(
-      `websocket abnormalClose: Onezone WS close not invoked by user, code: ${closeEvent.code}, WS was ${openingCompleted ? 'opened' : 'NOT opened'}`
+      `websocket abnormalClose: WS close not invoked by user, code: ${closeEvent.code}, WS was ${openingCompleted ? 'opened' : 'NOT opened'}`
     );
-    if (closeEvent && closeEvent.code === GOING_AWAY) {
+    if (closeEvent?.code === GOING_AWAY) {
       console.debug(
         'websocket abnormalClose: GOING_AWAY code, ignoring'
       );
