@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import { computed, observer, defineProperty } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { dasherize } from '@ember/string';
 import {
   getFunctionNameTranslation,
   getFunctionArgumentNameTranslation,
@@ -42,6 +43,11 @@ export default Component.extend({
   actionsFactory: undefined,
 
   /**
+   * @type {ComputedProperty<Array<FunctionRendererArgument>>}
+   */
+  functionArguments: undefined,
+
+  /**
    * @type {ComputedProperty<SafeString>}
    */
   readableName: computed('chartFunction.name', function readableName() {
@@ -49,9 +55,18 @@ export default Component.extend({
   }),
 
   /**
-   * @type {ComputedProperty<Array<FunctionRendererArgument>>}
+   * @type {ComputedProperty<string | null>}
    */
-  functionArguments: undefined,
+  settingsComponentName: computed(
+    'chartFunction.{name.hasSettingsComponent}',
+    function settingsComponentName() {
+      if (!this.chartFunction.hasSettingsComponent) {
+        return null;
+      }
+
+      return `atm-workflow/charts-dashboard-editor/function-editor/${dasherize(this.chartFunction.name)}-settings`;
+    }
+  ),
 
   functionArgumentsSetter: observer(
     'chartFunction.attachableArgumentSpecs',

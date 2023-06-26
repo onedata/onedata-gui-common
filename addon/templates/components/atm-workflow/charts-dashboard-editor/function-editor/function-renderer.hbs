@@ -2,6 +2,14 @@
   <div class="function-block-header">
     <span class="function-name">{{readableName}}</span>
   </div>
+  {{#if settingsComponentName}}
+    <div class="function-block-body">
+      {{component settingsComponentName
+        chartFunction=chartFunction
+        actionsFactory=actionsFactory
+      }}
+    </div>
+  {{/if}}
 </div>
 <div class="function-arguments-container">
   {{#each functionArguments as |argumentInfo|}}

@@ -32,6 +32,13 @@ export default ElementBase.extend({
   attachableArgumentSpecs: Object.freeze([]),
 
   /**
+   * @public
+   * @virtual optional
+   * @type {boolean}
+   */
+  hasSettingsComponent: false,
+
+  /**
    * @override
    */
   elementType: ElementType.Function,

@@ -24,6 +24,11 @@ const LiteralFunction = FunctionBase.extend({
   /**
    * @override
    */
+  hasSettingsComponent: true,
+
+  /**
+   * @override
+   */
   returnedTypes: Object.freeze([FunctionDataType.Number]),
 });
 

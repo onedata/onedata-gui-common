@@ -32,6 +32,12 @@ export default Component.extend({
   dashboardSpec: undefined,
 
   /**
+   * @virtual
+   * @type {Array<Utils.WorkflowVisualiser.Store>}
+   */
+  timeSeriesStores: undefined,
+
+  /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ViewState}
    */
   viewState: undefined,
@@ -133,6 +139,8 @@ export default Component.extend({
         newViewState.selectedSectionElement = null;
         newViewState.isChartEditorActive = false;
         newViewState.selectedChartElement = null;
+      } else if (viewStateChange.elementToSelect.elementType === ElementType.Function) {
+        // FIXME
       } else if (isChartElementType(viewStateChange.elementToSelect.elementType)) {
         // Chart element selection. We need to find parent chart...
         let chart = viewStateChange.elementToSelect.parent;

@@ -718,6 +718,10 @@
     > .perfect-scrollbar-element {
       display: grid;
       padding: 1em;
+
+      > .function-renderer > .function-arguments-container {
+        border-right: 1em solid transparent;
+      }
     }
 
     .function-renderer {
@@ -742,6 +746,28 @@
     .function-name {
       text-transform: uppercase;
       white-space: nowrap;
+    }
+
+    .function-block-body {
+      padding: 0.5em;
+      border-top: $main-border;
+      background-color: $color-one-white;
+    }
+
+    .function-settings {
+      max-width: 12em;
+
+      .field-message {
+        display: none;
+      }
+    }
+
+    .replace-empty-settings {
+      max-width: 16em;
+    }
+
+    .function-arguments-container {
+      flex-shrink: 0;
     }
 
     .function-argument-block {
@@ -770,6 +796,8 @@
     }
 
     .argument-line {
+      flex-shrink: 0;
+
       &::before {
         content: '';
         display: block;
