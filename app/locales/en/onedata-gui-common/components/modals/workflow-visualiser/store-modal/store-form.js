@@ -33,6 +33,9 @@ export default {
         timeSeries: {
           label: 'Time series',
         },
+        exception: {
+          label: 'Exception',
+        },
       },
     },
     defaultValue: {

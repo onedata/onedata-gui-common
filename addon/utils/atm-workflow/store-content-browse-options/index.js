@@ -9,6 +9,7 @@
 /**
  * @typedef {
  *   AtmAuditLogStoreContentBrowseOptions |
+ *   AtmExceptionStoreContentBrowseOptions |
  *   AtmListStoreContentBrowseOptions |
  *   AtmRangeStoreContentBrowseOptions |
  *   AtmSingleValueStoreContentBrowseOptions |

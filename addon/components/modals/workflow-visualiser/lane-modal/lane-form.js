@@ -233,7 +233,7 @@ export default Component.extend(I18n, {
    */
   maxBatchSizeField: computed(function maxBatchSizeField() {
     return NumberField
-      .extend(defaultValueGenerator(this, raw('100')))
+      .extend(defaultValueGenerator(this, raw('10')))
       .create({
         name: 'maxBatchSize',
         integer: true,

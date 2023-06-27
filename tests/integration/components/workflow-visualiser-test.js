@@ -123,7 +123,7 @@ describe('Integration | Component | workflow-visualiser', function () {
           maxRetries: 0,
           storeIteratorSpec: {
             storeSchemaId: lastStoreId,
-            maxBatchSize: 100,
+            maxBatchSize: 10,
           },
           parallelBoxes: [],
         });
@@ -177,7 +177,7 @@ describe('Integration | Component | workflow-visualiser', function () {
         maxRetries: 0,
         storeIteratorSpec: {
           storeSchemaId: 's1',
-          maxBatchSize: 100,
+          maxBatchSize: 10,
         },
       }),
       initialRawData: twoEmptyLanesExample,
@@ -221,7 +221,7 @@ describe('Integration | Component | workflow-visualiser', function () {
           maxRetries: 0,
           storeIteratorSpec: {
             storeSchemaId: lastStoreId,
-            maxBatchSize: 100,
+            maxBatchSize: 10,
           },
         });
       },
@@ -677,7 +677,7 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
       maxRetries: 0,
       storeIteratorSpec: {
         storeSchemaId: storeIdFromExample(0),
-        maxBatchSize: 100,
+        maxBatchSize: 10,
       },
       parallelBoxes: [],
     }),
@@ -1053,7 +1053,7 @@ function generateExample(
       maxRetries: 0,
       storeIteratorSpec: {
         storeSchemaId: storeIdFromExample(0),
-        maxBatchSize: 100,
+        maxBatchSize: 10,
       },
       parallelBoxes: _.range(parallelBoxsPerLane).map(blockNo => ({
         id: parallelBoxIdFromExample(laneNo, blockNo),

@@ -73,7 +73,7 @@ describe('Integration | Utility | workflow-visualiser/actions/create-lane-action
         maxRetries: 0,
         storeIteratorSpec: {
           storeSchemaId: 's1',
-          maxBatchSize: 100,
+          maxBatchSize: 10,
         },
         parallelBoxes: [],
       });

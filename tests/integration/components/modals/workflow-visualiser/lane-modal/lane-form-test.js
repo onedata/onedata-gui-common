@@ -167,14 +167,14 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
       );
     });
 
-    it('renders "max batch size" field with "100" as default value', async function () {
+    it('renders "max batch size" field with "10" as default value', async function () {
       await renderComponent();
 
       const label = find('.maxBatchSize-field .control-label');
       const field = find('.maxBatchSize-field .form-control');
       expect(label.textContent.trim()).to.equal('Max. batch size:');
       expect(field.type).to.equal('number');
-      expect(field.value).to.equal('100');
+      expect(field.value).to.equal('10');
     });
 
     it('marks "max batch size" field as invalid when it is empty', async function () {
@@ -220,7 +220,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
           maxRetries: 0,
           storeIteratorSpec: {
             storeSchemaId: 's1',
-            maxBatchSize: 100,
+            maxBatchSize: 10,
           },
         },
         isValid: false,
@@ -235,7 +235,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
           maxRetries: 0,
           storeIteratorSpec: {
             storeSchemaId: 's1',
-            maxBatchSize: 100,
+            maxBatchSize: 10,
           },
         },
         isValid: true,
@@ -281,7 +281,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
           maxRetries: 0,
           storeIteratorSpec: {
             storeSchemaId: 'snew',
-            maxBatchSize: 100,
+            maxBatchSize: 10,
           },
         },
         isValid: true,
@@ -307,7 +307,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
             maxRetries: 0,
             storeIteratorSpec: {
               storeSchemaId: 's2',
-              maxBatchSize: 100,
+              maxBatchSize: 10,
             },
           },
           isValid: true,

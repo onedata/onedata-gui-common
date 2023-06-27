@@ -9,6 +9,7 @@
 import { getProperties } from '@ember/object';
 import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import auditLog from './audit-log';
+import exception from './exception';
 import list from './list';
 import range from './range';
 import singleValue from './single-value';
@@ -17,6 +18,7 @@ import treeForest from './tree-forest';
 
 export const stores = {
   auditLog,
+  exception,
   list,
   range,
   singleValue,

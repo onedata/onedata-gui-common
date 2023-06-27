@@ -87,6 +87,12 @@ const storeTypes = [{
 }, {
   label: 'Time series',
   type: 'timeSeries',
+}, {
+  ...arrayOfDatasetsDefaultValueSetup,
+  label: 'Exception',
+  type: 'exception',
+  dataSpecConfigKey: 'itemDataSpec',
+  viewOnly: true,
 }];
 
 const storeTypesWithGenericConfig = storeTypes
@@ -223,7 +229,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
       });
     });
 
-    storeTypesWithGenericConfig.forEach(({
+    storeTypesWithGenericConfig.filter(({ viewOnly }) => !viewOnly).forEach(({
       label,
       type,
       dataSpecConfigKey,
@@ -371,7 +377,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
       expect(find(`.${componentClass}`)).to.have.class('mode-edit');
     });
 
-    storeTypesWithGenericConfig.forEach(({
+    storeTypesWithGenericConfig.filter(({ viewOnly }) => !viewOnly).forEach(({
       label,
       type,
       dataSpecConfigKey,

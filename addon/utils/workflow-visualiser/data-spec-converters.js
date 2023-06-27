@@ -19,6 +19,7 @@ export function getStoreWriteDataSpec({ type, config }) {
     case 'list':
     case 'singleValue':
     case 'treeForest':
+    case 'exception':
       return config && config.itemDataSpec || null;
     case 'range':
       return { type: 'range' };
@@ -41,6 +42,7 @@ export function getStoreReadDataSpec({ type, config }) {
     case 'list':
     case 'singleValue':
     case 'treeForest':
+    case 'exception':
       return config && config.itemDataSpec || null;
     case 'range':
       return { type: 'range' };
