@@ -1,0 +1,66 @@
+{{#one-modal
+  class="websocket-reconnection-modal alert-global"
+  open=opened
+  keyboard=false
+  backdropClose=false
+  onShown=(action "modalShown")
+  onHidden=(action "modalHidden")
+  transitionDuration=modalTransitionDuration
+  shouldCloseOnTransition=false
+  as |modal|
+}}
+  {{#modal.header}}
+    <h1>
+      {{one-icon icon="sign-warning-rounded"}}
+      <span class="one-label">{{tt this "header"}}</span>
+    </h1>
+  {{/modal.header}}
+  {{#modal.body}}
+    {{#if (or (eq state "waiting") (eq state "connecting"))}}
+      <p class="p-info-attempt-pending">
+        {{tt this "textWaitingIntro"}}
+        {{#if specialText}}
+          {{tt this (concat "specialText." specialText)}}
+        {{/if}}
+        {{!-- below must be in single line, because of dot at the end --}}
+        {{tt this "textWaitingAttempting"}}{{#if (lt currentAttempt maxAttempts)}} {{tt this "textWaitingTry" currentAttempt=currentAttempt maxAttempts=maxAttempts}}{{/if}}.
+      </p>
+    {{/if}}
+    {{#if (eq state "waiting")}}
+      <p class="p-info-attempt-waiting">
+        {{tt this "textNextAttempt"}}
+        <span class="seconds-remaining-number">{{secondsRemaining}}</span>
+        {{tt this (concat "second" (unless (eq secondsRemaining 1) "s"))}}...
+      </p>
+    {{else if (eq state "connecting")}}
+      <p class="p-connection-attempt-connecting">
+        {{tt this "connectionAttemptManual"}}
+      </p>
+    {{/if}}
+    {{#if (eq state "timeout")}}
+      <p class="p-info-attempt-timeout">
+        {{tt this "textWaitingIntro"}}
+        {{tt this "textWaitingTimeout"}}
+      </p>
+    {{/if}}
+  {{/modal.body}}
+  {{#modal.footer class="btn-toolbar"}}
+    <div class="left-btn-container">
+      {{#one-button
+        type="warning"
+        onClick=(action "reload")
+      }}
+        {{tt this "reload"}}
+        {{one-tooltip title=(tt this "reloadWarning")}}
+      {{/one-button}}
+    </div>
+    {{#one-button
+      type="primary"
+      buttonType="submit"
+      onClick=(action "connectNow")
+      isPending=(eq state "connecting")
+    }}
+      {{tt this (if (eq state "connecting") "reconnecting" "tryToConnectNow")}}
+    {{/one-button}}
+  {{/modal.footer}}
+{{/one-modal}}
