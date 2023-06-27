@@ -797,7 +797,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
       it(`provides available stores for result of type "${dataSpecName}"`,
         async function () {
           setProperties(this.get('atmLambda.revisionRegistry.1'), {
-            preferredBatchSize: 100,
+            preferredBatchSize: 10,
             resultSpecs: [{
               name: 'res1',
               dataSpec,
@@ -830,7 +830,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
             type: sortedPossibleStores[0].type,
           }));
           setProperties(this.get('atmLambda.revisionRegistry.1'), {
-            preferredBatchSize: 100,
+            preferredBatchSize: 10,
             resultSpecs: [{
               name: 'res1',
               dataSpec,

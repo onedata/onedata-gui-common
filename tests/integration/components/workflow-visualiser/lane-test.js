@@ -75,7 +75,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
       maxRetries: 0,
       storeIteratorSpec: {
         storeSchemaId: 's1',
-        maxBatchSize: 100,
+        maxBatchSize: 10,
       },
     }));
   });
