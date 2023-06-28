@@ -156,7 +156,7 @@ const Axis = ElementBase.extend({
       this.set('series', []);
     }
     this.set('usedUnitOptions', {});
-    if (!this.dataProvider) {
+    if (!this.valueProvider) {
       const axisOutput = functions.axisOutput.modelClass.create({
         parent: this,
         elementOwner: this.elementOwner,
@@ -167,7 +167,7 @@ const Axis = ElementBase.extend({
       });
       set(axisOutput, 'data', currentValue);
 
-      this.set('dataProvider', axisOutput);
+      this.set('valueProvider', axisOutput);
     }
 
     this._super(...arguments);

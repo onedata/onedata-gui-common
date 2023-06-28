@@ -698,6 +698,10 @@
       grid-template-rows: min-content 1fr;
       gap: 1em;
     }
+
+    .axis-editor .function-editor {
+      margin-bottom: 0;
+    }
   }
 
   .function-editor {
