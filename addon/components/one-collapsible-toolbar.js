@@ -100,11 +100,6 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
   renderImmediately: false,
 
   /**
-   * @type {boolean}
-   */
-  dropdownOverModals: false,
-
-  /**
    * Combined value of isMinimized and hasOverflow
    * @type {Ember.ComputedProperty<boolean>}
    */
