@@ -1,3 +1,13 @@
+/**
+ * A component responsible for function creation. Which function will can be
+ * created is determined by execution context and parent function target argument
+ * (place where new function is going to be attached).
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import _ from 'lodash';
@@ -16,12 +26,6 @@ export default Component.extend(I18n, {
    * @override
    */
   i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.functionEditor.functionAdder',
-
-  /**
-   * @virtual
-   * @type {Array<FunctionDataType>}
-   */
-  allowedReturnTypes: undefined,
 
   /**
    * @virtual

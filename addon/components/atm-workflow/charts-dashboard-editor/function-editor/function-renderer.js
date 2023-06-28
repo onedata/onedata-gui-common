@@ -1,3 +1,11 @@
+/**
+ * Renders chart function - main block, argument blocks and lines between them.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed, observer, defineProperty } from '@ember/object';
 import { inject as service } from '@ember/service';

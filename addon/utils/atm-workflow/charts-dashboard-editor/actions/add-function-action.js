@@ -1,5 +1,5 @@
 /**
- * Adds new element to specific target.
+ * Adds new function to specific target.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -120,7 +120,7 @@ export default Action.extend({
       ]);
     }
 
-    // this.changeViewState({ elementToSelect: this.newFunction });
+    this.changeViewState({ elementToSelect: this.newFunction });
   },
 
   /**
@@ -155,9 +155,9 @@ export default Action.extend({
       set(element, 'isRemoved', true)
     );
 
-    // this.changeViewState({
-    //   elementsToDeselect: [this.newFunction, ...this.newFunction.nestedElements()],
-    // });
+    this.changeViewState({
+      elementsToDeselect: [this.newFunction, ...this.newFunction.nestedElements()],
+    });
   },
 
   /**

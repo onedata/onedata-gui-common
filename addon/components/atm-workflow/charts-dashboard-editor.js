@@ -177,7 +177,7 @@ export default Component.extend({
         newViewState.isChartEditorActive = false;
         newViewState.selectedChartElement = null;
       } else if (viewStateChange.elementToSelect.elementType === ElementType.Function) {
-        // FIXME
+        // TODO: VFS-11104
       } else if (isChartElementType(viewStateChange.elementToSelect.elementType)) {
         // Chart element selection. We need to find parent chart...
         let chart = viewStateChange.elementToSelect.parent;

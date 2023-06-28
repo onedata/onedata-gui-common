@@ -415,7 +415,15 @@ export function createFunctionFromSpec(
   elementOwner = null,
   dataSources = []
 ) {
-  const functionElemSpec = functions[functionSpec?.functionName];
+  let functionName = functionSpec?.functionName;
+  if (
+    functionName === 'loadSeries' &&
+    functionSpec.functionArguments?.sourceSpecProvider.functionName ===
+    'getDynamicSeriesConfig'
+  ) {
+    functionName = 'loadRepeatedSeries';
+  }
+  const functionElemSpec = functions[functionName];
   const functionProps = { elementOwner };
   if (functionElemSpec?.needsDataSources) {
     functionProps.dataSources = dataSources;

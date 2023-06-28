@@ -1,3 +1,13 @@
+/**
+ * "loadRepeatedSeries" function settings component. It has the same set of
+ * settings as "replaceEmpty" function. Only mapping from model to form
+ * differs.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { set, observer } from '@ember/object';
 import { ReplaceEmptyStrategy } from 'onedata-gui-common/utils/time-series-dashboard';
 import ReplaceEmptySettings from './replace-empty-settings';
