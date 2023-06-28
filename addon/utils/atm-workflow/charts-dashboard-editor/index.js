@@ -20,6 +20,7 @@ export {
   createNewAxis,
   createNewSeriesGroup,
   createNewSeries,
+  createNewFunction,
 }
 from './create-model';
 export { default as Model } from './model';

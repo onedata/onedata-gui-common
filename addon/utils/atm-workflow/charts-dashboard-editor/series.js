@@ -44,6 +44,13 @@ const Series = ElementBase.extend({
 
   /**
    * @public
+   * @virtual
+   * @type {Array<ChartsDashboardEditorDataSource>}
+   */
+  dataSources: undefined,
+
+  /**
+   * @public
    * @virtual optional
    * @type {boolean}
    */
@@ -98,11 +105,9 @@ const Series = ElementBase.extend({
   dataProvider: undefined,
 
   /**
-   * @public
-   * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
+   * @override
    */
-  parent: null,
+  needsDataSources: true,
 
   /**
    * @override

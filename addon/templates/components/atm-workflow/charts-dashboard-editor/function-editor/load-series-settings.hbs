@@ -1,0 +1,13 @@
+<form class="form form-horizontal form-component">
+  {{form-component/field-renderer field=mainForm}}
+  <a
+    class="clickable missing-points-collapse"
+    onclick={{action (mut isReplaceEmptyFormVisible) (not isReplaceEmptyFormVisible)}}
+  >
+    {{tt this "missingPointsCollapse"}}
+    {{one-icon icon=(if isReplaceEmptyFormVisible "arrow-up" "arrow-down")}}
+  </a>
+  {{#if isReplaceEmptyFormVisible}}
+    {{form-component/field-renderer field=replaceEmptyForm}}
+  {{/if}}
+</form>

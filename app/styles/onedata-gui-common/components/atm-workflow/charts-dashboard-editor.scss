@@ -416,7 +416,7 @@
     min-height: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 2fr 3fr;
     background-color: $color-one-white;
 
     h2 {
@@ -736,6 +736,7 @@
       flex-shrink: 0;
       border: $main-border;
       border-radius: $border-radius-base;
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 3px;
     }
 
     .function-block-header {
@@ -746,6 +747,7 @@
     .function-name {
       text-transform: uppercase;
       white-space: nowrap;
+      font-size: 90%;
     }
 
     .function-block-body {
@@ -762,8 +764,30 @@
       }
     }
 
-    .replace-empty-settings {
+    .replace-empty-settings,
+    .load-repeated-series-settings {
       max-width: 16em;
+    }
+
+    .load-series-settings {
+      max-width: 16em;
+
+      .form > .form-group:first-child {
+        padding-bottom: 1em;
+        margin-bottom: 0.5em;
+        border-bottom: $main-border;
+      }
+
+      .missing-points-collapse {
+        font-size: $font-size-small;
+        .one-icon {
+          vertical-align: middle;
+        }
+
+        & + .form-group {
+          margin-top: 0.5em;
+        }
+      }
     }
 
     .function-arguments-container {

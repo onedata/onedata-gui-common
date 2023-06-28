@@ -7,6 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { set } from '@ember/object';
 import { FunctionDataType, FunctionExecutionContext } from './common';
 import FunctionBase from './function-base';
 
@@ -39,6 +40,23 @@ const AxisOutputFunction = FunctionBase.extend({
 });
 
 /**
+ * @param {unknown} spec
+ * @param {Partial<FunctionBase>} fieldsToInject
+ * @param {(spec: unknown) => FunctionBase} convertAnySpecToFunction
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.AxisOutput}
+ */
+function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
+  const funcElement = AxisOutputFunction.create({
+    ...fieldsToInject,
+    data: convertAnySpecToFunction(spec),
+  });
+  if (funcElement.data) {
+    set(funcElement.data, 'parentElement', funcElement);
+  }
+  return funcElement;
+}
+
+/**
  * @type {FunctionSpec<AxisOutputFunction>}
  */
 export default Object.freeze({
@@ -47,4 +65,5 @@ export default Object.freeze({
   isNotAvailableForUser: true,
   allowedContexts: [FunctionExecutionContext.Axis],
   modelClass: AxisOutputFunction,
+  createFromSpec,
 });

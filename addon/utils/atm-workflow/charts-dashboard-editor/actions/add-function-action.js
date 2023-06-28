@@ -9,13 +9,14 @@
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { functions } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import { createNewFunction } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 
 /**
  * @typedef {Object} AddFunctionActionContext
  * @property {string} newFunctionName
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase} targetFunction
  * @property {string} targetArgumentName
+ * @property {Array<ChartsDashboardEditorDataSource>} dataSources
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
@@ -51,6 +52,11 @@ export default Action.extend({
    * @type {ComputedProperty<AddFunctionActionContext['targetArgumentName']>}
    */
   targetArgumentName: reads('context.targetArgumentName'),
+
+  /**
+   * @type {ComputedProperty<AddFunctionActionContext['dataSources']>}
+   */
+  dataSources: reads('context.dataSources'),
 
   /**
    * @type {ComputedProperty<AddFunctionActionContext['changeViewState']>}
@@ -158,9 +164,10 @@ export default Action.extend({
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null}
    */
   createNewFunction() {
-    const elementOwner = this.targetFunction.elementOwner;
-    return functions[this.newFunctionName]?.modelClass.create({
-      elementOwner,
-    }) ?? null;
+    return createNewFunction(
+      this.newFunctionName,
+      this.targetFunction.elementOwner,
+      this.dataSources
+    );
   },
 });

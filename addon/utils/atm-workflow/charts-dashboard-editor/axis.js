@@ -69,7 +69,7 @@ const Axis = ElementBase.extend({
    * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.AxisOutput}
    */
-  dataProvider: undefined,
+  valueProvider: undefined,
 
   /**
    * @public
@@ -77,13 +77,6 @@ const Axis = ElementBase.extend({
    * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.Series>}
    */
   series: undefined,
-
-  /**
-   * @public
-   * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
-   */
-  parent: null,
 
   /**
    * @private

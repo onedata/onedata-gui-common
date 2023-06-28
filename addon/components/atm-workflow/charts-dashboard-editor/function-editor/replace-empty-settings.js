@@ -82,7 +82,7 @@ const UsePreviousStrategyField = ToggleField.extend({
 /**
  * @type {Utils.FormComponent.FormFieldsRootGroup}
  */
-const Form = SettingsForm.extend({
+export const Form = SettingsForm.extend({
   /**
    * @override
    */

@@ -66,13 +66,6 @@ const SeriesGroup = ElementBase.extend({
   series: undefined,
 
   /**
-   * @public
-   * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup | null}
-   */
-  parent: null,
-
-  /**
    * @override
    */
   referencingPropertyNames: Object.freeze(['parent', 'seriesGroups', 'series']),

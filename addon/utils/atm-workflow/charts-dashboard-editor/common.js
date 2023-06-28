@@ -137,3 +137,11 @@ export function getUnnamedElementNamePlaceholder(i18n) {
  *   chart and you want to open its editor, then set this flag to `true`.
  * @property {Array<DashboardElement>} [elementsToDeselect]
  */
+
+/**
+ * @typedef {Object} ChartsDashboardEditorDataSource
+ * @property {string} name
+ * @property {string} collectionRef
+ * @property {TimeSeriesCollectionSchema} timeSeriesCollectionSchema
+ * @property {boolean} [isDefault]
+ */

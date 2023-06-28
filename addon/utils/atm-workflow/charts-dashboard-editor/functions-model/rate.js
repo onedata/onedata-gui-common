@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import { computed, set } from '@ember/object';
 import { FunctionDataType } from './common';
 import FunctionBase from './function-base';
 
@@ -52,10 +52,28 @@ const RateFunction = FunctionBase.extend({
 });
 
 /**
+ * @param {unknown} spec
+ * @param {Partial<FunctionBase>} fieldsToInject
+ * @param {(spec: unknown) => FunctionBase} convertAnySpecToFunction
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.Rate}
+ */
+function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
+  const funcElement = RateFunction.create({
+    ...fieldsToInject,
+    data: convertAnySpecToFunction(spec.functionArguments?.dataProvider),
+  });
+  if (funcElement.data) {
+    set(funcElement.data, 'parentElement', funcElement);
+  }
+  return funcElement;
+}
+
+/**
  * @type {FunctionSpec<RateFunction>}
  */
 export default Object.freeze({
   name: 'rate',
   returnedTypes: [FunctionDataType.Points, FunctionDataType.Number],
   modelClass: RateFunction,
+  createFromSpec,
 });

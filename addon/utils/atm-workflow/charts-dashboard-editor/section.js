@@ -63,13 +63,6 @@ const Section = ElementBase.extend({
   sections: undefined,
 
   /**
-   * @public
-   * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
-   */
-  parent: null,
-
-  /**
    * @override
    */
   referencingPropertyNames: Object.freeze(['charts', 'sections', 'parent']),

@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import { computed, set } from '@ember/object';
 import { FunctionDataType } from './common';
 import FunctionBase from './function-base';
 
@@ -67,10 +67,27 @@ const MultiplyFunction = FunctionBase.extend({
 });
 
 /**
+ * @param {unknown} spec
+ * @param {Partial<FunctionBase>} fieldsToInject
+ * @param {(spec: unknown) => FunctionBase} convertAnySpecToFunction
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.Multiply}
+ */
+function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
+  const funcElement = MultiplyFunction.create({
+    ...fieldsToInject,
+    operands: spec.functionArguments?.operandProviders
+      ?.map((operandSpec) => convertAnySpecToFunction(operandSpec)) ?? [],
+  });
+  funcElement.operands.forEach((operand) => set(operand, 'parentElement', funcElement));
+  return funcElement;
+}
+
+/**
  * @type {FunctionSpec<MultiplyFunction>}
  */
 export default Object.freeze({
   name: 'multiply',
   returnedTypes: [FunctionDataType.Points, FunctionDataType.Number],
   modelClass: MultiplyFunction,
+  createFromSpec,
 });

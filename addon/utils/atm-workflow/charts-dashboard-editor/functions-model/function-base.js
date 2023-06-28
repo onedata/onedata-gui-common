@@ -6,6 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { computed } from '@ember/object';
 import ElementBase from '../element-base';
 import { ElementType } from '../common';
 
@@ -44,11 +45,11 @@ export default ElementBase.extend({
   elementType: ElementType.Function,
 
   /**
-   * @public
-   * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Function | Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
+   * @override
    */
-  parent: null,
+  referencingPropertyNames: computed('attachableArgumentSpecs.[]', function referencingPropertyNames() {
+    return [...this.attachableArgumentSpecs.map(({ name }) => name), 'parent'];
+  }),
 
   /**
    * @override
@@ -68,5 +69,30 @@ export default ElementBase.extend({
     } finally {
       this._super(...arguments);
     }
+  },
+
+  /**
+   * @override
+   */
+  * nestedElements() {
+    for (const { name, isArray } of this.attachableArgumentSpecs) {
+      if (this[name]) {
+        if (isArray) {
+          yield* this[name];
+        } else {
+          yield this[name];
+        }
+      }
+    }
+  },
+
+  /**
+   * @override
+   */
+  * referencingElements() {
+    if (this.parent) {
+      yield this.parent;
+    }
+    yield* this.nestedElements();
   },
 });

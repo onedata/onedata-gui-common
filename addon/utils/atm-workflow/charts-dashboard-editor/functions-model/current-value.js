@@ -22,6 +22,15 @@ const CurrentValueFunction = FunctionBase.extend({
 });
 
 /**
+ * @param {unknown} spec
+ * @param {Partial<FunctionBase>} fieldsToInject
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.CurrentValueFunction}
+ */
+function createFromSpec(spec, fieldsToInject) {
+  return CurrentValueFunction.create(fieldsToInject);
+}
+
+/**
  * @type {FunctionSpec<CurrentValueFunction>}
  */
 export default Object.freeze({
@@ -29,4 +38,5 @@ export default Object.freeze({
   returnedTypes: [FunctionDataType.Number],
   allowedContexts: [FunctionExecutionContext.Axis],
   modelClass: CurrentValueFunction,
+  createFromSpec,
 });

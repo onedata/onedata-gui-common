@@ -7,8 +7,9 @@
  */
 
 import Component from '@ember/component';
-import { computed, set } from '@ember/object';
+import { computed, observer, set } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { A } from '@ember/array';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor';
 import {
   ActionsFactory,
@@ -33,9 +34,9 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Array<Utils.WorkflowVisualiser.Store>}
+   * @type {Array<ChartsDashboardEditorDataSource>}
    */
-  timeSeriesStores: undefined,
+  dataSources: undefined,
 
   /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ViewState}
@@ -53,11 +54,34 @@ export default Component.extend({
   undoManager: undefined,
 
   /**
+   * @type {Ember.Array<Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement>}
+   */
+  allElements: undefined,
+
+  /**
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Model>}
    */
   model: computed('dashboardSpec', function model() {
     return createModelFromSpec(this.dashboardSpec, this);
   }),
+
+  dataSourcesObserver: observer('dataSources', function dataSourcesObserver() {
+    this.actionsFactory.dataSources = this.dataSources;
+    this.allElements.forEach((element) => {
+      if (element.needsDataSources) {
+        set(element, 'dataSources', this.dataSources);
+      }
+    });
+  }),
+
+  destroyedElementsRemover: observer(
+    'allElements.@each.isDestroyed',
+    function destroyedElementsRemover() {
+      this.allElements.removeObjects(
+        this.allElements.filter(({ isDestroyed }) => isDestroyed)
+      );
+    }
+  ),
 
   /**
    * @override
@@ -68,6 +92,7 @@ export default Component.extend({
     const undoManager = UndoManager.create();
     const actionsFactory = new ActionsFactory({
       ownerSource: this,
+      dataSources: this.dataSources,
       changeViewState: (...args) => this.changeViewState(...args),
     });
     actionsFactory.addExecuteListener((action, result) => {
@@ -75,10 +100,22 @@ export default Component.extend({
         undoManager.addActionToHistory(action);
       }
     });
+    actionsFactory.addCreateElementListener((newElement) => {
+      this.allElements.pushObject(newElement);
+    });
+
+    const allElements = A();
+    if (this.model.rootSection) {
+      allElements.pushObjects([
+        this.model.rootSection,
+        ...this.model.rootSection.nestedElements(),
+      ]);
+    }
 
     this.setProperties({
       actionsFactory,
       undoManager,
+      allElements,
     });
 
     this.resetViewState();
