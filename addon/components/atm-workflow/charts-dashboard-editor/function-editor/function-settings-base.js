@@ -43,6 +43,12 @@ export default Component.extend(I18n, {
   actionsFactory: undefined,
 
   /**
+   * @virtual optional
+   * @type {Utils.FormComponent.FormFieldsRootGroup | null}
+   */
+  form: null,
+
+  /**
    * @type {ComputedProperty<string>}
    */
   functionBasedClassName: computed('chartFunction.name', function functionBasedClassName() {

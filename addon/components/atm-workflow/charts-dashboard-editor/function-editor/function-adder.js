@@ -1,5 +1,5 @@
 /**
- * A component responsible for function creation. Which function will can be
+ * A component responsible for function creation. Which function can be
  * created is determined by execution context and parent function target argument
  * (place where new function is going to be attached).
  *

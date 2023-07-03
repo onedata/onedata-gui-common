@@ -95,12 +95,12 @@ export default Component.extend({
       dataSources: this.dataSources,
       changeViewState: (...args) => this.changeViewState(...args),
     });
-    actionsFactory.addExecuteListener((action, result) => {
+    actionsFactory.addExecutionListener((action, result) => {
       if (!result.undo) {
         undoManager.addActionToHistory(action);
       }
     });
-    actionsFactory.addCreateElementListener((newElement) => {
+    actionsFactory.addElementCreationListener((newElement) => {
       this.allElements.pushObject(newElement);
     });
 

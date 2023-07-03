@@ -24,6 +24,7 @@ import {
   not,
   or,
   and,
+  raw,
 } from 'ember-awesome-macros';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import config from 'ember-get-config';
@@ -75,7 +76,7 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {ComputedProperty<number>}
    */
-  tabindex: writable(conditional('disabled', -1, 0)),
+  tabindex: writable(conditional('disabled', raw(undefined), raw(0))),
 
   /**
    * @virtual optional

@@ -9,7 +9,7 @@
 import { set, computed, observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
-import { hash } from 'ember-awesome-macros';
+import { hash, array, raw, eq, bool } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';
 import _ from 'lodash';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
@@ -32,7 +32,7 @@ export default FunctionSettingsBase.extend({
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
-  mainForm: computed(function form() {
+  mainForm: computed(function mainForm() {
     return MainForm.create({
       component: this,
     });
@@ -41,14 +41,25 @@ export default FunctionSettingsBase.extend({
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
-  replaceEmptyForm: computed(function form() {
+  replaceEmptyFuncForm: computed(function replaceEmptyFuncForm() {
     return ReplaceEmptySettingsForm.create({
       component: this,
     });
   }),
 
+  /**
+   * @type {ComputedProperty<TimeSeriesRef>}
+   */
+  timeSeriesRef: reads('chartFunction.timeSeriesRef'),
+
+  /**
+   * @type {ComputedProperty<ReplaceEmptyParameters>}
+   */
+  replaceEmptyParameters: reads('chartFunction.replaceEmptyParameters'),
+
   formValuesUpdater: observer(
-    'chartFunction.{timeSeriesRef.collectionRef,timeSeriesRef.timeSeriesNameGenerator,timeSeriesRef.timeSeriesName,timeSeriesRef.metricNames,replaceEmptyParameters.strategy,replaceEmptyParameters.fallbackValue}',
+    'timeSeriesRef.{collectionRef,timeSeriesNameGenerator,timeSeriesName,metricNames}',
+    'replaceEmptyParameters{strategy,fallbackValue}',
     function formValuesUpdater() {
       scheduleOnce('afterRender', this, 'updateFormValues');
     }
@@ -73,7 +84,7 @@ export default FunctionSettingsBase.extend({
     switch (fieldName) {
       case 'fallbackValue':
         propertyName = `replaceEmptyParameters.${propertyName}`;
-        if (this.replaceEmptyForm.getFieldByPath('fallbackValue').isValid) {
+        if (this.replaceEmptyFuncForm.getFieldByPath('fallbackValue').isValid) {
           normalizedValue = value === '' ? null : Number.parseFloat(value);
         }
         changeType = 'continuous';
@@ -117,20 +128,21 @@ export default FunctionSettingsBase.extend({
     this.mainForm.invalidFields.forEach((field) => field.markAsModified());
 
     const newFallbackValue = this.chartFunction?.replaceEmptyParameters?.fallbackValue ?? '';
-    if (newFallbackValue !== this.replaceEmptyForm.valuesSource.fallbackValue) {
-      set(this.replaceEmptyForm.valuesSource, 'fallbackValue', newFallbackValue);
+    if (newFallbackValue !== this.replaceEmptyFuncForm.valuesSource.fallbackValue) {
+      set(this.replaceEmptyFuncForm.valuesSource, 'fallbackValue', newFallbackValue);
     }
 
     const newUsePreviousStrategy =
       this.chartFunction?.replaceEmptyParameters?.strategy ===
       ReplaceEmptyStrategy.UsePrevious;
     if (
-      newUsePreviousStrategy !== this.replaceEmptyForm.valuesSource.usePreviousStrategy
+      newUsePreviousStrategy !==
+      this.replaceEmptyFuncForm.valuesSource.usePreviousStrategy
     ) {
-      set(this.replaceEmptyForm.valuesSource, 'usePreviousStrategy', newUsePreviousStrategy);
+      set(this.replaceEmptyFuncForm.valuesSource, 'usePreviousStrategy', newUsePreviousStrategy);
     }
 
-    this.replaceEmptyForm.invalidFields.forEach((field) => field.markAsModified());
+    this.replaceEmptyFuncForm.invalidFields.forEach((field) => field.markAsModified());
   },
 });
 
@@ -166,6 +178,11 @@ const TimeSeriesNameGeneratorField = DropdownField.extend({
   /**
    * @override
    */
+  isEnabled: reads('parent.collectionRefField.isValid'),
+
+  /**
+   * @override
+   */
   options: computed(
     'parent.dataSources',
     'valuesSource.collectionRef',
@@ -193,9 +210,7 @@ const TimeSeriesNameField = TextField.extend({
   /**
    * @override
    */
-  isEnabled: computed('parent.selectedNameGeneratorSpec', function isEnabled() {
-    return this.parent.selectedNameGeneratorSpec?.nameGeneratorType !== 'exact';
-  }),
+  isEnabled: eq('parent.selectedNameGeneratorSpec.nameGeneratorType', raw('addPrefix')),
 
   /**
    * @override
@@ -249,6 +264,11 @@ const MetricNamesField = TagsField.extend({
   /**
    * @override
    */
+  isEnabled: bool('parent.selectedNameGeneratorSpec'),
+
+  /**
+   * @override
+   */
   tagEditorSettings: hash('allowedTags'),
 
   /**
@@ -278,6 +298,11 @@ const MainForm = SettingsForm.extend({
   ]),
 
   /**
+   * @type {Utils.FormComponent.DropdownField}
+   */
+  collectionRefField: array.findBy('fields', raw('name'), raw('collectionRef')),
+
+  /**
    * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
    */
   dataSources: reads('component.chartFunction.dataSources'),
@@ -288,7 +313,7 @@ const MainForm = SettingsForm.extend({
   selectedNameGeneratorSpec: computed(
     'dataSources',
     'valuesSource.{collectionRef,timeSeriesNameGenerator}',
-    function timeSeriesNameGeneratorSpec() {
+    function selectedNameGeneratorSpec() {
       const timeSeriesSchemas = this.dataSources.find(({ collectionRef }) =>
         collectionRef === this.valuesSource?.collectionRef
       )?.timeSeriesCollectionSchema.timeSeriesSchemas ?? [];

@@ -14,7 +14,7 @@ import FunctionSettingsBase, { SettingsForm } from './function-settings-base';
 
 export default FunctionSettingsBase.extend({
   /**
-   * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
+   * @override
    */
   form: computed(function form() {
     return Form.create({
@@ -53,7 +53,8 @@ export default FunctionSettingsBase.extend({
    */
   onValueChange(fieldName, value) {
     let normalizedValue = value;
-    if (fieldName === 'fallbackValue') {
+    const isFallbackValueField = fieldName === 'fallbackValue';
+    if (isFallbackValueField) {
       if (this.form.getFieldByPath('fallbackValue').isValid) {
         normalizedValue = value === '' ? null : Number.parseFloat(value);
       }
@@ -64,9 +65,9 @@ export default FunctionSettingsBase.extend({
 
     const action = this.actionsFactory.createChangeElementPropertyAction({
       element: this.chartFunction,
-      propertyName: fieldName === 'fallbackValue' ? 'fallbackValue' : 'strategy',
+      propertyName: isFallbackValueField ? 'fallbackValue' : 'strategy',
       newValue: normalizedValue,
-      changeType: fieldName === 'fallbackValue' ? 'continuous' : 'discrete',
+      changeType: isFallbackValueField ? 'continuous' : 'discrete',
     });
     action.execute();
   },

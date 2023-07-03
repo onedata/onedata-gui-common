@@ -721,11 +721,7 @@
 
     > .perfect-scrollbar-element {
       display: grid;
-      padding: 1em;
-
-      > .function-renderer > .function-arguments-container {
-        border-right: 1em solid transparent;
-      }
+      padding: 3em;
     }
 
     .function-renderer {
@@ -737,7 +733,6 @@
       display: grid;
       grid-template-rows: min-content 1fr;
       overflow: hidden;
-      flex-shrink: 0;
       border: $main-border;
       border-radius: $border-radius-base;
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 3px;
@@ -761,7 +756,7 @@
     }
 
     .function-settings {
-      max-width: 12em;
+      width: 12em;
 
       .field-message {
         display: none;
@@ -769,13 +764,12 @@
     }
 
     .replace-empty-settings,
+    .load-series-settings,
     .load-repeated-series-settings {
-      max-width: 16em;
+      width: 16em;
     }
 
     .load-series-settings {
-      max-width: 16em;
-
       .form > .form-group:first-child {
         padding-bottom: 1em;
         margin-bottom: 0.5em;

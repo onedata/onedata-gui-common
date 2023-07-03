@@ -1,7 +1,7 @@
 /**
  * Creates actions used by dashboard editor. Internally monitors each action
  * execution and notifies about every such event through execute listeners (see
- * `addExecuteListener` and `removeExecuteListeners`).
+ * `addExecutionListener` and `removeExecutionListeners`).
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -20,11 +20,11 @@ import EndChartContentEditionAction from './actions/end-chart-content-edition-ac
 import AddFunctionAction from './actions/add-function-action';
 
 /**
- * @typedef {(action: Utils.Action, result: Utils.ActionResult) => void} ActionExecuteListener
+ * @typedef {(action: Utils.Action, result: Utils.ActionResult) => void} ActionExecutionListener
  */
 
 /**
- * @typedef {(newElement: Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement) => void} CreateElementListener
+ * @typedef {(newElement: Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement) => void} ElementCreationListener
  */
 
 /**
@@ -63,15 +63,15 @@ export default class ActionsFactory {
 
     /**
      * @private
-     * @type {Set<ActionExecuteListener>}
+     * @type {Set<ActionExecutionListener>}
      */
-    this.executeListeners = new Set();
+    this.executionListeners = new Set();
 
     /**
      * @private
-     * @type {Set<CreateElementListener>}
+     * @type {Set<ElementCreationListener>}
      */
-    this.createElementListeners = new Set();
+    this.elementCreationListeners = new Set();
 
     /**
      * May contain only action with `changeType` equal to `'continuous'`
@@ -88,44 +88,44 @@ export default class ActionsFactory {
   destroy() {
     this.ownerSource = null;
     this.onSelectElement = () => {};
-    this.executeListeners.clear();
-    this.createElementListeners.clear();
+    this.executionListeners.clear();
+    this.elementCreationListeners.clear();
   }
 
   /**
    * @public
-   * @param {ActionExecuteListener} listener
+   * @param {ActionExecutionListener} listener
    * @returns {void}
    */
-  addExecuteListener(listener) {
-    this.executeListeners.add(listener);
+  addExecutionListener(listener) {
+    this.executionListeners.add(listener);
   }
 
   /**
    * @public
-   * @param {ActionExecuteListener} listener
+   * @param {ActionExecutionListener} listener
    * @returns {void}
    */
-  removeExecuteListener(listener) {
-    this.executeListeners.delete(listener);
+  removeExecutionListener(listener) {
+    this.executionListeners.delete(listener);
   }
 
   /**
    * @public
-   * @param {CreateElementListener} listener
+   * @param {ElementCreationListener} listener
    * @returns {void}
    */
-  addCreateElementListener(listener) {
-    this.createElementListeners.add(listener);
+  addElementCreationListener(listener) {
+    this.elementCreationListeners.add(listener);
   }
 
   /**
    * @public
-   * @param {CreateElementListener} listener
+   * @param {ElementCreationListener} listener
    * @returns {void}
    */
-  removeCreateElementListener(listener) {
-    this.createElementListeners.delete(listener);
+  removeElementCreationListener(listener) {
+    this.elementCreationListeners.delete(listener);
   }
 
   /**
@@ -134,8 +134,8 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.AddElementAction}
    */
   createAddElementAction(context) {
-    return this.attachCreateElementListener(
-      this.attachExecuteListener(
+    return this.attachElementCreationListener(
+      this.attachExecutionListener(
         AddElementAction.create({
           ownerSource: this.ownerSource,
           context: {
@@ -154,7 +154,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.MoveElementAction}
    */
   createMoveElementAction(context) {
-    return this.attachExecuteListener(MoveElementAction.create({
+    return this.attachExecutionListener(MoveElementAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -169,7 +169,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.DuplicateElementAction}
    */
   createDuplicateElementAction(context) {
-    return this.attachExecuteListener(DuplicateElementAction.create({
+    return this.attachExecutionListener(DuplicateElementAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -184,7 +184,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.RemoveElementAction}
    */
   createRemoveElementAction(context) {
-    return this.attachExecuteListener(RemoveElementAction.create({
+    return this.attachExecutionListener(RemoveElementAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -199,7 +199,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.SelectElementAction}
    */
   createSelectElementAction(context) {
-    return this.attachExecuteListener(SelectElementAction.create({
+    return this.attachExecutionListener(SelectElementAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -237,7 +237,7 @@ export default class ActionsFactory {
     }
 
     if (!action) {
-      action = this.attachExecuteListener(ChangeElementPropertyAction.create({
+      action = this.attachExecutionListener(ChangeElementPropertyAction.create({
         ownerSource: this.ownerSource,
         context: {
           changeViewState: this.changeViewState,
@@ -278,7 +278,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.EditChartContentAction}
    */
   createEditChartContentAction(context) {
-    return this.attachExecuteListener(EditChartContentAction.create({
+    return this.attachExecutionListener(EditChartContentAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -293,7 +293,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.EndChartContentEditionAction}
    */
   createEndChartContentEditionAction(context = {}) {
-    return this.attachExecuteListener(EndChartContentEditionAction.create({
+    return this.attachExecutionListener(EndChartContentEditionAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -308,8 +308,8 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.AddFunctionAction}
    */
   createAddFunctionAction(context) {
-    return this.attachCreateElementListener(
-      this.attachExecuteListener(
+    return this.attachElementCreationListener(
+      this.attachExecutionListener(
         AddFunctionAction.create({
           ownerSource: this.ownerSource,
           context: {
@@ -327,10 +327,10 @@ export default class ActionsFactory {
    * @param {Utils.Action} action
    * @returns {Utils.Action}
    */
-  attachExecuteListener(action) {
+  attachExecutionListener(action) {
     action.addExecuteHook((result) => {
       if (result?.status === 'done') {
-        this.executeListeners.forEach((listener) => listener(action, result));
+        this.executionListeners.forEach((listener) => listener(action, result));
       }
     });
     return action;
@@ -341,13 +341,13 @@ export default class ActionsFactory {
    * @param {Utils.Action} action
    * @returns {Utils.Action}
    */
-  attachCreateElementListener(action) {
+  attachElementCreationListener(action) {
     let wasCalled = false;
     action.addExecuteHook((result) => {
       const createdElement = action.newFunction ?? action.newElement;
       if (result?.status === 'done' && !result?.undo && createdElement && !wasCalled) {
         wasCalled = true;
-        this.createElementListeners.forEach((listener) => listener(createdElement));
+        this.elementCreationListeners.forEach((listener) => listener(createdElement));
       }
     });
     return action;

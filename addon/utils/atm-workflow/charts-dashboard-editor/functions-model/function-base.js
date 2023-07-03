@@ -33,6 +33,9 @@ export default ElementBase.extend({
   attachableArgumentSpecs: Object.freeze([]),
 
   /**
+   * When set to true, function-renderer component will automatically render
+   * dedicated settings component for this function. See more in function-renderer
+   * component.
    * @public
    * @virtual optional
    * @type {boolean}

@@ -43,7 +43,7 @@ const LoadSeriesFunction = FunctionBase.extend({
   /**
    * @public
    * @virtual optional
-   * @type {EmberObject<ReplaceEmptyParameters> | null}
+   * @type {EmberObject<ReplaceEmptyParameters>}
    */
   replaceEmptyParameters: null,
 
@@ -134,16 +134,22 @@ const LoadSeriesFunction = FunctionBase.extend({
           'handleMetricNamesChange'
         );
 
-        if (this.timeSeriesRef.collectionRef) {
+        const {
+          collectionRef,
+          timeSeriesNameGenerator,
+          timeSeriesName,
+          metricNames,
+        } = (this.timeSeriesRef ?? {});
+        if (collectionRef) {
           const collectionRefHistory =
-            this.historicalTimeSeriesRefs[this.timeSeriesRef.collectionRef] =
-            this.historicalTimeSeriesRefs[this.timeSeriesRef.collectionRef] ?? {};
+            this.historicalTimeSeriesRefs[collectionRef] =
+            this.historicalTimeSeriesRefs[collectionRef] ?? {};
           collectionRefHistory.lastTimeSeriesNameGenerator =
-            this.timeSeriesRef.timeSeriesNameGenerator;
-          if (this.timeSeriesRef.timeSeriesNameGenerator) {
-            collectionRefHistory[this.timeSeriesRef.timeSeriesNameGenerator] = {
-              timeSeriesName: this.timeSeriesRef.timeSeriesName,
-              metricNames: this.timeSeriesRef.metricNames,
+            timeSeriesNameGenerator;
+          if (timeSeriesNameGenerator) {
+            collectionRefHistory[timeSeriesNameGenerator] = {
+              timeSeriesName: timeSeriesName,
+              metricNames: metricNames,
             };
           }
         }

@@ -37,7 +37,8 @@ export default ReplaceEmptySettings.extend({
    */
   onValueChange(fieldName, value) {
     let normalizedValue = value;
-    if (fieldName === 'fallbackValue') {
+    const isFallbackValueField = fieldName === 'fallbackValue';
+    if (isFallbackValueField) {
       if (this.form.getFieldByPath('fallbackValue').isValid) {
         normalizedValue = value === '' ? null : Number.parseFloat(value);
       }
@@ -48,9 +49,9 @@ export default ReplaceEmptySettings.extend({
 
     const action = this.actionsFactory.createChangeElementPropertyAction({
       element: this.chartFunction,
-      propertyName: `replaceEmptyParameters.${fieldName === 'fallbackValue' ? 'fallbackValue' : 'strategy'}`,
+      propertyName: `replaceEmptyParameters.${isFallbackValueField ? 'fallbackValue' : 'strategy'}`,
       newValue: normalizedValue,
-      changeType: fieldName === 'fallbackValue' ? 'continuous' : 'discrete',
+      changeType: isFallbackValueField ? 'continuous' : 'discrete',
     });
     action.execute();
   },

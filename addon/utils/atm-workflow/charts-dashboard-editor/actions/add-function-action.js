@@ -111,13 +111,13 @@ export default Action.extend({
     set(this.newFunction, 'parent', this.targetFunction);
 
     // Add new function to the parent
-    if (!this.targetArgumentSpec.isArray) {
-      set(this.targetFunction, this.targetArgumentName, this.newFunction);
-    } else {
+    if (this.targetArgumentSpec.isArray) {
       set(this.targetFunction, this.targetArgumentName, [
         ...this.targetFunction[this.targetArgumentName],
         this.newFunction,
       ]);
+    } else {
+      set(this.targetFunction, this.targetArgumentName, this.newFunction);
     }
 
     this.changeViewState({ elementToSelect: this.newFunction });
@@ -132,15 +132,15 @@ export default Action.extend({
     }
 
     // Add new function to the parent
-    if (!this.targetArgumentSpec.isArray) {
-      set(this.targetFunction, this.targetArgumentName, null);
-    } else {
+    if (this.targetArgumentSpec.isArray) {
       set(
         this.targetFunction,
         this.targetArgumentName,
         this.targetFunction[this.targetArgumentName]
         .filter((func) => func !== this.newFunction)
       );
+    } else {
+      set(this.targetFunction, this.targetArgumentName, null);
     }
 
     set(

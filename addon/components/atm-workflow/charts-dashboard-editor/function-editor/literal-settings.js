@@ -12,7 +12,7 @@ import FunctionSettingsBase, { SettingsForm } from './function-settings-base';
 
 export default FunctionSettingsBase.extend({
   /**
-   * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
+   * @override
    */
   form: computed(function form() {
     return Form.create({
@@ -41,8 +41,13 @@ export default FunctionSettingsBase.extend({
    * @override
    */
   onValueChange(fieldName, value) {
+    if (fieldName !== 'value') {
+      console.warn(`Trying to set unknown form field "${fieldName}". Ignoring.`);
+      return;
+    }
+
     let normalizedValue = value;
-    if (this.form.getFieldByPath('value').isValid) {
+    if (this.form.getFieldByPath(fieldName).isValid) {
       normalizedValue = Number.parseFloat(value);
     }
 
