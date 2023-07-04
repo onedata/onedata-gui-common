@@ -152,6 +152,19 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   action: reads('executeCallback'),
 
   /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      if (this.context) {
+        this.set('context', null);
+      }
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
    * Executes action (onExecute and then execute hooks)
    * @public
    * @returns {Promise<Utils.ActionResult>}

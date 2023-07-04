@@ -76,7 +76,6 @@ export default Action.extend({
   willDestroy() {
     try {
       this.setProperties({
-        context: null,
         oldParent: null,
         oldPosition: null,
       });

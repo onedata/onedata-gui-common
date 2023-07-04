@@ -87,6 +87,8 @@ const LoadSeriesFunction = FunctionBase.extend({
         return;
       }
 
+      // Attaching observers to the timeSeriesRef itself, to allows replacing
+      // the whole `timeSeriesRef` object without fireing them.
       if (this.prevTimeSeriesRef) {
         this.prevTimeSeriesRef.removeObserver(
           'collectionRef',
@@ -142,8 +144,7 @@ const LoadSeriesFunction = FunctionBase.extend({
         } = (this.timeSeriesRef ?? {});
         if (collectionRef) {
           const collectionRefHistory =
-            this.historicalTimeSeriesRefs[collectionRef] =
-            this.historicalTimeSeriesRefs[collectionRef] ?? {};
+            this.historicalTimeSeriesRefs[collectionRef] ??= {};
           collectionRefHistory.lastTimeSeriesNameGenerator =
             timeSeriesNameGenerator;
           if (timeSeriesNameGenerator) {
@@ -194,11 +195,10 @@ const LoadSeriesFunction = FunctionBase.extend({
 
   handleCollectionRefChange() {
     const collectionRef = this.timeSeriesRef.collectionRef;
-    this.historicalTimeSeriesRefs[collectionRef] =
-      this.historicalTimeSeriesRefs[collectionRef] ?? {
-        lastTimeSeriesNameGenerator: '',
-        timeSeriesNameGenerators: {},
-      };
+    this.historicalTimeSeriesRefs[collectionRef] ??= {
+      lastTimeSeriesNameGenerator: '',
+      timeSeriesNameGenerators: {},
+    };
     set(
       this.timeSeriesRef,
       'timeSeriesNameGenerator',
@@ -225,11 +225,10 @@ const LoadSeriesFunction = FunctionBase.extend({
       const defaultTimeSeriesName =
         timeSeriesNameGeneratorSpec?.nameGeneratorType === 'exact' ?
         timeSeriesNameGenerator : '';
-      collectionRefHistory.timeSeriesNameGenerators[timeSeriesNameGenerator] =
-        collectionRefHistory.timeSeriesNameGenerators[timeSeriesNameGenerator] ?? {
-          timeSeriesName: defaultTimeSeriesName,
-          metricNames: [],
-        };
+      collectionRefHistory.timeSeriesNameGenerators[timeSeriesNameGenerator] ??= {
+        timeSeriesName: defaultTimeSeriesName,
+        metricNames: [],
+      };
     }
     setProperties(
       this.timeSeriesRef,

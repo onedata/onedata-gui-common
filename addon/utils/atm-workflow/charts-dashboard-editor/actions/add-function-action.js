@@ -82,10 +82,7 @@ export default Action.extend({
       if (this.newFunction && !this.newFunction.parent) {
         this.newFunction.destroy();
       }
-      this.setProperties({
-        context: null,
-        newFunction: null,
-      });
+      this.set('newFunction', null);
     } finally {
       this._super(...arguments);
     }

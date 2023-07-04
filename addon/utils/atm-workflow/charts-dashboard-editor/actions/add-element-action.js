@@ -88,10 +88,7 @@ export default Action.extend({
       if (this.newElement && !this.newElement.parent) {
         this.newElement.destroy();
       }
-      this.setProperties({
-        context: null,
-        newElement: null,
-      });
+      this.set('newElement', null);
     } finally {
       this._super(...arguments);
     }
