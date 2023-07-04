@@ -1,40 +1,12 @@
 {{#if (eq itemDataSpec.type "object")}}
-  {{#one-button size="sm" class="visible-properties-btn clickable"}}
-    {{tt this "visibleProperties"
-      total=availableColumns.length
-      visible=visibleColumns.length
-    }}
-  {{/one-button}}
-  {{#one-webui-popover
-    class="list-store-presenter-properties-popover"
-    triggerSelector=(local-selector elementId ".visible-properties-btn")
+  {{modals/workflow-visualiser/store-modal/visible-properties-selector
+    availableProperties=availableColumns
+    visibleProperties=visibleColumns
+    isMaxPropertiesCountReached=(gte availableColumns.length maxAvailableColumnsCount)
+    onTogglePropertyVisibility=(action "toggleColumnVisibility")
   }}
-    {{#perfect-scrollbar-element class="properties-list-container"}}
-      <ul class="properties-list">
-        {{#each availableColumns as |property|}}
-          <li class="property">
-            {{one-checkbox
-              class="property-checkbox"
-              inputId=(concat elementId "-" property)
-              checked=(contains property visibleColumns)
-              update=(action "toggleColumnVisibility" property)
-            }}
-            <label for={{concat elementId "-" property}}>
-              {{#truncated-string}}{{property}}{{/truncated-string}}
-            </label>
-          </li>
-        {{else}}
-          {{tt this "noDetectedProperties"}}
-        {{/each}}
-      </ul>
-      {{#if (gte availableColumns.length maxAvailableColumnsCount)}}
-        <small class="limited-properties-message text-muted">
-          {{tt this "limitedProperties" count=availableColumns.length}}
-        </small>
-      {{/if}}
-    {{/perfect-scrollbar-element}}
-  {{/one-webui-popover}}
 {{/if}}
+
 {{!-- Adding 1 to tableColumnsCount to include traceId column --}}
 {{#infinite-scroll-table
   onFetchEntries=fetchEntriesCallback
