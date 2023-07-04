@@ -63,10 +63,7 @@ export default Action.extend({
       if (this.createdDuplicate && !this.createdDuplicate.parent) {
         this.createdDuplicate.destroy();
       }
-      this.setProperties({
-        context: null,
-        createdDuplicate: null,
-      });
+      this.set('createdDuplicate', null);
     } finally {
       this._super(...arguments);
     }

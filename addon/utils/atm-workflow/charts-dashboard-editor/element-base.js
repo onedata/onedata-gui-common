@@ -35,6 +35,20 @@ const ElementBase = EmberObject.extend({
 
   /**
    * @public
+   * @virtual optional
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null}
+   */
+  parent: null,
+
+  /**
+   * @public
+   * @virtual optional
+   * @type {boolean}
+   */
+  needsDataSources: false,
+
+  /**
+   * @public
    * @type {boolean}
    */
   isRemoved: false,
@@ -58,7 +72,7 @@ const ElementBase = EmberObject.extend({
    * @virtual optional
    * @type {Array<string>}
    */
-  referencingPropertyNames: undefined,
+  referencingPropertyNames: Object.freeze(['parent']),
 
   /**
    * @public

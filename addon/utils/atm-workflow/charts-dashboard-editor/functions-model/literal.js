@@ -19,8 +19,30 @@ const LiteralFunction = FunctionBase.extend({
   /**
    * @override
    */
+  name: 'literal',
+
+  /**
+   * @override
+   */
+  hasSettingsComponent: true,
+
+  /**
+   * @override
+   */
   returnedTypes: Object.freeze([FunctionDataType.Number]),
 });
+
+/**
+ * @param {unknown} spec
+ * @param {Partial<FunctionBase>} fieldsToInject
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.LiteralFunction}
+ */
+function createFromSpec(spec, fieldsToInject) {
+  return LiteralFunction.create({
+    ...fieldsToInject,
+    data: spec.functionArguments?.data,
+  });
+}
 
 /**
  * @type {FunctionSpec<LiteralFunction>}
@@ -29,4 +51,5 @@ export default Object.freeze({
   name: 'literal',
   returnedTypes: [FunctionDataType.Number],
   modelClass: LiteralFunction,
+  createFromSpec,
 });

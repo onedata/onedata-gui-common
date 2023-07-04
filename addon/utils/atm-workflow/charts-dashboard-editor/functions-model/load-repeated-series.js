@@ -7,7 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { FunctionDataType } from './common';
+import EmberObject from '@ember/object';
+import { FunctionDataType, FunctionExecutionContext } from './common';
 import FunctionBase from './function-base';
 
 const LoadRepeatedSeriesFunction = FunctionBase.extend({
@@ -21,8 +22,54 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
   /**
    * @override
    */
+  name: 'loadRepeatedSeries',
+
+  /**
+   * @override
+   */
+  hasSettingsComponent: true,
+
+  /**
+   * @override
+   */
   returnedTypes: Object.freeze([FunctionDataType.Points]),
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      if (this.replaceEmptyParameters) {
+        this.replaceEmptyParameters.destroy();
+        this.set('replaceEmptyParameters', null);
+      }
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });
+
+/**
+ * @param {unknown} spec
+ * @param {Partial<FunctionBase>} fieldsToInject
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.LoadRepeatedSeries}
+ */
+function createFromSpec(spec, fieldsToInject) {
+  const replaceEmptyRawArgs = spec.functionArguments
+    ?.replaceEmptyParametersProvider?.functionArguments;
+
+  const funcElement = LoadRepeatedSeriesFunction.create({
+    ...fieldsToInject,
+    replaceEmptyParameters: EmberObject.create({
+      // We assume here, that strategy and fallbackValue are always provided
+      // by "literal" function. There is no other (sensible) function, which could be
+      // used in this context.
+      strategy: replaceEmptyRawArgs?.strategyProvider?.functionArguments?.data,
+      fallbackValue: replaceEmptyRawArgs?.fallbackValueProvider?.functionArguments?.data,
+    }),
+  });
+  return funcElement;
+}
 
 /**
  * @type {FunctionSpec<LoadRepeatedSeriesFunction>}
@@ -30,6 +77,7 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
 export default Object.freeze({
   name: 'loadRepeatedSeries',
   returnedTypes: [FunctionDataType.Points],
-  onlyForRepeatedSeries: true,
+  allowedContexts: [FunctionExecutionContext.RepeatedSeries],
   modelClass: LoadRepeatedSeriesFunction,
+  createFromSpec,
 });

@@ -59,7 +59,6 @@ export default Action.extend({
         this.elementToRemove.destroy();
       }
       this.setProperties({
-        context: null,
         oldParent: null,
         removedReferences: null,
       });

@@ -6,10 +6,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed, observer } from '@ember/object';
+import EmberObject, { set, computed, observer } from '@ember/object';
 import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
+import functions from './functions-model';
 
 /**
  * @typedef {DashboardElementValidationError} AxisNameEmptyValidationError
@@ -66,16 +67,16 @@ const Axis = ElementBase.extend({
   /**
    * @public
    * @virtual optional
-   * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.Series>}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.AxisOutput}
    */
-  series: undefined,
+  valueProvider: undefined,
 
   /**
    * @public
    * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Chart | null}
+   * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.Series>}
    */
-  parent: null,
+  series: undefined,
 
   /**
    * @private
@@ -86,7 +87,7 @@ const Axis = ElementBase.extend({
   /**
    * @override
    */
-  referencingPropertyNames: Object.freeze(['series', 'parent']),
+  referencingPropertyNames: Object.freeze(['series', 'parent', 'dataProvider']),
 
   /**
    * @override
@@ -155,6 +156,19 @@ const Axis = ElementBase.extend({
       this.set('series', []);
     }
     this.set('usedUnitOptions', {});
+    if (!this.valueProvider) {
+      const axisOutput = functions.axisOutput.modelClass.create({
+        parent: this,
+        elementOwner: this.elementOwner,
+      });
+      const currentValue = functions.currentValue.modelClass.create({
+        parent: axisOutput,
+        elementOwner: this.elementOwner,
+      });
+      set(axisOutput, 'data', currentValue);
+
+      this.set('valueProvider', axisOutput);
+    }
 
     this._super(...arguments);
     this.unitOptionsConfigurator();
@@ -171,6 +185,10 @@ const Axis = ElementBase.extend({
       }
       if (this.series.length) {
         this.set('series', []);
+      }
+      if (this.dataProvider) {
+        this.dataProvider.destroy();
+        this.set('dataProvider', null);
       }
       if (this.parent) {
         this.set('parent', null);

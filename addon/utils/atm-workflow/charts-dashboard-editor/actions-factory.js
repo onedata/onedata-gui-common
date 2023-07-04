@@ -1,7 +1,7 @@
 /**
  * Creates actions used by dashboard editor. Internally monitors each action
  * execution and notifies about every such event through execute listeners (see
- * `addExecuteListener` and `removeExecuteListeners`).
+ * `addExecutionListener` and `removeExecutionListeners`).
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -17,14 +17,20 @@ import SelectElementAction from './actions/select-element-action';
 import ChangeElementPropertyAction from './actions/change-element-property-action';
 import EditChartContentAction from './actions/edit-chart-content-action';
 import EndChartContentEditionAction from './actions/end-chart-content-edition-action';
+import AddFunctionAction from './actions/add-function-action';
 
 /**
- * @typedef {(action: Utils.Action, result: Utils.ActionResult) => void} ActionExecuteListener
+ * @typedef {(action: Utils.Action, result: Utils.ActionResult) => void} ActionExecutionListener
+ */
+
+/**
+ * @typedef {(newElement: Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement) => void} ElementCreationListener
  */
 
 /**
  * @typedef {Object} ActionsFactoryInitOptions
  * @property {unknown} ownerSource
+ * @property {Array<ChartsDashboardEditorDataSource>} dataSources
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
@@ -34,8 +40,15 @@ export default class ActionsFactory {
    */
   constructor({
     ownerSource,
+    dataSources,
     changeViewState,
   } = {}) {
+    /**
+     * @public
+     * @type {Array<ChartsDashboardEditorDataSource>}
+     */
+    this.dataSources = dataSources;
+
     /**
      * @private
      * @type {ActionsFactoryInitOptions['ownerSource']}
@@ -50,9 +63,15 @@ export default class ActionsFactory {
 
     /**
      * @private
-     * @type {Set<ActionExecuteListener>}
+     * @type {Set<ActionExecutionListener>}
      */
-    this.executeListeners = new Set();
+    this.executionListeners = new Set();
+
+    /**
+     * @private
+     * @type {Set<ElementCreationListener>}
+     */
+    this.elementCreationListeners = new Set();
 
     /**
      * May contain only action with `changeType` equal to `'continuous'`
@@ -69,40 +88,64 @@ export default class ActionsFactory {
   destroy() {
     this.ownerSource = null;
     this.onSelectElement = () => {};
-    this.executeListeners.clear();
+    this.executionListeners.clear();
+    this.elementCreationListeners.clear();
   }
 
   /**
    * @public
-   * @param {ActionExecuteListener} listener
+   * @param {ActionExecutionListener} listener
    * @returns {void}
    */
-  addExecuteListener(listener) {
-    this.executeListeners.add(listener);
+  addExecutionListener(listener) {
+    this.executionListeners.add(listener);
   }
 
   /**
    * @public
-   * @param {ActionExecuteListener} listener
+   * @param {ActionExecutionListener} listener
    * @returns {void}
    */
-  removeExecuteListener(listener) {
-    this.executeListeners.delete(listener);
+  removeExecutionListener(listener) {
+    this.executionListeners.delete(listener);
   }
 
   /**
    * @public
-   * @param {Omit<AddElementActionContext, 'changeViewState'>} context
+   * @param {ElementCreationListener} listener
+   * @returns {void}
+   */
+  addElementCreationListener(listener) {
+    this.elementCreationListeners.add(listener);
+  }
+
+  /**
+   * @public
+   * @param {ElementCreationListener} listener
+   * @returns {void}
+   */
+  removeElementCreationListener(listener) {
+    this.elementCreationListeners.delete(listener);
+  }
+
+  /**
+   * @public
+   * @param {Omit<AddElementActionContext, 'changeViewState' | 'dataSources'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.AddElementAction}
    */
   createAddElementAction(context) {
-    return this.attachExecuteListener(AddElementAction.create({
-      ownerSource: this.ownerSource,
-      context: {
-        changeViewState: this.changeViewState,
-        ...context,
-      },
-    }));
+    return this.attachElementCreationListener(
+      this.attachExecutionListener(
+        AddElementAction.create({
+          ownerSource: this.ownerSource,
+          context: {
+            dataSources: this.dataSources,
+            changeViewState: this.changeViewState,
+            ...context,
+          },
+        })
+      )
+    );
   }
 
   /**
@@ -111,7 +154,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.MoveElementAction}
    */
   createMoveElementAction(context) {
-    return this.attachExecuteListener(MoveElementAction.create({
+    return this.attachExecutionListener(MoveElementAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -126,7 +169,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.DuplicateElementAction}
    */
   createDuplicateElementAction(context) {
-    return this.attachExecuteListener(DuplicateElementAction.create({
+    return this.attachExecutionListener(DuplicateElementAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -141,7 +184,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.RemoveElementAction}
    */
   createRemoveElementAction(context) {
-    return this.attachExecuteListener(RemoveElementAction.create({
+    return this.attachExecutionListener(RemoveElementAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -156,7 +199,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.SelectElementAction}
    */
   createSelectElementAction(context) {
-    return this.attachExecuteListener(SelectElementAction.create({
+    return this.attachExecutionListener(SelectElementAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -194,7 +237,7 @@ export default class ActionsFactory {
     }
 
     if (!action) {
-      action = this.attachExecuteListener(ChangeElementPropertyAction.create({
+      action = this.attachExecutionListener(ChangeElementPropertyAction.create({
         ownerSource: this.ownerSource,
         context: {
           changeViewState: this.changeViewState,
@@ -235,7 +278,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.EditChartContentAction}
    */
   createEditChartContentAction(context) {
-    return this.attachExecuteListener(EditChartContentAction.create({
+    return this.attachExecutionListener(EditChartContentAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -250,7 +293,7 @@ export default class ActionsFactory {
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.EndChartContentEditionAction}
    */
   createEndChartContentEditionAction(context = {}) {
-    return this.attachExecuteListener(EndChartContentEditionAction.create({
+    return this.attachExecutionListener(EndChartContentEditionAction.create({
       ownerSource: this.ownerSource,
       context: {
         changeViewState: this.changeViewState,
@@ -260,14 +303,51 @@ export default class ActionsFactory {
   }
 
   /**
+   * @public
+   * @param {Omit<AddFunctionActionContext, 'changeViewState' | 'dataSources'>} context
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.AddFunctionAction}
+   */
+  createAddFunctionAction(context) {
+    return this.attachElementCreationListener(
+      this.attachExecutionListener(
+        AddFunctionAction.create({
+          ownerSource: this.ownerSource,
+          context: {
+            dataSources: this.dataSources,
+            changeViewState: this.changeViewState,
+            ...context,
+          },
+        })
+      )
+    );
+  }
+
+  /**
    * @private
    * @param {Utils.Action} action
    * @returns {Utils.Action}
    */
-  attachExecuteListener(action) {
+  attachExecutionListener(action) {
     action.addExecuteHook((result) => {
       if (result?.status === 'done') {
-        this.executeListeners.forEach((listener) => listener(action, result));
+        this.executionListeners.forEach((listener) => listener(action, result));
+      }
+    });
+    return action;
+  }
+
+  /**
+   * @private
+   * @param {Utils.Action} action
+   * @returns {Utils.Action}
+   */
+  attachElementCreationListener(action) {
+    let wasCalled = false;
+    action.addExecuteHook((result) => {
+      const createdElement = action.newFunction ?? action.newElement;
+      if (result?.status === 'done' && !result?.undo && createdElement && !wasCalled) {
+        wasCalled = true;
+        this.elementCreationListeners.forEach((listener) => listener(createdElement));
       }
     });
     return action;

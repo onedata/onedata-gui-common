@@ -7,8 +7,9 @@
  */
 
 import Component from '@ember/component';
-import { computed, set } from '@ember/object';
+import { computed, observer, set } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { A } from '@ember/array';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor';
 import {
   ActionsFactory,
@@ -32,6 +33,12 @@ export default Component.extend({
   dashboardSpec: undefined,
 
   /**
+   * @virtual
+   * @type {Array<ChartsDashboardEditorDataSource>}
+   */
+  dataSources: undefined,
+
+  /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ViewState}
    */
   viewState: undefined,
@@ -47,11 +54,34 @@ export default Component.extend({
   undoManager: undefined,
 
   /**
+   * @type {Ember.Array<Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement>}
+   */
+  allElements: undefined,
+
+  /**
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Model>}
    */
   model: computed('dashboardSpec', function model() {
     return createModelFromSpec(this.dashboardSpec, this);
   }),
+
+  dataSourcesObserver: observer('dataSources', function dataSourcesObserver() {
+    this.actionsFactory.dataSources = this.dataSources;
+    this.allElements.forEach((element) => {
+      if (element.needsDataSources) {
+        set(element, 'dataSources', this.dataSources);
+      }
+    });
+  }),
+
+  destroyedElementsRemover: observer(
+    'allElements.@each.isDestroyed',
+    function destroyedElementsRemover() {
+      this.allElements.removeObjects(
+        this.allElements.filter(({ isDestroyed }) => isDestroyed)
+      );
+    }
+  ),
 
   /**
    * @override
@@ -62,17 +92,30 @@ export default Component.extend({
     const undoManager = UndoManager.create();
     const actionsFactory = new ActionsFactory({
       ownerSource: this,
+      dataSources: this.dataSources,
       changeViewState: (...args) => this.changeViewState(...args),
     });
-    actionsFactory.addExecuteListener((action, result) => {
+    actionsFactory.addExecutionListener((action, result) => {
       if (!result.undo) {
         undoManager.addActionToHistory(action);
       }
     });
+    actionsFactory.addElementCreationListener((newElement) => {
+      this.allElements.pushObject(newElement);
+    });
+
+    const allElements = A();
+    if (this.model.rootSection) {
+      allElements.pushObjects([
+        this.model.rootSection,
+        ...this.model.rootSection.nestedElements(),
+      ]);
+    }
 
     this.setProperties({
       actionsFactory,
       undoManager,
+      allElements,
     });
 
     this.resetViewState();
@@ -133,6 +176,8 @@ export default Component.extend({
         newViewState.selectedSectionElement = null;
         newViewState.isChartEditorActive = false;
         newViewState.selectedChartElement = null;
+      } else if (viewStateChange.elementToSelect.elementType === ElementType.Function) {
+        // TODO: VFS-11104
       } else if (isChartElementType(viewStateChange.elementToSelect.elementType)) {
         // Chart element selection. We need to find parent chart...
         let chart = viewStateChange.elementToSelect.parent;

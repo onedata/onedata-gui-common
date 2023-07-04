@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import { computed, set } from '@ember/object';
 import { FunctionDataType } from './common';
 import FunctionBase from './function-base';
 
@@ -25,6 +25,11 @@ const AbsFunction = FunctionBase.extend({
   /**
    * @override
    */
+  name: 'abs',
+
+  /**
+   * @override
+   */
   attachableArgumentSpecs: Object.freeze([dataArgument]),
 
   /**
@@ -36,10 +41,28 @@ const AbsFunction = FunctionBase.extend({
 });
 
 /**
+ * @param {unknown} spec
+ * @param {Partial<FunctionBase>} fieldsToInject
+ * @param {(spec: unknown) => FunctionBase} convertAnySpecToFunction
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.Abs}
+ */
+function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
+  const funcElement = AbsFunction.create({
+    ...fieldsToInject,
+    data: convertAnySpecToFunction(spec.functionArguments?.dataProvider),
+  });
+  if (funcElement.data) {
+    set(funcElement.data, 'parentElement', funcElement);
+  }
+  return funcElement;
+}
+
+/**
  * @type {FunctionSpec<AbsFunction>}
  */
 export default Object.freeze({
   name: 'abs',
   returnedTypes: [FunctionDataType.Points, FunctionDataType.Number],
   modelClass: AbsFunction,
+  createFromSpec,
 });

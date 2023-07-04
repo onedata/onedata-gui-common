@@ -23,6 +23,7 @@ import { getCollectionFieldName } from './utils';
  * @typedef {Object} AddElementActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType} newElementType
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup} targetElement
+ * @property {Array<ChartsDashboardEditorDataSource>} dataSources
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
@@ -57,6 +58,11 @@ export default Action.extend({
   targetElement: reads('context.targetElement'),
 
   /**
+   * @type {ComputedProperty<AddFunctionActionContext['dataSources']>}
+   */
+  dataSources: reads('context.dataSources'),
+
+  /**
    * @type {ComputedProperty<AddElementActionContext['changeViewState']>}
    */
   changeViewState: reads('context.changeViewState'),
@@ -82,10 +88,7 @@ export default Action.extend({
       if (this.newElement && !this.newElement.parent) {
         this.newElement.destroy();
       }
-      this.setProperties({
-        context: null,
-        newElement: null,
-      });
+      this.set('newElement', null);
     } finally {
       this._super(...arguments);
     }
@@ -173,7 +176,11 @@ export default Action.extend({
 
     const creatorFunction = creatorFunctions[this.newElementType];
     if (creatorFunction) {
-      return creatorFunction(this.i18n, elementOwner);
+      const element = creatorFunction(this.i18n, elementOwner);
+      if (element.needsDataSources && this.dataSources) {
+        set(element, 'dataSources', this.dataSources);
+      }
+      return element;
     } else {
       console.error(
         `Could not create charts dashboard element of type "${this.newElementType}" - type not recognized.`

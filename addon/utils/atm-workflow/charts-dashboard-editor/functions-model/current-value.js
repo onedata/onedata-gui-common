@@ -6,10 +6,15 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { FunctionDataType } from './common';
+import { FunctionDataType, FunctionExecutionContext } from './common';
 import FunctionBase from './function-base';
 
 const CurrentValueFunction = FunctionBase.extend({
+  /**
+   * @override
+   */
+  name: 'currentValue',
+
   /**
    * @override
    */
@@ -17,10 +22,21 @@ const CurrentValueFunction = FunctionBase.extend({
 });
 
 /**
+ * @param {unknown} spec
+ * @param {Partial<FunctionBase>} fieldsToInject
+ * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.CurrentValueFunction}
+ */
+function createFromSpec(spec, fieldsToInject) {
+  return CurrentValueFunction.create(fieldsToInject);
+}
+
+/**
  * @type {FunctionSpec<CurrentValueFunction>}
  */
 export default Object.freeze({
   name: 'currentValue',
   returnedTypes: [FunctionDataType.Number],
+  allowedContexts: [FunctionExecutionContext.Axis],
   modelClass: CurrentValueFunction,
+  createFromSpec,
 });

@@ -30,6 +30,13 @@
       elementId=tabIds.labelsFormatting
       title=(tt this "detailsTabNames.labelsFormatting")
     }}
+      {{#render-later triggerRender=(eq activeTabId tabIds.labelsFormatting)}}
+        {{atm-workflow/charts-dashboard-editor/function-editor
+          outputFunction=chartElement.valueProvider
+          executionContext="axis"
+          actionsFactory=actionsFactory
+        }}
+      {{/render-later}}
     {{/tab.pane}}
   {{/bs-tab}}
 </div>

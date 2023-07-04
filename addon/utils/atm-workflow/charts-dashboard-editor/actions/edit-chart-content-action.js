@@ -41,17 +41,6 @@ export default Action.extend({
   /**
    * @override
    */
-  willDestroy() {
-    try {
-      this.set('context', null);
-    } finally {
-      this._super(...arguments);
-    }
-  },
-
-  /**
-   * @override
-   */
   onExecute() {
     this.changeViewState({
       elementToSelect: this.chart,
