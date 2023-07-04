@@ -73,6 +73,23 @@
     place-items: stretch;
   }
 
+  .exception-presenter {
+    .details-container {
+      .details {
+        grid-template-rows: 1fr min-content;
+      }
+
+      .trace-id-container {
+        padding: 1em;
+        padding-top: 0;
+      }
+
+      .trace-id-clipboard-line {
+        white-space: nowrap;
+      }
+    }
+  }
+
   .related-logs-column-header {
     width: 12em;
   }

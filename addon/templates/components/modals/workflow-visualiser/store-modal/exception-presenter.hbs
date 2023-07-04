@@ -1,0 +1,113 @@
+{{#if (eq itemDataSpec.type "object")}}
+  {{#one-button size="sm" class="visible-properties-btn clickable"}}
+    {{tt this "visibleProperties"
+      total=availableColumns.length
+      visible=visibleColumns.length
+    }}
+  {{/one-button}}
+  {{#one-webui-popover
+    class="list-store-presenter-properties-popover"
+    triggerSelector=(local-selector elementId ".visible-properties-btn")
+  }}
+    {{#perfect-scrollbar-element class="properties-list-container"}}
+      <ul class="properties-list">
+        {{#each availableColumns as |property|}}
+          <li class="property">
+            {{one-checkbox
+              class="property-checkbox"
+              inputId=(concat elementId "-" property)
+              checked=(contains property visibleColumns)
+              update=(action "toggleColumnVisibility" property)
+            }}
+            <label for={{concat elementId "-" property}}>
+              {{#truncated-string}}{{property}}{{/truncated-string}}
+            </label>
+          </li>
+        {{else}}
+          {{tt this "noDetectedProperties"}}
+        {{/each}}
+      </ul>
+      {{#if (gte availableColumns.length maxAvailableColumnsCount)}}
+        <small class="limited-properties-message text-muted">
+          {{tt this "limitedProperties" count=availableColumns.length}}
+        </small>
+      {{/if}}
+    {{/perfect-scrollbar-element}}
+  {{/one-webui-popover}}
+{{/if}}
+{{!-- Adding 1 to tableColumnsCount to include traceId column --}}
+{{#infinite-scroll-table
+  onFetchEntries=fetchEntriesCallback
+  columnsCount=(add tableColumnsCount 1)
+  updateStrategy="always"
+  rowHeight=45
+  doesOpenDetailsOnClick=true
+  as |section|
+}}
+  {{#if (eq section.sectionName "tableHead")}}
+
+    {{#component tableHeaderRowPresenterComponent
+      columns=visibleColumns
+      as |headerRow|
+    }}
+      {{#if (eq headerRow.section "start")}}
+        <th class="column-trace-id">{{tt this "traceIdHeader"}}</th>
+      {{/if}}
+    {{/component}}
+
+  {{else if (eq section.sectionName "entryRow")}}
+
+    {{#if section.entry.success}}
+      {{#component tableBodyRowPresenterComponent
+        value=section.entry.value
+        dataSpec=itemDataSpec
+        context=context
+        columns=visibleColumns
+        click=section.onRowClick
+        class=section.rowClassName
+        dataRowId=section.dataRowId
+        as |row|
+      }}
+        {{#if (eq row.section "start")}}
+          <td class="column-trace-id">
+            {{#truncated-string}}
+              {{get itemIndexToTraceIdMap section.entry.index}}
+            {{/truncated-string}}
+          </td>
+        {{/if}}
+      {{/component}}
+    {{else}}
+      <tr
+        class={{concat-classes section.rowClassName "text-danger"}}
+        data-row-id={{section.dataRowId}}
+        onclick={{section.onRowClick}}
+      >
+        <td class="column-trace-id">
+          {{#truncated-string}}
+            {{get itemIndexToTraceIdMap section.entry.index}}
+          {{/truncated-string}}
+        </td>
+        <td colspan={{tableColumnsCount}} class="truncate">
+          {{evaluate-function createErrorMessage section.entry}}
+        </td>
+      </tr>
+    {{/if}}
+
+  {{else if (eq section.sectionName "entryDetails")}}
+
+    {{modals/workflow-visualiser/store-modal/value-container-presenter
+      dataSpec=itemDataSpec
+      valueContainer=section.entry
+      context=context
+    }}
+    <div class="trace-id-container">
+      {{one-clipboard-line
+        class="trace-id-clipboard-line"
+        size="sm"
+        label=(concat (tt this "traceIdHeader") ":")
+        value=(get itemIndexToTraceIdMap section.entry.index)
+      }}
+    </div>
+
+  {{/if}}
+{{/infinite-scroll-table}}
