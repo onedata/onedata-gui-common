@@ -201,12 +201,12 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<PromiseArray<Utils.OneTimeSeriesChart.Configuration>>}
    */
   chartConfigurationsProxy: promise.array(computed(
-    'sectionSpec.charts',
+    'sectionSpec.{charts,chartNavigation}',
     'globalTimeSecondsOffset',
     'normalizedExternalDataSources',
     async function chartConfigurationsProxy() {
       const chartSpecs = this.sectionSpec?.charts ?? [];
-      return await allFulfilled(chartSpecs.map(async (chartSpec) => {
+      const configurations = await allFulfilled(chartSpecs.map(async (chartSpec) => {
         const configuration = new OTSCConfiguration({
           nowTimestampOffset: this.globalTimeSecondsOffset ?? 0,
           chartDefinition: chartSpec,
@@ -214,8 +214,13 @@ export default Component.extend(I18n, {
           externalDataSources: this.normalizedExternalDataSources,
         });
         configuration.setViewParameters({ live: this.live });
+
         return configuration;
       }));
+
+      await this.synchronizeXAxisIfNeeded(configurations);
+
+      return configurations;
     }
   )),
 
@@ -239,6 +244,7 @@ export default Component.extend(I18n, {
         config.setViewParameters({ live: this.live });
       }
     });
+    await this.synchronizeXAxisIfNeeded(chartConfigurations);
   }),
 
   init() {
@@ -292,6 +298,52 @@ export default Component.extend(I18n, {
     const callback = onGetTimeResolutionSpecs ||
       defaultCallbacks.onGetTimeResolutionSpecs;
     return callback({ chartDefinition });
+  },
+
+  /**
+   * When "live" option is false then all charts are considered as ended and
+   * non-changing. In that case each of them can have its newest point at
+   * different timestamp, which breaks down UX a bit - it is hard to compare
+   * charts when X (time) axes are not the same. Especially when section has
+   * shared controls to go forth and back in chart view. To solve this issue
+   * we fetch newest points for each of chart configuration, compare them
+   * and then set fake newest point timestamp in charts, which are behind in
+   * time comparing to the "newest" chart.
+   * @param {Array<Utils.OneTimeSeriesChart.Configuration>} chartConfigurations
+   * @returns {void}
+   */
+  async synchronizeXAxisIfNeeded(chartConfigurations) {
+    if (!this.live && this.sectionSpec?.chartNavigation === 'sharedWithinSection') {
+      const prefetchedStates = [];
+      const nonFakePrefetchedStates = [];
+      await allFulfilled(chartConfigurations.map(async (configuration) => {
+        configuration.setViewParameters({ lastPointTimestamp: null });
+        const prefetchedState = await configuration.getState();
+        prefetchedStates.push(prefetchedState);
+        const allPoints = _.flatten(prefetchedState.series.map(({ data }) => data));
+        if (allPoints.find(({ fake }) => !fake)) {
+          nonFakePrefetchedStates.push(prefetchedState);
+        }
+      }));
+
+      const statesToAnalyse = nonFakePrefetchedStates.length ?
+        nonFakePrefetchedStates : prefetchedStates;
+      const maxNewestPointTimestamp = Math.max(
+        ...statesToAnalyse.map(({ newestPointTimestamp }) => newestPointTimestamp)
+      );
+      chartConfigurations.forEach((configuration) => {
+        const currentViewParameters = configuration.getViewParameters();
+        if (currentViewParameters.lastPointTimestamp !== maxNewestPointTimestamp) {
+          configuration.newestPointTimestamp = maxNewestPointTimestamp;
+          configuration.newestEdgeTimestamp =
+            maxNewestPointTimestamp +
+            configuration.getViewParameters().timeResolution - 1;
+          configuration.setViewParameters({
+            lastPointTimestamp: maxNewestPointTimestamp,
+          });
+        }
+      });
+    }
   },
 });
 

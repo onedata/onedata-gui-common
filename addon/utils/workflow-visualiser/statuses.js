@@ -42,6 +42,7 @@ export const taskStatuses = [
   'active',
   'stopping',
   'unscheduled',
+  ...taskSuspendedStatuses,
   ...taskEndedStatuses,
   taskUnknownStatus,
 ];
