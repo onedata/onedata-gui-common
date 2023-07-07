@@ -2,7 +2,7 @@
  * Set of parsers dedicated for file ID.
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2019-2020 ACK CYFRONET AGH
+ * @copyright (C) 2019-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -10,11 +10,18 @@
 const guidRegexp = /guid#(.*)#(.*)/;
 const shareGuidRegexp = /shareGuid#(.*)#(.*)#(.*)/;
 
+// FIXME: rename
+
+// FIXME: zmienione nazwy, sprawdzić we wszystkich projektach:
+// getInternalFileIdFromFileId
+// getSpaceIdFromFileId
+// getShareIdFromFileId
+
 /**
  * @param {String} fileEntityId
  * @returns {String}
  */
-export function getInternalFileIdFromFileId(fileEntityId) {
+export function getInternalFileIdFromGuid(fileEntityId) {
   const decoded = atob(fileEntityId);
   const m = decoded.match(guidRegexp) || decoded.match(shareGuidRegexp);
   return m && m[1];
@@ -24,7 +31,7 @@ export function getInternalFileIdFromFileId(fileEntityId) {
  * @param {String} fileEntityId
  * @returns {String}
  */
-export function getSpaceIdFromFileId(fileEntityId) {
+export function getSpaceIdFromGuid(fileEntityId) {
   const decoded = atob(fileEntityId);
   const m = decoded.match(guidRegexp) || decoded.match(shareGuidRegexp);
   return m && m[2];
@@ -34,7 +41,7 @@ export function getSpaceIdFromFileId(fileEntityId) {
  * @param {String} fileEntityId
  * @returns {String}
  */
-export function getShareIdFromFileId(fileEntityId) {
+export function getShareIdFromGuid(fileEntityId) {
   const decoded = atob(fileEntityId);
   const m = decoded.match(shareGuidRegexp);
   return m && m[3];
