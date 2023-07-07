@@ -7,6 +7,7 @@
  */
 
 import { computed } from '@ember/object';
+import generateId from 'onedata-gui-common/utils/generate-id';
 import ElementBase from '../element-base';
 import { ElementType } from '../common';
 
@@ -28,6 +29,13 @@ export default ElementBase.extend({
   /**
    * @public
    * @virtual optional
+   * @type {string}
+   */
+  id: undefined,
+
+  /**
+   * @public
+   * @virtual optional
    * @type {Array<FunctionAttachableArgumentSpec>}
    */
   attachableArgumentSpecs: Object.freeze([]),
@@ -43,6 +51,15 @@ export default ElementBase.extend({
   hasSettingsComponent: false,
 
   /**
+   * Defined when function is detached. Represents position of this function
+   * relative to the root (output) function. The root function is always in the
+   * left-center placement of the editor, so can be considered a fixed element -
+   * good as a reference point.
+   * @type {{ left: number, top: number } | null}
+   */
+  positionRelativeToRootFunc: null,
+
+  /**
    * @override
    */
   elementType: ElementType.Function,
@@ -53,6 +70,16 @@ export default ElementBase.extend({
   referencingPropertyNames: computed('attachableArgumentSpecs.[]', function referencingPropertyNames() {
     return [...this.attachableArgumentSpecs.map(({ name }) => name), 'parent'];
   }),
+
+  /**
+   * @override
+   */
+  init() {
+    if (!this.id) {
+      this.set('id', generateId());
+    }
+    this._super(...arguments);
+  },
 
   /**
    * @override

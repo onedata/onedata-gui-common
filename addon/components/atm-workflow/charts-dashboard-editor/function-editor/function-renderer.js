@@ -7,7 +7,7 @@
  */
 
 import Component from '@ember/component';
-import { computed, observer, defineProperty } from '@ember/object';
+import { set, computed, observer, defineProperty } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { dasherize } from '@ember/string';
 import {
@@ -29,6 +29,7 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
 export default Component.extend({
   layout,
   classNames: ['function-renderer'],
+  attributeBindings: ['chartFunction.id:data-function-id'],
 
   i18n: service(),
 
@@ -111,6 +112,33 @@ export default Component.extend({
     }
   ),
 
+  detachDetector: observer('chartFunction.parent', function detachDetector() {
+    if (!this.element) {
+      return;
+    }
+    const isDetachedInDom =
+      this.element.parentElement.matches('.detached-functions-container');
+    const isDetached =
+      this.chartFunction.parent?.detachedFunctions?.includes(this.chartFunction);
+    const rootFunctionBlock = this.element.closest('.function-editor')
+      ?.querySelector('.root-function > .function-block');
+    const functionBlock = this.element.querySelector('.function-block');
+
+    // When function becomes detached -> persist its current coordinates
+    // relative to the root function (as root function position is considered
+    // constant).
+    if (
+      functionBlock &&
+      rootFunctionBlock &&
+      isDetached &&
+      !isDetachedInDom
+    ) {
+
+      const position = dom.position(functionBlock, rootFunctionBlock);
+      set(this.chartFunction, 'positionRelativeToRootFunc', position);
+    }
+  }),
+
   /**
    * @override
    */
@@ -132,6 +160,38 @@ export default Component.extend({
       }
     })();
   },
+
+  // /**
+  //  * @override
+  //  */
+  // willDestroyElement() {
+  //   try {
+  //     if (this.element) {
+  //       const isInDetachedFunctionsContainer =
+  //         Boolean(this.element.closest('.detached-functions-container'));
+  //       const isDetached =
+  //         this.chartFunction.parent?.detachedFunctions?.includes(this.chartFunction);
+  //       const rootFunctionBlock = this.element.closest('.root-function')?.querySelector(':scope > .function-block');
+  //       const functionBlock = this.element.querySelector('.function-block');
+
+  //       // When function becomes detached -> persist its current coordinates
+  //       // relative to the root function (as root function position is considered
+  //       // constant).
+  //       if (
+  //         functionBlock &&
+  //         rootFunctionBlock &&
+  //         isDetached &&
+  //         !isInDetachedFunctionsContainer
+  //       ) {
+
+  //         const position = dom.position(functionBlock, rootFunctionBlock);
+  //         set(this.chartFunction, 'positionRelativeToRootFunc', position);
+  //       }
+  //     }
+  //   } finally {
+  //     this._super(...arguments);
+  //   }
+  // },
 
   recalculateArgumentLinePositions() {
     const argumentElements = this.element.querySelectorAll(
@@ -168,5 +228,13 @@ export default Component.extend({
         );
       }
     }
+  },
+
+  actions: {
+    detachFunction(func) {
+      const action = this.actionsFactory
+        .createDetachArgumentFunctionAction({ functionToDetach: func });
+      action.execute();
+    },
   },
 });

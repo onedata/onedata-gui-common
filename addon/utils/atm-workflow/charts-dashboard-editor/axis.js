@@ -73,6 +73,12 @@ const Axis = ElementBase.extend({
 
   /**
    * @public
+   * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.FunctionBase>}
+   */
+  detachedFunctions: undefined,
+
+  /**
+   * @public
    * @virtual optional
    * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.Series>}
    */
@@ -87,7 +93,12 @@ const Axis = ElementBase.extend({
   /**
    * @override
    */
-  referencingPropertyNames: Object.freeze(['series', 'parent', 'dataProvider']),
+  referencingPropertyNames: Object.freeze([
+    'series',
+    'parent',
+    'dataProvider',
+    'detachedFunctions',
+  ]),
 
   /**
    * @override

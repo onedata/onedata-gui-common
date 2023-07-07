@@ -1,7 +1,17 @@
-{{#perfect-scrollbar-element}}
+{{#perfect-scrollbar-element class="functions-container"}}
   {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
+    class="root-function"
     chartFunction=outputFunction
     executionContext=executionContext
     actionsFactory=actionsFactory
   }}
+  <div class="detached-functions-container">
+    {{#each detachedFunctions as |detachedFunction|}}
+      {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
+        chartFunction=detachedFunction
+        executionContext=executionContext
+        actionsFactory=actionsFactory
+      }}
+    {{/each}}
+  </div>
 {{/perfect-scrollbar-element}}

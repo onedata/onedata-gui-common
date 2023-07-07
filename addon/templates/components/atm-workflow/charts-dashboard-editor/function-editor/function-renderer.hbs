@@ -21,7 +21,15 @@
       {{#each argumentInfo.attachedFunctions as |func|}}
         <div class="function-argument-block">
           <div class="argument-middle-line argument-line"></div>
-          <div class="argument-end-line argument-line"></div>
+          <div class="argument-end-line argument-line">
+            <div class="attachment-actions">
+              {{one-icon
+                class="remove-action action"
+                icon="x"
+                click=(action "detachFunction" func)
+              }}
+            </div>
+          </div>
           {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
             chartFunction=func
             executionContext=executionContext

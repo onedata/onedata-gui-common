@@ -863,6 +863,39 @@
         height: 100%;
       }
     }
+
+    .argument-end-line {
+      position: relative;
+    }
+
+    .attachment-actions {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100%) translateY(-0.2em);
+      display: flex;
+      border: $main-border;
+      border-radius: $border-radius-small;
+      background-color: $color-one-white;
+      opacity: 0.5;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      .action {
+        padding: 0.1em;
+        + .action {
+          border-left: $main-border;
+        }
+      }
+    }
+
+    .detached-functions-container {
+      > .function-renderer {
+        position: absolute;
+      }
+    }
   }
 
   @media (max-width: $screen-xs-max) {
