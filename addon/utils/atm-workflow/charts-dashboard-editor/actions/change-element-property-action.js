@@ -90,12 +90,6 @@ export default Action.extend({
   previousValue: undefined,
 
   /**
-   * @private
-   * @type {boolean}
-   */
-  wasExecuted: false,
-
-  /**
    * @override
    */
   onExecute() {
@@ -103,7 +97,6 @@ export default Action.extend({
     if (!this.wasExecuted) {
       this.set('previousValue', get(this.element, this.propertyName));
     }
-    this.set('wasExecuted', true);
     set(this.element, this.propertyName, this.newValue);
   },
 

@@ -29,6 +29,7 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
 export default Component.extend({
   layout,
   classNames: ['function-renderer'],
+  classNameBindings: ['chartFunction.isRoot:root-function'],
   attributeBindings: ['chartFunction.id:data-function-id'],
 
   i18n: service(),
@@ -231,6 +232,11 @@ export default Component.extend({
   },
 
   actions: {
+    removeFunction() {
+      const action = this.actionsFactory
+        .createRemoveFunctionAction({ functionToRemove: this.chartFunction });
+      action.execute();
+    },
     detachFunction(func) {
       const action = this.actionsFactory
         .createDetachArgumentFunctionAction({ functionToDetach: func });

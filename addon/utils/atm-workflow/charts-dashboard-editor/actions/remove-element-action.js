@@ -55,8 +55,8 @@ export default Action.extend({
    */
   willDestroy() {
     try {
-      if (this.elementToRemove && !this.elementToRemove.parent) {
-        this.elementToRemove.destroy();
+      if (this.wasExecuted) {
+        this.elementToRemove?.destroy();
       }
       this.setProperties({
         oldParent: null,

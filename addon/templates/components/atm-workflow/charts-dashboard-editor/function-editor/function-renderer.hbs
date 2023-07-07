@@ -1,6 +1,15 @@
 <div class="function-block">
   <div class="function-block-header">
     <span class="function-name">{{readableName}}</span>
+    {{#if (not chartFunction.isRoot)}}
+      <div class="function-actions">
+        {{one-icon
+          class="remove-action action"
+          icon="x"
+          click=(action "removeFunction")
+        }}
+      </div>
+    {{/if}}
   </div>
   {{#if settingsComponentName}}
     <div class="function-block-body">

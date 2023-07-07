@@ -20,7 +20,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed, get, set } from '@ember/object';
+import EmberObject, { computed, get, set, trySet } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -123,6 +123,15 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   title: computed('i18nPrefix', function title() {
     return this.t('title', {}, { defaultValue: '' });
   }),
+
+  /**
+   * `true` when action has been executed, `false` otherwise.
+   * NOTE: calling `executeUndo` also sets it to `false`, as action is then
+   * considered as non-executed.
+   * @public
+   * @type {boolean}
+   */
+  wasExecuted: false,
 
   /**
    * Will be called just after the onExecute[Undo]() method. Are executed in
@@ -246,6 +255,7 @@ export default EmberObject.extend(I18n, OwnerInjector, {
     }
 
     this.notifyResult(result);
+    trySet(this, 'wasExecuted', !undo);
     return result;
   },
 
