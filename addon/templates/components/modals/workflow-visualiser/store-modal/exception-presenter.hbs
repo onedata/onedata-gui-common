@@ -7,9 +7,10 @@
   }}
 {{/if}}
 
+{{!-- Adding 1 to tableColumnsCount to include traceId column --}}
 {{#infinite-scroll-table
   onFetchEntries=fetchEntriesCallback
-  columnsCount=tableColumnsCount
+  columnsCount=(add tableColumnsCount 1)
   updateStrategy="always"
   rowHeight=45
   doesOpenDetailsOnClick=true
@@ -17,14 +18,19 @@
 }}
   {{#if (eq section.sectionName "tableHead")}}
 
-    {{component tableHeaderRowPresenterComponent
+    {{#component tableHeaderRowPresenterComponent
       columns=visibleColumns
+      as |headerRow|
     }}
+      {{#if (eq headerRow.section "start")}}
+        <th class="column-trace-id">{{tt this "traceIdHeader"}}</th>
+      {{/if}}
+    {{/component}}
 
   {{else if (eq section.sectionName "entryRow")}}
 
     {{#if section.entry.success}}
-      {{component tableBodyRowPresenterComponent
+      {{#component tableBodyRowPresenterComponent
         value=section.entry.value
         dataSpec=itemDataSpec
         context=context
@@ -32,13 +38,27 @@
         click=section.onRowClick
         class=section.rowClassName
         dataRowId=section.dataRowId
+        as |row|
       }}
+        {{#if (eq row.section "start")}}
+          <td class="column-trace-id">
+            {{#truncated-string}}
+              {{get itemIndexToTraceIdMap section.entry.index}}
+            {{/truncated-string}}
+          </td>
+        {{/if}}
+      {{/component}}
     {{else}}
       <tr
         class={{concat-classes section.rowClassName "text-danger"}}
         data-row-id={{section.dataRowId}}
         onclick={{section.onRowClick}}
       >
+        <td class="column-trace-id">
+          {{#truncated-string}}
+            {{get itemIndexToTraceIdMap section.entry.index}}
+          {{/truncated-string}}
+        </td>
         <td colspan={{tableColumnsCount}} class="truncate">
           {{evaluate-function createErrorMessage section.entry}}
         </td>
@@ -52,6 +72,14 @@
       valueContainer=section.entry
       context=context
     }}
+    <div class="trace-id-container">
+      {{one-clipboard-line
+        class="trace-id-clipboard-line"
+        size="sm"
+        label=(concat (tt this "traceIdHeader") ":")
+        value=(get itemIndexToTraceIdMap section.entry.index)
+      }}
+    </div>
 
   {{/if}}
 {{/infinite-scroll-table}}

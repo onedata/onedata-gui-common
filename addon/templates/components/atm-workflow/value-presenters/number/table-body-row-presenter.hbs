@@ -1,3 +1,4 @@
+{{yield (hash section="start")}}
 <td class="column-value">
   {{#truncated-string}}
     {{atm-workflow/value-presenters/number/single-line-presenter
@@ -5,3 +6,4 @@
     }}
   {{/truncated-string}}
 </td>
+{{yield (hash section="end")}}

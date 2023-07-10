@@ -1,5 +1,7 @@
+{{yield (hash section="start")}}
 {{#each (array "name" "path" "size") as |colName|}}
   <th class="column-{{dasherize colName}}">
     {{#truncated-string}}{{tt this colName}}{{/truncated-string}}
   </th>
 {{/each}}
+{{yield (hash section="end")}}
