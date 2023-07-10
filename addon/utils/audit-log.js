@@ -213,7 +213,7 @@ export function normalizeEntrySource(source) {
 }
 
 /**
- * @typedef {'debug'|'info'|'notice'|'warning'|'alert'|'error'|'critical'|'emergency'} AuditLogEntrySeverity
+ * @typedef {'debug'|'info'|'notice'|'warning'|'error'|'critical'|'alert'|'emergency'} AuditLogEntrySeverity
  */
 
 /**
@@ -225,9 +225,9 @@ export const EntrySeverity = Object.freeze({
   Info: 'info',
   Notice: 'notice',
   Warning: 'warning',
-  Alert: 'alert',
   Error: 'error',
   Critical: 'critical',
+  Alert: 'alert',
   Emergency: 'emergency',
 });
 
@@ -239,9 +239,9 @@ export const entrySeveritiesArray = Object.freeze([
   EntrySeverity.Info,
   EntrySeverity.Notice,
   EntrySeverity.Warning,
-  EntrySeverity.Alert,
   EntrySeverity.Error,
   EntrySeverity.Critical,
+  EntrySeverity.Alert,
   EntrySeverity.Emergency,
 ]);
 

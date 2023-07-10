@@ -296,6 +296,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
   }),
 
   /**
+   * NOTE: Generated stores, unlike to defined ones, don't function as
+   * standalone entities. These are rather stores created on-demand, owned
+   * by models which need them. Also the lifecycle of the generated store is
+   * tightly coupled with its parent. Example: audit log or time series a of task.
+   * Some store state properties (like `contentMayChange` value) are determined
+   * by the state of the parent model.
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
   generatedStores: computed('executionState', function generatedStores() {
@@ -678,6 +684,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const systemAuditLogStore = systemAuditLogStoreInstanceId &&
       this.getStoreByInstanceId(systemAuditLogStoreInstanceId);
     if (systemAuditLogStore) {
+      // Updating generated store state. See more in `generatedStores` field docs
       set(
         systemAuditLogStore,
         'contentMayChange',
@@ -1108,6 +1115,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       });
       ['systemAuditLogStore', 'timeSeriesStore'].forEach((taskStoreName) => {
         if (normalizedRunsRegistry[runNumber][taskStoreName]) {
+          // Updating generated stores state. See more in `generatedStores` field docs
           set(
             normalizedRunsRegistry[runNumber][taskStoreName],
             'contentMayChange',

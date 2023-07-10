@@ -313,37 +313,36 @@ export default Component.extend(I18n, {
    * @returns {void}
    */
   async synchronizeXAxisIfNeeded(chartConfigurations) {
-    if (!this.live && this.sectionSpec?.chartNavigation === 'sharedWithinSection') {
-      const prefetchedStates = [];
-      const nonFakePrefetchedStates = [];
-      await allFulfilled(chartConfigurations.map(async (configuration) => {
-        configuration.setViewParameters({ lastPointTimestamp: null });
-        const prefetchedState = await configuration.getState();
-        prefetchedStates.push(prefetchedState);
-        const allPoints = _.flatten(prefetchedState.series.map(({ data }) => data));
-        if (allPoints.find(({ fake }) => !fake)) {
-          nonFakePrefetchedStates.push(prefetchedState);
-        }
-      }));
-
-      const statesToAnalyse = nonFakePrefetchedStates.length ?
-        nonFakePrefetchedStates : prefetchedStates;
-      const maxNewestPointTimestamp = Math.max(
-        ...statesToAnalyse.map(({ newestPointTimestamp }) => newestPointTimestamp)
-      );
-      chartConfigurations.forEach((configuration) => {
-        const currentViewParameters = configuration.getViewParameters();
-        if (currentViewParameters.lastPointTimestamp !== maxNewestPointTimestamp) {
-          configuration.newestPointTimestamp = maxNewestPointTimestamp;
-          configuration.newestEdgeTimestamp =
-            maxNewestPointTimestamp +
-            configuration.getViewParameters().timeResolution - 1;
-          configuration.setViewParameters({
-            lastPointTimestamp: maxNewestPointTimestamp,
-          });
-        }
-      });
+    if (this.live || this.sectionSpec?.chartNavigation !== 'sharedWithinSection') {
+      return;
     }
+
+    const prefetchedStates = [];
+    const nonFakePrefetchedStates = [];
+    await allFulfilled(chartConfigurations.map(async (configuration) => {
+      configuration.setViewParameters({ lastPointTimestamp: null });
+      const prefetchedState = await configuration.getState();
+      prefetchedStates.push(prefetchedState);
+      const allPoints = _.flatten(prefetchedState.series.map(({ data }) => data));
+      if (allPoints.find(({ fake }) => !fake)) {
+        nonFakePrefetchedStates.push(prefetchedState);
+      }
+    }));
+
+    const statesToAnalyse = nonFakePrefetchedStates.length ?
+      nonFakePrefetchedStates : prefetchedStates;
+    const maxNewestPointTimestamp = Math.max(
+      ...statesToAnalyse.map(({ newestPointTimestamp }) => newestPointTimestamp)
+    );
+    chartConfigurations.forEach((configuration) => {
+      configuration.newestPointTimestamp = maxNewestPointTimestamp;
+      configuration.newestEdgeTimestamp =
+        maxNewestPointTimestamp +
+        configuration.getViewParameters().timeResolution - 1;
+      configuration.setViewParameters({
+        lastPointTimestamp: maxNewestPointTimestamp,
+      });
+    });
   },
 });
 
