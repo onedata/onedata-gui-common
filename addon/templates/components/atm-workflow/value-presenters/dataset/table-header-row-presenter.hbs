@@ -1,6 +1,8 @@
+{{yield (hash section="start")}}
 <th class="column-name">
   {{#truncated-string}}{{tt this "name"}}{{/truncated-string}}
 </th>
 <th class="column-root-file-path">
   {{#truncated-string}}{{tt this "rootFilePath"}}{{/truncated-string}}
 </th>
+{{yield (hash section="end")}}
