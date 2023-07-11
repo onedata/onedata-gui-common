@@ -64,9 +64,13 @@ export default Action.extend({
    * @override
    */
   onExecute() {
+    // It is important to firstly set `isRemoved` and detach nested elements
+    // after that. When element detaches, then it tries to figure out why detach
+    // ocurred by checking i.a. `isRemoved` flag of the parent. See more in
+    // function-renderer component.
+    set(this.functionToRemove, 'isRemoved', true);
     this.detachArgumentFunctions();
     this.removeReferences();
-    set(this.functionToRemove, 'isRemoved', true);
 
     this.changeViewState({
       elementsToDeselect: [this.functionToRemove],
@@ -77,9 +81,9 @@ export default Action.extend({
    * @override
    */
   onExecuteUndo() {
-    set(this.functionToRemove, 'isRemoved', false);
     this.rollbackReferencesRemoval();
     this.reattachArgumentFunctions();
+    set(this.functionToRemove, 'isRemoved', false);
   },
 
   /**

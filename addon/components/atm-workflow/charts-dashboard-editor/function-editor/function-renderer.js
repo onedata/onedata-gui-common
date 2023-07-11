@@ -13,6 +13,7 @@ import { dasherize } from '@ember/string';
 import {
   getFunctionNameTranslation,
   getFunctionArgumentNameTranslation,
+  ElementType,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import dom from 'onedata-gui-common/utils/dom';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
@@ -56,6 +57,15 @@ export default Component.extend({
    * @type {ComputedProperty<Array<FunctionRendererArgument>>}
    */
   functionArguments: undefined,
+
+  /**
+   * Contains current parent chart function (if exists). Is not a computed - is
+   * set `parentObserver`. That approach allows to analyse difference between old
+   * and new parent values.
+   * Is null, when element's parent is not a chart function.
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null}
+   */
+  parentChartFunction: null,
 
   /**
    * @type {ComputedProperty<SafeString>}
@@ -113,7 +123,17 @@ export default Component.extend({
     }
   ),
 
-  detachDetector: observer('chartFunction.parent', function detachDetector() {
+  parentObserver: observer('chartFunction.parent', function parentObserver() {
+    if (this.parentChartFunction === this.chartFunction.parent) {
+      return;
+    }
+    const wasParentRemoved = this.parentChartFunction?.isRemoved ?? false;
+    this.set(
+      'parentChartFunction',
+      this.chartFunction.parent?.elementType === ElementType.Function ?
+      this.chartFunction.parent : null
+    );
+
     if (!this.element) {
       return;
     }
@@ -134,9 +154,15 @@ export default Component.extend({
       isDetached &&
       !isDetachedInDom
     ) {
-
       const position = dom.position(functionBlock, rootFunctionBlock);
-      set(this.chartFunction, 'positionRelativeToRootFunc', position);
+      const detachPositionOffset = {
+        top: 0,
+        left: wasParentRemoved ? 0 : 100,
+      };
+      set(this.chartFunction, 'positionRelativeToRootFunc', {
+        top: position.top + detachPositionOffset.top,
+        left: position.left + detachPositionOffset.left,
+      });
     }
   }),
 
@@ -145,6 +171,7 @@ export default Component.extend({
    */
   init() {
     this._super(...arguments);
+    this.parentObserver();
     this.functionArgumentsSetter();
   },
 
