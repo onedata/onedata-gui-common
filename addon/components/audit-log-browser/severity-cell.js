@@ -21,9 +21,9 @@ const defaultSeverityIcons = Object.freeze({
   [EntrySeverity.Info]: 'browser-info',
   [EntrySeverity.Notice]: 'browser-info',
   [EntrySeverity.Warning]: 'checkbox-filled-warning',
-  [EntrySeverity.Alert]: 'checkbox-filled-warning',
   [EntrySeverity.Error]: 'checkbox-filled-x',
   [EntrySeverity.Critical]: 'checkbox-filled-x',
+  [EntrySeverity.Alert]: 'checkbox-filled-x',
   [EntrySeverity.Emergency]: 'checkbox-filled-x',
 });
 

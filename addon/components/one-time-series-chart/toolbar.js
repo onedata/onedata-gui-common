@@ -142,7 +142,7 @@ export default Component.extend(I18n, {
       const maxMoveableState = get(moveableModels[0], 'state');
       const newLastPointTimestamp = maxMoveableState.firstPointTimestamp -
         maxMoveableState.timeResolution;
-      moveableModels.forEach((model) => {
+      this.getModels().forEach((model) => {
         if (get(model, 'state.lastPointTimestamp') > newLastPointTimestamp) {
           model.setViewParameters({
             lastPointTimestamp: newLastPointTimestamp,
@@ -167,7 +167,7 @@ export default Component.extend(I18n, {
       const minMoveableState = get(moveableModels[0], 'state');
       const newLastPointTimestamp = minMoveableState.lastPointTimestamp +
         minMoveableState.timeResolution * minMoveableState.pointsCount;
-      moveableModels.forEach((model) => {
+      this.getModels().forEach((model) => {
         if (get(model, 'state.lastPointTimestamp') < newLastPointTimestamp) {
           model.setViewParameters({
             lastPointTimestamp: newLastPointTimestamp,

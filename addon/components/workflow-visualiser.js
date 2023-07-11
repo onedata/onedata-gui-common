@@ -111,12 +111,18 @@ import {
   translateWorkflowStatus,
   workflowEndedStatuses,
   workflowSuspendedStatuses,
+  taskEndedStatuses,
+  taskSuspendedStatuses,
 } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 import { typeOf } from '@ember/utils';
 import dom from 'onedata-gui-common/utils/dom';
 import validateAtmWorkflowSchemaRevision from 'onedata-gui-common/utils/atm-workflow/validate-atm-workflow-schema-revision';
 
+const nonActiveTaskStatuses = [
+  ...taskEndedStatuses,
+  ...taskSuspendedStatuses,
+];
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
 const statsUpdateInterval = 3000;
@@ -290,6 +296,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
   }),
 
   /**
+   * NOTE: Generated stores, unlike to defined ones, don't function as
+   * standalone entities. These are rather stores created on-demand, owned
+   * by models which need them. Also the lifecycle of the generated store is
+   * tightly coupled with its parent. Example: audit log or time series a of task.
+   * Some store state properties (like `contentMayChange` value) are determined
+   * by the state of the parent model.
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
   generatedStores: computed('executionState', function generatedStores() {
@@ -671,6 +683,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
     );
     const systemAuditLogStore = systemAuditLogStoreInstanceId &&
       this.getStoreByInstanceId(systemAuditLogStoreInstanceId);
+    if (systemAuditLogStore) {
+      // Updating generated store state. See more in `generatedStores` field docs
+      set(
+        systemAuditLogStore,
+        'contentMayChange',
+        !this.isExecutionEnded && !this.isExecutionSuspended
+      );
+    }
 
     const existingWorkflow = this.getCachedElement('workflow');
 
@@ -1093,6 +1113,16 @@ export default Component.extend(I18n, WindowResizeHandler, {
         systemAuditLogStore: this.getStoreByInstanceId(systemAuditLogStoreInstanceId),
         timeSeriesStore: this.getStoreByInstanceId(timeSeriesStoreInstanceId),
       });
+      ['systemAuditLogStore', 'timeSeriesStore'].forEach((taskStoreName) => {
+        if (normalizedRunsRegistry[runNumber][taskStoreName]) {
+          // Updating generated stores state. See more in `generatedStores` field docs
+          set(
+            normalizedRunsRegistry[runNumber][taskStoreName],
+            'contentMayChange',
+            !nonActiveTaskStatuses.includes(normalizedRunsRegistry[runNumber].status)
+          );
+        }
+      });
     });
     parentRunNumbers.forEach((parentRunNumber) => {
       if (!(parentRunNumber in normalizedRunsRegistry)) {
@@ -1242,6 +1272,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     );
     const contentMayChange = instanceId && !this.isExecutionEnded &&
       !this.isExecutionSuspended;
+    const isStoreGenerated = !schemaId;
 
     const existingStore =
       (instanceId && this.getCachedElement('store', { instanceId })) ||
@@ -1263,7 +1294,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
         config,
         defaultInitialContent,
         requiresInitialContent,
-        contentMayChange,
+        // `contentMayChange` of generated stores can be changed to `true` only by
+        // its container (e.g. task or workflow).
+        contentMayChange: (isStoreGenerated && contentMayChange) ?
+          existingStore.contentMayChange : contentMayChange,
       });
       return existingStore;
     } else {
