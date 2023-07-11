@@ -162,38 +162,6 @@ export default Component.extend({
     })();
   },
 
-  // /**
-  //  * @override
-  //  */
-  // willDestroyElement() {
-  //   try {
-  //     if (this.element) {
-  //       const isInDetachedFunctionsContainer =
-  //         Boolean(this.element.closest('.detached-functions-container'));
-  //       const isDetached =
-  //         this.chartFunction.parent?.detachedFunctions?.includes(this.chartFunction);
-  //       const rootFunctionBlock = this.element.closest('.root-function')?.querySelector(':scope > .function-block');
-  //       const functionBlock = this.element.querySelector('.function-block');
-
-  //       // When function becomes detached -> persist its current coordinates
-  //       // relative to the root function (as root function position is considered
-  //       // constant).
-  //       if (
-  //         functionBlock &&
-  //         rootFunctionBlock &&
-  //         isDetached &&
-  //         !isInDetachedFunctionsContainer
-  //       ) {
-
-  //         const position = dom.position(functionBlock, rootFunctionBlock);
-  //         set(this.chartFunction, 'positionRelativeToRootFunc', position);
-  //       }
-  //     }
-  //   } finally {
-  //     this._super(...arguments);
-  //   }
-  // },
-
   recalculateArgumentLinePositions() {
     const argumentElements = this.element.querySelectorAll(
       ':scope > .function-arguments-container > .function-argument');

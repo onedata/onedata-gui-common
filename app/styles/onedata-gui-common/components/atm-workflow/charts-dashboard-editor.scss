@@ -724,6 +724,12 @@
       padding: 3em;
     }
 
+    .functions-container {
+      position: relative;
+      display: grid;
+      align-self: center;
+    }
+
     .function-renderer {
       display: inline-flex;
       align-items: center;
@@ -901,6 +907,8 @@
     }
 
     .detached-functions-container {
+      display: contents;
+
       > .function-renderer {
         position: absolute;
       }

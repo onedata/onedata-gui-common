@@ -40,19 +40,6 @@ export default Component.extend({
   actionsFactory: undefined,
 
   /**
-   * @type {ResizeObserver |null}
-   */
-  functionsContainerResizeObserver: undefined,
-
-  /**
-   * @override
-   */
-  didInsertElement() {
-    this._super(...arguments);
-    this.setupFunctionsContainerResizeObserver();
-  },
-
-  /**
    * @override
    */
   didRender() {
@@ -67,49 +54,6 @@ export default Component.extend({
   },
 
   /**
-   * @override
-   */
-  willDestroyElement() {
-    try {
-      this.teardownFunctionsContainerResizeObserver();
-    } finally {
-      this._super(...arguments);
-    }
-  },
-
-  /**
-   * Resize observer is responsible for triggering recalculation of detached
-   * function positions.
-   * @returns {void}
-   */
-  setupFunctionsContainerResizeObserver() {
-    if (this.resizeObserver) {
-      return;
-    }
-
-    const functionsContainer = this.element?.querySelector('.functions-container');
-    // Check whether ResizeObserver API is available
-    if (!ResizeObserver || !functionsContainer) {
-      return;
-    }
-
-    const resizeObserver = new ResizeObserver(() => {
-      this.recalculateDetachedFunctionPositions();
-    });
-    resizeObserver.observe(functionsContainer);
-
-    this.set('functionsContainerResizeObserver', resizeObserver);
-  },
-
-  /**
-   * @returns {void}
-   */
-  teardownFunctionsContainerResizeObserver() {
-    this.functionsContainerResizeObserver?.disconnect();
-    this.set('functionsContainerResizeObserver', null);
-  },
-
-  /**
    * @returns {void}
    */
   recalculateDetachedFunctionPositions() {
@@ -119,40 +63,96 @@ export default Component.extend({
     const detachedFunctionRenderers = this.element?.querySelectorAll(
       '.detached-functions-container > .function-renderer'
     );
-    if (!rootFunctionBlock || !detachedFunctionRenderers?.length) {
+
+    if (rootFunctionBlock && detachedFunctionRenderers?.length) {
+      const rootFunctionBlockPosition = dom.position(
+        rootFunctionBlock,
+        rootFunctionBlock.closest('.functions-container')
+      );
+
+      [...detachedFunctionRenderers].forEach((detachedFunctionRenderer) => {
+        const detachedFunctionId = detachedFunctionRenderer.dataset['functionId'];
+        const detachedFunction = this.detachedFunctions?.find(({ id }) =>
+          id === detachedFunctionId
+        );
+        const detachedFunctionBlock = detachedFunctionRenderer.querySelector(
+          ':scope > .function-block'
+        );
+        if (!detachedFunction?.positionRelativeToRootFunc || !detachedFunctionBlock) {
+          return;
+        }
+        const detachedBlockInRendererPosition = dom.position(
+          detachedFunctionBlock,
+          detachedFunctionRenderer
+        );
+        const newDetachedLeftCoord = rootFunctionBlockPosition.left +
+          detachedFunction.positionRelativeToRootFunc.left -
+          detachedBlockInRendererPosition.left;
+        const newDetachedTopCoord = rootFunctionBlockPosition.top +
+          detachedFunction.positionRelativeToRootFunc.top -
+          detachedBlockInRendererPosition.top;
+        dom.setStyles(detachedFunctionRenderer, {
+          left: `${newDetachedLeftCoord}px`,
+          top: `${newDetachedTopCoord}px`,
+        });
+      });
+    }
+
+    this.recalculateFunctionsContainerExtraMargin();
+  },
+
+  /**
+   * @returns {void}
+   */
+  recalculateFunctionsContainerExtraMargin() {
+    const functionsContainer = this.element?.querySelector('.functions-container');
+    const detachedFunctionRenderers = this.element?.querySelectorAll(
+      '.detached-functions-container > .function-renderer'
+    ) ?? [];
+    if (!functionsContainer) {
       return;
     }
 
-    const rootFunctionBlockPosition = dom.position(
-      rootFunctionBlock,
-      rootFunctionBlock.closest('.functions-container')
-    );
-
+    const overflowDetectors = {
+      top: (funcRenderer) => Math.max(
+        dom.position(funcRenderer, functionsContainer).top * -1,
+        0
+      ),
+      bottom: (funcRenderer) => Math.max(
+        dom.position(funcRenderer, functionsContainer).top + dom.height(funcRenderer) -
+        dom.height(functionsContainer),
+        0
+      ),
+      left: (funcRenderer) => Math.max(
+        dom.position(funcRenderer, functionsContainer).left * -1,
+        0
+      ),
+      right: (funcRenderer) => Math.max(
+        dom.position(funcRenderer, functionsContainer).left + dom.width(funcRenderer) -
+        dom.width(functionsContainer),
+        0
+      ),
+    };
+    const extraMargins = {
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+    };
     [...detachedFunctionRenderers].forEach((detachedFunctionRenderer) => {
-      const detachedFunctionId = detachedFunctionRenderer.dataset['functionId'];
-      const detachedFunction = this.detachedFunctions?.find(({ id }) =>
-        id === detachedFunctionId
-      );
-      const detachedFunctionBlock = detachedFunctionRenderer.querySelector(
-        ':scope > .function-block'
-      );
-      if (!detachedFunction?.positionRelativeToRootFunc || !detachedFunctionBlock) {
-        return;
-      }
-      const detachedBlockInRendererPosition = dom.position(
-        detachedFunctionBlock,
-        detachedFunctionRenderer
-      );
-      const newDetachedLeftCoord = rootFunctionBlockPosition.left +
-        detachedFunction.positionRelativeToRootFunc.left -
-        detachedBlockInRendererPosition.left;
-      const newDetachedTopCoord = rootFunctionBlockPosition.top +
-        detachedFunction.positionRelativeToRootFunc.top -
-        detachedBlockInRendererPosition.top;
-      dom.setStyles(detachedFunctionRenderer, {
-        left: `${newDetachedLeftCoord}px`,
-        top: `${newDetachedTopCoord}px`,
+      Object.keys(extraMargins).forEach((side) => {
+        extraMargins[side] = Math.max(
+          overflowDetectors[side](detachedFunctionRenderer),
+          extraMargins[side]
+        );
       });
+    });
+
+    dom.setStyles(functionsContainer, {
+      marginTop: `${extraMargins.top}px`,
+      marginBottom: `${extraMargins.bottom}px`,
+      marginLeft: `${extraMargins.left}px`,
+      marginRight: `${extraMargins.right}px`,
     });
   },
 });
