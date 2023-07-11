@@ -10,13 +10,6 @@
 const guidRegexp = /guid#(.*)#(.*)/;
 const shareGuidRegexp = /shareGuid#(.*)#(.*)#(.*)/;
 
-// FIXME: rename
-
-// FIXME: zmienione nazwy, sprawdzić we wszystkich projektach:
-// getInternalFileIdFromFileId
-// getSpaceIdFromFileId
-// getShareIdFromFileId
-
 /**
  * @param {String} fileEntityId
  * @returns {String}
