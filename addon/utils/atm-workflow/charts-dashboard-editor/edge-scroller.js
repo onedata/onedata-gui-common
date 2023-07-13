@@ -1,5 +1,5 @@
 /**
- * Performs automatic scrolling to an (Y axis) edge when cursor is near that
+ * Performs automatic scrolling to an element edge when cursor is near that
  * edge. Speed of scrolling depends on how close your mouse is to the edge.
  *
  * @author Michał Borzęcki
@@ -9,13 +9,36 @@
 
 import dom from 'onedata-gui-common/utils/dom';
 
+/**
+ * @typedef {Object} EdgeScrollerOptions
+ * @property {number} [maxVelocity]
+ * @property {number} [frameDuration]
+ */
+
+/**
+ * @typedef {Object} EdgeScrollerScrollEventMovement
+ * @property {'top' | 'bottom' | 'left' | 'right'} targetDirection
+ * @property {number} availableDistance
+ * @property {number} wantedDistance
+ * @property {number} scrolledDistance
+ */
+
+/**
+ * @typedef {Object} EdgeScrollerScrollEvent
+ * @property {Array<EdgeScrollerScrollEventMovement>} scrollMovements
+ */
+
+/**
+ * @typedef {(event: EdgeScrollerScrollEvent) => void)} EdgeScrollerScrollEventListener
+ */
+
 export default class EdgeScroller {
   /**
    * @public
    * @param {HTMLElement} element
-   * @param {number} maxVelocity
+   * @param {EdgeScrollerOptions} options
    */
-  constructor(element, maxVelocity = 1500) {
+  constructor(element, { maxVelocity = 1500, frameDuration = 20 } = {}) {
     /**
      * @private
      * @type {HTMLElement}
@@ -30,15 +53,21 @@ export default class EdgeScroller {
 
     /**
      * @private
+     * @type {number}
+     */
+    this.frameDuration = frameDuration;
+
+    /**
+     * @private
      * @type {boolean}
      */
     this.isEnabled = false;
 
     /**
      * @private
-     * @type {number}
+     * @type {{ x: number, y: number }}
      */
-    this.velocity = 0;
+    this.velocity = { x: 0, y: 0 };
 
     /**
      * @private
@@ -48,9 +77,15 @@ export default class EdgeScroller {
 
     /**
      * @private
-     * @type {number}
+     * @type {{ x: number, y: number }}
      */
-    this.lastScrollTimestampMillis = 0;
+    this.lastScrollTimestampMillis = { x: 0, y: 0 };
+
+    /**
+     * @private
+     * @type {Set<EdgeScrollerScrollEventListener>}
+     */
+    this.scrollListeners = new Set();
 
     this.element.addEventListener('mousemove', this.mouseMoveHandler);
     this.element.addEventListener('dragover', this.mouseMoveHandler);
@@ -67,6 +102,7 @@ export default class EdgeScroller {
 
     this.element.removeEventListener('mousemove', this.mouseMoveHandler);
     this.element.removeEventListener('dragover', this.mouseMoveHandler);
+    this.scrollListeners.clear();
   }
 
   /**
@@ -82,13 +118,40 @@ export default class EdgeScroller {
    * @returns {void}
    */
   disable() {
-    this.changeVelocity(0);
+    this.changeVelocity({ x: 0, y: 0 });
     this.isEnabled = false;
   }
 
   /**
+   * @public
+   * @param {EdgeScrollerScrollEventListener} listener
+   * @returns {void}
+   */
+  addScrollEventListener(listener) {
+    this.scrollListeners.add(listener);
+  }
+
+  /**
+   * @public
+   * @param {EdgeScrollerScrollEventListener} listener
+   * @returns {void}
+   */
+  removeScrollEventListener(listener) {
+    this.scrollListeners.delete(listener);
+  }
+
+  /**
    * @private
-   * @param {number} newVelocity
+   * @param {EdgeScrollerScrollEvent} event
+   * @returns {void}
+   */
+  emitScrollEvent(event) {
+    this.scrollListeners.forEach((listener) => listener(event));
+  }
+
+  /**
+   * @private
+   * @param {{ x: number, y: number }} newVelocity
    * @returns {void}
    */
   changeVelocity(newVelocity) {
@@ -99,7 +162,11 @@ export default class EdgeScroller {
     const oldVelocity = this.velocity;
     this.velocity = newVelocity;
 
-    if (oldVelocity === 0 && newVelocity !== 0) {
+    if (
+      oldVelocity.x === 0 &&
+      oldVelocity.y === 0 &&
+      (newVelocity.x !== 0 || newVelocity.y !== 0)
+    ) {
       this.startScrolling();
     }
   }
@@ -109,7 +176,7 @@ export default class EdgeScroller {
    * @returns {void}
    */
   startScrolling() {
-    this.lastScrollTimestampMillis = Date.now();
+    this.lastScrollTimestampMillis = { x: Date.now(), y: Date.now() };
     this.scheduleNextScrollFrame();
   }
 
@@ -126,33 +193,41 @@ export default class EdgeScroller {
     // Filtering out events with incorrect mouse coordinates. These may
     // sometimes happen when the mouse pointer exits the browser window.
     if (event.pageX === 0 && event.pageY === 0) {
-      this.changeVelocity(0);
+      this.changeVelocity({ x: 0, y: 0 });
       return;
     }
 
-    const scrollableAreaHeight = dom.height(this.element, dom.LayoutBox.PaddingBox);
-    const triggeringAreaHeight = Math.min(scrollableAreaHeight / 3, 50);
-    const pointerYInScrollableArea =
-      Math.max(event.pageY - dom.offset(this.element).top, 0);
+    const newVelocity = { x: 0, y: 0 };
+    ['x', 'y'].forEach((axis) => {
+      const scrollableAreaSize = (axis === 'x' ? dom.width : dom.height)(
+        this.element,
+        dom.LayoutBox.PaddingBox
+      );
+      const triggeringAreaSize = Math.max(Math.min(scrollableAreaSize / 3, 50), 1);
+      const pointerPositionInScrollableArea =
+        Math.max(
+          event[axis === 'x' ? 'pageX' : 'pageY'] -
+          dom.offset(this.element)[axis === 'x' ? 'left' : 'top'],
+          0
+        );
 
-    if (triggeringAreaHeight < 1) {
-      this.changeVelocity(0);
-      return;
-    }
+      let axisVelocityFraction = 0;
+      let axisVelocitySign = 1;
+      if (pointerPositionInScrollableArea < triggeringAreaSize) {
+        axisVelocityFraction = 1 - (pointerPositionInScrollableArea / triggeringAreaSize);
+        axisVelocitySign = -1;
+      } else if (
+        pointerPositionInScrollableArea > scrollableAreaSize - triggeringAreaSize
+      ) {
+        axisVelocityFraction = (
+          pointerPositionInScrollableArea - (scrollableAreaSize - triggeringAreaSize)
+        ) / triggeringAreaSize;
+      }
+      newVelocity[axis] = Math.floor(this.maxVelocity * axisVelocityFraction) *
+        axisVelocitySign;
+    });
 
-    let velocityFraction = 0;
-    let velocitySign = 1;
-    if (pointerYInScrollableArea < triggeringAreaHeight) {
-      velocityFraction = 1 - (pointerYInScrollableArea / triggeringAreaHeight);
-      velocitySign = -1;
-    } else if (pointerYInScrollableArea > scrollableAreaHeight - triggeringAreaHeight) {
-      velocityFraction = (
-        pointerYInScrollableArea - (scrollableAreaHeight - triggeringAreaHeight)
-      ) / triggeringAreaHeight;
-    }
-
-    const velocity = Math.floor(this.maxVelocity * velocityFraction) * velocitySign;
-    this.changeVelocity(velocity);
+    this.changeVelocity(newVelocity);
   }
 
   /**
@@ -161,44 +236,101 @@ export default class EdgeScroller {
    */
   scheduleNextScrollFrame() {
     requestAnimationFrame(() => {
-      if (this.velocity === 0) {
+      if (this.velocity.x === 0 && this.velocity.y === 0) {
         return;
       }
 
-      const totalPxToScroll = this.getTotalPxToScroll(this.velocity < 0 ? 'up' : 'down');
-      if (totalPxToScroll < 1) {
-        this.changeVelocity(0);
-        return;
+      const scrollBy = {};
+      const scrollMovements = [];
+      ['x', 'y'].forEach((axis) => {
+        if (this.velocity[axis] === 0) {
+          return;
+        }
+
+        const millisSincePrevScroll = Date.now() - this.lastScrollTimestampMillis[axis];
+        const totalPxToScroll = this.getTotalPxToScroll(
+          axis,
+          this.velocity[axis] < 0 ? 'toStart' : 'toEnd'
+        );
+        const pxToScrollNow = (this.velocity[axis] / 1000) * millisSincePrevScroll;
+        const targetDirection = this.normalizeAxisDirectionToTargetDirection(
+          axis,
+          this.velocity[axis] < 0 ? 'toStart' : 'toEnd'
+        );
+        if (totalPxToScroll >= 1) {
+          if (Math.abs(pxToScrollNow) > 1) {
+            scrollBy[axis === 'x' ? 'left' : 'top'] = pxToScrollNow;
+            this.lastScrollTimestampMillis[axis] = Date.now();
+            scrollMovements.push({
+              targetDirection,
+              availableDistance: totalPxToScroll,
+              wantedDistance: Math.abs(pxToScrollNow),
+              scrolledDistance: Math.min(Math.abs(pxToScrollNow), totalPxToScroll),
+            });
+          }
+        } else {
+          // Scrolling is impossible as we reached the end of element. From now
+          // we behave like each scroll frame works, but just scrolls by 0 pixels.
+          this.lastScrollTimestampMillis[axis] = Date.now();
+          scrollMovements.push({
+            targetDirection,
+            availableDistance: totalPxToScroll,
+            wantedDistance: Math.abs(pxToScrollNow),
+            scrolledDistance: 0,
+          });
+        }
+      });
+
+      if (Object.keys(scrollBy).length > 0) {
+        this.element.scrollBy(scrollBy);
+      }
+      if (scrollMovements.length) {
+        this.emitScrollEvent({ scrollMovements });
       }
 
-      const millisSincePrevScroll = Date.now() - this.lastScrollTimestampMillis;
-      const pxToScrollNow = (this.velocity / 1000) * millisSincePrevScroll;
-      if (Math.abs(pxToScrollNow) > 1) {
-        this.element.scrollBy({ top: pxToScrollNow });
-        this.lastScrollTimestampMillis = Date.now();
-      }
-
-      this.scheduleNextScrollFrame();
+      setTimeout(() => this.scheduleNextScrollFrame(), this.frameDuration);
     });
   }
 
   /**
    * @private
-   * @param {'up'|'down'} direction
+   * @param {'x' | 'y'} axis
+   * @param {'toStart' | 'toEnd'} axisDirection
    * @returns {number}
    */
-  getTotalPxToScroll(direction) {
-    const scrollableAreaHeight = dom.height(this.element, dom.LayoutBox.PaddingBox);
-    const scrollableContentHeight = this.element.scrollHeight;
-    const scrollTopPosition = this.element.scrollTop;
+  getTotalPxToScroll(axis, axisDirection) {
+    const checkXAxis = axis === 'x';
 
-    if (direction === 'up') {
-      return scrollTopPosition;
+    const scrollableAreaSize = (checkXAxis ? dom.width : dom.height)(
+      this.element,
+      dom.LayoutBox.PaddingBox
+    );
+    const scrollableContentSize = checkXAxis ?
+      this.element.scrollWidth : this.element.scrollHeight;
+    const scrollPosition = checkXAxis ?
+      this.element.scrollLeft : this.element.scrollTop;
+
+    if (axisDirection === 'toStart') {
+      return scrollPosition;
     } else {
       return Math.max(
-        scrollableContentHeight - (scrollTopPosition + scrollableAreaHeight),
+        scrollableContentSize - (scrollPosition + scrollableAreaSize),
         0,
       );
+    }
+  }
+
+  /**
+   * @private
+   * @param {'x' | 'y'} axis
+   * @param {'toStart' | 'toEnd'} axisDirection
+   * @returns {'top' | 'bottom' | 'left' | 'right'}
+   */
+  normalizeAxisDirectionToTargetDirection(axis, axisDirection) {
+    if (axis === 'x') {
+      return axisDirection === 'toStart' ? 'left' : 'right';
+    } else {
+      return axisDirection === 'toStart' ? 'top' : 'bottom';
     }
   }
 }

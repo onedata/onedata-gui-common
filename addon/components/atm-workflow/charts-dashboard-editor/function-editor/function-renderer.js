@@ -6,10 +6,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Component from '@ember/component';
 import { set, computed, observer, defineProperty } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { dasherize } from '@ember/string';
+import { reads } from '@ember/object/computed';
+import { not } from 'ember-awesome-macros';
+import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import {
   getFunctionNameTranslation,
   getFunctionArgumentNameTranslation,
@@ -27,7 +29,7 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
  * @property {boolean} isArray
  */
 
-export default Component.extend({
+export default OneDraggableObject.extend({
   layout,
   classNames: ['function-renderer'],
   classNameBindings: ['chartFunction.isRoot:root-function'],
@@ -68,6 +70,12 @@ export default Component.extend({
   parentChartFunction: null,
 
   /**
+   * For one-draggable-object
+   * @override
+   */
+  dragHandle: '.function-block-header',
+
+  /**
    * @type {ComputedProperty<SafeString>}
    */
   readableName: computed('chartFunction.name', function readableName() {
@@ -87,6 +95,18 @@ export default Component.extend({
       return `atm-workflow/charts-dashboard-editor/function-editor/${dasherize(this.chartFunction.name)}-settings`;
     }
   ),
+
+  /**
+   * For one-draggable-object
+   * @override
+   */
+  isDraggable: not('chartFunction.isRoot'),
+
+  /**
+   * For one-draggable-object
+   * @override
+   */
+  content: reads('chartFunction'),
 
   functionArgumentsSetter: observer(
     'chartFunction.attachableArgumentSpecs',
