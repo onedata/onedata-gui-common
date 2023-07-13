@@ -64,4 +64,29 @@ describe('Unit | Utility | version', function () {
       ).to.be.false;
     }
   });
+
+  it('can be used to sort versions in ascending order', function () {
+    const unsortedVersions = [
+      '21.02.11',
+      '21.02.3',
+      '22.02.0-alpha1',
+      '21.02.0-alpha3',
+      '21.02.2',
+      '20.02.2',
+      '20.02.0-alpha10',
+      '21.02.4',
+    ];
+    const sortedVersions = [...unsortedVersions].sort(Version.compareVersions);
+
+    expect(sortedVersions).to.deep.equal([
+      '20.02.0-alpha10',
+      '20.02.2',
+      '21.02.0-alpha3',
+      '21.02.2',
+      '21.02.3',
+      '21.02.4',
+      '21.02.11',
+      '22.02.0-alpha1',
+    ]);
+  });
 });

@@ -13,6 +13,7 @@ import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import { or, tag } from 'ember-awesome-macros';
 import { scheduleOnce, next } from '@ember/runloop';
+import _ from 'lodash';
 
 /**
  * @typedef {Object} RouterTransitionInfo
@@ -224,14 +225,37 @@ export default BsModal.extend({
    */
   handleAppProxyPropertyChange(event) {
     const navigationProperties = this.appProxy.getNavigationProperties();
-    if (!navigationProperties.some((propName) => propName in event.changedProperties)) {
+    const cleanedEvent = this.cleanChangedPropertiesEvent(event);
+
+    if (
+      !navigationProperties.some((propName) =>
+        propName in cleanedEvent.changedProperties
+      )
+    ) {
       return;
     }
 
-    const transitionInfo = { type: 'appProxy', data: event };
+    const transitionInfo = { type: 'appProxy', data: cleanedEvent };
     if (this.calculateShouldCloseOnTransition(transitionInfo)) {
       this.send('close');
     }
+  },
+
+  /**
+   * Removes info about properties which values are deep equal from
+   * AppProxyPropertyChangeEvent object.
+   * @param {AppProxyPropertyChangeEvent} event
+   * @returns {AppProxyPropertyChangeEvent}
+   */
+  cleanChangedPropertiesEvent(event) {
+    const realChangedProperties = {};
+    for (const propertyName in event.changedProperties) {
+      const { prevValue, newValue } = event.changedProperties[propertyName];
+      if (!_.isEqual(prevValue, newValue)) {
+        realChangedProperties[propertyName] = { prevValue, newValue };
+      }
+    }
+    return { ...event, changedProperties: realChangedProperties };
   },
 
   /**

@@ -9,6 +9,7 @@
 export default {
   isRequiredVersion,
   parseVersion,
+  compareVersions,
   compareMinorVersions,
 };
 
@@ -46,6 +47,21 @@ export function parseVersion(version) {
     major,
     minor,
   };
+}
+
+export function compareVersions(aVer, bVer) {
+  if (aVer === bVer) {
+    return 0;
+  }
+  const { major: aMajor, minor: aMinor } = parseVersion(aVer);
+  const { major: bMajor, minor: bMinor } = parseVersion(bVer);
+  if (aMajor === bMajor) {
+    return compareMinorVersions(aMinor, bMinor);
+  } else if (aMajor < bMajor) {
+    return -1;
+  } else if (aMajor > bMajor) {
+    return 1;
+  }
 }
 
 export function compareMinorVersions(aVer, bVer) {
