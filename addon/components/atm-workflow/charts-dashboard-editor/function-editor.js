@@ -50,9 +50,14 @@ export default Component.extend({
   edgeScroller: undefined,
 
   /**
-   * @type {ResizeObserver |null}
+   * @type {ResizeObserver | null}
    */
-  scrollableContainerResizeObserver: undefined,
+  scrollableContainerResizeObserver: null,
+
+  /**
+   * @type {PerfectScrollbarApi | null}
+   */
+  scrollbarApi: null,
 
   edgeScrollerEnabler: observer(
     'dragDrop.draggedElementModel.elementType',
@@ -277,6 +282,7 @@ export default Component.extend({
         `${extraMargins[side]}px`
       );
     });
+    this.scrollbarApi?.update();
   },
 
   /**
@@ -293,6 +299,7 @@ export default Component.extend({
         '0px'
       );
     });
+    this.scrollbarApi?.update();
   },
 
   /**
@@ -318,6 +325,7 @@ export default Component.extend({
         );
       }
     });
+    this.scrollbarApi?.update();
   },
 
   /**
@@ -332,5 +340,16 @@ export default Component.extend({
    */
   getFunctionsContainer() {
     return this.element?.querySelector('.functions-container') ?? null;
+  },
+
+  actions: {
+    /**
+     * @param {PerfectScrollbarApi} api
+     * @returns {void}
+     */
+    registerScrollbarApi(api) {
+      this.set('scrollbarApi', api);
+      console.log(api);
+    },
   },
 });
