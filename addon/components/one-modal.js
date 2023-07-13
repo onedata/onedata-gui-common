@@ -228,7 +228,6 @@ export default BsModal.extend({
     const cleanedEvent = this.cleanChangedPropertiesEvent(event);
 
     if (
-      !event.changedProperties.length ||
       !navigationProperties.some((propName) =>
         propName in cleanedEvent.changedProperties
       )
