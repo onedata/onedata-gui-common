@@ -7,10 +7,12 @@
  */
 
 import Route from '@ember/routing/route';
+import globals from 'onedata-gui-common/utils/globals';
+
 export default Route.extend({
   activate() {
     this._super(...arguments);
-    const preAppLoadingElement = document.getElementById('index-pre-app-loading');
+    const preAppLoadingElement = globals.document.getElementById('index-pre-app-loading');
     if (preAppLoadingElement) {
       preAppLoadingElement.remove();
     }

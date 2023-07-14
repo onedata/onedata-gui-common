@@ -92,15 +92,20 @@ export default OnePieChart.extend({
           'supportInfoFieldName'
         );
         if (get(spaces, 'isFulfilled')) {
-          return A(spaces.map(space => {
-            const spaceId = get(space, 'id');
-            return EmberObject.create({
-              id: spaceId,
-              label: get(space, 'name'),
-              value: get(space, supportInfoFieldName)[providerId],
-              color: spacesColors[spaceId],
-            });
-          }));
+          // TODO: VFS-11005 Handle single load errors
+          return A(
+            spaces
+            .filter(space => space && !get(space, 'isRejected'))
+            .map(space => {
+              const spaceId = get(space, 'id');
+              return EmberObject.create({
+                id: spaceId,
+                label: get(space, 'name'),
+                value: get(space, supportInfoFieldName)[providerId],
+                color: spacesColors[spaceId],
+              });
+            })
+          );
         } else {
           return [];
         }

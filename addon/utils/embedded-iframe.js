@@ -36,6 +36,7 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { assert } from '@ember/debug';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default EmberObject.extend({
   guiUtils: service(),
@@ -95,11 +96,6 @@ export default EmberObject.extend({
   iframeError: undefined,
 
   /**
-   * @type {Document}
-   */
-  _document: document,
-
-  /**
    * @type {Ember.ComputedProperty<Object>}
    * Mapping actionName -> callback, that will be injected to iframe.
    */
@@ -121,12 +117,11 @@ export default EmberObject.extend({
    */
   iframeElement: computed(function iframeElement() {
     const {
-      _document,
       iframeId,
       iframeOnLoadHandler,
-    } = this.getProperties('_document', 'iframeId', 'iframeOnLoadHandler');
+    } = this.getProperties('iframeId', 'iframeOnLoadHandler');
 
-    const iframe = _document.createElement('iframe');
+    const iframe = globals.document.createElement('iframe');
     iframe.id = iframeId;
     iframe.addEventListener('load', iframeOnLoadHandler);
     iframe[sharedObjectName] = {

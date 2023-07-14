@@ -8,50 +8,62 @@
  * - `interval` can be always changed - it will start new interval timer and clear old
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import EmberObject, { observer } from '@ember/object';
-import Evented, { on } from '@ember/object/evented';
+import Evented from '@ember/object/evented';
 import { cancel, later } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default EmberObject.extend(Evented, {
-  _intervalId: null,
-
+  /**
+   * Time in milliseconds between the `tick` event (callback invocation).
+   * @virtual optional
+   * @type {number|null}
+   */
   interval: null,
 
   /**
    * If true, the tick notify will be launched right after changing interval
+   * @virtual optional
    * @type {boolean}
    */
   immediate: false,
+
+  //#region state
 
   /**
    * @type {any}
    */
   nextNotifyTimer: undefined,
 
-  resetInterval: on('init', observer('interval', function () {
-    const {
-      immediate,
-      interval,
-      _intervalId,
-    } = this.getProperties('immediate', 'interval', '_intervalId');
-    if (_intervalId != null) {
-      clearInterval(_intervalId);
+  _intervalId: null,
+
+  /**
+   * Stores last value of interval to compare with current interval when it changes.
+   * @type {number|null}
+   */
+  lastInterval: undefined,
+
+  //#endregion
+
+  intervalObserver: observer('interval', function intervalObserver() {
+    if (this.interval === this.lastInterval) {
+      return;
     }
-    if (interval && interval > 0) {
-      this.set(
-        '_intervalId',
-        setInterval(this.notify.bind(this), interval)
-      );
-      if (immediate) {
-        this.notify();
-      }
+    this.set('lastInterval', this.interval);
+    this.restartInterval();
+    if (this.interval > 0 && this.immediate) {
+      this.notify();
     }
-  })),
+  }),
+
+  init() {
+    this._super(...arguments);
+    this.intervalObserver();
+  },
 
   destroy() {
     try {
@@ -72,5 +84,17 @@ export default EmberObject.extend(Evented, {
       'nextNotifyTimer',
       later(() => safeExec(this, () => this.trigger('tick')))
     );
+  },
+
+  restartInterval() {
+    if (this._intervalId != null) {
+      clearInterval(this._intervalId);
+    }
+    if (this.interval > 0) {
+      this.set(
+        '_intervalId',
+        setInterval(this.notify.bind(this), this.interval)
+      );
+    }
   },
 });

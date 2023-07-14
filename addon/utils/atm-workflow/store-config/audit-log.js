@@ -34,9 +34,7 @@ export function getWriteDataSpecFilters(storeConfig) {
       filterType: 'typeOrSubtype',
       types: [logContentDataSpec, {
         type: 'array',
-        valueConstraints: {
-          itemDataSpec: logContentDataSpec,
-        },
+        itemDataSpec: logContentDataSpec,
       }],
     });
   }

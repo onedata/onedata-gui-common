@@ -1,7 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-/* eslint-disable max-len */
-
 /**
  * A function that adds a ``conflictLabel`` property for each conflicting record
  * in some array.
@@ -24,10 +20,11 @@ import _ from 'lodash';
 /**
  * Assigns a `conflictLabel` property for each record in array.
  * See utils/conflict-ids for details about conflict ids algorithm.
- * @param {Array.Object|Array.EmberObject} records
+ * @param {Array<Object | EmberObject>} records
  * @param {string} conflictProperty
  * @param {string} diffProperty
  * @param {string} [defaultId]
+ * @returns {Array<Object | EmberObject>}
  */
 export default function addConflictLabels(
   records,
@@ -70,13 +67,18 @@ function groupConflictingRecords(records, conflictProperty) {
  */
 function assignConflictLabels(conflictingRecords, diffProperty, defaultId) {
   if (conflictingRecords.length > 1) {
-    const conflictLabels = conflictIds(_.map(conflictingRecords, r => get(r, diffProperty)));
+    const conflictLabels = conflictIds(
+      _.map(conflictingRecords, r => get(r, diffProperty))
+    );
     // removing conflict labels for defaultId
     for (let i = 0; i < conflictingRecords.length; i += 1) {
       const record = conflictingRecords[i];
       const currentConflictLabel = get(record, 'conflictLabel');
       if (currentConflictLabel) {
-        if (conflictLabels[i] !== null && conflictLabels[i] > currentConflictLabel.length) {
+        if (
+          conflictLabels[i] !== null &&
+          conflictLabels[i] > currentConflictLabel.length
+        ) {
           set(record, 'conflictLabel', conflictLabels[i]);
         }
       } else {

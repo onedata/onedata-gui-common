@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * Trims token from whitespaces and all special characters. Only digits and
  * ASCII letters are allowed.
@@ -20,8 +17,7 @@ export default function trimToken(token) {
   if (token === null || token === undefined) {
     return token;
   } else {
-    token = String(token);
-    const correctTokenParts = token.match(tokenRegexp);
+    const correctTokenParts = String(token).match(tokenRegexp);
     return correctTokenParts ? correctTokenParts.join('') : '';
   }
 }

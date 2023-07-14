@@ -18,6 +18,7 @@ import { get } from '@ember/object';
 import sinon from 'sinon';
 import { lookupService } from '../../helpers/stub-service';
 import OneSidebar from 'onedata-gui-common/components/one-sidebar';
+import globals from 'onedata-gui-common/utils/globals';
 
 const TestableOneSidebar = OneSidebar.extend({
   didInsertElement() {
@@ -189,16 +190,14 @@ describe('Integration | Component | one-sidebar', function () {
   it(
     'does not render expanded advanced filters when localstorage has key oneSidebar.areAdvancedFiltersVisible == "false"',
     async function () {
-      const _localStorage = {
+      globals.mock('localStorage', {
         getItem: sinon.stub()
           .withArgs('oneSidebar.areAdvancedFiltersVisible').returns('false'),
-      };
-      this.set('_localStorage', _localStorage);
+      });
 
       await render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="test-component"
-        _localStorage=_localStorage
       }}`);
 
       expect(find('.advanced-filters-collapse.in .test-component')).to.not.exist;
@@ -212,16 +211,14 @@ describe('Integration | Component | one-sidebar', function () {
     it(
       `renders expanded advanced filters when localstorage has key oneSidebar.areAdvancedFiltersVisible == ${JSON.stringify(value)}`,
       async function () {
-        const _localStorage = {
+        globals.mock('localStorage', {
           getItem: sinon.stub()
             .withArgs('oneSidebar.areAdvancedFiltersVisible').returns(value),
-        };
-        this.set('_localStorage', _localStorage);
+        });
 
         await render(hbs `{{one-sidebar
           model=model
           advancedFiltersComponent="test-component"
-          _localStorage=_localStorage
         }}`);
 
         expect(find('.advanced-filters-collapse.in .test-component')).to.exist;
@@ -232,28 +229,26 @@ describe('Integration | Component | one-sidebar', function () {
   it(
     'remembers advanced filters collapse state in localstorage oneSidebar.areAdvancedFiltersVisible key',
     async function () {
-      const _localStorage = {
+      globals.mock('localStorage', {
         getItem: sinon.stub().returns('true'),
         setItem: sinon.spy(),
-      };
-      this.set('_localStorage', _localStorage);
+      });
 
       await render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="test-component"
-        _localStorage=_localStorage
       }}`);
 
       return click('.toggle-more-filters')
         .then(() => {
-          expect(_localStorage.setItem).to.be.calledOnce;
-          expect(_localStorage.setItem)
+          expect(globals.localStorage.setItem).to.be.calledOnce;
+          expect(globals.localStorage.setItem)
             .to.be.calledWith('oneSidebar.areAdvancedFiltersVisible', 'false');
           return click('.toggle-more-filters');
         })
         .then(() => {
-          expect(_localStorage.setItem).to.be.calledTwice;
-          expect(_localStorage.setItem.lastCall)
+          expect(globals.localStorage.setItem).to.be.calledTwice;
+          expect(globals.localStorage.setItem.lastCall)
             .to.be.calledWith('oneSidebar.areAdvancedFiltersVisible', 'true');
         });
     }
@@ -261,5 +256,5 @@ describe('Integration | Component | one-sidebar', function () {
 });
 
 function clearLocalStorage() {
-  localStorage.removeItem('oneSidebar.areAdvancedFiltersVisible');
+  globals.localStorage.removeItem('oneSidebar.areAdvancedFiltersVisible');
 }

@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Provides data and implementation of utils specific for gui,
  * that uses onedata-gui-common.
@@ -15,6 +12,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import modelRoutableId from 'onedata-gui-common/utils/model-routable-id';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Service.extend(I18n, {
   i18n: service(),
@@ -95,7 +93,7 @@ export default Service.extend(I18n, {
     const session = this.get('session');
     const loggingOut = session.invalidate();
     loggingOut.then(() =>
-      window.location.href = this.getAfterLogoutRedirectUrl()
+      globals.location.href = this.getAfterLogoutRedirectUrl()
     );
     loggingOut.catch(error => {
       this.get('globalNotify').backendError(this.t('loggingOut'), error);
@@ -110,6 +108,6 @@ export default Service.extend(I18n, {
   getAfterLogoutRedirectUrl() {
     // Redirect to main page with cleared out routing data
     // (these after '#' and '?' characters)
-    return window.location.href.match(/(^[^#?]*)/)[0];
+    return globals.location.href.match(/(^[^#?]*)/)[0];
   },
 });

@@ -1,0 +1,35 @@
+{{#one-button size="sm" class="visible-properties-btn clickable"}}
+  {{tt this "visibleProperties"
+    total=availableProperties.length
+    visible=visibleProperties.length
+  }}
+{{/one-button}}
+{{#one-webui-popover
+  class="store-presenter-properties-popover"
+  triggerSelector=(local-selector elementId ".visible-properties-btn")
+}}
+  {{#perfect-scrollbar-element class="properties-list-container"}}
+    <ul class="properties-list">
+      {{#each availableProperties as |property|}}
+        <li class="property">
+          {{one-checkbox
+            class="property-checkbox"
+            inputId=(concat elementId "-" property)
+            checked=(contains property visibleProperties)
+            update=(action onTogglePropertyVisibility property)
+          }}
+          <label for={{concat elementId "-" property}}>
+            {{#truncated-string}}{{property}}{{/truncated-string}}
+          </label>
+        </li>
+      {{else}}
+        {{tt this "noDetectedProperties"}}
+      {{/each}}
+    </ul>
+    {{#if isMaxPropertiesCountReached}}
+      <small class="limited-properties-message text-muted">
+        {{tt this "limitedProperties" count=availableProperties.length}}
+      </small>
+    {{/if}}
+  {{/perfect-scrollbar-element}}
+{{/one-webui-popover}}

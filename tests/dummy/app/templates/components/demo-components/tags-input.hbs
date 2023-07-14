@@ -20,3 +20,15 @@
 
 <h2>Readonly</h2>
 {{tags-input tags=tags readonly=true}}
+
+<h2>Tooltip with tags</h2>
+<p>
+  <strong>
+    <span>Hover me!</span>
+    {{#one-tooltip class="tooltip-items tooltip-with-tags"}}
+      <ul class="tags-input">
+        {{#each (repeat 50)}}<li class="tag-item">Hello</li><li class="tag-item">World</li>{{/each}}
+      </ul>
+    {{/one-tooltip}}
+  </strong>
+</p>

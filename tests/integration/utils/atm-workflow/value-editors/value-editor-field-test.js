@@ -158,10 +158,8 @@ describe('Integration | Utility | atm-workflow/value-editors/value-editor-field'
     it('propagates new value and validation state from nested editor', async function () {
       this.set('field.atmDataSpec', {
         type: AtmDataSpecType.Array,
-        valueConstraints: {
-          itemDataSpec: {
-            type: AtmDataSpecType.Number,
-          },
+        itemDataSpec: {
+          type: AtmDataSpecType.Number,
         },
       });
       await renderForm();

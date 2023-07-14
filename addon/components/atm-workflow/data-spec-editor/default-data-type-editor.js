@@ -1,7 +1,7 @@
 /**
  * Renders a representation of data spec type. In simple cases it is only name + toolbar.
- * It more complicated (like "timeSeriesMeasurement" type) renders also a form with
- * additional controls for value constraints.
+ * In more complicated (like "timeSeriesMeasurement" type) renders also a form with
+ * additional controls for data spec params.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -13,7 +13,7 @@ import { computed, observer, set, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { translateAtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
-import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
+import paramsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/params-editors';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/default-data-type-editor';
 
 export default Component.extend({
@@ -108,8 +108,8 @@ export default Component.extend({
       i18n,
     } = this.getProperties('dataType', 'formValues', 'i18n');
 
-    const summarizeFormValues = dataType in valueConstraintsEditors &&
-      valueConstraintsEditors[dataType].summarizeFormValues;
+    const summarizeFormValues = dataType in paramsEditors &&
+      paramsEditors[dataType].summarizeFormValues;
     if (summarizeFormValues) {
       return summarizeFormValues(i18n, get(formValues || {}, 'dataTypeEditor'));
     }

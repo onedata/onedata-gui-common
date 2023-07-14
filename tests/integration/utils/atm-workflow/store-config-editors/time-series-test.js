@@ -16,6 +16,7 @@ import { get } from '@ember/object';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import timeSeriesEditor from 'onedata-gui-common/utils/atm-workflow/store-config-editors/time-series';
+import globals from 'onedata-gui-common/utils/globals';
 
 const nameGeneratorTypeOptions = [{
   value: 'exact',
@@ -126,7 +127,8 @@ describe('Integration | Utility | atm-workflow/store-config-editors/time-series'
     await click('.add-field-button');
     await clickTrigger('.nameGeneratorType-field');
 
-    const optionElements = document.querySelectorAll('.ember-power-select-option');
+    const optionElements =
+      globals.document.querySelectorAll('.ember-power-select-option');
     expect(optionElements).to.have.length(nameGeneratorTypeOptions.length);
     nameGeneratorTypeOptions.forEach(({ label }, idx) =>
       expect(optionElements[idx].textContent.trim()).to.equal(label)
@@ -150,7 +152,8 @@ describe('Integration | Utility | atm-workflow/store-config-editors/time-series'
     await click('.add-field-button');
     await clickTrigger('.unit-field');
 
-    const optionElements = document.querySelectorAll('.ember-power-select-option');
+    const optionElements =
+      globals.document.querySelectorAll('.ember-power-select-option');
     expect(optionElements).to.have.length(unitOptions.length);
     unitOptions.forEach(({ label }, idx) =>
       expect(optionElements[idx].textContent.trim()).to.equal(label)
@@ -294,7 +297,7 @@ describe('Integration | Utility | atm-workflow/store-config-editors/time-series'
       expect(this.get('rootGroup.isValid')).to.be.true;
     });
 
-  it('allows to show existing measurement specs from value constraints', async function () {
+  it('allows to show existing measurement specs from store config', async function () {
     const formValues = timeSeriesEditor.storeConfigToFormValues({
       timeSeriesCollectionSchema: {
         timeSeriesSchemas: [{

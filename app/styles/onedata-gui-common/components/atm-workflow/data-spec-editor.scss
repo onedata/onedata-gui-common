@@ -52,6 +52,14 @@
 
   .form-summary-toggle {
     font-size: 80%;
+
+    .separator {
+      display: inline-block;
+      height: 1em;
+      margin: 0 0.3em;
+      border-right: 1px solid currentColor;
+    }
+
     * {
       vertical-align: middle;
     }

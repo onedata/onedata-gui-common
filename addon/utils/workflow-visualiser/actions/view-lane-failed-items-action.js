@@ -70,6 +70,11 @@ export default Action.extend({
   getStoreContentCallback: reads('context.getStoreContentCallback'),
 
   /**
+   * @type {ComputedProperty<AtmValuePresenterContext | undefined>}
+   */
+  storeContentPresenterContext: reads('context.storeContentPresenterContext'),
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   run: conditional(
@@ -87,23 +92,14 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    const {
-      exceptionStore,
-      getStoreContentCallback,
-      modalManager,
-    } = this.getProperties(
-      'exceptionStore',
-      'getStoreContentCallback',
-      'modalManager'
-    );
-
     const result = ActionResult.create();
-    return modalManager
+    return this.modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
-        store: exceptionStore,
+        store: this.exceptionStore,
         getStoreContentCallback: (...args) =>
-          getStoreContentCallback(exceptionStore, ...args),
+          this.getStoreContentCallback(this.exceptionStore, ...args),
+        storeContentPresenterContext: this.storeContentPresenterContext,
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');

@@ -9,12 +9,39 @@
 import BsModal from 'ember-bootstrap/components/bs-modal';
 import config from 'ember-get-config';
 import { guidFor } from '@ember/object/internals';
+import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import { or, tag } from 'ember-awesome-macros';
 import { scheduleOnce, next } from '@ember/runloop';
+import _ from 'lodash';
+
+/**
+ * @typedef {Object} RouterTransitionInfo
+ * @property {'transition'} type
+ * @property {Transition} data
+ */
+
+/**
+ * @typedef {Object} AppProxyTransitionInfo
+ * @property {'appProxy'} type
+ * @property {AppProxyPropertyChangeEvent} data
+ */
+
+/**
+ * @typedef {RouterTransitionInfo | AppProxyTransitionInfo} TransitionInfo
+ */
 
 export default BsModal.extend({
   tagName: '',
+
+  router: service(),
+  appProxy: service(),
+
+  /**
+   * @virtual optional
+   * @type {boolean | (transitionInfo: TransitionInfo) => boolean}
+   */
+  shouldCloseOnTransition: true,
 
   /**
    * In original source code modalId depends on elementId which is null here,
@@ -28,7 +55,7 @@ export default BsModal.extend({
    * due to an empty tag.
    * @override
    */
-  backdropId: tag `${'componentGuid'}-backdrop`,
+  backdropId: tag`${'componentGuid'}-backdrop`,
 
   /**
    * @type {ComputedProperty<String>}
@@ -42,6 +69,20 @@ export default BsModal.extend({
    */
   recomputeScrollShadowFunction: computed(function recomputeScrollShadowFunction() {
     return this.recomputeScrollShadow.bind(this);
+  }),
+
+  /**
+   * @type {ComputedProperty<(transition: Transition) => void>}
+   */
+  routeChangeHandler: computed(function routeChangeHandler() {
+    return (transition) => this.handleRouteChange(transition);
+  }),
+
+  /**
+   * @type {ComputedProperty<(event: AppProxyPropertyChangeEvent) => void>}
+   */
+  appProxyPropertyChangeHandler: computed(function appProxyPropertyChangeHandler() {
+    return (event) => this.handleAppProxyPropertyChange(event);
   }),
 
   sizeObserver: observer('size', function sizeObserver() {
@@ -61,6 +102,8 @@ export default BsModal.extend({
         backdropTransitionDuration: 1,
       });
     }
+    this.registerRouteChangeHandler();
+    this.registerAppProxyPropertyChangeHandler();
   },
 
   /**
@@ -77,6 +120,18 @@ export default BsModal.extend({
       if (scrollableArea) {
         scrollableArea.dispatchEvent(new Event('parentrender'));
       }
+    }
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.unregisterRouteChangeHandler();
+      this.unregisterAppProxyPropertyChangeHandler();
+    } finally {
+      this._super(...arguments);
     }
   },
 
@@ -131,5 +186,84 @@ export default BsModal.extend({
         }
       }
     }
+  },
+
+  registerRouteChangeHandler() {
+    this.router.on('routeDidChange', this.routeChangeHandler);
+  },
+
+  unregisterRouteChangeHandler() {
+    this.router.off('routeDidChange', this.routeChangeHandler);
+  },
+
+  registerAppProxyPropertyChangeHandler() {
+    this.appProxy.registerPropertyChangeListener(this.appProxyPropertyChangeHandler);
+  },
+
+  unregisterAppProxyPropertyChangeHandler() {
+    this.appProxy.unregisterPropertyChangeListener(this.appProxyPropertyChangeHandler);
+  },
+
+  /**
+   * @param {Transition} transition
+   * @returns {void}
+   */
+  handleRouteChange(transition) {
+    if (transition.isAborted) {
+      return;
+    }
+
+    const transitionInfo = { type: 'transition', data: transition };
+    if (this.calculateShouldCloseOnTransition(transitionInfo)) {
+      this.send('close');
+    }
+  },
+
+  /**
+   * @param {AppProxyPropertyChangeEvent} event
+   * @returns {void}
+   */
+  handleAppProxyPropertyChange(event) {
+    const navigationProperties = this.appProxy.getNavigationProperties();
+    const cleanedEvent = this.cleanChangedPropertiesEvent(event);
+
+    if (
+      !navigationProperties.some((propName) =>
+        propName in cleanedEvent.changedProperties
+      )
+    ) {
+      return;
+    }
+
+    const transitionInfo = { type: 'appProxy', data: cleanedEvent };
+    if (this.calculateShouldCloseOnTransition(transitionInfo)) {
+      this.send('close');
+    }
+  },
+
+  /**
+   * Removes info about properties which values are deep equal from
+   * AppProxyPropertyChangeEvent object.
+   * @param {AppProxyPropertyChangeEvent} event
+   * @returns {AppProxyPropertyChangeEvent}
+   */
+  cleanChangedPropertiesEvent(event) {
+    const realChangedProperties = {};
+    for (const propertyName in event.changedProperties) {
+      const { prevValue, newValue } = event.changedProperties[propertyName];
+      if (!_.isEqual(prevValue, newValue)) {
+        realChangedProperties[propertyName] = { prevValue, newValue };
+      }
+    }
+    return { ...event, changedProperties: realChangedProperties };
+  },
+
+  /**
+   * @param {TransitionInfo} transitionInfo
+   * @returns {boolean}
+   */
+  calculateShouldCloseOnTransition(transitionInfo) {
+    return typeof this.shouldCloseOnTransition === 'function' ?
+      this.shouldCloseOnTransition(transitionInfo) : this.shouldCloseOnTransition;
   },
 });

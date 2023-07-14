@@ -3,3 +3,44 @@
 .loading-container-inline-error {
   color: $color-one-danger;
 }
+.loading-container-label {
+  @include font-semibold;
+  opacity: $disabled-opacity;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateY(100%);
+  padding-top: 15%;
+  text-align: center;
+  margin-left: calc(-1 * var(--loading-container-label-additional-space));
+  margin-right: calc(-1 * var(--loading-container-label-additional-space));
+
+  &.loading-container-label-xxs {
+    padding-top: 40%;
+    font-size: 80%;
+    --loading-container-label-additional-space: 4em;
+  }
+
+  &.loading-container-label-xs {
+    padding-top: 30%;
+    font-size: 90%;
+    --loading-container-label-additional-space: 4em;
+  }
+
+  &.loading-container-label-sm {
+    padding-top: 20%;
+    font-size: 95%;
+    --loading-container-label-additional-space: 4em;
+  }
+
+  &.loading-container-label-md {
+    --loading-container-label-additional-space: 50%;
+  }
+
+  &.loading-container-label-lg {
+    padding-top: 10%;
+    font-size: 120%;
+    --loading-container-label-additional-space: 50%;
+  }
+}

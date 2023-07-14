@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * Provides viewer and editor of QoS parameters for storage (but is pretty
  * universal an may by used in the future for another similiar problems)
@@ -181,16 +178,14 @@ export default Component.extend(I18n, {
    * @returns {QosParamRecord} created record
    */
   addEmptyEditRecord(recordsArray = undefined, disableAnimation = false) {
-    if (!recordsArray) {
-      recordsArray = this.get('paramEditRecords');
-    }
+    const normalizedRecordsArray = recordsArray ?? this.paramEditRecords;
 
     const newRecord = QosParamRecord.create({
       isEditingKey: true,
       disableCreateAnimation: disableAnimation,
       validateKey: this.get('validateKey'),
     });
-    recordsArray.pushObject(newRecord);
+    normalizedRecordsArray.pushObject(newRecord);
 
     return newRecord;
   },

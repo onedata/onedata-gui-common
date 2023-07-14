@@ -1,3 +1,4 @@
+{{yield (hash section="start")}}
 {{#if columns.length}}
   {{#each columns as |column|}}
     <th class="column-object-property">
@@ -7,3 +8,4 @@
 {{else}}
   <th class="column-value">{{tt this "value"}}</th>
 {{/if}}
+{{yield (hash section="end")}}

@@ -3,6 +3,7 @@ import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, triggerEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | truncated-string', function () {
   setupRenderingTest();
@@ -15,7 +16,7 @@ describe('Integration | Component | truncated-string', function () {
     `);
 
     return triggerEvent('.truncated-string', 'mouseover')
-      .then(() => expect(document.querySelector('.tooltip.in')).to.not.exist);
+      .then(() => expect(globals.document.querySelector('.tooltip.in')).to.not.exist);
   });
 
   it('shows tooltip with full text, when text is not fully visible', async function () {
@@ -31,7 +32,7 @@ describe('Integration | Component | truncated-string', function () {
 
     return triggerEvent('.truncated-string', 'mouseover')
       .then(() =>
-        expect(document.querySelector('.tooltip.in').textContent.trim())
+        expect(globals.document.querySelector('.tooltip.in').textContent.trim())
         .to.equal(longText)
       );
   });

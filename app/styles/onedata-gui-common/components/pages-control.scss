@@ -1,0 +1,85 @@
+.pages-control {
+  display: flex;
+  align-items: center;
+  &.without-page-number-input {
+    > .pages-control-current-page-prefix, > .pages-control-current-page {
+      margin-right: 0.3em;
+    }
+  }
+  > * {
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+  .pages-control-current-page {
+    max-width: 4.5em;
+  }
+  .pages-control-btn {
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: $main-text-color;
+    &:hover {
+      color: darken($color-one-mint, 20%);
+    }
+    &:disabled {
+      color: $main-text-color-inactive;
+    }
+  }
+  .pages-control-page-size {
+    margin-left: 1em;
+    color: $main-text-color-inactive;
+  }
+  // allow wrapping in mobile mode for safety - but you should handle styles
+  // in mobile mode specifically for view context, because wrapping looks bad anyway
+  @media (max-width: $screen-xs-max) {
+    flex-wrap: wrap;
+  }
+}
+
+/// Styles for pages-control in various common contexts
+
+.header-row h1.with-pages-control {
+  display: flex;
+  justify-content: space-between;
+}
+
+h1.with-pages-control .pages-control {
+  text-transform: none;
+  font-size: 75%;
+  letter-spacing: initial;
+  flex-grow: 1;
+  margin-left: 2em;
+  @include font-regular;
+}
+
+.bottom-pages-control {
+  font-size: 90%;
+  justify-content: end;
+  margin-top: 3em;
+  margin-right: 2em;
+}
+
+.content-with-pages-control {
+  @media (max-width: 900px) {
+    .pages-control {
+      .pages-control-page-size {
+        display: none;
+      }
+    }
+  }
+  @media (max-width: 800px) {
+    h1.with-pages-control .pages-control {
+      display: none;
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .bottom-pages-control {
+      margin-right: 0;
+      justify-content: center;
+    }
+  }
+}

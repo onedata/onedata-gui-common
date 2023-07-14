@@ -6,7 +6,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-/* eslint-disable max-len */
 export const exampleMarkdownShort = `
 # Hello world
 

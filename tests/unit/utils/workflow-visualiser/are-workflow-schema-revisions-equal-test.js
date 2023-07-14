@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import areWorkflowSchemaRevisionsEqual from 'onedata-gui-common/utils/workflow-visualiser/are-workflow-schema-revisions-equal';
@@ -9,14 +6,6 @@ describe('Unit | Utility | workflow-visualiser/are-workflow-schema-revisions-equ
   it('returns true for two identical revisions', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
-    expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
-  });
-
-  it('returns true when config.itemDataSpec.valueConstraints changed from {} to empty', function () {
-    const revision1 = getExampleWorkflowSchemaRevision();
-    const revision2 = getExampleWorkflowSchemaRevision();
-    revision1.stores[0].config.itemDataSpec.valueConstraints = {};
-    delete revision2.stores[0].config.itemDataSpec.valueConstraints;
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
 
@@ -72,8 +61,10 @@ describe('Unit | Utility | workflow-visualiser/are-workflow-schema-revisions-equ
   it('returns true when valueBuilderRecipe changed from null to empty', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
-    revision1.lanes[0].parallelBoxes[0].tasks[0].argumentMappings[0].valueBuilder.valueBuilderRecipe = null;
-    delete revision2.lanes[0].parallelBoxes[0].tasks[0].argumentMappings[0].valueBuilder.valueBuilderRecipe;
+    revision1.lanes[0].parallelBoxes[0].tasks[0]
+      .argumentMappings[0].valueBuilder.valueBuilderRecipe = null;
+    delete revision2.lanes[0].parallelBoxes[0].tasks[0]
+      .argumentMappings[0].valueBuilder.valueBuilderRecipe;
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
 
@@ -87,35 +78,41 @@ describe('Unit | Utility | workflow-visualiser/are-workflow-schema-revisions-equ
   it('returns true when empty storeContentUpdateOptions is omitted in resultMappings', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
-    delete revision1.lanes[0].parallelBoxes[0].tasks[0].resultMappings[0].storeContentUpdateOptions;
-    revision2.lanes[0].parallelBoxes[0].tasks[0].resultMappings[0].storeContentUpdateOptions = {
-      type: 'singleValueStoreContentUpdateOptions',
-    };
+    delete revision1.lanes[0].parallelBoxes[0].tasks[0]
+      .resultMappings[0].storeContentUpdateOptions;
+    revision2.lanes[0].parallelBoxes[0].tasks[0]
+      .resultMappings[0].storeContentUpdateOptions = {
+        type: 'singleValueStoreContentUpdateOptions',
+      };
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
 
   it('returns false when non-empty storeContentUpdateOptions is omitted in resultMappings', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
-    delete revision1.lanes[0].parallelBoxes[0].tasks[0].resultMappings[1].storeContentUpdateOptions;
-    revision2.lanes[0].parallelBoxes[0].tasks[0].resultMappings[1].storeContentUpdateOptions = {
-      type: 'treeForestStoreContentUpdateOptions',
-      function: 'append',
-    };
+    delete revision1.lanes[0].parallelBoxes[0].tasks[0]
+      .resultMappings[1].storeContentUpdateOptions;
+    revision2.lanes[0].parallelBoxes[0].tasks[0]
+      .resultMappings[1].storeContentUpdateOptions = {
+        type: 'treeForestStoreContentUpdateOptions',
+        function: 'append',
+      };
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.false;
   });
 
   it('returns false when non-empty storeContentUpdateOptions changes in resultMappings', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
-    revision1.lanes[0].parallelBoxes[0].tasks[0].resultMappings[1].storeContentUpdateOptions = {
-      type: 'treeForestStoreContentUpdateOptions',
-      function: 'append',
-    };
-    revision2.lanes[0].parallelBoxes[0].tasks[0].resultMappings[1].storeContentUpdateOptions = {
-      type: 'treeForestStoreContentUpdateOptions',
-      function: 'extend',
-    };
+    revision1.lanes[0].parallelBoxes[0].tasks[0]
+      .resultMappings[1].storeContentUpdateOptions = {
+        type: 'treeForestStoreContentUpdateOptions',
+        function: 'append',
+      };
+    revision2.lanes[0].parallelBoxes[0].tasks[0]
+      .resultMappings[1].storeContentUpdateOptions = {
+        type: 'treeForestStoreContentUpdateOptions',
+        function: 'extend',
+      };
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.false;
   });
 
@@ -218,7 +215,6 @@ function getExampleWorkflowSchemaRevision() {
       defaultInitialContent: null,
       config: {
         itemDataSpec: {
-          valueConstraints: {},
           type: 'number',
         },
       },
@@ -231,7 +227,6 @@ function getExampleWorkflowSchemaRevision() {
       defaultInitialContent: null,
       config: {
         itemDataSpec: {
-          valueConstraints: {},
           type: 'number',
         },
       },

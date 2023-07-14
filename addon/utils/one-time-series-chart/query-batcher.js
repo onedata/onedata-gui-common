@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Allows to batch multiple time-series data queries into a (usually) smaller
  * number of requests. It is possible, because backend API allows to fetch
@@ -60,8 +57,6 @@ import config from 'ember-get-config';
 /**
  * @typedef {Object} QueryBatcherInitOptions
  * @property {QueryBatchFetchDataCallback} fetchData
- * @property {(func: () => unknown, timeout: number) => unknown} [setTimeout]
- * @property {(setTimeoutTimer: unknown) => void} [clearTimeout]
  */
 
 export default class QueryBatcher {
@@ -69,11 +64,7 @@ export default class QueryBatcher {
    * @public
    * @param {QueryBatcherInitOptions} params
    */
-  constructor({
-    fetchData,
-    setTimeout = window.setTimeout.bind(window),
-    clearTimeout = window.clearTimeout.bind(window),
-  }) {
+  constructor({ fetchData }) {
     /**
      * @public
      * @type {QueryBatchFetchDataCallback}
@@ -86,18 +77,6 @@ export default class QueryBatcher {
      * @type {number}
      */
     this.batchAccumulationTime = config.environment === 'test' ? 1 : 5;
-
-    /**
-     * @private
-     * @type {(func: () => unknown, timeout: number) => unknown}
-     */
-    this.setTimeout = setTimeout;
-
-    /**
-     * @private
-     * @type {(setTimeoutTimer: unknown) => void}
-     */
-    this.clearTimeout = clearTimeout;
 
     /**
      * @private
@@ -120,7 +99,7 @@ export default class QueryBatcher {
    */
   destroy() {
     if (this.flushBatchTimer !== null) {
-      this.clearTimeout(this.flushBatchTimer);
+      clearTimeout(this.flushBatchTimer);
     }
   }
 
@@ -137,7 +116,7 @@ export default class QueryBatcher {
     this.currentBatch.addEntry(newBatchEntry);
 
     if (this.flushBatchTimer === null) {
-      this.flushBatchTimer = this.setTimeout(
+      this.flushBatchTimer = setTimeout(
         () => this.flushBatch(),
         this.batchAccumulationTime
       );

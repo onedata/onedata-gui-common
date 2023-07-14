@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Extends `ember-i18n` `t` helper by using translation prefix provided by
  * passed component object (which should implement `mixin:components/i18n`).
@@ -34,6 +31,7 @@ export default t.extend({
    * @param {string} key specific key of translation - will be appended
    *    to `tPrefix` of component
    * @param {object} contextObject for original `t` helper
+   * @returns {SafeString}
    */
   compute([component, key, contextObject], interpolations) {
     assert(

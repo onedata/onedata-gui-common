@@ -23,7 +23,7 @@ export function recordRange(start, end) {
   return _.range(start, end).map(i => new Record(i));
 }
 
-export class MockArray {
+export class SimpleMockArray {
   constructor() {
     this.array = recordRange(0, defaultMockArraySize);
   }
@@ -46,6 +46,17 @@ export class MockArray {
     );
     const endOffset = Math.min(startOffset + size, this.array.length);
     return this.array.slice(startOffset, endOffset);
+  }
+}
+
+export class MockArray extends SimpleMockArray {
+  /** @override */
+  async fetch(fromIndex, size) {
+    const superArray = await super.fetch(...arguments);
+    return {
+      array: superArray,
+      isLast: superArray.length < size,
+    };
   }
 }
 

@@ -15,6 +15,7 @@ import { onepanelAbbrev } from 'onedata-gui-common/utils/onedata-urls';
 import { or } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/content-clusters-onepanel-redirect';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * @typedef {Object} ClusterModel
@@ -52,7 +53,7 @@ export default Component.extend({
         aspect,
       } = this.getProperties('clusterId', 'aspect');
       let href =
-        `${location.origin}/${onepanelAbbrev}/${clusterId}/i#/onedata/clusters/${clusterId}`;
+        `${globals.location.origin}/${onepanelAbbrev}/${clusterId}/i#/onedata/clusters/${clusterId}`;
       if (aspect) {
         href += `/${aspect}`;
       }
@@ -68,7 +69,7 @@ export default Component.extend({
   },
 
   redirectToOnepanelApp() {
-    window.location.replace(this.get('onepanelHref'));
+    globals.location.replace(this.get('onepanelHref'));
   },
 
   redirectToOnepanel() {

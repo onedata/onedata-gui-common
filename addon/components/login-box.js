@@ -15,6 +15,7 @@ import layout from 'onedata-gui-common/templates/components/login-box';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
 import AuthenticationErrorMessage from 'onedata-gui-common/mixins/authentication-error-message';
 import { underscore } from '@ember/string';
+import globals from 'onedata-gui-common/utils/globals';
 
 export const sessionExpiredKey = 'sessionExpired';
 
@@ -70,8 +71,6 @@ export default Component.extend(AuthenticationErrorMessage, {
 
   isBusy: false,
 
-  _sessionStorage: sessionStorage,
-
   /**
    * True, if previous session has expired
    */
@@ -87,10 +86,9 @@ export default Component.extend(AuthenticationErrorMessage, {
   },
 
   consumeSessionExpiredFlag() {
-    const _sessionStorage = this.get('_sessionStorage');
-    if (_sessionStorage.getItem(sessionExpiredKey)) {
+    if (globals.sessionStorage.getItem(sessionExpiredKey)) {
       this.set('sessionHasExpired', true);
-      _sessionStorage.removeItem(sessionExpiredKey);
+      globals.sessionStorage.removeItem(sessionExpiredKey);
     }
   },
 

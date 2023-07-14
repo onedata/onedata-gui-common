@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 /**
  * Class responsible for generating colors in a deterministic and idempotent way.
  * Idempotency of generating colors in guaranteed ONLY within calls to the
@@ -118,7 +115,8 @@ export default class ColorGenerator {
     // Calculating shade brightness to generate. Subtracting from 1 to generate
     // lighter colors before darker ones (reversing order of brightnesses in the
     // shade level - e.g. 0.375 becomes 0.625).
-    const shadeBrightness = 1 - (darkestBrightnessInLevel + shadeIdxInLevel * brightnessDiffInLevel);
+    const shadeBrightness =
+      1 - (darkestBrightnessInLevel + shadeIdxInLevel * brightnessDiffInLevel);
 
     // Rescaling shade brightness to be valid for Color library:
     // - moving brightness value range so that 0.5 (no brightness change) is now on 0,

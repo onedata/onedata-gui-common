@@ -13,6 +13,7 @@ import { clickTrigger, selectChoose } from 'ember-power-select/test-support/help
 import sinon from 'sinon';
 import { get } from '@ember/object';
 import { timeSeriesMetricResolutionsMap } from 'onedata-gui-common/utils/time-series';
+import globals from 'onedata-gui-common/utils/globals';
 
 const resolutionOptions = [{
   label: '5 seconds',
@@ -137,7 +138,7 @@ describe('Integration | Component | tags-input/time-series-metric-selector-edito
     await click('.tag-creator-trigger');
     await clickTrigger('.aggregator-dropdown');
 
-    const options = document.querySelectorAll('.ember-power-select-option');
+    const options = globals.document.querySelectorAll('.ember-power-select-option');
     expect(options).to.have.length(aggregators.length);
     aggregators.forEach(({ name }, index) =>
       expect(options[index].textContent.trim()).to.equal(name)
@@ -352,7 +353,7 @@ describe('Integration | Component | tags-input/time-series-metric-selector-edito
 });
 
 function getSelector() {
-  return document.querySelector('.webui-popover.in .tags-selector');
+  return globals.document.querySelector('.webui-popover.in .tags-selector');
 }
 
 function getFullPresetLabel(aggregatorIdx, presetIdx) {

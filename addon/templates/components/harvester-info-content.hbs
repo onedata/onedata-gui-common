@@ -25,7 +25,7 @@
         }}
       </td>
     </tr>
-    {{#if publicUrl}}
+    {{#if (and showDetails publicUrl)}}
       <tr class="row-with-text">
         <td class="property-name">{{tt this "publicUrl"}}</td>
         <td class="property-value">
@@ -37,7 +37,7 @@
         </td>
       </tr>
     {{/if}}
-    {{#if showCreator}}
+    {{#if (and showDetails showCreator)}}
       <tr class="row-with-text">
         <td class="property-name">{{tt this "creator"}}</td>
         <td class="property-value">
@@ -49,7 +49,7 @@
         </td>
       </tr>
     {{/if}}
-    {{#if creationTime}}
+    {{#if (and showDetails creationTime)}}
       <tr class="row-with-text">
         <td class="property-name">{{tt this "creationTime"}}</td>
         <td class="property-value">
@@ -59,7 +59,7 @@
     {{/if}}
   </tbody>
 </table>
-{{#if linkToHarvester}}
+{{#if (and showDetails linkToHarvester)}}
   <div class="links-container">
     <a href={{linkToHarvester}} class="info-link clickable">
       {{tt this "openHarvester"}}

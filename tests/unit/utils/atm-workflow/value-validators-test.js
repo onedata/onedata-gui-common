@@ -6,19 +6,15 @@ import { AtmFileType } from 'onedata-gui-common/utils/atm-workflow/data-spec/typ
 
 const arrayDataSpec = {
   type: AtmDataSpecType.Array,
-  valueConstraints: {
-    itemDataSpec: {
-      type: 'number',
-    },
+  itemDataSpec: {
+    type: 'number',
   },
 };
 const booleanDataSpec = { type: AtmDataSpecType.Boolean };
 const datasetDataSpec = { type: AtmDataSpecType.Dataset };
 const fileDataSpec = {
   type: AtmDataSpecType.File,
-  valueConstraints: {
-    fileType: AtmFileType.Regular,
-  },
+  fileType: AtmFileType.Regular,
 };
 const numberDataSpec = { type: AtmDataSpecType.Number };
 const objectDataSpec = { type: AtmDataSpecType.Object };
@@ -116,43 +112,45 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   );
   itRecognizesValueAsValid(10, {
     ...numberDataSpec,
-    valueConstraints: { integersOnly: true },
+    integersOnly: true,
   });
   itRecognizesValueAsInvalid(10.5, {
     ...numberDataSpec,
-    valueConstraints: { integersOnly: true },
+    integersOnly: true,
   });
   itRecognizesValueAsValid(10, {
     ...numberDataSpec,
-    valueConstraints: { integersOnly: false },
+    integersOnly: false,
   });
   itRecognizesValueAsValid(10.5, {
     ...numberDataSpec,
-    valueConstraints: { integersOnly: false },
+    integersOnly: false,
   });
   itRecognizesValueAsValid(10, {
     ...numberDataSpec,
-    valueConstraints: { allowedValues: [5, 10] },
+    allowedValues: [5, 10],
   });
   itRecognizesValueAsValid(10, {
     ...numberDataSpec,
-    valueConstraints: { allowedValues: null },
+    allowedValues: null,
   });
   itRecognizesValueAsInvalid(10, {
     ...numberDataSpec,
-    valueConstraints: { allowedValues: [5] },
+    allowedValues: [5],
   });
   itRecognizesValueAsInvalid(10, {
     ...numberDataSpec,
-    valueConstraints: { allowedValues: [] },
+    allowedValues: [],
   });
   itRecognizesValueAsInvalid(10.5, {
     ...numberDataSpec,
-    valueConstraints: { allowedValues: [10.5], integersOnly: true },
+    allowedValues: [10.5],
+    integersOnly: true,
   });
   itRecognizesValueAsInvalid(10, {
     ...numberDataSpec,
-    valueConstraints: { allowedValues: [5], integersOnly: true },
+    allowedValues: [5],
+    integersOnly: true,
   });
 
   [{}, { someKey: 123 }].forEach((value) =>
@@ -247,19 +245,19 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   );
   itRecognizesValueAsValid('a', {
     ...stringDataSpec,
-    valueConstraints: { allowedValues: ['a', 'b'] },
+    allowedValues: ['a', 'b'],
   });
   itRecognizesValueAsValid('a', {
     ...stringDataSpec,
-    valueConstraints: { allowedValues: null },
+    allowedValues: null,
   });
   itRecognizesValueAsInvalid('a', {
     ...stringDataSpec,
-    valueConstraints: { allowedValues: ['b'] },
+    allowedValues: ['b'],
   });
   itRecognizesValueAsInvalid('a', {
     ...stringDataSpec,
-    valueConstraints: { allowedValues: [] },
+    allowedValues: [],
   });
 
   [{

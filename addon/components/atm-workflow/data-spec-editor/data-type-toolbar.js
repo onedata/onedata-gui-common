@@ -21,7 +21,7 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/editor-element-creators';
 import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import { formValuesToDataSpec } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
-import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
+import paramsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/params-editors';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/data-type-toolbar';
 
@@ -99,9 +99,7 @@ export default Component.extend(I18n, {
 
       const packedDataSpec = {
         type: 'array',
-        valueConstraints: {
-          itemDataSpec: formValuesToDataSpec(editorElement),
-        },
+        itemDataSpec: formValuesToDataSpec(editorElement),
       };
       return isAtmDataSpecMatchingFilters(
         packedDataSpec,
@@ -122,8 +120,8 @@ export default Component.extend(I18n, {
         this.get('editorElement.config.item.type') === 'dataType'
       ) {
         return true;
-      } else if (dataType in valueConstraintsEditors) {
-        return valueConstraintsEditors[dataType].shouldWarnOnRemove(
+      } else if (dataType in paramsEditors) {
+        return paramsEditors[dataType].shouldWarnOnRemove(
           this.get('editorElement.config.formValues.dataTypeEditor')
         );
       } else {
@@ -150,7 +148,9 @@ export default Component.extend(I18n, {
         return;
       }
 
-      this.notifyElementChange(createDataTypeSelectorElement());
+      this.notifyElementChange(createDataTypeSelectorElement({
+        includeExpandParams: this.editorElement.config.includeExpandParams,
+      }));
     },
     toggleRemoveWarn(newState) {
       const calculatedState = newState !== undefined ?
@@ -168,7 +168,8 @@ export default Component.extend(I18n, {
       }
 
       this.notifyElementChange(createDataTypeElement('array', {
-        item: this.get('editorElement'),
+        includeExpandParams: this.editorElement.config.includeExpandParams,
+        item: this.editorElement,
       }));
     },
     unpackFromArray() {
@@ -177,7 +178,9 @@ export default Component.extend(I18n, {
       }
 
       this.notifyElementChange(
-        this.get('editorElement.config.item') || createDataTypeSelectorElement()
+        this.get('editorElement.config.item') || createDataTypeSelectorElement({
+          includeExpandParams: this.editorElement.config.includeExpandParams,
+        })
       );
     },
   },

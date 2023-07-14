@@ -1,7 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Common application route procedures in every Onedata web GUI
  *
@@ -16,6 +12,7 @@ import { get } from '@ember/object';
 import _ from 'lodash';
 import smoothscroll from 'smoothscroll-polyfill';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Route.extend(ApplicationRouteMixin, {
   guiUtils: service(),
@@ -24,21 +21,22 @@ export default Route.extend(ApplicationRouteMixin, {
   /**
    * Function for ember-cli-document-title
    * @param {Array<string>} tokens
+   * @returns {string}
    */
   title(tokens) {
     const {
       guiName,
       guiType,
     } = this.get('guiUtils').getProperties('guiName', 'guiType');
-    tokens = tokens.filter(token => !!token);
-    if (!tokens.length) {
-      tokens = this.getNavTokens();
+    let resultTokens = tokens.filter(token => !!token);
+    if (!resultTokens.length) {
+      resultTokens = this.getNavTokens();
     }
-    tokens = [guiName, ...tokens, guiType].filter(token => !!token);
-    if (!tokens.length) {
-      tokens.push(this.t('onedata'));
+    resultTokens = [guiName, ...resultTokens, guiType].filter(token => !!token);
+    if (!resultTokens.length) {
+      resultTokens.push(this.t('onedata'));
     }
-    return tokens.join(' – ');
+    return resultTokens.join(' – ');
   },
 
   beforeModel(transition) {
@@ -82,13 +80,14 @@ export default Route.extend(ApplicationRouteMixin, {
     // smooth scroll for perfect scrollbar. As Firefox + Chrome cover most of
     // the GUI users, we enforce smooth scroll polyfill in every browser
     // for simplicity.
-    window.__forceSmoothScrollPolyfill__ = true;
+    globals.window.__forceSmoothScrollPolyfill__ = true;
     smoothscroll.polyfill();
   },
 
   actions: {
     /**
      * Allows to send transitionTo action from places that not supported it
+     * @returns {Promise}
      */
     transitionTo() {
       const transition = this.transitionTo(...arguments);

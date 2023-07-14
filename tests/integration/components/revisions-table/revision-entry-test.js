@@ -4,6 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
+import globals from 'onedata-gui-common/utils/globals';
 
 const componentClass = 'revisions-table-revision-entry';
 
@@ -78,7 +79,7 @@ describe('Integration | Component | revisions-table/revision-entry', function ()
 
     await click(actionsTrigger);
     const actions =
-      document.querySelectorAll('.webui-popover.in .actions-popover-content a');
+      globals.document.querySelectorAll('.webui-popover.in .actions-popover-content a');
     expect(actions).to.have.length(1);
     expect(actions[0].textContent).to.contain('testAction 3');
   });

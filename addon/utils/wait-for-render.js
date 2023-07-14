@@ -10,11 +10,12 @@
 
 import { schedule } from '@ember/runloop';
 import { Promise } from 'rsvp';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default function waitForRender() {
   return new Promise(resolve => {
     schedule('afterRender', this, () => {
-      window.requestAnimationFrame(() => {
+      globals.window.requestAnimationFrame(() => {
         resolve();
       });
     });

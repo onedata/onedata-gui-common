@@ -31,15 +31,18 @@ export const taskEndedStatuses = [
   'finished',
   'failed',
 ];
+export const taskSuspendedStatuses = [
+  'paused',
+  'interrupted',
+];
 const taskUnknownStatus = 'unknown';
 export const taskStatuses = [
   'pending',
   'resuming',
   'active',
   'stopping',
-  'paused',
-  'interrupted',
   'unscheduled',
+  ...taskSuspendedStatuses,
   ...taskEndedStatuses,
   taskUnknownStatus,
 ];

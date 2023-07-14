@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Copy properites from source to destination EmberObject, overwriting
  * properties that are both in source and desitination.

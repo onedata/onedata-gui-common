@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Provides controls to select condition parameters - property, comparator and
  * comparator value.
@@ -197,21 +194,21 @@ export default Component.extend(...mixins, {
      * @param {QueryProperty} queryProperty
      */
     conditionPropertyChanged(queryProperty) {
-      return this.conditionPropertyChanged(queryProperty);
+      this.conditionPropertyChanged(queryProperty);
     },
 
     /**
      * @param {String} comparator
      */
     conditionComparatorChanged(comparator) {
-      return this.conditionComparatorChanged(comparator);
+      this.conditionComparatorChanged(comparator);
     },
 
     /**
      * @param {any} value
      */
     conditionComparatorValueChanged(value) {
-      return this.conditionComparatorValueChanged(value);
+      this.conditionComparatorValueChanged(value);
     },
 
     conditionSelected() {

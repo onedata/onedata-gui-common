@@ -5,12 +5,13 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | one-atlas', function () {
   setupRenderingTest();
 
   beforeEach(function () {
-    this.set('_window', {
+    globals.mock('window', {
       resizeListener: null,
       innerWidth: 800,
       addEventListener(event, listener) {
@@ -27,7 +28,7 @@ describe('Integration | Component | one-atlas', function () {
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     await render(hbs `
       <div style={{parentStyle}}>
-        {{one-atlas _window=_window}}
+        {{one-atlas}}
       </div>
     `);
 
@@ -44,7 +45,7 @@ describe('Integration | Component | one-atlas', function () {
     this.set('parentStyle', htmlSafe(`width: ${width}px; height: ${height}px`));
     await render(hbs `
       <div style={{parentStyle}}>
-        {{one-atlas _window=_window}}
+        {{one-atlas}}
       </div>
     `);
 
@@ -59,14 +60,14 @@ describe('Integration | Component | one-atlas', function () {
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     await render(hbs `
       <div style={{parentStyle}}>
-        {{one-atlas _window=_window}}
+        {{one-atlas}}
       </div>
     `);
 
     const atlas = find('.one-atlas');
     size = size / 2;
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
-    this.get('_window.resizeListener').call(null);
+    globals.window.resizeListener.call(null);
     await settled();
 
     expect(dom.width(atlas)).to.be.equal(size);
@@ -80,7 +81,7 @@ describe('Integration | Component | one-atlas', function () {
       this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
       await render(hbs `
         <div style={{parentStyle}}>
-          {{#one-atlas _window=_window as |atlas|}}
+          {{#one-atlas as |atlas|}}
             {{#atlas.position latitude=-33 longitude=151 as |position|}}
               {{#position.point class="sydney"}}
                 s

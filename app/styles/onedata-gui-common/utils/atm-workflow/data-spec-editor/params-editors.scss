@@ -1,0 +1,24 @@
+.data-spec-params-editor {
+  .allowedValues-field {
+    flex-wrap: wrap;
+
+    .control-label {
+      flex-basis: 100%;
+      text-align: left;
+      margin-bottom: 0.4em;
+    }
+
+    .btn-tooltip-container {
+      font-size: inherit;
+    }
+
+    .full-value-editor {
+      font-size: $font-size-base;
+    }
+  }
+}
+
+@import './params-editors/file';
+@import './params-editors/number';
+@import './params-editors/string';
+@import './params-editors/time-series-measurement';

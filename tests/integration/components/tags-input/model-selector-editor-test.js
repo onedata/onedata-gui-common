@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
@@ -18,6 +15,7 @@ import OneDropdownHelper from '../../../helpers/one-dropdown';
 import _ from 'lodash';
 import { resolve } from 'rsvp';
 import { findInElementsByText } from '../../../helpers/find';
+import globals from 'onedata-gui-common/utils/globals';
 
 const models = [{
   name: 'user',
@@ -271,8 +269,7 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
     name: 'serviceOnepanel',
     icon: 'onepanel',
     typeIndex: 4,
-  }].forEach(({ name, icon, typeIcon, recordIndex, typeIndex }) => {
-    recordIndex = recordIndex || 0;
+  }].forEach(({ name, icon, typeIcon, recordIndex = 0, typeIndex }) => {
     it(`uses icon ${icon} for ${recordIndex + 1}. ${name} test record`, async function () {
       this.set('tags', []);
       const changeSpy = sinon.spy(tags => this.set('tags', tags));
@@ -481,5 +478,5 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
 });
 
 function getSelector() {
-  return document.querySelector('.webui-popover.in .tags-selector');
+  return globals.document.querySelector('.webui-popover.in .tags-selector');
 }

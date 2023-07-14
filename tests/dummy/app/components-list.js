@@ -41,6 +41,7 @@ export default [
   'one-tree',
   'one-way-capacity',
   'one-way-toggle',
+  'pages-control',
   'perfect-scrollbar-element',
   'proceed-process-modal',
   'promise-proxy-container',

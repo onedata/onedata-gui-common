@@ -23,6 +23,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import $ from 'jquery';
 import _ from 'lodash';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Component.extend({
   layout,
@@ -101,12 +102,6 @@ export default Component.extend({
     return resultState;
   }),
 
-  /**
-   * Window object for test purposes
-   * @type {Window}
-   */
-  _window: window,
-
   didInsertElement() {
     this._super(...arguments);
 
@@ -151,7 +146,7 @@ export default Component.extend({
       $('.jvectormap-tip').remove();
       // jvectormap fix: removes unused resize handler
       const _mapInstance = this.get('_mapInstance');
-      $(window).unbind('resize', _mapInstance.onResize);
+      $(globals.window).unbind('resize', _mapInstance.onResize);
     } finally {
       this._super(...arguments);
     }
@@ -181,12 +176,10 @@ export default Component.extend({
       triggerWindowEventName,
       $mapContainer,
       onViewportChange,
-      _window,
     } = this.getProperties(
       'triggerWindowEventName',
       '$mapContainer',
       'onViewportChange',
-      '_window'
     );
     const _mapInstance = $mapContainer.vectorMap('get', 'mapObject');
     const {
@@ -208,7 +201,7 @@ export default Component.extend({
       _containerWidth: _mapInstance.width,
     });
     if (triggerWindowEventName) {
-      _window.dispatchEvent(new Event(triggerWindowEventName));
+      globals.window.dispatchEvent(new Event(triggerWindowEventName));
     }
     onViewportChange(calculatedEvent);
   },

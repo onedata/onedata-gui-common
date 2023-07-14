@@ -1,8 +1,12 @@
+<div class="row">
+  <button {{action "resetProxy"}}>Reset</button>
+</div>
+
 <div class="row"
   style="position: relative; height: 200px; border: 1px solid green;">
   {{#promise-proxy-container proxy=resolvingProxy}}
     Hello world
-  {{/promise-proxy-container}}  
+  {{/promise-proxy-container}}
 </div>
 
 <div class="row"
@@ -21,6 +25,11 @@
   {{/promise-proxy-container}}
 </div>
 
-<div class="row">
-  <button {{action "resetProxy"}}>Reset</button>
-</div>
+{{#each (array "xxs" "xs" "sm" "md" "lg") as |sizeClass|}}
+  <div class="row"
+    style="position: relative; height: 300px; border: 1px solid black;">
+    {{#promise-proxy-container proxy=infiniteProxy loadingLabel="Loading some data..." sizeClass=sizeClass}}
+      Hello world
+    {{/promise-proxy-container}}
+  </div>
+{{/each}}

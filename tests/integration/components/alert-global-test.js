@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
@@ -7,6 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { registerService, lookupService } from '../../helpers/stub-service';
 import Service from '@ember/service';
 import { setProperties } from '@ember/object';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | alert-global', function () {
   setupRenderingTest();
@@ -219,5 +219,5 @@ describe('Integration | Component | alert-global', function () {
 });
 
 function getModal() {
-  return document.querySelector('.modal.in');
+  return globals.document.querySelector('.modal.in');
 }

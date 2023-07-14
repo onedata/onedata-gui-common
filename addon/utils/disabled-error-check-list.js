@@ -14,9 +14,10 @@
  */
 
 import _ from 'lodash';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default class DisabledErrorCheckList {
-  constructor(type, storage = sessionStorage) {
+  constructor(type, storage = globals.sessionStorage) {
     this.type = type;
     this.storage = storage;
     this.errorCheckTypeKey = `${this.type}DisableErrorCheck`;

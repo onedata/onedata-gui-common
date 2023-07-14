@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 /**
  * A form responsible for showing and editing/creating tasks. It does not persists
  * data. Any changes are yielded using `onChange` callback.
@@ -92,7 +89,6 @@ const taskAuditLogStore = Store.create({
   config: {
     logContentDataSpec: {
       type: 'object',
-      valueConstraints: {},
     },
   },
 });
@@ -102,7 +98,6 @@ const workflowAuditLogStore = Store.create({
   config: {
     logContentDataSpec: {
       type: 'object',
-      valueConstraints: {},
     },
   },
 });
@@ -787,7 +782,9 @@ export default Component.extend(I18n, {
 
     const currentRevision = this.atmLambda?.revisionRegistry?.[currentRevisionNumber];
     const newRevision = this.atmLambda?.revisionRegistry?.[newRevisionNumber];
-    const propsToUpdateInCurrentRevision = {};
+    const propsToUpdateInCurrentRevision = {
+      atmLambda: newRevPlainValues.atmLambda,
+    };
 
     const newArgumentMappings = migrateArgResRevision(
       currentRevision?.argumentSpecs ?? [],
@@ -1211,6 +1208,9 @@ function getTargetStoresForDataSpec(availableStores, dataSpec) {
 }
 
 function getDispatchFunctionsForStoreType(storeType) {
+  // We don't include exception store here, as it is a runtime-only store
+  // unavailable for user logic. Other non-present stores simply don't have
+  // dispatch functions.
   switch (storeType) {
     case 'list':
     case 'auditLog':

@@ -1,7 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-/* eslint-disable max-len */
-
 /**
  * Ported from https://github.com/jackmoore/autosize as don't want to use globals
  * and npm import doesn't work in Ember for this package.
@@ -16,6 +12,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import globals from 'onedata-gui-common/utils/globals';
+
 const map = new Map();
 
 let createEvent = (name) => new Event(name, { bubbles: true });
@@ -24,7 +22,7 @@ try {
 } catch (e) {
   // IE does not support `new Event()`
   createEvent = (name) => {
-    const evt = document.createEvent('Event');
+    const evt = globals.document.createEvent('Event');
     evt.initEvent(name, true, false);
     return evt;
   };
@@ -40,7 +38,7 @@ function assign(ta) {
   let cachedHeight = null;
 
   function init() {
-    const style = window.getComputedStyle(ta, null);
+    const style = globals.window.getComputedStyle(ta, null);
 
     if (style.resize === 'vertical') {
       ta.style.resize = 'none';
@@ -51,7 +49,8 @@ function assign(ta) {
     if (style.boxSizing === 'content-box') {
       heightOffset = -(parseFloat(style.paddingTop) + parseFloat(style.paddingBottom));
     } else {
-      heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+      heightOffset =
+        parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
     }
     // Fix when a textarea is not on document body and heightOffset is Not a Number
     if (isNaN(heightOffset)) {
@@ -81,14 +80,15 @@ function assign(ta) {
   function getParentOverflows(el) {
     const arr = [];
 
-    while (el && el.parentNode && el.parentNode instanceof Element) {
-      if (el.parentNode.scrollTop) {
+    let elemToProcess = el;
+    while (elemToProcess?.parentNode instanceof Element) {
+      if (elemToProcess.parentNode.scrollTop) {
         arr.push({
-          node: el.parentNode,
-          scrollTop: el.parentNode.scrollTop,
+          node: elemToProcess.parentNode,
+          scrollTop: elemToProcess.parentNode.scrollTop,
         });
       }
-      el = el.parentNode;
+      elemToProcess = elemToProcess.parentNode;
     }
 
     return arr;
@@ -101,7 +101,7 @@ function assign(ta) {
     }
 
     const overflows = getParentOverflows(ta);
-    const docTop = document.documentElement && document.documentElement
+    const docTop = globals.document.documentElement && globals.document.documentElement
       .scrollTop; // Needed for Mobile IE (ticket #240)
 
     ta.style.height = '';
@@ -116,7 +116,7 @@ function assign(ta) {
     });
 
     if (docTop) {
-      document.documentElement.scrollTop = docTop;
+      globals.document.documentElement.scrollTop = docTop;
     }
   }
 
@@ -124,7 +124,7 @@ function assign(ta) {
     resize();
 
     const styleHeight = Math.round(parseFloat(ta.style.height));
-    const computed = window.getComputedStyle(ta, null);
+    const computed = globals.window.getComputedStyle(ta, null);
 
     // Using offsetHeight as a replacement for computed.height in IE, because IE does not account use of border-box
     let actualHeight = computed.boxSizing === 'content-box' ? Math.round(parseFloat(computed.height)) : ta
@@ -136,16 +136,18 @@ function assign(ta) {
       if (computed.overflowY === 'hidden') {
         changeOverflow('scroll');
         resize();
-        actualHeight = computed.boxSizing === 'content-box' ? Math.round(parseFloat(window.getComputedStyle(ta, null)
-          .height)) : ta.offsetHeight;
+        actualHeight = computed.boxSizing === 'content-box' ?
+          Math.round(parseFloat(globals.window.getComputedStyle(ta, null).height)) :
+          ta.offsetHeight;
       }
     } else {
       // Normally keep overflow set to hidden, to avoid flash of scrollbar as the textarea expands.
       if (computed.overflowY !== 'hidden') {
         changeOverflow('hidden');
         resize();
-        actualHeight = computed.boxSizing === 'content-box' ? Math.round(parseFloat(window.getComputedStyle(ta, null)
-          .height)) : ta.offsetHeight;
+        actualHeight = computed.boxSizing === 'content-box' ?
+          Math.round(parseFloat(globals.window.getComputedStyle(ta, null).height)) :
+          ta.offsetHeight;
       }
     }
 
@@ -168,7 +170,7 @@ function assign(ta) {
   };
 
   const destroy = (style => {
-    window.removeEventListener('resize', pageResize, false);
+    globals.window.removeEventListener('resize', pageResize, false);
     ta.removeEventListener('input', update, false);
     ta.removeEventListener('keyup', update, false);
     ta.removeEventListener('autosize:destroy', destroy, false);
@@ -196,7 +198,7 @@ function assign(ta) {
     ta.addEventListener('keyup', update, false);
   }
 
-  window.addEventListener('resize', pageResize, false);
+  globals.window.addEventListener('resize', pageResize, false);
   ta.addEventListener('input', update, false);
   ta.addEventListener('autosize:update', update, false);
   ta.style.overflowX = 'hidden';
@@ -227,7 +229,7 @@ function update(ta) {
 let autosize = null;
 
 // Do nothing in Node.js environment and IE8 (or lower)
-if (typeof window === 'undefined' || typeof window.getComputedStyle !== 'function') {
+if (typeof globals.window === 'undefined' || typeof globals.window.getComputedStyle !== 'function') {
   autosize = el => el;
   autosize.destroy = el => el;
   autosize.update = el => el;

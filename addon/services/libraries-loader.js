@@ -9,8 +9,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-/* eslint no-restricted-globals: ["error", "window"] */
-
 import Service from '@ember/service';
 import { get, computed } from '@ember/object';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
@@ -24,6 +22,7 @@ import {
 import _ from 'lodash';
 import { promise } from 'ember-awesome-macros';
 import $ from 'jquery';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Service.extend({
   /**
@@ -43,13 +42,6 @@ export default Service.extend({
    * @type {Object}
    */
   librariesSpec: _.cloneDeep(config.dynamicLibraries || {}),
-
-  /**
-   * @private
-   * @type {Window}
-   */
-  /* eslint-disable-next-line no-restricted-globals */
-  window,
 
   /**
    * @private
@@ -130,11 +122,7 @@ export default Service.extend({
    * @returns {Promise<Object|Function|null>}
    */
   async fetchLibrary(libraryName) {
-    const {
-      librariesSpec,
-      window,
-    } = this.getProperties('librariesSpec', 'window');
-    const librarySpec = librariesSpec[libraryName];
+    const librarySpec = this.librariesSpec[libraryName];
     if (!librarySpec || !librarySpec.files || !librarySpec.files.length) {
       throw new Error(`Cannot load library "${libraryName}": there are no files to load.`);
     }
@@ -144,7 +132,7 @@ export default Service.extend({
     );
     await allFulfilled(filesPromises);
     const exportName = librarySpec.exportName || libraryName;
-    return window[exportName];
+    return globals.window[exportName];
   },
 
   /**
@@ -154,8 +142,7 @@ export default Service.extend({
    * @returns {Promise<void>}
    */
   async fetchScript(libraryName, path) {
-    const window = this.get('window');
-    const scriptNode = window.document.createElement('script');
+    const scriptNode = globals.document.createElement('script');
     scriptNode.src = await this.getAssetPathToLoad(path);
     const loadingPromise = new Promise((resolve, reject) => {
       scriptNode.addEventListener('load', () => resolve());
@@ -169,7 +156,7 @@ export default Service.extend({
         ));
       });
     });
-    window.document.getElementsByTagName('body')[0].appendChild(scriptNode);
+    globals.document.getElementsByTagName('body')[0].appendChild(scriptNode);
     return loadingPromise;
   },
 
