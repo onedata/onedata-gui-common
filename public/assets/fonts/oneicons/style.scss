@@ -3,9 +3,9 @@
 @font-face {
   font-family: '#{$icomoon-font-family}';
   src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?hidzcj') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?hidzcj') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?hidzcj##{$icomoon-font-family}') format('svg');
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?45xb2l') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?45xb2l') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?45xb2l##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -352,6 +352,11 @@
     content: $oneicon-collection; 
   }
 }
+.oneicon-columns {
+  &:before {
+    content: $oneicon-columns; 
+  }
+}
 .oneicon-consume-token {
   &:before {
     content: $oneicon-consume-token; 
@@ -635,6 +640,26 @@
 .oneicon-move {
   &:before {
     content: $oneicon-move; 
+  }
+}
+.oneicon-navigate-first {
+  &:before {
+    content: $oneicon-navigate-first; 
+  }
+}
+.oneicon-navigate-last {
+  &:before {
+    content: $oneicon-navigate-last; 
+  }
+}
+.oneicon-navigate-next {
+  &:before {
+    content: $oneicon-navigate-next; 
+  }
+}
+.oneicon-navigate-prev {
+  &:before {
+    content: $oneicon-navigate-prev; 
   }
 }
 .oneicon-no-view {

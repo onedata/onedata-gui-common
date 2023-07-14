@@ -21,15 +21,19 @@ import { isArray } from '@ember/array';
 
 export function formatNumber(params, hash) {
   const number = Number(isArray(params) ? params[0] : params) || 0;
-  const format = hash && hash.format || '# ##0.';
+  const format = hash?.format || '# ##0.';
+  const allowHtml = hash?.allowHtml ?? true;
   const formattedNumber = numberFormatter(format, number);
-  // Replace spaces with space-like spans to make copy-paste more user-friendly
-  const spacelessFormattedNumber = formattedNumber.replace(
-    / /g,
-    '<span class="thousand-space"></span>'
-  );
-
-  return htmlSafe(spacelessFormattedNumber);
+  if (allowHtml) {
+    // Replace spaces with space-like spans to make copy-paste more user-friendly
+    const spacelessFormattedNumber = formattedNumber.replace(
+      / /g,
+      '<span class="thousand-space"></span>'
+    );
+    return htmlSafe(spacelessFormattedNumber);
+  } else {
+    return formattedNumber;
+  }
 }
 
 export default helper(formatNumber);

@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * A base to create form with one set of fields with optional validation and submit button.
  *
@@ -165,6 +162,7 @@ export default OneForm.extend({
     /**
      * Invokes injected ``submit`` action with Ember Object containing
      * values of form. The receiver should know what field to get from it.
+     * @returns {Promise}
      */
     submit() {
       const {

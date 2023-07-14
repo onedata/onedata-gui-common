@@ -55,7 +55,6 @@ $audit-log-browser-timestamp-cell-width: 7em;
   }
 
   .audit-log-severity-warning,
-  .audit-log-severity-alert,
   .audit-log-theme-warning {
     > td {
       background-color: lighten($color-one-warning, 35%);
@@ -68,6 +67,7 @@ $audit-log-browser-timestamp-cell-width: 7em;
 
   .audit-log-severity-error,
   .audit-log-severity-critical,
+  .audit-log-severity-alert,
   .audit-log-severity-emergency,
   .audit-log-theme-danger {
     > td {

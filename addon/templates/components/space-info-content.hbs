@@ -25,7 +25,7 @@
         }}
       </td>
     </tr>
-    {{#if showCreator}}
+    {{#if (and showDetails showCreator)}}
       <tr class="row-with-text">
         <td class="property-name">{{tt this "creator"}}</td>
         <td class="property-value">
@@ -39,7 +39,7 @@
         </td>
       </tr>
     {{/if}}
-    {{#if creationTime}}
+    {{#if (and showDetails creationTime)}}
       <tr class="row-with-text">
         <td class="property-name">{{tt this "creationTime"}}</td>
         <td class="property-value">
@@ -49,32 +49,34 @@
     {{/if}}
   </tbody>
 </table>
-<div class="links-container">
-  {{#if showLinkToRestApiModal}}
-    <a {{action "openRestApiModal"}} class="info-link rest-api-link clickable">
-      <span>{{tt this "openRestApi"}}</span>
-      {{one-icon icon="rest"}}
-    </a>
-    {{#if (or showLinkToFileBrowser showLinkToSpace)}}
-      <span class="col-separator"></span>
+{{#if showDetails}}
+  <div class="links-container">
+    {{#if showLinkToRestApiModal}}
+      <a {{action "openRestApiModal"}} class="info-link rest-api-link clickable">
+        <span>{{tt this "openRestApi"}}</span>
+        {{one-icon icon="rest"}}
+      </a>
+      {{#if (or showLinkToFileBrowser showLinkToSpace)}}
+        <span class="col-separator"></span>
+      {{/if}}
     {{/if}}
-  {{/if}}
-  {{#if showLinkToFileBrowser}}
-    <a
-      href={{linkToFileBrowser}}
-      class="info-link file-browser-link clickable"
-    >
-      <span>{{tt this "openFileBrowser"}}</span>
-      {{one-icon icon="link-external"}}
-    </a>
+    {{#if showLinkToFileBrowser}}
+      <a
+        href={{linkToFileBrowser}}
+        class="info-link file-browser-link clickable"
+      >
+        <span>{{tt this "openFileBrowser"}}</span>
+        {{one-icon icon="link-external"}}
+      </a>
+      {{#if showLinkToSpace}}
+        <span class="col-separator"></span>
+      {{/if}}
+    {{/if}}
     {{#if showLinkToSpace}}
-      <span class="col-separator"></span>
+      <a href={{linkToSpace}} class="info-link space-link clickable">
+        {{tt this "openSpace"}}
+        {{one-icon icon="link-external"}}
+      </a>
     {{/if}}
-  {{/if}}
-  {{#if showLinkToSpace}}
-    <a href={{linkToSpace}} class="info-link space-link clickable">
-      {{tt this "openSpace"}}
-      {{one-icon icon="link-external"}}
-    </a>
-  {{/if}}
-</div>
+  </div>
+{{/if}}

@@ -9,46 +9,42 @@
 import _ from 'lodash';
 import { typeDefinitionBase } from './commons';
 import { FileType } from 'onedata-gui-common/utils/file';
+import { assert } from '@ember/debug';
 
 /**
  * @typedef {Object} AtmFileDataSpec
  * @property {'file'} type
- * @property {AtmFileValueConstraints} valueConstraints
- */
-
-/**
- * @typedef {Object} AtmFileValueConstraints
  * @property {AtmFileType} fileType
  */
 
 /**
- * @typedef {Object} AtmFileValueConstraintsConditions
+ * @typedef {Object} AtmFileDataSpecParamsConditions
  * @property {Array<AtmFileType>} allowedFileTypes
  */
 
 /**
- * @type {AtmDataSpecTypeDefinition<AtmFileValueConstraints, AtmFileValueConstraintsConditions>}
+ * @type {AtmDataSpecTypeDefinition<AtmFileDataSpec, AtmFileDataSpecParamsConditions>}
  */
 export const atmDataSpecTypeDefinition = Object.freeze({
   ...typeDefinitionBase,
   supertype: 'object',
-  isValueConstraintsCompatible(
-    referenceConstraints,
-    typeOrSubtypeConstraints,
+  areAtmDataSpecParamsCompatible(
+    referenceAtmDataSpec,
+    typeOrSubtypeAtmDataSpec,
     ignoreEmpty = false,
   ) {
-    if (!referenceConstraints?.fileType || !typeOrSubtypeConstraints?.fileType) {
+    if (!referenceAtmDataSpec?.fileType || !typeOrSubtypeAtmDataSpec?.fileType) {
       return ignoreEmpty;
     }
 
-    if (referenceConstraints.fileType === typeOrSubtypeConstraints.fileType) {
+    if (referenceAtmDataSpec.fileType === typeOrSubtypeAtmDataSpec.fileType) {
       return true;
     } else {
-      return atmFileTypeSupertypes[typeOrSubtypeConstraints.fileType]
-        ?.includes(referenceConstraints.fileType) || false;
+      return atmFileTypeSupertypes[typeOrSubtypeAtmDataSpec.fileType]
+        ?.includes(referenceAtmDataSpec.fileType) || false;
     }
   },
-  getValueConstraintsConditions(filters) {
+  getAtmDataSpecParamsConditions(filters) {
     const allowedFileTypesPerFilter = filters
       ?.map((filter) => {
         const filterFileDataSpecs = filter?.types
@@ -57,7 +53,7 @@ export const atmDataSpecTypeDefinition = Object.freeze({
           return atmFileTypesArray;
         }
         const filterFileTypes = filterFileDataSpecs
-          .map((type) => type?.valueConstraints?.fileType ?? AtmFileType.Any);
+          .map((type) => type?.fileType ?? AtmFileType.Any);
         switch (filter?.filterType) {
           case 'typeOrSupertype':
             return _.uniq(_.flatten(filterFileTypes.map((fileType) => [
@@ -128,6 +124,11 @@ export const atmFileTypesArray = Object.freeze([
   AtmFileType.SymbolicLink,
 ]);
 
+assert(
+  'atmFileTypesArray must have the same items as AtmFileType enum.',
+  _.isEqual(Object.values(AtmFileType).sort(), [...atmFileTypesArray].sort())
+);
+
 /**
  * @type {Object<AtmFileType, Array<AtmFileType>>}
  */
@@ -137,6 +138,14 @@ export const atmFileTypeSupertypes = Object.freeze({
   [AtmFileType.Directory]: [AtmFileType.Any],
   [AtmFileType.SymbolicLink]: [AtmFileType.Any],
 });
+
+assert(
+  'Keys of atmFileTypeSupertypes must include all values from AtmFileType enum.',
+  _.isEqual(
+    Object.values(AtmFileType).sort(),
+    Object.keys(atmFileTypeSupertypes).sort()
+  )
+);
 
 /**
  * @type {Object<AtmFileType, Array<AtmFileType>>}
@@ -151,6 +160,14 @@ export const atmFileTypeSubtypes = Object.freeze({
   [AtmFileType.Directory]: [],
   [AtmFileType.SymbolicLink]: [],
 });
+
+assert(
+  'Keys of atmFileTypeSubtypes must include all values from AtmFileType enum.',
+  _.isEqual(
+    Object.values(AtmFileType).sort(),
+    Object.keys(atmFileTypeSupertypes).sort()
+  )
+);
 
 /**
  * @param {Ember.Service} i18n
@@ -167,3 +184,73 @@ export function translateAtmFileType(i18n, atmFileType, { upperFirst = false } =
   const translation = i18n.t(`utils.atmWorkflow.dataSpec.file.fileTypes.${atmFileType}`);
   return upperFirst ? _.upperFirst(translation) : translation;
 }
+
+/**
+ * @typedef {
+ * 'name' |
+ * 'type' |
+ * 'mode' |
+ * 'size' |
+ * 'atime' |
+ * 'mtime' |
+ * 'ctime' |
+ * 'owner_id' |
+ * 'file_id' |
+ * 'parent_id' |
+ * 'provider_id' |
+ * 'storage_user_id' |
+ * 'storage_group_id' |
+ * 'shares' |
+ * 'hardlinks_count' |
+ * 'index'
+ * } AtmFileAttribute
+ */
+
+/**
+ * @type {Object<string, AtmFileAttribute>}
+ */
+export const AtmFileAttribute = Object.freeze({
+  Name: 'name',
+  Type: 'type',
+  Mode: 'mode',
+  Size: 'size',
+  Atime: 'atime',
+  Mtime: 'mtime',
+  Ctime: 'ctime',
+  OwnerId: 'owner_id',
+  FileId: 'file_id',
+  ParentId: 'parent_id',
+  ProviderId: 'provider_id',
+  StorageUserId: 'storage_user_id',
+  StorageGroupId: 'storage_group_id',
+  Shares: 'shares',
+  HardlinksCount: 'hardlinks_count',
+  Index: 'index',
+});
+
+/**
+ * @type {Array<AtmFileAttribute>}
+ */
+export const atmFileAttributesArray = Object.freeze([
+  AtmFileAttribute.Name,
+  AtmFileAttribute.Type,
+  AtmFileAttribute.Mode,
+  AtmFileAttribute.Size,
+  AtmFileAttribute.Atime,
+  AtmFileAttribute.Mtime,
+  AtmFileAttribute.Ctime,
+  AtmFileAttribute.OwnerId,
+  AtmFileAttribute.FileId,
+  AtmFileAttribute.ParentId,
+  AtmFileAttribute.ProviderId,
+  AtmFileAttribute.StorageUserId,
+  AtmFileAttribute.StorageGroupId,
+  AtmFileAttribute.Shares,
+  AtmFileAttribute.HardlinksCount,
+  AtmFileAttribute.Index,
+]);
+
+assert(
+  'atmFileAttributesArray must have the same items as AtmFileAttribute enum.',
+  _.isEqual(Object.values(AtmFileAttribute).sort(), [...atmFileAttributesArray].sort())
+);

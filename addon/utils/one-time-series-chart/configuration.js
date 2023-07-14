@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 /**
  * A class, that contains configuration of time series chart - axes look,
  * time resolutions, actual axes position, visible points - basically everything,
@@ -546,7 +543,7 @@ import transformFunctionsIndex from './transform-functions';
 import seriesFunctionsIndex from './series-functions';
 import seriesBuildersIndex from './series-builders';
 import seriesGroupBuildersIndex from './series-group-builders';
-import formatValueFromUnit from './format-value-with-unit';
+import formatValueWithUnit from './format-value-with-unit';
 import _ from 'lodash';
 import { all as allFulfilled } from 'rsvp';
 import moment from 'moment';
@@ -919,14 +916,17 @@ export default class Configuration {
     if (parameters.lastPointTimestamp !== undefined) {
       if (this.live) {
         const nowTimestamp = this.getNowTimestamp();
-        const givenTimestampIsNow = typeof parameters.lastPointTimestamp !== 'number' ||
-          parameters.lastPointTimestamp >= nowTimestamp - (nowTimestamp % this.timeResolution);
+        const givenTimestampIsNow =
+          typeof parameters.lastPointTimestamp !== 'number' ||
+          parameters.lastPointTimestamp >=
+          nowTimestamp - (nowTimestamp % this.timeResolution);
         this.lastPointTimestamp = givenTimestampIsNow ?
           null : parameters.lastPointTimestamp;
       } else {
         if (typeof this.newestPointTimestamp === 'number') {
           this.lastPointTimestamp = typeof parameters.lastPointTimestamp === 'number' ?
-            Math.min(this.newestPointTimestamp, parameters.lastPointTimestamp) : this.newestPointTimestamp;
+            Math.min(this.newestPointTimestamp, parameters.lastPointTimestamp) :
+            this.newestPointTimestamp;
         } else {
           this.lastPointTimestamp = typeof parameters.lastPointTimestamp === 'number' ?
             parameters.lastPointTimestamp : null;
@@ -1025,12 +1025,14 @@ export default class Configuration {
       return;
     }
     if (foundNewestEdgeTimestampInSeries === null) {
-      foundNewestEdgeTimestampInSeries = foundNewestTimestampInSeries + usedTimeResolution - 1;
+      foundNewestEdgeTimestampInSeries =
+        foundNewestTimestampInSeries + usedTimeResolution - 1;
     }
     let foundGloballyNewestTimestamp = foundNewestTimestampInSeries;
     this.timeResolutionSpecs.forEach(({ timeResolution }) => {
       const thisResolutionNewestTimestamp =
-        foundNewestEdgeTimestampInSeries - (foundNewestEdgeTimestampInSeries % timeResolution);
+        foundNewestEdgeTimestampInSeries -
+        (foundNewestEdgeTimestampInSeries % timeResolution);
       if (thisResolutionNewestTimestamp > foundGloballyNewestTimestamp) {
         foundGloballyNewestTimestamp = thisResolutionNewestTimestamp;
       }
@@ -1070,12 +1072,13 @@ export default class Configuration {
         rawYAxis.valueProvider : {
           functionName: 'currentValue',
         };
-      const valueFormatter = (value) => formatValueFromUnit({
+      const valueFormatter = (value, allowHtml = true) => formatValueWithUnit({
         value: this.evaluateTransformFunction({
           currentValue: value,
         }, rawValueProvider),
         unitName: rawYAxis.unitName,
         unitOptions: rawYAxis.unitOptions,
+        allowHtml,
       });
 
       return {

@@ -21,7 +21,7 @@ import {
   createDataTypeSelectorElement,
   createDataTypeElement,
 } from './editor-element-creators';
-import valueConstraintsEditors from './value-constraints-editors';
+import paramsEditors from './params-editors';
 import { validator } from 'ember-cp-validations';
 
 /**
@@ -32,6 +32,12 @@ import { validator } from 'ember-cp-validations';
 /**
  * @typedef {DataSpecEditorElementBase} DataSpecEditorDataTypeSelector
  * @property {'dataTypeSelector'} type
+ * @property {DataSpecEditorDataTypeSelectorConfig} config
+ */
+
+/**
+ * @typedef {Object} DataSpecEditorDataTypeSelectorConfig
+ * @property {boolean} includeExpandParams
  */
 
 /**
@@ -54,17 +60,20 @@ import { validator } from 'ember-cp-validations';
  *   'dataset' |
  *   'range'
  * } dataType
+ * @property {boolean} includeExpandParams see "showExpandParams" in DataSpecEditor field
  */
 
 /**
  * @typedef {Object} DataSpecEditorDataTypeArrayConfig
  * @property {'array'} dataType
+ * @property {boolean} includeExpandParams see "showExpandParams" in DataSpecEditor field
  * @property {DataSpecEditorDataTypeConfig} item
  */
 
 /**
  * @typedef {Object} DataSpecEditorDataTypeCustomConfig
  * @property {'file'|'timeSeriesMeasurement'} dataType
+ * @property {boolean} includeExpandParams see "showExpandParams" in DataSpecEditor field
  * @property {Utils.FormComponent.ValuesContainer} formValues
  */
 
@@ -89,6 +98,18 @@ export const FormElement = FormField.extend({
    * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
+
+  /**
+   * If set to true, it will show additional data spec options (each type has its
+   * own set), which are responsible for controlling the process of atm values
+   * expanding during atm execution. Value expanding fills a basic value
+   * representation with additional (optional) data. Example: for
+   * file atm value expanding will introduce additional file attributes into
+   * file the object.
+   * @virtual optional
+   * @type {boolean}
+   */
+  showExpandParams: false,
 
   /**
    * @override
@@ -133,7 +154,7 @@ export const FormElement = FormField.extend({
 
   /**
    * Contains contextual data for editor elements. For now it preserves only `formRootGroup`
-   * for each editor element with dedicated value constraints form. It allows
+   * for each editor element with dedicated params form. It allows
    * to have the same form state regardless element nesting manipulation and component
    * rerenders.
    * @type {ComputedProperty<Map<string, DataSpecEditorElementContext>>}
@@ -169,13 +190,14 @@ export const FormElement = FormField.extend({
             elementsToProcess.push(get(newElement, 'config.item'));
             break;
           default: {
-            const dataTypeEditorClass = dataType in valueConstraintsEditors &&
-              valueConstraintsEditors[dataType].FormElement;
+            const dataTypeEditorClass = dataType in paramsEditors &&
+              paramsEditors[dataType].FormElement;
             if (!mapValue.formRootGroup && dataTypeEditorClass) {
               mapValue.formRootGroup = EditorElementFormRootGroup.create({
                 ownerSource: this,
                 dataSpecEditorInstance: this,
                 dataTypeEditorClass,
+                showExpandParams: newElement.config.includeExpandParams,
               });
               mapValue.formRootGroup.changeMode(mode);
             }
@@ -199,11 +221,36 @@ export const FormElement = FormField.extend({
   }),
 
   /**
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
+   */
+  nestedForms: computed('editorElementsContextMap', function nestedForms() {
+    const forms = [];
+    for (const elementCtx of this.get('editorElementsContextMap').values()) {
+      if (elementCtx.formRootGroup) {
+        forms.push(elementCtx.formRootGroup);
+      }
+    }
+    return forms;
+  }),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  areNestedFormsValid: computed(
+    'nestedForms.@each.isValid',
+    function areNestedFormsValid() {
+      return !this.nestedForms.findBy('isValid', false);
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   nestedFormsValidator: computed(() => validator(function (value, options, model) {
     const field = get(model, 'field');
-    return !field.getNestedForms().findBy('isValid', false);
+    return field.areNestedFormsValid;
+  }, {
+    depependentKeys: ['model.field.areNestedFormsValid'],
   })),
 
   /**
@@ -240,7 +287,7 @@ export const FormElement = FormField.extend({
 
     const ownerSource = this.get('ownerSource');
     if (ownerSource) {
-      for (const form of this.getNestedForms()) {
+      for (const form of this.nestedForms) {
         if (!get(form, 'ownerSource')) {
           set(form, 'ownerSource', ownerSource);
         }
@@ -253,20 +300,7 @@ export const FormElement = FormField.extend({
    */
   changeMode(mode) {
     this._super(...arguments);
-    this.getNestedForms().forEach((form) => form.changeMode(mode));
-  },
-
-  /**
-   * @returns {Array<Utils.FormComponent.FormFieldsRootGroup>}
-   */
-  getNestedForms() {
-    const forms = [];
-    for (const elementCtx of this.get('editorElementsContextMap').values()) {
-      if (elementCtx.formRootGroup) {
-        forms.push(elementCtx.formRootGroup);
-      }
-    }
-    return forms;
+    this.nestedForms.forEach((form) => form.changeMode(mode));
   },
 });
 
@@ -278,6 +312,7 @@ const EditorElementFormRootGroup = FormFieldsRootGroup.extend({
     return [this.get('dataTypeEditorClass').create({ name: 'dataTypeEditor' })];
   }),
   isEnabled: reads('dataSpecEditorInstance.isEffectivelyEnabled'),
+  showExpandParams: false,
   onValueChange() {
     this._super(...arguments);
     const onNotifyAboutChange = this.get('onNotifyAboutChange');
@@ -291,27 +326,30 @@ const EditorElementFormRootGroup = FormFieldsRootGroup.extend({
   },
 });
 
-export function dataSpecToFormValues(dataSpec) {
+export function dataSpecToFormValues(dataSpec, includeExpandParams = false) {
   if (!dataSpec || !dataSpec.type) {
-    return createDataTypeSelectorElement();
+    return createDataTypeSelectorElement({
+      includeExpandParams,
+    });
   }
 
   const dataType = dataSpec.type;
-  const valueConstraints = dataSpec.valueConstraints || {};
 
-  if (dataType in valueConstraintsEditors) {
+  if (dataType in paramsEditors) {
     return createDataTypeElement(dataType, {
+      includeExpandParams,
       formValues: createValuesContainer({
-        dataTypeEditor: valueConstraintsEditors[dataType]
-          .valueConstraintsToFormValues(valueConstraints),
+        dataTypeEditor: paramsEditors[dataType]
+          .atmDataSpecParamsToFormValues(dataSpec, includeExpandParams),
       }),
     });
   } else if (dataType === 'array') {
     return createDataTypeElement(dataType, {
-      item: dataSpecToFormValues(valueConstraints.itemDataSpec),
+      includeExpandParams,
+      item: dataSpecToFormValues(dataSpec.itemDataSpec),
     });
   } else {
-    return createDataTypeElement(dataType);
+    return createDataTypeElement(dataType, { includeExpandParams });
   }
 }
 
@@ -327,25 +365,24 @@ export function formValuesToDataSpec(values) {
 
   const dataType = values.config.dataType;
 
-  if (dataType in valueConstraintsEditors) {
+  if (dataType in paramsEditors) {
     const dataTypeEditorValues =
       get(values.config, 'formValues.dataTypeEditor');
     return {
       type: dataType,
-      valueConstraints: valueConstraintsEditors[dataType]
-        .formValuesToValueConstraints(dataTypeEditorValues),
+      ...paramsEditors[dataType].formValuesToAtmDataSpecParams(
+        dataTypeEditorValues,
+        values.config.includeExpandParams
+      ),
     };
   } else if (dataType === 'array') {
     return {
       type: dataType,
-      valueConstraints: {
-        itemDataSpec: formValuesToDataSpec(values.config.item),
-      },
+      itemDataSpec: formValuesToDataSpec(values.config.item),
     };
   } else {
     return {
       type: dataType,
-      valueConstraints: {},
     };
   }
 }

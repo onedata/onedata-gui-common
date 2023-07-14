@@ -75,7 +75,7 @@ export default class ArrayValueEditorState extends ValueEditorState {
    * @returns {AtmDataSpec | null}
    */
   get itemAtmDataSpec() {
-    return this.atmDataSpec?.valueConstraints?.itemDataSpec ?? null;
+    return this.atmDataSpec?.itemDataSpec ?? null;
   }
 
   /**

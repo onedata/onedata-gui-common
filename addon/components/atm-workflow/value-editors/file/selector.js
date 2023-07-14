@@ -67,7 +67,7 @@ export default Component.extend({
    * @type {ComputedProperty<AtmFileType>}
    */
   allowedAtmFileType: computed('atmDataSpec', function allowedAtmFileType() {
-    return this.atmDataSpec?.valueConstraints?.fileType ?? AtmFileType.Any;
+    return this.atmDataSpec?.fileType ?? AtmFileType.Any;
   }),
 
   /**

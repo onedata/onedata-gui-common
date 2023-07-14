@@ -343,6 +343,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
 // color-styles like danger.
 .tooltip-with-tags {
   $margin-base: 0.4em;
+  $item-spacing: $margin-base * 0.75;
   .tooltip-inner {
     // flexible panel width on desktop
     @media (max-width: 1250px) {
@@ -352,24 +353,39 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
       max-width: calc(100vw - 60px);
     }
     max-width: 1075px;
-    padding-top: $margin-base;
-    padding-bottom: $margin-base;
+    padding: $item-spacing * 2;
   }
   .tags-input {
-    display: inline-block;
+    display: flex;
     padding: 0;
-    line-height: 2.4;
     min-height: auto;
+    margin-top: -$item-spacing;
+    margin-bottom: -$item-spacing;
+    justify-content: center;
     .tag-item {
-      display: inline;
-      margin-right: $margin-base * 0.5;
+      display: inline-block;
+      margin-right: $item-spacing;
+      margin-top: $item-spacing * 0.5;
+      margin-bottom: $item-spacing * 0.5;
       padding: $margin-base * 0.5 $margin-base;
       border-radius: $border-radius-base;
       border: $tags-input-tag-border-size solid #ffffff33;
       background: #ffffff22;
       white-space: nowrap;
+      max-width: 480px;
+      overflow: hidden;
+      text-overflow: ellipsis;
       &:last-of-type {
         margin-right: 0;
+      }
+      &.tag-item-plaintext {
+        border: none;
+        background-color: transparent;
+        padding-top: $tags-input-tag-vertical-padding + $tags-input-tag-border-size;
+        padding-bottom: $tags-input-tag-vertical-padding + $tags-input-tag-border-size;
+        + .tag-item-plaintext {
+          margin-left: -$padding-xs-horizontal * 0.5;
+        }
       }
       .tag-label {
         display: inline;

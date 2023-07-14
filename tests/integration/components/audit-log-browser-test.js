@@ -19,9 +19,9 @@ const severityIcons = {
   info: 'browser-info',
   notice: 'browser-info',
   warning: 'checkbox-filled-warning',
-  alert: 'checkbox-filled-warning',
   error: 'checkbox-filled-x',
   critical: 'checkbox-filled-x',
+  alert: 'checkbox-filled-x',
   emergency: 'checkbox-filled-x',
 };
 const latestLogEntryTimestamp = 1658324755;

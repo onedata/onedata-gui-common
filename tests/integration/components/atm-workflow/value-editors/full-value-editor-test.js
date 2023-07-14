@@ -48,10 +48,8 @@ describe('Integration | Component | atm-workflow/value-editors/full-value-editor
   it('shows array editor for array data spec', async function () {
     this.setupStateManagerForItemType({
       type: AtmDataSpecType.Array,
-      valueConstraints: {
-        itemDataSpec: {
-          type: AtmDataSpecType.String,
-        },
+      itemDataSpec: {
+        type: AtmDataSpecType.String,
       },
     });
 
@@ -63,14 +61,10 @@ describe('Integration | Component | atm-workflow/value-editors/full-value-editor
   it('has validation state and value reflecting nested editors state', async function () {
     this.setupStateManagerForItemType({
       type: AtmDataSpecType.Array,
-      valueConstraints: {
+      itemDataSpec: {
+        type: AtmDataSpecType.Array,
         itemDataSpec: {
-          type: AtmDataSpecType.Array,
-          valueConstraints: {
-            itemDataSpec: {
-              type: AtmDataSpecType.Number,
-            },
-          },
+          type: AtmDataSpecType.Number,
         },
       },
     });
@@ -101,14 +95,10 @@ describe('Integration | Component | atm-workflow/value-editors/full-value-editor
   it('allows to override existing value (and rendered editors) from JS level', async function () {
     this.setupStateManagerForItemType({
       type: AtmDataSpecType.Array,
-      valueConstraints: {
+      itemDataSpec: {
+        type: AtmDataSpecType.Array,
         itemDataSpec: {
-          type: AtmDataSpecType.Array,
-          valueConstraints: {
-            itemDataSpec: {
-              type: AtmDataSpecType.Number,
-            },
-          },
+          type: AtmDataSpecType.Number,
         },
       },
     });

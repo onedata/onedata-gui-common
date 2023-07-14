@@ -6,6 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import Action from 'onedata-gui-common/utils/action';
 import sinon from 'sinon';
 import { ResourceListItem } from 'onedata-gui-common/components/resources-list';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | resources-list', function () {
   setupRenderingTest();
@@ -91,7 +92,7 @@ describe('Integration | Component | resources-list', function () {
       expect(find('.resource-item .btn-menu-toggle')).to.exist;
       return click('.btn-menu-toggle')
         .then(() =>
-          expect(document.querySelector('.dropdown-menu').textContent)
+          expect(globals.document.querySelector('.dropdown-menu').textContent)
           .to.contain('sth')
         );
     }
@@ -115,7 +116,8 @@ describe('Integration | Component | resources-list', function () {
 
       return click('.btn-menu-toggle')
         .then(() => click(
-          document.querySelector('.dropdown-menu .one-collapsible-toolbar-item a')))
+          globals.document.querySelector('.dropdown-menu .one-collapsible-toolbar-item a')
+        ))
         .then(() => expect(executeSpy).to.be.calledOnce);
     }
   );

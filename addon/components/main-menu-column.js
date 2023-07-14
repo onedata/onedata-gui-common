@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 /**
  * Container for application main menu used as a one of the layout columns.
  *
@@ -102,8 +99,15 @@ export default Component.extend({
         'globalSidenavResourceType'
       );
       const clickedResourceType = dasherize(itemId);
-      if ((!globalSidenavResourceType && activeResourceType !== clickedResourceType) ||
-        (globalSidenavResourceType && globalSidenavResourceType !== clickedResourceType)) {
+      if (
+        (
+          !globalSidenavResourceType &&
+          activeResourceType !== clickedResourceType
+        ) || (
+          globalSidenavResourceType &&
+          globalSidenavResourceType !== clickedResourceType
+        )
+      ) {
         this.set('navigationState.globalSidenavResourceType', clickedResourceType);
       } else {
         this.set('navigationState.globalSidenavResourceType', null);

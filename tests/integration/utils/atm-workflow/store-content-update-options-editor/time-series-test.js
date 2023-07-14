@@ -13,6 +13,7 @@ import { get } from '@ember/object';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import timeSeriesEditor from 'onedata-gui-common/utils/atm-workflow/store-content-update-options-editor/time-series';
+import globals from 'onedata-gui-common/utils/globals';
 
 const measurementNameMatcherOptions = [{
   label: 'Exact "exactName"',
@@ -60,15 +61,13 @@ describe('Integration | Utility | atm-workflow/store-content-update-options-edit
           timeSeriesEditor.FormElement.create({
             name: 'updateOptionsEditor',
             contentUpdateDataSpec: {
-              valueConstraints: {
-                specs: [{
-                  nameMatcherType: 'exact',
-                  nameMatcher: 'exactName',
-                }, {
-                  nameMatcherType: 'hasPrefix',
-                  nameMatcher: 'hasPrefixName',
-                }],
-              },
+              specs: [{
+                nameMatcherType: 'exact',
+                nameMatcher: 'exactName',
+              }, {
+                nameMatcherType: 'hasPrefix',
+                nameMatcher: 'hasPrefixName',
+              }],
             },
             storeConfig,
           }),
@@ -152,7 +151,8 @@ describe('Integration | Utility | atm-workflow/store-content-update-options-edit
     await click('.add-field-button');
     await clickTrigger('.measurementNameMatcher-field');
 
-    const optionElements = document.querySelectorAll('.ember-power-select-option');
+    const optionElements =
+      globals.document.querySelectorAll('.ember-power-select-option');
     expect(optionElements).to.have.length(measurementNameMatcherOptions.length);
     measurementNameMatcherOptions.forEach(({ label }, idx) =>
       expect(optionElements[idx].textContent.trim()).to.equal(label)
@@ -165,7 +165,8 @@ describe('Integration | Utility | atm-workflow/store-content-update-options-edit
     await click('.add-field-button');
     await clickTrigger('.timeSeriesNameGenerator-field');
 
-    const optionElements = document.querySelectorAll('.ember-power-select-option');
+    const optionElements =
+      globals.document.querySelectorAll('.ember-power-select-option');
     expect(optionElements).to.have.length(timeSeriesNameGeneratorOptions.length);
     timeSeriesNameGeneratorOptions.forEach(({ label }, idx) =>
       expect(optionElements[idx].textContent.trim()).to.equal(label)
@@ -180,7 +181,8 @@ describe('Integration | Utility | atm-workflow/store-content-update-options-edit
     await selectChoose('.timeSeriesNameGenerator-field', 'Add prefix "addPrefixName"');
     await clickTrigger('.prefixCombiner-field');
 
-    const optionElements = document.querySelectorAll('.ember-power-select-option');
+    const optionElements =
+      globals.document.querySelectorAll('.ember-power-select-option');
     expect(optionElements).to.have.length(prefixCombinerOptions.length);
     prefixCombinerOptions.forEach(({ label }, idx) =>
       expect(optionElements[idx].textContent.trim()).to.equal(label)
@@ -265,7 +267,7 @@ describe('Integration | Utility | atm-workflow/store-content-update-options-edit
       expect(this.get('rootGroup.isValid')).to.be.true;
     });
 
-  it('allows to show existing measurement specs from value constraints', async function () {
+  it('allows to show existing measurement specs', async function () {
     const formValues = timeSeriesEditor.storeContentUpdateOptionsToFormValues({
       dispatchRules: [{
         measurementTimeSeriesNameMatcherType: 'exact',
@@ -294,13 +296,13 @@ describe('Integration | Utility | atm-workflow/store-content-update-options-edit
       .to.contain('Exact "exactName"');
     expect(dispatchRules[0].querySelector('.timeSeriesNameGenerator-field').textContent)
       .to.contain('Add prefix "addPrefixName"');
-    expect(dispatchRules[0].querySelector('.prefixCmbiner-field')).to.not.exist;
+    expect(dispatchRules[0].querySelector('.prefixCombiner-field')).to.not.exist;
 
     expect(dispatchRules[1].querySelector('.measurementNameMatcher-field').textContent)
       .to.contain('Has prefix "hasPrefixName"');
     expect(dispatchRules[1].querySelector('.timeSeriesNameGenerator-field').textContent)
       .to.contain('Exact "exactName"');
-    expect(dispatchRules[1].querySelector('.prefixCmbiner-field')).to.not.exist;
+    expect(dispatchRules[1].querySelector('.prefixCombiner-field')).to.not.exist;
 
     expect(dispatchRules[2].querySelector('.measurementNameMatcher-field').textContent)
       .to.contain('Has prefix "hasPrefixName"');

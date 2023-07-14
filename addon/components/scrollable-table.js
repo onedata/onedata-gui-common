@@ -40,10 +40,9 @@ import layout from '../templates/components/scrollable-table';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import { computed, observer } from '@ember/object';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { inject as service } from '@ember/service';
-import { equal, raw } from 'ember-awesome-macros';
 import $ from 'jquery';
 import dom from 'onedata-gui-common/utils/dom';
+import browser, { BrowserName } from 'onedata-gui-common/utils/browser';
 
 const initialEdgeScrollState = Object.freeze({
   top: true,
@@ -69,8 +68,6 @@ export default Component.extend(WindowResizeHandler, {
     'edgeScrollClasses',
     'renderedInSafari:in-safari',
   ],
-
-  browser: service(),
 
   /**
    * @virtual optional
@@ -104,9 +101,9 @@ export default Component.extend(WindowResizeHandler, {
   scrollPosition: initialScrollPosition,
 
   /**
-   * @type {ComputedProperty<Boolean>}
+   * @type {Boolean}
    */
-  renderedInSafari: equal('browser.browserName', raw('safari')),
+  renderedInSafari: browser.name === BrowserName.Safari,
 
   /**
    * @type {ComputedProperty<String>}

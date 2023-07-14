@@ -1,7 +1,10 @@
+import globals from 'onedata-gui-common/utils/globals';
+
 export function getSlide(slideName, parent = undefined) {
   let normalizedParent = parent;
   if (!parent || typeof parent === 'string') {
-    normalizedParent = parent ? document.querySelector(parent) : document.body;
+    normalizedParent = parent ?
+      globals.document.querySelector(parent) : globals.document.body;
   }
   return normalizedParent.querySelector(`[data-one-carousel-slide-id="${slideName}"]`);
 }

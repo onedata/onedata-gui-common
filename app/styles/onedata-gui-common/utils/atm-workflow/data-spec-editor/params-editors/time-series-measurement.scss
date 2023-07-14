@@ -1,0 +1,42 @@
+.time-series-measurement-data-spec-params-editor {
+  flex-wrap: wrap;
+  margin-bottom: 0;
+
+  > .control-label {
+    flex-basis: 100%;
+    margin-bottom: 5px;
+    padding-top: 0;
+    text-align: left;
+  }
+
+  > .field-component {
+    margin-bottom: -$padding-base-vertical;
+  }
+
+  .collection-item {
+    min-width: 0;
+    width: 15em;
+  }
+
+  .measurementSpec-children > * {
+    flex-wrap: wrap;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    .measurementSpec-children > .field-renderer {
+      margin-bottom: 0;
+
+      &:first-child .control-label {
+        padding-top: 0;
+      }
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .measurementSpec-children > .field-renderer {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

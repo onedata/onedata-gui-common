@@ -5,7 +5,16 @@
     {{yield}}
   {{/if}}
   {{#if isLoading}}
-    {{spin-spinner-block sizeClass=sizeClass class=(concat-classes _spinnerBlockClass spinnerBlockClass)}}
+    {{#spin-spinner-block
+      sizeClass=sizeClass
+      class=(concat-classes _spinnerBlockClass spinnerBlockClass)
+    }}
+      {{#if loadingLabel}}
+        <div class="loading-container-label {{concat "loading-container-label-" sizeClass}}">
+          {{loadingLabel}}
+        </div>
+      {{/if}}
+    {{/spin-spinner-block}}
   {{else if isError}}
     {{#if inlineError}}
       <span class="loading-container-inline-error">{{or customErrorMessage errorReason}}</span>

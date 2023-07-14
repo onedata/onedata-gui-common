@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
@@ -25,6 +22,7 @@ import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions
 import { resolve, Promise } from 'rsvp';
 import { schedule } from '@ember/runloop';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 const laneWidth = 300;
 
@@ -114,7 +112,6 @@ describe('Integration | Component | workflow-visualiser', function () {
           config: {
             itemDataSpec: {
               type: 'string',
-              valueConstraints: {},
             },
           },
           defaultInitialContent: null,
@@ -126,7 +123,7 @@ describe('Integration | Component | workflow-visualiser', function () {
           maxRetries: 0,
           storeIteratorSpec: {
             storeSchemaId: lastStoreId,
-            maxBatchSize: 100,
+            maxBatchSize: 10,
           },
           parallelBoxes: [],
         });
@@ -180,7 +177,7 @@ describe('Integration | Component | workflow-visualiser', function () {
         maxRetries: 0,
         storeIteratorSpec: {
           storeSchemaId: 's1',
-          maxBatchSize: 100,
+          maxBatchSize: 10,
         },
       }),
       initialRawData: twoEmptyLanesExample,
@@ -215,7 +212,6 @@ describe('Integration | Component | workflow-visualiser', function () {
           config: {
             itemDataSpec: {
               type: 'string',
-              valueConstraints: {},
             },
           },
           defaultInitialContent: null,
@@ -225,7 +221,7 @@ describe('Integration | Component | workflow-visualiser', function () {
           maxRetries: 0,
           storeIteratorSpec: {
             storeSchemaId: lastStoreId,
-            maxBatchSize: 100,
+            maxBatchSize: 10,
           },
         });
       },
@@ -304,7 +300,6 @@ describe('Integration | Component | workflow-visualiser', function () {
         config: {
           itemDataSpec: {
             type: 'string',
-            valueConstraints: {},
           },
         },
         defaultInitialContent: null,
@@ -535,21 +530,32 @@ describe('Integration | Component | workflow-visualiser', function () {
   });
 });
 
-class WindowStub {
-  constructor() {
-    this.resizeListeners = [];
-  }
-
-  addEventListener(eventName, listener) {
-    if (eventName === 'resize') {
-      this.resizeListeners.push(listener);
-    }
-  }
-
-  removeEventListener() {}
+function createWindowStub() {
+  return {
+    resizeListeners: new Set(),
+    addEventListener(eventName, listener) {
+      if (eventName === 'resize') {
+        this.resizeListeners.add(listener);
+      } else {
+        globals.nativeWindow.addEventListener(...arguments);
+      }
+    },
+    removeEventListener(eventName, listener) {
+      if (eventName === 'resize') {
+        this.resizeListeners.delete(listener);
+      } else {
+        globals.nativeWindow.removeEventListener(...arguments);
+      }
+    },
+  };
 }
 
-function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
+function itScrollsToLane(
+  message,
+  [overflowEdge, overflowLane],
+  operations,
+  [edgeToCheck, laneToCheck]
+) {
   it(message, async function () {
     await renderForScrollTest(this, 5, laneWidth * 0.6);
     await scrollToLane(overflowEdge, overflowLane, 10);
@@ -571,7 +577,8 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
       if (laneToCheck === 0) {
         expect(lanesContainer.scrollLeft).to.equal(0);
       } else {
-        expect(dom.offset(targetLane).left).to.be.closeTo(dom.offset(lanesContainer).left, 2);
+        expect(dom.offset(targetLane).left)
+          .to.be.closeTo(dom.offset(lanesContainer).left, 2);
       }
     } else {
       if (laneToCheck === lanes.length - 1) {
@@ -670,7 +677,7 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
       maxRetries: 0,
       storeIteratorSpec: {
         storeSchemaId: storeIdFromExample(0),
-        maxBatchSize: 100,
+        maxBatchSize: 10,
       },
       parallelBoxes: [],
     }),
@@ -719,10 +726,11 @@ function itAddsNewTask(message, initialRawData, insertIndex) {
   itPerformsAction({
     description: message,
     actionTriggerGetter: () => find(addTriggerSelector),
-    applyUpdate: rawDump => rawDump.lanes[0].parallelBoxes[0].tasks.splice(insertIndex, 0, {
-      id: sinon.match.string,
-      name: 'Untitled task',
-    }),
+    applyUpdate: rawDump =>
+      rawDump.lanes[0].parallelBoxes[0].tasks.splice(insertIndex, 0, {
+        id: sinon.match.string,
+        name: 'Untitled task',
+      }),
     initialRawData,
   });
 }
@@ -872,9 +880,9 @@ async function renderWithRawData(testCase, rawData) {
 }
 
 async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
+  globals.mock('window', createWindowStub());
   testCase.setProperties({
     rawData: generateExample(lanesNumber, 0, 0),
-    _window: new WindowStub(),
   });
   await changeContainerWidthForScrollTest(testCase, containerWidth);
 
@@ -883,7 +891,6 @@ async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
       {{workflow-visualiser
         mode="view"
         rawData=rawData
-        _window=_window
       }}
     </div>
   `);
@@ -895,7 +902,7 @@ async function changeContainerWidthForScrollTest(testCase, newWidth) {
     htmlSafe(`min-width: ${newWidth}px; max-width: ${newWidth}px`)
   );
   await settled();
-  testCase.get('_window').resizeListeners.forEach(f => f());
+  globals.window.resizeListeners.forEach(f => f());
   await settled();
 }
 
@@ -903,7 +910,7 @@ async function getActionTrigger(elementType, elementPath, actionName) {
   const elementTypeForClasses = dasherize(elementType);
   const elementId = idGenerators[elementType](...elementPath);
   await click(`[data-visualiser-element-id="${elementId}"] .${elementTypeForClasses}-actions-trigger`);
-  return document.querySelector(
+  return globals.document.querySelector(
     `.webui-popover.in .${actionName}-${elementTypeForClasses}-action-trigger`
   );
 }
@@ -1046,7 +1053,7 @@ function generateExample(
       maxRetries: 0,
       storeIteratorSpec: {
         storeSchemaId: storeIdFromExample(0),
-        maxBatchSize: 100,
+        maxBatchSize: 10,
       },
       parallelBoxes: _.range(parallelBoxsPerLane).map(blockNo => ({
         id: parallelBoxIdFromExample(laneNo, blockNo),
@@ -1065,7 +1072,6 @@ function generateExample(
       config: {
         itemDataSpec: {
           type: 'string',
-          valueConstraints: {},
         },
       },
       defaultInitialContent: null,

@@ -118,7 +118,7 @@ export function rawValueToAtmParameterSpecsEditorValue(rawValue) {
     formData.__fieldsValueNames.push(valueName);
     formData[valueName] = createValuesContainer({
       entryName: entry.name,
-      entryDataSpec: dataSpecToFormValues(entry.dataSpec),
+      entryDataSpec: dataSpecToFormValues(entry.dataSpec, true),
       entryIsOptional: entry.isOptional === true,
       entryDefaultValue: atmRawValueToFormValue(entry.defaultValue, true),
     });
@@ -136,7 +136,7 @@ export function atmParameterSpecsEditorValueToRawValue(formValue) {
     .filter(Boolean)
     .map((entry) => ({
       name: entry.entryName,
-      dataSpec: formValuesToDataSpec(entry.entryDataSpec),
+      dataSpec: formValuesToDataSpec(entry.entryDataSpec, true),
       isOptional: Boolean(entry.entryIsOptional),
       defaultValue: atmFormValueToRawValue(entry.entryDefaultValue),
     }));
@@ -203,6 +203,11 @@ const EntryDataSpecField = DataSpecEditor.extend({
    * @override
    */
   name: 'entryDataSpec',
+
+  /**
+   * @override
+   */
+  showExpandParams: true,
 });
 
 const EntryIsOptionalField = ToggleField.extend({

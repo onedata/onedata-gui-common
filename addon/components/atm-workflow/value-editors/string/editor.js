@@ -16,6 +16,7 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/string/editor';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default EditorBase.extend({
   layout,
@@ -31,7 +32,7 @@ export default EditorBase.extend({
    * @override
    */
   didInsertElement() {
-    const textarea = document.querySelector(
+    const textarea = globals.document.querySelector(
       `[data-editor-id="${this.editorState.id}"] textarea`
     );
     if (textarea) {
@@ -87,7 +88,7 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   /**
    * @type {ComputedProperty<'text'|'dropdown'>}
    */
-  editorType: conditional('valueConstraints.allowedValues', raw('dropdown'), raw('text')),
+  editorType: conditional('atmDataSpec.allowedValues', raw('dropdown'), raw('text')),
 
   /**
    * @override
@@ -105,12 +106,12 @@ const FormRootGroup = FormFieldsRootGroup.extend({
   isEnabled: not('component.isDisabled'),
 
   /**
-   * @type {ComputedProperty<AtmStringValueConstraints>}
+   * @type {ComputedProperty<AtmStringDataSpec>}
    */
-  valueConstraints: reads('component.editorState.atmDataSpec.valueConstraints'),
+  atmDataSpec: reads('component.editorState.atmDataSpec'),
 
   valueFieldSetter: observer(
-    'valueConstraints.allowedValues',
+    'atmDataSpec.allowedValues',
     function valueFieldSetter() {
       const valueField = this.getFieldByPath('value');
       const valueFieldIdx = valueField ? this.fields.indexOf(valueField) : 0;
@@ -168,13 +169,13 @@ const DropdownValueInput = DropdownField.extend({
    * Allow empty string.
    * @override
    */
-  isOptional: array.includes('parent.valueConstraints.allowedValues', raw('')),
+  isOptional: array.includes('parent.atmDataSpec.allowedValues', raw('')),
 
   /**
    * @override
    */
-  options: computed('parent.valueConstraints.allowedValues', function options() {
-    return this.parent?.valueConstraints?.allowedValues
+  options: computed('parent.atmDataSpec.allowedValues', function options() {
+    return this.parent?.atmDataSpec?.allowedValues
       ?.map((value) => ({ value, label: value })) ?? [];
   }),
 });

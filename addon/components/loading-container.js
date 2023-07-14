@@ -15,7 +15,7 @@
  * It will render `some-component` if above conditions are not met.
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -56,6 +56,12 @@ export default Component.extend({
    * @type {Boolean}
    */
   inlineError: false,
+
+  /**
+   * @virtual optional
+   * @type {string}
+   */
+  loadingLabel: '',
 
   /**
    * If true, spinner will be absolutely centered, otherwise it will fill

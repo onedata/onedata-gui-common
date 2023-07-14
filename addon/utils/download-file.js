@@ -7,9 +7,10 @@
  */
 
 import $ from 'jquery';
+import globals from 'onedata-gui-common/utils/globals';
 
-export default function downloadFile({ fileUrl, _window }) {
-  const body = _window.document.body;
+export default function downloadFile({ fileUrl }) {
+  const body = globals.document.body;
   const iframe = $('<iframe/>').attr({
     src: fileUrl,
     style: 'display:none;',
@@ -18,14 +19,14 @@ export default function downloadFile({ fileUrl, _window }) {
   setTimeout(() => iframe.remove(), 60000);
 }
 
-export function downloadData({ dataString, fileName, mimeType, _window }) {
+export function downloadData({ dataString, fileName, mimeType }) {
   const blobToDownload = new Blob([dataString], {
     type: mimeType,
     name: fileName,
   });
-  const downloadUrl = _window.URL.createObjectURL(blobToDownload);
+  const downloadUrl = globals.window.URL.createObjectURL(blobToDownload);
 
-  const link = _window.document.createElement('a');
+  const link = globals.document.createElement('a');
   link.type = mimeType;
   link.href = downloadUrl;
   link.download = fileName;

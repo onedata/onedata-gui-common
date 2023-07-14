@@ -26,6 +26,7 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 const DEFAULT_LINE_LENGTH = '100';
 const DEFAULT_LINE_POINTER_LENGTH = '50%';
@@ -242,7 +243,7 @@ function getChartRenderEntry(chart) {
     };
     // remove not existing charts renders
     chartsIndex = chartsIndex.filter((existingChartRender) => {
-      return $.contains(document.documentElement, existingChartRender.node);
+      return $.contains(globals.document.documentElement, existingChartRender.node);
     });
     chartsIndex.push(chartRender);
   }

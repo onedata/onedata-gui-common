@@ -6,6 +6,7 @@ import {
   afterEach,
 } from 'mocha';
 import { GlobalCssVariablesManager } from 'onedata-gui-common/utils/global-css-variables-manager';
+import globals from 'onedata-gui-common/utils/globals';
 
 describe('Unit | Utility | global-css-variables-manager', function () {
   beforeEach(function () {
@@ -108,5 +109,6 @@ function expectVariableValue(testCase, variableName, variableValue) {
 }
 
 function getVariableValueFromDom(variableName) {
-  return getComputedStyle(document.body).getPropertyValue(variableName) || null;
+  return getComputedStyle(globals.document.body)
+    .getPropertyValue(variableName) || null;
 }

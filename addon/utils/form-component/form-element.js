@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * A form element abstraction, which is a base for the form field and the form group.
  * The form component mechanism is built using Composite design pattern where
@@ -625,6 +622,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @public
    * At this level of abstraction we don't know how to return nested fields.
    * Concrete implementation is in FormFieldsGroup
+   * @returns {Utils.FormComponent.FormElement | null}
    */
   getFieldByPath() {
     return null;

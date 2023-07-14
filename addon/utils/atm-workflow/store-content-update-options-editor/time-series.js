@@ -71,8 +71,8 @@ const FormElement = FormFieldsCollectionGroup.extend({
   measurementSpecs: computed('contentUpdateDataSpec', function measurementSpecs() {
     const isArray = this.get('contentUpdateDataSpec.type') === 'array';
     return this.get(isArray ?
-      'contentUpdateDataSpec.valueConstraints.itemDataSpec.valueConstraints.specs' :
-      'contentUpdateDataSpec.valueConstraints.specs'
+      'contentUpdateDataSpec.itemDataSpec.specs' :
+      'contentUpdateDataSpec.specs'
     );
   }),
 

@@ -16,9 +16,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { htmlSafe } from '@ember/string';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import stringifyDuration from 'onedata-gui-common/utils/i18n/stringify-duration';
 import getNumberMetricSuffix from 'onedata-gui-common/utils/get-number-metric-suffix';
+import { formatNumber } from 'onedata-gui-common/helpers/format-number';
 import _ from 'lodash';
 
 /**
@@ -26,6 +28,7 @@ import _ from 'lodash';
  * @property {number} value
  * @property {UnitName|undefined|null} unitName
  * @property {BytesUnitOptions|CustomUnitOptions|undefined|null} unitOptions
+ * @property {boolean} [allowHtml]
  */
 
 /**
@@ -67,11 +70,19 @@ export default function formatValueWithUnit(args) {
     value,
     unitName,
     unitOptions,
+    allowHtml = true,
   } = args;
 
   if (!Number.isFinite(value)) {
     return null;
   }
+
+  const formatNumericMeasurement = (value) => {
+    // Use thousand separating space and up to 3 fractional digits precision
+    return String(formatNumber(value, { format: '# ##0.###', allowHtml }));
+  };
+
+  let result;
   switch (unitName) {
     case 'milliseconds':
     case 'seconds': {
@@ -79,9 +90,11 @@ export default function formatValueWithUnit(args) {
       // For single milliseconds and fractional seconds `stringifyDuration` is not
       // precise enough.
       if (Math.abs(normalizedValue) < 1) {
-        return `${Math.floor(normalizedValue * 1000)} ms`;
+        result = `${Math.floor(normalizedValue * 1000)} ms`;
+        break;
       } else if (Math.abs(normalizedValue) < 60) {
-        return `${Math.floor(normalizedValue * 10) / 10} sec`;
+        result = `${Math.floor(normalizedValue * 10) / 10} sec`;
+        break;
       }
 
       let durationString = stringifyDuration(normalizedValue, {
@@ -91,7 +104,8 @@ export default function formatValueWithUnit(args) {
       if (value < 0) {
         durationString = `-${durationString}`;
       }
-      return durationString;
+      result = durationString;
+      break;
     }
     case 'bits':
     case 'bytes':
@@ -109,11 +123,13 @@ export default function formatValueWithUnit(args) {
         areBits ? value / 8 : value,
         bytesToStringOptions
       );
-      return isPerSec ? `${stringifiedValue}/s` : stringifiedValue;
+      result = isPerSec ? `${stringifiedValue}/s` : stringifiedValue;
+      break;
     }
     case 'hertz': {
       const { suffixedNumber, prefixForUnit } = getNumberMetricSuffix(value);
-      return `${suffixedNumber} ${prefixForUnit}${unitSuffixes[unitName]}`;
+      result = `${formatNumericMeasurement(suffixedNumber)} ${prefixForUnit}${unitSuffixes[unitName]}`;
+      break;
     }
     case 'countsPerSec':
     case 'operationsPerSec':
@@ -121,26 +137,38 @@ export default function formatValueWithUnit(args) {
     case 'readsPerSec':
     case 'writesPerSec':
     case 'ioOperationsPerSec': {
-      const { formattedString } = getNumberMetricSuffix(value);
-      return `${formattedString} ${unitSuffixes[unitName]}`;
+      const { suffixedNumber, suffix } = getNumberMetricSuffix(value);
+      result = `${formatNumericMeasurement(suffixedNumber)}${suffix} ${unitSuffixes[unitName]}`;
+      break;
     }
     case 'percent':
     case 'percentNormalized': {
       const percentNumber = unitName === 'percentNormalized' ? value * 100 : value;
-      return `${percentNumber}%`;
+      result = `${formatNumericMeasurement(percentNumber)}%`;
+      break;
     }
     case 'boolean':
-      return value === 0 ? 'False' : 'True';
+      result = value === 0 ? 'False' : 'True';
+      break;
     case 'custom': {
-      const stringifiedValue = unitOptions && unitOptions.useMetricSuffix === true ?
-        getNumberMetricSuffix(value).formattedString : String(value);
+      let stringifiedValue;
+      if (unitOptions?.useMetricSuffix) {
+        const { suffixedNumber, suffix } = getNumberMetricSuffix(value);
+        stringifiedValue = `${formatNumericMeasurement(suffixedNumber)}${suffix}`;
+      } else {
+        stringifiedValue = formatNumericMeasurement(value);
+      }
       const customUnitName = unitOptions &&
         unitOptions.customName &&
         typeof unitOptions.customName === 'string' ?
         unitOptions.customName : '';
-      return `${stringifiedValue}${customUnitName ? ' ' + customUnitName : ''}`;
+      result = `${stringifiedValue}${customUnitName ? ' ' + customUnitName : ''}`;
+      break;
     }
     default:
-      return String(value);
+      result = formatNumericMeasurement(value);
+      break;
   }
+
+  return allowHtml ? htmlSafe(result) : result;
 }

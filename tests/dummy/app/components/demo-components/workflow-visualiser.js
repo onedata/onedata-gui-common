@@ -314,7 +314,6 @@ export default Component.extend({
       config: {
         itemDataSpec: {
           type: 'number',
-          valueConstraints: {},
         },
       },
       defaultInitialContent: undefined,

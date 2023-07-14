@@ -23,6 +23,7 @@ import { Promise, resolve } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import dom from 'onedata-gui-common/utils/dom';
 import { isEmpty } from 'ember-awesome-macros';
+import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * @typedef {Object} OneInlineEditorSettings
@@ -299,7 +300,7 @@ export default Component.extend(I18n, {
       this.onApiRegister(this.editorApi);
     }
     if (this.get('isInToolbar')) {
-      $(window).on(`resize.${this.element.id}`, () => {
+      $(globals.window).on(`resize.${this.element.id}`, () => {
         run(() => {
           if (this.get('_inEditionMode')) {
             this.resizeToFitToolbar();
@@ -312,7 +313,7 @@ export default Component.extend(I18n, {
   willDestroyElement() {
     if (this.get('isInToolbar')) {
       run(() => {
-        $(window).off(`resize.${this.element.id}`);
+        $(globals.window).off(`resize.${this.element.id}`);
       });
     }
   },
@@ -329,7 +330,7 @@ export default Component.extend(I18n, {
       );
       const toolbarWidth = toolbar && dom.width(toolbar, dom.LayoutBox.ContentBox) || 0;
       const paddingRight = parseFloat(
-        window.getComputedStyle(element)['padding-right']
+        globals.window.getComputedStyle(element)['padding-right']
       );
       const width = parentWidth - toolbarWidth - paddingRight - (toolbarWidth ? 50 : 0);
       dom.setStyle(element, 'width', `${width}px`);

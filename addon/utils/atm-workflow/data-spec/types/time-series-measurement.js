@@ -12,23 +12,18 @@ import { typeDefinitionBase } from './commons';
 /**
  * @typedef {Object} AtmTimeSeriesMeasurementDataSpec
  * @property {'timeSeriesMeasurement'} type
- * @property {AtmTimeSeriesMeasurementValueConstraints} valueConstraints
- */
-
-/**
- * @typedef {Object} AtmTimeSeriesMeasurementValueConstraints
  * @property {Array<AtmTimeSeriesMeasurementSpec>} specs
  */
 
 /**
- * @typedef {Object} AtmTimeSeriesMeasurementValueConstraintsConditions
+ * @typedef {Object} AtmTimeSeriesMeasurementDataSpecParamssConditions
  * TODO: VFS-10007 implement understanding these conditions
  * @property {Array<AtmTimeSeriesMeasurementSpec>|null} allowedSpecs for subtype
  * @property {Array<AtmTimeSeriesMeasurementSpec>|null} requiredSpecs for supertype
  */
 
 /**
- * @type {AtmDataSpecTypeDefinition<AtmTimeSeriesMeasurementValueConstraints, AtmTimeSeriesMeasurementValueConstraintsConditions>}
+ * @type {AtmDataSpecTypeDefinition<AtmTimeSeriesMeasurementDataSpec, AtmTimeSeriesMeasurementDataSpecParamssConditions>}
  */
 export const atmDataSpecTypeDefinition = Object.freeze({
   ...typeDefinitionBase,
@@ -40,7 +35,7 @@ export const atmDataSpecTypeDefinition = Object.freeze({
       value: 0,
     };
   },
-  // TODO: VFS-10007 implement `getValueConstraintsConditions`
+  // TODO: VFS-10007 implement `getAtmDataSpecParamsConditions`
 });
 
 /**

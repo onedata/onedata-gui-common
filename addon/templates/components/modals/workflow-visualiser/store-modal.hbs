@@ -88,6 +88,12 @@
           onGetTimeSeriesCollectionRefsMap=getTimeSeriesCollectionRefsMapCallback
           live=store.contentMayChange
         }}
+      {{else if (eq store.type "exception")}}
+        {{modals/workflow-visualiser/store-modal/exception-presenter
+          store=store
+          getStoreContentCallback=getStoreContentCallback
+          context=storeContentPresenterContext
+        }}
       {{else}}
         <p class="text-danger">{{tt this "noContentDueToUnknownStoreType"}}</p>
       {{/if}}
@@ -116,5 +122,4 @@
       {{/one-button}}
     {{/modal.footer}}
   {{/if}}
-
 {{/global-modal}}

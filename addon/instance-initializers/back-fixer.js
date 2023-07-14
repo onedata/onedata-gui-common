@@ -8,18 +8,19 @@
 
 import $ from 'jquery';
 import { next } from '@ember/runloop';
+import globals from 'onedata-gui-common/utils/globals';
+import browser, { BrowserName } from 'onedata-gui-common/utils/browser';
 
-export function initialize(applicationInstance) {
+export function initialize() {
   // Fix for Firefox
-  window.addEventListener('unload', function () {});
+  globals.window.addEventListener('unload', function () {});
 
   // Hack to not use Safari cache
-  const browser = applicationInstance.lookup('service:browser');
-  const isSafari = browser.get('browserName') === 'safari';
+  const isSafari = browser.name === BrowserName.Safari;
   if (isSafari) {
-    $(window).bind('pagehide', function () {
-      window.onedataIsReloadingApp = 1;
-      next(() => window.location.reload());
+    $(globals.window).bind('pagehide', function () {
+      globals.window.onedataIsReloadingApp = 1;
+      next(() => globals.location.reload());
     });
   }
 }

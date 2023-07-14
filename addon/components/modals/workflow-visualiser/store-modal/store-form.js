@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 /**
  * A form responsible for showing and editing/creating stores. It does not persists
  * data. Any changes are yielded using `onChange` callback.
@@ -68,6 +65,7 @@ const storeTypes = Object.freeze([
   'range',
   'auditLog',
   'timeSeries',
+  'exception',
 ]);
 
 const storeSpecificAllowedDataSpecTypes = Object.freeze({
@@ -80,7 +78,15 @@ const storeSpecificForbiddenDataSpecTypes = Object.freeze({
   auditLog: ['file', 'dataset'],
 });
 
-const storeTypesExpandingArrays = ['list', 'treeForest', 'auditLog', 'timeSeries'];
+const storeTypesExpandingArrays = [
+  'list',
+  'treeForest',
+  'auditLog',
+  'timeSeries',
+  'exception',
+];
+
+const storeTypesUnavailableToEdition = ['exception'];
 
 export default Component.extend(I18n, {
   layout,
@@ -136,6 +142,7 @@ export default Component.extend(I18n, {
     'allowedStoreReadDataSpec',
     'allowedStoreWriteDataSpec',
     'allowedStoreTypes',
+    'mode',
     function effAllowedStoreTypes() {
       const {
         allowedStoreReadDataSpec,
@@ -148,6 +155,12 @@ export default Component.extend(I18n, {
       );
 
       let effAllowedTypes = storeTypes;
+
+      if (this.mode !== 'view') {
+        effAllowedTypes = effAllowedTypes.filter((type) =>
+          !storeTypesUnavailableToEdition.includes(type)
+        );
+      }
 
       if (allowedStoreTypes && allowedStoreTypes.length) {
         effAllowedTypes = effAllowedTypes.filter((type) =>
@@ -170,7 +183,7 @@ export default Component.extend(I18n, {
             storeTypesExpandingArrays.includes(storeType)
           ) {
             isOk = isDataSpecValidForStoreConfig(
-              get(allowedStoreWriteDataSpec, 'valueConstraints.itemDataSpec'),
+              allowedStoreWriteDataSpec.itemDataSpec,
               storeType
             );
           }
@@ -496,7 +509,7 @@ export default Component.extend(I18n, {
         types: [allowedStoreWriteDataSpec],
       };
       const arrayItemDataSpec = allowedStoreWriteDataSpec.type === 'array' &&
-        get(allowedStoreWriteDataSpec, 'valueConstraints.itemDataSpec');
+        allowedStoreWriteDataSpec?.itemDataSpec;
       if (arrayItemDataSpec && storeTypesExpandingArrays.includes(storeType)) {
         typeOrSupertypeFilter.types.push(arrayItemDataSpec);
       }

@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Renders special instance of one-modal, which uses state of modalManager service
  * to control itself.
@@ -46,6 +43,12 @@ export default Component.extend({
    * @type {boolean}
    */
   allowClose: true,
+
+  /**
+   * @virtual optional
+   * @type {boolean | (transitionInfo: TransitionInfo) => boolean}
+   */
+  shouldCloseOnTransition: true,
 
   /**
    * Callback called on modal hide. If returns false, then modal hide is cancelled.

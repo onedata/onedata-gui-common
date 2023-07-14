@@ -56,10 +56,8 @@ export default Component.extend({
   numberEditorStateManager2: computed(() => {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.Number,
-      valueConstraints: {
-        allowedValues: [1, 1.5, 2, 3],
-        integersOnly: true,
-      },
+      allowedValues: [1, 1.5, 2, 3],
+      integersOnly: true,
     });
   }),
 
@@ -84,15 +82,13 @@ export default Component.extend({
   stringEditorStateManager2: computed(() => {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.String,
-      valueConstraints: {
-        allowedValues: [
-          '',
-          'a',
-          'b',
-          'c',
-          'Velit non veniam ut ipsum dolore laboris ea. Reprehenderit velit magna proident qui magna anim elit veniam. Laboris in nulla reprehenderit ex velit aliqua amet cillum do nisi esse cupidatat. Tempor pariatur consectetur proident ipsum magna proident irure ipsum excepteur esse veniam amet.',
-        ],
-      },
+      allowedValues: [
+        '',
+        'a',
+        'b',
+        'c',
+        'Velit non veniam ut ipsum dolore laboris ea. Reprehenderit velit magna proident qui magna anim elit veniam. Laboris in nulla reprehenderit ex velit aliqua amet cillum do nisi esse cupidatat. Tempor pariatur consectetur proident ipsum magna proident irure ipsum excepteur esse veniam amet.',
+      ],
     });
   }),
 
@@ -135,10 +131,8 @@ export default Component.extend({
   arrayStringEditorStateManager: computed(() => {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.Array,
-      valueConstraints: {
-        itemDataSpec: {
-          type: AtmDataSpecType.String,
-        },
+      itemDataSpec: {
+        type: AtmDataSpecType.String,
       },
     });
   }),
@@ -146,14 +140,10 @@ export default Component.extend({
   arrayArrayRangeEditorStateManager: computed(() => {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.Array,
-      valueConstraints: {
+      itemDataSpec: {
+        type: AtmDataSpecType.Array,
         itemDataSpec: {
-          type: AtmDataSpecType.Array,
-          valueConstraints: {
-            itemDataSpec: {
-              type: AtmDataSpecType.Range,
-            },
-          },
+          type: AtmDataSpecType.Range,
         },
       },
     });
@@ -162,10 +152,8 @@ export default Component.extend({
   arrayFileEditorStateManager: computed(function arrayFileEditorStateManager() {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.Array,
-      valueConstraints: {
-        itemDataSpec: {
-          type: AtmDataSpecType.File,
-        },
+      itemDataSpec: {
+        type: AtmDataSpecType.File,
       },
     }, this.context);
   }),
@@ -173,10 +161,8 @@ export default Component.extend({
   arrayDatasetEditorStateManager: computed(function arrayDatasetEditorStateManager() {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.Array,
-      valueConstraints: {
-        itemDataSpec: {
-          type: AtmDataSpecType.Dataset,
-        },
+      itemDataSpec: {
+        type: AtmDataSpecType.Dataset,
       },
     }, this.context);
   }),

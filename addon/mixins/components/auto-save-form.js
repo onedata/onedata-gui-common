@@ -10,12 +10,11 @@ import Mixin from '@ember/object/mixin';
 import EmberObject, { computed, get } from '@ember/object';
 import { run, debounce, later, cancel } from '@ember/runloop';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
+import globals from 'onedata-gui-common/utils/globals';
 
 const formSendDebounceTime = 4000;
 
 export default Mixin.create({
-  _window: window,
-
   /**
    * Action called on data send. The only arguments is an object with
    * modified data.
@@ -114,21 +113,13 @@ export default Mixin.create({
 
   init() {
     this._super(...arguments);
-    const {
-      _window,
-      unloadHandler,
-    } = this.getProperties('_window', 'unloadHandler');
-    _window.addEventListener('beforeunload', unloadHandler);
+    globals.window.addEventListener('beforeunload', this.unloadHandler);
   },
 
   willDestroyElement() {
     try {
-      const {
-        _window,
-        unloadHandler,
-      } = this.getProperties('_window', 'unloadHandler');
-      _window.removeEventListener('beforeunload', unloadHandler);
-      unloadHandler();
+      globals.window.removeEventListener('beforeunload', this.unloadHandler);
+      this.unloadHandler();
     } finally {
       this._super(...arguments);
     }

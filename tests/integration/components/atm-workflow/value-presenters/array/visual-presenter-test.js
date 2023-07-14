@@ -251,9 +251,7 @@ function createArrayDataSpec(itemType, arrayNesting = 1) {
   for (let i = 0; i < arrayNesting; i++) {
     dataSpec = {
       type: 'array',
-      valueConstraints: {
-        itemDataSpec: dataSpec,
-      },
+      itemDataSpec: dataSpec,
     };
   }
   return dataSpec;

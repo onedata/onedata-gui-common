@@ -11,21 +11,16 @@ import { typeDefinitionBase } from './commons';
 /**
  * @typedef {Object} AtmStringDataSpec
  * @property {'string'} type
- * @property {AtmStringValueConstraints} valueConstraints
- */
-
-/**
- * @typedef {Object} AtmStringValueConstraints
  * @property {Array<string>|null} [allowedValues]
  */
 
 /**
- * @type {AtmDataSpecTypeDefinition<AtmStringValueConstraints, null>}
+ * @type {AtmDataSpecTypeDefinition<AtmStringDataSpec, null>}
  */
 export const atmDataSpecTypeDefinition = Object.freeze({
   ...typeDefinitionBase,
   getDefaultValue(atmDataSpec) {
-    const allowedValues = atmDataSpec?.valueConstraints?.allowedValues;
+    const allowedValues = atmDataSpec?.allowedValues;
     return (!allowedValues?.length || allowedValues?.includes('')) ? '' : allowedValues[0];
   },
 });

@@ -6,6 +6,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { assert } from '@ember/debug';
+import _ from 'lodash';
+
 /**
  * # WHAT IS AN AUDIT LOG
  *
@@ -210,7 +213,7 @@ export function normalizeEntrySource(source) {
 }
 
 /**
- * @typedef {'debug'|'info'|'notice'|'warning'|'alert'|'error'|'critical'|'emergency'} AuditLogEntrySeverity
+ * @typedef {'debug'|'info'|'notice'|'warning'|'error'|'critical'|'alert'|'emergency'} AuditLogEntrySeverity
  */
 
 /**
@@ -222,11 +225,30 @@ export const EntrySeverity = Object.freeze({
   Info: 'info',
   Notice: 'notice',
   Warning: 'warning',
-  Alert: 'alert',
   Error: 'error',
   Critical: 'critical',
+  Alert: 'alert',
   Emergency: 'emergency',
 });
+
+/**
+ * @type {Array<AuditLogEntrySeverity>}
+ */
+export const entrySeveritiesArray = Object.freeze([
+  EntrySeverity.Debug,
+  EntrySeverity.Info,
+  EntrySeverity.Notice,
+  EntrySeverity.Warning,
+  EntrySeverity.Error,
+  EntrySeverity.Critical,
+  EntrySeverity.Alert,
+  EntrySeverity.Emergency,
+]);
+
+assert(
+  '`entrySeveritiesArray` should have the same values as `EntrySeverity` does.',
+  _.isEqual(Object.values(EntrySeverity).sort(), [...entrySeveritiesArray].sort())
+);
 
 /**
  * The most common severity level, which can be used as a default one and as

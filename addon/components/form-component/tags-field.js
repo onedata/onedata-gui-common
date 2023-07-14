@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * A component responsible for rendering tags field.
  *
@@ -64,11 +61,8 @@ export default FieldComponentBase.extend({
         field,
       } = this.getProperties('sort', 'field');
 
-      if (sort) {
-        tags = field.sortTags(tags);
-      }
-
-      return this._super(field.tagsToValue(tags));
+      const tagsAfterSort = sort ? field.sortTags(tags) : tags;
+      return this._super(field.tagsToValue(tagsAfterSort));
     },
   },
 });

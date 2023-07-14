@@ -15,6 +15,7 @@ import StaticUserField from 'onedata-gui-common/utils/form-component/static-user
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import ColorField from 'onedata-gui-common/utils/form-component/color-field';
 import CustomValueDropdownField from 'onedata-gui-common/utils/form-component/custom-value-dropdown-field';
+import AceField from 'onedata-gui-common/utils/form-component/ace-field';
 import {
   Tag as RecordTag,
   removeExcessiveTags,
@@ -76,6 +77,7 @@ export default Component.extend({
           this.colorField,
           this.dropdownField,
           this.customValueDropdownField,
+          this.aceField,
           this.radioField,
           this.datetimeField,
           this.addButtonField,
@@ -277,6 +279,14 @@ export default Component.extend({
           label: 'wrong address',
         },
       ],
+    });
+  }),
+
+  aceField: computed(function aceField() {
+    return AceField.create({
+      name: 'ace',
+      label: 'ACE JSON',
+      lang: 'json',
     });
   }),
 

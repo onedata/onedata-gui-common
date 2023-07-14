@@ -28,6 +28,12 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.proceedProcessModal',
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  shouldCloseOnTransition: true,
+
+  /**
    * If true, modal is opened
    * @type {boolean}
    */

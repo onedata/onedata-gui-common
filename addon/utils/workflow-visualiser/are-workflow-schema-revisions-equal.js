@@ -154,27 +154,9 @@ function areStoreConfigsEqual(config1, config2) {
   if (_.isEmpty(config1) && _.isEmpty(config2)) {
     return true;
   }
-  return checkEqualityPerEachKey(config1, config2, (key, val1, val2) => {
-    switch (key) {
-      case 'logContentDataSpec':
-      case 'itemDataSpec':
-        return areDataSpecsEqual(val1, val2);
-      default:
-        return _.isEqual(val1, val2);
-    }
-  });
-}
-
-function areDataSpecsEqual(dataSpec1, dataSpec2) {
-  return checkEqualityPerEachKey(dataSpec1, dataSpec2, (key, val1, val2) => {
-    switch (key) {
-      case 'valueConstraints':
-        return (isNoneOrEmptyObject(val1) && isNoneOrEmptyObject(val2)) ||
-          _.isEqual(val1, val2);
-      default:
-        return _.isEqual(val1, val2);
-    }
-  });
+  return checkEqualityPerEachKey(config1, config2, (key, val1, val2) =>
+    _.isEqual(val1, val2)
+  );
 }
 
 function areRangeStoreDefaultValuesEqual(default1, default2) {
@@ -192,10 +174,6 @@ function areRangeStoreDefaultValuesEqual(default1, default2) {
 
 function isNone(val) {
   return val === null || val === undefined;
-}
-
-function isNoneOrEmptyObject(val) {
-  return isNone(val) || typeof val === 'object' && Object.keys(val).length === 0;
 }
 
 function isNoneOrEmptyArray(val) {

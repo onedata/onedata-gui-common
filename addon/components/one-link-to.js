@@ -15,13 +15,11 @@
  */
 
 import LinkComponent from '@ember/routing/link-component';
-import { inject as service } from '@ember/service';
-import { equal, raw } from 'ember-awesome-macros';
+import globals from 'onedata-gui-common/utils/globals';
+import browser, { BrowserName } from 'onedata-gui-common/utils/browser';
 
 export default LinkComponent.extend({
   attributeBindings: ['draggable'],
-
-  browser: service(),
 
   /**
    * @type {Boolean}
@@ -29,9 +27,9 @@ export default LinkComponent.extend({
   draggable: undefined,
 
   /**
-   * @type {ComputedProperty<Boolean>}
+   * @type {Boolean}
    */
-  isInFirefox: equal('browser.browserName', raw('firefox')),
+  isInFirefox: browser.name === BrowserName.Firefox,
 
   init() {
     this._super(...arguments);
@@ -47,7 +45,7 @@ export default LinkComponent.extend({
 
   dragStart(event) {
     const nestedInputs = [...this.get('element').querySelectorAll('input')];
-    if (nestedInputs.includes(document.activeElement)) {
+    if (nestedInputs.includes(globals.document.activeElement)) {
       event.preventDefault();
       return;
     }

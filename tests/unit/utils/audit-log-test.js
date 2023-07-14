@@ -274,9 +274,9 @@ describe('Unit | Utility | audit-log', function () {
     itTranslatesSeverity(EntrySeverity.Info, 'Info');
     itTranslatesSeverity(EntrySeverity.Notice, 'Notice');
     itTranslatesSeverity(EntrySeverity.Warning, 'Warning');
-    itTranslatesSeverity(EntrySeverity.Alert, 'Alert');
     itTranslatesSeverity(EntrySeverity.Error, 'Error');
     itTranslatesSeverity(EntrySeverity.Critical, 'Critical');
+    itTranslatesSeverity(EntrySeverity.Alert, 'Alert');
     itTranslatesSeverity(EntrySeverity.Emergency, 'Emergency');
   });
 });

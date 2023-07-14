@@ -62,14 +62,10 @@ export default Component.extend({
 
   array1DataSpec: Object.freeze({
     type: 'array',
-    valueConstraints: {
+    itemDataSpec: {
+      type: 'array',
       itemDataSpec: {
-        type: 'array',
-        valueConstraints: {
-          itemDataSpec: {
-            type: 'string',
-          },
-        },
+        type: 'string',
       },
     },
   }),

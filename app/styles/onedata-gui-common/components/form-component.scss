@@ -139,6 +139,21 @@ $form-component-view-margin: $padding-base-vertical;
     word-wrap: break-word;
   }
 
+  .ace-field-renderer {
+    .field-component {
+      display: grid;
+      height: 15em;
+
+      > div {
+        display: grid;
+      }
+    }
+
+    .ace_editor {
+      margin: 0;
+    }
+  }
+
   .field-view-mode {
     &:not(.form-fields-group-renderer) {
       margin-bottom: $form-component-view-margin;

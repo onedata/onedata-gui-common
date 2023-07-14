@@ -70,9 +70,7 @@ describe('Integration | Component | atm-workflow/value-editors/string/editor', f
   it('shows all allowed strings in dropdown when "allowedValues" is set', async function () {
     this.set('stateManager', new ValueEditorStateManager({
       type: AtmDataSpecType.String,
-      valueConstraints: {
-        allowedValues: ['a', 'b'],
-      },
+      allowedValues: ['a', 'b'],
     }));
 
     await renderComponent();
@@ -83,9 +81,7 @@ describe('Integration | Component | atm-workflow/value-editors/string/editor', f
   it('selects empty string by default if empty string exists in non-empty "allowedValues"', async function () {
     this.set('stateManager', new ValueEditorStateManager({
       type: AtmDataSpecType.String,
-      valueConstraints: {
-        allowedValues: ['a', '', 'b'],
-      },
+      allowedValues: ['a', '', 'b'],
     }));
 
     await renderComponent();
@@ -98,9 +94,7 @@ describe('Integration | Component | atm-workflow/value-editors/string/editor', f
     async function () {
       this.set('stateManager', new ValueEditorStateManager({
         type: AtmDataSpecType.String,
-        valueConstraints: {
-          allowedValues: ['a', 'b'],
-        },
+        allowedValues: ['a', 'b'],
       }));
 
       await renderComponent();
@@ -113,9 +107,7 @@ describe('Integration | Component | atm-workflow/value-editors/string/editor', f
   it('allows to change selected string when "allowedValues" is not empty', async function () {
     this.set('stateManager', new ValueEditorStateManager({
       type: AtmDataSpecType.String,
-      valueConstraints: {
-        allowedValues: ['a', 'b'],
-      },
+      allowedValues: ['a', 'b'],
     }));
     await renderComponent();
 

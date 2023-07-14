@@ -87,6 +87,12 @@ const storeTypes = [{
 }, {
   label: 'Time series',
   type: 'timeSeries',
+}, {
+  ...arrayOfDatasetsDefaultValueSetup,
+  label: 'Exception',
+  type: 'exception',
+  dataSpecConfigKey: 'itemDataSpec',
+  viewOnly: true,
 }];
 
 const storeTypesWithGenericConfig = storeTypes
@@ -214,7 +220,6 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
           config: {
             itemDataSpec: {
               type: 'string',
-              valueConstraints: {},
             },
           },
           defaultInitialContent: null,
@@ -224,7 +229,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
       });
     });
 
-    storeTypesWithGenericConfig.forEach(({
+    storeTypesWithGenericConfig.filter(({ viewOnly }) => !viewOnly).forEach(({
       label,
       type,
       dataSpecConfigKey,
@@ -286,7 +291,6 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
           expectedJson.data.config = {
             [dataSpecConfigKey]: {
               type: defaultDataType || 'dataset',
-              valueConstraints: {},
             },
           };
         }
@@ -373,7 +377,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
       expect(find(`.${componentClass}`)).to.have.class('mode-edit');
     });
 
-    storeTypesWithGenericConfig.forEach(({
+    storeTypesWithGenericConfig.filter(({ viewOnly }) => !viewOnly).forEach(({
       label,
       type,
       dataSpecConfigKey,
@@ -391,7 +395,6 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
           config: {
             [dataSpecConfigKey]: {
               type: defaultDataType || 'dataset',
-              valueConstraints: {},
             },
           },
           defaultInitialContent: defaultValueForTests ?? null,
@@ -513,7 +516,6 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
           config: dataSpecConfigKey ? {
             [dataSpecConfigKey]: {
               type: defaultDataType || 'dataset',
-              valueConstraints: {},
             },
           } : undefined,
           defaultInitialContent: defaultValueForTests ?? null,

@@ -7,6 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import EmberAce from 'onedata-gui-common/components/ember-ace';
+import ChartistChart from 'onedata-gui-common/components/chartist-chart';
 import OneModalBody from 'onedata-gui-common/components/one-modal/body';
 import OneModal from 'onedata-gui-common/components/one-modal';
 
@@ -16,6 +18,8 @@ import OneModal from 'onedata-gui-common/components/one-modal';
 const overrides = {
   'component:bs-modal/body': OneModalBody,
   'component:bs-modal': OneModal,
+  'component:chartist-chart': ChartistChart,
+  'component:ember-ace': EmberAce,
 };
 
 export default function overrideComponents(applicationInstance) {

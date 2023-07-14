@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * @abstract To implement in specific projects
  * An abstraction layer for getting data for sidebar of various tabs
@@ -53,6 +50,7 @@ export default Service.extend({
   /**
    * Returns Promise ready to be consumed by sidebar
    * @param {string} resourceType
+   * @returns {Promise<{ resourceType: string, collection: Array<Object> }>}
    */
   getSidebarModelFor(resourceType) {
     const collectionProxy = this.getCollectionFor(resourceType);

@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * A global state of page navigation. Accumulates data about active content and
  * aspect, generates proper global bar titles, active content level and manages
@@ -445,6 +442,7 @@ export default Service.extend(I18n, {
    * @param {Object} options
    * @param {Boolean} [replaceHistory=false] if true, there will be no entry in history
    *   for options state before options set (only entry with new options)
+   * @returns {Transition}
    */
   setRouteAspectOptions(options, replaceHistory = false) {
     const serializedOptions = serializeAspectOptions(options);
@@ -461,6 +459,7 @@ export default Service.extend(I18n, {
    * @param {Object} optionsDiff
    * @param {Boolean} [replaceHistory=false] if true, there will be no entry in history
    *   for options state before options set (only entry with new options)
+   * @returns {Transition}
    */
   changeRouteAspectOptions(optionsDiff, replaceHistory) {
     return this.setRouteAspectOptions(

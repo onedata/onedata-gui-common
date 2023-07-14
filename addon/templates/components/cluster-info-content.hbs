@@ -15,22 +15,24 @@
         }}
       </td>
     </tr>
-    <tr class="row-with-text">
-      <td class="property-name">{{tt this "type"}}</td>
-      <td class="property-value capitalized-text">
-        {{clusterType}}
-      </td>
-    </tr>
-    <tr class="row-with-text">
-      <td class="property-name">{{tt this "domain"}}</td>
-      <td class="property-value">
-        {{one-clipboard-line
-          size="sm"
-          value=record.domain
-          type="text"
-        }}
-      </td>
-    </tr>
+    {{#if showDetails}}
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "type"}}</td>
+        <td class="property-value capitalized-text">
+          {{clusterType}}
+        </td>
+      </tr>
+      <tr class="row-with-text">
+        <td class="property-name">{{tt this "domain"}}</td>
+        <td class="property-value">
+          {{one-clipboard-line
+            size="sm"
+            value=record.domain
+            type="text"
+          }}
+        </td>
+      </tr>
+    {{/if}}
     <tr class="row-with-text">
       <td class="property-name">{{tt this "id"}}</td>
       <td class="property-value id">
@@ -43,7 +45,7 @@
     </tr>
   </tbody>
 </table>
-{{#if linkToCluster}}
+{{#if (and showDetails linkToCluster)}}
   <div class="links-container">
     <a href={{linkToCluster}} class="info-link clickable">
       {{tt this "openCluster"}}

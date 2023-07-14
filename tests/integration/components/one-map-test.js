@@ -6,6 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import _ from 'lodash';
 import dom from 'onedata-gui-common/utils/dom';
+import globals from 'onedata-gui-common/utils/globals';
 
 function getRelativePosition(parent, child) {
   const pPosition = dom.offset(parent);
@@ -73,13 +74,12 @@ describe('Integration | Component | one-map', function () {
     'triggers window event on viewport change if event has been specified',
     async function () {
       const eventSpy = sinon.spy();
-      const _window = {
+      globals.mock('window', {
         dispatchEvent: eventSpy,
-      };
-      this.set('_window', _window);
+      });
       await render(hbs `
         <div style="width: 1400px; height: 700px">
-          {{one-map _window=_window triggerWindowEventName="mapTestResize"}}
+          {{one-map triggerWindowEventName="mapTestResize"}}
         </div>
       `);
       expect(eventSpy.lastCall.args[0].type).to.be.equal('mapTestResize');

@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * A mixin that provides values tree operations for the one-dynamic-tree
  * component. To store value, a tree data structure is used. That tree has
@@ -23,7 +20,7 @@ import { typeOf } from '@ember/utils';
 export default Mixin.create({
   /**
    * Values tree.
-   * @type {Ember.Object}
+   * @type {EmberObject}
    */
   values: null,
 
@@ -31,6 +28,7 @@ export default Mixin.create({
    * Creates new values tree from definition.
    * @param {Array.Object} definition
    * @param {boolean} useDefaults
+   * @returns {EmberObject}
    */
   _buildEmptyValuesTree(definition, useDefaults = false) {
     const tmpRoot = {
@@ -47,7 +45,7 @@ export default Mixin.create({
    * @param {boolean} useDefaults Fill nodes with default values.
    * @param {Object} overrideValues If passed, it will be used as a source of
    *   default values instead of tree definition.
-   * @returns {Ember.Object} A values node.
+   * @returns {EmberObject} A values node.
    */
   _buildValuesNode(node, useDefaults, overrideValues) {
     if (!node.subtree) {
@@ -83,9 +81,10 @@ export default Mixin.create({
 
   /**
    * Copies values from actual values to treeTo. Nodes values are copied only if
-   * node structure is the same in both trees. treeTo must be an Ember.Object.
-   * @param {Object|Ember.Object} treeFrom
-   * @param {Ember.Object} treeTo
+   * node structure is the same in both trees. treeTo must be an EmberObject.
+   * @param {Object|EmberObject} treeFrom
+   * @param {EmberObject} treeTo
+   * @returns {EmberObject}
    */
   _mergeValuesTrees(treeFrom, treeTo) {
     this._mergeValuesNodeCopy(treeTo, treeFrom);
@@ -94,8 +93,8 @@ export default Mixin.create({
 
   /**
    * Copies (merges) values from passed node to another.
-   * @param {Ember.Object} nodeTo
-   * @param {Object|Ember.Object} treeFrom
+   * @param {EmberObject} nodeTo
+   * @param {Object|EmberObject} treeFrom
    */
   _mergeValuesNodeCopy(nodeTo, nodeFrom) {
     const objectTypes = ['instance', 'object'];

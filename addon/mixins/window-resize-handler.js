@@ -10,6 +10,7 @@ import Mixin from '@ember/object/mixin';
 import { computed } from '@ember/object';
 import { debounce } from '@ember/runloop';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default Mixin.create({
   /**
@@ -25,11 +26,6 @@ export default Mixin.create({
    * Debounce time for window resize handler
    */
   windowResizeDebounceTime: 100,
-
-  /**
-   * @type {Window}
-   */
-  _window: window,
 
   /**
    * @type {Ember.ComputedProperty<Function>}
@@ -48,26 +44,10 @@ export default Mixin.create({
   }),
 
   attachWindowResizeHandler() {
-    const {
-      windowResizeHandler,
-      _window,
-    } = this.getProperties(
-      'windowResizeHandler',
-      '_window'
-    );
-
-    _window.addEventListener('resize', windowResizeHandler);
+    globals.window.addEventListener('resize', this.windowResizeHandler);
   },
 
   detachWindowResizeHandler() {
-    const {
-      windowResizeHandler,
-      _window,
-    } = this.getProperties(
-      'windowResizeHandler',
-      '_window'
-    );
-
-    _window.removeEventListener('resize', windowResizeHandler);
+    globals.window.removeEventListener('resize', this.windowResizeHandler);
   },
 });

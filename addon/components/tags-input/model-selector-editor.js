@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 /**
  * A tags (tokenizer) input editor, which allows to add tags using selector with
  * model records. Available models are: user, group, oneprovider, service (op and oz),
@@ -44,16 +41,17 @@ const supportedModels = [
  * @returns {Array<Tag>}
  */
 export function removeExcessiveTags(tags) {
+  let resultTags = tags;
   supportedModels.forEach(model => {
-    if (tags.findBy('value.record.representsAll', model)) {
-      tags = tags.filter(tag =>
+    if (resultTags.findBy('value.record.representsAll', model)) {
+      resultTags = resultTags.filter(tag =>
         get(tag, 'value.model') !== model ||
         get(tag, 'value.record.representsAll') ||
         get(tag, 'value.record.serviceType') === 'onezone'
       );
     }
   });
-  return tags;
+  return resultTags;
 }
 
 // ModelSelectorEditor needs specific tag object to handle record related data.

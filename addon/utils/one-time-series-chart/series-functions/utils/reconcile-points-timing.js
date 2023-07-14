@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable max-len */
-
 /**
  * Alters points arrays so that all have the same timestamps (time domain).
  * All arrays will be aligned to the array with the newest set of points -
@@ -50,7 +47,8 @@ export default function reconcilePointsTiming(pointsArrays) {
       continue;
     }
 
-    const indexOfFirstTimestamp = pointsArray.findIndex(({ timestamp }) => timestamp === firstTimestamp);
+    const indexOfFirstTimestamp =
+      pointsArray.findIndex(({ timestamp }) => timestamp === firstTimestamp);
     const pointsToRemoveCount = indexOfFirstTimestamp >= 0 ?
       indexOfFirstTimestamp : pointsArray.length;
     const removedPoints = pointsArray.splice(0, pointsToRemoveCount);

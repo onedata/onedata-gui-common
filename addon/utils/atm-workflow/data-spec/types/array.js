@@ -12,45 +12,40 @@ import { typeDefinitionBase } from './commons';
 /**
  * @typedef {Object} AtmArrayDataSpec
  * @property {'array'} type
- * @property {AtmArrayValueConstraints} valueConstraints
- */
-
-/**
- * @typedef {Object} AtmArrayValueConstraints
  * @property {AtmDataSpec} itemDataSpec
  */
 
 /**
- * @typedef {Object} AtmArrayValueConstraintsConditions
+ * @typedef {Object} AtmArrayDataSpecParamsConditions
  * @property {Array<AtmDataSpecFilter>} itemDataSpecFilters
  */
 
 /**
- * @type {AtmDataSpecTypeDefinition<AtmArrayValueConstraints, AtmArrayValueConstraintsConditions>}
+ * @type {AtmDataSpecTypeDefinition<AtmArrayDataSpec, AtmArrayDataSpecParamsConditions>}
  */
 export const atmDataSpecTypeDefinition = Object.freeze({
   ...typeDefinitionBase,
-  isValueConstraintsCompatible(
-    referenceConstraints,
-    typeOrSubtypeConstraints,
+  areAtmDataSpecParamsCompatible(
+    referenceAtmDataSpec,
+    typeOrSubtypeAtmDataSpec,
     ignoreEmpty,
     context
   ) {
-    if (!referenceConstraints?.itemDataSpec || !typeOrSubtypeConstraints?.itemDataSpec) {
+    if (!referenceAtmDataSpec?.itemDataSpec || !typeOrSubtypeAtmDataSpec?.itemDataSpec) {
       return ignoreEmpty;
     }
 
     return context.isAtmDataSpecCompatible(
-      referenceConstraints.itemDataSpec,
-      typeOrSubtypeConstraints.itemDataSpec,
+      referenceAtmDataSpec.itemDataSpec,
+      typeOrSubtypeAtmDataSpec.itemDataSpec,
       ignoreEmpty
     );
   },
-  getValueConstraintsConditions(filters) {
+  getAtmDataSpecParamsConditions(filters) {
     const itemDataSpecFilters = filters?.map((filter) => {
       const itemDataSpecs = filter?.types
         ?.map((dataSpec) =>
-          dataSpec?.type === 'array' ? dataSpec?.valueConstraints?.itemDataSpec : null
+          dataSpec?.type === 'array' ? dataSpec?.itemDataSpec : null
         )
         ?.filter(Boolean) ?? [];
       switch (filter.filterType) {
@@ -79,8 +74,8 @@ export const atmDataSpecTypeDefinition = Object.freeze({
       itemDataSpecFilters,
     };
   },
-  isValueConstraintsMatchingFilters(constraints, atmDataSpecFilters, context) {
-    const itemDataSpec = constraints?.itemDataSpec;
+  isAtmDataSpecParamsMatchingFilters(atmDataSpec, atmDataSpecFilters, context) {
+    const itemDataSpec = atmDataSpec?.itemDataSpec;
     const filtersToCheck = atmDataSpecFilters?.filter((filter) =>
       filter?.filterType !== 'typeOrSupertype' &&
       filter?.filterType !== 'typeOrSubtype'

@@ -9,7 +9,7 @@
 import Component from '@ember/component';
 import layout from '../templates/components/popover-content-limit';
 import { computed, observer } from '@ember/object';
-import PerfectScrollbar from 'perfect-scrollbar';
+import PerfectScrollbar from 'onedata-gui-common/utils/perfect-scrollbar';
 import { scheduleOnce } from '@ember/runloop';
 
 export default Component.extend({

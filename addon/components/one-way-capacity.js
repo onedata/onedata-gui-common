@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable jsdoc/require-returns */
-
 /**
  * Capacity one-way editor.
  *
@@ -14,6 +11,7 @@ import layout from '../templates/components/one-way-capacity';
 import { computed, observer } from '@ember/object';
 import { iecUnits } from 'onedata-gui-common/utils/bytes-to-string';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import _ from 'lodash';
 
 export default Component.extend({
   layout,
@@ -128,6 +126,7 @@ export default Component.extend({
   /**
    * @param {string} scaledValue
    * @param {Object} sizeUnit
+   * @returns {number}
    */
   getValueInBytes(scaledValue, sizeUnit = undefined) {
     const multiplicator = (sizeUnit && sizeUnit.multiplicator) ||
@@ -139,7 +138,7 @@ export default Component.extend({
 
   getUnitForBytes(bytes) {
     const sortedSizeUnits = this.get('sizeUnits').sortBy('multiplicator');
-    return sortedSizeUnits.reverse().find(sizeUnit => sizeUnit.multiplicator <= bytes) ||
+    return _.findLast(sortedSizeUnits, (sizeUnit) => sizeUnit.multiplicator <= bytes) ||
       sortedSizeUnits[0];
   },
 
