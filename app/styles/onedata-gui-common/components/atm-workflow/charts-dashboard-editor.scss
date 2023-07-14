@@ -747,7 +747,7 @@
       display: inline-flex;
       align-items: center;
 
-      &.detached {
+      &:not(.root-function) {
         .function-block-header {
           cursor: grab;
         }

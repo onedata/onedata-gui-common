@@ -366,7 +366,7 @@ export default Component.extend({
      * @returns {void}
      */
     acceptDraggedFunction(chartFunction, { event }) {
-      if (!this.dragDrop.lastDragEvent) {
+      if (!chartFunction.isDetached || !this.dragDrop.lastDragEvent) {
         return;
       }
 

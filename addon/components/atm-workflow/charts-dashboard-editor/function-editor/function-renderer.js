@@ -10,7 +10,7 @@ import { set, computed, observer, defineProperty } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { dasherize } from '@ember/string';
 import { reads } from '@ember/object/computed';
-import { bool } from 'ember-awesome-macros';
+import { not } from 'ember-awesome-macros';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import {
   getFunctionNameTranslation,
@@ -32,10 +32,7 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
 export default OneDraggableObject.extend({
   layout,
   classNames: ['function-renderer'],
-  classNameBindings: [
-    'chartFunction.isRoot:root-function',
-    'chartFunction.isDetached:detached',
-  ],
+  classNameBindings: ['chartFunction.isRoot:root-function'],
   attributeBindings: ['chartFunction.id:data-function-id'],
 
   i18n: service(),
@@ -103,7 +100,7 @@ export default OneDraggableObject.extend({
    * For one-draggable-object
    * @override
    */
-  isDraggable: bool('chartFunction.isDetached'),
+  isDraggable: not('chartFunction.isRoot'),
 
   /**
    * For one-draggable-object
@@ -165,6 +162,10 @@ export default OneDraggableObject.extend({
     const rootFunctionBlock = this.element.closest('.function-editor')
       ?.querySelector('.root-function > .function-block');
     const functionBlock = this.element.querySelector('.function-block');
+
+    // Due to some unknown Ember issues `chartFunction.isDetached` does not always
+    // recalculate on parent change (but only in Firefox). Enforcing recalculation.
+    this.chartFunction.notifyPropertyChange('isDetached');
 
     // When function becomes detached -> persist its current coordinates
     // relative to the root function (as root function position is considered

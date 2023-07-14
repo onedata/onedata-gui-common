@@ -11,6 +11,8 @@ import { observer } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import { getBy } from 'ember-awesome-macros';
 import { resolve } from 'rsvp';
+import browser, { BrowserName } from 'onedata-gui-common/utils/browser';
+import dom from 'onedata-gui-common/utils/dom';
 
 export default Service.extend({
   dragCoordinator: service(),
@@ -52,14 +54,24 @@ export default Service.extend({
         this.dragCoordinator.currentDragEvent !== this.lastDragEvent
       ) {
         this.set('lastDragEvent', this.dragCoordinator.currentDragEvent);
-        // Getting offsetX/Y here to define their values. It turnes out, that
-        // value of these properties is calculated at a time of theirs first get.
-        // It is problematic, when the dragged element is moving on the view and
-        // offsetX/Y differs depending on time. In our usecases the only correct
-        // value is the value actual at the moment of the event creation. Hence
-        // we get these values at the beginning of drag to freeze them.
-        this.lastDragEvent?.offsetX;
-        this.lastDragEvent?.offsetY;
+        if (this.lastDragEvent) {
+          if (browser.name === BrowserName.Firefox) {
+            // Firefox has broken offsetX/Y property value in drag events - are
+            // always set to 0. Calculating them from scratch.
+            const elementOffset = dom.offset(this.lastDragEvent.target);
+            this.lastDragEvent.offsetX = this.lastDragEvent.pageX - elementOffset.left;
+            this.lastDragEvent.offsetY = this.lastDragEvent.pageY - elementOffset.top;
+          } else {
+            // Getting offsetX/Y here to define their values. It turnes out, that
+            // value of these properties is calculated at a time of theirs first get.
+            // It is problematic, when the dragged element is moving on the view and
+            // offsetX/Y differs depending on time. In our usecases the only correct
+            // value is the value actual at the moment of the event creation. Hence
+            // we get these values at the beginning of drag to freeze them.
+            this.lastDragEvent?.offsetX;
+            this.lastDragEvent?.offsetY;
+          }
+        }
       }
     }
   ),
