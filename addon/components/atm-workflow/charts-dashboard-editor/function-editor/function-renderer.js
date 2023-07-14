@@ -10,7 +10,7 @@ import { set, computed, observer, defineProperty } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { dasherize } from '@ember/string';
 import { reads } from '@ember/object/computed';
-import { not } from 'ember-awesome-macros';
+import { bool } from 'ember-awesome-macros';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import {
   getFunctionNameTranslation,
@@ -32,7 +32,10 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
 export default OneDraggableObject.extend({
   layout,
   classNames: ['function-renderer'],
-  classNameBindings: ['chartFunction.isRoot:root-function'],
+  classNameBindings: [
+    'chartFunction.isRoot:root-function',
+    'chartFunction.isDetached:detached',
+  ],
   attributeBindings: ['chartFunction.id:data-function-id'],
 
   i18n: service(),
@@ -100,7 +103,7 @@ export default OneDraggableObject.extend({
    * For one-draggable-object
    * @override
    */
-  isDraggable: not('chartFunction.isRoot'),
+  isDraggable: bool('chartFunction.isDetached'),
 
   /**
    * For one-draggable-object
@@ -159,8 +162,6 @@ export default OneDraggableObject.extend({
     }
     const isDetachedInDom =
       this.element.parentElement.matches('.detached-functions-container');
-    const isDetached =
-      this.chartFunction.parent?.detachedFunctions?.includes(this.chartFunction);
     const rootFunctionBlock = this.element.closest('.function-editor')
       ?.querySelector('.root-function > .function-block');
     const functionBlock = this.element.querySelector('.function-block');
@@ -171,7 +172,7 @@ export default OneDraggableObject.extend({
     if (
       functionBlock &&
       rootFunctionBlock &&
-      isDetached &&
+      this.chartFunction.isDetached &&
       !isDetachedInDom
     ) {
       const position = dom.position(functionBlock, rootFunctionBlock);

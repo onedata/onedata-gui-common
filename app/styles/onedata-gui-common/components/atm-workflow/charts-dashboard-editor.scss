@@ -706,6 +706,7 @@
 
   .function-editor {
     --arrow-size: 10px;
+    --workspace-padding: 3em;
 
     display: grid;
     margin: -1em;
@@ -719,24 +720,38 @@
     background-size: 20px 20px;
     background-position: 0 0, 10px 10px;
 
-    > .perfect-scrollbar-element {
+    .workspace-drag-target {
       display: grid;
-      padding: 3em;
+      min-height: 0;
+      cursor: initial !important;
+
+      > .perfect-scrollbar-element {
+        padding: var(--workspace-padding);
+        position: relative;
+      }
     }
 
     .functions-container {
       position: relative;
       display: grid;
-      align-self: center;
+      width: max-content;
       margin-top: calc(var(--margin-top-for-detached, 0px) + var(--margin-top-for-dragdrop, 0px));
       margin-bottom: calc(var(--margin-bottom-for-detached, 0px) + var(--margin-bottom-for-dragdrop, 0px));
       margin-left: calc(var(--margin-left-for-detached, 0px) + var(--margin-left-for-dragdrop, 0px));
       margin-right: calc(var(--margin-right-for-detached, 0px) + var(--margin-right-for-dragdrop, 0px));
+      min-width: calc(var(--workspace-width) - 2 * var(--workspace-padding));
+      min-height: calc(var(--workspace-height) - 2 * var(--workspace-padding));
     }
 
     .function-renderer {
       display: inline-flex;
       align-items: center;
+
+      &.detached {
+        .function-block-header {
+          cursor: grab;
+        }
+      }
     }
 
     .function-block {
@@ -761,6 +776,7 @@
       text-transform: uppercase;
       white-space: nowrap;
       font-size: 90%;
+      user-select: none;
     }
 
     .function-actions {

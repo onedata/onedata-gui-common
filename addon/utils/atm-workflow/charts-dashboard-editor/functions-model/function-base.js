@@ -82,6 +82,13 @@ export default ElementBase.extend({
   }),
 
   /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isDetached: computed('parent.detachedFunctions.[]', function isDetached() {
+    return this.parent?.detachedFunctions?.includes(this);
+  }),
+
+  /**
    * @override
    */
   init() {

@@ -9,6 +9,7 @@
 import Component from '@ember/component';
 import { observer } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { eq, raw } from 'ember-awesome-macros';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import dom from 'onedata-gui-common/utils/dom';
 import { ElementType, EdgeScroller } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
@@ -17,6 +18,7 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
 export default Component.extend({
   layout,
   classNames: ['function-editor'],
+  classNameBindings: ['isFunctionDragged:has-dragging-function'],
 
   dragDrop: service(),
 
@@ -59,16 +61,28 @@ export default Component.extend({
    */
   scrollbarApi: null,
 
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isFunctionDragged: eq('dragDrop.draggedElementModel.elementType', raw(ElementType.Function)),
+
   edgeScrollerEnabler: observer(
-    'dragDrop.draggedElementModel.elementType',
-    function edgeScrollerEnabler() {
-      const draggedElementType = this.dragDrop.draggedElementModel?.elementType;
-      if (draggedElementType === ElementType.Function) {
+    'isFunctionDragged',
+    async function edgeScrollerEnabler() {
+      if (this.isFunctionDragged) {
         this.edgeScroller?.enable();
       } else {
+        await this.dragDrop.latestDragPromise;
         this.edgeScroller?.disable();
         this.resetDragDropExtraMargin();
       }
+    }
+  ),
+
+  detachedFunctionPositionsObserver: observer(
+    'detachedFunctions.@each.positionRelativeToRootFunc',
+    function detachedFunctionPositionsObserver() {
+      this.recalculateDetachedFunctionPositions();
     }
   ),
 
@@ -140,7 +154,7 @@ export default Component.extend({
     }
 
     const resizeObserver = new ResizeObserver(() => {
-      this.recalculateFunctionsContainerSize();
+      this.recalculateWorkspaceSize();
     });
     resizeObserver.observe(scrollableContainer);
 
@@ -158,27 +172,22 @@ export default Component.extend({
   /**
    * @returns {void}
    */
-  recalculateFunctionsContainerSize() {
+  recalculateWorkspaceSize() {
     const scrollableContainer = this.getScrollableContainer();
-    const functionsContainer = this.getFunctionsContainer();
-    if (!scrollableContainer || !functionsContainer) {
+    if (!scrollableContainer) {
       return;
     }
 
-    const heightForFunctionsContainer = dom.height(
+    const workspaceWidth = dom.width(
       scrollableContainer,
-      dom.LayoutBox.ContentBox
+      dom.LayoutBox.PaddingBox
     );
-    const widthForFunctionsContainer = dom.width(
+    const workspaceHeight = dom.height(
       scrollableContainer,
-      dom.LayoutBox.ContentBox
+      dom.LayoutBox.PaddingBox
     );
-    dom.setStyles(functionsContainer, {
-      // Removing 1px from sizes to avoid any subpixel-level-rendering glitches
-      // which could cause 1px overflow.
-      minHeight: `${heightForFunctionsContainer - 1}px`,
-      minWidth: `${widthForFunctionsContainer - 1}px`,
-    });
+    scrollableContainer.style.setProperty('--workspace-width', `${workspaceWidth}px`);
+    scrollableContainer.style.setProperty('--workspace-height', `${workspaceHeight}px`);
   },
 
   /**
@@ -349,7 +358,39 @@ export default Component.extend({
      */
     registerScrollbarApi(api) {
       this.set('scrollbarApi', api);
-      console.log(api);
+    },
+
+    /**
+     * @param {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase} chartFunction
+     * @param {{ event: DropEvent }} additionalInfo
+     * @returns {void}
+     */
+    acceptDraggedFunction(chartFunction, { event }) {
+      if (!this.dragDrop.lastDragEvent) {
+        return;
+      }
+
+      const elementOldPosition = dom.offset(this.dragDrop.lastDragEvent.target);
+      const elementNewPosition = {
+        top: event.pageY - this.dragDrop.lastDragEvent.offsetY,
+        left: event.pageX - this.dragDrop.lastDragEvent.offsetX,
+      };
+
+      const leftOffset = elementNewPosition.left - elementOldPosition.left;
+      const topOffset = elementNewPosition.top - elementOldPosition.top;
+
+      const newPosition = {
+        left: (chartFunction.positionRelativeToRootFunc?.left ?? 0) + leftOffset,
+        top: (chartFunction.positionRelativeToRootFunc?.top ?? 0) + topOffset,
+      };
+
+      const action = this.actionsFactory.createChangeElementPropertyAction({
+        element: chartFunction,
+        propertyName: 'positionRelativeToRootFunc',
+        newValue: newPosition,
+        changeType: 'discrete',
+      });
+      action.execute();
     },
   },
 });
