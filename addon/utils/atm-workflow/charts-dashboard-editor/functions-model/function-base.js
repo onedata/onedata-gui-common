@@ -53,7 +53,7 @@ export default ElementBase.extend({
   /**
    * `true` value of this property means, that this specific function is a
    * top-level function (the beginning of the functions chain) and as such it
-   * should behave a bit differently that the ordinary function.
+   * should behave a bit differently than the ordinary function.
    * @public
    * @virtual optional
    * @type {boolean}
