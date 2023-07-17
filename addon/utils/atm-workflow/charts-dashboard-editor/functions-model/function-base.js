@@ -85,7 +85,7 @@ export default ElementBase.extend({
    * @type {ComputedProperty<boolean>}
    */
   isDetached: computed('parent.detachedFunctions.[]', function isDetached() {
-    return this.parent?.detachedFunctions?.includes(this);
+    return Boolean(this.parent?.detachedFunctions?.includes(this));
   }),
 
   /**
@@ -151,5 +151,22 @@ export default ElementBase.extend({
         }
       }
     }
+  },
+
+  /**
+   * @param {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase} attachedFunction
+   * @returns {string | null}
+   */
+  getArgumentNameForAttachedFunction(attachedFunction) {
+    for (const { name } of this.attachableArgumentSpecs) {
+      if (
+        this[name] === attachedFunction ||
+        (Array.isArray(this[name]) && this[name].includes(attachedFunction))
+      ) {
+        return name;
+      }
+    }
+
+    return null;
   },
 });

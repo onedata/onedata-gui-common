@@ -17,6 +17,7 @@ import {
   getFunctionArgumentNameTranslation,
   ElementType,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 import dom from 'onedata-gui-common/utils/dom';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/function-editor/function-renderer';
@@ -27,15 +28,22 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
  * @property {string} name
  * @property {Array<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase>} attachedFunctions
  * @property {boolean} isArray
+ * @property {boolean} hasFunctionAdder
  */
 
-export default OneDraggableObject.extend({
+export default OneDraggableObject.extend(I18n, {
   layout,
   classNames: ['function-renderer'],
   classNameBindings: ['chartFunction.isRoot:root-function'],
   attributeBindings: ['chartFunction.id:data-function-id'],
 
   i18n: service(),
+  dragDrop: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.functionEditor.functionRenderer',
 
   /**
    * @virtual
@@ -76,6 +84,11 @@ export default OneDraggableObject.extend({
   dragHandle: '.function-block-header',
 
   /**
+   * @type {boolean}
+   */
+  isAdderOpened: false,
+
+  /**
    * @type {ComputedProperty<SafeString>}
    */
   readableName: computed('chartFunction.name', function readableName() {
@@ -108,6 +121,27 @@ export default OneDraggableObject.extend({
    */
   content: reads('chartFunction'),
 
+  /**
+   * @type {ComputedProperties<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null>}
+   */
+  draggedChartFunction: computed('dragDrop.draggedElementModel', function draggedChartFunction() {
+    return this.dragDrop.draggedElementModel?.elementType === ElementType.Function ?
+      this.dragDrop.draggedElementModel : null;
+  }),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  amIInDraggedChartFunction: computed(
+    'draggedChartFunction',
+    function amIInDraggedChartFunction() {
+      return this.draggedChartFunction ? [
+        ...this.draggedChartFunction.nestedElements(),
+        this.draggedChartFunction,
+      ].includes(this.chartFunction) : false;
+    }
+  ),
+
   functionArgumentsSetter: observer(
     'chartFunction.attachableArgumentSpecs',
     function functionArgumentsSetter() {
@@ -135,6 +169,7 @@ export default OneDraggableObject.extend({
               name: argSpec.name,
               attachedFunctions,
               isArray: argSpec.isArray,
+              hasFunctionAdder: argSpec.isArray || !attachedFunctions.length,
             };
           });
         })
@@ -207,10 +242,13 @@ export default OneDraggableObject.extend({
       await waitForRender();
       if (this.element) {
         this.recalculateArgumentLinePositions();
+        this.recalculateDragTargetHeights();
       }
     })();
   },
-
+  /**
+   * @returns {void}
+   */
   recalculateArgumentLinePositions() {
     const argumentElements = this.element.querySelectorAll(
       ':scope > .function-arguments-container > .function-argument');
@@ -248,6 +286,58 @@ export default OneDraggableObject.extend({
     }
   },
 
+  /**
+   * @returns {void}
+   */
+  recalculateDragTargetHeights() {
+    const argumentElements = this.element.querySelectorAll(
+      ':scope > .function-arguments-container > .function-argument');
+
+    for (const argumentElement of argumentElements) {
+      const argumentBlocksChildren = argumentElement.querySelectorAll(
+        ':scope > .function-argument-blocks > *'
+      );
+      const isFirstChildADropTarget = argumentBlocksChildren[0]?.matches(
+        '.between-args-drop-target-container.before-first-arg'
+      );
+      const isSecondChildAFuncArgBlock = argumentBlocksChildren[1]?.matches(
+        '.function-argument-block'
+      );
+
+      if (isFirstChildADropTarget && isSecondChildAFuncArgBlock) {
+        const funcBlock = argumentBlocksChildren[1].querySelector(
+          '.function-block, .adder-draggable-object-target'
+        );
+        const topEmptySpace = (
+          dom.height(argumentBlocksChildren[1]) -
+          dom.height(funcBlock)
+        ) / 2;
+        argumentBlocksChildren[0].style.setProperty('--y-offset', `${topEmptySpace}px`);
+      }
+
+      for (let i = 1; i < argumentBlocksChildren.length; i++) {
+        if (
+          !argumentBlocksChildren[i].matches('.between-args-drop-target-container') ||
+          !argumentBlocksChildren[i - 1].matches('.function-argument-block') ||
+          !argumentBlocksChildren[i + 1]?.matches('.function-argument-block')
+        ) {
+          continue;
+        }
+
+        const topBlock = argumentBlocksChildren[i - 1].querySelector('.function-block');
+        const bottomBlock = argumentBlocksChildren[i + 1].querySelector(
+          '.function-block, .adder-draggable-object-target'
+        );
+        const topEmptySpace = (dom.height(argumentBlocksChildren[i - 1]) -
+          dom.height(topBlock)) / 2;
+        const bottomEmptySpace = (dom.height(argumentBlocksChildren[i + 1]) -
+          dom.height(bottomBlock)) / 2;
+        argumentBlocksChildren[i].style.setProperty('--y-offset', `-${topEmptySpace}px`);
+        argumentBlocksChildren[i].style.setProperty('--available-y-space', `${topEmptySpace + bottomEmptySpace}px`);
+      }
+    }
+  },
+
   actions: {
     removeFunction() {
       const action = this.actionsFactory
@@ -257,6 +347,42 @@ export default OneDraggableObject.extend({
     detachFunction(func) {
       const action = this.actionsFactory
         .createDetachArgumentFunctionAction({ functionToDetach: func });
+      action.execute();
+    },
+    validateOnAdderDragEvent() {
+      return !this.amIInDraggedChartFunction &&
+        ![...this.chartFunction.attachedFunctions()]
+        .includes(this.draggedChartFunction);
+    },
+    /**
+     * @param {string} argumentName
+     * @param {MoveElementActionNewPosition['placement'] | null} placement
+     * @param {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null} referenceFunction
+     * @param {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase} draggedFunction
+     */
+    acceptDraggedFunction(argumentName, placement, referenceFunction, draggedFunction) {
+      let currentRelationFieldName;
+      if (draggedFunction.isDetached) {
+        currentRelationFieldName = 'detachedFunctions';
+      } else {
+        currentRelationFieldName =
+          draggedFunction.parent?.getArgumentNameForAttachedFunction?.(draggedFunction);
+      }
+
+      if (!currentRelationFieldName) {
+        return;
+      }
+
+      const action = this.actionsFactory.createMoveElementAction({
+        movedElement: draggedFunction,
+        currentRelationFieldName,
+        newParent: this.chartFunction,
+        newRelationFieldName: argumentName,
+        newPosition: placement ? {
+          placement,
+          referenceElement: referenceFunction,
+        } : null,
+      });
       action.execute();
     },
   },

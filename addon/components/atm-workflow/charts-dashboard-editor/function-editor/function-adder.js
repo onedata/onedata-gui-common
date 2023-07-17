@@ -20,7 +20,7 @@ import {
 
 export default Component.extend(I18n, {
   layout,
-  classNames: ['function-adder'],
+  tagName: '',
 
   /**
    * @override
@@ -50,6 +50,24 @@ export default Component.extend(I18n, {
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,
+
+  /**
+   * @virtual
+   * @type {string}
+   */
+  triggerSelector: undefined,
+
+  /**
+   * @virtual
+   * @type {boolean}
+   */
+  isOpened: false,
+
+  /**
+   * @virtual
+   * @type {() => void}
+   */
+  onClose: undefined,
 
   /**
    * @type {string}
@@ -117,6 +135,7 @@ export default Component.extend(I18n, {
         targetArgumentName: this.parentFunctionArgumentName,
       });
       action.execute();
+      this.onClose?.();
     },
   },
 });

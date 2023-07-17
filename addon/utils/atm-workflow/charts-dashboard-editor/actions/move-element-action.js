@@ -7,14 +7,16 @@
  */
 
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
-import { set } from '@ember/object';
+import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { getCollectionFieldName } from './utils';
 
 /**
  * @typedef {Object} MoveElementActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} movedElement
+ * @property {string} [currentRelationFieldName]
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} newParent
+ * @property {string} [newRelationFieldName]
  * @property {MoveElementActionNewPosition | null} newPosition
  *   `null` will place `movedElement` at the end
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
@@ -54,6 +56,18 @@ export default Action.extend({
   newPosition: reads('context.newPosition'),
 
   /**
+   * @type {ComputedProperty<string>}
+   */
+  newRelationFieldName: computed(
+    'context.newRelationFieldName',
+    'movedElement.elementType',
+    function newRelationFieldName() {
+      return this.context.newRelationFieldName ??
+        getCollectionFieldName(this.movedElement.elementType);
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<MoveElementActionContext['changeViewState']>}
    */
   changeViewState: reads('context.changeViewState'),
@@ -69,6 +83,18 @@ export default Action.extend({
    * @type {MoveElementActionContext['newPosition']}
    */
   oldPosition: null,
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  oldRelationFieldName: computed(
+    'context.currentRelationFieldName',
+    'movedElement.elementType',
+    function newRelationFieldName() {
+      return this.context.currentRelationFieldName ??
+        getCollectionFieldName(this.movedElement.elementType);
+    }
+  ),
 
   /**
    * @override
@@ -89,16 +115,18 @@ export default Action.extend({
    */
   onExecute() {
     const currentParent = this.movedElement.parent;
-    const currentParentCollection =
-      currentParent[getCollectionFieldName(this.movedElement.elementType)];
-    const movedElementIdx =
-      currentParentCollection.indexOf(this.movedElement);
+    const currentParentCollection = currentParent[this.oldRelationFieldName];
+
     let currentPosition = null;
-    if (movedElementIdx < currentParentCollection.length - 1) {
-      currentPosition = {
-        placement: 'before',
-        referenceElement: currentParentCollection[movedElementIdx + 1],
-      };
+    if (Array.isArray(currentParentCollection)) {
+      const movedElementIdx =
+        currentParentCollection.indexOf(this.movedElement);
+      if (movedElementIdx < currentParentCollection.length - 1) {
+        currentPosition = {
+          placement: 'before',
+          referenceElement: currentParentCollection[movedElementIdx + 1],
+        };
+      }
     }
 
     this.setProperties({
@@ -106,7 +134,12 @@ export default Action.extend({
       oldPosition: currentPosition,
     });
 
-    this.moveElement(this.newParent, this.newPosition);
+    this.moveElement(
+      this.oldRelationFieldName,
+      this.newParent,
+      this.newRelationFieldName,
+      this.newPosition
+    );
     this.changeViewState({ elementToSelect: this.movedElement });
   },
 
@@ -114,7 +147,12 @@ export default Action.extend({
    * @override
    */
   onExecuteUndo() {
-    this.moveElement(this.oldParent, this.oldPosition);
+    this.moveElement(
+      this.newRelationFieldName,
+      this.oldParent,
+      this.oldRelationFieldName,
+      this.oldPosition
+    );
     this.changeViewState({ elementToSelect: this.movedElement });
   },
 
@@ -123,36 +161,42 @@ export default Action.extend({
    * @param {MoveElementActionContext['newPosition']} newPosition
    * @returns {void}
    */
-  moveElement(newParent, newPosition) {
+  moveElement(currentRelationFieldName, newParent, newRelationFieldName, newPosition) {
     const currentParent = this.movedElement.parent;
-    const parentCollectionName = getCollectionFieldName(this.movedElement.elementType);
-    const currentParentCollection = currentParent[parentCollectionName];
-    set(
-      currentParent,
-      parentCollectionName,
-      currentParentCollection.filter((element) => element !== this.movedElement)
-    );
-
-    const newParentCollection = newParent[parentCollectionName];
-
-    const referenceElementIdx = newPosition ?
-      newParentCollection.indexOf(newPosition.referenceElement) :
-      -1;
-    let newElementIdx;
-    if (referenceElementIdx > -1) {
-      if (newPosition?.placement === 'before') {
-        newElementIdx = referenceElementIdx;
-      } else {
-        newElementIdx = referenceElementIdx + 1;
-      }
+    const currentParentCollection = currentParent[currentRelationFieldName];
+    if (Array.isArray(currentParentCollection)) {
+      set(
+        currentParent,
+        currentRelationFieldName,
+        currentParentCollection.filter((element) => element !== this.movedElement)
+      );
     } else {
-      newElementIdx = newParentCollection.length;
+      set(currentParent, currentRelationFieldName, null);
     }
-    set(newParent, parentCollectionName, [
-      ...newParentCollection.slice(0, newElementIdx),
-      this.movedElement,
-      ...newParentCollection.slice(newElementIdx),
-    ]);
+
+    const newParentCollection = newParent[newRelationFieldName];
+    if (Array.isArray(newParentCollection)) {
+      const referenceElementIdx = newPosition ?
+        newParentCollection.indexOf(newPosition.referenceElement) :
+        -1;
+      let newElementIdx;
+      if (referenceElementIdx > -1) {
+        if (newPosition?.placement === 'before') {
+          newElementIdx = referenceElementIdx;
+        } else {
+          newElementIdx = referenceElementIdx + 1;
+        }
+      } else {
+        newElementIdx = newParentCollection.length;
+      }
+      set(newParent, newRelationFieldName, [
+        ...newParentCollection.slice(0, newElementIdx),
+        this.movedElement,
+        ...newParentCollection.slice(newElementIdx),
+      ]);
+    } else {
+      set(newParent, newRelationFieldName, this.movedElement);
+    }
 
     set(this.movedElement, 'parent', newParent);
   },

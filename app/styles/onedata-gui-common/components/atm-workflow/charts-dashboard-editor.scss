@@ -707,6 +707,7 @@
   .function-editor {
     --arrow-size: 10px;
     --workspace-padding: 3em;
+    --between-args-space: 1em;
 
     display: grid;
     margin: -1em;
@@ -827,13 +828,57 @@
       flex-shrink: 0;
     }
 
+    .function-argument-blocks {
+      .draggable-object-target {
+        &::before {
+          content: '';
+          display: none;
+          background-color: rgba(#000, 0.1);
+          border: 2px dashed rgba(#000, 0.2);
+          border-radius: $border-radius-small;
+        }
+
+        &.accepts-drag::before {
+          display: block;
+        }
+      }
+
+      .between-args-drop-target-container {
+        position: relative;
+        width: 10em;
+        top: var(--y-offset, 0);
+
+        .draggable-object-target {
+          position: absolute;
+          width: 100%;
+          height: calc(var(--available-y-space, 0px) + var(--between-args-space) + 2em);
+          top: -1em;
+          display: flex;
+          align-items: center;
+          padding-left: 0.5em;
+          z-index: 1;
+
+          &::before {
+            height: calc(var(--available-y-space, 0px) + var(--between-args-space) - 0.5em);
+            flex-basis: 100%;
+          }
+        }
+
+        &.before-first-arg {
+          .draggable-object-target {
+            top: calc(var(--between-args-space) * -1 - 1em);
+          }
+        }
+      }
+    }
+
     .function-argument-block {
       position: relative;
       display: flex;
       align-items: center;
 
-      & + .function-argument-block {
-        margin-top: 1em;
+      & ~ .function-argument-block {
+        margin-top: var(--between-args-space);
       }
     }
 
@@ -923,6 +968,26 @@
         + .action {
           border-left: $main-border;
         }
+      }
+    }
+
+
+    .adder-draggable-object-target {
+      width: initial;
+      position: relative;
+
+      &.accepts-drag button {
+        background-color: transparent;
+        color: $main-text-color;
+        border-color: transparent;
+      }
+
+      &::before {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        pointer-events: none;
       }
     }
 

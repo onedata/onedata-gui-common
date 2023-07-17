@@ -1,3 +1,4 @@
+import functionRenderer from './function-editor/function-renderer';
 import functionAdder from './function-editor/function-adder';
 import literalSettings from './function-editor/literal-settings';
 import loadSeriesSettings from './function-editor/load-series-settings';
@@ -7,6 +8,7 @@ import replaceEmptySettings from './function-editor/replace-empty-settings';
 import timeDerivativeSettings from './function-editor/time-derivative-settings';
 
 export default {
+  functionRenderer,
   functionAdder,
   literalSettings,
   loadSeriesSettings,
