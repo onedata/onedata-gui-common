@@ -11,6 +11,7 @@ import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { translateSeriesType } from 'onedata-gui-common/utils/time-series-dashboard';
 import {
   ElementType,
@@ -19,11 +20,16 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-list-item';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['series-list-item'],
 
   i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.chartEditor.seriesListItem',
 
   /**
    * @virtual
@@ -49,19 +55,32 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<string | null>}
    */
-  name: computed('item.{repeatPerPrefixedTimeSeries,name}', function name() {
-    // TODO: VFS-10649 Handle dynamic series names
-    return this.item.repeatPerPrefixedTimeSeries ? null : this.item.name ?? null;
-  }),
+  name: computed(
+    'item.{repeatPerPrefixedTimeSeries,name,prefixedTimeSeriesRef.timeSeriesNameGenerator}',
+    function name() {
+      if (this.item.repeatPerPrefixedTimeSeries) {
+        const timeSeriesNameGenerator =
+          this.item.prefixedTimeSeriesRef.timeSeriesNameGenerator;
+        return this.t('nameForRepeated', {
+          generatorName: timeSeriesNameGenerator ? `${timeSeriesNameGenerator}*` : '?',
+        });
+      } else {
+        return this.item.name ?? null;
+      }
+    }
+  ),
 
   /**
    * @type {ComputedProperty<SafeString | null>}
    */
-  colorStyle: computed('item.color', function colorStyle() {
-    return this.item.color ?
-      htmlSafe(`--series-color: ${_.escape(this.item.color)}`) :
-      null;
-  }),
+  colorStyle: computed(
+    'item.{color,repeatPerPrefixedTimeSeries}',
+    function colorStyle() {
+      return this.item.color && !this.item.repeatPerPrefixedTimeSeries ?
+        htmlSafe(`--series-color: ${_.escape(this.item.color)}`) :
+        null;
+    }
+  ),
 
   /**
    * @type {ComputedProperty<SafeString>}

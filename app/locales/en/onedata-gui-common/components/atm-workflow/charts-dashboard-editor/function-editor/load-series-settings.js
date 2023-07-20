@@ -4,18 +4,20 @@ import replaceEmptySettings from './replace-empty-settings';
 export default _.merge(replaceEmptySettings, {
   missingPointsCollapse: 'Missing points options',
   fields: {
-    collectionRef: {
-      label: 'Store',
-    },
-    timeSeriesNameGenerator: {
-      label: 'Time series name generator',
-    },
-    timeSeriesName: {
-      label: 'Time series name',
-      placeholder: 'Example: {{nameGenerator}}123',
-    },
-    metricNames: {
-      label: 'Metrics',
+    timeSeriesSelector: {
+      collectionRef: {
+        label: 'Store',
+      },
+      timeSeriesNameGenerator: {
+        label: 'Time series name generator',
+      },
+      timeSeriesName: {
+        label: 'Time series name',
+        placeholder: 'Example: {{nameGenerator}}123',
+      },
+      metricNames: {
+        label: 'Metrics',
+      },
     },
   },
 });

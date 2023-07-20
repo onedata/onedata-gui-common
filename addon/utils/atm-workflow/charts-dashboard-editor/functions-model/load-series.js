@@ -7,6 +7,8 @@
  */
 
 import EmberObject, { observer, set, setProperties } from '@ember/object';
+import Mixin from '@ember/object/mixin';
+import _ from 'lodash';
 import { ReplaceEmptyStrategy } from 'onedata-gui-common/utils/time-series-dashboard';
 import { FunctionDataType, FunctionExecutionContext } from './common';
 import FunctionBase from './function-base';
@@ -25,7 +27,7 @@ import FunctionBase from './function-base';
  * @property {number | null} fallbackValue
  */
 
-const LoadSeriesFunction = FunctionBase.extend({
+const LoadSeriesFunction = FunctionBase.extend(createTimeSeriesRefChangesHandler('timeSeriesRef'), {
   /**
    * @public
    * @virtual
@@ -67,100 +69,9 @@ const LoadSeriesFunction = FunctionBase.extend({
    */
   returnedTypes: Object.freeze([FunctionDataType.Points]),
 
-  /**
-   * Map collectionRef -> { lastTimeSeriesNameGenerator: string, timeSeriesNameGenerators: { timeSeriesName, metricNames }}.
-   * Contains user input for given collection/generator pair. Allows to restore
-   * previous timeSeriesName and metricNames when user changes collection or generator.
-   * @type {Object<string, Object<{lastTimeSeriesNameGenerator: string, timeSeriesNameGenerators: { timeSeriesName: string, metricNames: Array<string> }>>}
-   */
-  historicalTimeSeriesRefs: undefined,
-
-  /**
-   * @type {EmberObject<TimeSeriesRef> | null}
-   */
-  prevTimeSeriesRef: null,
-
-  timeSeriesRefObserver: observer(
-    'timeSeriesRef',
-    function timeSeriesRefObserver() {
-      if (this.prevTimeSeriesRef === this.timeSeriesRef) {
-        return;
-      }
-
-      // Attaching observers to the timeSeriesRef itself, to allows replacing
-      // the whole `timeSeriesRef` object without fireing them.
-      if (this.prevTimeSeriesRef) {
-        this.prevTimeSeriesRef.removeObserver(
-          'collectionRef',
-          this,
-          'handleCollectionRefChange'
-        );
-        this.prevTimeSeriesRef.removeObserver(
-          'timeSeriesNameGenerator',
-          this,
-          'handleTimeSeriesNameGeneratorChange'
-        );
-        this.prevTimeSeriesRef.removeObserver(
-          'timeSeriesName',
-          this,
-          'handleTimeSeriesNameChange'
-        );
-        this.prevTimeSeriesRef.removeObserver(
-          'metricNames',
-          this,
-          'handleMetricNamesChange'
-        );
-        this.prevTimeSeriesRef.destroy();
-      }
-      this.set('prevTimeSeriesRef', this.timeSeriesRef);
-
-      if (this.timeSeriesRef) {
-        this.timeSeriesRef.addObserver(
-          'collectionRef',
-          this,
-          'handleCollectionRefChange'
-        );
-        this.timeSeriesRef.addObserver(
-          'timeSeriesNameGenerator',
-          this,
-          'handleTimeSeriesNameGeneratorChange'
-        );
-        this.timeSeriesRef.addObserver(
-          'timeSeriesName',
-          this,
-          'handleTimeSeriesNameChange'
-        );
-        this.timeSeriesRef.addObserver(
-          'metricNames',
-          this,
-          'handleMetricNamesChange'
-        );
-
-        const {
-          collectionRef,
-          timeSeriesNameGenerator,
-          timeSeriesName,
-          metricNames,
-        } = (this.timeSeriesRef ?? {});
-        if (collectionRef) {
-          const collectionRefHistory =
-            this.historicalTimeSeriesRefs[collectionRef] ??= {};
-          collectionRefHistory.lastTimeSeriesNameGenerator =
-            timeSeriesNameGenerator;
-          if (timeSeriesNameGenerator) {
-            collectionRefHistory[timeSeriesNameGenerator] = {
-              timeSeriesName: timeSeriesName,
-              metricNames: metricNames,
-            };
-          }
-        }
-      }
-    }
-  ),
-
   init() {
-    this._super(...arguments);
-    this.set('historicalTimeSeriesRefs', {});
+    // Setting timeSeriesRef before _super call, to provide a ready to use value
+    // for mixins.
     if (!this.timeSeriesRef) {
       this.set('timeSeriesRef', EmberObject.create({
         collectionRef: '',
@@ -169,7 +80,9 @@ const LoadSeriesFunction = FunctionBase.extend({
         metricNames: [],
       }));
     }
-    this.timeSeriesRefObserver();
+
+    this._super(...arguments);
+
     if (!this.replaceEmptyParameters) {
       this.set('replaceEmptyParameters', EmberObject.create({
         fallbackValue: null,
@@ -190,70 +103,6 @@ const LoadSeriesFunction = FunctionBase.extend({
       }
     } finally {
       this._super(...arguments);
-    }
-  },
-
-  handleCollectionRefChange() {
-    const collectionRef = this.timeSeriesRef.collectionRef;
-    this.historicalTimeSeriesRefs[collectionRef] ??= {
-      lastTimeSeriesNameGenerator: '',
-      timeSeriesNameGenerators: {},
-    };
-    set(
-      this.timeSeriesRef,
-      'timeSeriesNameGenerator',
-      this.historicalTimeSeriesRefs[collectionRef].lastTimeSeriesNameGenerator
-    );
-  },
-
-  handleTimeSeriesNameGeneratorChange() {
-    const collectionRef = this.timeSeriesRef.collectionRef;
-    const collectionRefHistory = this.historicalTimeSeriesRefs[collectionRef];
-    const timeSeriesNameGenerator = this.timeSeriesRef.timeSeriesNameGenerator;
-    if (!collectionRefHistory) {
-      return;
-    }
-    collectionRefHistory.lastTimeSeriesNameGenerator =
-      timeSeriesNameGenerator;
-    if (timeSeriesNameGenerator) {
-      const timeSeriesSchemas = this.dataSources.find((source) =>
-        source.collectionRef === collectionRef
-      )?.timeSeriesCollectionSchema.timeSeriesSchemas ?? [];
-      const timeSeriesNameGeneratorSpec = timeSeriesSchemas.find(({ nameGenerator }) =>
-        nameGenerator === timeSeriesNameGenerator
-      );
-      const defaultTimeSeriesName =
-        timeSeriesNameGeneratorSpec?.nameGeneratorType === 'exact' ?
-        timeSeriesNameGenerator : '';
-      collectionRefHistory.timeSeriesNameGenerators[timeSeriesNameGenerator] ??= {
-        timeSeriesName: defaultTimeSeriesName,
-        metricNames: [],
-      };
-    }
-    setProperties(
-      this.timeSeriesRef,
-      collectionRefHistory.timeSeriesNameGenerators[timeSeriesNameGenerator] ?? {
-        timeSeriesName: '',
-        metricNames: [],
-      }
-    );
-  },
-
-  handleTimeSeriesNameChange() {
-    const generatorHistory =
-      this.historicalTimeSeriesRefs[this.timeSeriesRef.collectionRef]
-      ?.timeSeriesNameGenerators[this.timeSeriesRef.timeSeriesNameGenerator];
-    if (generatorHistory) {
-      generatorHistory.timeSeriesName = this.timeSeriesRef.timeSeriesName;
-    }
-  },
-
-  handleMetricNamesChange() {
-    const generatorHistory =
-      this.historicalTimeSeriesRefs[this.timeSeriesRef.collectionRef]
-      ?.timeSeriesNameGenerators[this.timeSeriesRef.timeSeriesNameGenerator];
-    if (generatorHistory) {
-      generatorHistory.metricNames = this.timeSeriesRef.metricNames;
     }
   },
 });
@@ -300,3 +149,174 @@ export default Object.freeze({
   modelClass: LoadSeriesFunction,
   createFromSpec,
 });
+
+/**
+ * @param {string} timeSeriesRefFieldName
+ * @param {boolean} [ignoreTimeSeriesName]
+ * @returns {Ember.Mixin}
+ */
+export function createTimeSeriesRefChangesHandler(
+  timeSeriesRefFieldName,
+  ignoreTimeSeriesName = false,
+) {
+  const historicalRefsFieldName = `historical${_.upperFirst(timeSeriesRefFieldName)}`;
+  const prevRefFieldName = `prev${_.upperFirst(timeSeriesRefFieldName)}`;
+  const replaceObserverName = `${timeSeriesRefFieldName}Observer`;
+
+  return Mixin.create({
+    /**
+     * Map collectionRef -> { lastTimeSeriesNameGenerator: string, timeSeriesNameGenerators: { timeSeriesName, metricNames }}.
+     * Contains user input for given collection/generator pair. Allows to restore
+     * previous timeSeriesName and metricNames when user changes collection or generator.
+     * @type {Object<string, Object<{lastTimeSeriesNameGenerator: string, timeSeriesNameGenerators: { timeSeriesName: string, metricNames: Array<string> }>>}
+     */
+    [historicalRefsFieldName]: undefined,
+
+    /**
+     * @type {EmberObject<unknown> | null}
+     */
+    [prevRefFieldName]: null,
+
+    [replaceObserverName]: observer(
+      timeSeriesRefFieldName,
+      function timeSeriesRefObserver() {
+        if (this[prevRefFieldName] === this[timeSeriesRefFieldName]) {
+          return;
+        }
+
+        const fieldsToMonitor = ['collectionRef', 'timeSeriesNameGenerator', 'metricNames'];
+        if (!ignoreTimeSeriesName) {
+          fieldsToMonitor.push('timeSeriesName');
+        }
+
+        // Attaching observers to the timeSeriesRef itself, to allow replacing
+        // the whole `timeSeriesRef` object without firing them.
+        if (this[prevRefFieldName]) {
+          fieldsToMonitor.forEach((fieldName) => {
+            this[prevRefFieldName].removeObserver(
+              fieldName,
+              this,
+              `handle${_.upperFirst(fieldName)}Change`
+            );
+          });
+          this[prevRefFieldName].destroy();
+        }
+        this.set(prevRefFieldName, this[timeSeriesRefFieldName]);
+
+        if (this[timeSeriesRefFieldName]) {
+          fieldsToMonitor.forEach((fieldName) => {
+            this[timeSeriesRefFieldName].addObserver(
+              fieldName,
+              this,
+              `handle${_.upperFirst(fieldName)}Change`
+            );
+          });
+
+          const {
+            collectionRef,
+            timeSeriesNameGenerator,
+            timeSeriesName,
+            metricNames,
+          } = (this[timeSeriesRefFieldName] ?? {});
+          if (collectionRef) {
+            const collectionRefHistory =
+              this[historicalRefsFieldName][collectionRef] ??= {};
+            collectionRefHistory.lastTimeSeriesNameGenerator =
+              timeSeriesNameGenerator;
+            if (timeSeriesNameGenerator) {
+              collectionRefHistory[timeSeriesNameGenerator] = {
+                metricNames: metricNames,
+              };
+              if (!ignoreTimeSeriesName) {
+                collectionRefHistory[timeSeriesNameGenerator].timeSeriesName =
+                  timeSeriesName;
+              }
+            }
+          }
+        }
+      }
+    ),
+
+    init() {
+      this._super(...arguments);
+      this.set(historicalRefsFieldName, {});
+      this[replaceObserverName]();
+    },
+
+    handleCollectionRefChange() {
+      const collectionRef = this[timeSeriesRefFieldName].collectionRef;
+      this[historicalRefsFieldName][collectionRef] ??= {
+        lastTimeSeriesNameGenerator: '',
+        timeSeriesNameGenerators: {},
+      };
+      set(
+        this[timeSeriesRefFieldName],
+        'timeSeriesNameGenerator',
+        this[historicalRefsFieldName][collectionRef].lastTimeSeriesNameGenerator
+      );
+    },
+
+    handleTimeSeriesNameGeneratorChange() {
+      const collectionRef = this[timeSeriesRefFieldName].collectionRef;
+      const collectionRefHistory = this[historicalRefsFieldName][collectionRef];
+      const timeSeriesNameGenerator =
+        this[timeSeriesRefFieldName].timeSeriesNameGenerator;
+      if (!collectionRefHistory) {
+        return;
+      }
+      collectionRefHistory.lastTimeSeriesNameGenerator =
+        timeSeriesNameGenerator;
+      if (timeSeriesNameGenerator) {
+        if (ignoreTimeSeriesName) {
+          collectionRefHistory.timeSeriesNameGenerators[timeSeriesNameGenerator] ??= {
+            metricNames: [],
+          };
+        } else {
+          const timeSeriesSchemas = this.dataSources.find((source) =>
+            source.collectionRef === collectionRef
+          )?.timeSeriesCollectionSchema.timeSeriesSchemas ?? [];
+          const timeSeriesNameGeneratorSpec = timeSeriesSchemas
+            .find(({ nameGenerator }) =>
+              nameGenerator === timeSeriesNameGenerator
+            );
+          const defaultTimeSeriesName =
+            timeSeriesNameGeneratorSpec?.nameGeneratorType === 'exact' ?
+            timeSeriesNameGenerator : '';
+          collectionRefHistory.timeSeriesNameGenerators[timeSeriesNameGenerator] ??= {
+            timeSeriesName: defaultTimeSeriesName,
+            metricNames: [],
+          };
+        }
+      }
+      setProperties(
+        this[timeSeriesRefFieldName],
+        collectionRefHistory.timeSeriesNameGenerators[timeSeriesNameGenerator] ?? {
+          ...(ignoreTimeSeriesName ? {} : { timeSeriesName: '' }),
+          metricNames: [],
+        }
+      );
+    },
+
+    handleTimeSeriesNameChange() {
+      if (ignoreTimeSeriesName) {
+        return;
+      }
+
+      const generatorHistory =
+        this[historicalRefsFieldName][this[timeSeriesRefFieldName].collectionRef]
+        ?.timeSeriesNameGenerators[this[timeSeriesRefFieldName].timeSeriesNameGenerator];
+      if (generatorHistory) {
+        generatorHistory.timeSeriesName = this[timeSeriesRefFieldName].timeSeriesName;
+      }
+    },
+
+    handleMetricNamesChange() {
+      const generatorHistory =
+        this[historicalRefsFieldName][this[timeSeriesRefFieldName].collectionRef]
+        ?.timeSeriesNameGenerators[this[timeSeriesRefFieldName].timeSeriesNameGenerator];
+      if (generatorHistory) {
+        generatorHistory.metricNames = this[timeSeriesRefFieldName].metricNames;
+      }
+    },
+  });
+}

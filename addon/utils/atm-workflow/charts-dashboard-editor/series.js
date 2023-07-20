@@ -11,6 +11,7 @@ import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
 import functions from './functions-model';
+import { createTimeSeriesRefChangesHandler } from './functions-model/load-series';
 
 /**
  * @typedef {Object} TimeSeriesGeneratorRef
@@ -29,7 +30,7 @@ import functions from './functions-model';
  * @property {'seriesAxisNotAssigned'} errorId
  */
 
-const Series = ElementBase.extend({
+const Series = ElementBase.extend(createTimeSeriesRefChangesHandler('prefixedTimeSeriesRef', false), {
   /**
    * @override
    */
@@ -59,9 +60,9 @@ const Series = ElementBase.extend({
   /**
    * @public
    * @virtual optional
-   * @type {EmberObject<TimeSeriesGeneratorRef> | null}
+   * @type {EmberObject<TimeSeriesGeneratorRef>}
    */
-  prefixedTimeSeriesRef: null,
+  prefixedTimeSeriesRef: undefined,
 
   /**
    * @public
@@ -166,6 +167,13 @@ const Series = ElementBase.extend({
     }
     if (!this.detachedFunctions) {
       this.set('detachedFunctions', []);
+    }
+    if (!this.prefixedTimeSeriesRef) {
+      this.set('prefixedTimeSeriesRef', EmberObject.create({
+        collectionRef: '',
+        timeSeriesNameGenerator: '',
+        metricNames: [],
+      }));
     }
 
     this._super(...arguments);
