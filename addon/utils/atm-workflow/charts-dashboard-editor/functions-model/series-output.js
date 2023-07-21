@@ -37,6 +37,11 @@ const SeriesOutputFunction = FunctionBase.extend({
    * @override
    */
   returnedTypes: Object.freeze([FunctionDataType.Points]),
+
+  /**
+   * @override
+   */
+  isRoot: true,
 });
 
 /**

@@ -7,6 +7,7 @@
  */
 
 import { computed } from '@ember/object';
+import generateId from 'onedata-gui-common/utils/generate-id';
 import ElementBase from '../element-base';
 import { ElementType } from '../common';
 
@@ -28,6 +29,13 @@ export default ElementBase.extend({
   /**
    * @public
    * @virtual optional
+   * @type {string}
+   */
+  id: undefined,
+
+  /**
+   * @public
+   * @virtual optional
    * @type {Array<FunctionAttachableArgumentSpec>}
    */
   attachableArgumentSpecs: Object.freeze([]),
@@ -43,6 +51,25 @@ export default ElementBase.extend({
   hasSettingsComponent: false,
 
   /**
+   * `true` value of this property means, that this specific function is a
+   * top-level function (the beginning of the functions chain) and as such it
+   * should behave a bit differently than the ordinary function.
+   * @public
+   * @virtual optional
+   * @type {boolean}
+   */
+  isRoot: false,
+
+  /**
+   * Defined when function is detached. Represents position of this function
+   * relative to the root (output) function. The root function is always in the
+   * left-center placement of the editor, so can be considered a fixed element -
+   * good as a reference point.
+   * @type {{ left: number, top: number } | null}
+   */
+  positionRelativeToRootFunc: null,
+
+  /**
    * @override
    */
   elementType: ElementType.Function,
@@ -53,6 +80,23 @@ export default ElementBase.extend({
   referencingPropertyNames: computed('attachableArgumentSpecs.[]', function referencingPropertyNames() {
     return [...this.attachableArgumentSpecs.map(({ name }) => name), 'parent'];
   }),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isDetached: computed('parent.detachedFunctions.[]', function isDetached() {
+    return Boolean(this.parent?.detachedFunctions?.includes(this));
+  }),
+
+  /**
+   * @override
+   */
+  init() {
+    if (!this.id) {
+      this.set('id', generateId());
+    }
+    this._super(...arguments);
+  },
 
   /**
    * @override
@@ -78,6 +122,26 @@ export default ElementBase.extend({
    * @override
    */
   * nestedElements() {
+    for (const func of this.attachedFunctions()) {
+      yield func;
+      yield* func.nestedElements();
+    }
+  },
+
+  /**
+   * @override
+   */
+  * referencingElements() {
+    if (this.parent) {
+      yield this.parent;
+    }
+    yield* this.attachedFunctions();
+  },
+
+  /**
+   * @returns {Generator<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase>}
+   */
+  * attachedFunctions() {
     for (const { name, isArray } of this.attachableArgumentSpecs) {
       if (this[name]) {
         if (isArray) {
@@ -90,12 +154,19 @@ export default ElementBase.extend({
   },
 
   /**
-   * @override
+   * @param {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase} attachedFunction
+   * @returns {string | null}
    */
-  * referencingElements() {
-    if (this.parent) {
-      yield this.parent;
+  getArgumentNameForAttachedFunction(attachedFunction) {
+    for (const { name } of this.attachableArgumentSpecs) {
+      if (
+        this[name] === attachedFunction ||
+        (Array.isArray(this[name]) && this[name].includes(attachedFunction))
+      ) {
+        return name;
+      }
     }
-    yield* this.nestedElements();
+
+    return null;
   },
 });

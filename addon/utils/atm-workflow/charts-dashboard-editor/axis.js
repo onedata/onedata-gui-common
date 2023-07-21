@@ -73,6 +73,12 @@ const Axis = ElementBase.extend({
 
   /**
    * @public
+   * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.FunctionBase>}
+   */
+  detachedFunctions: undefined,
+
+  /**
+   * @public
    * @virtual optional
    * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.Series>}
    */
@@ -87,7 +93,12 @@ const Axis = ElementBase.extend({
   /**
    * @override
    */
-  referencingPropertyNames: Object.freeze(['series', 'parent', 'dataProvider']),
+  referencingPropertyNames: Object.freeze([
+    'series',
+    'parent',
+    'dataProvider',
+    'detachedFunctions',
+  ]),
 
   /**
    * @override
@@ -169,6 +180,9 @@ const Axis = ElementBase.extend({
 
       this.set('valueProvider', axisOutput);
     }
+    if (!this.detachedFunctions) {
+      this.set('detachedFunctions', []);
+    }
 
     this._super(...arguments);
     this.unitOptionsConfigurator();
@@ -189,6 +203,10 @@ const Axis = ElementBase.extend({
       if (this.dataProvider) {
         this.dataProvider.destroy();
         this.set('dataProvider', null);
+      }
+      if (this.detachedFunctions.length) {
+        this.detachedFunctions.forEach((chartFunction) => chartFunction.destroy());
+        this.set('detachedFunctions', []);
       }
       if (this.parent) {
         this.set('parent', null);

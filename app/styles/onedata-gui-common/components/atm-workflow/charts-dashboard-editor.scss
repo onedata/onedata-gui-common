@@ -706,6 +706,9 @@
 
   .function-editor {
     --arrow-size: 10px;
+    --line-base-width: 4em;
+    --workspace-padding: 3em;
+    --between-args-space: 1em;
 
     display: grid;
     margin: -1em;
@@ -719,14 +722,62 @@
     background-size: 20px 20px;
     background-position: 0 0, 10px 10px;
 
-    > .perfect-scrollbar-element {
+    &:not(.has-dragging-function) {
+      .function-block,
+      .function-actions,
+      .attachment-actions,
+      .add-selector-trigger {
+        pointer-events: initial;
+      }
+    }
+
+    *:not(input) {
+      user-select: none;
+    }
+
+    .is-dragging-object {
+      > .function-block {
+        pointer-events: initial;
+      }
+    }
+
+    .draggable-object-target {
+      pointer-events: initial;
+    }
+
+    .workspace-drag-target {
       display: grid;
-      padding: 3em;
+      min-height: 0;
+      cursor: initial !important;
+
+      > .perfect-scrollbar-element {
+        padding: var(--workspace-padding);
+        position: relative;
+      }
+    }
+
+    .functions-container {
+      position: relative;
+      display: grid;
+      width: max-content;
+      margin-top: calc(var(--margin-top-for-detached, 0px) + var(--margin-top-for-dragdrop, 0px));
+      margin-bottom: calc(var(--margin-bottom-for-detached, 0px) + var(--margin-bottom-for-dragdrop, 0px));
+      margin-left: calc(var(--margin-left-for-detached, 0px) + var(--margin-left-for-dragdrop, 0px));
+      margin-right: calc(var(--margin-right-for-detached, 0px) + var(--margin-right-for-dragdrop, 0px));
+      min-width: calc(var(--workspace-width) - 2 * var(--workspace-padding));
+      min-height: calc(var(--workspace-height) - 2 * var(--workspace-padding));
     }
 
     .function-renderer {
       display: inline-flex;
       align-items: center;
+      pointer-events: none;
+
+      &:not(.root-function) {
+        .function-block-header {
+          cursor: grab;
+        }
+      }
     }
 
     .function-block {
@@ -739,7 +790,11 @@
     }
 
     .function-block-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5em;
       padding: 0.5em;
+      font-size: 1.2em;
       background-color: $block-background-color;
     }
 
@@ -747,6 +802,12 @@
       text-transform: uppercase;
       white-space: nowrap;
       font-size: 90%;
+      user-select: none;
+    }
+
+    .function-actions {
+      display: flex;
+      align-items: center;
     }
 
     .function-block-body {
@@ -792,13 +853,57 @@
       flex-shrink: 0;
     }
 
+    .function-argument-blocks {
+      .draggable-object-target {
+        &::before {
+          content: '';
+          display: none;
+          background-color: rgba(#000, 0.1);
+          border: 2px dashed rgba(#000, 0.2);
+          border-radius: $border-radius-small;
+        }
+
+        &.accepts-drag::before {
+          display: block;
+        }
+      }
+
+      .between-args-drop-target-container {
+        position: relative;
+        width: calc(var(--line-base-width) + var(--min-sibling-block-width));
+        top: var(--y-offset, 0);
+
+        .draggable-object-target {
+          position: absolute;
+          width: 100%;
+          height: calc(var(--available-y-space, 0px) + var(--between-args-space) + 2em);
+          top: -1em;
+          display: flex;
+          align-items: center;
+          padding-left: 0.5em;
+          z-index: 1;
+
+          &::before {
+            height: calc(var(--available-y-space, 0px) + var(--between-args-space) - 0.5em);
+            flex-basis: 100%;
+          }
+        }
+
+        &.before-first-arg {
+          .draggable-object-target {
+            top: calc(var(--between-args-space) * -1 - 1em);
+          }
+        }
+      }
+    }
+
     .function-argument-block {
       position: relative;
       display: flex;
       align-items: center;
 
-      & + .function-argument-block {
-        margin-top: 1em;
+      & ~ .function-argument-block {
+        margin-top: var(--between-args-space);
       }
     }
 
@@ -851,7 +956,7 @@
 
     .argument-start-line,
     .argument-end-line {
-      min-width: 50px;
+      min-width: var(--line-base-width);
     }
 
     .argument-middle-line {
@@ -861,6 +966,61 @@
       height: var(--argument-middle-line-length);
       &::before {
         height: 100%;
+      }
+    }
+
+    .argument-end-line {
+      position: relative;
+    }
+
+    .attachment-actions {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100%) translateY(-0.2em);
+      display: flex;
+      border: $main-border;
+      border-radius: $border-radius-small;
+      background-color: $color-one-white;
+      opacity: 0.5;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      .action {
+        padding: 0.1em;
+        + .action {
+          border-left: $main-border;
+        }
+      }
+    }
+
+
+    .adder-draggable-object-target {
+      width: initial;
+      position: relative;
+
+      &.accepts-drag button {
+        background-color: transparent;
+        color: $main-text-color;
+        border-color: transparent;
+      }
+
+      &::before {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+    }
+
+    .detached-functions-container {
+      display: contents;
+
+      > .function-renderer {
+        position: absolute;
       }
     }
   }

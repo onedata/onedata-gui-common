@@ -6,14 +6,18 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Component from '@ember/component';
-import { computed, observer, defineProperty } from '@ember/object';
+import { set, computed, observer, defineProperty } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { dasherize } from '@ember/string';
+import { reads } from '@ember/object/computed';
+import { not } from 'ember-awesome-macros';
+import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import {
   getFunctionNameTranslation,
   getFunctionArgumentNameTranslation,
+  ElementType,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 import dom from 'onedata-gui-common/utils/dom';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/function-editor/function-renderer';
@@ -24,13 +28,22 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
  * @property {string} name
  * @property {Array<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase>} attachedFunctions
  * @property {boolean} isArray
+ * @property {boolean} hasFunctionAdder
  */
 
-export default Component.extend({
+export default OneDraggableObject.extend(I18n, {
   layout,
   classNames: ['function-renderer'],
+  classNameBindings: ['chartFunction.isRoot:root-function'],
+  attributeBindings: ['chartFunction.id:data-function-id'],
 
   i18n: service(),
+  dragDrop: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.functionEditor.functionRenderer',
 
   /**
    * @virtual
@@ -56,6 +69,26 @@ export default Component.extend({
   functionArguments: undefined,
 
   /**
+   * Contains current parent chart function (if exists). Is not a computed - it is
+   * set `parentObserver`. That approach allows to analyse difference between old
+   * and new parent values.
+   * It is null, when element's parent is not a chart function.
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null}
+   */
+  parentChartFunction: null,
+
+  /**
+   * For one-draggable-object
+   * @override
+   */
+  dragHandle: '.function-block-header',
+
+  /**
+   * @type {boolean}
+   */
+  isAdderOpened: false,
+
+  /**
    * @type {ComputedProperty<SafeString>}
    */
   readableName: computed('chartFunction.name', function readableName() {
@@ -73,6 +106,42 @@ export default Component.extend({
       }
 
       return `atm-workflow/charts-dashboard-editor/function-editor/${dasherize(this.chartFunction.name)}-settings`;
+    }
+  ),
+
+  /**
+   * For one-draggable-object
+   * @override
+   */
+  isDraggable: not('chartFunction.isRoot'),
+
+  /**
+   * For one-draggable-object
+   * @override
+   */
+  content: reads('chartFunction'),
+
+  /**
+   * @type {ComputedProperties<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null>}
+   */
+  draggedChartFunction: computed(
+    'dragDrop.draggedElementModel',
+    function draggedChartFunction() {
+      return this.dragDrop.draggedElementModel?.elementType === ElementType.Function ?
+        this.dragDrop.draggedElementModel : null;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isInDraggedChartFunction: computed(
+    'draggedChartFunction',
+    function isInDraggedChartFunction() {
+      return this.draggedChartFunction ? [
+        ...this.draggedChartFunction.nestedElements(),
+        this.draggedChartFunction,
+      ].includes(this.chartFunction) : false;
     }
   ),
 
@@ -103,6 +172,7 @@ export default Component.extend({
               name: argSpec.name,
               attachedFunctions,
               isArray: argSpec.isArray,
+              hasFunctionAdder: argSpec.isArray || !attachedFunctions.length,
             };
           });
         })
@@ -111,11 +181,53 @@ export default Component.extend({
     }
   ),
 
+  parentObserver: observer('chartFunction.parent', function parentObserver() {
+    if (this.parentChartFunction === this.chartFunction.parent) {
+      return;
+    }
+    const wasParentRemoved = this.parentChartFunction?.isRemoved ?? false;
+    this.set(
+      'parentChartFunction',
+      this.chartFunction.parent?.elementType === ElementType.Function ?
+      this.chartFunction.parent : null
+    );
+
+    if (!this.element) {
+      return;
+    }
+    const isDetachedInDom =
+      this.element.parentElement.matches('.detached-functions-container');
+    const rootFunctionBlock = this.element.closest('.function-editor')
+      ?.querySelector('.root-function > .function-block');
+    const functionBlock = this.element.querySelector('.function-block');
+
+    // When function becomes detached -> persist its current coordinates
+    // relative to the root function (as root function position is considered
+    // constant).
+    if (
+      functionBlock &&
+      rootFunctionBlock &&
+      this.chartFunction.isDetached &&
+      !isDetachedInDom
+    ) {
+      const position = dom.position(functionBlock, rootFunctionBlock);
+      const detachPositionOffset = {
+        top: 0,
+        left: wasParentRemoved ? 0 : 100,
+      };
+      set(this.chartFunction, 'positionRelativeToRootFunc', {
+        top: position.top + detachPositionOffset.top,
+        left: position.left + detachPositionOffset.left,
+      });
+    }
+  }),
+
   /**
    * @override
    */
   init() {
     this._super(...arguments);
+    this.parentObserver();
     this.functionArgumentsSetter();
   },
 
@@ -129,22 +241,28 @@ export default Component.extend({
       await waitForRender();
       if (this.element) {
         this.recalculateArgumentLinePositions();
+        this.recalculateDragTargetHeights();
       }
     })();
   },
-
+  /**
+   * @returns {void}
+   */
   recalculateArgumentLinePositions() {
     const argumentElements = this.element.querySelectorAll(
       ':scope > .function-arguments-container > .function-argument');
     for (const argumentElement of argumentElements) {
-      const startLineElement = argumentElement.querySelector(':scope > .argument-start-line');
+      const startLineElement =
+        argumentElement.querySelector(':scope > .argument-start-line');
       const startLineHeight = dom.height(startLineElement);
       const argumentBlockElements = argumentElement.querySelectorAll(
         ':scope > .function-argument-blocks > .function-argument-block'
       );
       for (const argumentBlockElement of argumentBlockElements) {
-        const middleLineElement = argumentBlockElement.querySelector(':scope > .argument-middle-line');
-        const endLineElement = argumentBlockElement.querySelector(':scope > .argument-end-line');
+        const middleLineElement =
+          argumentBlockElement.querySelector(':scope > .argument-middle-line');
+        const endLineElement =
+          argumentBlockElement.querySelector(':scope > .argument-end-line');
         // Distance below can be negative when end line is lower (on the Y axis) than start.
         const startToEndDistance = dom.position(endLineElement, startLineElement).top;
 
@@ -168,5 +286,123 @@ export default Component.extend({
         );
       }
     }
+  },
+
+  /**
+   * @returns {void}
+   */
+  recalculateDragTargetHeights() {
+    const argumentElements = this.element.querySelectorAll(
+      ':scope > .function-arguments-container > .function-argument'
+    );
+
+    for (const argumentElement of argumentElements) {
+      const argumentBlocksChildren = argumentElement.querySelectorAll(
+        ':scope > .function-argument-blocks > *'
+      );
+      const isFirstChildADropTarget = argumentBlocksChildren[0]?.matches(
+        '.between-args-drop-target-container.before-first-arg'
+      );
+      const isSecondChildAFuncArgBlock = argumentBlocksChildren[1]?.matches(
+        '.function-argument-block'
+      );
+
+      if (isFirstChildADropTarget && isSecondChildAFuncArgBlock) {
+        const funcBlock = argumentBlocksChildren[1].querySelector(
+          '.function-block, .adder-draggable-object-target'
+        );
+        const topEmptySpace = (
+          dom.height(argumentBlocksChildren[1]) -
+          dom.height(funcBlock)
+        ) / 2;
+        argumentBlocksChildren[0].style.setProperty('--y-offset', `${topEmptySpace}px`);
+        argumentBlocksChildren[0].style.setProperty(
+          '--min-sibling-block-width',
+          `${dom.width(funcBlock)}px`
+        );
+      }
+
+      for (let i = 1; i < argumentBlocksChildren.length; i++) {
+        if (
+          !argumentBlocksChildren[i].matches('.between-args-drop-target-container') ||
+          !argumentBlocksChildren[i - 1].matches('.function-argument-block') ||
+          !argumentBlocksChildren[i + 1]?.matches('.function-argument-block')
+        ) {
+          continue;
+        }
+
+        const topBlock = argumentBlocksChildren[i - 1].querySelector('.function-block');
+        const bottomBlock = argumentBlocksChildren[i + 1].querySelector(
+          '.function-block, .adder-draggable-object-target'
+        );
+        const topEmptySpace = (dom.height(argumentBlocksChildren[i - 1]) -
+          dom.height(topBlock)) / 2;
+        const bottomEmptySpace = (dom.height(argumentBlocksChildren[i + 1]) -
+          dom.height(bottomBlock)) / 2;
+        const minBlockWidth = Math.min(
+          dom.width(topBlock),
+          bottomBlock.matches('.function-block') ?
+          dom.width(bottomBlock) : Number.POSITIVE_INFINITY
+        );
+        argumentBlocksChildren[i].style.setProperty('--y-offset', `-${topEmptySpace}px`);
+        argumentBlocksChildren[i].style.setProperty(
+          '--available-y-space',
+          `${topEmptySpace + bottomEmptySpace}px`
+        );
+        argumentBlocksChildren[i].style.setProperty(
+          '--min-sibling-block-width',
+          `${minBlockWidth}px`
+        );
+      }
+    }
+  },
+
+  actions: {
+    removeFunction() {
+      const action = this.actionsFactory
+        .createRemoveFunctionAction({ functionToRemove: this.chartFunction });
+      action.execute();
+    },
+    detachFunction(chartFunctionToDetach) {
+      const action = this.actionsFactory
+        .createDetachArgumentFunctionAction({ functionToDetach: chartFunctionToDetach });
+      action.execute();
+    },
+    validateOnAdderDragEvent() {
+      return !this.isInDraggedChartFunction &&
+        ![...this.chartFunction.attachedFunctions()]
+        .includes(this.draggedChartFunction);
+    },
+    /**
+     * @param {string} argumentName
+     * @param {MoveElementActionNewPosition['placement'] | null} placement
+     * @param {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null} referenceFunction
+     * @param {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase} draggedFunction
+     */
+    acceptDraggedFunction(argumentName, placement, referenceFunction, draggedFunction) {
+      let currentRelationFieldName;
+      if (draggedFunction.isDetached) {
+        currentRelationFieldName = 'detachedFunctions';
+      } else {
+        currentRelationFieldName =
+          draggedFunction.parent?.getArgumentNameForAttachedFunction?.(draggedFunction);
+      }
+
+      if (!currentRelationFieldName) {
+        return;
+      }
+
+      const action = this.actionsFactory.createMoveElementAction({
+        movedElement: draggedFunction,
+        currentRelationFieldName,
+        newParent: this.chartFunction,
+        newRelationFieldName: argumentName,
+        newPosition: placement ? {
+          placement,
+          referenceElement: referenceFunction,
+        } : null,
+      });
+      action.execute();
+    },
   },
 });

@@ -8,6 +8,7 @@
 
 import { inject as service } from '@ember/service';
 import DraggableObjectTarget from 'ember-drag-drop/components/draggable-object-target';
+import globals from 'onedata-gui-common/utils/globals';
 
 export default DraggableObjectTarget.extend({
   dragDrop: service(),
@@ -53,7 +54,7 @@ export default DraggableObjectTarget.extend({
  * @returns {Array<HTMLElement>}
  */
 function getIncorrectAcceptingTargets(currentAcceptingTarget) {
-  return [...document.querySelectorAll('.draggable-object-target.accepts-drag')]
+  return [...globals.document.querySelectorAll('.draggable-object-target.accepts-drag')]
     .filter((target) => target !== currentAcceptingTarget);
 }
 

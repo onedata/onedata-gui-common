@@ -18,6 +18,8 @@ import ChangeElementPropertyAction from './actions/change-element-property-actio
 import EditChartContentAction from './actions/edit-chart-content-action';
 import EndChartContentEditionAction from './actions/end-chart-content-edition-action';
 import AddFunctionAction from './actions/add-function-action';
+import DetachArgumentFunctionAction from './actions/detach-argument-function-action';
+import RemoveFunctionAction from './actions/remove-function-action';
 
 /**
  * @typedef {(action: Utils.Action, result: Utils.ActionResult) => void} ActionExecutionListener
@@ -319,6 +321,40 @@ export default class ActionsFactory {
           },
         })
       )
+    );
+  }
+
+  /**
+   * @public
+   * @param {Omit<DetachArgumentFunctionActionContext, 'changeViewState'>} context
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.DetachArgumentFunctionAction}
+   */
+  createDetachArgumentFunctionAction(context) {
+    return this.attachExecutionListener(
+      DetachArgumentFunctionAction.create({
+        ownerSource: this.ownerSource,
+        context: {
+          changeViewState: this.changeViewState,
+          ...context,
+        },
+      })
+    );
+  }
+
+  /**
+   * @public
+   * @param {Omit<RemoveFunctionActionContext, 'changeViewState'>} context
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.RemoveFunctionAction}
+   */
+  createRemoveFunctionAction(context) {
+    return this.attachExecutionListener(
+      RemoveFunctionAction.create({
+        ownerSource: this.ownerSource,
+        context: {
+          changeViewState: this.changeViewState,
+          ...context,
+        },
+      })
     );
   }
 

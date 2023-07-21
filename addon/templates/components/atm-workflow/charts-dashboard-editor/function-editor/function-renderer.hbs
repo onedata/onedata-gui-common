@@ -1,6 +1,15 @@
 <div class="function-block">
   <div class="function-block-header">
     <span class="function-name">{{readableName}}</span>
+    {{#if (not chartFunction.isRoot)}}
+      <div class="function-actions">
+        {{one-icon
+          class="remove-action action"
+          icon="x"
+          click=(action "removeFunction")
+        }}
+      </div>
+    {{/if}}
   </div>
   {{#if settingsComponentName}}
     <div class="function-block-body">
@@ -18,29 +27,90 @@
         <div class="argument-name">{{argumentInfo.readableName}}</div>
       </div>
       <div class="function-argument-blocks">
-      {{#each argumentInfo.attachedFunctions as |func|}}
-        <div class="function-argument-block">
-          <div class="argument-middle-line argument-line"></div>
-          <div class="argument-end-line argument-line"></div>
-          {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
-            chartFunction=func
-            executionContext=executionContext
-            actionsFactory=actionsFactory
-          }}
-        </div>
-      {{/each}}
-      {{#if (or argumentInfo.isArray (not argumentInfo.attachedFunctions.length))}}
-        <div class="function-argument-block">
-          <div class="argument-middle-line argument-line"></div>
-          <div class="argument-end-line argument-line"></div>
-          {{atm-workflow/charts-dashboard-editor/function-editor/function-adder
-            executionContext=executionContext
-            actionsFactory=actionsFactory
-            parentFunction=chartFunction
-            parentFunctionArgumentName=argumentInfo.name
-          }}
-        </div>
-      {{/if}}
+        {{#if (and
+          draggedChartFunction
+          argumentInfo.isArray
+          argumentInfo.attachedFunctions.length
+          (not-eq argumentInfo.attachedFunctions.[0] draggedChartFunction)
+          (not isInDraggedChartFunction)
+        )}}
+          <div class="between-args-drop-target-container before-first-arg">
+            {{one-draggable-object-target
+              action=(action
+                "acceptDraggedFunction"
+                argumentInfo.name
+                "before"
+                argumentInfo.attachedFunctions.[0]
+              )
+            }}
+          </div>
+        {{/if}}
+        {{#each argumentInfo.attachedFunctions as |func index|}}
+          <div class="function-argument-block">
+            <div class="argument-middle-line argument-line"></div>
+            <div class="argument-end-line argument-line">
+              <div class="attachment-actions">
+                {{one-icon
+                  class="remove-action action"
+                  icon="x"
+                  click=(action "detachFunction" func)
+                }}
+              </div>
+            </div>
+            {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
+              chartFunction=func
+              executionContext=executionContext
+              actionsFactory=actionsFactory
+            }}
+          </div>
+          {{#if (and
+            draggedChartFunction
+            argumentInfo.isArray
+            (not-eq func draggedChartFunction)
+            (not-eq (get argumentInfo.attachedFunctions (add index 1)) draggedChartFunction)
+            (not isInDraggedChartFunction)
+          )}}
+            <div class="between-args-drop-target-container">
+              {{one-draggable-object-target
+                action=(action
+                  "acceptDraggedFunction"
+                  argumentInfo.name
+                  "after"
+                  func
+                )
+              }}
+            </div>
+          {{/if}}
+        {{/each}}
+        {{#if argumentInfo.hasFunctionAdder}}
+          <div class="function-argument-block">
+            <div class="argument-middle-line argument-line"></div>
+            <div class="argument-end-line argument-line"></div>
+            {{#one-draggable-object-target
+              class="adder-draggable-object-target"
+              validateDragEvent=(action "validateOnAdderDragEvent")
+              action=(action "acceptDraggedFunction" argumentInfo.name null null)
+            }}
+              {{#one-button
+                type="default"
+                size="sm"
+                class="add-selector-trigger"
+                onClick=(action (mut isAdderOpened) (not isAdderOpened))
+              }}
+                {{tt this "addArgument"}}
+              {{/one-button}}
+            {{/one-draggable-object-target}}
+            {{atm-workflow/charts-dashboard-editor/function-editor/function-adder
+              executionContext=executionContext
+              actionsFactory=actionsFactory
+              parentFunction=chartFunction
+              parentFunctionArgumentName=argumentInfo.name
+              triggerSelector=(local-selector this.elementId ".add-selector-trigger")
+              isOpened=isAdderOpened
+              onClose=(action (mut isAdderOpened) false)
+            }}
+          </div>
+        {{/if}}
       </div>
     </div>
   {{/each}}

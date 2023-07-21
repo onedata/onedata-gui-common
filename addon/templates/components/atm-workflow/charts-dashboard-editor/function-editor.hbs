@@ -1,7 +1,23 @@
-{{#perfect-scrollbar-element}}
-  {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
-    chartFunction=outputFunction
-    executionContext=executionContext
-    actionsFactory=actionsFactory
-  }}
-{{/perfect-scrollbar-element}}
+{{#one-draggable-object-target
+  class="workspace-drag-target"
+  action=(action "acceptDraggedFunction")
+}}
+  {{#perfect-scrollbar-element registerApi=(action "registerScrollbarApi")}}
+    <div class="functions-container">
+      {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
+        chartFunction=outputFunction
+        executionContext=executionContext
+        actionsFactory=actionsFactory
+      }}
+      <div class="detached-functions-container">
+        {{#each detachedFunctions as |detachedFunction|}}
+          {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
+            chartFunction=detachedFunction
+            executionContext=executionContext
+            actionsFactory=actionsFactory
+          }}
+        {{/each}}
+      </div>
+    </div>
+  {{/perfect-scrollbar-element}}
+{{/one-draggable-object-target}}

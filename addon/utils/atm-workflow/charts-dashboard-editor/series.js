@@ -105,6 +105,12 @@ const Series = ElementBase.extend({
   dataProvider: undefined,
 
   /**
+   * @public
+   * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.FunctionBase>}
+   */
+  detachedFunctions: undefined,
+
+  /**
    * @override
    */
   needsDataSources: true,
@@ -112,7 +118,13 @@ const Series = ElementBase.extend({
   /**
    * @override
    */
-  referencingPropertyNames: Object.freeze(['parent', 'axis', 'group', 'dataProvider']),
+  referencingPropertyNames: Object.freeze([
+    'parent',
+    'axis',
+    'group',
+    'dataProvider',
+    'detachedFunctions',
+  ]),
 
   /**
    * @override
@@ -152,6 +164,9 @@ const Series = ElementBase.extend({
         elementOwner: this.elementOwner,
       }));
     }
+    if (!this.detachedFunctions) {
+      this.set('detachedFunctions', []);
+    }
 
     this._super(...arguments);
   },
@@ -174,6 +189,10 @@ const Series = ElementBase.extend({
       if (this.dataProvider) {
         this.dataProvider.destroy();
         this.set('dataProvider', null);
+      }
+      if (this.detachedFunctions.length) {
+        this.detachedFunctions.forEach((chartFunction) => chartFunction.destroy());
+        this.set('detachedFunctions', []);
       }
       if (this.parent) {
         this.set('parent', null);

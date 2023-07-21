@@ -29,16 +29,6 @@ export default Action.extend({
   context: undefined,
 
   /**
-   * @type {ComputedProperty<RemoveElementActionContext['elementToRemove']>}
-   */
-  elementToRemove: reads('context.elementToRemove'),
-
-  /**
-   * @type {ComputedProperty<RemoveElementActionContext['changeViewState']>}
-   */
-  changeViewState: reads('context.changeViewState'),
-
-  /**
    * Becomes defined during action execution
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null}
    */
@@ -51,12 +41,22 @@ export default Action.extend({
   removedReferences: null,
 
   /**
+   * @type {ComputedProperty<RemoveElementActionContext['elementToRemove']>}
+   */
+  elementToRemove: reads('context.elementToRemove'),
+
+  /**
+   * @type {ComputedProperty<RemoveElementActionContext['changeViewState']>}
+   */
+  changeViewState: reads('context.changeViewState'),
+
+  /**
    * @override
    */
   willDestroy() {
     try {
-      if (this.elementToRemove && !this.elementToRemove.parent) {
-        this.elementToRemove.destroy();
+      if (this.wasExecuted) {
+        this.elementToRemove?.destroy();
       }
       this.setProperties({
         oldParent: null,

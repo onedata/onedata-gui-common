@@ -23,7 +23,7 @@
  * @param {HTMLElement} [referenceElement]
  * @returns {DomOffsetResult}
  */
-export default function offset(element, referenceElement) {
+export default function position(element, referenceElement) {
   const normalizedReferenceElement = referenceElement ??
     element.offsetParent ??
     element.ownerDocument.documentElement;

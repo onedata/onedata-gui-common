@@ -37,6 +37,11 @@ const AxisOutputFunction = FunctionBase.extend({
    * @override
    */
   returnedTypes: Object.freeze([FunctionDataType.Number]),
+
+  /**
+   * @override
+   */
+  isRoot: true,
 });
 
 /**

@@ -5,6 +5,7 @@ import { render, find, click, findAll } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import { createModelFromSpec, ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import globals from 'onedata-gui-common/utils/globals';
 import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 import { drag } from '../../../../../helpers/drag-drop';
 
@@ -83,7 +84,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     expect(items[0].querySelector('.axis-name')).to.contain.text('a1');
     expect(items[1]).to.contain.text('s2');
     expect(
-      window.getComputedStyle(items[1].querySelector('.color-mark'))
+      globals.window.getComputedStyle(items[1].querySelector('.color-mark'))
       .getPropertyValue('--series-color')
       .trim()
     ).to.equal('#ff0000');
