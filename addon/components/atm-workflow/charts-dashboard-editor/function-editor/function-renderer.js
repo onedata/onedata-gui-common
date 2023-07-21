@@ -69,10 +69,10 @@ export default OneDraggableObject.extend(I18n, {
   functionArguments: undefined,
 
   /**
-   * Contains current parent chart function (if exists). Is not a computed - is
+   * Contains current parent chart function (if exists). Is not a computed - it is
    * set `parentObserver`. That approach allows to analyse difference between old
    * and new parent values.
-   * Is null, when element's parent is not a chart function.
+   * It is null, when element's parent is not a chart function.
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null}
    */
   parentChartFunction: null,
@@ -124,17 +124,20 @@ export default OneDraggableObject.extend(I18n, {
   /**
    * @type {ComputedProperties<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null>}
    */
-  draggedChartFunction: computed('dragDrop.draggedElementModel', function draggedChartFunction() {
-    return this.dragDrop.draggedElementModel?.elementType === ElementType.Function ?
-      this.dragDrop.draggedElementModel : null;
-  }),
+  draggedChartFunction: computed(
+    'dragDrop.draggedElementModel',
+    function draggedChartFunction() {
+      return this.dragDrop.draggedElementModel?.elementType === ElementType.Function ?
+        this.dragDrop.draggedElementModel : null;
+    }
+  ),
 
   /**
    * @type {ComputedProperty<boolean>}
    */
-  amIInDraggedChartFunction: computed(
+  isInDraggedChartFunction: computed(
     'draggedChartFunction',
-    function amIInDraggedChartFunction() {
+    function isInDraggedChartFunction() {
       return this.draggedChartFunction ? [
         ...this.draggedChartFunction.nestedElements(),
         this.draggedChartFunction,
@@ -198,10 +201,6 @@ export default OneDraggableObject.extend(I18n, {
       ?.querySelector('.root-function > .function-block');
     const functionBlock = this.element.querySelector('.function-block');
 
-    // Due to some unknown Ember issues `chartFunction.isDetached` does not always
-    // recalculate on parent change (but only in Firefox). Enforcing recalculation.
-    this.chartFunction.notifyPropertyChange('isDetached');
-
     // When function becomes detached -> persist its current coordinates
     // relative to the root function (as root function position is considered
     // constant).
@@ -253,14 +252,17 @@ export default OneDraggableObject.extend(I18n, {
     const argumentElements = this.element.querySelectorAll(
       ':scope > .function-arguments-container > .function-argument');
     for (const argumentElement of argumentElements) {
-      const startLineElement = argumentElement.querySelector(':scope > .argument-start-line');
+      const startLineElement =
+        argumentElement.querySelector(':scope > .argument-start-line');
       const startLineHeight = dom.height(startLineElement);
       const argumentBlockElements = argumentElement.querySelectorAll(
         ':scope > .function-argument-blocks > .function-argument-block'
       );
       for (const argumentBlockElement of argumentBlockElements) {
-        const middleLineElement = argumentBlockElement.querySelector(':scope > .argument-middle-line');
-        const endLineElement = argumentBlockElement.querySelector(':scope > .argument-end-line');
+        const middleLineElement =
+          argumentBlockElement.querySelector(':scope > .argument-middle-line');
+        const endLineElement =
+          argumentBlockElement.querySelector(':scope > .argument-end-line');
         // Distance below can be negative when end line is lower (on the Y axis) than start.
         const startToEndDistance = dom.position(endLineElement, startLineElement).top;
 
@@ -291,7 +293,8 @@ export default OneDraggableObject.extend(I18n, {
    */
   recalculateDragTargetHeights() {
     const argumentElements = this.element.querySelectorAll(
-      ':scope > .function-arguments-container > .function-argument');
+      ':scope > .function-arguments-container > .function-argument'
+    );
 
     for (const argumentElement of argumentElements) {
       const argumentBlocksChildren = argumentElement.querySelectorAll(
@@ -313,6 +316,10 @@ export default OneDraggableObject.extend(I18n, {
           dom.height(funcBlock)
         ) / 2;
         argumentBlocksChildren[0].style.setProperty('--y-offset', `${topEmptySpace}px`);
+        argumentBlocksChildren[0].style.setProperty(
+          '--min-sibling-block-width',
+          `${dom.width(funcBlock)}px`
+        );
       }
 
       for (let i = 1; i < argumentBlocksChildren.length; i++) {
@@ -332,8 +339,20 @@ export default OneDraggableObject.extend(I18n, {
           dom.height(topBlock)) / 2;
         const bottomEmptySpace = (dom.height(argumentBlocksChildren[i + 1]) -
           dom.height(bottomBlock)) / 2;
+        const minBlockWidth = Math.min(
+          dom.width(topBlock),
+          bottomBlock.matches('.function-block') ?
+          dom.width(bottomBlock) : Number.POSITIVE_INFINITY
+        );
         argumentBlocksChildren[i].style.setProperty('--y-offset', `-${topEmptySpace}px`);
-        argumentBlocksChildren[i].style.setProperty('--available-y-space', `${topEmptySpace + bottomEmptySpace}px`);
+        argumentBlocksChildren[i].style.setProperty(
+          '--available-y-space',
+          `${topEmptySpace + bottomEmptySpace}px`
+        );
+        argumentBlocksChildren[i].style.setProperty(
+          '--min-sibling-block-width',
+          `${minBlockWidth}px`
+        );
       }
     }
   },
@@ -344,13 +363,13 @@ export default OneDraggableObject.extend(I18n, {
         .createRemoveFunctionAction({ functionToRemove: this.chartFunction });
       action.execute();
     },
-    detachFunction(func) {
+    detachFunction(chartFunctionToDetach) {
       const action = this.actionsFactory
-        .createDetachArgumentFunctionAction({ functionToDetach: func });
+        .createDetachArgumentFunctionAction({ functionToDetach: chartFunctionToDetach });
       action.execute();
     },
     validateOnAdderDragEvent() {
-      return !this.amIInDraggedChartFunction &&
+      return !this.isInDraggedChartFunction &&
         ![...this.chartFunction.attachedFunctions()]
         .includes(this.draggedChartFunction);
     },

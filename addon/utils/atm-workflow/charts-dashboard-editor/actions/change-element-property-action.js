@@ -54,6 +54,12 @@ export default Action.extend({
   context: undefined,
 
   /**
+   * @public
+   * @type {unknown}
+   */
+  previousValue: undefined,
+
+  /**
    * @private
    * @type {ComputedProperty<ChangeElementPropertyActionContext['element']>}
    */
@@ -82,12 +88,6 @@ export default Action.extend({
    * @type {ComputedProperty<ChangeElementPropertyActionContext['changeViewState']>}
    */
   changeViewState: reads('context.changeViewState'),
-
-  /**
-   * @public
-   * @type {unknown}
-   */
-  previousValue: undefined,
 
   /**
    * @override

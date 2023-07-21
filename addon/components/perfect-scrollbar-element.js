@@ -145,6 +145,15 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
     }];
   }),
 
+  /**
+   * @type {ComputedProperty<PerfectScrollbarApi>}
+   */
+  perfectScrollbarApi: computed(function perfectScrollbarApi() {
+    return {
+      update: () => this.perfectScrollbar.update(),
+    };
+  }),
+
   didInsertElement() {
     this._super(...arguments);
 
@@ -161,9 +170,7 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
       element.addEventListener(eventName, handler, passive ? { passive: true } : false)
     );
 
-    this.registerApi?.({
-      update: () => this.perfectScrollbar.update(),
-    });
+    this.registerApi?.(this.perfectScrollbarApi);
   },
 
   willDestroyElement() {

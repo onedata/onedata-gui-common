@@ -180,6 +180,9 @@ const Axis = ElementBase.extend({
 
       this.set('valueProvider', axisOutput);
     }
+    if (!this.detachedFunctions) {
+      this.set('detachedFunctions', []);
+    }
 
     this._super(...arguments);
     this.unitOptionsConfigurator();
@@ -200,6 +203,10 @@ const Axis = ElementBase.extend({
       if (this.dataProvider) {
         this.dataProvider.destroy();
         this.set('dataProvider', null);
+      }
+      if (this.detachedFunctions.length) {
+        this.detachedFunctions.forEach((chartFunction) => chartFunction.destroy());
+        this.set('detachedFunctions', []);
       }
       if (this.parent) {
         this.set('parent', null);

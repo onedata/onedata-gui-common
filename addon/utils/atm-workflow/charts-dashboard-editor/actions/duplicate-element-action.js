@@ -30,6 +30,12 @@ export default Action.extend({
   context: undefined,
 
   /**
+   * Becomes defined during action execution
+   * @type {DuplicateElementActionContext['elementToDuplicate'] | null}
+   */
+  createdDuplicate: null,
+
+  /**
    * @type {ComputedProperty<DuplicateElementActionContext['elementToDuplicate']>}
    */
   elementToDuplicate: reads('context.elementToDuplicate'),
@@ -38,12 +44,6 @@ export default Action.extend({
    * @type {ComputedProperty<DuplicateElementActionContext['changeViewState']>}
    */
   changeViewState: reads('context.changeViewState'),
-
-  /**
-   * Becomes defined during action execution
-   * @type {DuplicateElementActionContext['elementToDuplicate'] | null}
-   */
-  createdDuplicate: null,
 
   /**
    * @type {ComputedProperty<string>}

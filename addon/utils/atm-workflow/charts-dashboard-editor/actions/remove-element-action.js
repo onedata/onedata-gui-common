@@ -29,16 +29,6 @@ export default Action.extend({
   context: undefined,
 
   /**
-   * @type {ComputedProperty<RemoveElementActionContext['elementToRemove']>}
-   */
-  elementToRemove: reads('context.elementToRemove'),
-
-  /**
-   * @type {ComputedProperty<RemoveElementActionContext['changeViewState']>}
-   */
-  changeViewState: reads('context.changeViewState'),
-
-  /**
    * Becomes defined during action execution
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null}
    */
@@ -49,6 +39,16 @@ export default Action.extend({
    * @type {Array<DashboardElementReference> | null}
    */
   removedReferences: null,
+
+  /**
+   * @type {ComputedProperty<RemoveElementActionContext['elementToRemove']>}
+   */
+  elementToRemove: reads('context.elementToRemove'),
+
+  /**
+   * @type {ComputedProperty<RemoveElementActionContext['changeViewState']>}
+   */
+  changeViewState: reads('context.changeViewState'),
 
   /**
    * @override
