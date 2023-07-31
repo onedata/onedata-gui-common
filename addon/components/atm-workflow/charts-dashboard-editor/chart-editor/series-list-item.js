@@ -11,25 +11,20 @@ import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { translateSeriesType } from 'onedata-gui-common/utils/time-series-dashboard';
 import {
   ElementType,
   chartElementIcons,
   getUnnamedElementNamePlaceholder,
+  getRepeatedSeriesName,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-list-item';
 
-export default Component.extend(I18n, {
+export default Component.extend({
   layout,
   classNames: ['series-list-item'],
 
   i18n: service(),
-
-  /**
-   * @override
-   */
-  i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.chartEditor.seriesListItem',
 
   /**
    * @virtual
@@ -60,10 +55,8 @@ export default Component.extend(I18n, {
     function name() {
       if (this.item.repeatPerPrefixedTimeSeries) {
         const timeSeriesNameGenerator =
-          this.item.prefixedTimeSeriesRef.timeSeriesNameGenerator;
-        return this.t('nameForRepeated', {
-          generatorName: timeSeriesNameGenerator ? `${timeSeriesNameGenerator}*` : '?',
-        });
+          this.item.prefixedTimeSeriesRef.timeSeriesNameGenerator ?? null;
+        return getRepeatedSeriesName(this.i18n, timeSeriesNameGenerator);
       } else {
         return this.item.name ?? null;
       }

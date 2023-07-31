@@ -11,7 +11,7 @@ import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
 import functions from './functions-model';
-import { createTimeSeriesRefChangesHandler } from './functions-model/load-series';
+import TimeSeriesRefChangesHandler from './time-series-ref-changes-handler';
 
 /**
  * @typedef {Object} TimeSeriesGeneratorRef
@@ -30,7 +30,7 @@ import { createTimeSeriesRefChangesHandler } from './functions-model/load-series
  * @property {'seriesAxisNotAssigned'} errorId
  */
 
-const Series = ElementBase.extend(createTimeSeriesRefChangesHandler('prefixedTimeSeriesRef', false), {
+const Series = ElementBase.extend({
   /**
    * @override
    */
@@ -117,6 +117,12 @@ const Series = ElementBase.extend(createTimeSeriesRefChangesHandler('prefixedTim
   needsDataSources: true,
 
   /**
+   * Set in `init`.
+   * @type {TimeSeriesRefChangesHandler}
+   */
+  timeSeriesRefChangesHandler: undefined,
+
+  /**
    * @override
    */
   referencingPropertyNames: Object.freeze([
@@ -175,6 +181,11 @@ const Series = ElementBase.extend(createTimeSeriesRefChangesHandler('prefixedTim
         metricNames: [],
       }));
     }
+    this.set('timeSeriesRefChangesHandler', TimeSeriesRefChangesHandler.create({
+      timeSeriesRefContainer: this,
+      timeSeriesRefFieldName: 'prefixedTimeSeriesRef',
+      ignoreTimeSeriesName: true,
+    }));
 
     this._super(...arguments);
   },
@@ -204,6 +215,10 @@ const Series = ElementBase.extend(createTimeSeriesRefChangesHandler('prefixedTim
       }
       if (this.parent) {
         this.set('parent', null);
+      }
+      if (this.timeSeriesRefChangesHandler) {
+        this.timeSeriesRefChangesHandler.destroy();
+        this.set('replaceEmptyParameters', undefined);
       }
     } finally {
       this._super(...arguments);
