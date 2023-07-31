@@ -708,6 +708,7 @@
 
   .function-editor {
     --arrow-size: 10px;
+    --line-base-width: 4em;
     --workspace-padding: 3em;
     --between-args-space: 1em;
 
@@ -722,6 +723,29 @@
         transparent 75%, $block-background-color 75%, $block-background-color);
     background-size: 20px 20px;
     background-position: 0 0, 10px 10px;
+
+    &:not(.has-dragging-function) {
+      .function-block,
+      .function-actions,
+      .attachment-actions,
+      .add-selector-trigger {
+        pointer-events: initial;
+      }
+    }
+
+    *:not(input) {
+      user-select: none;
+    }
+
+    .is-dragging-object {
+      > .function-block {
+        pointer-events: initial;
+      }
+    }
+
+    .draggable-object-target {
+      pointer-events: initial;
+    }
 
     .workspace-drag-target {
       display: grid;
@@ -749,6 +773,7 @@
     .function-renderer {
       display: inline-flex;
       align-items: center;
+      pointer-events: none;
 
       &:not(.root-function) {
         .function-block-header {
@@ -847,7 +872,7 @@
 
       .between-args-drop-target-container {
         position: relative;
-        width: 10em;
+        width: calc(var(--line-base-width) + var(--min-sibling-block-width));
         top: var(--y-offset, 0);
 
         .draggable-object-target {
@@ -933,7 +958,7 @@
 
     .argument-start-line,
     .argument-end-line {
-      min-width: 50px;
+      min-width: var(--line-base-width);
     }
 
     .argument-middle-line {

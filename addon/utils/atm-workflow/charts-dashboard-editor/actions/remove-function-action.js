@@ -29,6 +29,12 @@ export default Action.extend({
   context: undefined,
 
   /**
+   * Becomes defined during action execution
+   * @type {Array<DashboardElementReference> | null}
+   */
+  removedReferences: null,
+
+  /**
    * @type {ComputedProperty<RemoveElementActionContext['functionToRemove']>}
    */
   functionToRemove: reads('context.functionToRemove'),
@@ -37,12 +43,6 @@ export default Action.extend({
    * @type {ComputedProperty<RemoveElementActionContext['changeViewState']>}
    */
   changeViewState: reads('context.changeViewState'),
-
-  /**
-   * Becomes defined during action execution
-   * @type {Array<DashboardElementReference> | null}
-   */
-  removedReferences: null,
 
   /**
    * @override
@@ -64,7 +64,7 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    // It is important to firstly set `isRemoved` and detach nested elements
+    // It is important to first set `isRemoved` and detach nested elements
     // after that. When element detaches, then it tries to figure out why detach
     // ocurred by checking i.a. `isRemoved` flag of the parent. See more in
     // function-renderer component.
@@ -97,7 +97,7 @@ export default Action.extend({
       return;
     }
 
-    let closestParentWithDetachedFuncs = this.closestParentWithDetachedFuncs;
+    let closestParentWithDetachedFuncs;
     let possibleParentWithDetachedFuncs = this.functionToRemove.parent;
     while (!closestParentWithDetachedFuncs && possibleParentWithDetachedFuncs) {
       if (possibleParentWithDetachedFuncs.detachedFunctions) {

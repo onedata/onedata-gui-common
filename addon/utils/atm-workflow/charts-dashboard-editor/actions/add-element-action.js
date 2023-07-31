@@ -48,6 +48,12 @@ export default Action.extend({
   context: undefined,
 
   /**
+   * Becomes defined during action execution
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null}
+   */
+  newElement: null,
+
+  /**
    * @type {ComputedProperty<AddElementActionContext['newElementType']>}
    */
   newElementType: reads('context.newElementType'),
@@ -66,12 +72,6 @@ export default Action.extend({
    * @type {ComputedProperty<AddElementActionContext['changeViewState']>}
    */
   changeViewState: reads('context.changeViewState'),
-
-  /**
-   * Becomes defined during action execution
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null}
-   */
-  newElement: null,
 
   /**
    * @type {ComputedProperty<string>}

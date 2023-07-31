@@ -198,6 +198,10 @@ const Series = ElementBase.extend(createTimeSeriesRefChangesHandler('prefixedTim
         this.dataProvider.destroy();
         this.set('dataProvider', null);
       }
+      if (this.detachedFunctions.length) {
+        this.detachedFunctions.forEach((chartFunction) => chartFunction.destroy());
+        this.set('detachedFunctions', []);
+      }
       if (this.parent) {
         this.set('parent', null);
       }

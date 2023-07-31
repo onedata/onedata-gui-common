@@ -32,7 +32,7 @@
           argumentInfo.isArray
           argumentInfo.attachedFunctions.length
           (not-eq argumentInfo.attachedFunctions.[0] draggedChartFunction)
-          (not amIInDraggedChartFunction)
+          (not isInDraggedChartFunction)
         )}}
           <div class="between-args-drop-target-container before-first-arg">
             {{one-draggable-object-target
@@ -68,7 +68,7 @@
             argumentInfo.isArray
             (not-eq func draggedChartFunction)
             (not-eq (get argumentInfo.attachedFunctions (add index 1)) draggedChartFunction)
-            (not amIInDraggedChartFunction)
+            (not isInDraggedChartFunction)
           )}}
             <div class="between-args-drop-target-container">
               {{one-draggable-object-target

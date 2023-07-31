@@ -29,16 +29,6 @@ export default Action.extend({
   context: undefined,
 
   /**
-   * @type {ComputedProperty<DetachArgumentFunctionActionContext['functionToDetach']>}
-   */
-  functionToDetach: reads('context.functionToDetach'),
-
-  /**
-   * @type {ComputedProperty<DetachArgumentFunctionActionContext['changeViewState']>}
-   */
-  changeViewState: reads('context.changeViewState'),
-
-  /**
    * Becomes defined during action execution
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.FunctionBase | null}
    */
@@ -51,10 +41,14 @@ export default Action.extend({
   removedReferences: null,
 
   /**
-   * Becomes defined during action execution
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null}
+   * @type {ComputedProperty<DetachArgumentFunctionActionContext['functionToDetach']>}
    */
-  closestParentWithDetachedFuncs: null,
+  functionToDetach: reads('context.functionToDetach'),
+
+  /**
+   * @type {ComputedProperty<DetachArgumentFunctionActionContext['changeViewState']>}
+   */
+  changeViewState: reads('context.changeViewState'),
 
   /**
    * @override
@@ -66,9 +60,6 @@ export default Action.extend({
       }
       if (this.removedReferences) {
         this.set('removedReferences', null);
-      }
-      if (this.closestParentWithDetachedFuncs) {
-        this.set('closestParentWithDetachedFuncs', null);
       }
     } finally {
       this._super(...arguments);
@@ -83,7 +74,7 @@ export default Action.extend({
 
     this.removeReferencesInParent();
 
-    let closestParentWithDetachedFuncs = this.closestParentWithDetachedFuncs;
+    let closestParentWithDetachedFuncs;
     let possibleParentWithDetachedFuncs = this.oldParent;
     while (!closestParentWithDetachedFuncs && possibleParentWithDetachedFuncs) {
       if (possibleParentWithDetachedFuncs.detachedFunctions) {
@@ -94,19 +85,19 @@ export default Action.extend({
     }
 
     if (closestParentWithDetachedFuncs) {
-      if (!this.closestParentWithDetachedFuncs) {
-        this.set('closestParentWithDetachedFuncs', closestParentWithDetachedFuncs);
-      }
-
       set(
         closestParentWithDetachedFuncs,
         'detachedFunctions',
         [...closestParentWithDetachedFuncs.detachedFunctions, this.functionToDetach]
       );
-      set(this.functionToDetach, 'parent', this.closestParentWithDetachedFuncs);
+      set(this.functionToDetach, 'parent', closestParentWithDetachedFuncs);
     } else {
       set(this.functionToDetach, 'parent', null);
     }
+
+    // Due to some unknown Ember issues `functionToDetach.isDetached` does not always
+    // recalculate on parent change (but only in Firefox). Enforcing recalculation.
+    this.functionToDetach.notifyPropertyChange('isDetached');
 
     this.changeViewState({
       elementToSelect: this.functionToDetach,
@@ -117,12 +108,19 @@ export default Action.extend({
    * @override
    */
   onExecuteUndo() {
+    const parentWithDetachedFuncs = this.functionToDetach.parent;
+
     set(this.functionToDetach, 'parent', this.oldParent);
-    if (this.closestParentWithDetachedFuncs) {
+
+    // Due to some unknown Ember issues `functionToDetach.isDetached` does not always
+    // recalculate on parent change (but only in Firefox). Enforcing recalculation.
+    this.functionToDetach.notifyPropertyChange('isDetached');
+
+    if (parentWithDetachedFuncs) {
       set(
-        this.closestParentWithDetachedFuncs,
+        parentWithDetachedFuncs,
         'detachedFunctions',
-        this.closestParentWithDetachedFuncs.detachedFunctions.filter((x) =>
+        parentWithDetachedFuncs.detachedFunctions.filter((x) =>
           x !== this.functionToDetach
         )
       );

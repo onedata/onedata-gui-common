@@ -64,7 +64,10 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isFunctionDragged: eq('dragDrop.draggedElementModel.elementType', raw(ElementType.Function)),
+  isFunctionDragged: eq(
+    'dragDrop.draggedElementModel.elementType',
+    raw(ElementType.Function)
+  ),
 
   edgeScrollerEnabler: observer(
     'isFunctionDragged',
@@ -119,6 +122,7 @@ export default Component.extend({
     (async () => {
       await waitForRender();
       if (this.element) {
+        this.recalculateWorkspaceSize();
         this.recalculateDetachedFunctionPositions();
       }
     })();
@@ -207,7 +211,7 @@ export default Component.extend({
         rootFunctionBlock.closest('.functions-container')
       );
 
-      [...detachedFunctionRenderers].forEach((detachedFunctionRenderer) => {
+      for (const detachedFunctionRenderer of detachedFunctionRenderers) {
         const detachedFunctionId = detachedFunctionRenderer.dataset['functionId'];
         const detachedFunction = this.detachedFunctions?.find(({ id }) =>
           id === detachedFunctionId
@@ -232,7 +236,7 @@ export default Component.extend({
           left: `${newDetachedLeftCoord}px`,
           top: `${newDetachedTopCoord}px`,
         });
-      });
+      }
     }
 
     this.recalculateFunctionsContainerExtraMargin();
@@ -250,7 +254,7 @@ export default Component.extend({
       return;
     }
 
-    const overflowDetectors = {
+    const overflowMeasurers = {
       top: (funcRenderer) => Math.max(
         dom.position(funcRenderer, functionsContainer).top * -1,
         0
@@ -276,14 +280,14 @@ export default Component.extend({
       left: 0,
       right: 0,
     };
-    [...detachedFunctionRenderers].forEach((detachedFunctionRenderer) => {
+    for (const detachedFunctionRenderer of detachedFunctionRenderers) {
       Object.keys(extraMargins).forEach((side) => {
         extraMargins[side] = Math.max(
-          overflowDetectors[side](detachedFunctionRenderer),
+          overflowMeasurers[side](detachedFunctionRenderer),
           extraMargins[side]
         );
       });
-    });
+    }
 
     Object.keys(extraMargins).forEach((side) => {
       functionsContainer.style.setProperty(

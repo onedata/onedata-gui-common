@@ -14,9 +14,13 @@ import { getCollectionFieldName } from './utils';
 /**
  * @typedef {Object} MoveElementActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} movedElement
- * @property {string} [currentRelationFieldName]
+ * @property {string} [currentRelationFieldName] Needed for non-obvious relations
+ *   (e.g. when moving function to some specific function arguments. Argument
+ *   names are custom and there is no way to guess them).
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} newParent
- * @property {string} [newRelationFieldName]
+ * @property {string} [newRelationFieldName] Needed for non-obvious relations
+ *   (e.g. when moving function to some specific function arguments. Argument
+ *   names are custom and there is no way to guess them).
  * @property {MoveElementActionNewPosition | null} newPosition
  *   `null` will place `movedElement` at the end
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
@@ -39,6 +43,18 @@ export default Action.extend({
    * @type {MoveElementActionContext}
    */
   context: undefined,
+
+  /**
+   * Becomes defined during action execution
+   * @type {MoveElementActionContext['newParent'] | null}
+   */
+  oldParent: null,
+
+  /**
+   * Becomes defined during action execution
+   * @type {MoveElementActionContext['newPosition']}
+   */
+  oldPosition: null,
 
   /**
    * @type {ComputedProperty<MoveElementActionContext['movedElement']>}
@@ -73,24 +89,12 @@ export default Action.extend({
   changeViewState: reads('context.changeViewState'),
 
   /**
-   * Becomes defined during action execution
-   * @type {MoveElementActionContext['newParent'] | null}
-   */
-  oldParent: null,
-
-  /**
-   * Becomes defined during action execution
-   * @type {MoveElementActionContext['newPosition']}
-   */
-  oldPosition: null,
-
-  /**
    * @type {ComputedProperty<string>}
    */
   oldRelationFieldName: computed(
     'context.currentRelationFieldName',
     'movedElement.elementType',
-    function newRelationFieldName() {
+    function oldRelationFieldName() {
       return this.context.currentRelationFieldName ??
         getCollectionFieldName(this.movedElement.elementType);
     }
@@ -157,7 +161,9 @@ export default Action.extend({
   },
 
   /**
+   * @param {string} currentRelationFieldName
    * @param {MoveElementActionContext['newParent']} newParent
+   * @param {string} newRelationFieldName
    * @param {MoveElementActionContext['newPosition']} newPosition
    * @returns {void}
    */

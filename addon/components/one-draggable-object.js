@@ -8,6 +8,7 @@
 
 import { set } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { scheduleOnce } from '@ember/runloop';
 import { defer } from 'rsvp';
 import DraggableObject from 'ember-drag-drop/components/draggable-object';
 
@@ -18,6 +19,39 @@ export default DraggableObject.extend({
    * @type {Defer | null}
    */
   latestDragDefer: null,
+
+  didInsertElement() {
+    /**
+     * BUGFIX
+     *
+     * Bug description: element is not draggable when one drag occured and then
+     * we want to start another drag without leaving and reentering drag handle.
+     * It is caused by not receiving mouseover event without reentering drag
+     * handle. That mouseover event originally causes `draggable` attribute
+     * to be set to `true` and lets drag to start.
+     *
+     * Bug solution: we listen also for mousedown event and treat it like if
+     * it was a mouseover. Even when we don't reenter drag handle, we always
+     * trigger mousedown when starting to drag. The rest of the solution code is
+     * located in the `willDestroyElement`.
+     */
+    scheduleOnce('afterRender', () => {
+      const dragHandleElement = this.getDragHandleElement();
+      if (dragHandleElement) {
+        dragHandleElement.addEventListener('mousedown', this.mouseOverHandler);
+      }
+    });
+  },
+
+  willDestroyElement() {
+    /**
+     * The rest of the bugfix described in `didInsertElement`.
+     */
+    const dragHandleElement = this.getDragHandleElement();
+    if (dragHandleElement) {
+      dragHandleElement.removeEventListener('mousedown', this.mouseOverHandler);
+    }
+  },
 
   /**
    * @override
@@ -62,5 +96,12 @@ export default DraggableObject.extend({
       this.latestDragDefer.resolve();
       this.set('latestDragDefer', null);
     }
+  },
+
+  /**
+   * @returns {HTMLElement | null}
+   */
+  getDragHandleElement() {
+    return (this.dragHandle && this.element?.querySelector(this.dragHandle)) ?? null;
   },
 });
