@@ -179,4 +179,8 @@ $-tile-separator-color: #dcdcdc;
     cursor: not-allowed;
     opacity: $disabled-opacity;
   }
+  .figure-text-centered {
+    @include absolute-align-middle-center;
+    width: 100%;
+  }
 }
