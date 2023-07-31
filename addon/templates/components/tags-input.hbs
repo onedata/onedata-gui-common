@@ -1,4 +1,4 @@
-{{#each tags as |tag|}}
+{{#each displayedTags as |tag|}}
   <li class={{concat-classes
     "tag-item input-element"
     (if (contains tag currentTagsToHighlight) "animated fadeIn")
@@ -50,5 +50,20 @@
       onClick=(action "clearInput")
     }}
   {{/if}}
+{{/if}}
+{{#if moreTags.length}}
+  <li class="tag-item tag-item-plaintext more-tag clickable">
+    <div class="tag-label more-tag-text">
+      {{tt this "moreTags" count=moreTags.length}}
+    </div>
+    {{#one-tooltip class="tooltip-with-tags"}}
+      <ul class="tags-input">
+        {{#each moreTags as |tag|}}
+          {{!-- using .tag-label element is not necessary here --}}
+          <li class="tag-item">{{tag.label}}</li>
+        {{/each}}
+      </ul>
+    {{/one-tooltip}}
+  </li>
 {{/if}}
 {{yield}}
