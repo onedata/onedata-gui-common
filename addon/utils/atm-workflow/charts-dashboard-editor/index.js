@@ -6,6 +6,7 @@ export {
   translateValidationErrorsBatch,
   chartElementIcons,
   getUnnamedElementNamePlaceholder,
+  getRepeatedSeriesName,
 }
 from './common';
 export { default as UndoManager } from './undo-manager';

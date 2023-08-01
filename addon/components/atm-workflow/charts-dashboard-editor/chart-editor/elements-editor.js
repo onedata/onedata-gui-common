@@ -17,6 +17,7 @@ import {
   chartElementIcons,
   ElementType,
   getUnnamedElementNamePlaceholder,
+  getRepeatedSeriesName,
   translateValidationErrorsBatch,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
@@ -216,6 +217,23 @@ const ElementsEditorTab = EmberObject.extend(OwnerInjector, {
   icon: computed('element.elementType', function icon() {
     return chartElementIcons[this.element.elementType] ?? null;
   }),
+
+  /**
+   * @public
+   * @type {ComputedProperty<string | null>}
+   */
+  name: computed(
+    'element.{name,repeatPerPrefixedTimeSeries,prefixedTimeSeriesRef.timeSeriesNameGenerator}',
+    function name() {
+      if (this.element.repeatPerPrefixedTimeSeries) {
+        const timeSeriesNameGenerator =
+          this.element.prefixedTimeSeriesRef.timeSeriesNameGenerator ?? null;
+        return getRepeatedSeriesName(this.i18n, timeSeriesNameGenerator);
+      } else {
+        return this.element.name;
+      }
+    }
+  ),
 
   /**
    * @public

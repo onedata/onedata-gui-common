@@ -11,6 +11,7 @@ import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
 import functions from './functions-model';
+import TimeSeriesRefChangesHandler from './time-series-ref-changes-handler';
 
 /**
  * @typedef {Object} TimeSeriesGeneratorRef
@@ -59,9 +60,9 @@ const Series = ElementBase.extend({
   /**
    * @public
    * @virtual optional
-   * @type {EmberObject<TimeSeriesGeneratorRef> | null}
+   * @type {EmberObject<TimeSeriesGeneratorRef>}
    */
-  prefixedTimeSeriesRef: null,
+  prefixedTimeSeriesRef: undefined,
 
   /**
    * @public
@@ -116,6 +117,12 @@ const Series = ElementBase.extend({
   needsDataSources: true,
 
   /**
+   * Set in `init`.
+   * @type {TimeSeriesRefChangesHandler}
+   */
+  timeSeriesRefChangesHandler: undefined,
+
+  /**
    * @override
    */
   referencingPropertyNames: Object.freeze([
@@ -167,6 +174,18 @@ const Series = ElementBase.extend({
     if (!this.detachedFunctions) {
       this.set('detachedFunctions', []);
     }
+    if (!this.prefixedTimeSeriesRef) {
+      this.set('prefixedTimeSeriesRef', EmberObject.create({
+        collectionRef: '',
+        timeSeriesNameGenerator: '',
+        metricNames: [],
+      }));
+    }
+    this.set('timeSeriesRefChangesHandler', TimeSeriesRefChangesHandler.create({
+      timeSeriesRefContainer: this,
+      timeSeriesRefFieldName: 'prefixedTimeSeriesRef',
+      ignoreTimeSeriesName: true,
+    }));
 
     this._super(...arguments);
   },
@@ -196,6 +215,10 @@ const Series = ElementBase.extend({
       }
       if (this.parent) {
         this.set('parent', null);
+      }
+      if (this.timeSeriesRefChangesHandler) {
+        this.timeSeriesRefChangesHandler.destroy();
+        this.set('replaceEmptyParameters', undefined);
       }
     } finally {
       this._super(...arguments);

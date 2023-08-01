@@ -124,6 +124,17 @@ export function getUnnamedElementNamePlaceholder(i18n) {
 }
 
 /**
+ * @param {Ember.Service} i18n
+ * @param {string | null} timeSeriesNameGenerator
+ * @returns {SafeString}
+ */
+export function getRepeatedSeriesName(i18n, timeSeriesNameGenerator) {
+  return i18n.t(`${i18nPrefix}.repeatedSeriesName`, {
+    generatorName: timeSeriesNameGenerator ? `${timeSeriesNameGenerator}*` : '?',
+  });
+}
+
+/**
  * @typedef {Object} ViewState
  * @property {SectionElement | null} selectedSectionElement
  * @property {boolean} isChartEditorActive

@@ -1,5 +1,11 @@
 export default {
   fields: {
+    repeatPerPrefixedTimeSeries: {
+      label: 'Repeat per prefixed time series',
+    },
+    timeSeriesSelector: {
+      label: 'Prefixed time series',
+    },
     name: {
       label: 'Name',
     },

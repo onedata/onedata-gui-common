@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { set, setProperties } from '@ember/object';
+import EmberObject, { set } from '@ember/object';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import Model from './model';
 import Section from './section';
@@ -332,6 +332,7 @@ function createSeriesModelFromSpec(
   const series = Series.create({
     elementOwner,
     dataSources,
+    repeatPerPrefixedTimeSeries: seriesSpec.builderType === 'dynamic',
   });
   let id;
   let name;
@@ -339,6 +340,7 @@ function createSeriesModelFromSpec(
   let yAxisId;
   let groupId;
   let color;
+  let prefixedTimeSeriesRef;
   const seriesTemplate = seriesSpec.builderRecipe?.seriesTemplate;
   if (seriesSpec.builderType === 'dynamic') {
     const externalSourceParameters = seriesSpec?.builderRecipe
@@ -351,11 +353,9 @@ function createSeriesModelFromSpec(
       seriesTemplate.groupIdProvider.functionArguments?.data : null;
     color = seriesTemplate?.colorProvider?.functionName === 'literal' ?
       seriesTemplate.colorProvider.functionArguments?.data : null;
-    setProperties(series, {
-      repeatPerPrefixedTimeSeries: true,
-      prefixedTimeSeriesRef: externalSourceParameters ?
-        EmberObject.create(externalSourceParameters) : null,
-    });
+    if (externalSourceParameters) {
+      prefixedTimeSeriesRef = EmberObject.create(externalSourceParameters);
+    }
   } else {
     id = seriesTemplate?.id;
     name = seriesTemplate?.name;
@@ -387,6 +387,9 @@ function createSeriesModelFromSpec(
   if (color) {
     set(series, 'color', color);
   }
+  if (prefixedTimeSeriesRef) {
+    set(series, 'prefixedTimeSeriesRef', prefixedTimeSeriesRef);
+  }
   const seriesOutputFunc = functions.seriesOutput.modelClass.create({
     elementOwner,
     parent: series,
@@ -400,6 +403,8 @@ function createSeriesModelFromSpec(
   // We use seriesOutput function as a proxy between series and its real
   // function from dataProvider field. It simplifies rendering.
   set(series, 'dataProvider', seriesOutputFunc);
+
+  set(series, 'dataSources', dataSources);
 
   return series;
 }

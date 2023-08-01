@@ -60,38 +60,45 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     expect(find('.series-editor-form')).to.exist;
   });
 
-  it('has five fields - "name", "type", "color", "axis" and "group"', async function () {
-    await renderComponent();
+  it('has six fields - "repeat per prefixed time series", "name", "type", "color", "axis" and "group"',
+    async function () {
+      await renderComponent();
 
-    const fields = findAll('.field-renderer:not(.form-fields-group-renderer)');
-    expect(fields).to.have.length(5);
+      const fields = findAll('.field-renderer:not(.form-fields-group-renderer)');
+      expect(fields).to.have.length(6);
 
-    expect(fields[0].querySelector('.control-label')).to.contain.text('Name');
-    expect(fields[0].querySelector('input[type="text"]')).to.exist;
+      expect(fields[0].querySelector('.control-label')).to.contain.text(
+        'Repeat per prefixed time series'
+      );
+      expect(fields[0].querySelector('.one-way-toggle')).to.exist;
 
-    expect(fields[1].querySelector('.control-label')).to.contain.text('Type');
-    expect(fields[1].querySelector('.dropdown-field')).to.exist;
-    expect(await typeDropdownHelper.getOptionsText()).to.deep.equal(['Line', 'Bar']);
+      expect(fields[1].querySelector('.control-label')).to.contain.text('Name');
+      expect(fields[1].querySelector('input[type="text"]')).to.exist;
 
-    expect(fields[2].querySelector('.control-label')).to.contain.text('Color');
-    const radios = fields[2].querySelectorAll('.radio-inline');
-    expect(radios[0]).to.contain.text('auto');
-    expect(radios[1]).to.contain.text('custom');
+      expect(fields[2].querySelector('.control-label')).to.contain.text('Type');
+      expect(fields[2].querySelector('.dropdown-field')).to.exist;
+      expect(await typeDropdownHelper.getOptionsText()).to.deep.equal(['Line', 'Bar']);
 
-    expect(fields[3].querySelector('.control-label')).to.contain.text('Axis');
-    expect(fields[3].querySelector('.dropdown-field')).to.exist;
-    expect(await axisDropdownHelper.getOptionsText()).to.deep.equal(['axis1', 'axis2']);
+      expect(fields[3].querySelector('.control-label')).to.contain.text('Color');
+      const radios = fields[3].querySelectorAll('.radio-inline');
+      expect(radios[0]).to.contain.text('auto');
+      expect(radios[1]).to.contain.text('custom');
 
-    expect(fields[4].querySelector('.control-label')).to.contain.text('Group');
-    expect(fields[4].querySelector('.dropdown-field')).to.exist;
-    expect(await groupDropdownHelper.getOptionsText()).to.deep.equal([
-      'None',
-      'group1',
-      'group12 (in group1)',
-      'group123 (in group1 > group12)',
-      'group2',
-    ]);
-  });
+      expect(fields[4].querySelector('.control-label')).to.contain.text('Axis');
+      expect(fields[4].querySelector('.dropdown-field')).to.exist;
+      expect(await axisDropdownHelper.getOptionsText()).to.deep.equal(['axis1', 'axis2']);
+
+      expect(fields[5].querySelector('.control-label')).to.contain.text('Group');
+      expect(fields[5].querySelector('.dropdown-field')).to.exist;
+      expect(await groupDropdownHelper.getOptionsText()).to.deep.equal([
+        'None',
+        'group1',
+        'group12 (in group1)',
+        'group123 (in group1 > group12)',
+        'group2',
+      ]);
+    }
+  );
 
   it('shows series data in fields', async function () {
     this.set('series', createSeries(this, {

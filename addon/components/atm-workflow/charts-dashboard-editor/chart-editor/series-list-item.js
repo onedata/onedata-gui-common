@@ -16,6 +16,7 @@ import {
   ElementType,
   chartElementIcons,
   getUnnamedElementNamePlaceholder,
+  getRepeatedSeriesName,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-list-item';
 
@@ -49,19 +50,30 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<string | null>}
    */
-  name: computed('item.{repeatPerPrefixedTimeSeries,name}', function name() {
-    // TODO: VFS-10649 Handle dynamic series names
-    return this.item.repeatPerPrefixedTimeSeries ? null : this.item.name ?? null;
-  }),
+  name: computed(
+    'item.{repeatPerPrefixedTimeSeries,name,prefixedTimeSeriesRef.timeSeriesNameGenerator}',
+    function name() {
+      if (this.item.repeatPerPrefixedTimeSeries) {
+        const timeSeriesNameGenerator =
+          this.item.prefixedTimeSeriesRef.timeSeriesNameGenerator ?? null;
+        return getRepeatedSeriesName(this.i18n, timeSeriesNameGenerator);
+      } else {
+        return this.item.name ?? null;
+      }
+    }
+  ),
 
   /**
    * @type {ComputedProperty<SafeString | null>}
    */
-  colorStyle: computed('item.color', function colorStyle() {
-    return this.item.color ?
-      htmlSafe(`--series-color: ${_.escape(this.item.color)}`) :
-      null;
-  }),
+  colorStyle: computed(
+    'item.{color,repeatPerPrefixedTimeSeries}',
+    function colorStyle() {
+      return this.item.color && !this.item.repeatPerPrefixedTimeSeries ?
+        htmlSafe(`--series-color: ${_.escape(this.item.color)}`) :
+        null;
+    }
+  ),
 
   /**
    * @type {ComputedProperty<SafeString>}

@@ -9,9 +9,10 @@
 import { set, computed, observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
-import { hash, array, raw, eq, bool } from 'ember-awesome-macros';
+import { hash, array, raw, eq, bool, not } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';
 import _ from 'lodash';
+import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
@@ -113,17 +114,10 @@ export default FunctionSettingsBase.extend({
   },
 
   updateFormValues() {
-    ['collectionRef', 'timeSeriesNameGenerator', 'timeSeriesName'].forEach((propName) => {
-      const newValue = this.chartFunction?.timeSeriesRef?.[propName] ?? '';
-      if (newValue !== this.mainForm.valuesSource[propName]) {
-        set(this.mainForm.valuesSource, propName, newValue);
-      }
-    });
-
-    const newMetricNames = this.chartFunction?.timeSeriesRef?.metricNames ?? [];
-    if (!_.isEqual(newMetricNames, this.mainForm.valuesSource.metricNames)) {
-      set(this.mainForm.valuesSource, 'metricNames', newMetricNames);
-    }
+    updateTimeSeriesSelectorFormValues(
+      this.mainForm.valuesSource.timeSeriesSelector,
+      this.chartFunction?.timeSeriesRef
+    );
 
     this.mainForm.invalidFields.forEach((field) => field.markAsModified());
 
@@ -145,6 +139,23 @@ export default FunctionSettingsBase.extend({
     this.replaceEmptyFuncForm.invalidFields.forEach((field) => field.markAsModified());
   },
 });
+
+export function updateTimeSeriesSelectorFormValues(valuesSource, timeSeriesRef) {
+  ['collectionRef', 'timeSeriesNameGenerator', 'timeSeriesName'].forEach((propName) => {
+    const newValue = timeSeriesRef?.[propName] ?? '';
+    if (newValue !== valuesSource[propName]) {
+      set(valuesSource, propName, newValue);
+    }
+  });
+
+  const newMetricNames = timeSeriesRef?.metricNames ?? [];
+  if (!_.isEqual(
+      newMetricNames,
+      valuesSource.metricNames
+    )) {
+    set(valuesSource, 'metricNames', newMetricNames);
+  }
+}
 
 /**
  * @type {Utils.FormComponent.DropdownField}
@@ -184,16 +195,18 @@ const TimeSeriesNameGeneratorField = DropdownField.extend({
    * @override
    */
   options: computed(
-    'parent.dataSources',
-    'valuesSource.collectionRef',
+    'parent.{dataSources,allowPrefixedTimeSeriesOnly,collectionRefField.value}',
     function options() {
       const timeSeriesSchemas = this.parent.dataSources.find(({ collectionRef }) =>
-        collectionRef === this.valuesSource?.collectionRef
+        collectionRef === this.parent.collectionRefField.value
       )?.timeSeriesCollectionSchema.timeSeriesSchemas ?? [];
-      return timeSeriesSchemas.map(({ nameGeneratorType, nameGenerator }) => ({
-        value: nameGenerator,
-        label: `${translateTimeSeriesNameGeneratorType(this.i18n, nameGeneratorType)} "${nameGenerator}"`,
-      }));
+      return timeSeriesSchemas
+        .map(({ nameGeneratorType, nameGenerator }) => ({
+          value: nameGenerator,
+          label: `${translateTimeSeriesNameGeneratorType(this.i18n, nameGeneratorType)} "${nameGenerator}"`,
+          disabled: this.parent.allowPrefixedTimeSeriesOnly &&
+            nameGeneratorType !== 'addPrefix',
+        }));
     }
   ),
 });
@@ -206,6 +219,11 @@ const TimeSeriesNameField = TextField.extend({
    * @override
    */
   name: 'timeSeriesName',
+
+  /**
+   * @override
+   */
+  isVisible: not('parent.allowPrefixedTimeSeriesOnly'),
 
   /**
    * @override
@@ -283,10 +301,29 @@ const MetricNamesField = TagsField.extend({
   }),
 });
 
-/**
- * @type {Utils.FormComponent.FormFieldsRootGroup}
- */
-const MainForm = SettingsForm.extend({
+export const TimeSeriesSelector = FormFieldsGroup.extend({
+  /**
+   * @virtual
+   * @type {boolean}
+   */
+  allowPrefixedTimeSeriesOnly: false,
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.atmWorkflow.chartsDashboardEditor.functionEditor.loadSeriesSettings.fields.timeSeriesSelector',
+
+  /**
+   * Do not take parent fields group translation path into account.
+   * @override
+   */
+  translationPath: '',
+
+  /**
+   * @override
+   */
+  name: 'timeSeriesSelector',
+
   /**
    * @override
    */
@@ -305,21 +342,38 @@ const MainForm = SettingsForm.extend({
   /**
    * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
    */
-  dataSources: reads('component.chartFunction.dataSources'),
+  dataSources: reads('parent.dataSources'),
 
   /**
    * @type {ComputedProperty<TimeSeriesSchema | null>}
    */
   selectedNameGeneratorSpec: computed(
     'dataSources',
-    'valuesSource.{collectionRef,timeSeriesNameGenerator}',
+    'value.{collectionRef,timeSeriesNameGenerator}',
     function selectedNameGeneratorSpec() {
       const timeSeriesSchemas = this.dataSources.find(({ collectionRef }) =>
-        collectionRef === this.valuesSource?.collectionRef
+        collectionRef === this.value?.collectionRef
       )?.timeSeriesCollectionSchema.timeSeriesSchemas ?? [];
       return timeSeriesSchemas.find(({ nameGenerator }) =>
-        nameGenerator === this.valuesSource?.timeSeriesNameGenerator
+        nameGenerator === this.value?.timeSeriesNameGenerator
       ) ?? null;
     }
   ),
+});
+
+/**
+ * @type {Utils.FormComponent.FormFieldsRootGroup}
+ */
+const MainForm = SettingsForm.extend({
+  /**
+   * @override
+   */
+  fields: computed(() => [
+    TimeSeriesSelector.create(),
+  ]),
+
+  /**
+   * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
+   */
+  dataSources: reads('component.chartFunction.dataSources'),
 });

@@ -1,7 +1,11 @@
 {{one-icon icon=icon}}
 <span class="name">
   {{#if name}}
-    {{name}}
+    {{#if this.item.repeatPerPrefixedTimeSeries}}
+      <em>{{name}}</em>
+    {{else}}
+      {{name}}
+    {{/if}}
   {{else}}
     <em>{{namePlaceholder}}</em>
   {{/if}}

@@ -20,8 +20,12 @@
           >
             {{one-icon icon=tabSpec.icon}}
             {{#truncated-string}}
-              {{#if tabSpec.element.name}}
-                {{tabSpec.element.name}}
+              {{#if tabSpec.name}}
+                {{#if tabSpec.element.repeatPerPrefixedTimeSeries}}
+                  <em>{{tabSpec.name}}</em>
+                {{else}}
+                  {{tabSpec.name}}
+                {{/if}}
               {{else}}
                 <em>{{namePlaceholder}}</em>
               {{/if}}

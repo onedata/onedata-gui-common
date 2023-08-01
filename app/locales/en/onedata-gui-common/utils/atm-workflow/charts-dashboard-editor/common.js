@@ -12,4 +12,5 @@ export default {
     errorNounPlural: 'errors',
   },
   namePlaceholder: 'Unnamed',
+  repeatedSeriesName: 'Series repeated for {{generatorName}}',
 };

@@ -11,9 +11,10 @@ import { computed, observer, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
-import { tag, eq, raw } from 'ember-awesome-macros';
+import { tag, eq, raw, and, not } from 'ember-awesome-macros';
 import _ from 'lodash';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
+import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import ColorField from 'onedata-gui-common/utils/form-component/color-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
@@ -25,8 +26,10 @@ import {
   ElementType,
   getUnnamedElementNamePlaceholder,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
-
-// TODO: VFS-10649 Handle dynamic series names
+import {
+  TimeSeriesSelector,
+  updateTimeSeriesSelectorFormValues,
+} from 'onedata-gui-common/components/atm-workflow/charts-dashboard-editor/function-editor/load-series-settings';
 
 const noneGroup = Object.freeze({});
 const defaultSeriesColor = '#000000';
@@ -62,6 +65,11 @@ export default Component.extend(I18n, {
   actionsFactory: undefined,
 
   /**
+   * @type {ComputedProperty<TimeSeriesRef>}
+   */
+  prefixedTimeSeriesRef: reads('series.prefixedTimeSeriesRef'),
+
+  /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
   form: computed(function form() {
@@ -71,8 +79,27 @@ export default Component.extend(I18n, {
   }),
 
   formValuesUpdater: observer(
-    'series.{name,type,color,axis,group}',
+    'series.{repeatPerPrefixedTimeSeries,name,type,color,axis,group}',
+    'prefixedTimeSeriesRef.{collectionRef,timeSeriesNameGenerator,metricNames}',
     function formValuesUpdater() {
+      const repeatPerPrefixedTimeSeries =
+        this.series?.repeatPerPrefixedTimeSeries ?? false;
+      if (
+        this.form.valuesSource.repeatPerPrefixedTimeSeries !==
+        repeatPerPrefixedTimeSeries
+      ) {
+        set(
+          this.form.valuesSource,
+          'repeatPerPrefixedTimeSeries',
+          repeatPerPrefixedTimeSeries
+        );
+      }
+
+      updateTimeSeriesSelectorFormValues(
+        this.form.valuesSource.timeSeriesSelector,
+        this.series?.prefixedTimeSeriesRef
+      );
+
       ['name', 'type', 'axis'].forEach((fieldName) => {
         const newValue = this.series?.[fieldName] ?? '';
         if (newValue !== this.form.valuesSource[fieldName]) {
@@ -121,6 +148,7 @@ export default Component.extend(I18n, {
       case 'name':
         changeType = 'continuous';
         break;
+      case 'repeatPerPrefixedTimeSeries':
       case 'type':
       case 'colorType':
       case 'customColor':
@@ -133,13 +161,28 @@ export default Component.extend(I18n, {
 
     let normalizedFieldName = fieldName;
     let normalizedValue = value;
-    if (fieldName === 'colorType') {
-      normalizedFieldName = 'color';
-      normalizedValue = value === 'auto' ?
-        null : (this.series.color ?? defaultSeriesColor);
-    } else if (fieldName === 'customColor') {
-      normalizedFieldName = 'color';
-    } else if (normalizedValue === noneGroup) {
+    switch (fieldName) {
+      case 'colorType':
+        normalizedFieldName = 'color';
+        normalizedValue = value === 'auto' ?
+          null : (this.series.color ?? defaultSeriesColor);
+        break;
+      case 'customColor':
+        normalizedFieldName = 'color';
+        break;
+      case 'collectionRef':
+      case 'timeSeriesNameGenerator':
+      case 'metricNames':
+        normalizedFieldName = `prefixedTimeSeriesRef.${fieldName}`;
+        break;
+      case 'timeSeriesName':
+        // Its should never happend as `timeSeriesName` field is not rendered in
+        // time series selector. But for sake of security, we throw this field
+        // change away.
+        return;
+    }
+
+    if (normalizedValue === noneGroup) {
       normalizedValue = null;
     }
 
@@ -186,8 +229,16 @@ export default Component.extend(I18n, {
 /**
  * @type {Utils.FormComponent.TextField}
  */
+const RepeatPerPrefixedTimeSeriesField = ToggleField.extend({
+  name: 'repeatPerPrefixedTimeSeries',
+});
+
+/**
+ * @type {Utils.FormComponent.TextField}
+ */
 const NameField = TextField.extend({
   name: 'name',
+  isVisible: not('valuesSource.repeatPerPrefixedTimeSeries'),
 });
 
 /**
@@ -210,12 +261,16 @@ const TypeField = DropdownField.extend({
 const ColorTypeField = RadioField.extend({
   name: 'colorType',
   options: Object.freeze([{ value: 'auto' }, { value: 'custom' }]),
+  isVisible: not('valuesSource.repeatPerPrefixedTimeSeries'),
 });
 
 const CustomColorField = ColorField.extend({
   name: 'customColor',
   defaultValue: defaultSeriesColor,
-  isVisible: eq('valuesSource.colorType', raw('custom')),
+  isVisible: and(
+    not('valuesSource.repeatPerPrefixedTimeSeries'),
+    eq('valuesSource.colorType', raw('custom'))
+  ),
 });
 
 /**
@@ -268,6 +323,38 @@ const GroupField = DropdownField.extend({
 });
 
 /**
+ * @type {Utils.FormComponent.FormFieldsGroup}
+ */
+const PrefixedTimeSeriesSelector = TimeSeriesSelector.extend({
+  /**
+   * @override
+   */
+  allowPrefixedTimeSeriesOnly: true,
+
+  /**
+   * @override
+   */
+  classes: 'prefixed-time-series-selector-group',
+
+  /**
+   * @override
+   */
+  addColonToLabel: false,
+
+  /**
+   * @override
+   */
+  label: computed(function label() {
+    return this.parent.getTranslation('timeSeriesSelector.label');
+  }),
+
+  /**
+   * @override
+   */
+  isVisible: reads('valuesSource.repeatPerPrefixedTimeSeries'),
+});
+
+/**
  * @type {Utils.FormComponent.FormFieldsRootGroup}
  */
 const Form = FormFieldsRootGroup.extend({
@@ -298,9 +385,16 @@ const Form = FormFieldsRootGroup.extend({
   chart: reads('component.chart'),
 
   /**
+   * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
+   */
+  dataSources: reads('component.series.dataSources'),
+
+  /**
    * @override
    */
   fields: computed(() => [
+    RepeatPerPrefixedTimeSeriesField.create(),
+    PrefixedTimeSeriesSelector.create(),
     NameField.create(),
     TypeField.create(),
     ColorTypeField.create(),

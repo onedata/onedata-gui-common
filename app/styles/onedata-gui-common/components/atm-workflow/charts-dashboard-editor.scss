@@ -44,6 +44,7 @@
       padding: 0;
       padding-bottom: 0.2em;
       flex-grow: 1;
+      flex-shrink: 1;
     }
 
     .field-component {
@@ -682,7 +683,8 @@
         color: $main-text-color-inactive;
       }
 
-      .unit-options-group {
+      .unit-options-group,
+      .prefixed-time-series-selector-group {
         border: $main-border;
         padding: 0.5em;
         border-radius: $border-radius-base;

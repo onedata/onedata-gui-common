@@ -7,6 +7,8 @@
  */
 
 import Component from '@ember/component';
+import { conditional, raw } from 'ember-awesome-macros';
+import { FunctionExecutionContext } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/series-editor';
 
 export default Component.extend({
@@ -30,4 +32,13 @@ export default Component.extend({
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,
+
+  /**
+   * @type {ComputedProperty<FunctionExecutionContext>}
+   */
+  functionExecutionContext: conditional(
+    'chartElement.repeatPerPrefixedTimeSeries',
+    raw(FunctionExecutionContext.RepeatedSeries),
+    raw(FunctionExecutionContext.Series)
+  ),
 });
