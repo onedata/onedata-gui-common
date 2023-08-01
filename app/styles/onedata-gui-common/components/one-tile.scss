@@ -163,7 +163,7 @@ $-tile-separator-color: #dcdcdc;
   .tile-footer {
     border-top: 1px solid $-tile-separator-color;
     .footer-text-icon-container {
-      margin-right: 6px;
+      margin-right: 0.2em;
     }
     &:hover {
       background-color: $-tile-hover-background-color;

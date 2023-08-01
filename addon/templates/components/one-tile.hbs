@@ -28,9 +28,8 @@
         {{#if footerTextIcon}}
           <div class="inline-icon-container footer-text-icon-container">
             {{one-icon icon=footerTextIcon class="tile-footer-icon"}}
-          </div>
-        {{/if}}
-        {{footerText}}
+          </div>{{/if}}{{footerText}}
+          {{!-- ^ no space for Firefox --}}
       {{/link-to}}
     {{else}}
       {{#if footerTextIcon}}
