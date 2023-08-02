@@ -249,8 +249,8 @@ export default Component.extend(I18n, {
         onLostFocus() {
           this.editor.onLostFocus(...arguments);
         },
-        onSave() {
-          this.editor.saveEdition();
+        async onSave() {
+          await this.editor.saveEdition();
         },
         onCancel() {
           this.editor.cancelEdition();
@@ -430,22 +430,21 @@ export default Component.extend(I18n, {
     );
     const preparedInputValue = this.getEditedValue();
     this.set('_whileSaving', true);
-    onSave(preparedInputValue)
-      .then(() => {
-        this.onEdit(false);
-        if (!controlledManually) {
-          this.stopEdition();
-        }
-        safeExec(this, 'set', '_inputValue', preparedInputValue);
-      })
-      .finally(() => {
-        safeExec(this, 'set', '_whileSaving', false);
-        if (this.get('isInToolbar')) {
-          next(() => {
-            this.get('eventsBus').trigger('one-inline-editor:resize');
-          });
-        }
-      });
+    try {
+      await onSave(preparedInputValue);
+      this.onEdit(false);
+      if (!controlledManually) {
+        this.stopEdition();
+      }
+      safeExec(this, 'set', '_inputValue', preparedInputValue);
+    } finally {
+      safeExec(this, 'set', '_whileSaving', false);
+      if (this.isInToolbar) {
+        next(() => {
+          this.eventsBus.trigger('one-inline-editor:resize');
+        });
+      }
+    }
   },
 
   actions: {
