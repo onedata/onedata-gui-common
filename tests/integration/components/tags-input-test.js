@@ -479,7 +479,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it('shows limited tags number if readonlyTagsDisplayLimit is set in readonly mode',
+  it('shows limited tags number with more tags text if readonlyTagsDisplayLimit is set in readonly mode',
     async function () {
       const tags = _.range(5).map(i => ({ label: `tag-${i}` }));
       this.set('tags', tags);
@@ -515,6 +515,29 @@ describe('Integration | Component | tags-input', function () {
       const tagsInput = find('.tags-input');
       const tagItems = tagsInput.querySelectorAll('.tag-item');
       expect(tagItems).to.have.lengthOf(3);
+    }
+  );
+
+  it('shows custom more tags text if onEvaluateMoreTagsText function is provided',
+    async function () {
+      const tags = _.range(5).map(i => ({ label: `tag-${i}` }));
+      this.set('tags', tags);
+      this.set('onEvaluateMoreTagsText', (moreTagsCount) => {
+        return `lorem ${moreTagsCount} ipsum`;
+      });
+      await render(hbs `{{tags-input
+        readonly=true
+        tags=tags
+        readonlyTagsDisplayLimit=3
+        tagEditorComponentName="test-component"
+        onEvaluateMoreTagsText=onEvaluateMoreTagsText
+      }}`);
+
+      /** @type {HTMLElement} */
+      const tagsInput = find('.tags-input');
+      const moreTag = tagsInput.querySelector('.more-tag');
+      expect(moreTag).to.exist;
+      expect(moreTag).to.contain.text('lorem 3 ipsum');
     }
   );
 });

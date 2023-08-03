@@ -156,6 +156,12 @@ export default Component.extend(I18n, {
   onFocusLost: notImplementedIgnore,
 
   /**
+   * @virtual optional
+   * @type {(moreTagsCount: number) => SafeString|string}
+   */
+  onEvaluateMoreTagsText: undefined,
+
+  /**
    * @type {boolan}
    */
   isCreatingTag: false,
@@ -189,6 +195,18 @@ export default Component.extend(I18n, {
         return this.tags.slice(this.tagsDisplayedOnLimitExceed);
       } else {
         return [];
+      }
+    }
+  ),
+
+  moreTagsText: computed(
+    'moreTags.length',
+    'onEvaluateMoreTagsText',
+    function moreTagsText() {
+      if (typeof this.onEvaluateMoreTagsText === 'function') {
+        return this.onEvaluateMoreTagsText(this.moreTags.length);
+      } else {
+        return this.t('moreTags', { count: this.moreTags.length });
       }
     }
   ),
