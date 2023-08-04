@@ -70,6 +70,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/f
     );
     expect(params).to.deep.equal({
       fileType: AtmFileType.Regular,
+      attributes: null,
     });
     expect(this.get('rootGroup.isValid')).to.be.true;
   });

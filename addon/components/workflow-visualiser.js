@@ -215,6 +215,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @virtual optional
    * @type {Utils.Action}
    */
+  forceContinueExecutionAction: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Utils.Action}
+   */
   removeExecutionAction: undefined,
 
   /**
@@ -433,6 +439,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     'lifecycleChangingActionHook',
     'pauseResumeExecutionAction',
     'cancelExecutionAction',
+    'forceContinueExecutionAction',
     'removeExecutionAction',
     function executionActions() {
       const actions = [this.copyInstanceIdAction, this.viewAuditLogAction];
@@ -448,6 +455,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
           this.normalizeLifecycleChangingAction(this.cancelExecutionAction);
         if (cancelExecutionAction) {
           actions.push(cancelExecutionAction);
+        }
+      }
+      if (this.executionState?.workflow?.status === 'failed') {
+        const forceContinueExecutionAction =
+          this.normalizeLifecycleChangingAction(this.forceContinueExecutionAction);
+        if (forceContinueExecutionAction) {
+          actions.push(forceContinueExecutionAction);
         }
       }
       if (this.isExecutionEnded || this.isExecutionSuspended) {

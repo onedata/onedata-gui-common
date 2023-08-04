@@ -113,8 +113,10 @@ function formValuesToAtmDataSpecParams(values, includeExpandParams = false) {
     formFileType : atmFileTypesArray[0];
   const params = { fileType };
 
-  if (includeExpandParams && Array.isArray(values.fileAttributes)) {
-    params.attributes = values.fileAttributes;
+  if (includeExpandParams) {
+    params.attributes = Array.isArray(values.fileAttributes) ? values.fileAttributes : [];
+  } else {
+    params.attributes = null;
   }
 
   return params;
