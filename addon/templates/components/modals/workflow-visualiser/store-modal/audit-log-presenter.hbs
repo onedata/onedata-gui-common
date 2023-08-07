@@ -9,7 +9,7 @@
     <td class="description-cell truncate">{{logEntry.content.description}}</td>
     {{#if getTaskRunForInstanceIdCallback}}
       {{modals/workflow-visualiser/store-modal/audit-log-presenter/related-logs-cell
-        referencedComponents=logEntry.content.referencedComponents
+        referencedElements=logEntry.content.referencedElements
         getTaskRunForInstanceIdCallback=getTaskRunForInstanceIdCallback
         actionsFactory=actionsFactory
       }}
