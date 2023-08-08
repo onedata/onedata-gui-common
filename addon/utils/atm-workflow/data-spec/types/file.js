@@ -15,6 +15,7 @@ import { assert } from '@ember/debug';
  * @typedef {Object} AtmFileDataSpec
  * @property {'file'} type
  * @property {AtmFileType} fileType
+ * @property {Array<AtmFileAttribute> | null} attributes
  */
 
 /**

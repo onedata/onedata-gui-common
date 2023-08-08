@@ -17,9 +17,9 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {AtmAuditLogEntryReferencedComponents|undefined}
+   * @type {AtmAuditLogEntryReferencedElements|undefined}
    */
-  referencedComponents: undefined,
+  referencedElements: undefined,
 
   /**
    * @virtual
@@ -36,8 +36,8 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<string>}
    */
-  taskExecutionId: computed('referencedComponents', function taskExecutionId() {
-    return this.get('referencedComponents.tasks.0');
+  taskExecutionId: computed('referencedElements', function taskExecutionId() {
+    return this.get('referencedElements.tasks.0');
   }),
 
   /**

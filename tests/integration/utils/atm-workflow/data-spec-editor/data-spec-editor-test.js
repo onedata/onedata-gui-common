@@ -121,6 +121,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
       expect(getCreatedAtmDataSpec(this)).to.deep.equal({
         type: AtmDataSpecType.File,
         fileType: AtmFileType.Regular,
+        attributes: null,
       });
     });
 
