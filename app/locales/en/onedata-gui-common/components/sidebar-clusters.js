@@ -6,7 +6,6 @@ export default {
     certificate: 'Web certificate',
     emergencyPassphrase: 'Emergency passphrase',
     provider: 'Provider',
-    ceph: 'Ceph',
     storages: 'Storages',
     spaces: 'Spaces',
     guiSettings: 'GUI settings',

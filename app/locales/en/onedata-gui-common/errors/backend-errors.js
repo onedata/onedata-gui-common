@@ -211,10 +211,6 @@ export default {
       op_worker: 'Oneprovider Worker',
       onezone: 'Onezone',
       oz_worker: 'Onezone Worker',
-      ceph: 'Ceph',
-      ceph_osd: 'Ceph Object Storage Daemon',
-      ceph_mgr: 'Ceph Manager',
-      ceph_mon: 'Ceph Monitor',
     },
     posixErrno: {
       eperm: 'Operation not permitted',
