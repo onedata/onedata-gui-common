@@ -18,6 +18,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 import $ from 'jquery';
 import computedT from 'onedata-gui-common/utils/computed-t';
 import globals from 'onedata-gui-common/utils/globals';
+import { bool } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -97,6 +98,13 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   tooltipText: undefined,
+
+  /**
+   * If provided, a dismiss button will appear, which will invoke this action on click.
+   * @virtual optional
+   * @type {() => void}
+   */
+  onDismiss: undefined,
 
   /**
    * If true, whole tile is a pseudo-link to aspect.
@@ -188,6 +196,11 @@ export default Component.extend(I18n, {
     return () => debounce(this, this.scaleUp, 50);
   }),
 
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  showDismissButton: bool('onDismiss'),
+
   scaleObserver: observer(
     'isScalable',
     'x2Breakpoint',
@@ -274,6 +287,9 @@ export default Component.extend(I18n, {
   actions: {
     tileMainClick(clickEvent) {
       return this.tileMainClick(clickEvent);
+    },
+    dismiss() {
+      this?.onDismiss();
     },
   },
 });
