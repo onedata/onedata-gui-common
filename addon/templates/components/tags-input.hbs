@@ -59,8 +59,15 @@
     {{#one-tooltip class="tooltip-with-tags"}}
       <ul class="tags-input">
         {{#each moreTags as |tag|}}
-          {{!-- using .tag-label element is not necessary here --}}
-          <li class="tag-item">{{tag.label}}</li>
+          <li class="tag-item">
+            {{#if tag.icon}}
+              {{one-icon icon=tag.icon class="tag-icon"}}
+            {{/if}}
+            {{!-- Using truncated-string component is not necessary here --}}
+            <span class="tag-label">
+              {{tag.label}}
+            </span>
+          </li>
         {{/each}}
       </ul>
     {{/one-tooltip}}
