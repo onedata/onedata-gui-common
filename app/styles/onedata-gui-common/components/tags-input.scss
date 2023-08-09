@@ -180,6 +180,10 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   .tags-input-external-editor {
     margin: 0;
   }
+
+  .more-tag {
+    text-decoration: underline;
+  }
 }
 
 .form-group-sm .tags-input {

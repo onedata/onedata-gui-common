@@ -249,8 +249,8 @@ export default Component.extend(I18n, {
         onLostFocus() {
           this.editor.onLostFocus(...arguments);
         },
-        onSave() {
-          this.editor.saveEdition();
+        async onSave() {
+          await this.editor.saveEdition();
         },
         onCancel() {
           this.editor.cancelEdition();
@@ -296,9 +296,7 @@ export default Component.extend(I18n, {
   },
 
   didInsertElement() {
-    if (this.editorType === 'custom') {
-      this.onApiRegister(this.editorApi);
-    }
+    this.onApiRegister?.(this.editorApi);
     if (this.get('isInToolbar')) {
       $(globals.window).on(`resize.${this.element.id}`, () => {
         run(() => {
@@ -399,6 +397,56 @@ export default Component.extend(I18n, {
     }
   },
 
+  cancelEdition() {
+    const {
+      hideEditIcons,
+      onEdit,
+      controlledManually,
+    } = this.getProperties(
+      'hideEditIcons',
+      'onEdit',
+      'controlledManually'
+    );
+    // If cancel button is hidden, then canceling edition using any other
+    // method should be blocked
+    if (!hideEditIcons) {
+      onEdit(false);
+      if (!controlledManually) {
+        this.stopEdition();
+      }
+    }
+  },
+
+  async saveEdition() {
+    if (this.isSaveDisabled) {
+      return;
+    }
+    const {
+      onSave,
+      controlledManually,
+    } = this.getProperties(
+      'onSave',
+      'controlledManually'
+    );
+    const preparedInputValue = this.getEditedValue();
+    this.set('_whileSaving', true);
+    try {
+      await onSave(preparedInputValue);
+      this.onEdit(false);
+      if (!controlledManually) {
+        this.stopEdition();
+      }
+      safeExec(this, 'set', '_inputValue', preparedInputValue);
+    } finally {
+      safeExec(this, 'set', '_whileSaving', false);
+      if (this.isInToolbar) {
+        next(() => {
+          this.eventsBus.trigger('one-inline-editor:resize');
+        });
+      }
+    }
+  },
+
   actions: {
     startEdition() {
       const {
@@ -418,52 +466,10 @@ export default Component.extend(I18n, {
       }
     },
     cancelEdition() {
-      const {
-        hideEditIcons,
-        onEdit,
-        controlledManually,
-      } = this.getProperties(
-        'hideEditIcons',
-        'onEdit',
-        'controlledManually'
-      );
-      // If cancel button is hidden, then canceling edition using any other
-      // method should be blocked
-      if (!hideEditIcons) {
-        onEdit(false);
-        if (!controlledManually) {
-          this.stopEdition();
-        }
-      }
+      return this.cancelEdition();
     },
     async saveEdition() {
-      if (this.isSaveDisabled) {
-        return;
-      }
-      const {
-        onSave,
-        controlledManually,
-      } = this.getProperties(
-        'onSave',
-        'controlledManually'
-      );
-      const preparedInputValue = this.getEditedValue();
-      this.set('_whileSaving', true);
-      onSave(preparedInputValue)
-        .then(() => {
-          if (!controlledManually) {
-            this.stopEdition();
-          }
-          safeExec(this, 'set', '_inputValue', preparedInputValue);
-        })
-        .finally(() => {
-          safeExec(this, 'set', '_whileSaving', false);
-          if (this.get('isInToolbar')) {
-            next(() => {
-              this.get('eventsBus').trigger('one-inline-editor:resize');
-            });
-          }
-        });
+      return this.saveEdition();
     },
   },
 });
