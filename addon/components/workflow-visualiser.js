@@ -761,7 +761,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   getVisualiserElements() {
     const rawLanes = this.get('rawData.lanes') || [];
     const lanes = rawLanes.map(rawLane => this.getElementForRawData('lane', rawLane));
-    this.updateFirstLastFlagsInCollection(lanes);
+    this.updatePositionInfoForCollection(lanes);
 
     const visualiserElements = [
       this.getInterelementSpaceFor(null, lanes[0] || null, null),
@@ -801,25 +801,25 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
-   * Sets correct values of `isFirst` and `isLast` flags in elements of passed collection.
+   * Sets correct values of `indexInParent`, `isFirst` and `isLast` properties in
+   * elements of passed collection.
    * @param {Array<Utils.WorkflowVisualiser.VisualiserElement>} collection
    */
-  updateFirstLastFlagsInCollection(collection) {
+  updatePositionInfoForCollection(collection) {
     for (let i = 0; i < collection.length; i++) {
       const item = collection[i];
-      const {
-        isFirst,
-        isLast,
-      } = getProperties(item, 'isFirst', 'isLast');
 
-      if (i === 0 && !isFirst) {
+      if (item.indexInParent !== i) {
+        set(item, 'indexInParent', i);
+      }
+      if (i === 0 && !item.isFirst) {
         set(item, 'isFirst', true);
-      } else if (i !== 0 && isFirst) {
+      } else if (i !== 0 && item.isFirst) {
         set(item, 'isFirst', false);
       }
-      if (i === collection.length - 1 && !isLast) {
+      if (i === collection.length - 1 && !item.isLast) {
         set(item, 'isLast', true);
-      } else if (i !== collection.length - 1 && isLast) {
+      } else if (i !== collection.length - 1 && item.isLast) {
         set(item, 'isLast', false);
       }
     }
@@ -992,7 +992,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const elementsForRawData = (elementsRawData || []).map(elementRawData =>
       this.getElementForRawData(elementType, elementRawData, parent)
     );
-    this.updateFirstLastFlagsInCollection(elementsForRawData);
+    this.updatePositionInfoForCollection(elementsForRawData);
 
     const newLaneElements = [
       this.getInterelementSpaceFor(null, elementsForRawData[0] || null, parent),

@@ -33,6 +33,12 @@ export default VisualiserElement.extend({
 
   /**
    * @virtual
+   * @type {number}
+   */
+  indexInParent: 0,
+
+  /**
+   * @virtual
    * @type {Boolean}
    */
   isFirst: false,
