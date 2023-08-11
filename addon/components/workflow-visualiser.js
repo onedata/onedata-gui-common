@@ -801,7 +801,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
-   * Sets correct values of `indexInParent`, `isFirst` and `isLast` properties in
+   * Sets correct values of `positionInParent`, `isFirst` and `isLast` properties in
    * elements of passed collection.
    * @param {Array<Utils.WorkflowVisualiser.VisualiserElement>} collection
    */
@@ -809,8 +809,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
     for (let i = 0; i < collection.length; i++) {
       const item = collection[i];
 
-      if (item.indexInParent !== i) {
-        set(item, 'indexInParent', i);
+      if (item.positionInParent !== i + 1) {
+        set(item, 'positionInParent', i + 1);
       }
       if (i === 0 && !item.isFirst) {
         set(item, 'isFirst', true);

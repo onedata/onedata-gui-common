@@ -32,10 +32,11 @@ export default VisualiserElement.extend({
   runsRegistry: undefined,
 
   /**
+   * Starts from 1
    * @virtual
    * @type {number}
    */
-  indexInParent: 0,
+  positionInParent: 1,
 
   /**
    * @virtual
