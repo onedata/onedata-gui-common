@@ -45,6 +45,7 @@ export default Component.extend(I18n, {
   ],
 
   i18n: service(),
+  workflowManager: service(),
 
   /**
    * @override
@@ -103,6 +104,22 @@ export default Component.extend(I18n, {
   modeClass: tag `mode-${'mode'}`,
 
   /**
+   * @type {ComputedProperty<string>}
+   */
+  defaultFailForExceptionsRatio: computed(
+    'workflowManager.atmLaneFailForExceptionsRatio',
+    function defaultFailForExceptionsRatio() {
+      const atmLaneFailForExceptionsRatio =
+        this.workflowManager.atmLaneFailForExceptionsRatio;
+      if (typeof atmLaneFailForExceptionsRatio === 'number') {
+        return String(atmLaneFailForExceptionsRatio);
+      } else {
+        return '1';
+      }
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   passedFormValues: computed(
@@ -119,10 +136,12 @@ export default Component.extend(I18n, {
     const {
       nameField,
       maxRetriesField,
+      failForExceptionsRatioField,
       iteratorOptionsFieldsGroup,
     } = this.getProperties(
       'nameField',
       'maxRetriesField',
+      'failForExceptionsRatioField',
       'iteratorOptionsFieldsGroup'
     );
 
@@ -139,6 +158,7 @@ export default Component.extend(I18n, {
       fields: [
         nameField,
         maxRetriesField,
+        failForExceptionsRatioField,
         iteratorOptionsFieldsGroup,
       ],
     });
@@ -165,6 +185,19 @@ export default Component.extend(I18n, {
         name: 'maxRetries',
         gte: 0,
         integer: true,
+      });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.NumberField>}
+   */
+  failForExceptionsRatioField: computed(function failForExceptionsRatioField() {
+    return NumberField
+      .extend(defaultValueGenerator(this, 'defaultValueSource.defaultFailForExceptionsRatio'))
+      .create({
+        name: 'failForExceptionsRatio',
+        gte: 0,
+        lte: 1,
       });
   }),
 
@@ -333,8 +366,15 @@ function laneToFormData(lane) {
   const {
     name,
     maxRetries,
+    failForExceptionsRatio,
     storeIteratorSpec,
-  } = getProperties(lane || {}, 'name', 'maxRetries', 'storeIteratorSpec');
+  } = getProperties(
+    lane || {},
+    'name',
+    'maxRetries',
+    'failForExceptionsRatio',
+    'storeIteratorSpec'
+  );
   const {
     storeSchemaId,
     maxBatchSize,
@@ -343,6 +383,7 @@ function laneToFormData(lane) {
   return {
     name,
     maxRetries,
+    failForExceptionsRatio,
     iteratorOptions: {
       sourceStore: storeSchemaId,
       maxBatchSize,
@@ -354,11 +395,13 @@ function formDataToLane(formData) {
   const {
     name,
     maxRetries,
+    failForExceptionsRatio,
     iteratorOptions,
   } = getProperties(
     formData,
     'name',
     'maxRetries',
+    'failForExceptionsRatio',
     'iteratorOptions',
   );
   const {
@@ -378,6 +421,7 @@ function formDataToLane(formData) {
   return {
     name,
     maxRetries: Number.parseInt(maxRetries) || 0,
+    failForExceptionsRatio: Number.parseFloat(failForExceptionsRatio) || 1,
     storeIteratorSpec,
   };
 }

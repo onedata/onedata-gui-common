@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, click, fillIn } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import CreateLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-lane-action';
-import { getProperties, get } from '@ember/object';
+import { getProperties, get, set } from '@ember/object';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
@@ -15,11 +15,17 @@ import {
   getModalFooter,
 } from '../../../../helpers/modal';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
+import { lookupService } from '../../../../helpers/stub-service';
 
 describe('Integration | Utility | workflow-visualiser/actions/create-lane-action', function () {
   setupRenderingTest();
 
   beforeEach(function () {
+    set(
+      lookupService(this, 'workflow-manager'),
+      'atmLaneFailForExceptionsRatio',
+      0.1
+    );
     const createStub = sinon.stub();
     const action = CreateLaneAction.create({
       ownerSource: this.owner,
@@ -71,6 +77,7 @@ describe('Integration | Utility | workflow-visualiser/actions/create-lane-action
       expect(createStub).to.be.calledOnce.and.to.be.calledWith({
         name: 'lane1',
         maxRetries: 0,
+        failForExceptionsRatio: 0.1,
         storeIteratorSpec: {
           storeSchemaId: 's1',
           maxBatchSize: 10,

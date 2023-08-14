@@ -6,6 +6,9 @@ export default {
     maxRetries: {
       label: 'Max. retries',
     },
+    failForExceptionsRatio: {
+      label: 'Fail for exception ratio',
+    },
     iteratorOptions: {
       label: 'Iterator options',
       sourceStore: {

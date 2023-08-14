@@ -837,6 +837,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       id,
       name,
       maxRetries,
+      failForExceptionsRatio,
       storeIteratorSpec,
       parallelBoxes: rawParallelBoxes,
       dashboardSpec,
@@ -845,6 +846,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'id',
       'name',
       'maxRetries',
+      'failForExceptionsRatio',
       'storeIteratorSpec',
       'parallelBoxes',
       'dashboardSpec'
@@ -917,6 +919,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       this.updateElement(lane, {
         name,
         maxRetries,
+        failForExceptionsRatio,
         storeIteratorSpec,
         dashboardSpec,
         runsRegistry: normalizedRunsRegistry,
@@ -941,6 +944,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         schemaId: id,
         name,
         maxRetries,
+        failForExceptionsRatio,
         storeIteratorSpec,
         dashboardSpec,
         runsRegistry: normalizedRunsRegistry,
