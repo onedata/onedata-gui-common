@@ -30,6 +30,7 @@ export const FunctionExecutionContext = Object.freeze({
 /**
  * @typedef {Object} FunctionSpec<T extends FunctionBase>
  * @property {string} name
+ * @property {Array<FunctionAttachableArgumentSpec>} attachableArgumentSpecs
  * @property {Array<FunctionDataType>} returnedTypes
  * @property {boolean} [isNotAvailableForUser]
  * @property {Array<FunctionExecutionContext>} [allowedContexts]

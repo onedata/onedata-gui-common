@@ -76,6 +76,7 @@ function createFromSpec(spec, fieldsToInject) {
  */
 export default Object.freeze({
   name: 'loadRepeatedSeries',
+  attachableArgumentSpecs: [],
   returnedTypes: [FunctionDataType.Points],
   allowedContexts: [FunctionExecutionContext.RepeatedSeries],
   modelClass: LoadRepeatedSeriesFunction,

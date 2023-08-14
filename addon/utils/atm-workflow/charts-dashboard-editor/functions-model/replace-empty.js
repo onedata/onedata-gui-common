@@ -15,6 +15,7 @@ const dataArgument = Object.freeze({
   name: 'data',
   compatibleTypes: [FunctionDataType.Points, FunctionDataType.Number],
 });
+const attachableArgumentSpecs = Object.freeze([dataArgument]);
 
 const ReplaceEmptyFunction = FunctionBase.extend({
   /**
@@ -48,7 +49,7 @@ const ReplaceEmptyFunction = FunctionBase.extend({
   /**
    * @override
    */
-  attachableArgumentSpecs: Object.freeze([dataArgument]),
+  attachableArgumentSpecs,
 
   /**
    * @override
@@ -90,6 +91,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
  */
 export default Object.freeze({
   name: 'replaceEmpty',
+  attachableArgumentSpecs,
   returnedTypes: [FunctionDataType.Points, FunctionDataType.Number],
   modelClass: ReplaceEmptyFunction,
   createFromSpec,

@@ -15,6 +15,7 @@ const operandsArgument = Object.freeze({
   compatibleTypes: [FunctionDataType.Points, FunctionDataType.Number],
   isArray: true,
 });
+const attachableArgumentSpecs = Object.freeze([operandsArgument]);
 
 const MultiplyFunction = FunctionBase.extend({
   /**
@@ -31,7 +32,7 @@ const MultiplyFunction = FunctionBase.extend({
   /**
    * @override
    */
-  attachableArgumentSpecs: Object.freeze([operandsArgument]),
+  attachableArgumentSpecs,
 
   /**
    * @override
@@ -87,6 +88,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
  */
 export default Object.freeze({
   name: 'multiply',
+  attachableArgumentSpecs,
   returnedTypes: [FunctionDataType.Points, FunctionDataType.Number],
   modelClass: MultiplyFunction,
   createFromSpec,

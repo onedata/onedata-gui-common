@@ -49,6 +49,7 @@ function createFromSpec(spec, fieldsToInject) {
  */
 export default Object.freeze({
   name: 'literal',
+  attachableArgumentSpecs: [],
   returnedTypes: [FunctionDataType.Number],
   modelClass: LiteralFunction,
   createFromSpec,

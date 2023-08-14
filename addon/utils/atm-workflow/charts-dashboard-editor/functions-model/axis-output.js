@@ -15,6 +15,7 @@ const dataArgument = Object.freeze({
   name: 'data',
   compatibleTypes: [FunctionDataType.Number],
 });
+const attachableArgumentSpecs = Object.freeze([dataArgument]);
 
 const AxisOutputFunction = FunctionBase.extend({
   /**
@@ -31,7 +32,7 @@ const AxisOutputFunction = FunctionBase.extend({
   /**
    * @override
    */
-  attachableArgumentSpecs: Object.freeze([dataArgument]),
+  attachableArgumentSpecs,
 
   /**
    * @override
@@ -66,6 +67,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
  */
 export default Object.freeze({
   name: 'axisOutput',
+  attachableArgumentSpecs,
   returnedTypes: [FunctionDataType.Number],
   isNotAvailableForUser: true,
   allowedContexts: [FunctionExecutionContext.Axis],

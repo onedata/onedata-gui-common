@@ -14,6 +14,7 @@ const dataArgument = Object.freeze({
   name: 'data',
   compatibleTypes: [FunctionDataType.Points, FunctionDataType.Number],
 });
+const attachableArgumentSpecs = Object.freeze([dataArgument]);
 
 const TimeDerivativeFunction = FunctionBase.extend({
   /**
@@ -41,7 +42,7 @@ const TimeDerivativeFunction = FunctionBase.extend({
   /**
    * @override
    */
-  attachableArgumentSpecs: Object.freeze([dataArgument]),
+  attachableArgumentSpecs,
 
   /**
    * @override
@@ -73,6 +74,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
  */
 export default Object.freeze({
   name: 'timeDerivative',
+  attachableArgumentSpecs,
   returnedTypes: [FunctionDataType.Points, FunctionDataType.Number],
   modelClass: TimeDerivativeFunction,
   createFromSpec,

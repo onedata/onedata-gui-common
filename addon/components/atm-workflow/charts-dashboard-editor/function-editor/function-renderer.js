@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { set, computed, observer, defineProperty } from '@ember/object';
+import EmberObject, { set, computed, observer, defineProperty } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { dasherize } from '@ember/string';
 import { reads } from '@ember/object/computed';
@@ -84,9 +84,22 @@ export default OneDraggableObject.extend(I18n, {
   dragHandle: '.function-block-header',
 
   /**
-   * @type {boolean}
+   * Contains open state of adder popovers. Each argument can have multiple adders
+   * - one before each attached function and one at the end to create new argument.
+   * Because of that Ember object for containing open state has format:
+   * EmberObject({ [argumentName]: EmberObject({ [indexOfAttachedFunction]: boolean})).
+   * Adder which adds new function at the end has index -1.
+   * @type {EmberObject}
    */
-  isAdderOpened: false,
+  adderOpenState: computed('chartFunction', function adderOpenState() {
+    const argumentNames =
+      this.chartFunction?.attachableArgumentSpecs.map(({ name }) => name) ?? [];
+    const openState = EmberObject.create();
+    argumentNames.forEach((argName) => set(openState, argName, EmberObject.create({
+      '-1': false,
+    })));
+    return openState;
+  }),
 
   /**
    * @type {ComputedProperty<SafeString>}
@@ -358,6 +371,11 @@ export default OneDraggableObject.extend(I18n, {
   },
 
   actions: {
+    toggleAdder(argumentName, index, newState) {
+      const normalizedNewState = typeof newState === 'boolean' ?
+        newState : !this.adderOpenState[argumentName][index];
+      set(this.adderOpenState[argumentName], index, normalizedNewState);
+    },
     removeFunction() {
       const action = this.actionsFactory
         .createRemoveFunctionAction({ functionToRemove: this.chartFunction });

@@ -47,6 +47,20 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {number}
+   */
+  insertAtIndex: undefined,
+
+  /**
+   * Function that will be automatically attached to the newly created function.
+   * Useful when implementing "add function in the middle" feature.
+   * @virtual optional
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null}
+   */
+  functionToAttach: null,
+
+  /**
+   * @virtual
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,
@@ -94,6 +108,7 @@ export default Component.extend(I18n, {
   functions: computed(
     'executionContext',
     'parentFunctionArgumentSpec',
+    'functionToAttach',
     function functions() {
       const functionsArray = Object.values(functionDefs)
         .filter((funcDef) =>
@@ -102,7 +117,8 @@ export default Component.extend(I18n, {
           _.intersection(
             funcDef.returnedTypes,
             this.parentFunctionArgumentSpec?.compatibleTypes ?? []
-          ).length
+          ).length &&
+          (!this.functionToAttach || funcDef.attachableArgumentSpecs.length > 0)
         )
         .map((funcDef) => ({
           ...funcDef,
@@ -133,6 +149,8 @@ export default Component.extend(I18n, {
         newFunctionName,
         targetFunction: this.parentFunction,
         targetArgumentName: this.parentFunctionArgumentName,
+        insertAtIndex: this.insertAtIndex,
+        functionToAttach: this.functionToAttach,
       });
       action.execute();
       this.onClose?.();
