@@ -370,6 +370,17 @@ export default OneDraggableObject.extend(I18n, {
     }
   },
 
+  /**
+   * Returns trigger selector for function adder popover placed on
+   * function-function relation line.
+   * @param {string} argumentName
+   * @param {number} indexInArgument
+   * @returns {string}
+   */
+  getInChainFunctionAdderTriggerSelector(argumentName, indexInArgument) {
+    return `#${this.elementId} [data-parent-function-id="${this.chartFunction.id}"][data-argument-name="${argumentName}"][data-argument-block-idx="${indexInArgument}"] > .argument-end-line .add-action`;
+  },
+
   actions: {
     toggleAdder(argumentName, index, newState) {
       const normalizedNewState = typeof newState === 'boolean' ?
