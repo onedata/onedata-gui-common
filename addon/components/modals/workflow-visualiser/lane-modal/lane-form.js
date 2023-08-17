@@ -107,12 +107,12 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<string>}
    */
   defaultInstantFailureExceptionThreshold: computed(
-    'workflowManager.atmLaneInstantFailureExceptionThreshold',
+    'workflowManager.atmInstantFailureExceptionThreshold',
     function defaultInstantFailureExceptionThreshold() {
-      const atmLaneInstantFailureExceptionThreshold =
-        this.workflowManager.atmLaneInstantFailureExceptionThreshold;
-      if (typeof atmLaneInstantFailureExceptionThreshold === 'number') {
-        return String(atmLaneInstantFailureExceptionThreshold);
+      const atmInstantFailureExceptionThreshold =
+        this.workflowManager.atmInstantFailureExceptionThreshold;
+      if (typeof atmInstantFailureExceptionThreshold === 'number') {
+        return String(atmInstantFailureExceptionThreshold);
       } else {
         return '1';
       }

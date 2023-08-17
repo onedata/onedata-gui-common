@@ -27,7 +27,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
   beforeEach(function () {
     set(
       lookupService(this, 'workflow-manager'),
-      'atmLaneInstantFailureExceptionThreshold',
+      'atmInstantFailureExceptionThreshold',
       0.1
     );
     const definedStores = A([

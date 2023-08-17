@@ -45,7 +45,7 @@ describe('Integration | Component | workflow-visualiser', function () {
   beforeEach(function () {
     set(
       lookupService(this, 'workflow-manager'),
-      'atmLaneInstantFailureExceptionThreshold',
+      'atmInstantFailureExceptionThreshold',
       0.1
     );
     const actionsFactory = ActionsFactory.create({ ownerSource: this.owner });

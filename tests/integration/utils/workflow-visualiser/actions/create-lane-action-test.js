@@ -23,7 +23,7 @@ describe('Integration | Utility | workflow-visualiser/actions/create-lane-action
   beforeEach(function () {
     set(
       lookupService(this, 'workflow-manager'),
-      'atmLaneInstantFailureExceptionThreshold',
+      'atmInstantFailureExceptionThreshold',
       0.1
     );
     const createStub = sinon.stub();

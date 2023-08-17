@@ -5,5 +5,5 @@ export default Service.extend({
    * @virtual
    * @type {number}
    */
-  atmLaneInstantFailureExceptionThreshold: 0.1,
+  atmInstantFailureExceptionThreshold: 0.1,
 });

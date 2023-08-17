@@ -32,7 +32,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal', func
   beforeEach(function () {
     set(
       lookupService(this, 'workflow-manager'),
-      'atmLaneInstantFailureExceptionThreshold',
+      'atmInstantFailureExceptionThreshold',
       0.1
     );
     this.setProperties({
