@@ -35,6 +35,7 @@ function createFromSpec(spec, fieldsToInject) {
  */
 export default Object.freeze({
   name: 'currentValue',
+  attachableArgumentSpecs: [],
   returnedTypes: [FunctionDataType.Number],
   allowedContexts: [FunctionExecutionContext.Axis],
   modelClass: CurrentValueFunction,

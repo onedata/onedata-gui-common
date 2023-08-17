@@ -15,6 +15,7 @@ const dataArgument = Object.freeze({
   name: 'data',
   compatibleTypes: [FunctionDataType.Points],
 });
+const attachableArgumentSpecs = Object.freeze([dataArgument]);
 
 const SeriesOutputFunction = FunctionBase.extend({
   /**
@@ -31,7 +32,7 @@ const SeriesOutputFunction = FunctionBase.extend({
   /**
    * @override
    */
-  attachableArgumentSpecs: Object.freeze([dataArgument]),
+  attachableArgumentSpecs,
 
   /**
    * @override
@@ -66,6 +67,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
  */
 export default Object.freeze({
   name: 'seriesOutput',
+  attachableArgumentSpecs,
   returnedTypes: [FunctionDataType.Points],
   isNotAvailableForUser: true,
   allowedContexts: [

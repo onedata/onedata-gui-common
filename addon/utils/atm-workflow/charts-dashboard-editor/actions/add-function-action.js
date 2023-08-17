@@ -9,13 +9,15 @@
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { createNewFunction } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import { createNewFunction, ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 
 /**
  * @typedef {Object} AddFunctionActionContext
  * @property {string} newFunctionName
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase} targetFunction
  * @property {string} targetArgumentName
+ * @property {number} [insertAtIndex]
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null} [functionToAttach]
  * @property {Array<ChartsDashboardEditorDataSource>} dataSources
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
@@ -39,6 +41,18 @@ export default Action.extend({
   newFunction: null,
 
   /**
+   * Becomes defined during action execution
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null}
+   */
+  oldFunctionToAttachParent: null,
+
+  /**
+   * Becomes defined during action execution
+   * @type {Array<DashboardElementReference>}
+   */
+  removedReferencesToAttachedFunction: null,
+
+  /**
    * @type {ComputedProperty<AddFunctionActionContext['newFunctionName']>}
    */
   newFunctionName: reads('context.newFunctionName'),
@@ -52,6 +66,16 @@ export default Action.extend({
    * @type {ComputedProperty<AddFunctionActionContext['targetArgumentName']>}
    */
   targetArgumentName: reads('context.targetArgumentName'),
+
+  /**
+   * @type {ComputedProperty<AddFunctionActionContext['insertAtIndex']>}
+   */
+  insertAtIndex: reads('context.insertAtIndex'),
+
+  /**
+   * @type {ComputedProperty<AddFunctionActionContext['functionToAttach']>}
+   */
+  functionToAttach: reads('context.functionToAttach'),
 
   /**
    * @type {ComputedProperty<AddFunctionActionContext['dataSources']>}
@@ -107,11 +131,37 @@ export default Action.extend({
     // Assign parent
     set(this.newFunction, 'parent', this.targetFunction);
 
+    // Attach functionToAttach to the newly created function
+    if (
+      this.functionToAttach && (
+        !this.functionToAttach.parent ||
+        this.functionToAttach.parent.elementType === ElementType.Function
+      ) && this.newFunction.attachableArgumentSpecs.length > 0
+    ) {
+      if (this.functionToAttach.parent) {
+        this.setProperties({
+          oldFunctionToAttachParent: this.functionToAttach.parent,
+          removedReferencesToAttachedFunction: this.functionToAttach
+            .parent.removeElementReferences(this.functionToAttach),
+        });
+      }
+      set(this.functionToAttach, 'parent', this.newFunction);
+      const firstArgSpec = this.newFunction.attachableArgumentSpecs[0];
+      if (firstArgSpec.isArray) {
+        set(this.newFunction, firstArgSpec.name, [this.functionToAttach]);
+      } else {
+        set(this.newFunction, firstArgSpec.name, this.functionToAttach);
+      }
+    }
+
     // Add new function to the parent
     if (this.targetArgumentSpec.isArray) {
+      const insertAtIndex = this.insertAtIndex ??
+        this.targetFunction[this.targetArgumentName].length;
       set(this.targetFunction, this.targetArgumentName, [
-        ...this.targetFunction[this.targetArgumentName],
+        ...this.targetFunction[this.targetArgumentName].slice(0, insertAtIndex),
         this.newFunction,
+        ...this.targetFunction[this.targetArgumentName].slice(insertAtIndex),
       ]);
     } else {
       set(this.targetFunction, this.targetArgumentName, this.newFunction);
@@ -128,7 +178,7 @@ export default Action.extend({
       return;
     }
 
-    // Add new function to the parent
+    // Remove new function from the parent
     if (this.targetArgumentSpec.isArray) {
       set(
         this.targetFunction,
@@ -138,6 +188,15 @@ export default Action.extend({
       );
     } else {
       set(this.targetFunction, this.targetArgumentName, null);
+    }
+
+    // Rollback functionToAttach attachment
+    if (this.functionToAttach.parent === this.newFunction) {
+      set(this.functionToAttach, 'parent', this.oldFunctionToAttachParent);
+      this.removedReferencesToAttachedFunction?.forEach((removedReference) => {
+        removedReference.referencingElement.rollbackReferenceRemoval(removedReference);
+      });
+      this.newFunction.removeElementReferences(this.functionToAttach);
     }
 
     set(

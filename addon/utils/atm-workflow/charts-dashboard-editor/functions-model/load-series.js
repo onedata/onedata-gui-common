@@ -151,6 +151,7 @@ function createFromSpec(spec, fieldsToInject) {
  */
 export default Object.freeze({
   name: 'loadSeries',
+  attachableArgumentSpecs: [],
   returnedTypes: [FunctionDataType.Points],
   allowedContexts: [
     FunctionExecutionContext.Series,
