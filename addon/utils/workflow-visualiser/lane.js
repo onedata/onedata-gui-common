@@ -36,7 +36,7 @@ export default VisualiserRecord.extend({
    * @virtual
    * @type {number}
    */
-  failForExceptionsRatio: undefined,
+  instantFailureExceptionThreshold: undefined,
 
   /**
    * @virtual

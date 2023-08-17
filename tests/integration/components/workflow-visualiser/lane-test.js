@@ -73,7 +73,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
       actionsFactory,
       name: 'lane1',
       maxRetries: 0,
-      failForExceptionsRatio: 0.1,
+      instantFailureExceptionThreshold: 0.1,
       storeIteratorSpec: {
         storeSchemaId: 's1',
         maxBatchSize: 10,

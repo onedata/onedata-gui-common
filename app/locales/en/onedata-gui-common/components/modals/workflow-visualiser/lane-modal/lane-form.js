@@ -6,8 +6,8 @@ export default {
     maxRetries: {
       label: 'Max. retries',
     },
-    failForExceptionsRatio: {
-      label: 'Fail for exception ratio',
+    instantFailureExceptionThreshold: {
+      label: 'Instant failure exception threshold',
     },
     iteratorOptions: {
       label: 'Iterator options',

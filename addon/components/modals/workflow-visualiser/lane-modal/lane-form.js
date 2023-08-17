@@ -106,13 +106,13 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<string>}
    */
-  defaultFailForExceptionsRatio: computed(
-    'workflowManager.atmLaneFailForExceptionsRatio',
-    function defaultFailForExceptionsRatio() {
-      const atmLaneFailForExceptionsRatio =
-        this.workflowManager.atmLaneFailForExceptionsRatio;
-      if (typeof atmLaneFailForExceptionsRatio === 'number') {
-        return String(atmLaneFailForExceptionsRatio);
+  defaultInstantFailureExceptionThreshold: computed(
+    'workflowManager.atmLaneInstantFailureExceptionThreshold',
+    function defaultInstantFailureExceptionThreshold() {
+      const atmLaneInstantFailureExceptionThreshold =
+        this.workflowManager.atmLaneInstantFailureExceptionThreshold;
+      if (typeof atmLaneInstantFailureExceptionThreshold === 'number') {
+        return String(atmLaneInstantFailureExceptionThreshold);
       } else {
         return '1';
       }
@@ -136,12 +136,12 @@ export default Component.extend(I18n, {
     const {
       nameField,
       maxRetriesField,
-      failForExceptionsRatioField,
+      instantFailureExceptionThresholdField,
       iteratorOptionsFieldsGroup,
     } = this.getProperties(
       'nameField',
       'maxRetriesField',
-      'failForExceptionsRatioField',
+      'instantFailureExceptionThresholdField',
       'iteratorOptionsFieldsGroup'
     );
 
@@ -158,7 +158,7 @@ export default Component.extend(I18n, {
       fields: [
         nameField,
         maxRetriesField,
-        failForExceptionsRatioField,
+        instantFailureExceptionThresholdField,
         iteratorOptionsFieldsGroup,
       ],
     });
@@ -191,11 +191,11 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Utils.FormComponent.NumberField>}
    */
-  failForExceptionsRatioField: computed(function failForExceptionsRatioField() {
+  instantFailureExceptionThresholdField: computed(function instantFailureExceptionThresholdField() {
     return NumberField
-      .extend(defaultValueGenerator(this, 'defaultValueSource.defaultFailForExceptionsRatio'))
+      .extend(defaultValueGenerator(this, 'defaultValueSource.defaultInstantFailureExceptionThreshold'))
       .create({
-        name: 'failForExceptionsRatio',
+        name: 'instantFailureExceptionThreshold',
         gte: 0,
         lte: 1,
       });
@@ -366,13 +366,13 @@ function laneToFormData(lane) {
   const {
     name,
     maxRetries,
-    failForExceptionsRatio,
+    instantFailureExceptionThreshold,
     storeIteratorSpec,
   } = getProperties(
     lane || {},
     'name',
     'maxRetries',
-    'failForExceptionsRatio',
+    'instantFailureExceptionThreshold',
     'storeIteratorSpec'
   );
   const {
@@ -383,7 +383,7 @@ function laneToFormData(lane) {
   return {
     name,
     maxRetries,
-    failForExceptionsRatio,
+    instantFailureExceptionThreshold,
     iteratorOptions: {
       sourceStore: storeSchemaId,
       maxBatchSize,
@@ -395,13 +395,13 @@ function formDataToLane(formData) {
   const {
     name,
     maxRetries,
-    failForExceptionsRatio,
+    instantFailureExceptionThreshold,
     iteratorOptions,
   } = getProperties(
     formData,
     'name',
     'maxRetries',
-    'failForExceptionsRatio',
+    'instantFailureExceptionThreshold',
     'iteratorOptions',
   );
   const {
@@ -421,7 +421,7 @@ function formDataToLane(formData) {
   return {
     name,
     maxRetries: Number.parseInt(maxRetries) || 0,
-    failForExceptionsRatio: Number.parseFloat(failForExceptionsRatio) || 1,
+    instantFailureExceptionThreshold: Number.parseFloat(instantFailureExceptionThreshold) || 1,
     storeIteratorSpec,
   };
 }

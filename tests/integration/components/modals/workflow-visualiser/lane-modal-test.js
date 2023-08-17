@@ -19,7 +19,7 @@ import { selectChoose } from 'ember-power-select/test-support/helpers';
 const simpliestLane = {
   name: 'lane1',
   maxRetries: 0,
-  failForExceptionsRatio: 0.1,
+  instantFailureExceptionThreshold: 0.1,
   storeIteratorSpec: {
     storeSchemaId: 's1',
     maxBatchSize: 10,
@@ -32,7 +32,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal', func
   beforeEach(function () {
     set(
       lookupService(this, 'workflow-manager'),
-      'atmLaneFailForExceptionsRatio',
+      'atmLaneInstantFailureExceptionThreshold',
       0.1
     );
     this.setProperties({

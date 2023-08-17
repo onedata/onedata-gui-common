@@ -45,7 +45,7 @@ describe('Integration | Component | workflow-visualiser', function () {
   beforeEach(function () {
     set(
       lookupService(this, 'workflow-manager'),
-      'atmLaneFailForExceptionsRatio',
+      'atmLaneInstantFailureExceptionThreshold',
       0.1
     );
     const actionsFactory = ActionsFactory.create({ ownerSource: this.owner });
@@ -127,7 +127,7 @@ describe('Integration | Component | workflow-visualiser', function () {
           id: sinon.match.string,
           name: 'lane1',
           maxRetries: 0,
-          failForExceptionsRatio: 0.1,
+          instantFailureExceptionThreshold: 0.1,
           storeIteratorSpec: {
             storeSchemaId: lastStoreId,
             maxBatchSize: 10,
@@ -182,7 +182,7 @@ describe('Integration | Component | workflow-visualiser', function () {
       applyUpdate: rawDump => Object.assign(rawDump.lanes[0], {
         name: 'othername',
         maxRetries: 0,
-        failForExceptionsRatio: 0.1,
+        instantFailureExceptionThreshold: 0.1,
         storeIteratorSpec: {
           storeSchemaId: 's1',
           maxBatchSize: 10,
@@ -227,7 +227,7 @@ describe('Integration | Component | workflow-visualiser', function () {
         });
         Object.assign(rawDump.lanes[0], {
           maxRetries: 0,
-          failForExceptionsRatio: 0.1,
+          instantFailureExceptionThreshold: 0.1,
           storeIteratorSpec: {
             storeSchemaId: lastStoreId,
             maxBatchSize: 10,
@@ -684,7 +684,7 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
       id: sinon.match.string,
       name: 'lane999',
       maxRetries: 0,
-      failForExceptionsRatio: 0.1,
+      instantFailureExceptionThreshold: 0.1,
       storeIteratorSpec: {
         storeSchemaId: storeIdFromExample(0),
         maxBatchSize: 10,
@@ -1061,7 +1061,7 @@ function generateExample(
       id: laneIdFromExample(laneNo),
       name: `lane${laneNo}`,
       maxRetries: 0,
-      failForExceptionsRatio: 0.1,
+      instantFailureExceptionThreshold: 0.1,
       storeIteratorSpec: {
         storeSchemaId: storeIdFromExample(0),
         maxBatchSize: 10,

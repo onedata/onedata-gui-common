@@ -23,7 +23,7 @@ describe('Integration | Utility | workflow-visualiser/actions/create-lane-action
   beforeEach(function () {
     set(
       lookupService(this, 'workflow-manager'),
-      'atmLaneFailForExceptionsRatio',
+      'atmLaneInstantFailureExceptionThreshold',
       0.1
     );
     const createStub = sinon.stub();
@@ -77,7 +77,7 @@ describe('Integration | Utility | workflow-visualiser/actions/create-lane-action
       expect(createStub).to.be.calledOnce.and.to.be.calledWith({
         name: 'lane1',
         maxRetries: 0,
-        failForExceptionsRatio: 0.1,
+        instantFailureExceptionThreshold: 0.1,
         storeIteratorSpec: {
           storeSchemaId: 's1',
           maxBatchSize: 10,
