@@ -24,6 +24,7 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-lane-action
     const lane = Lane.create({
       name: 'lane1',
       maxRetries: 0,
+      instantFailureExceptionThreshold: 0.1,
       storeIteratorSpec: {
         storeSchemaId: 's1',
         maxBatchSize: 10,

@@ -12,13 +12,14 @@ import {
 } from '../../../../helpers/modal';
 import sinon from 'sinon';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
-import { setProperties } from '@ember/object';
+import { setProperties, set } from '@ember/object';
 import { Promise } from 'rsvp';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 const simpliestLane = {
   name: 'lane1',
   maxRetries: 0,
+  instantFailureExceptionThreshold: 0.1,
   storeIteratorSpec: {
     storeSchemaId: 's1',
     maxBatchSize: 10,
@@ -29,6 +30,11 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal', func
   setupRenderingTest();
 
   beforeEach(function () {
+    set(
+      lookupService(this, 'workflow-manager'),
+      'atmInstantFailureExceptionThreshold',
+      0.1
+    );
     this.setProperties({
       modalManager: lookupService(this, 'modal-manager'),
       modalOptions: {

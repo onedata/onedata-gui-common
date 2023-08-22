@@ -7,6 +7,7 @@ export default Component.extend({
       id: 'l0',
       name: 'lane0',
       maxRetries: 1,
+      instantFailureExceptionThreshold: 0.1,
       storeIteratorSpec: {
         strategy: {
           type: 'serial',
@@ -90,6 +91,7 @@ export default Component.extend({
       id: 'l1',
       name: 'lane1',
       maxRetries: 5,
+      instantFailureExceptionThreshold: 0.2,
       storeIteratorSpec: {
         strategy: {
           type: 'serial',
@@ -165,6 +167,7 @@ export default Component.extend({
       id: 'l2',
       name: 'lane2',
       maxRetries: 2,
+      instantFailureExceptionThreshold: 1,
       storeIteratorSpec: {
         strategy: {
           type: 'serial',
@@ -240,6 +243,7 @@ export default Component.extend({
       id: 'l3',
       name: 'lane3',
       maxRetries: 0,
+      instantFailureExceptionThreshold: 0,
       parallelBoxes: [{
         id: 'b3.0',
         name: 'block3.0',
