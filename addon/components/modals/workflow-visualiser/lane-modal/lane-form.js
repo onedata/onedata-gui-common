@@ -191,15 +191,20 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Utils.FormComponent.NumberField>}
    */
-  instantFailureExceptionThresholdField: computed(function instantFailureExceptionThresholdField() {
-    return NumberField
-      .extend(defaultValueGenerator(this, 'defaultValueSource.defaultInstantFailureExceptionThreshold'))
-      .create({
-        name: 'instantFailureExceptionThreshold',
-        gte: 0,
-        lte: 1,
-      });
-  }),
+  instantFailureExceptionThresholdField: computed(
+    function instantFailureExceptionThresholdField() {
+      return NumberField
+        .extend(defaultValueGenerator(
+          this,
+          'defaultValueSource.defaultInstantFailureExceptionThreshold'
+        ))
+        .create({
+          name: 'instantFailureExceptionThreshold',
+          gte: 0,
+          lte: 1,
+        });
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
@@ -421,7 +426,9 @@ function formDataToLane(formData) {
   return {
     name,
     maxRetries: Number.parseInt(maxRetries) || 0,
-    instantFailureExceptionThreshold: Number.parseFloat(instantFailureExceptionThreshold) || 1,
+    instantFailureExceptionThreshold: Number.parseFloat(
+      instantFailureExceptionThreshold
+    ) || 1,
     storeIteratorSpec,
   };
 }
