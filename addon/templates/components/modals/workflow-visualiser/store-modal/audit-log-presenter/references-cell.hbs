@@ -1,0 +1,10 @@
+{{#if actionToUse}}
+  <a
+    class="clickable {{actionToUse.className}}"
+    onclick={{action actionToUse.executeCallback}}
+  >
+    {{actionToUse.title}}
+  </a>
+{{else}}
+  –
+{{/if}}

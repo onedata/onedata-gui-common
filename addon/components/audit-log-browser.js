@@ -186,6 +186,14 @@ export default Component.extend(I18n, {
   doesOpenDetailsOnClick: false,
 
   /**
+   * See infinite-scroll-table documentation for information about
+   * `renderEntriesOneByOne`.
+   * @virtual optional
+   * @type {boolean}
+   */
+  renderEntriesOneByOne: false,
+
+  /**
    * @virtual optional
    * @type {InfiniteScrollTableUpdateStrategy}
    */

@@ -31,34 +31,37 @@ export default Component.extend(I18n, {
   getStoreContentCallback: undefined,
 
   /**
-   * @type {((taskInstanceId: string) => { task: Utils.WorkflowVisualiser.Lane.Task, runNumber: number } | null) | undefined}
-   */
-  getTaskRunForInstanceIdCallback: undefined,
-
-  /**
    * @type {Utils.WorkflowVisualiser.ActionsFactory | undefined}
    */
   actionsFactory: undefined,
 
   /**
+   * If presented audit logs are taken from task, then this field contains that
+   * task execution ID.
+   * @virtual optional
+   * @type {string | null}
+   */
+  taskExecutionId: null,
+
+  /**
+   * @virtual optional
+   * @type {((taskInstanceId: string) => { task: Utils.WorkflowVisualiser.Lane.Task, runNumber: number } | null) | undefined}
+   */
+  getTaskRunForInstanceIdCallback: undefined,
+
+  /**
    * @type {ComputedProperty<Array<AuditLogBrowserCustomColumnHeader>>}
    */
-  customColumnHeaders: computed(
-    'getTaskRunForInstanceIdCallback',
-    function customColumnHeaders() {
-      const columnHeaders = [{
-        classNames: 'description-column-header',
-        content: this.t('customColumns.description'),
-      }];
-      if (this.get('getTaskRunForInstanceIdCallback')) {
-        columnHeaders.push({
-          classNames: 'related-logs-column-header',
-          content: this.t('customColumns.relatedLogs'),
-        });
-      }
-      return columnHeaders;
-    }
-  ),
+  customColumnHeaders: computed(function customColumnHeaders() {
+    const columnHeaders = [{
+      classNames: 'description-column-header',
+      content: this.t('customColumns.description'),
+    }, {
+      classNames: 'references-column-header',
+      content: this.t('customColumns.references'),
+    }];
+    return columnHeaders;
+  }),
 
   /**
    * @type {ComputedProperty<(listingParams: AuditLogListingParams) => Promise<AuditLogEntriesPage<AtmAuditLogEntryContent>>>}
