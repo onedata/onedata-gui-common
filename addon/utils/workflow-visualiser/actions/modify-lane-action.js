@@ -92,6 +92,7 @@ export default Action.extend({
     const keysToCheck = [
       'name',
       'maxRetries',
+      'instantFailureExceptionThreshold',
       'storeIteratorSpec',
     ];
 

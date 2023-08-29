@@ -78,17 +78,6 @@ export default SecondLevelItems.extend(I18n, {
     };
   }),
 
-  /**
-   * @type {Ember.ComputedProperty<Object>}
-   */
-  cephItem: computed(function cephItem() {
-    return {
-      id: 'ceph',
-      label: this.t('ceph'),
-      icon: 'ceph',
-    };
-  }),
-
   storagesItem: computed(function storagesItem() {
     return {
       id: 'storages',
@@ -128,7 +117,6 @@ export default SecondLevelItems.extend(I18n, {
     'nodesItem',
     'overviewItem',
     'providerItem',
-    'cephItem',
     'storagesItem',
     'spacesItem',
     'guiSettingsItem',
@@ -141,7 +129,6 @@ export default SecondLevelItems.extend(I18n, {
         nodesItem,
         overviewItem,
         providerItem,
-        cephItem,
         storagesItem,
         spacesItem,
         guiSettingsItem,
@@ -154,7 +141,6 @@ export default SecondLevelItems.extend(I18n, {
         'nodesItem',
         'overviewItem',
         'providerItem',
-        'cephItem',
         'storagesItem',
         'spacesItem',
         'guiSettingsItem',
@@ -176,7 +162,6 @@ export default SecondLevelItems.extend(I18n, {
         ] : [
           ...commonItems,
           providerItem,
-          cephItem,
           storagesItem,
           spacesItem,
         ];

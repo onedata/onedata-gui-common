@@ -14,8 +14,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { scrollTo } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import _ from 'lodash';
-import { htmlSafe } from '@ember/string';
-import { dasherize } from '@ember/string';
+import { htmlSafe, dasherize } from '@ember/string';
 import { getModalBody, getModalFooter } from '../../helpers/modal';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
@@ -23,6 +22,8 @@ import { resolve, Promise } from 'rsvp';
 import { schedule } from '@ember/runloop';
 import dom from 'onedata-gui-common/utils/dom';
 import globals from 'onedata-gui-common/utils/globals';
+import { lookupService } from '../../helpers/stub-service';
+import { set } from '@ember/object';
 
 const laneWidth = 300;
 
@@ -42,6 +43,11 @@ describe('Integration | Component | workflow-visualiser', function () {
   setupRenderingTest();
 
   beforeEach(function () {
+    set(
+      lookupService(this, 'workflow-manager'),
+      'atmInstantFailureExceptionThreshold',
+      0.1
+    );
     const actionsFactory = ActionsFactory.create({ ownerSource: this.owner });
     actionsFactory.setGetTaskCreationDataCallback(
       () => resolve({ name: 'Untitled task' })
@@ -121,6 +127,7 @@ describe('Integration | Component | workflow-visualiser', function () {
           id: sinon.match.string,
           name: 'lane1',
           maxRetries: 0,
+          instantFailureExceptionThreshold: 0.1,
           storeIteratorSpec: {
             storeSchemaId: lastStoreId,
             maxBatchSize: 10,
@@ -175,6 +182,7 @@ describe('Integration | Component | workflow-visualiser', function () {
       applyUpdate: rawDump => Object.assign(rawDump.lanes[0], {
         name: 'othername',
         maxRetries: 0,
+        instantFailureExceptionThreshold: 0.1,
         storeIteratorSpec: {
           storeSchemaId: 's1',
           maxBatchSize: 10,
@@ -219,6 +227,7 @@ describe('Integration | Component | workflow-visualiser', function () {
         });
         Object.assign(rawDump.lanes[0], {
           maxRetries: 0,
+          instantFailureExceptionThreshold: 0.1,
           storeIteratorSpec: {
             storeSchemaId: lastStoreId,
             maxBatchSize: 10,
@@ -675,6 +684,7 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
       id: sinon.match.string,
       name: 'lane999',
       maxRetries: 0,
+      instantFailureExceptionThreshold: 0.1,
       storeIteratorSpec: {
         storeSchemaId: storeIdFromExample(0),
         maxBatchSize: 10,
@@ -1051,6 +1061,7 @@ function generateExample(
       id: laneIdFromExample(laneNo),
       name: `lane${laneNo}`,
       maxRetries: 0,
+      instantFailureExceptionThreshold: 0.1,
       storeIteratorSpec: {
         storeSchemaId: storeIdFromExample(0),
         maxBatchSize: 10,

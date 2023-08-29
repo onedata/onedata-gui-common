@@ -16,6 +16,8 @@ import {
   find,
 } from '@ember/test-helpers';
 import globals from 'onedata-gui-common/utils/globals';
+import { lookupService } from '../../../../../helpers/stub-service';
+import { set } from '@ember/object';
 
 const componentClass = 'lane-form';
 
@@ -23,6 +25,11 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
   setupRenderingTest();
 
   beforeEach(function () {
+    set(
+      lookupService(this, 'workflow-manager'),
+      'atmInstantFailureExceptionThreshold',
+      0.1
+    );
     const definedStores = A([
       // random order to test sorting
       Store.create({
@@ -137,6 +144,66 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
       expect(find('.maxRetries-field')).to.have.class('has-success');
     });
 
+    it('renders "instant failure exception threshold" field with "0.1" as default value', async function () {
+      await renderComponent();
+
+      const label = find('.instantFailureExceptionThreshold-field .control-label');
+      const field = find('.instantFailureExceptionThreshold-field .form-control');
+      expect(label.textContent.trim()).to.equal('Instant failure exception threshold:');
+      expect(field.type).to.equal('number');
+      expect(field.value).to.equal('0.1');
+    });
+
+    it('marks "instant failure exception threshold" field as invalid when it is empty', async function () {
+      await renderComponent();
+
+      await fillIn('.instantFailureExceptionThreshold-field .form-control', '');
+
+      expect(find('.instantFailureExceptionThreshold-field')).to.have.class('has-error');
+    });
+
+    it('marks "instant failure exception threshold" field as invalid when it contains negative number',
+      async function () {
+        await renderComponent();
+
+        await fillIn('.instantFailureExceptionThreshold-field .form-control', '-0.1');
+
+        expect(find('.instantFailureExceptionThreshold-field')).to.have.class('has-error');
+      });
+
+    it('marks "instant failure exception threshold" field as invalid when it contains a a number > 1', async function () {
+      await renderComponent();
+
+      await fillIn('.instantFailureExceptionThreshold-field .form-control', '1.1');
+
+      expect(find('.instantFailureExceptionThreshold-field')).to.have.class('has-error');
+    });
+
+    it('marks "instant failure exception threshold" field as valid when it contains a positive number < 1',
+      async function () {
+        await renderComponent();
+
+        await fillIn('.instantFailureExceptionThreshold-field .form-control', '0.2');
+
+        expect(find('.instantFailureExceptionThreshold-field')).to.have.class('has-success');
+      });
+
+    it('marks "instant failure exception threshold" field as valid when it contains 0', async function () {
+      await renderComponent();
+
+      await fillIn('.instantFailureExceptionThreshold-field .form-control', '0');
+
+      expect(find('.instantFailureExceptionThreshold-field')).to.have.class('has-success');
+    });
+
+    it('marks "instant failure exception threshold" field as valid when it contains 1', async function () {
+      await renderComponent();
+
+      await fillIn('.instantFailureExceptionThreshold-field .form-control', '1');
+
+      expect(find('.instantFailureExceptionThreshold-field')).to.have.class('has-success');
+    });
+
     it('has fields group "Iterator options"', async function () {
       await renderComponent();
 
@@ -218,6 +285,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
         data: {
           name: '',
           maxRetries: 0,
+          instantFailureExceptionThreshold: 0.1,
           storeIteratorSpec: {
             storeSchemaId: 's1',
             maxBatchSize: 10,
@@ -233,6 +301,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
         data: {
           name: 'someName',
           maxRetries: 0,
+          instantFailureExceptionThreshold: 0.1,
           storeIteratorSpec: {
             storeSchemaId: 's1',
             maxBatchSize: 10,
@@ -248,6 +317,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
 
       await fillIn('.name-field .form-control', 'someName');
       await fillIn('.maxRetries-field .form-control', '4');
+      await fillIn('.instantFailureExceptionThreshold-field .form-control', '0.2');
       await selectChoose('.sourceStore-field', 'store2');
       await fillIn('.maxBatchSize-field .form-control', '200');
 
@@ -256,6 +326,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
         data: {
           name: 'someName',
           maxRetries: 4,
+          instantFailureExceptionThreshold: 0.2,
           storeIteratorSpec: {
             storeSchemaId: 's2',
             maxBatchSize: 200,
@@ -279,6 +350,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
         data: {
           name: 'someName',
           maxRetries: 0,
+          instantFailureExceptionThreshold: 0.1,
           storeIteratorSpec: {
             storeSchemaId: 'snew',
             maxBatchSize: 10,
@@ -305,6 +377,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
           data: {
             name: 'someName',
             maxRetries: 0,
+            instantFailureExceptionThreshold: 0.1,
             storeIteratorSpec: {
               storeSchemaId: 's2',
               maxBatchSize: 10,
@@ -328,6 +401,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
       this.set('lane', {
         name: 'lane1',
         maxRetries: 10,
+        instantFailureExceptionThreshold: 0.2,
         storeIteratorSpec: {
           storeSchemaId: 's2',
           maxBatchSize: 50,
@@ -338,6 +412,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
 
       expect(find('.name-field .form-control').value).to.equal('lane1');
       expect(find('.maxRetries-field .form-control').value).to.equal('10');
+      expect(find('.instantFailureExceptionThreshold-field .form-control').value).to.equal('0.2');
       expect(find('.sourceStore-field .dropdown-field-trigger').textContent.trim())
         .to.equal('store2');
       expect(find('.maxBatchSize-field .form-control').value).to.equal('50');
@@ -367,6 +442,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
       this.set('lane', {
         name: 'lane1',
         maxRetries: 10,
+        instantFailureExceptionThreshold: 0.2,
         storeIteratorSpec: {
           storeSchemaId: 's2',
           maxBatchSize: 50,
@@ -377,6 +453,8 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
 
       expect(find('.name-field .field-component').textContent.trim()).to.equal('lane1');
       expect(find('.maxRetries-field .field-component').textContent.trim()).to.equal('10');
+      expect(find('.instantFailureExceptionThreshold-field .field-component').textContent.trim())
+        .to.equal('0.2');
       expect(find('.sourceStore-field .field-component').textContent.trim())
         .to.equal('store2');
       expect(find('.maxBatchSize-field .field-component').textContent.trim()).to.equal('50');
