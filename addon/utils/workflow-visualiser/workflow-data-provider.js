@@ -158,17 +158,10 @@ export default EmberObject.extend({
       console.error(
         'util:workflow-visualiser/workflow-data-provider#convertAtmExceptionStoreTraceIdsToIndices: executionDataFetcher is not set',
       );
-      return reject();
-    }
-    const storeInstanceId = store?.instanceId;
-    if (!storeInstanceId) {
-      console.error(
-        'util:workflow-visualiser/workflow-data-provider#convertAtmExceptionStoreTraceIdsToIndices: provided store does not have instance id',
-      );
-      return reject();
+      return reject(new Error('executionDataFetcher is not set'));
     }
     return this.executionDataFetcher.convertAtmExceptionStoreTraceIdsToIndices(
-      storeInstanceId,
+      store?.instanceId,
       traceIds
     );
   },

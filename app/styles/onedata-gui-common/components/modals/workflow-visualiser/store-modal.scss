@@ -74,9 +74,16 @@
   }
 
   .exception-presenter {
-     .highlight-example, .highlight-row > td {
+    .mark {
       @include font-bold();
-      background-color: $color-file-highlighted;
+
+      &:is(tr) {
+        padding: 0;
+
+        > td {
+          background-color: inherit;
+        }
+      }
     }
 
     .details-container {

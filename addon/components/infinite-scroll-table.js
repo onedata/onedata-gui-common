@@ -127,6 +127,7 @@ import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 import globals from 'onedata-gui-common/utils/globals';
 import dom from 'onedata-gui-common/utils/dom';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
+import { Promise } from 'rsvp';
 
 export default Component.extend(I18n, {
   layout,
@@ -367,7 +368,7 @@ export default Component.extend(I18n, {
     this.setupResizeObserver();
 
     this.entries.initialLoad.then(() =>
-      next(() => this.increaseRenderedEntriesLimit())
+      this.handleInitialRender()
     );
   },
 
@@ -383,6 +384,13 @@ export default Component.extend(I18n, {
     }
   },
 
+  handleInitialRender() {
+    next(async () => {
+      await this.increaseRenderedEntriesLimitIfNeeded();
+      await this.scrollToInitialJumpEntry();
+    });
+  },
+
   /**
    * First rendering is very heavy due to dozens of components ready to render
    * at the same time. To mitigate freezing GUI, first rendering is
@@ -392,38 +400,47 @@ export default Component.extend(I18n, {
    * This method is responsible for handling that mechanism.
    * @returns {void}
    */
-  increaseRenderedEntriesLimit() {
-    safeExec(this, async () => {
-      if (this.renderedEntriesLimit === null) {
-        // Initial rendering ended. If there was an initial-jump entry, then
-        // scroll to it so it will be at the top of the table.
-        if (this.initialJumpIndex) {
-          await waitForRender();
-          const tableHeader = this.element?.querySelector('thead');
-          const jumpEntryElement = this.element?.querySelector(
-            `[data-row-id="${this.initialJumpIndex}"]`
-          );
-          if (tableHeader && jumpEntryElement) {
-            const scrollYDelta =
-              dom.position(jumpEntryElement, tableHeader).top - dom.height(tableHeader) -
-              this.rowHeight;
-            this.getScrollableContainer()?.scrollBy(0, scrollYDelta);
-          }
-        }
-        return;
-      }
+  async increaseRenderedEntriesLimitIfNeeded() {
+    if (
+      this.isDestroyed ||
+      this.isDestroying ||
+      this.renderedEntriesLimit === null ||
+      typeof this.entries?.length !== 'number'
+    ) {
+      return;
+    }
 
-      let newRenderedEntriesLimit = this.renderedEntriesLimit + 1;
+    this.getScrollableContainer().dispatchEvent(new Event('scroll'));
 
-      if (newRenderedEntriesLimit < this.entries.length) {
-        next(() => this.increaseRenderedEntriesLimit());
-      } else if (newRenderedEntriesLimit >= this.entries.length) {
-        newRenderedEntriesLimit = null;
-      }
+    if (this.renderedEntriesLimit + 1 < this.entries.length) {
+      this.set('renderedEntriesLimit', this.renderedEntriesLimit + 1);
+      await new Promise((resolve) => {
+        next(async () => {
+          await this.increaseRenderedEntriesLimitIfNeeded();
+          resolve();
+        });
+      });
+    } else {
+      this.set('renderedEntriesLimit', null);
+    }
+  },
 
-      this.getScrollableContainer().dispatchEvent(new Event('scroll'));
-      this.set('renderedEntriesLimit', newRenderedEntriesLimit);
-    });
+  async scrollToInitialJumpEntry() {
+    if (!this.initialJumpIndex) {
+      return;
+    }
+
+    await waitForRender();
+    const tableHeader = this.element?.querySelector('thead');
+    const jumpEntryElement = this.element?.querySelector(
+      `[data-row-id="${this.initialJumpIndex}"]`
+    );
+    if (tableHeader && jumpEntryElement) {
+      const scrollYDelta =
+        dom.position(jumpEntryElement, tableHeader).top - dom.height(tableHeader) -
+        this.rowHeight;
+      this.getScrollableContainer()?.scrollBy(0, scrollYDelta);
+    }
   },
 
   /**

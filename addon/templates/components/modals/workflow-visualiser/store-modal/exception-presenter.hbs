@@ -43,7 +43,7 @@
         click=section.onRowClick
         class=(concat-classes
           section.rowClassName
-          (if (contains section.entry.index indicesToHighlight) "highlight-row")
+          (if (contains section.entry.index indicesToHighlight) "mark")
         )
         dataRowId=section.dataRowId
         as |row|
@@ -61,7 +61,7 @@
         class={{concat-classes
           section.rowClassName
           "text-danger"
-          (if (contains section.entry.index indicesToHighlight) "highlight-row")
+          (if (contains section.entry.index indicesToHighlight) "mark")
         }}
         data-row-id={{section.dataRowId}}
         onclick={{section.onRowClick}}

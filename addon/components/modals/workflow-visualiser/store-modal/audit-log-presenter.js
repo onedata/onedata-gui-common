@@ -53,14 +53,13 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Array<AuditLogBrowserCustomColumnHeader>>}
    */
   customColumnHeaders: computed(function customColumnHeaders() {
-    const columnHeaders = [{
+    return [{
       classNames: 'description-column-header',
       content: this.t('customColumns.description'),
     }, {
       classNames: 'references-column-header',
       content: this.t('customColumns.references'),
     }];
-    return columnHeaders;
   }),
 
   /**
