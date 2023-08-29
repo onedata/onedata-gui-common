@@ -125,6 +125,9 @@ import layout from 'onedata-gui-common/templates/components/infinite-scroll-tabl
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 import globals from 'onedata-gui-common/utils/globals';
+import dom from 'onedata-gui-common/utils/dom';
+import waitForRender from 'onedata-gui-common/utils/wait-for-render';
+import { Promise } from 'rsvp';
 
 export default Component.extend(I18n, {
   layout,
@@ -205,6 +208,24 @@ export default Component.extend(I18n, {
   doesOpenDetailsOnClick: false,
 
   /**
+   * If set, the first listing will load entries range containing the provided index.
+   * WARNING: It works only when `renderEntriesOneByOne` is false.
+   * @virtual optional
+   * @type {string | undefined}
+   */
+  initialJumpIndex: undefined,
+
+  /**
+   * If set to true, it changes rendering entries method - instead of rendering
+   * all entries at one shot it renders entries one after another (to spread out
+   * rendering in time). It might be handy to avoid moments of GUI freeze, which
+   * is especially important in terms of animations.
+   * @virtual
+   * @type {boolean}
+   */
+  renderEntriesOneByOne: false,
+
+  /**
    * @virtual optional
    * @type {InfiniteScrollTableUpdateStrategy}
    */
@@ -243,7 +264,7 @@ export default Component.extend(I18n, {
    * `increaseRenderedEntriesLimit()` method.
    * @type {number|null}
    */
-  renderedEntriesLimit: 1,
+  renderedEntriesLimit: null,
 
   /**
    * @type {ComputedProperty<boolean>}
@@ -294,7 +315,8 @@ export default Component.extend(I18n, {
       const isAutoUpdating = this.infiniteScroll.isAutoUpdating;
 
       if (shouldBeUpdating && !isAutoUpdating) {
-        this.infiniteScroll.startAutoUpdate(true);
+        // Immediate update only when list was already rendered
+        this.infiniteScroll.startAutoUpdate(Boolean(this.element));
       } else if (!shouldBeUpdating && isAutoUpdating) {
         this.infiniteScroll.stopAutoUpdate();
       }
@@ -312,6 +334,7 @@ export default Component.extend(I18n, {
       startIndex: 0,
       endIndex: 50,
       indexMargin: 10,
+      initialJumpIndex: this.initialJumpIndex,
     });
 
     const infiniteScroll = InfiniteScroll.create({
@@ -324,6 +347,10 @@ export default Component.extend(I18n, {
       entries,
       infiniteScroll,
     });
+
+    if (this.renderEntriesOneByOne) {
+      this.set('renderedEntriesLimit', 1);
+    }
 
     this.autoUpdateController();
   },
@@ -341,7 +368,7 @@ export default Component.extend(I18n, {
     this.setupResizeObserver();
 
     this.entries.initialLoad.then(() =>
-      next(() => this.increaseRenderedEntriesLimit())
+      this.handleInitialRender()
     );
   },
 
@@ -357,32 +384,63 @@ export default Component.extend(I18n, {
     }
   },
 
+  handleInitialRender() {
+    next(async () => {
+      await this.increaseRenderedEntriesLimitIfNeeded();
+      await this.scrollToInitialJumpEntry();
+    });
+  },
+
   /**
    * First rendering is very heavy due to dozens of components ready to render
-   * at the same time. To mitigate freezeing GUI, first rendering is
+   * at the same time. To mitigate freezing GUI, first rendering is
    * divided and spread out in time. Instead of rendering all entries at once,
    * each entry is rendered one after another in consecutive `next()` calls
    * so the rendered list "grows" entry by entry.
    * This method is responsible for handling that mechanism.
    * @returns {void}
    */
-  increaseRenderedEntriesLimit() {
-    safeExec(this, () => {
-      if (this.renderedEntriesLimit === null) {
-        return;
-      }
+  async increaseRenderedEntriesLimitIfNeeded() {
+    if (
+      this.isDestroyed ||
+      this.isDestroying ||
+      this.renderedEntriesLimit === null ||
+      typeof this.entries?.length !== 'number'
+    ) {
+      return;
+    }
 
-      let newRenderedEntriesLimit = this.renderedEntriesLimit + 1;
+    this.getScrollableContainer().dispatchEvent(new Event('scroll'));
 
-      if (newRenderedEntriesLimit < this.entries.length) {
-        next(() => this.increaseRenderedEntriesLimit());
-      } else if (newRenderedEntriesLimit >= this.entries.length) {
-        newRenderedEntriesLimit = null;
-      }
+    if (this.renderedEntriesLimit + 1 < this.entries.length) {
+      this.set('renderedEntriesLimit', this.renderedEntriesLimit + 1);
+      await new Promise((resolve) => {
+        next(async () => {
+          await this.increaseRenderedEntriesLimitIfNeeded();
+          resolve();
+        });
+      });
+    } else {
+      this.set('renderedEntriesLimit', null);
+    }
+  },
 
-      this.getScrollableContainer().dispatchEvent(new Event('scroll'));
-      this.set('renderedEntriesLimit', newRenderedEntriesLimit);
-    });
+  async scrollToInitialJumpEntry() {
+    if (!this.initialJumpIndex) {
+      return;
+    }
+
+    await waitForRender();
+    const tableHeader = this.element?.querySelector('thead');
+    const jumpEntryElement = this.element?.querySelector(
+      `[data-row-id="${this.initialJumpIndex}"]`
+    );
+    if (tableHeader && jumpEntryElement) {
+      const scrollYDelta =
+        dom.position(jumpEntryElement, tableHeader).top - dom.height(tableHeader) -
+        this.rowHeight;
+      this.getScrollableContainer()?.scrollBy(0, scrollYDelta);
+    }
   },
 
   /**

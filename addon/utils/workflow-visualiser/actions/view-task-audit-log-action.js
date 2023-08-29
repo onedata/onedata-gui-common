@@ -43,10 +43,20 @@ export default Action.extend({
   runNumber: reads('context.runNumber'),
 
   /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.ActionsFactory>}
+   */
+  actionsFactory: reads('context.actionsFactory'),
+
+  /**
    * @param {Utils.WorkflowVisualiser.Store} store
    * @type {ComputedProperty<Function>}
    */
   getAuditLogContentCallback: reads('context.getAuditLogContentCallback'),
+
+  /**
+   * @type {ComputedProperty<(taskInstanceId: string) => { task: Utils.WorkflowVisualiser.Lane.Task, runNumber: number } | null>}
+   */
+  getTaskRunForInstanceIdCallback: reads('context.getTaskRunForInstanceIdCallback'),
 
   /**
    * @override
@@ -64,9 +74,13 @@ export default Action.extend({
       'modalManager'
     );
 
-    let systemAuditLogStore = get(task, 'systemAuditLogStore');
+    let systemAuditLogStore = task.systemAuditLogStore;
+    let taskExecutionId = task.instanceId;
     if (runNumber !== undefined) {
-      const run = get(task, 'runsRegistry')?.[runNumber];
+      const run = task.runsRegistry?.[runNumber];
+      if (run?.instanceId) {
+        taskExecutionId = run.instanceId;
+      }
       if (run?.systemAuditLogStore) {
         systemAuditLogStore = run.systemAuditLogStore;
       }
@@ -79,8 +93,11 @@ export default Action.extend({
         viewModeLayout: 'auditLog',
         subjectName: this.t('subjectName', { taskName: get(task, 'name') }),
         store: systemAuditLogStore,
+        taskExecutionId,
+        actionsFactory: this.actionsFactory,
         getStoreContentCallback: (...args) =>
           getAuditLogContentCallback(systemAuditLogStore, ...args),
+        getTaskRunForInstanceIdCallback: this.getTaskRunForInstanceIdCallback,
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');

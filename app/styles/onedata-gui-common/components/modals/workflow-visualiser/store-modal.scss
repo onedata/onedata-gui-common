@@ -74,6 +74,18 @@
   }
 
   .exception-presenter {
+    .mark {
+      @include font-bold();
+
+      &:is(tr) {
+        padding: 0;
+
+        > td {
+          background-color: inherit;
+        }
+      }
+    }
+
     .details-container {
       .details {
         grid-template-rows: 1fr min-content;
@@ -90,7 +102,7 @@
     }
   }
 
-  .related-logs-column-header {
+  .references-column-header {
     width: 12em;
   }
 
@@ -98,8 +110,8 @@
     .audit-log-presenter {
       .severity-column-header,
       .severity-cell,
-      .related-logs-column-header,
-      .related-logs-cell {
+      .references-column-header,
+      .references-cell {
         // We can't use `display: none` because of `colspan` value for some rows
         // - a number of rendered (visible) cells can't change.
         width: 0;

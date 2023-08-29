@@ -7,13 +7,12 @@
 }}
   {{#if (eq logEntry.source "system")}}
     <td class="description-cell truncate">{{logEntry.content.description}}</td>
-    {{#if getTaskRunForInstanceIdCallback}}
-      {{modals/workflow-visualiser/store-modal/audit-log-presenter/related-logs-cell
-        referencedElements=logEntry.content.referencedElements
-        getTaskRunForInstanceIdCallback=getTaskRunForInstanceIdCallback
-        actionsFactory=actionsFactory
-      }}
-    {{/if}}
+    {{modals/workflow-visualiser/store-modal/audit-log-presenter/references-cell
+      referencedElements=logEntry.content.referencedElements
+      taskExecutionId=taskExecutionId
+      getTaskRunForInstanceIdCallback=getTaskRunForInstanceIdCallback
+      actionsFactory=actionsFactory
+    }}
   {{else}}
     {{modals/workflow-visualiser/store-modal/audit-log-presenter/user-log-content-cell
       content=logEntry.content
