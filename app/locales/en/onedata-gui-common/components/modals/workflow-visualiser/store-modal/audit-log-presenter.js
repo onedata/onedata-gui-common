@@ -1,6 +1,9 @@
+import referencesCell from './audit-log-presenter/references-cell';
+
 export default {
   customColumns: {
     description: 'Description',
-    relatedLogs: 'Related logs',
+    references: 'References',
   },
+  referencesCell,
 };

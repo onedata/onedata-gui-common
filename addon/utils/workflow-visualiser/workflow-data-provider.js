@@ -147,4 +147,22 @@ export default EmberObject.extend({
 
     return referencesMap;
   },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Store} store
+   * @param {Array<string>} traceIds
+   * @returns {Promise<Object<string, string>>} map traceId -> index
+   */
+  convertAtmExceptionStoreTraceIdsToIndices(store, traceIds) {
+    if (!this.executionDataFetcher) {
+      console.error(
+        'util:workflow-visualiser/workflow-data-provider#convertAtmExceptionStoreTraceIdsToIndices: executionDataFetcher is not set',
+      );
+      return reject(new Error('executionDataFetcher is not set'));
+    }
+    return this.executionDataFetcher.convertAtmExceptionStoreTraceIdsToIndices(
+      store?.instanceId,
+      traceIds
+    );
+  },
 });

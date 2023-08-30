@@ -394,8 +394,11 @@ export default EmberObject.extend(OwnerInjector, {
     return ViewTaskAuditLogAction.create({
       ownerSource: this,
       context: Object.assign({
+        actionsFactory: this,
         getAuditLogContentCallback: (...args) =>
-          this.get('workflowDataProvider').getStoreContent(...args),
+          this.workflowDataProvider.getStoreContent(...args),
+        getTaskRunForInstanceIdCallback: (...args) =>
+          this.workflowDataProvider.getTaskRunForInstanceId(...args),
       }, context),
     });
   },
@@ -419,6 +422,7 @@ export default EmberObject.extend(OwnerInjector, {
   /**
    * @param {Utils.WorkflowVisualiser.Lane} context.lane
    * @param {AtmLaneRunNumber} [context.runNumber]
+   * @param {Array<string>} [context.itemTraceIdsToHighlight]
    * @returns {Utils.WorkflowVisualiser.Actions.ViewLaneFailedItemsAction}
    */
   createViewLaneFailedItemsAction(context) {
@@ -429,6 +433,8 @@ export default EmberObject.extend(OwnerInjector, {
           this.workflowDataProvider.getStoreContent(...args),
         storeContentPresenterContext: this.workflowDataProvider
           .getStoreContentPresenterContext(),
+        convertTraceIdsToIndicesCallback: (...args) =>
+          this.workflowDataProvider.convertAtmExceptionStoreTraceIdsToIndices(...args),
       }, context),
     });
   },

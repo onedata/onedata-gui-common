@@ -1,3 +1,7 @@
+{{#if indicesToHighlight.length}}
+  <div class="alert alert-info">{{tt this "highlightedItemsInfo"}}</div>
+{{/if}}
+
 {{#if (eq itemDataSpec.type "object")}}
   {{modals/workflow-visualiser/store-modal/visible-properties-selector
     availableProperties=availableColumns
@@ -14,6 +18,7 @@
   updateStrategy="always"
   rowHeight=45
   doesOpenDetailsOnClick=true
+  initialJumpIndex=(get indicesToHighlight "0")
   as |section|
 }}
   {{#if (eq section.sectionName "tableHead")}}
@@ -36,7 +41,10 @@
         context=context
         columns=visibleColumns
         click=section.onRowClick
-        class=section.rowClassName
+        class=(concat-classes
+          section.rowClassName
+          (if (contains section.entry.index indicesToHighlight) "mark")
+        )
         dataRowId=section.dataRowId
         as |row|
       }}
@@ -50,7 +58,11 @@
       {{/component}}
     {{else}}
       <tr
-        class={{concat-classes section.rowClassName "text-danger"}}
+        class={{concat-classes
+          section.rowClassName
+          "text-danger"
+          (if (contains section.entry.index indicesToHighlight) "mark")
+        }}
         data-row-id={{section.dataRowId}}
         onclick={{section.onRowClick}}
       >

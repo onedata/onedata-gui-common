@@ -115,6 +115,16 @@ export default Component.extend(I18n, {
   allowedStoreWriteDataSpec: reads('modalOptions.allowedStoreWriteDataSpec'),
 
   /**
+   * @type {ComputedProperty<string|undefined>}
+   */
+  taskExecutionId: reads('modalOptions.taskExecutionId'),
+
+  /**
+   * @type {ComputedProperty<Array<string>|undefined>}
+   */
+  indicesToHighlight: reads('modalOptions.indicesToHighlight'),
+
+  /**
    * @type {ComputedProperty<(browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>>}
    */
   getStoreContentCallback: reads('modalOptions.getStoreContentCallback'),

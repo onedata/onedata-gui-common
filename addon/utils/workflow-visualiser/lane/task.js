@@ -25,6 +25,12 @@ export default VisualiserRecord.extend({
 
   /**
    * @virtual
+   * @type {Utils.WorkflowVisualiser.ParallelBox}
+   */
+  parent: undefined,
+
+  /**
+   * @virtual
    * @type {String}
    */
   lambdaId: undefined,

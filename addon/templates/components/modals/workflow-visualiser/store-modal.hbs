@@ -1,4 +1,6 @@
 {{!-- TODO: VFS-10331 unify modal layout in zone and provider --}}
+{{!-- TODO: VFS-11301 fade is false when indicesToHighlight is not empty as fade
+  animation breaks down randomly infinite scroll jump --}}
 {{#global-modal
   classNames=(concat-classes
     "store-modal"
@@ -7,6 +9,7 @@
   allowClose=(not isSubmitting)
   modalId=modalId
   size="lg"
+  fade=(not indicesToHighlight.length)
   as |modal|
 }}
 
@@ -76,6 +79,7 @@
       {{else if (eq store.type "auditLog")}}
         {{modals/workflow-visualiser/store-modal/audit-log-presenter
           store=store
+          taskExecutionId=(or taskExecutionId null)
           getStoreContentCallback=getStoreContentCallback
           getTaskRunForInstanceIdCallback=getTaskRunForInstanceIdCallback
           actionsFactory=actionsFactory
@@ -93,6 +97,7 @@
           store=store
           getStoreContentCallback=getStoreContentCallback
           context=storeContentPresenterContext
+          indicesToHighlight=indicesToHighlight
         }}
       {{else}}
         <p class="text-danger">{{tt this "noContentDueToUnknownStoreType"}}</p>
