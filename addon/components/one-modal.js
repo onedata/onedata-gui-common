@@ -10,7 +10,7 @@ import BsModal from 'ember-bootstrap/components/bs-modal';
 import config from 'ember-get-config';
 import { guidFor } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
-import { computed, observer } from '@ember/object';
+import { computed } from '@ember/object';
 import { or, tag } from 'ember-awesome-macros';
 import { scheduleOnce, next } from '@ember/runloop';
 import _ from 'lodash';
@@ -31,68 +31,57 @@ import _ from 'lodash';
  * @typedef {RouterTransitionInfo | AppProxyTransitionInfo} TransitionInfo
  */
 
-export default BsModal.extend({
-  tagName: '',
-
-  router: service(),
-  appProxy: service(),
+export default class OneModal extends BsModal {
+  @service router;
+  @service appProxy;
 
   /**
    * @virtual optional
    * @type {boolean | (transitionInfo: TransitionInfo) => boolean}
    */
-  shouldCloseOnTransition: true,
+  shouldCloseOnTransition = true;
 
   /**
-   * In original source code modalId depends on elementId which is null here,
-   * due to an empty tag.
    * @override
    */
-  modalId: or('id', tag `${'componentGuid'}-modal`),
+  @computed
+  get modalId() {
+    return this.id ?? `${guidFor(this)}-modal`;
+  }
 
   /**
-   * In original source code modalId depends on elementId which is null here,
-   * due to an empty tag.
-   * @override
+   * @type {string}
    */
-  backdropId: tag`${'componentGuid'}-backdrop`,
+  prevSize = undefined;
 
   /**
-   * @type {ComputedProperty<String>}
+   * @type {function}
    */
-  componentGuid: computed(function componentGuid() {
-    return guidFor(this);
-  }),
-
-  /**
-   * @type {ComputedProperty<Function>}
-   */
-  recomputeScrollShadowFunction: computed(function recomputeScrollShadowFunction() {
+  @computed
+  get recomputeScrollShadowFunction() {
     return this.recomputeScrollShadow.bind(this);
-  }),
+  }
 
   /**
-   * @type {ComputedProperty<(transition: Transition) => void>}
+   * @type {(transition: Transition) => void}
    */
-  routeChangeHandler: computed(function routeChangeHandler() {
+  @computed
+  get routeChangeHandler() {
     return (transition) => this.handleRouteChange(transition);
-  }),
+  }
 
   /**
    * @type {ComputedProperty<(event: AppProxyPropertyChangeEvent) => void>}
    */
-  appProxyPropertyChangeHandler: computed(function appProxyPropertyChangeHandler() {
+  @computed
+  get appProxyPropertyChangeHandler() {
     return (event) => this.handleAppProxyPropertyChange(event);
-  }),
-
-  sizeObserver: observer('size', function sizeObserver() {
-    // Change of modal size corrupts scroll shadow css classes, so we need to
-    // recompute them again.
-    scheduleOnce('afterRender', this, 'recomputeScrollShadow');
-  }),
+  }
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
+
+    this.set('prevSize', this.size);
 
     if (config.environment === 'test') {
       // 1ms (not 0) for animation to prevent from firing shown and hidden events
@@ -104,13 +93,26 @@ export default BsModal.extend({
     }
     this.registerRouteChangeHandler();
     this.registerAppProxyPropertyChangeHandler();
-  },
+  }
+
+  /**
+   * @override
+   */
+  didUpdateAttrs() {
+    super.didUpdateAttrs(...arguments);
+    if (this.prevSize !== this.size) {
+      this.set('prevSize', this.size);
+      // Change of modal size corrupts scroll shadow css classes, so we need to
+      // recompute them again.
+      scheduleOnce('afterRender', this, 'recomputeScrollShadow');
+    }
+  }
 
   /**
    * @override
    */
   didRender() {
-    this._super(...arguments);
+    super.didRender(...arguments);
 
     // Modals make some magic with positioning which does not fire perfect-scrollbars
     // overflow detection on render. We need to notify perfect-scrollbar about change
@@ -121,7 +123,7 @@ export default BsModal.extend({
         scrollableArea.dispatchEvent(new Event('parentrender'));
       }
     }
-  },
+  }
 
   /**
    * @override
@@ -131,25 +133,25 @@ export default BsModal.extend({
       this.unregisterRouteChangeHandler();
       this.unregisterAppProxyPropertyChangeHandler();
     } finally {
-      this._super(...arguments);
+      super.willDestroyElement(...arguments);
     }
-  },
+  }
 
   /**
    * @override
    */
   show() {
-    this._super(...arguments);
+    super.show(...arguments);
     scheduleOnce('afterRender', this, 'toggleListeners', true);
-  },
+  }
 
   /**
    * @override
    */
   hide() {
-    this._super(...arguments);
+    super.hide(...arguments);
     this.toggleListeners(false);
-  },
+  }
 
   recomputeScrollShadow() {
     const modalElement = this.get('modalElement');
@@ -167,7 +169,7 @@ export default BsModal.extend({
         modalDialog.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-bottom');
       }
     }
-  },
+  }
 
   toggleListeners(enabled) {
     const {
@@ -186,23 +188,23 @@ export default BsModal.extend({
         }
       }
     }
-  },
+  }
 
   registerRouteChangeHandler() {
     this.router.on('routeDidChange', this.routeChangeHandler);
-  },
+  }
 
   unregisterRouteChangeHandler() {
     this.router.off('routeDidChange', this.routeChangeHandler);
-  },
+  }
 
   registerAppProxyPropertyChangeHandler() {
     this.appProxy.registerPropertyChangeListener(this.appProxyPropertyChangeHandler);
-  },
+  }
 
   unregisterAppProxyPropertyChangeHandler() {
     this.appProxy.unregisterPropertyChangeListener(this.appProxyPropertyChangeHandler);
-  },
+  }
 
   /**
    * @param {Transition} transition
@@ -217,7 +219,7 @@ export default BsModal.extend({
     if (this.calculateShouldCloseOnTransition(transitionInfo)) {
       this.send('close');
     }
-  },
+  }
 
   /**
    * @param {AppProxyPropertyChangeEvent} event
@@ -239,7 +241,7 @@ export default BsModal.extend({
     if (this.calculateShouldCloseOnTransition(transitionInfo)) {
       this.send('close');
     }
-  },
+  }
 
   /**
    * Removes info about properties which values are deep equal from
@@ -256,7 +258,7 @@ export default BsModal.extend({
       }
     }
     return { ...event, changedProperties: realChangedProperties };
-  },
+  }
 
   /**
    * @param {TransitionInfo} transitionInfo
@@ -265,5 +267,5 @@ export default BsModal.extend({
   calculateShouldCloseOnTransition(transitionInfo) {
     return typeof this.shouldCloseOnTransition === 'function' ?
       this.shouldCloseOnTransition(transitionInfo) : this.shouldCloseOnTransition;
-  },
-});
+  }
+}

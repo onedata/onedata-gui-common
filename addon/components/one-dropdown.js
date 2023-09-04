@@ -8,42 +8,42 @@
 
 import PowerSelect from 'ember-power-select/components/power-select';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import { observer, getProperties } from '@ember/object';
 import { inject as service } from '@ember/service';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
-export default PowerSelect.extend({
-  scrollState: service(),
-  media: service(),
+export default class OneDropdown extends PowerSelect {
+  @service scrollState;
+  @service media;
 
-  scrollObserver: observer('scrollState.lastScrollEvent', function scrollObserver() {
-    this.handlePageScroll();
-  }),
+  /**
+   * @type {ScrollListener}
+   */
+  scrollListener = undefined;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
+    this.set('scrollListener', () => this.handlePageScroll());
+    this.scrollState.addScrollListener(this.scrollListener);
+  }
 
-    // Enable observers
-    this.get('scrollState.lastScrollEvent');
-  },
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.scrollState.removeScrollListener(this.scrollListener);
+  }
 
   updateState() {
-    return safeExec(this, () => this._super(...arguments));
-  },
+    return safeExec(this, () => super.updateState(...arguments));
+  }
 
   handlePageScroll() {
-    if (!this.get('renderInPlace') && this.get('publicAPI.isOpen')) {
-      const {
-        isTablet,
-        isMobile,
-      } = getProperties(this.get('media'), 'isTablet', 'isMobile');
-      if (isTablet || isMobile) {
+    if (!this.renderInPlace && this.publicAPI.isOpen) {
+      if (this.media.isTablet || this.media.isMobile) {
         // In mobile mode dropdown may overlay top bar of the GUI. We need to hide dropdown
         // on scroll.
-        (this.get('publicAPI.actions.close') || notImplementedIgnore)();
+        (this.publicAPI.actions?.close || notImplementedIgnore)();
       } else {
-        (this.get('publicAPI.actions.reposition') || notImplementedIgnore)();
+        (this.publicAPI.actions?.reposition || notImplementedIgnore)();
       }
     }
-  },
-});
+  }
+}

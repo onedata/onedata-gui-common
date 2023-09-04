@@ -1,15 +1,14 @@
 <span class="control-label">{{tt this "resolution"}}:</span>
-{{#one-dropdown
-  triggerClass="small time-resolutions-trigger"
-  dropdownClass="small time-resolutions-dropdown"
-  options=timeResolutionOptions
-  onchange=(action "changeTimeResolution")
-  selected=(find-by "value" selectedTimeResolution timeResolutionOptions)
-  searchEnabled=false
+<OneDropdown
+  @triggerClass="small time-resolutions-trigger"
+  @dropdownClass="small time-resolutions-dropdown"
+  @options={{timeResolutionOptions}}
+  @onChange={{action "changeTimeResolution"}}
+  @selected={{find-by "value" selectedTimeResolution timeResolutionOptions}}
   as |option|
-}}
+>
   {{option.label}}
-{{/one-dropdown}}
+</OneDropdown>
 <div class="btn-group navigation-buttons">
   {{#one-button
     class="show-older-btn"
