@@ -11,7 +11,6 @@ import config from 'ember-get-config';
 import { guidFor } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
-import { or, tag } from 'ember-awesome-macros';
 import { scheduleOnce, next } from '@ember/runloop';
 import _ from 'lodash';
 
