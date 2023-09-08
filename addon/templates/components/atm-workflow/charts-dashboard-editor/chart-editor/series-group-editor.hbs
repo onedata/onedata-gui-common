@@ -2,6 +2,7 @@
   {{atm-workflow/charts-dashboard-editor/chart-editor/series-group-editor-form
     seriesGroup=chartElement
     actionsFactory=actionsFactory
+    isReadOnly=isReadOnly
   }}
 </div>
 <div class="details-column">
@@ -11,6 +12,7 @@
       chart=chart
       seriesSource=chartElement
       actionsFactory=actionsFactory
+      isReadOnly=isReadOnly
     }}
   {{else}}
     <p class="empty-details-info">{{tt this "noSeriesAttached"}}</p>

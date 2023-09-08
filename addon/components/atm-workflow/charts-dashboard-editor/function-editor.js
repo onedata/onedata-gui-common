@@ -47,6 +47,12 @@ export default Component.extend({
   actionsFactory: undefined,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EdgeScroller}
    */
   edgeScroller: undefined,

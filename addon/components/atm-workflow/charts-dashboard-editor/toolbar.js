@@ -48,6 +48,12 @@ export default Component.extend(I18n, {
   onRemoveDashboard: undefined,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
    * @type {boolean}
    */
   isRemoveDashboardConfirmationOpened: false,

@@ -104,6 +104,12 @@ export default PerfectScrollbarElement.extend({
   hideActions: false,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EdgeScroller}
    */
   edgeScroller: undefined,

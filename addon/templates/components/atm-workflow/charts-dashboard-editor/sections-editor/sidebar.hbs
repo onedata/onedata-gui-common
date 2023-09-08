@@ -2,11 +2,13 @@
   {{atm-workflow/charts-dashboard-editor/sections-editor/section-details-editor
     section=selectedElement
     actionsFactory=actionsFactory
+    isReadOnly=isReadOnly
   }}
 {{else if (eq selectedElement.elementType ElementType.Chart)}}
   {{atm-workflow/charts-dashboard-editor/sections-editor/chart-details-editor
     chart=selectedElement
     actionsFactory=actionsFactory
+    isReadOnly=isReadOnly
   }}
 {{else}}
   <p class="no-selection-info">{{tt this "selectElementForMore"}}</p>

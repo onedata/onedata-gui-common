@@ -8,6 +8,7 @@
         chartFunction=outputFunction
         executionContext=executionContext
         actionsFactory=actionsFactory
+        isReadOnly=isReadOnly
       }}
       <div class="detached-functions-container">
         {{#each detachedFunctions as |detachedFunction|}}
@@ -15,6 +16,7 @@
             chartFunction=detachedFunction
             executionContext=executionContext
             actionsFactory=actionsFactory
+            isReadOnly=isReadOnly
           }}
         {{/each}}
       </div>

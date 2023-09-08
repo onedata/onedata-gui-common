@@ -65,6 +65,12 @@ export default Component.extend(I18n, {
   actionsFactory: undefined,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
    * @type {ComputedProperty<TimeSeriesRef>}
    */
   prefixedTimeSeriesRef: reads('series.prefixedTimeSeriesRef'),
@@ -378,6 +384,11 @@ const Form = FormFieldsRootGroup.extend({
    * @override
    */
   size: 'sm',
+
+  /**
+   * @override
+   */
+  isEnabled: not('component.isReadOnly'),
 
   /**
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Chart>}

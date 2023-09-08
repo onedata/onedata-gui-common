@@ -5,6 +5,7 @@
   {{atm-workflow/charts-dashboard-editor/sections-editor/section
     section=rootSection
     actionsFactory=actionsFactory
+    isReadOnly=isReadOnly
   }}
 {{/perfect-scrollbar-element}}
 {{atm-workflow/charts-dashboard-editor/sections-editor/sidebar
@@ -12,4 +13,5 @@
   selectedElement=selectedElement
   hasValidationErrors=(bool rootSection.validationErrors.length)
   actionsFactory=actionsFactory
+  isReadOnly=isReadOnly
 }}

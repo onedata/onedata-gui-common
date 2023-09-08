@@ -39,6 +39,12 @@ export default Component.extend({
   dataSources: undefined,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ViewState}
    */
   viewState: undefined,

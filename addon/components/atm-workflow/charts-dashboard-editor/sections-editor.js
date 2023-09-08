@@ -36,6 +36,12 @@ export default Component.extend({
 
   /**
    * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
+   * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.SectionElement | null}
    */
   selectedElement: undefined,

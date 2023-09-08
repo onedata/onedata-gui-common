@@ -34,6 +34,12 @@ export default Component.extend({
   actionsFactory: undefined,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
    * @type {ComputedProperty<FunctionExecutionContext>}
    */
   functionExecutionContext: conditional(

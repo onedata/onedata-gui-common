@@ -10,7 +10,7 @@ import Component from '@ember/component';
 import { computed, observer, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { tag, eq } from 'ember-awesome-macros';
+import { tag, eq, not } from 'ember-awesome-macros';
 import _ from 'lodash';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
@@ -46,6 +46,12 @@ export default Component.extend(I18n, {
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
@@ -283,6 +289,11 @@ const Form = FormFieldsRootGroup.extend({
    * @override
    */
   size: 'sm',
+
+  /**
+   * @override
+   */
+  isEnabled: not('component.isReadOnly'),
 
   /**
    * @override

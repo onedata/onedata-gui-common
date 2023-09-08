@@ -49,6 +49,12 @@ export default Component.extend(I18n, {
   seriesSource: undefined,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
    * @type {Array<SeriesListItemModel>}
    */
   itemModels: undefined,

@@ -9,7 +9,7 @@
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { not } from 'ember-awesome-macros';
+import { not, and } from 'ember-awesome-macros';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor/section';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -51,6 +51,12 @@ export default OneDraggableObject.extend(I18n, {
   actionsFactory: undefined,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
    * @type {boolean}
    */
   isHovered: false,
@@ -59,7 +65,7 @@ export default OneDraggableObject.extend(I18n, {
    * For one-draggable-object
    * @override
    */
-  isDraggable: not('section.isRoot'),
+  isDraggable: and(not('section.isRoot'), not('isReadOnly')),
 
   /**
    * For one-draggable-object

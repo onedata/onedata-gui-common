@@ -6,7 +6,7 @@
   {{#if validationErrorsMessage}}
     {{warning-icon tooltipText=validationErrorsMessage}}
   {{/if}}
-  {{#if (not hideActions)}}
+  {{#if (and (not isReadOnly) (not hideActions))}}
     <div class="actions">
       {{#if allowNesting}}
         {{#one-icon
@@ -42,8 +42,10 @@
       {{atm-workflow/charts-dashboard-editor/chart-editor/elements-list-item
         itemModel=subitemModel
         allowNesting=allowNesting
+        isDraggable=isDraggable
         hideActions=hideActions
         actionsFactory=actionsFactory
+        isReadOnly=isReadOnly
       }}
     {{/each}}
   </ol>

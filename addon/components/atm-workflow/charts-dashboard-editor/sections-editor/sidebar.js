@@ -42,6 +42,12 @@ export default PerfectScrollbarElement.extend(I18n, {
   actionsFactory: undefined,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
    * @type {Object<string, Utils.AtmWorkflow.ChartsDashboardEditor.ElementType>}
    */
   ElementType,

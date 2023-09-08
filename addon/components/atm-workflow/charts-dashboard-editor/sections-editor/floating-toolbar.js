@@ -38,26 +38,39 @@ export default Component.extend(I18n, {
   actionsFactory: undefined,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
    * @type {ComputedProperty<Array<{ name: string, icon: string }>>}
    */
-  actionsToRender: computed('model.elementType', function actionsToRender() {
-    const actions = [{
-      name: 'duplicate',
-      icon: 'browser-copy',
-    }, {
-      name: 'remove',
-      icon: 'browser-delete',
-    }];
+  actionsToRender: computed(
+    'model.elementType',
+    'isReadOnly',
+    function actionsToRender() {
+      const actions = [];
+      if (!this.isReadOnly) {
+        actions.push({
+          name: 'duplicate',
+          icon: 'browser-copy',
+        }, {
+          name: 'remove',
+          icon: 'browser-delete',
+        });
+      }
 
-    if (this.model?.elementType === ElementType.Chart) {
-      actions.unshift({
-        name: 'editContent',
-        icon: 'rename',
-      });
+      if (this.model?.elementType === ElementType.Chart) {
+        actions.unshift({
+          name: 'editContent',
+          icon: 'rename',
+        });
+      }
+
+      return actions;
     }
-
-    return actions;
-  }),
+  ),
 
   actions: {
     /**

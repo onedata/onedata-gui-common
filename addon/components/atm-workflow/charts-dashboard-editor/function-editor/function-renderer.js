@@ -10,7 +10,7 @@ import EmberObject, { set, computed, observer, defineProperty } from '@ember/obj
 import { inject as service } from '@ember/service';
 import { dasherize } from '@ember/string';
 import { reads } from '@ember/object/computed';
-import { not } from 'ember-awesome-macros';
+import { not, and } from 'ember-awesome-macros';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import {
   getFunctionNameTranslation,
@@ -34,7 +34,7 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
 export default OneDraggableObject.extend(I18n, {
   layout,
   classNames: ['function-renderer'],
-  classNameBindings: ['chartFunction.isRoot:root-function'],
+  classNameBindings: ['chartFunction.isRoot:root-function', 'isReadOnly:read-only'],
   attributeBindings: ['chartFunction.id:data-function-id'],
 
   i18n: service(),
@@ -62,6 +62,12 @@ export default OneDraggableObject.extend(I18n, {
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
    */
   actionsFactory: undefined,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
 
   /**
    * @type {ComputedProperty<Array<FunctionRendererArgument>>}
@@ -126,7 +132,7 @@ export default OneDraggableObject.extend(I18n, {
    * For one-draggable-object
    * @override
    */
-  isDraggable: not('chartFunction.isRoot'),
+  isDraggable: and(not('isReadOnly'), not('chartFunction.isRoot')),
 
   /**
    * For one-draggable-object
@@ -398,7 +404,8 @@ export default OneDraggableObject.extend(I18n, {
       action.execute();
     },
     validateOnAdderDragEvent() {
-      return !this.isInDraggedChartFunction &&
+      return !this.isReadOnly &&
+        !this.isInDraggedChartFunction &&
         ![...this.chartFunction.attachedFunctions()]
         .includes(this.draggedChartFunction);
     },

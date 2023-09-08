@@ -2,6 +2,7 @@
   {{atm-workflow/charts-dashboard-editor/chart-editor/axis-editor-form
     axis=chartElement
     actionsFactory=actionsFactory
+    isReadOnly=isReadOnly
   }}
 {{/perfect-scrollbar-element}}
 <div class="details-column">
@@ -21,6 +22,7 @@
           chart=chart
           seriesSource=chartElement
           actionsFactory=actionsFactory
+          isReadOnly=isReadOnly
         }}
       {{else}}
         <p class="empty-details-info">{{tt this "noSeriesAttached"}}</p>
@@ -35,6 +37,7 @@
           outputFunction=chartElement.valueProvider
           executionContext="axis"
           actionsFactory=actionsFactory
+          isReadOnly=isReadOnly
         }}
       {{/render-later}}
     {{/tab.pane}}
