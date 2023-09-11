@@ -9,7 +9,6 @@
 import PowerSelect from 'ember-power-select/components/power-select';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { inject as service } from '@ember/service';
-import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default class OneDropdown extends PowerSelect {
   @service scrollState;
@@ -40,9 +39,9 @@ export default class OneDropdown extends PowerSelect {
       if (this.media.isTablet || this.media.isMobile) {
         // In mobile mode dropdown may overlay top bar of the GUI. We need to hide dropdown
         // on scroll.
-        (this.publicAPI.actions?.close || notImplementedIgnore)();
+        this.publicAPI.actions?.close?.();
       } else {
-        (this.publicAPI.actions?.reposition || notImplementedIgnore)();
+        this.publicAPI.actions?.reposition?.();
       }
     }
   }

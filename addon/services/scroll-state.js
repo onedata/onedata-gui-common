@@ -35,7 +35,13 @@ export default Service.extend({
    */
   scrollOccurred(scrollEvent) {
     this.set('lastScrollEvent', scrollEvent);
-    this.scrollListeners.forEach((listener) => listener(scrollEvent));
+    this.scrollListeners.forEach((listener) => {
+      try {
+        listener(scrollEvent);
+      } catch (error) {
+        console.error('Error occurred during scroll event handling.', error);
+      }
+    });
   },
 
   /**

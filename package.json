@@ -50,7 +50,6 @@
     "autosize": "5.0.2",
     "bootstrap-sass": "3.4.3",
     "broccoli-asset-rev": "git+https://github.com/joankaradimov/broccoli-asset-rev.git#24c7816e2c95494d3e23ca9d757255b637aa0bd1",
-    "caniuse-lite": "1.0.30001525",
     "chai-dom": "1.11.0",
     "chartist-plugin-legend": "0.6.2",
     "echarts": "5.4.1",

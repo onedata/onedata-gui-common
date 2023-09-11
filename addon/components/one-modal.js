@@ -70,7 +70,7 @@ export default class OneModal extends BsModal {
   }
 
   /**
-   * @type {ComputedProperty<(event: AppProxyPropertyChangeEvent) => void>}
+   * @type {(event: AppProxyPropertyChangeEvent) => void}
    */
   @computed
   get appProxyPropertyChangeHandler() {
