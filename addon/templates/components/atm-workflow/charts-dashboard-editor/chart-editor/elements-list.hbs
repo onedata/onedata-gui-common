@@ -4,12 +4,12 @@
       itemModel=itemModel
       allowNesting=allowNesting
       hideActions=hideActions
-      isDraggable=allowDragDrop
-      actionsFactory=actionsFactory
+      isDraggable=allowItemsDragDrop
+      editorContext=editorContext
     }}
   {{/each}}
 </ol>
-{{#if dropZones.length}}
+{{#if (and (not editorContext.isReadOnly) dropZones.length)}}
   <div class="drop-zones-container">
     {{#each dropZones as |dropZone|}}
       <div

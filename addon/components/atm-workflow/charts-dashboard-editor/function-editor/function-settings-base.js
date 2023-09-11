@@ -13,7 +13,7 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { dasherize } from '@ember/string';
 import { getOwner } from '@ember/application';
-import { tag } from 'ember-awesome-macros';
+import { tag, not } from 'ember-awesome-macros';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/function-editor/function-settings-base';
@@ -38,9 +38,9 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @virtual optional
@@ -66,7 +66,7 @@ export default Component.extend(I18n, {
    * @returns {void}
    */
   onEditionInterrupted() {
-    this.actionsFactory.interruptActiveChangeElementPropertyAction();
+    this.editorContext.actionsFactory.interruptActiveChangeElementPropertyAction();
   },
 });
 
@@ -94,6 +94,11 @@ export const SettingsForm = FormFieldsRootGroup.extend({
    * @override
    */
   size: 'sm',
+
+  /**
+   * @override
+   */
+  isEnabled: not('component.editorContext.isReadOnly'),
 
   /**
    * @override

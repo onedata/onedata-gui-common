@@ -1,16 +1,18 @@
-<div class="list-header">
-  {{#one-button
-    class="add-axis-btn"
-    type="primary"
-    size="sm"
-    onClick=(action "addAxis")
-  }}
-    {{one-icon icon="plus"}}
-    <span class="text">{{tt this "addAxis"}}</span>
-  {{/one-button}}
-</div>
+{{#if (not editorContext.isReadOnly)}}
+  <div class="list-header">
+    {{#one-button
+      class="add-axis-btn"
+      type="primary"
+      size="sm"
+      onClick=(action "addAxis")
+    }}
+      {{one-icon icon="plus"}}
+      <span class="text">{{tt this "addAxis"}}</span>
+    {{/one-button}}
+  </div>
+{{/if}}
 {{atm-workflow/charts-dashboard-editor/chart-editor/elements-list
   itemModels=itemModels
   allowDragDrop=true
-  actionsFactory=actionsFactory
+  editorContext=editorContext
 }}

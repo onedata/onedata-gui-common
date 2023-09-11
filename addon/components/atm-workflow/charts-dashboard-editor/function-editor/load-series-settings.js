@@ -104,7 +104,7 @@ export default FunctionSettingsBase.extend({
         break;
     }
 
-    const action = this.actionsFactory.createChangeElementPropertyAction({
+    const action = this.editorContext.actionsFactory.createChangeElementPropertyAction({
       element: this.chartFunction,
       propertyName,
       newValue: normalizedValue,

@@ -63,7 +63,7 @@ export default FunctionSettingsBase.extend({
         value ? ReplaceEmptyStrategy.UsePrevious : ReplaceEmptyStrategy.UseFallback;
     }
 
-    const action = this.actionsFactory.createChangeElementPropertyAction({
+    const action = this.editorContext.actionsFactory.createChangeElementPropertyAction({
       element: this.chartFunction,
       propertyName: isFallbackValueField ? 'fallbackValue' : 'strategy',
       newValue: normalizedValue,

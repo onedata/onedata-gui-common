@@ -1,24 +1,30 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find, click, findAll } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
-import { createModelFromSpec, ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import {
+  createModelFromSpec,
+  ElementType,
+  EditorContext,
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 import { drag } from '../../../../../helpers/drag-drop';
 
 describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-editor/axes-list', function () {
   setupRenderingTest();
 
+  beforeEach(function () {
+    this.set('editorContext', EditorContext.create());
+  });
+
   it('has working "add axis" button', async function () {
     const executeSpy = sinon.spy();
-    this.setProperties({
-      chart: createChart(),
-      actionsFactory: {
-        createAddElementAction: sinon.spy(() => ({ execute: executeSpy })),
-      },
+    this.set('editorContext.actionsFactory', {
+      createAddElementAction: sinon.spy(() => ({ execute: executeSpy })),
     });
+    this.set('chart', createChart());
     await renderComponent();
 
     const btn = find('.add-axis-btn');
@@ -27,7 +33,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
 
     await click(btn);
 
-    expect(this.actionsFactory.createAddElementAction).to.be.calledWith({
+    expect(this.editorContext.actionsFactory.createAddElementAction).to.be.calledWith({
       newElementType: ElementType.Axis,
       targetElement: this.chart,
     });
@@ -73,17 +79,15 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
   it('shows working actions per item', async function () {
     const duplicateExecuteSpy = sinon.spy();
     const removeExecuteSpy = sinon.spy();
-    this.setProperties({
-      chart: createChart({
-        yAxes: [{
-          id: '1',
-        }],
-      }),
-      actionsFactory: {
-        createDuplicateElementAction: sinon.spy(() => ({ execute: duplicateExecuteSpy })),
-        createRemoveElementAction: sinon.spy(() => ({ execute: removeExecuteSpy })),
-      },
+    this.set('editorContext.actionsFactory', {
+      createDuplicateElementAction: sinon.spy(() => ({ execute: duplicateExecuteSpy })),
+      createRemoveElementAction: sinon.spy(() => ({ execute: removeExecuteSpy })),
     });
+    this.set('chart', createChart({
+      yAxes: [{
+        id: '1',
+      }],
+    }));
     await renderComponent();
 
     const actions = findAll('.elements-list-item .action');
@@ -97,13 +101,14 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
 
     await click(actions[0]);
     expect(duplicateExecuteSpy).to.be.calledOnce;
-    expect(this.actionsFactory.createDuplicateElementAction).to.be.calledWith({
-      elementToDuplicate: this.chart.axes[0],
-    });
+    expect(this.editorContext.actionsFactory.createDuplicateElementAction)
+      .to.be.calledWith({
+        elementToDuplicate: this.chart.axes[0],
+      });
 
     await click(actions[1]);
     expect(removeExecuteSpy).to.be.calledOnce;
-    expect(this.actionsFactory.createRemoveElementAction).to.be.calledWith({
+    expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.calledWith({
       elementToRemove: this.chart.axes[0],
     });
   });
@@ -139,7 +144,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
 
 async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/chart-editor/axes-list
-    actionsFactory=actionsFactory
+    editorContext=editorContext
     chart=chart
   }}`);
 }

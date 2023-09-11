@@ -61,9 +61,9 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @virtual
@@ -145,7 +145,7 @@ export default Component.extend(I18n, {
 
   actions: {
     addFunction(newFunctionName) {
-      const action = this.actionsFactory.createAddFunctionAction({
+      const action = this.editorContext.actionsFactory.createAddFunctionAction({
         newFunctionName,
         targetFunction: this.parentFunction,
         targetArgumentName: this.parentFunctionArgumentName,

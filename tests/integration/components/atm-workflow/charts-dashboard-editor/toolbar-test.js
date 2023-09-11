@@ -6,6 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import {
   createNewChart,
+  EditorContext,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import { set } from '@ember/object';
 
@@ -170,9 +171,11 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/toolbar
     const executeSpy = sinon.spy();
     this.setProperties({
       editedChart: createNewChart(this.owner.lookup('service:i18n')),
-      actionsFactory: {
-        createEndChartContentEditionAction: () => ({ execute: executeSpy }),
-      },
+      editorContext: EditorContext.create({
+        actionsFactory: {
+          createEndChartContentEditionAction: () => ({ execute: executeSpy }),
+        },
+      }),
     });
     await renderComponent();
 
@@ -188,7 +191,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/toolbar
 async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/toolbar
     undoManager=undoManager
-    actionsFactory=actionsFactory
+    editorContext=editorContext
     editedChart=editedChart
     onRemoveDashboard=onRemoveDashboard
   }}`);

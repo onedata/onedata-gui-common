@@ -9,6 +9,7 @@ import {
   createNewSeries,
   createNewSeriesGroup,
   createNewAxis,
+  EditorContext,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 
 describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-editor/elements-editor', function () {
@@ -20,11 +21,13 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     );
     this.setProperties({
       i18n: this.owner.lookup('service:i18n'),
-      actionsFactory: {
-        createSelectElementAction: ({ elementToSelect, elementsToDeselect }) => ({
-          execute: () => selectSpy(elementToSelect, elementsToDeselect),
-        }),
-      },
+      editorContext: EditorContext.create({
+        actionsFactory: {
+          createSelectElementAction: ({ elementToSelect, elementsToDeselect }) => ({
+            execute: () => selectSpy(elementToSelect, elementsToDeselect),
+          }),
+        },
+      }),
       selectSpy,
     });
   });
@@ -187,6 +190,6 @@ async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/chart-editor/elements-editor
     chart=chart
     selectedElement=selectedElement
-    actionsFactory=actionsFactory
+    editorContext=editorContext
   }}`);
 }

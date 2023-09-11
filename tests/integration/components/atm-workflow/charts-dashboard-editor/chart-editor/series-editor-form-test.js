@@ -7,6 +7,7 @@ import { setProperties } from '@ember/object';
 import {
   createChartModelFromSpec,
   createNewSeries,
+  EditorContext,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import OneDropdownHelper from '../../../../../helpers/one-dropdown';
 
@@ -18,40 +19,43 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
   setupRenderingTest();
 
   beforeEach(function () {
-    this.set('chart', createChartModelFromSpec({
-      yAxes: [{
-        id: 'a1',
-        name: 'axis1',
-      }, {
-        id: 'a2',
-        name: 'axis2',
-      }],
-      seriesGroupBuilders: [{
-        builderType: 'static',
-        builderRecipe: {
-          seriesGroupTemplate: {
-            id: 'g1',
-            name: 'group1',
-            subgroups: [{
-              id: 'g12',
-              name: 'group12',
+    this.setProperties({
+      chart: createChartModelFromSpec({
+        yAxes: [{
+          id: 'a1',
+          name: 'axis1',
+        }, {
+          id: 'a2',
+          name: 'axis2',
+        }],
+        seriesGroupBuilders: [{
+          builderType: 'static',
+          builderRecipe: {
+            seriesGroupTemplate: {
+              id: 'g1',
+              name: 'group1',
               subgroups: [{
-                id: 'g13',
-                name: 'group123',
+                id: 'g12',
+                name: 'group12',
+                subgroups: [{
+                  id: 'g13',
+                  name: 'group123',
+                }],
               }],
-            }],
+            },
           },
-        },
-      }, {
-        builderType: 'static',
-        builderRecipe: {
-          seriesGroupTemplate: {
-            id: 'g2',
-            name: 'group2',
+        }, {
+          builderType: 'static',
+          builderRecipe: {
+            seriesGroupTemplate: {
+              id: 'g2',
+              name: 'group2',
+            },
           },
-        },
-      }],
-    }));
+        }],
+      }),
+      editorContext: EditorContext.create(),
+    });
   });
 
   it('has class "series-editor-form"', async function () {
@@ -171,5 +175,6 @@ async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/chart-editor/series-editor-form
     series=series
     chart=chart
+    editorContext=editorContext
   }}`);
 }

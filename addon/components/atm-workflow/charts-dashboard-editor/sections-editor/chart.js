@@ -9,7 +9,7 @@
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { reads } from '@ember/object/computed';
-import { equal } from 'ember-awesome-macros';
+import { equal, not } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor/chart';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
@@ -49,9 +49,9 @@ export default OneDraggableObject.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @type {boolean}
@@ -62,7 +62,7 @@ export default OneDraggableObject.extend(I18n, {
    * For one-draggable-object
    * @override
    */
-  isDraggable: true,
+  isDraggable: not('editorContext.isReadOnly'),
 
   /**
    * For one-draggable-object
@@ -128,7 +128,7 @@ export default OneDraggableObject.extend(I18n, {
   click(event) {
     this._super(...arguments);
     if (isDirectlyClicked(event)) {
-      const action = this.actionsFactory
+      const action = this.editorContext.actionsFactory
         .createSelectElementAction({ elementToSelect: this.chart });
       action.execute();
     }
@@ -151,7 +151,7 @@ export default OneDraggableObject.extend(I18n, {
      * @returns {void}
      */
     async acceptDraggedElement(placement, draggedElement) {
-      const action = this.actionsFactory.createMoveElementAction({
+      const action = this.editorContext.actionsFactory.createMoveElementAction({
         movedElement: draggedElement,
         newParent: this.chart.parent,
         newPosition: {
@@ -166,7 +166,7 @@ export default OneDraggableObject.extend(I18n, {
      * @returns {void}
      */
     editContent() {
-      const action = this.actionsFactory.createEditChartContentAction({
+      const action = this.editorContext.actionsFactory.createEditChartContentAction({
         chart: this.chart,
       });
       action.execute();

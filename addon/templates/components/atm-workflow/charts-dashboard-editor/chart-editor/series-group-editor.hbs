@@ -1,7 +1,7 @@
 <div class="form-column">
   {{atm-workflow/charts-dashboard-editor/chart-editor/series-group-editor-form
     seriesGroup=chartElement
-    actionsFactory=actionsFactory
+    editorContext=editorContext
   }}
 </div>
 <div class="details-column">
@@ -10,7 +10,7 @@
     {{atm-workflow/charts-dashboard-editor/chart-editor/series-list
       chart=chart
       seriesSource=chartElement
-      actionsFactory=actionsFactory
+      editorContext=editorContext
     }}
   {{else}}
     <p class="empty-details-info">{{tt this "noSeriesAttached"}}</p>

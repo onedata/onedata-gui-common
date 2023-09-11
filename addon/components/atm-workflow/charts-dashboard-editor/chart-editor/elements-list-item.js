@@ -37,9 +37,9 @@ export default OneDraggableObject.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @virtual optional
@@ -77,7 +77,7 @@ export default OneDraggableObject.extend(I18n, {
       if (!isDirectlyClicked(event)) {
         return;
       }
-      const action = this.actionsFactory.createSelectElementAction({
+      const action = this.editorContext.actionsFactory.createSelectElementAction({
         elementToSelect: this.itemModel.item,
       });
       action.execute();
@@ -87,20 +87,20 @@ export default OneDraggableObject.extend(I18n, {
         return;
       }
 
-      const action = this.actionsFactory.createAddElementAction({
+      const action = this.editorContext.actionsFactory.createAddElementAction({
         newElementType: this.itemModel.item.elementType,
         targetElement: this.itemModel.item,
       });
       action.execute();
     },
     duplicate() {
-      const action = this.actionsFactory.createDuplicateElementAction({
+      const action = this.editorContext.actionsFactory.createDuplicateElementAction({
         elementToDuplicate: this.itemModel.item,
       });
       action.execute();
     },
     remove() {
-      const action = this.actionsFactory.createRemoveElementAction({
+      const action = this.editorContext.actionsFactory.createRemoveElementAction({
         elementToRemove: this.itemModel.item,
       });
       action.execute();

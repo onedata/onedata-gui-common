@@ -33,38 +33,45 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @type {ComputedProperty<Array<{ name: string, icon: string }>>}
    */
-  actionsToRender: computed('model.elementType', function actionsToRender() {
-    const actions = [{
-      name: 'duplicate',
-      icon: 'browser-copy',
-    }, {
-      name: 'remove',
-      icon: 'browser-delete',
-    }];
+  actionsToRender: computed(
+    'model.elementType',
+    'editorContext.isReadOnly',
+    function actionsToRender() {
+      const actions = [];
+      if (!this.editorContext.isReadOnly) {
+        actions.push({
+          name: 'duplicate',
+          icon: 'browser-copy',
+        }, {
+          name: 'remove',
+          icon: 'browser-delete',
+        });
+      }
 
-    if (this.model?.elementType === ElementType.Chart) {
-      actions.unshift({
-        name: 'editContent',
-        icon: 'rename',
-      });
+      if (this.model?.elementType === ElementType.Chart) {
+        actions.unshift({
+          name: 'editContent',
+          icon: 'rename',
+        });
+      }
+
+      return actions;
     }
-
-    return actions;
-  }),
+  ),
 
   actions: {
     /**
      * @returns {void}
      */
     editContent() {
-      const action = this.actionsFactory.createEditChartContentAction({
+      const action = this.editorContext.actionsFactory.createEditChartContentAction({
         chart: this.model,
       });
       action.execute();
@@ -74,7 +81,7 @@ export default Component.extend(I18n, {
      * @returns {void}
      */
     duplicate() {
-      const action = this.actionsFactory.createDuplicateElementAction({
+      const action = this.editorContext.actionsFactory.createDuplicateElementAction({
         elementToDuplicate: this.model,
       });
       action.execute();
@@ -84,7 +91,7 @@ export default Component.extend(I18n, {
      * @returns {void}
      */
     remove() {
-      const action = this.actionsFactory.createRemoveElementAction({
+      const action = this.editorContext.actionsFactory.createRemoveElementAction({
         elementToRemove: this.model,
       });
       action.execute();

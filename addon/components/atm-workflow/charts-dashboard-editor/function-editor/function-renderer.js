@@ -10,7 +10,7 @@ import EmberObject, { set, computed, observer, defineProperty } from '@ember/obj
 import { inject as service } from '@ember/service';
 import { dasherize } from '@ember/string';
 import { reads } from '@ember/object/computed';
-import { not } from 'ember-awesome-macros';
+import { not, and } from 'ember-awesome-macros';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import {
   getFunctionNameTranslation,
@@ -34,7 +34,7 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-
 export default OneDraggableObject.extend(I18n, {
   layout,
   classNames: ['function-renderer'],
-  classNameBindings: ['chartFunction.isRoot:root-function'],
+  classNameBindings: ['chartFunction.isRoot:root-function', 'editorContext.isReadOnly:read-only'],
   attributeBindings: ['chartFunction.id:data-function-id'],
 
   i18n: service(),
@@ -59,9 +59,9 @@ export default OneDraggableObject.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @type {ComputedProperty<Array<FunctionRendererArgument>>}
@@ -126,7 +126,7 @@ export default OneDraggableObject.extend(I18n, {
    * For one-draggable-object
    * @override
    */
-  isDraggable: not('chartFunction.isRoot'),
+  isDraggable: and(not('editorContext.isReadOnly'), not('chartFunction.isRoot')),
 
   /**
    * For one-draggable-object
@@ -388,17 +388,18 @@ export default OneDraggableObject.extend(I18n, {
       set(this.adderOpenState[argumentName], index, normalizedNewState);
     },
     removeFunction() {
-      const action = this.actionsFactory
+      const action = this.editorContext.actionsFactory
         .createRemoveFunctionAction({ functionToRemove: this.chartFunction });
       action.execute();
     },
     detachFunction(chartFunctionToDetach) {
-      const action = this.actionsFactory
+      const action = this.editorContext.actionsFactory
         .createDetachArgumentFunctionAction({ functionToDetach: chartFunctionToDetach });
       action.execute();
     },
     validateOnAdderDragEvent() {
-      return !this.isInDraggedChartFunction &&
+      return !this.editorContext.isReadOnly &&
+        !this.isInDraggedChartFunction &&
         ![...this.chartFunction.attachedFunctions()]
         .includes(this.draggedChartFunction);
     },
@@ -421,7 +422,7 @@ export default OneDraggableObject.extend(I18n, {
         return;
       }
 
-      const action = this.actionsFactory.createMoveElementAction({
+      const action = this.editorContext.actionsFactory.createMoveElementAction({
         movedElement: draggedFunction,
         currentRelationFieldName,
         newParent: this.chartFunction,

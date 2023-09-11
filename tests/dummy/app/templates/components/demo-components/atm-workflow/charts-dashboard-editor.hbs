@@ -1,3 +1,4 @@
+<button {{action (mut isReadOnly) (not isReadOnly)}}>Toggle readonly</button>
 <div style="height: calc(100vh - 100px); display: grid;">
-  {{atm-workflow/charts-dashboard-editor dataSources=dataSources}}
+  {{atm-workflow/charts-dashboard-editor dataSources=dataSources isReadOnly=isReadOnly}}
 </div>

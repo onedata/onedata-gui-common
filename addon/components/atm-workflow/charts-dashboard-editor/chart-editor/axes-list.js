@@ -37,9 +37,9 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @type {Array<AxesListItemModel>}
@@ -81,7 +81,7 @@ export default Component.extend(I18n, {
      * @returns {void}
      */
     addAxis() {
-      const action = this.actionsFactory.createAddElementAction({
+      const action = this.editorContext.actionsFactory.createAddElementAction({
         newElementType: ElementType.Axis,
         targetElement: this.chart,
       });

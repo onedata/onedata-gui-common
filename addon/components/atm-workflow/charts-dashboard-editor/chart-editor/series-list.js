@@ -38,9 +38,9 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @virtual optional
@@ -98,7 +98,7 @@ export default Component.extend(I18n, {
      * @returns {void}
      */
     addSeries() {
-      const action = this.actionsFactory.createAddElementAction({
+      const action = this.editorContext.actionsFactory.createAddElementAction({
         newElementType: ElementType.Series,
         targetElement: this.chart,
       });

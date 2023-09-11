@@ -1,6 +1,8 @@
 import Component from '@ember/component';
 
 export default Component.extend({
+  isReadOnly: false,
+
   dataSources: Object.freeze([{
     name: 'Store "abc"',
     collectionRef: 'store-abc',

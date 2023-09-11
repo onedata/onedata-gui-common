@@ -1,19 +1,19 @@
 {{#if model.rootSection}}
   {{atm-workflow/charts-dashboard-editor/toolbar
     class="editor-toolbar"
+    editorContext=editorContext
     undoManager=undoManager
-    actionsFactory=actionsFactory
     editedChart=(if viewState.isChartEditorActive viewState.selectedSectionElement null)
     onRemoveDashboard=(action "removeDashboard")
   }}
   {{atm-workflow/charts-dashboard-editor/sections-editor
     selectedElement=viewState.selectedSectionElement
-    actionsFactory=actionsFactory
+    editorContext=editorContext
     rootSection=model.rootSection
   }}
   {{#if viewState.isChartEditorActive}}
     {{atm-workflow/charts-dashboard-editor/chart-editor
-      actionsFactory=actionsFactory
+      editorContext=editorContext
       chart=viewState.selectedSectionElement
       selectedElement=viewState.selectedChartElement
     }}
@@ -21,5 +21,6 @@
 {{else}}
   {{atm-workflow/charts-dashboard-editor/no-dashboard-info
     onCreateDashboard=(action "createDashboard")
+    editorContext=editorContext
   }}
 {{/if}}

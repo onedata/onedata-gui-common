@@ -51,7 +51,7 @@ export default FunctionSettingsBase.extend({
       normalizedValue = Number.parseFloat(value);
     }
 
-    const action = this.actionsFactory.createChangeElementPropertyAction({
+    const action = this.editorContext.actionsFactory.createChangeElementPropertyAction({
       element: this.chartFunction,
       propertyName: fieldName,
       newValue: normalizedValue,

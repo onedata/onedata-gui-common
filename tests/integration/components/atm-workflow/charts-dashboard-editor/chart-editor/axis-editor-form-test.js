@@ -1,10 +1,10 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find, findAll, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { setProperties } from '@ember/object';
-import { createNewAxis } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import { createNewAxis, EditorContext } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import OneDropdownHelper from '../../../../../helpers/one-dropdown';
 
 const unitDropdownHelper = new OneDropdownHelper('.unitName-field');
@@ -73,6 +73,10 @@ const units = [{
 
 describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-editor/axis-editor-form', function () {
   setupRenderingTest();
+
+  beforeEach(function () {
+    this.set('editorContext', EditorContext.create());
+  });
 
   it('has class "axis-editor-form"', async function () {
     await renderComponent();
@@ -231,5 +235,6 @@ function createAxis(testCase, props = {}) {
 async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/chart-editor/axis-editor-form
     axis=axis
+    editorContext=editorContext
   }}`);
 }

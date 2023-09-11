@@ -8,6 +8,7 @@ import sinon from 'sinon';
 import {
   createNewSection,
   createNewChart,
+  EditorContext,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 
@@ -32,7 +33,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
     setupRenderingTest();
 
     beforeEach(function () {
-      this.set('actionsFactory', {});
+      this.set('editorContext', EditorContext.create());
     });
 
     it('has class "floating-toolbar"', async function () {
@@ -74,7 +75,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/sections-editor/floating-toolbar
     model=model
-    actionsFactory=actionsFactory
+    editorContext=editorContext
   }}`);
 }
 
@@ -93,15 +94,19 @@ function createChart(testCase, props = {}) {
 function itTriggersEditContentAction() {
   it('triggers editor on "edit content" click', async function () {
     const executeSpy = sinon.spy();
-    this.actionsFactory.createEditChartContentAction = sinon.spy(() => ({
-      execute: executeSpy,
-    }));
+    this.editorContext.actionsFactory = {
+      createEditChartContentAction: sinon.spy(() => ({
+        execute: executeSpy,
+      })),
+    };
     await renderComponent();
-    expect(this.actionsFactory.createEditChartContentAction).to.be.not.called;
+    expect(this.editorContext.actionsFactory.createEditChartContentAction)
+      .to.be.not.called;
 
     await click('.editContent-action');
 
-    expect(this.actionsFactory.createEditChartContentAction).to.be.calledOnce
+    expect(this.editorContext.actionsFactory.createEditChartContentAction)
+      .to.be.calledOnce
       .and.calledWith({ chart: this.model });
     expect(executeSpy).to.be.calledOnce;
   });
@@ -110,15 +115,19 @@ function itTriggersEditContentAction() {
 function itTriggersDuplicateAction() {
   it('triggers duplication on "duplicate" click', async function () {
     const executeSpy = sinon.spy();
-    this.actionsFactory.createDuplicateElementAction = sinon.spy(() => ({
-      execute: executeSpy,
-    }));
+    this.editorContext.actionsFactory = {
+      createDuplicateElementAction: sinon.spy(() => ({
+        execute: executeSpy,
+      })),
+    };
     await renderComponent();
-    expect(this.actionsFactory.createDuplicateElementAction).to.be.not.called;
+    expect(this.editorContext.actionsFactory.createDuplicateElementAction)
+      .to.be.not.called;
 
     await click('.duplicate-action');
 
-    expect(this.actionsFactory.createDuplicateElementAction).to.be.calledOnce
+    expect(this.editorContext.actionsFactory.createDuplicateElementAction)
+      .to.be.calledOnce
       .and.calledWith({ elementToDuplicate: this.model });
     expect(executeSpy).to.be.calledOnce;
   });
@@ -127,15 +136,17 @@ function itTriggersDuplicateAction() {
 function itTriggersRemoveAction() {
   it('triggers removal on "remove" click', async function () {
     const executeSpy = sinon.spy();
-    this.actionsFactory.createRemoveElementAction = sinon.spy(() => ({
-      execute: executeSpy,
-    }));
+    this.editorContext.actionsFactory = {
+      createRemoveElementAction: sinon.spy(() => ({
+        execute: executeSpy,
+      })),
+    };
     await renderComponent();
-    expect(this.actionsFactory.createRemoveElementAction).to.be.not.called;
+    expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.not.called;
 
     await click('.remove-action');
 
-    expect(this.actionsFactory.createRemoveElementAction).to.be.calledOnce
+    expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.calledOnce
       .and.calledWith({ elementToRemove: this.model });
     expect(executeSpy).to.be.calledOnce;
   });

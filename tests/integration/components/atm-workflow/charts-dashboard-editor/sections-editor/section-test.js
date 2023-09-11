@@ -5,7 +5,7 @@ import { render, find, findAll, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { setProperties, set } from '@ember/object';
 import sinon from 'sinon';
-import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import { ElementType, EditorContext } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import { createNewSection } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 
@@ -15,7 +15,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   beforeEach(function () {
     this.setProperties({
       section: createSection(this),
-      actionsFactory: {},
+      editorContext: EditorContext.create(),
     });
   });
 
@@ -65,15 +65,17 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 
   it('triggers chart creation on "add chart" click', async function () {
     const executeSpy = sinon.spy();
-    this.actionsFactory.createAddElementAction = sinon.spy(() => ({
-      execute: executeSpy,
-    }));
+    this.editorContext.actionsFactory = {
+      createAddElementAction: sinon.spy(() => ({
+        execute: executeSpy,
+      })),
+    };
     await renderComponent();
-    expect(this.actionsFactory.createAddElementAction).to.be.not.called;
+    expect(this.editorContext.actionsFactory.createAddElementAction).to.be.not.called;
 
     await click('.add-chart');
 
-    expect(this.actionsFactory.createAddElementAction).to.be.calledOnce
+    expect(this.editorContext.actionsFactory.createAddElementAction).to.be.calledOnce
       .and.calledWith({
         newElementType: ElementType.Chart,
         targetElement: this.section,
@@ -83,15 +85,17 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 
   it('triggers subsection creation on "add subsection" click', async function () {
     const executeSpy = sinon.spy();
-    this.actionsFactory.createAddElementAction = sinon.spy(() => ({
-      execute: executeSpy,
-    }));
+    this.editorContext.actionsFactory = {
+      createAddElementAction: sinon.spy(() => ({
+        execute: executeSpy,
+      })),
+    };
     await renderComponent();
-    expect(this.actionsFactory.createAddElementAction).to.be.not.called;
+    expect(this.editorContext.actionsFactory.createAddElementAction).to.be.not.called;
 
     await click('.add-subsection');
 
-    expect(this.actionsFactory.createAddElementAction).to.be.calledOnce
+    expect(this.editorContext.actionsFactory.createAddElementAction).to.be.calledOnce
       .and.calledWith({
         newElementType: ElementType.Section,
         targetElement: this.section,
@@ -115,15 +119,17 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 
   it('triggers action on action trigger click in floating toolbar', async function () {
     const executeSpy = sinon.spy();
-    this.actionsFactory.createRemoveElementAction = sinon.spy(() => ({
-      execute: executeSpy,
-    }));
+    this.editorContext.actionsFactory = {
+      createRemoveElementAction: sinon.spy(() => ({
+        execute: executeSpy,
+      })),
+    };
     await renderComponent();
-    expect(this.actionsFactory.createRemoveElementAction).to.be.not.called;
+    expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.not.called;
 
     await click('.floating-toolbar .remove-action');
 
-    expect(this.actionsFactory.createRemoveElementAction).to.be.calledOnce
+    expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.calledOnce
       .and.calledWith({ elementToRemove: this.section });
     expect(executeSpy).to.be.calledOnce;
   });
@@ -132,7 +138,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/sections-editor/section
     section=section
-    actionsFactory=actionsFactory
+    editorContext=editorContext
   }}`);
 }
 

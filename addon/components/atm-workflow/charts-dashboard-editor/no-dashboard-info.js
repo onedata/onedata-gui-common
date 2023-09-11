@@ -28,4 +28,10 @@ export default Component.extend(I18n, {
    * @type {() => void}
    */
   onCreateDashboard: undefined,
+
+  /**
+   * @virtual
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
+   */
+  editorContext: undefined,
 });

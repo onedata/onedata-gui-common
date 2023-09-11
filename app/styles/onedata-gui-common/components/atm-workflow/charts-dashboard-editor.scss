@@ -84,6 +84,7 @@
     justify-content: flex-end;
     padding: 0.3em;
     min-width: 0;
+    min-height: 3em;
     gap: 0.3em;
     align-items: center;
     border-bottom: $main-border;
@@ -775,7 +776,7 @@
       align-items: center;
       pointer-events: none;
 
-      &:not(.root-function) {
+      &:not(.root-function, .read-only) {
         .function-block-header {
           cursor: grab;
         }

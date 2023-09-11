@@ -1,7 +1,13 @@
 export default {
   header: 'Chart element editor',
   noElements: {
-    header: 'You are not editing any element.',
-    description: 'Click on a chart element to start edition.',
+    header: {
+      edit: 'You are not editing any element.',
+      view: 'You are not viewing any element.',
+    },
+    description: {
+      edit: 'Click on a chart element to start edition.',
+      view: 'Click on a chart element to view its details.',
+    },
   },
 };

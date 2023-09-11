@@ -46,9 +46,17 @@
   <div class="tab-content">
     {{#if (not tabs.length)}}
       <div class="no-elements-info info-box">
-        <h3 class="header">{{tt this "noElements.header"}}</h3>
+        <h3 class="header">
+          {{tt this (concat
+            "noElements.header."
+            (if editorContext.isReadOnly "view" "edit")
+          )}}
+        </h3>
         <p class="description">
-          {{tt this "noElements.description"}}
+          {{tt this (concat
+            "noElements.description."
+            (if editorContext.isReadOnly "view" "edit")
+          )}}
         </p>
       </div>
     {{/if}}
@@ -58,7 +66,7 @@
           (concat "atm-workflow/charts-dashboard-editor/chart-editor/" tabSpec.editorComponentName)
           chartElement=tabSpec.element
           chart=chart
-          actionsFactory=actionsFactory
+          editorContext=editorContext
         }}
       {{/tab.pane}}
     {{/each}}

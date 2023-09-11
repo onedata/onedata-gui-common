@@ -10,7 +10,7 @@ import Component from '@ember/component';
 import { computed, observer, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { tag, eq } from 'ember-awesome-macros';
+import { tag, eq, not } from 'ember-awesome-macros';
 import _ from 'lodash';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
@@ -43,9 +43,9 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
@@ -148,7 +148,7 @@ export default Component.extend(I18n, {
       }
     }
 
-    const action = this.actionsFactory.createChangeElementPropertyAction({
+    const action = this.editorContext.actionsFactory.createChangeElementPropertyAction({
       element: this.axis,
       propertyName: normalizedFieldName,
       newValue: normalizedValue,
@@ -161,7 +161,7 @@ export default Component.extend(I18n, {
    * @returns {void}
    */
   onEditionInterrupted() {
-    this.actionsFactory?.interruptActiveChangeElementPropertyAction();
+    this.editorContext.actionsFactory?.interruptActiveChangeElementPropertyAction();
   },
 });
 
@@ -283,6 +283,11 @@ const Form = FormFieldsRootGroup.extend({
    * @override
    */
   size: 'sm',
+
+  /**
+   * @override
+   */
+  isEnabled: not('component.editorContext.isReadOnly'),
 
   /**
    * @override

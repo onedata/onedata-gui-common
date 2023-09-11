@@ -60,9 +60,9 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @type {ComputedProperty<TimeSeriesRef>}
@@ -186,7 +186,7 @@ export default Component.extend(I18n, {
       normalizedValue = null;
     }
 
-    const action = this.actionsFactory.createChangeElementPropertyAction({
+    const action = this.editorContext.actionsFactory.createChangeElementPropertyAction({
       element: this.series,
       propertyName: normalizedFieldName,
       newValue: normalizedValue,
@@ -222,7 +222,7 @@ export default Component.extend(I18n, {
    * @returns {void}
    */
   onEditionInterrupted() {
-    this.actionsFactory?.interruptActiveChangeElementPropertyAction();
+    this.editorContext.actionsFactory?.interruptActiveChangeElementPropertyAction();
   },
 });
 
@@ -378,6 +378,11 @@ const Form = FormFieldsRootGroup.extend({
    * @override
    */
   size: 'sm',
+
+  /**
+   * @override
+   */
+  isEnabled: not('component.editorContext.isReadOnly'),
 
   /**
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Chart>}
