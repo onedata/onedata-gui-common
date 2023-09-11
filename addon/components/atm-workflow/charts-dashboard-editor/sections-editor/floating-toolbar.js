@@ -33,25 +33,19 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
-
-  /**
-   * @virtual optional
-   * @type {boolean}
-   */
-  isReadOnly: false,
+  editorContext: undefined,
 
   /**
    * @type {ComputedProperty<Array<{ name: string, icon: string }>>}
    */
   actionsToRender: computed(
     'model.elementType',
-    'isReadOnly',
+    'editorContext.isReadOnly',
     function actionsToRender() {
       const actions = [];
-      if (!this.isReadOnly) {
+      if (!this.editorContext.isReadOnly) {
         actions.push({
           name: 'duplicate',
           icon: 'browser-copy',
@@ -77,7 +71,7 @@ export default Component.extend(I18n, {
      * @returns {void}
      */
     editContent() {
-      const action = this.actionsFactory.createEditChartContentAction({
+      const action = this.editorContext.actionsFactory.createEditChartContentAction({
         chart: this.model,
       });
       action.execute();
@@ -87,7 +81,7 @@ export default Component.extend(I18n, {
      * @returns {void}
      */
     duplicate() {
-      const action = this.actionsFactory.createDuplicateElementAction({
+      const action = this.editorContext.actionsFactory.createDuplicateElementAction({
         elementToDuplicate: this.model,
       });
       action.execute();
@@ -97,7 +91,7 @@ export default Component.extend(I18n, {
      * @returns {void}
      */
     remove() {
-      const action = this.actionsFactory.createRemoveElementAction({
+      const action = this.editorContext.actionsFactory.createRemoveElementAction({
         elementToRemove: this.model,
       });
       action.execute();

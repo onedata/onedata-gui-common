@@ -55,15 +55,9 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
-
-  /**
-   * @virtual optional
-   * @type {boolean}
-   */
-  isReadOnly: false,
+  editorContext: undefined,
 
   /**
    * @type {Array<ElementsEditorTab>}
@@ -161,7 +155,7 @@ export default Component.extend(I18n, {
    * @returns {void}
    */
   openTab(tab) {
-    const selectAction = this.actionsFactory.createSelectElementAction({
+    const selectAction = this.editorContext.actionsFactory.createSelectElementAction({
       elementToSelect: tab.element,
     });
     selectAction.execute();
@@ -186,7 +180,7 @@ export default Component.extend(I18n, {
     closeTab(tab) {
       if (this.selectedTab === tab) {
         const nextSelectedTabCandidate = this.findNextSelectedTabCandidate();
-        const selectAction = this.actionsFactory.createSelectElementAction({
+        const selectAction = this.editorContext.actionsFactory.createSelectElementAction({
           elementToSelect: nextSelectedTabCandidate?.element,
           elementsToDeselect: [tab.element],
         });

@@ -2,8 +2,7 @@
   {{atm-workflow/charts-dashboard-editor/chart-editor/series-editor-form
     series=chartElement
     chart=chart
-    actionsFactory=actionsFactory
-    isReadOnly=isReadOnly
+    editorContext=editorContext
   }}
 {{/perfect-scrollbar-element}}
 <div class="details-column">
@@ -11,7 +10,6 @@
     outputFunction=chartElement.dataProvider
     detachedFunctions=chartElement.detachedFunctions
     executionContext=functionExecutionContext
-    actionsFactory=actionsFactory
-    isReadOnly=isReadOnly
+    editorContext=editorContext
   }}
 </div>

@@ -31,9 +31,9 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @virtual
@@ -46,12 +46,6 @@ export default Component.extend(I18n, {
    * @type {() => void}
    */
   onRemoveDashboard: undefined,
-
-  /**
-   * @virtual optional
-   * @type {boolean}
-   */
-  isReadOnly: false,
 
   /**
    * @type {boolean}
@@ -76,7 +70,8 @@ export default Component.extend(I18n, {
      * @returns {void}
      */
     back() {
-      const action = this.actionsFactory.createEndChartContentEditionAction();
+      const action = this.editorContext.actionsFactory
+        .createEndChartContentEditionAction();
       action.execute();
     },
 

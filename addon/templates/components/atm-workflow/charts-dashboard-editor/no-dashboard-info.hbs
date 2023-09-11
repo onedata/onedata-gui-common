@@ -1,5 +1,5 @@
 <h3 class="header">{{tt this "header"}}</h3>
-{{#if (not isReadOnly)}}
+{{#if (not editorContext.isReadOnly)}}
   <p class="description">{{tt this "description"}}</p>
   {{#one-button
     class="create-btn"

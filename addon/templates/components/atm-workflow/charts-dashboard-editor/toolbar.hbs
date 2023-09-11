@@ -12,7 +12,7 @@
 
 {{#truncated-string class="view-title"}}{{title}}{{/truncated-string}}
 
-{{#if (not isReadOnly)}}
+{{#if (not editorContext.isReadOnly)}}
   {{#one-button
     class="undo-btn"
     type="default"
@@ -48,7 +48,7 @@
     <span class="text">{{tt this "removeDashboard"}}</span>
     {{remove-ack-popover
       triggerSelector=(local-selector elementId ".remove-dashboard-btn")
-      isOpened=(and isRemoveDashboardConfirmationOpened (not isReadOnly))
+      isOpened=(and isRemoveDashboardConfirmationOpened (not editorContext.isReadOnly))
       question=(tt this "removeDashboardConfirmation")
       onConfirm=(action "removeDashboard")
       onClose=(action (mut isRemoveDashboardConfirmationOpened) false)

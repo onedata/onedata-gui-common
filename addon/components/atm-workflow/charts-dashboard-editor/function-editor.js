@@ -42,15 +42,9 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
-
-  /**
-   * @virtual optional
-   * @type {boolean}
-   */
-  isReadOnly: false,
+  editorContext: undefined,
 
   /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EdgeScroller}
@@ -394,7 +388,7 @@ export default Component.extend({
         top: (chartFunction.positionRelativeToRootFunc?.top ?? 0) + topOffset,
       };
 
-      const action = this.actionsFactory.createChangeElementPropertyAction({
+      const action = this.editorContext.actionsFactory.createChangeElementPropertyAction({
         element: chartFunction,
         propertyName: 'positionRelativeToRootFunc',
         newValue: newPosition,

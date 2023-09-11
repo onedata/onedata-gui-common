@@ -6,6 +6,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { set } from '@ember/object';
 import { drag } from '../../../../helpers/drag-drop';
 import {
+  EditorContext,
   createNewSection,
   createModelFromSpec,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
@@ -14,10 +15,10 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   setupRenderingTest();
 
   beforeEach(function () {
-    this.set(
-      'rootSection',
-      createNewSection(this.owner.lookup('service:i18n'), null, true),
-    );
+    this.setProperties({
+      editorContext: EditorContext.create(),
+      rootSection: createNewSection(this.owner.lookup('service:i18n'), null, true),
+    });
   });
 
   it('has class "sections-editor"', async function () {
@@ -148,6 +149,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/sections-editor
     rootSection=rootSection
+    editorContext=editorContext
   }}`);
 }
 

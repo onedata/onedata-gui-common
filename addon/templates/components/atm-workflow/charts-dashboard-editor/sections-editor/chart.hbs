@@ -25,15 +25,14 @@
 
 {{atm-workflow/charts-dashboard-editor/sections-editor/floating-toolbar
   model=chart
-  actionsFactory=actionsFactory
-  isReadOnly=isReadOnly
+  editorContext=editorContext
 }}
 
 {{#if validationErrorsMessage}}
   {{warning-icon tooltipText=validationErrorsMessage}}
 {{/if}}
 
-{{#if (and (not isReadOnly) draggedChart (not isMeDragged))}}
+{{#if (and (not editorContext.isReadOnly) draggedChart (not isMeDragged))}}
   {{one-draggable-object-target
     class="before-drag-target"
     action=(action "acceptDraggedElement" "before")

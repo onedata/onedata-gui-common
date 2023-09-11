@@ -4,7 +4,11 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find, click, findAll } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
-import { createModelFromSpec, ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import {
+  createModelFromSpec,
+  ElementType,
+  EditorContext,
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import globals from 'onedata-gui-common/utils/globals';
 import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 import { drag } from '../../../../../helpers/drag-drop';
@@ -16,9 +20,11 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
     const executeSpy = sinon.spy();
     this.setProperties({
       chart: createChart(),
-      actionsFactory: {
-        createAddElementAction: sinon.spy(() => ({ execute: executeSpy })),
-      },
+      editorContext: EditorContext.create({
+        actionsFactory: {
+          createAddElementAction: sinon.spy(() => ({ execute: executeSpy })),
+        },
+      }),
     });
     await renderComponent();
 
@@ -28,7 +34,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
 
     await click(btn);
 
-    expect(this.actionsFactory.createAddElementAction).to.be.calledWith({
+    expect(this.editorContext.actionsFactory.createAddElementAction).to.be.calledWith({
       newElementType: ElementType.Series,
       targetElement: this.chart,
     });
@@ -99,10 +105,13 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
       chart: createChart({
         seriesBuilders: [emptySeriesSpec('1')],
       }),
-      actionsFactory: {
-        createDuplicateElementAction: sinon.spy(() => ({ execute: duplicateExecuteSpy })),
-        createRemoveElementAction: sinon.spy(() => ({ execute: removeExecuteSpy })),
-      },
+      editorContext: EditorContext.create({
+        actionsFactory: {
+          createDuplicateElementAction: sinon
+            .spy(() => ({ execute: duplicateExecuteSpy })),
+          createRemoveElementAction: sinon.spy(() => ({ execute: removeExecuteSpy })),
+        },
+      }),
     });
     await renderComponent();
 
@@ -117,13 +126,14 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
 
     await click(actions[0]);
     expect(duplicateExecuteSpy).to.be.calledOnce;
-    expect(this.actionsFactory.createDuplicateElementAction).to.be.calledWith({
-      elementToDuplicate: this.chart.series[0],
-    });
+    expect(this.editorContext.actionsFactory.createDuplicateElementAction)
+      .to.be.calledWith({
+        elementToDuplicate: this.chart.series[0],
+      });
 
     await click(actions[1]);
     expect(removeExecuteSpy).to.be.calledOnce;
-    expect(this.actionsFactory.createRemoveElementAction).to.be.calledWith({
+    expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.calledWith({
       elementToRemove: this.chart.series[0],
     });
   });
@@ -156,7 +166,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/chart-e
 
 async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/chart-editor/series-list
-    actionsFactory=actionsFactory
+    editorContext=editorContext
     chart=chart
   }}`);
 }

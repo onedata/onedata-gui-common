@@ -38,3 +38,4 @@ export {
   getFunctionArgumentNameTranslation,
 }
 from './functions-model';
+export { default as EditorContext } from './editor-context';

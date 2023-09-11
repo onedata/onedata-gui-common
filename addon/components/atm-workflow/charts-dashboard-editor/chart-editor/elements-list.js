@@ -13,6 +13,7 @@ import PerfectScrollbarElement from 'onedata-gui-common/components/perfect-scrol
 import EmberObject, { observer } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
+import { and, not } from 'ember-awesome-macros';
 import _ from 'lodash';
 import {
   isChartElementType,
@@ -81,9 +82,9 @@ export default PerfectScrollbarElement.extend({
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @virtual optional
@@ -104,12 +105,6 @@ export default PerfectScrollbarElement.extend({
   hideActions: false,
 
   /**
-   * @virtual optional
-   * @type {boolean}
-   */
-  isReadOnly: false,
-
-  /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EdgeScroller}
    */
   edgeScroller: undefined,
@@ -118,6 +113,11 @@ export default PerfectScrollbarElement.extend({
    * @type {Array<ElementsListDropZone>}
    */
   dropZones: null,
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  allowItemsDragDrop: and(not('editorContext.isReadOnly'), 'allowDragDrop'),
 
   edgeScrollerEnabler: observer(
     'dragDrop.draggedElementModel.elementType',
@@ -322,7 +322,7 @@ export default PerfectScrollbarElement.extend({
      * @returns {void}
      */
     acceptDrop(referenceElement, placement, draggedElement) {
-      const action = this.actionsFactory.createMoveElementAction({
+      const action = this.editorContext.actionsFactory.createMoveElementAction({
         movedElement: draggedElement,
         newParent: placement === 'inside' ?
           referenceElement : referenceElement.parent,

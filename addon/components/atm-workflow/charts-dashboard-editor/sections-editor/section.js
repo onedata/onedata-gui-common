@@ -9,7 +9,7 @@
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { not, and } from 'ember-awesome-macros';
+import { not, and, or } from 'ember-awesome-macros';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor/section';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -46,15 +46,9 @@ export default OneDraggableObject.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
-
-  /**
-   * @virtual optional
-   * @type {boolean}
-   */
-  isReadOnly: false,
+  editorContext: undefined,
 
   /**
    * @type {boolean}
@@ -65,7 +59,7 @@ export default OneDraggableObject.extend(I18n, {
    * For one-draggable-object
    * @override
    */
-  isDraggable: and(not('section.isRoot'), not('isReadOnly')),
+  isDraggable: and(not('section.isRoot'), not('editorContext.isReadOnly')),
 
   /**
    * For one-draggable-object
@@ -128,6 +122,27 @@ export default OneDraggableObject.extend(I18n, {
   }),
 
   /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isAcceptingInsideDrag: and(
+    not('editorContext.isReadOnly'),
+    or(
+      'draggedChart',
+      and('draggedSection', not('isMeOrParentDragged'))
+    )
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isAcceptingEdgeDrag: and(
+    not('editorContext.isReadOnly'),
+    not('section.isRoot'),
+    'draggedSection',
+    not('isMeOrParentDragged'),
+  ),
+
+  /**
    * @override
    */
   mouseLeave() {
@@ -151,7 +166,7 @@ export default OneDraggableObject.extend(I18n, {
   click(event) {
     this._super(...arguments);
     if (isDirectlyClicked(event)) {
-      const action = this.actionsFactory
+      const action = this.editorContext.actionsFactory
         .createSelectElementAction({ elementToSelect: this.section });
       action.execute();
     }
@@ -172,7 +187,7 @@ export default OneDraggableObject.extend(I18n, {
      * @returns {void}
      */
     addChart() {
-      const action = this.actionsFactory.createAddElementAction({
+      const action = this.editorContext.actionsFactory.createAddElementAction({
         newElementType: ElementType.Chart,
         targetElement: this.section,
       });
@@ -183,7 +198,7 @@ export default OneDraggableObject.extend(I18n, {
      * @returns {void}
      */
     addSubsection() {
-      const action = this.actionsFactory.createAddElementAction({
+      const action = this.editorContext.actionsFactory.createAddElementAction({
         newElementType: ElementType.Section,
         targetElement: this.section,
       });
@@ -196,7 +211,7 @@ export default OneDraggableObject.extend(I18n, {
      * @returns {void}
      */
     async acceptDraggedElement(placement, draggedElement) {
-      const action = this.actionsFactory.createMoveElementAction({
+      const action = this.editorContext.actionsFactory.createMoveElementAction({
         movedElement: draggedElement,
         newParent: placement === 'inside' ?
           this.section : this.section.parent,

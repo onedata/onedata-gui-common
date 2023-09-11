@@ -30,15 +30,9 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
-
-  /**
-   * @virtual optional
-   * @type {boolean}
-   */
-  isReadOnly: false,
+  editorContext: undefined,
 
   /**
    * @virtual optional
@@ -111,7 +105,7 @@ export default Component.extend({
      */
     workspaceClick(event) {
       if (event.target === this.getWorkspaceElement()) {
-        const action = this.actionsFactory
+        const action = this.editorContext.actionsFactory
           .createSelectElementAction({ elementToSelect: null });
         action.execute();
       }

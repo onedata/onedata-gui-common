@@ -36,15 +36,9 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
-
-  /**
-   * @virtual optional
-   * @type {boolean}
-   */
-  isReadOnly: false,
+  editorContext: undefined,
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
@@ -94,7 +88,7 @@ export default Component.extend(I18n, {
         break;
     }
 
-    const action = this.actionsFactory.createChangeElementPropertyAction({
+    const action = this.editorContext.actionsFactory.createChangeElementPropertyAction({
       element: this.section,
       propertyName: fieldName,
       newValue: value,
@@ -107,7 +101,7 @@ export default Component.extend(I18n, {
    * @returns {void}
    */
   onEditionInterrupted() {
-    this.actionsFactory.interruptActiveChangeElementPropertyAction();
+    this.editorContext.actionsFactory.interruptActiveChangeElementPropertyAction();
   },
 });
 
@@ -168,7 +162,7 @@ const DetailsForm = FormFieldsRootGroup.extend({
   /**
    * @override
    */
-  isEnabled: not('component.isReadOnly'),
+  isEnabled: not('component.editorContext.isReadOnly'),
 
   /**
    * @override

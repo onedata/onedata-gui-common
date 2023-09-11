@@ -1,4 +1,4 @@
-{{#if (and (not isReadOnly) (not hideActions))}}
+{{#if (and (not editorContext.isReadOnly) (not hideActions))}}
   <div class="list-header">
     {{#one-button
       class="add-series-btn"
@@ -15,6 +15,5 @@
   itemModels=itemModels
   allowDragDrop=(not hideActions)
   hideActions=hideActions
-  actionsFactory=actionsFactory
-  isReadOnly=isReadOnly
+  editorContext=editorContext
 }}

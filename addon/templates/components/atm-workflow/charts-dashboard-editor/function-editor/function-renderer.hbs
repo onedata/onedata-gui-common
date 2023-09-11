@@ -1,7 +1,7 @@
 <div class="function-block">
   <div class="function-block-header">
     <span class="function-name">{{readableName}}</span>
-    {{#if (and (not isReadOnly) (not chartFunction.isRoot))}}
+    {{#if (and (not editorContext.isReadOnly) (not chartFunction.isRoot))}}
       <div class="function-actions">
         {{one-icon
           class="remove-action action"
@@ -15,8 +15,7 @@
     <div class="function-block-body">
       {{component settingsComponentName
         chartFunction=chartFunction
-        actionsFactory=actionsFactory
-        isReadOnly=isReadOnly
+        editorContext=editorContext
       }}
     </div>
   {{/if}}
@@ -29,7 +28,7 @@
       </div>
       <div class="function-argument-blocks">
         {{#if (and
-          (not isReadOnly)
+          (not editorContext.isReadOnly)
           draggedChartFunction
           argumentInfo.isArray
           argumentInfo.attachedFunctions.length
@@ -55,7 +54,7 @@
           >
             <div class="argument-middle-line argument-line"></div>
             <div class="argument-end-line argument-line">
-              {{#if (not isReadOnly)}}
+              {{#if (not editorContext.isReadOnly)}}
                 <div class="attachment-actions">
                   {{one-icon
                     class="add-action action"
@@ -69,7 +68,7 @@
                   }}
                   {{atm-workflow/charts-dashboard-editor/function-editor/function-adder
                     executionContext=executionContext
-                    actionsFactory=actionsFactory
+                    editorContext=editorContext
                     parentFunction=chartFunction
                     parentFunctionArgumentName=argumentInfo.name
                     insertAtIndex=index
@@ -88,12 +87,11 @@
             {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
               chartFunction=func
               executionContext=executionContext
-              actionsFactory=actionsFactory
-              isReadOnly=isReadOnly
+              editorContext=editorContext
             }}
           </div>
           {{#if (and
-            (not isReadOnly)
+            (not editorContext.isReadOnly)
             draggedChartFunction
             argumentInfo.isArray
             (not-eq func draggedChartFunction)
@@ -125,13 +123,13 @@
                 type="default"
                 size="sm"
                 class="add-selector-trigger"
-                disabled=isReadOnly
+                disabled=editorContext.isReadOnly
                 onClick=(action "toggleAdder" argumentInfo.name -1)
               }}
                 {{tt this "addArgument"}}
               {{/one-button}}
             {{/one-draggable-object-target}}
-            {{#if (not isReadOnly)}}
+            {{#if (not editorContext.isReadOnly)}}
               {{atm-workflow/charts-dashboard-editor/function-editor/function-adder
                 executionContext=executionContext
                 actionsFactory=actionsFactory

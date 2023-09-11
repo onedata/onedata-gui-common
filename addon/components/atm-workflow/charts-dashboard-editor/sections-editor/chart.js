@@ -49,15 +49,9 @@ export default OneDraggableObject.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
-
-  /**
-   * @virtual optional
-   * @type {boolean}
-   */
-  isReadOnly: false,
+  editorContext: undefined,
 
   /**
    * @type {boolean}
@@ -68,7 +62,7 @@ export default OneDraggableObject.extend(I18n, {
    * For one-draggable-object
    * @override
    */
-  isDraggable: not('isReadOnly'),
+  isDraggable: not('editorContext.isReadOnly'),
 
   /**
    * For one-draggable-object
@@ -134,7 +128,7 @@ export default OneDraggableObject.extend(I18n, {
   click(event) {
     this._super(...arguments);
     if (isDirectlyClicked(event)) {
-      const action = this.actionsFactory
+      const action = this.editorContext.actionsFactory
         .createSelectElementAction({ elementToSelect: this.chart });
       action.execute();
     }
@@ -157,7 +151,7 @@ export default OneDraggableObject.extend(I18n, {
      * @returns {void}
      */
     async acceptDraggedElement(placement, draggedElement) {
-      const action = this.actionsFactory.createMoveElementAction({
+      const action = this.editorContext.actionsFactory.createMoveElementAction({
         movedElement: draggedElement,
         newParent: this.chart.parent,
         newPosition: {
@@ -172,7 +166,7 @@ export default OneDraggableObject.extend(I18n, {
      * @returns {void}
      */
     editContent() {
-      const action = this.actionsFactory.createEditChartContentAction({
+      const action = this.editorContext.actionsFactory.createEditChartContentAction({
         chart: this.chart,
       });
       action.execute();

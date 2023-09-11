@@ -22,19 +22,13 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
    */
-  actionsFactory: undefined,
+  editorContext: undefined,
 
   /**
    * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ChartElement | null}
    */
   selectedElement: null,
-
-  /**
-   * @virtual optional
-   * @type {boolean}
-   */
-  isReadOnly: false,
 });

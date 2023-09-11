@@ -6,7 +6,7 @@
   {{#if validationErrorsMessage}}
     {{warning-icon tooltipText=validationErrorsMessage}}
   {{/if}}
-  {{#if (and (not isReadOnly) (not hideActions))}}
+  {{#if (and (not editorContext.isReadOnly) (not hideActions))}}
     <div class="actions">
       {{#if allowNesting}}
         {{#one-icon
@@ -44,8 +44,7 @@
         allowNesting=allowNesting
         isDraggable=isDraggable
         hideActions=hideActions
-        actionsFactory=actionsFactory
-        isReadOnly=isReadOnly
+        editorContext=editorContext
       }}
     {{/each}}
   </ol>

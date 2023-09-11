@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { setProperties } from '@ember/object';
-import { createNewChart } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import { createNewChart, EditorContext } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 import sinon from 'sinon';
 
@@ -14,7 +14,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
   beforeEach(function () {
     this.setProperties({
       chart: createChart(this),
-      actionsFactory: {},
+      editorContext: EditorContext.create(),
     });
   });
 
@@ -57,31 +57,36 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 
   it('triggers action on action trigger click in floating toolbar', async function () {
     const executeSpy = sinon.spy();
-    this.actionsFactory.createRemoveElementAction = sinon.spy(() => ({
-      execute: executeSpy,
-    }));
+    this.editorContext.actionsFactory = {
+      createRemoveElementAction: sinon.spy(() => ({
+        execute: executeSpy,
+      })),
+    };
     await renderComponent();
-    expect(this.actionsFactory.createRemoveElementAction).to.be.not.called;
+    expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.not.called;
 
     await click('.floating-toolbar .remove-action');
 
-    expect(this.actionsFactory.createRemoveElementAction).to.be.calledOnce
+    expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.calledOnce
       .and.calledWith({ elementToRemove: this.chart });
     expect(executeSpy).to.be.calledOnce;
   });
 
   it('triggers editor on "edit content" link click', async function () {
     const executeSpy = sinon.spy();
-    this.actionsFactory.createEditChartContentAction = sinon.spy(() => ({
-      execute: executeSpy,
-    }));
+    this.editorContext.actionsFactory = {
+      createEditChartContentAction: sinon.spy(() => ({
+        execute: executeSpy,
+      })),
+    };
     await renderComponent();
-    expect(this.actionsFactory.createEditChartContentAction).to.be.not.called;
+    expect(this.editorContext.actionsFactory.createEditChartContentAction)
+      .to.be.not.called;
 
     await click('.edit-chart-content-trigger');
 
-    expect(this.actionsFactory.createEditChartContentAction).to.be.calledOnce
-      .and.calledWith({ chart: this.chart });
+    expect(this.editorContext.actionsFactory.createEditChartContentAction)
+      .to.be.calledOnce.and.calledWith({ chart: this.chart });
     expect(executeSpy).to.be.calledOnce;
   });
 });
@@ -89,7 +94,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/section
 async function renderComponent() {
   await render(hbs`{{atm-workflow/charts-dashboard-editor/sections-editor/chart
     chart=chart
-    actionsFactory=actionsFactory
+    editorContext=editorContext
   }}`);
 }
 

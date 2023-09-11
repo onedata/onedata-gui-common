@@ -1,4 +1,4 @@
-{{#if (not isReadOnly)}}
+{{#if (not editorContext.isReadOnly)}}
   <div class="list-header">
     {{#one-button
       class="add-series-group-btn"
@@ -15,6 +15,5 @@
   itemModels=itemModels
   allowDragDrop=true
   allowNesting=true
-  actionsFactory=actionsFactory
-  isReadOnly=isReadOnly
+  editorContext=editorContext
 }}

@@ -1,4 +1,4 @@
-{{#if (not isReadOnly)}}
+{{#if (not editorContext.isReadOnly)}}
   <div class="list-header">
     {{#one-button
       class="add-axis-btn"
@@ -14,6 +14,5 @@
 {{atm-workflow/charts-dashboard-editor/chart-editor/elements-list
   itemModels=itemModels
   allowDragDrop=true
-  actionsFactory=actionsFactory
-  isReadOnly=isReadOnly
+  editorContext=editorContext
 }}

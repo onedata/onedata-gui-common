@@ -12,6 +12,7 @@ import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor';
 import {
+  EditorContext,
   ActionsFactory,
   UndoManager,
   createModelFromSpec,
@@ -50,11 +51,6 @@ export default Component.extend({
   viewState: undefined,
 
   /**
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.ActionsFactory}
-   */
-  actionsFactory: undefined,
-
-  /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.UndoManager}
    */
   undoManager: undefined,
@@ -65,6 +61,30 @@ export default Component.extend({
   allElements: undefined,
 
   /**
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext | null}
+   */
+  editorContextCache: null,
+
+  /**
+   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext>}
+   */
+  editorContext: computed('isReadOnly', 'dataSources', function editorContext() {
+    if (!this.editorContextCache) {
+      const newContext = this.createNewEditorContext();
+      this.set('editorContextCache', newContext);
+      return newContext;
+    }
+
+    if (this.editorContextCache.isReadOnly !== this.isReadOnly) {
+      set(this.editorContextCache, 'isReadOnly', this.isReadOnly);
+    }
+    if (this.editorContextCache.actionsFactory.dataSources !== this.dataSources) {
+      this.editorContextCache.actionsFactory.dataSources = this.dataSources;
+    }
+    return this.editorContextCache;
+  }),
+
+  /**
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Model>}
    */
   model: computed('dashboardSpec', function model() {
@@ -72,7 +92,6 @@ export default Component.extend({
   }),
 
   dataSourcesObserver: observer('dataSources', function dataSourcesObserver() {
-    this.actionsFactory.dataSources = this.dataSources;
     this.allElements.forEach((element) => {
       if (element.needsDataSources) {
         set(element, 'dataSources', this.dataSources);
@@ -95,21 +114,6 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    const undoManager = UndoManager.create();
-    const actionsFactory = new ActionsFactory({
-      ownerSource: this,
-      dataSources: this.dataSources,
-      changeViewState: (...args) => this.changeViewState(...args),
-    });
-    actionsFactory.addExecutionListener((action, result) => {
-      if (!result.undo) {
-        undoManager.addActionToHistory(action);
-      }
-    });
-    actionsFactory.addElementCreationListener((newElement) => {
-      this.allElements.pushObject(newElement);
-    });
-
     const allElements = A();
     if (this.model.rootSection) {
       allElements.pushObjects([
@@ -119,8 +123,7 @@ export default Component.extend({
     }
 
     this.setProperties({
-      actionsFactory,
-      undoManager,
+      undoManager: UndoManager.create(),
       allElements,
     });
 
@@ -133,11 +136,10 @@ export default Component.extend({
   willDestroyElement() {
     try {
       this.cacheFor('model')?.destroy();
-      this.actionsFactory.destroy();
+      this.cacheFor('editorContext')?.destroy();
       this.undoManager.destroy();
       this.setProperties({
         model: undefined,
-        actionsFactory: undefined,
         undoManager: undefined,
       });
     } finally {
@@ -234,6 +236,30 @@ export default Component.extend({
     }
 
     this.set('viewState', newViewState);
+  },
+
+  /**
+   * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext}
+   */
+  createNewEditorContext() {
+    const actionsFactory = new ActionsFactory({
+      ownerSource: this,
+      dataSources: this.dataSources,
+      changeViewState: (...args) => this.changeViewState(...args),
+    });
+    actionsFactory.addExecutionListener((action, result) => {
+      if (!result.undo) {
+        this.undoManager.addActionToHistory(action);
+      }
+    });
+    actionsFactory.addElementCreationListener((newElement) => {
+      this.allElements.pushObject(newElement);
+    });
+
+    return EditorContext.create({
+      actionsFactory,
+      isReadOnly: this.isReadOnly,
+    });
   },
 
   actions: {
