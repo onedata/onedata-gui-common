@@ -39,6 +39,18 @@ const AbsFunction = FunctionBase.extend({
   returnedTypes: computed('data.returnedTypes', function returnedTypes() {
     return this.data?.returnedTypes ?? dataArgument.compatibleTypes;
   }),
+
+  /**
+   * @override
+   */
+  toJson() {
+    return {
+      functionName: 'abs',
+      functionArguments: {
+        inputDataProvider: this.data?.toJson() ?? null,
+      },
+    };
+  },
 });
 
 /**
@@ -50,7 +62,7 @@ const AbsFunction = FunctionBase.extend({
 function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
   const funcElement = AbsFunction.create({
     ...fieldsToInject,
-    data: convertAnySpecToFunction(spec.functionArguments?.dataProvider),
+    data: convertAnySpecToFunction(spec.functionArguments?.inputDataProvider),
   });
   if (funcElement.data) {
     set(funcElement.data, 'parentElement', funcElement);

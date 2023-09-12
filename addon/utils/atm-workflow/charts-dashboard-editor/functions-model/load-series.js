@@ -116,6 +116,52 @@ const LoadSeriesFunction = FunctionBase.extend({
       this._super(...arguments);
     }
   },
+
+  /**
+   * @override
+   */
+  toJson() {
+    return {
+      functionName: 'loadSeries',
+      functionArguments: {
+        sourceType: 'external',
+        sourceSpecProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: {
+              externalSourceName: 'store',
+              externalSourceParameters: {
+                collectionRef: this.timeSeriesRef.collectionRef,
+                timeSeriesNameGenerator: this.timeSeriesRef.timeSeriesNameGenerator,
+                timeSeriesName: this.timeSeriesRef.timeSeriesName,
+                metricNames: this.timeSeriesRef.metricNames,
+              },
+            },
+          },
+        },
+        replaceEmptyParametersProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: {
+              strategyProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: this.replaceEmptyParameters.strategy ??
+                    ReplaceEmptyStrategy.UseFallback,
+                },
+              },
+              fallbackValueProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: this.replaceEmptyParameters.fallbackValue ?? null,
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+  },
 });
 
 /**

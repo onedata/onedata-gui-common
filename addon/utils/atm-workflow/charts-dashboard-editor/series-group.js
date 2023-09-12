@@ -170,6 +170,30 @@ const SeriesGroup = ElementBase.extend({
   /**
    * @override
    */
+  toJson() {
+    const groupJson = {
+      id: this.id,
+      name: this.name,
+      stacked: this.stacked,
+      showSum: this.showSum,
+      subgroups: this.seriesGroups.map((subgroup) => subgroup.toJson()),
+    };
+
+    if (this.parent.elementType === ElementType.Chart) {
+      return {
+        builderType: 'static',
+        builderRecipe: {
+          seriesGroupTemplate: groupJson,
+        },
+      };
+    }
+
+    return groupJson;
+  },
+
+  /**
+   * @override
+   */
   * nestedElements() {
     for (const subgroup of this.seriesGroups) {
       yield subgroup;

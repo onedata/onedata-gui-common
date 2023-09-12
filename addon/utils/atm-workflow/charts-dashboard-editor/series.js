@@ -247,6 +247,89 @@ const Series = ElementBase.extend({
   /**
    * @override
    */
+  toJson() {
+    const yAxisId = this.axis?.id ?? null;
+    const groupId = this.group?.id ?? null;
+    const dataProvider = this.dataProvider?.toJson();
+
+    if (this.repeatPerPrefixedTimeSeries) {
+      return {
+        builderType: 'dynamic',
+        builderRecipe: {
+          dynamicSeriesConfigsSource: {
+            sourceType: 'external',
+            sourceSpec: {
+              externalSourceName: 'store',
+              externalSourceParameters: {
+                collectionRef: this.prefixedTimeSeriesRef.collectionRef,
+                timeSeriesNameGenerator: this.prefixedTimeSeriesRef
+                  .timeSeriesNameGenerator,
+                metricNames: this.prefixedTimeSeriesRef.metricNames,
+              },
+            },
+          },
+          seriesTemplate: {
+            idProvider: {
+              functionName: 'getDynamicSeriesConfig',
+              functionArguments: {
+                propertyName: 'id',
+              },
+            },
+            nameProvider: {
+              functionName: 'getDynamicSeriesConfig',
+              functionArguments: {
+                propertyName: 'name',
+              },
+            },
+            typeProvider: {
+              functionName: 'literal',
+              functionArguments: {
+                data: this.type,
+              },
+            },
+            yAxisIdProvider: {
+              functionName: 'literal',
+              functionArguments: {
+                data: yAxisId,
+              },
+            },
+            groupIdProvider: {
+              functionName: 'literal',
+              functionArguments: {
+                data: groupId,
+              },
+            },
+            colorProvider: {
+              functionName: 'literal',
+              functionArguments: {
+                data: this.color,
+              },
+            },
+            dataProvider,
+          },
+        },
+      };
+    }
+
+    return {
+      builderType: 'static',
+      builderRecipe: {
+        seriesTemplate: {
+          id: this.id,
+          name: this.name,
+          type: this.type,
+          yAxisId,
+          groupId,
+          color: this.color,
+          dataProvider,
+        },
+      },
+    };
+  },
+
+  /**
+   * @override
+   */
   * referencingElements() {
     if (this.parent) {
       yield this.parent;

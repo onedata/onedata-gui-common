@@ -65,6 +65,18 @@ const MultiplyFunction = FunctionBase.extend({
       this.set('operands', []);
     }
   },
+
+  /**
+   * @override
+   */
+  toJson() {
+    return {
+      functionName: 'multiply',
+      functionArguments: {
+        operandProviders: this.operands.map((operand) => operand.toJson()),
+      },
+    };
+  },
 });
 
 /**

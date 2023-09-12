@@ -26,4 +26,13 @@ export default EmberObject.extend({
       this._super(...arguments);
     }
   },
+
+  /**
+   * @returns {AtmTimeSeriesDashboardSpec}
+   */
+  toJson() {
+    return {
+      rootSection: this.rootSection?.toJson() ?? null,
+    };
+  },
 });

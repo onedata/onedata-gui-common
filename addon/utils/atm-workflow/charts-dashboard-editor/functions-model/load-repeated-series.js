@@ -8,6 +8,7 @@
  */
 
 import EmberObject from '@ember/object';
+import { ReplaceEmptyStrategy } from 'onedata-gui-common/utils/time-series-dashboard';
 import { FunctionDataType, FunctionExecutionContext } from './common';
 import FunctionBase from './function-base';
 
@@ -47,6 +48,44 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
       this._super(...arguments);
     }
   },
+
+  /**
+   * @override
+   */
+  toJson() {
+    return {
+      functionName: 'loadSeries',
+      functionArguments: {
+        sourceType: 'external',
+        sourceSpecProvider: {
+          functionName: 'getDynamicSeriesConfig',
+          functionArguments: {
+            propertyName: 'loadSeriesSourceSpec',
+          },
+        },
+        replaceEmptyParametersProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: {
+              strategyProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: this.replaceEmptyParameters.strategy ??
+                    ReplaceEmptyStrategy.UseFallback,
+                },
+              },
+              fallbackValueProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: this.replaceEmptyParameters.fallbackValue ?? null,
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+  },
 });
 
 /**
@@ -56,7 +95,7 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
  */
 function createFromSpec(spec, fieldsToInject) {
   const replaceEmptyRawArgs = spec.functionArguments
-    ?.replaceEmptyParametersProvider?.functionArguments;
+    ?.replaceEmptyParametersProvider?.functionArguments?.data;
 
   const funcElement = LoadRepeatedSeriesFunction.create({
     ...fieldsToInject,

@@ -119,6 +119,13 @@ const ElementBase = EmberObject.extend({
 
   /**
    * @public
+   * @virtual
+   * @returns {unknown}
+   */
+  toJson() {},
+
+  /**
+   * @public
    * @returns {Generator<Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement>}
    */
   * nestedElements() {},

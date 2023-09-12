@@ -50,6 +50,29 @@ const RateFunction = FunctionBase.extend({
   returnedTypes: computed('data.returnedTypes', function returnedTypes() {
     return this.data?.returnedTypes ?? dataArgument.compatibleTypes;
   }),
+
+  /**
+   * @override
+   */
+  toJson() {
+    const functionJson = {
+      functionName: 'rate',
+      functionArguments: {
+        inputDataProvider: this.data?.toJson() ?? null,
+      },
+    };
+
+    if (this.timeSpan) {
+      functionJson.functionArguments.timeSpanProvider = {
+        functionName: 'literal',
+        functionArguments: {
+          data: this.timeSpan,
+        },
+      };
+    }
+
+    return functionJson;
+  },
 });
 
 /**
@@ -59,9 +82,13 @@ const RateFunction = FunctionBase.extend({
  * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.Rate}
  */
 function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
+  const timeSpanProvider = spec.functionArguments.timeSpanProvider;
+  const timeSpan = timeSpanProvider?.functionName === 'literal' ?
+    timeSpanProvider.functionArguments.data : null;
   const funcElement = RateFunction.create({
     ...fieldsToInject,
-    data: convertAnySpecToFunction(spec.functionArguments?.dataProvider),
+    data: convertAnySpecToFunction(spec.functionArguments?.inputDataProvider),
+    timeSpan,
   });
   if (funcElement.data) {
     set(funcElement.data, 'parentElement', funcElement);

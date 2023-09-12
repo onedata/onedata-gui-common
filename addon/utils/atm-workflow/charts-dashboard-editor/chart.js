@@ -154,6 +154,21 @@ const Chart = ElementBase.extend({
   /**
    * @override
    */
+  toJson() {
+    return {
+      title: {
+        content: this.title,
+        tip: this.titleTip,
+      },
+      yAxes: this.axes.map((axis) => axis.toJson()),
+      seriesGroupBuilders: this.seriesGroups.map((seriesGroup) => seriesGroup.toJson()),
+      seriesBuilders: this.series.map((singleSeries) => singleSeries.toJson()),
+    };
+  },
+
+  /**
+   * @override
+   */
   * nestedElements() {
     for (const element of [...this.axes, ...this.seriesGroups, ...this.series]) {
       yield element;

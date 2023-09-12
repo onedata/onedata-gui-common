@@ -43,6 +43,16 @@ const SeriesOutputFunction = FunctionBase.extend({
    * @override
    */
   isRoot: true,
+
+  /**
+   * @override
+   */
+  toJson() {
+    if (!this.data) {
+      return null;
+    }
+    return this.data.toJson();
+  },
 });
 
 /**
