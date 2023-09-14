@@ -132,6 +132,7 @@
             {{#if (not editorContext.isReadOnly)}}
               {{atm-workflow/charts-dashboard-editor/function-editor/function-adder
                 executionContext=executionContext
+                editorContext=editorContext
                 actionsFactory=actionsFactory
                 parentFunction=chartFunction
                 parentFunctionArgumentName=argumentInfo.name

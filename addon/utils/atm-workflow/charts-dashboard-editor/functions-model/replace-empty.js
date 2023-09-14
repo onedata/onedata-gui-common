@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed, set } from '@ember/object';
+import { computed, set } from '@ember/object';
 import { ReplaceEmptyStrategy } from 'onedata-gui-common/utils/time-series-dashboard';
 import { FunctionDataType } from './common';
 import FunctionBase from './function-base';
@@ -57,6 +57,30 @@ const ReplaceEmptyFunction = FunctionBase.extend({
   returnedTypes: computed('data.returnedTypes', function returnedTypes() {
     return this.data?.returnedTypes ?? dataArgument.compatibleTypes;
   }),
+
+  /**
+   * @override
+   */
+  toJson() {
+    return {
+      functionName: 'replaceEmpty',
+      functionArguments: {
+        inputDataProvider: this.data?.toJson() ?? null,
+        strategyProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: this.strategy,
+          },
+        },
+        fallbackValueProvider: {
+          functionName: 'literal',
+          functionArguments: {
+            data: this.fallbackValue,
+          },
+        },
+      },
+    };
+  },
 });
 
 /**
@@ -68,17 +92,14 @@ const ReplaceEmptyFunction = FunctionBase.extend({
 function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
   const funcElement = ReplaceEmptyFunction.create({
     ...fieldsToInject,
-    strategy: convertAnySpecToFunction(spec.functionArguments?.strategyProvider) ??
+    data: convertAnySpecToFunction(spec.functionArguments?.inputDataProvider),
+    // We assume here, that strategy and fallbackValue are always provided
+    // by "literal" function. There is no other (sensible) function, which could be
+    // used in this context.
+    strategy: spec.functionArguments?.strategyProvider?.functionArguments?.data ??
       ReplaceEmptyStrategy.UseFallback,
-    replaceEmptyParameters: EmberObject.create({
-      data: convertAnySpecToFunction(spec.functionArguments?.dataProvider),
-      // We assume here, that strategy and fallbackValue are always provided
-      // by "literal" function. There is no other (sensible) function, which could be
-      // used in this context.
-      strategy: spec.functionArguments?.strategyProvider?.functionArguments?.data,
-      fallbackValue: spec.functionArguments?.fallbackValueProvider
-        ?.functionArguments?.data,
-    }),
+    fallbackValue: spec.functionArguments?.fallbackValueProvider
+      ?.functionArguments?.data,
   });
   if (funcElement.data) {
     set(funcElement.data, 'parentElement', funcElement);

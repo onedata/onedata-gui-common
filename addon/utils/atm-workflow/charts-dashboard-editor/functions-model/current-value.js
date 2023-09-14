@@ -19,6 +19,16 @@ const CurrentValueFunction = FunctionBase.extend({
    * @override
    */
   returnedTypes: Object.freeze([FunctionDataType.Number]),
+
+  /**
+   * @override
+   */
+  toJson() {
+    return {
+      functionName: 'currentValue',
+      functionArguments: {},
+    };
+  },
 });
 
 /**

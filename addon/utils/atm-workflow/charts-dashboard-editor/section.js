@@ -139,6 +139,22 @@ const Section = ElementBase.extend({
   /**
    * @override
    */
+  toJson() {
+    return {
+      title: {
+        content: this.title,
+        tip: this.titleTip,
+      },
+      description: this.description,
+      chartNavigation: 'independent',
+      charts: this.charts.map((chart) => chart.toJson()),
+      sections: this.sections.map((section) => section.toJson()),
+    };
+  },
+
+  /**
+   * @override
+   */
   * nestedElements() {
     for (const element of [...this.sections, ...this.charts]) {
       yield element;

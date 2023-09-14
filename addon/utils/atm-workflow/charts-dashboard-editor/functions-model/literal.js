@@ -30,6 +30,18 @@ const LiteralFunction = FunctionBase.extend({
    * @override
    */
   returnedTypes: Object.freeze([FunctionDataType.Number]),
+
+  /**
+   * @override
+   */
+  toJson() {
+    return {
+      functionName: 'literal',
+      functionArguments: {
+        data: this.data,
+      },
+    };
+  },
 });
 
 /**

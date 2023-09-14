@@ -236,6 +236,37 @@ const Axis = ElementBase.extend({
   /**
    * @override
    */
+  toJson() {
+    const unitOptionsType = getUnitOptionsTypeForUnitName(this.unitName);
+    let unitOptions = null;
+    if (this.unitOptions) {
+      switch (unitOptionsType) {
+        case 'BytesUnitOptions':
+          unitOptions = {
+            format: this.unitOptions.format,
+          };
+          break;
+        case 'CustomUnitOptions':
+          unitOptions = {
+            customName: this.unitOptions.customName,
+            useMetricSuffix: this.unitOptions.useMetricSuffix,
+          };
+      }
+    }
+
+    return {
+      id: this.id,
+      name: this.name,
+      unitName: this.unitName,
+      unitOptions,
+      minInterval: this.minInterval,
+      valueProvider: this.valueProvider.toJson(),
+    };
+  },
+
+  /**
+   * @override
+   */
   * referencingElements() {
     if (this.parent) {
       yield this.parent;

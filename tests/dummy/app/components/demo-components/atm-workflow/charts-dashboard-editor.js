@@ -1,7 +1,15 @@
 import Component from '@ember/component';
+import { computed } from '@ember/object';
+import {
+  createModelFromSpec,
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 
 export default Component.extend({
   isReadOnly: false,
+
+  dashboardModel: computed(() => {
+    return createModelFromSpec(null, this);
+  }),
 
   dataSources: Object.freeze([{
     name: 'Store "abc"',
@@ -91,4 +99,10 @@ export default Component.extend({
       }],
     },
   }]),
+
+  actions: {
+    logModelJson() {
+      console.log(this.dashboardModel.toJson());
+    },
+  },
 });
