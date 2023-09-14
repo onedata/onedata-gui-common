@@ -28,10 +28,16 @@ export default Component.extend({
   i18n: service(),
 
   /**
-   * @virtual
+   * @virtual optional
    * @type {AtmTimeSeriesDashboardSpec}
    */
   dashboardSpec: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Model}
+   */
+  dashboardModel: undefined,
 
   /**
    * @virtual
@@ -87,8 +93,8 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Model>}
    */
-  model: computed('dashboardSpec', function model() {
-    return createModelFromSpec(this.dashboardSpec, this);
+  model: computed('dashboardModel', 'dashboardSpec', function model() {
+    return this.dashboardModel ?? createModelFromSpec(this.dashboardSpec, this);
   }),
 
   dataSourcesObserver: observer('dataSources', function dataSourcesObserver() {
@@ -135,7 +141,9 @@ export default Component.extend({
    */
   willDestroyElement() {
     try {
-      this.cacheFor('model')?.destroy();
+      if (this.cacheFor('model') !== this.dashboardModel) {
+        this.cacheFor('model')?.destroy();
+      }
       this.cacheFor('editorContext')?.destroy();
       this.undoManager.destroy();
       this.setProperties({
