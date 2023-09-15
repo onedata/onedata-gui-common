@@ -90,6 +90,8 @@ export default Action.extend({
       ...parentCollection.slice(elementIndexInParent + 1),
     ]);
     set(this.createdDuplicate, 'parent', parent);
+
+    parent.notifyAboutChange();
     this.changeViewState({ elementToSelect: this.createdDuplicate });
   },
 
@@ -106,6 +108,8 @@ export default Action.extend({
     );
     [this.createdDuplicate, ...this.createdDuplicate.nestedElements()]
     .forEach((element) => set(element, 'isRemoved', true));
+
+    parent.notifyAboutChange();
     this.changeViewState({
       elementsToDeselect: [
         this.createdDuplicate,

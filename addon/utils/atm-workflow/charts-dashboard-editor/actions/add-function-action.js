@@ -10,6 +10,7 @@ import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { createNewFunction, ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import { ChangedElementsSet } from './utils';
 
 /**
  * @typedef {Object} AddFunctionActionContext
@@ -116,6 +117,7 @@ export default Action.extend({
    * @override
    */
   onExecute() {
+    const changedElements = new ChangedElementsSet();
     // Create new function
     if (!this.newFunction) {
       this.set('newFunction', this.createNewFunction());
@@ -144,8 +146,10 @@ export default Action.extend({
           removedReferencesToAttachedFunction: this.functionToAttach
             .parent.removeElementReferences(this.functionToAttach),
         });
+        changedElements.addElement(this.functionToAttach.parent);
       }
       set(this.functionToAttach, 'parent', this.newFunction);
+      changedElements.addElement(this.functionToAttach);
       const firstArgSpec = this.newFunction.attachableArgumentSpecs[0];
       if (firstArgSpec.isArray) {
         set(this.newFunction, firstArgSpec.name, [this.functionToAttach]);
@@ -166,6 +170,9 @@ export default Action.extend({
     } else {
       set(this.targetFunction, this.targetArgumentName, this.newFunction);
     }
+    changedElements.addElement(this.targetFunction);
+
+    changedElements.notifyAboutChange();
 
     this.changeViewState({ elementToSelect: this.newFunction });
   },
@@ -177,6 +184,7 @@ export default Action.extend({
     if (!this.newFunction) {
       return;
     }
+    const changedElements = new ChangedElementsSet();
 
     // Remove new function from the parent
     if (this.targetArgumentSpec.isArray) {
@@ -189,27 +197,27 @@ export default Action.extend({
     } else {
       set(this.targetFunction, this.targetArgumentName, null);
     }
+    changedElements.addElement(this.targetFunction);
 
     // Rollback functionToAttach attachment
     if (this.functionToAttach.parent === this.newFunction) {
       set(this.functionToAttach, 'parent', this.oldFunctionToAttachParent);
+      changedElements.addElement(this.functionToAttach);
       this.removedReferencesToAttachedFunction?.forEach((removedReference) => {
         removedReference.referencingElement.rollbackReferenceRemoval(removedReference);
       });
+      if (this.oldFunctionToAttachParent) {
+        changedElements.addElement(this.oldFunctionToAttachParent);
+      }
       this.newFunction.removeElementReferences(this.functionToAttach);
     }
 
-    set(
-      this.targetElement,
-      this.collectionName,
-      this.targetElement[this.collectionName]
-      .filter((element) => element !== this.newElement)
-    );
     set(this.newFunction, 'parent', null);
-
     [this.newFunction, ...this.newFunction.nestedElements()].forEach((element) =>
       set(element, 'isRemoved', true)
     );
+
+    changedElements.notifyAboutChange();
 
     this.changeViewState({
       elementsToDeselect: [this.newFunction, ...this.newFunction.nestedElements()],

@@ -32,3 +32,29 @@ export function getCollectionFieldName(childElementType) {
       return null;
   }
 }
+
+export class ChangedElementsSet {
+  constructor() {
+    /**
+     * @type {Set<Utils.AtmWorkflow.ChartsDashboardEditor.ElementBase>}
+     */
+    this.changedElements = new Set();
+  }
+
+  /**
+   * @public
+   * @param {Utils.AtmWorkflow.ChartsDashboardEditor.ElementBase} element
+   * @returns {void}
+   */
+  addElement(element) {
+    this.changedElements.add(element);
+  }
+
+  /**
+   * @public
+   * @void
+   */
+  notifyAboutChange() {
+    this.changedElements.forEach((element) => element.notifyAboutChange());
+  }
+}

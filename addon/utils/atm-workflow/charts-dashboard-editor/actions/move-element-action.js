@@ -144,6 +144,9 @@ export default Action.extend({
       this.newRelationFieldName,
       this.newPosition
     );
+    [this.oldParent, this.newParent, this.movedElement].forEach((element) =>
+      element.notifyAboutChange()
+    );
     this.changeViewState({ elementToSelect: this.movedElement });
   },
 
@@ -156,6 +159,9 @@ export default Action.extend({
       this.oldParent,
       this.oldRelationFieldName,
       this.oldPosition
+    );
+    [this.oldParent, this.newParent, this.movedElement].forEach((element) =>
+      element.notifyAboutChange()
     );
     this.changeViewState({ elementToSelect: this.movedElement });
   },

@@ -17,7 +17,7 @@ import {
   createNewSeries,
 } from '../create-model';
 import { ElementType } from '../common';
-import { getCollectionFieldName } from './utils';
+import { getCollectionFieldName, ChangedElementsSet } from './utils';
 
 /**
  * @typedef {Object} AddElementActionContext
@@ -98,6 +98,7 @@ export default Action.extend({
    * @override
    */
   onExecute() {
+    const changedElements = new ChangedElementsSet();
     // Create new element
     if (!this.newElement) {
       this.set('newElement', this.createNewElement());
@@ -122,6 +123,7 @@ export default Action.extend({
           ...firstAxis.series,
           this.newElement,
         ]);
+        changedElements(firstAxis);
       }
     }
 
@@ -130,6 +132,9 @@ export default Action.extend({
       ...this.targetElement[this.collectionName],
       this.newElement,
     ]);
+    changedElements(this.targetElement);
+
+    changedElements.notifyAboutChange();
 
     this.changeViewState({ elementToSelect: this.newElement });
   },
@@ -142,6 +147,7 @@ export default Action.extend({
       return;
     }
 
+    const changedElements = new ChangedElementsSet();
     set(
       this.targetElement,
       this.collectionName,
@@ -149,6 +155,7 @@ export default Action.extend({
       .filter((element) => element !== this.newElement)
     );
     set(this.newElement, 'parent', null);
+    changedElements(this.targetElement);
 
     if (this.newElementType === ElementType.Series && this.newElement.axis) {
       set(
@@ -156,12 +163,15 @@ export default Action.extend({
         'series',
         this.newElement.axis.series.filter((series) => series !== this.newElement)
       );
+      changedElements(this.newElement.axis);
       set(this.newElement, 'axis', null);
     }
 
     [this.newElement, ...this.newElement.nestedElements()].forEach((element) =>
       set(element, 'isRemoved', true)
     );
+
+    changedElements.notifyAboutChange();
 
     this.changeViewState({
       elementsToDeselect: [this.newElement, ...this.newElement.nestedElements()],
