@@ -2,7 +2,7 @@
   {{component (concat "errors/" error.type) error=error}}
 {{else}}
   <div class="row absolute-align-middle-center error-row">
-    {{one-icon tagName="div" icon="sign-warning" class="application-error-icon"}}
+    {{one-icon tagName="div" icon="sign-warning-rounded" class="application-error-icon"}}
     <div class="application-error-message">
       {{message}}
     </div>
@@ -24,4 +24,4 @@
       </div>
     {{/if}}
   </div>
-{{/if}}  
+{{/if}}

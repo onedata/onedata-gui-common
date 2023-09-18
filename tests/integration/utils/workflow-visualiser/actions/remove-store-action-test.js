@@ -33,7 +33,7 @@ describe('Integration | Utility | workflow-visualiser/actions/remove-store-actio
       title,
     } = getProperties(this.get('action'), 'className', 'icon', 'title');
     expect(className).to.equal('remove-store-action-trigger');
-    expect(icon).to.equal('remove');
+    expect(icon).to.equal('browser-delete');
     expect(String(title)).to.equal('Remove');
   });
 

@@ -27,7 +27,7 @@ export default Action.extend({
   /**
    * @override
    */
-  icon: 'remove',
+  icon: 'browser-delete',
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}

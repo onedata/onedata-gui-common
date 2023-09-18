@@ -28,11 +28,11 @@ import globals from 'onedata-gui-common/utils/globals';
 const taskActionsSpec = [{
   className: 'modify-task-action-trigger',
   label: 'Modify',
-  icon: 'rename',
+  icon: 'browser-rename',
 }, {
   className: 'remove-task-action-trigger',
   label: 'Remove',
-  icon: 'remove',
+  icon: 'browser-delete',
 }];
 
 describe('Integration | Component | workflow-visualiser/lane/task', function () {

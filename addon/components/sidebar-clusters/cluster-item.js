@@ -133,7 +133,7 @@ export default Component.extend(I18n, {
   //     ),
   //     title: this.t('deregister'),
   //     class: 'deregister-oneprovider-action',
-  //     icon: 'remove',
+  //     icon: 'browser-delete',
   //   };
   // }),
 

@@ -11,7 +11,8 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-icon';
 import { htmlSafe } from '@ember/template';
-import isOneicon, { isDeprecatedOneicon } from 'onedata-gui-common/utils/is-oneicon';
+import isOneicon from 'onedata-gui-common/utils/is-oneicon';
+import config from 'ember-get-config';
 
 export default Component.extend({
   layout,
@@ -38,12 +39,13 @@ export default Component.extend({
    * @type {Ember.ComputedProperty<string>}
    */
   iconClass: computed('icon', function iconClass() {
-    // FIXME: will be only console warning
-    if (!isOneicon(this.icon)) {
-      console.error(`Unknown oneicon: "${this.icon}"`);
-    }
-    if (isDeprecatedOneicon(this.icon)) {
-      console.warn(`Deprecated oneicon: "${this.icon}"`);
+    if (config.environment !== 'production' && !isOneicon(this.icon)) {
+      const message = `Unknown oneicon used: "${this.icon}"`;
+      if (config.environment === 'test' && this.icon) {
+        throw new Error(message);
+      } else {
+        console.warn(message);
+      }
     }
     return `oneicon-${this.icon}`;
   }),

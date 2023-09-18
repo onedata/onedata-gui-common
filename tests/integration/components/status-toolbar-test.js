@@ -32,8 +32,8 @@ describe('Integration | Component | status-toolbar', function () {
         {{toolbar.icon icon="space" subIcon="checkbox-filled" subIconClass="subicon"}}
       {{/status-toolbar}}
     `);
-    expect(find('.oneicon-checkbox')).to.exist;
-    expect(find('.oneicon-checkbox')).to.have.class('subicon');
+    expect(find('.oneicon-checkbox-filled')).to.exist;
+    expect(find('.oneicon-checkbox-filled')).to.have.class('subicon');
   });
 
   it('triggers status icon click action', async function () {
