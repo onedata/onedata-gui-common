@@ -38,7 +38,7 @@ describe('Integration | Utility | clipboard-actions/copy-record-id-action', func
       title,
     } = getProperties(this.get('action'), 'className', 'icon', 'title');
     expect(className).to.equal('copy-record-id-action-trigger');
-    expect(icon).to.equal('copy');
+    expect(icon).to.equal('browser-copy');
     expect(String(title)).to.equal('Copy ID');
   });
 
