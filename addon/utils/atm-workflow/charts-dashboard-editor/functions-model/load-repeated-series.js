@@ -70,14 +70,14 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
               strategyProvider: {
                 functionName: 'literal',
                 functionArguments: {
-                  data: this.replaceEmptyParameters.strategy ??
+                  data: this.replaceEmptyParameters?.strategy ??
                     ReplaceEmptyStrategy.UseFallback,
                 },
               },
               fallbackValueProvider: {
                 functionName: 'literal',
                 functionArguments: {
-                  data: this.replaceEmptyParameters.fallbackValue ?? null,
+                  data: this.replaceEmptyParameters?.fallbackValue ?? null,
                 },
               },
             },

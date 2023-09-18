@@ -14,7 +14,7 @@ const LiteralFunction = FunctionBase.extend({
    * @public
    * @type {number | null}
    */
-  data: null,
+  data: 1,
 
   /**
    * @override

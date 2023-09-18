@@ -84,7 +84,7 @@ export default Action.extend({
     .forEach((element) => set(element, 'isRemoved', true));
 
     if (this.oldParent) {
-      changedElements.addElement(this.oldParent());
+      changedElements.addElement(this.oldParent);
     }
 
     changedElements.notifyAboutChange();

@@ -123,7 +123,7 @@ export default Action.extend({
           ...firstAxis.series,
           this.newElement,
         ]);
-        changedElements(firstAxis);
+        changedElements.addElement(firstAxis);
       }
     }
 
@@ -132,7 +132,7 @@ export default Action.extend({
       ...this.targetElement[this.collectionName],
       this.newElement,
     ]);
-    changedElements(this.targetElement);
+    changedElements.addElement(this.targetElement);
 
     changedElements.notifyAboutChange();
 
@@ -155,7 +155,7 @@ export default Action.extend({
       .filter((element) => element !== this.newElement)
     );
     set(this.newElement, 'parent', null);
-    changedElements(this.targetElement);
+    changedElements.addElement(this.targetElement);
 
     if (this.newElementType === ElementType.Series && this.newElement.axis) {
       set(
@@ -163,7 +163,7 @@ export default Action.extend({
         'series',
         this.newElement.axis.series.filter((series) => series !== this.newElement)
       );
-      changedElements(this.newElement.axis);
+      changedElements.addElement(this.newElement.axis);
       set(this.newElement, 'axis', null);
     }
 
