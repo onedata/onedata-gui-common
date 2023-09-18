@@ -143,7 +143,7 @@ export const knownOneicons = new Set([
   // 'parents',
   // 'password-change',
   'pause',
-  // 'permissions',
+  'permissions',
   'play',
   'plug-in',
   'plug-out',
