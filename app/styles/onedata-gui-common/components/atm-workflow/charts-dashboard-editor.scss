@@ -175,6 +175,10 @@
         }
       }
 
+      .chart-preview {
+        flex-grow: 1;
+      }
+
       .warning-icon {
         position: absolute;
         right: 0;
@@ -409,6 +413,25 @@
     }
   }
 
+  .chart-preview {
+    display: grid;
+    min-height: 0;
+    min-width: 0;
+
+    .one-time-series-chart-plot {
+      min-height: 0;
+      min-width: 0;
+
+      .title-area {
+        display: none;
+      }
+
+      .no-data-img {
+        transform: translateY(-50%) translateX(-50%);
+      }
+    }
+  }
+
   .chart-editor {
     grid-row: 2;
     grid-column: 1;
@@ -455,14 +478,6 @@
         padding-top: 0.5em;
         background-color: $color-one-white;
         border: $main-border;
-
-        .title-area {
-          display: none;
-        }
-
-        .no-data-img {
-          transform: translateY(-50%) translateX(-50%);
-        }
       }
     }
 

@@ -146,6 +146,7 @@ const Chart = ElementBase.extend({
   clone() {
     const clonedInstance = Chart.create({
       elementOwner: this.elementOwner,
+      dataSources: this.dataSources,
       title: this.title,
       titleTip: this.titleTip,
       axes: this.axes.map((axis) => axis.clone()),

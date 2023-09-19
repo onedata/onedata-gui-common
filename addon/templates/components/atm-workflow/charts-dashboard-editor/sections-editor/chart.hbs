@@ -1,15 +1,19 @@
-<div class="canvas-area">
-  <div class="no-config-info info-box">
-    <h3 class="header">{{tt this "noConfig.header"}}</h3>
-    <p class="description">
-      <a
-        class="clickable underlined azure edit-chart-content-trigger"
-        onClick={{action "editContent"}}
-      >{{tt this "noConfig.description.editContent"}}</a>
-      {{tt this "noConfig.description.toDefineConfig"}}
-    </p>
+{{#if (and chart.series.length chart.axes.length)}}
+  {{atm-workflow/charts-dashboard-editor/chart-preview chart=chart}}
+{{else}}
+  <div class="canvas-area">
+    <div class="no-config-info info-box">
+      <h3 class="header">{{tt this "noConfig.header"}}</h3>
+      <p class="description">
+        <a
+          class="clickable underlined azure edit-chart-content-trigger"
+          onClick={{action "editContent"}}
+        >{{tt this "noConfig.description.editContent"}}</a>
+        {{tt this "noConfig.description.toDefineConfig"}}
+      </p>
+    </div>
   </div>
-</div>
+{{/if}}
 
 {{#if chart.title}}
   <div class="title-area">

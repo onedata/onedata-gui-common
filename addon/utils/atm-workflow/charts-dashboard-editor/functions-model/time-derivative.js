@@ -54,6 +54,24 @@ const TimeDerivativeFunction = FunctionBase.extend({
   /**
    * @override
    */
+  clone() {
+    const functionClone = TimeDerivativeFunction.create({
+      data: this.data?.clone(),
+      timeSpan: this.timeSpan,
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
+
+    if (functionClone.data) {
+      set(functionClone.data, 'parent', functionClone);
+    }
+
+    return functionClone;
+  },
+
+  /**
+   * @override
+   */
   toJson() {
     const functionJson = {
       functionName: 'timeDerivative',
@@ -91,7 +109,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
     timeSpan,
   });
   if (funcElement.data) {
-    set(funcElement.data, 'parentElement', funcElement);
+    set(funcElement.data, 'parent', funcElement);
   }
   return funcElement;
 }

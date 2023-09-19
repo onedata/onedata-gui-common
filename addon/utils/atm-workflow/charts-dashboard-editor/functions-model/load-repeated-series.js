@@ -52,6 +52,18 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
   /**
    * @override
    */
+  clone() {
+    return LoadRepeatedSeriesFunction.create({
+      replaceEmptyParameters: this.replaceEmptyParameters ?
+        EmberObject.create(this.replaceEmptyParameters) : null,
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
+  },
+
+  /**
+   * @override
+   */
   toJson() {
     return {
       functionName: 'loadSeries',

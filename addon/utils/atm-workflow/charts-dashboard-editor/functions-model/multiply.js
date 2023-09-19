@@ -69,6 +69,21 @@ const MultiplyFunction = FunctionBase.extend({
   /**
    * @override
    */
+  clone() {
+    const functionClone = MultiplyFunction.create({
+      operands: this.operands.map((func) => func.clone()),
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
+
+    functionClone.operands.forEach((func) => set(func, 'parent', functionClone));
+
+    return functionClone;
+  },
+
+  /**
+   * @override
+   */
   toJson() {
     return {
       functionName: 'multiply',
@@ -91,7 +106,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
     operands: spec.functionArguments?.operandProviders
       ?.map((operandSpec) => convertAnySpecToFunction(operandSpec)) ?? [],
   });
-  funcElement.operands.forEach((operand) => set(operand, 'parentElement', funcElement));
+  funcElement.operands.forEach((operand) => set(operand, 'parent', funcElement));
   return funcElement;
 }
 

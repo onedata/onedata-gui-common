@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed } from '@ember/object';
+import EmberObject, { computed, set } from '@ember/object';
 import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
@@ -218,7 +218,7 @@ const Series = ElementBase.extend({
       }
       if (this.timeSeriesRefChangesHandler) {
         this.timeSeriesRefChangesHandler.destroy();
-        this.set('replaceEmptyParameters', undefined);
+        this.set('timeSeriesRefChangesHandler', null);
       }
     } finally {
       this._super(...arguments);
@@ -229,9 +229,10 @@ const Series = ElementBase.extend({
    * @override
    */
   clone() {
-    return Series.create({
+    const seriesClone = Series.create({
       elementOwner: this.elementOwner,
       id: generateId(),
+      dataSources: this.dataSources,
       repeatPerPrefixedTimeSeries: this.repeatPerPrefixedTimeSeries,
       prefixedTimeSeriesRef: this.prefixedTimeSeriesRef ?
         EmberObject.create(this.prefixedTimeSeriesRef) : this.prefixedTimeSeriesRef,
@@ -240,8 +241,19 @@ const Series = ElementBase.extend({
       axis: this.axis,
       color: this.color,
       group: this.group,
+      dataProvider: this.dataProvider?.clone(),
+      detachedFunctions: this.detachedFunctions.map((func) => func.clone()),
       parent: this.parent,
     });
+
+    if (seriesClone.dataProvider) {
+      set(seriesClone.dataProvider, 'parent', seriesClone);
+    }
+    seriesClone.detachedFunctions.forEach((func) =>
+      set(func, 'parent', seriesClone)
+    );
+
+    return seriesClone;
   },
 
   /**

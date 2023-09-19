@@ -34,6 +34,17 @@ const LiteralFunction = FunctionBase.extend({
   /**
    * @override
    */
+  clone() {
+    return LiteralFunction.create({
+      data: this.data,
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
+  },
+
+  /**
+   * @override
+   */
   toJson() {
     return {
       functionName: 'literal',
