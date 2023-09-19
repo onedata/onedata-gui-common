@@ -149,7 +149,7 @@ export const knownOneicons = new Set([
   'plug-out',
   'plus',
   'properties',
-  // 'provider-add',
+  'provider-add',
   // 'provider-default',
   // 'provider-home',
   'provider',
