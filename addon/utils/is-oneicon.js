@@ -14,7 +14,7 @@ export const knownOneicons = new Set([
   'arrow-down',
   'arrow-left',
   // 'arrow-long-up',
-  // 'arrow-right-full',
+  'arrow-right-full',
   'arrow-right',
   'arrow-up',
   'atm-inventory',
