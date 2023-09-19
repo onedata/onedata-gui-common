@@ -746,6 +746,11 @@
     content: $oneicon-text-underline;
   }
 }
+.oneicon-time-outline {
+  &:before {
+    content: $oneicon-time-outline;
+  }
+}
 .oneicon-time {
   &:before {
     content: $oneicon-time;

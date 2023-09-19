@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'oneicons';
   src:
-    url('fonts/oneicons.ttf?lfumiy') format('truetype'),
-    url('fonts/oneicons.woff?lfumiy') format('woff'),
-    url('fonts/oneicons.svg?lfumiy#oneicons') format('svg');
+    url('fonts/oneicons.ttf?34zb69') format('truetype'),
+    url('fonts/oneicons.woff?34zb69') format('woff'),
+    url('fonts/oneicons.svg?34zb69#oneicons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -456,60 +456,63 @@
 .oneicon-text-underline:before {
   content: "\e98f";
 }
-.oneicon-time:before {
+.oneicon-time-outline:before {
   content: "\e990";
 }
-.oneicon-token-access:before {
+.oneicon-time:before {
   content: "\e991";
 }
-.oneicon-token-identity:before {
+.oneicon-token-access:before {
   content: "\e992";
 }
-.oneicon-token-invite:before {
+.oneicon-token-identity:before {
   content: "\e993";
 }
-.oneicon-tokens:before {
+.oneicon-token-invite:before {
   content: "\e994";
 }
-.oneicon-transfers:before {
+.oneicon-tokens:before {
   content: "\e995";
 }
-.oneicon-undo:before {
+.oneicon-transfers:before {
   content: "\e996";
 }
-.oneicon-unit:before {
+.oneicon-undo:before {
   content: "\e997";
 }
-.oneicon-unknown:before {
+.oneicon-unit:before {
   content: "\e998";
 }
-.oneicon-update:before {
+.oneicon-unknown:before {
   content: "\e999";
 }
-.oneicon-user-profile:before {
+.oneicon-update:before {
   content: "\e99a";
 }
-.oneicon-user:before {
+.oneicon-user-profile:before {
   content: "\e99b";
 }
-.oneicon-view-grid:before {
+.oneicon-user:before {
   content: "\e99c";
 }
-.oneicon-view-list:before {
+.oneicon-view-grid:before {
   content: "\e99d";
 }
-.oneicon-view:before {
+.oneicon-view-list:before {
   content: "\e99e";
 }
-.oneicon-visual-editor:before {
+.oneicon-view:before {
   content: "\e99f";
 }
-.oneicon-warning:before {
+.oneicon-visual-editor:before {
   content: "\e9a0";
 }
-.oneicon-x:before {
+.oneicon-warning:before {
   content: "\e9a1";
 }
-.oneicon-xml-file:before {
+.oneicon-x:before {
   content: "\e9a2";
+}
+.oneicon-xml-file:before {
+  content: "\e9a3";
 }

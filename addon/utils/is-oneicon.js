@@ -215,6 +215,7 @@ export const knownOneicons = new Set([
   'text-strikethrough',
   'text-ulist',
   'text-underline',
+  'time-outline',
   'time',
   'token-access',
   'token-identity',
