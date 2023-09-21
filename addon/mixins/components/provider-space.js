@@ -35,14 +35,6 @@ export default Mixin.create({
   _name: alias('space.name'),
 
   /**
-   * Space icon name
-   * @type {computed.string}
-   */
-  _iconName: computed('space.isDefault', function () {
-    return this.get('space.isDefault') ? 'space-default' : 'space';
-  }),
-
-  /**
    * Space support size
    * @type {computed.number}
    */

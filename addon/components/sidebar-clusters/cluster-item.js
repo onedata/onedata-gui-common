@@ -95,7 +95,7 @@ export default Component.extend(I18n, {
       ),
       title: this.t('copyDomainAction'),
       class: 'copy-cluster-domain-action-trigger',
-      icon: 'copy',
+      icon: 'browser-copy',
     };
   }),
 
@@ -133,7 +133,7 @@ export default Component.extend(I18n, {
   //     ),
   //     title: this.t('deregister'),
   //     class: 'deregister-oneprovider-action',
-  //     icon: 'remove',
+  //     icon: 'browser-delete',
   //   };
   // }),
 

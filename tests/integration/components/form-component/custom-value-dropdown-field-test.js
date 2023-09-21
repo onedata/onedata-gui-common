@@ -456,9 +456,9 @@ describe('Integration | Component | form-component/custom-value-dropdown-field',
       const trigger = await helper.dropdown.getTrigger();
       const customValueOption = await helper.getCustomValueOption();
 
-      expect(trigger.querySelector('.one-icon')).to.have.class('oneicon-rename');
+      expect(trigger.querySelector('.one-icon')).to.have.class('oneicon-browser-rename');
       expect(customValueOption.querySelector('.one-icon'))
-        .to.have.class('oneicon-rename');
+        .to.have.class('oneicon-browser-rename');
     }
   );
 

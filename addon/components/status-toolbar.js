@@ -12,10 +12,10 @@
  *   {{toolbar.icon
  *     icon="space"
  *     status="done"
- *     subIcon="checkbox"
+ *     subIcon="checkbox-filled"
  *     subIconClass="subicon"}}
  *   {{toolbar.icon
- *     icon="checkbox"
+ *     icon="checkbox-filled"
  *     hint="some tooltip text"
  *     status="inProgress"
  *     clickAction=(action "iconClick")}}
