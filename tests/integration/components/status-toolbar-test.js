@@ -29,11 +29,11 @@ describe('Integration | Component | status-toolbar', function () {
   it('adds a subicon to status icon', async function () {
     await render(hbs `
       {{#status-toolbar as |toolbar|}}
-        {{toolbar.icon icon="space" subIcon="checkbox" subIconClass="subicon"}}
+        {{toolbar.icon icon="space" subIcon="checkbox-filled" subIconClass="subicon"}}
       {{/status-toolbar}}
     `);
-    expect(find('.oneicon-checkbox')).to.exist;
-    expect(find('.oneicon-checkbox')).to.have.class('subicon');
+    expect(find('.oneicon-checkbox-filled')).to.exist;
+    expect(find('.oneicon-checkbox-filled')).to.have.class('subicon');
   });
 
   it('triggers status icon click action', async function () {
