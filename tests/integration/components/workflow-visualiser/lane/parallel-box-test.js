@@ -30,7 +30,7 @@ const blockActionsSpec = [{
 }, {
   className: 'remove-parallel-box-action-trigger',
   label: 'Remove',
-  icon: 'remove',
+  icon: 'browser-delete',
 }];
 
 describe('Integration | Component | workflow-visualiser/lane/parallel-box', function () {

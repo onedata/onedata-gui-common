@@ -56,7 +56,7 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-lane-action
       title,
     } = getProperties(this.get('action'), 'className', 'icon', 'title');
     expect(className).to.equal('modify-lane-action-trigger');
-    expect(icon).to.equal('rename');
+    expect(icon).to.equal('browser-rename');
     expect(String(title)).to.equal('Modify');
   });
 

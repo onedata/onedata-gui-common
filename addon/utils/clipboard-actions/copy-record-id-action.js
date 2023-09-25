@@ -30,7 +30,7 @@ export default Action.extend({
   /**
    * @override
    */
-  icon: 'copy',
+  icon: 'browser-copy',
 
   /**
    * @type {ComputedProperty<GraphSingleModel>}
