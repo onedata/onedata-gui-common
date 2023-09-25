@@ -81,17 +81,28 @@ export default Component.extend(I18n, {
   ),
 
   /**
+   * Override this to get custom notifications like: "<textType> successfully copied..."
+   * @virtual optional
+   * @type {Ember.ComputedProperty<string>}
+   */
+  textType: computed({
+    get() {
+      return this.injectedTextType ?? this.t('defaultTextType');
+    },
+    set(key, value) {
+      return this.injectedTextType = value;
+    },
+  }),
+
+  /**
    * @type {string | null}
    */
   injectedClipboardTarget: null,
 
   /**
-   * Override this to get custom notifications like: "<textType> successfully copied..."
-   * @type {Ember.ComputedProperty<string>|string}
+   * @type {string | null}
    */
-  textType: computed(function textType() {
-    return this.t('defaultTextType');
-  }),
+  injectedTextType: null,
 
   /**
    * @type {Ember.ComputedProperty<function>}
