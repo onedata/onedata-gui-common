@@ -160,7 +160,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {Array<Tag>}
    */
-  selectedTags: computed(() => []),
+  selectedTags: undefined,
 
   /**
    * @virtual
@@ -372,8 +372,14 @@ export default Component.extend(I18n, {
     }
   ),
 
+  /**
+   * @override
+   */
   init() {
     this._super(...arguments);
+    if (!this.selectedTags) {
+      this.set('selectedTags', []);
+    }
     this.set('selectedAggregatorOption', this.get('aggregatorOptions')[0]);
     // Mark as modified to show selected resolution conflict from the beginning
     this.get('customMetricFields').getFieldByPath('resolution').markAsModified();

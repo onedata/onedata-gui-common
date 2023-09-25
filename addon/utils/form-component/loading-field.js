@@ -22,16 +22,28 @@ export default FormField.extend({
    * @virtual
    * @type {PromiseObject}
    */
-  loadingProxy: computed(() => PromiseObject.create({ promise: resolve() })),
+  loadingProxy: undefined,
 
   /**
    * Will be shown to user while loadingProxy is pending.
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  loadingText: computed('i18nPrefix', 'translationPath', function loadingText() {
-    return this.getTranslation('loadingText', {}, { defaultValue: '' });
+  loadingText: computed('i18nPrefix', 'translationPath', {
+    get() {
+      return this.injectedLoadingText ??
+        this.getTranslation('loadingText', {}, { defaultValue: '' });
+    },
+    set(key, value) {
+      return this.injectedLoadingText = value;
+    },
   }),
+
+  /**
+   * Custom loadingText injected during field creation.
+   * @type {string | null}
+   */
+  injectedLoadingText: null,
 
   /**
    * @type {ComputedProperty<boolean>}
@@ -52,4 +64,11 @@ export default FormField.extend({
    * @override
    */
   isValueless: true,
+
+  init() {
+    this._super(...arguments);
+    if (!this.loadingProxy) {
+      this.set('loadingProxy', PromiseObject.create({ promise: resolve() }));
+    }
+  },
 });

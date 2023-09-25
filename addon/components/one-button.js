@@ -23,10 +23,19 @@ export default class OneButton extends BsButton {
   layout = layout;
 
   /**
+   * It has to be computed, because BsButton class has it defined as a computed
+   * which breaks direct setting of this property.
    * @virtual optional
    * @type {boolean}
    */
-  isPending = false;
+  @computed()
+  get isPending() {
+    return this.injectedIsPending ?? false;
+  }
+
+  set isPending(value) {
+    this.injectedIsPending = value;
+  }
 
   /**
    * @virtual optional
@@ -39,6 +48,11 @@ export default class OneButton extends BsButton {
    * @type {boolean}
    */
   showSpinnerWhenPending = true;
+
+  /**
+   * @type {boolean | null}
+   */
+  injectedIsPending = false;
 
   /**
    * @type {boolean}

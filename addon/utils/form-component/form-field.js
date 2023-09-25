@@ -42,7 +42,7 @@ export default FormElement.extend({
    * @virtual optional
    * @type {Array<Object>}
    */
-  customValidators: computed(() => A()),
+  customValidators: undefined,
 
   /**
    * Array of property names, which contain internal field validators (validators
@@ -81,7 +81,7 @@ export default FormElement.extend({
     'isValueless',
     'isInViewMode',
     'fieldValidationChecker.isValid'
-  )),
+  ), (value) => value),
 
   /**
    * @override
@@ -109,6 +109,10 @@ export default FormElement.extend({
 
   init() {
     this._super(...arguments);
+
+    if (!this.customValidators) {
+      this.set('customValidators', []);
+    }
 
     this.registerInternalValidator('presenceValidator');
   },

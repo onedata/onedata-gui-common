@@ -48,7 +48,21 @@ export default Component.extend(I18n, {
    */
   linkName: '',
 
-  href: computed('docPath', function url() {
-    return oneDocUrl([this.get('docPath')]);
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<string>}
+   */
+  href: computed('docPath', {
+    get() {
+      return this.injectedHref ?? oneDocUrl([this.docPath]);
+    },
+    set(key, value) {
+      return this.injectedHref = value;
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedHref: null,
 });

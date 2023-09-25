@@ -31,6 +31,7 @@ export default Component.extend({
 
   /**
    * Support data.
+   * @virtual
    * @type {Ember.Array.SupportSizeEntry}
    */
   data: null,
@@ -44,26 +45,50 @@ export default Component.extend({
 
   /**
    * Message, that is shown when there is no data
+   * @virtual optional
    * @type {string}
    */
   noDataToShowMessage: '',
 
   /**
    * Header title for supporters column.
+   * @virtual optional
    * @type {computed.string}
    */
-  supporterNameHeader: computed(function () {
-    return this.get('i18n')
-      .t('components.supportSizeInfo.table.supporterNameHeader');
+  supporterNameHeader: computed({
+    get() {
+      return this.injectedSupporterNameHeader ?? this.get('i18n')
+        .t('components.supportSizeInfo.table.supporterNameHeader');
+    },
+    set(key, value) {
+      return this.injectedSupporterNameHeader = value;
+    },
   }),
 
   /**
    * Header title for size column.
+   * @virtual optional
    * @type {computed.string}
    */
-  supporterSizeHeader: computed(function () {
-    return this.get('i18n').t('components.supportSizeInfo.table.supportSizeHeader');
+  supporterSizeHeader: computed({
+    get() {
+      return this.injectedSupporterSizeHeader ??
+        this.get('i18n').t('components.supportSizeInfo.table.supportSizeHeader');
+    },
+    set(key, value) {
+      return this.injectedSupporterSizeHeader = value;
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedSupporterNameHeader: null,
+
+  /**
+   * @type {string | null}
+   */
+  injectedSupporterSizeHeader: null,
 
   /**
    * @type {computed.string}

@@ -38,8 +38,14 @@ export default FormField.extend({
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  placeholder: computed('i18nPrefix', 'translationPath', function placeholder() {
-    return this.getTranslation('placeholder', {}, { defaultValue: '' });
+  placeholder: computed('i18nPrefix', 'translationPath', {
+    get() {
+      return this.injectedPlaceholder ??
+        this.getTranslation('placeholder', {}, { defaultValue: '' });
+    },
+    set(key, value) {
+      return this.injectedPlaceholder = value;
+    },
   }),
 
   /**
@@ -50,4 +56,9 @@ export default FormField.extend({
     raw('view-as-static-text'),
     raw('')
   ),
+
+  /**
+   * @type {string | null}
+   */
+  injectedPlaceholder: null,
 });

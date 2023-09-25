@@ -85,6 +85,11 @@ export default Component.extend({
    */
   oldSelectionValue: null,
 
+  /**
+   * @type {boolean}
+   */
+  supposedToBeActive: false,
+
   _isItemCollapsed: computed('_isListCollapsed', '_matchesSearchQuery',
     '_isSelected',
     function () {
@@ -109,17 +114,15 @@ export default Component.extend({
     return !_matchesSearchQuery && _isSelected;
   }),
 
-  isActive: computed('activeElementId', 'accordionMode', function () {
-    const {
-      activeElementId,
-      elementId,
-    } = this.getProperties([
-      'activeElementId', 'elementId',
-    ]);
-    if (this.get('accordionMode')) {
-      return activeElementId === elementId;
+  isActive: computed(
+    'activeElementId',
+    'accordionMode',
+    'supposedToBeActive',
+    function isActive() {
+      return this.accordionMode ?
+        this.activeElementId === this.elementId : this.supposedToBeActive;
     }
-  }),
+  ),
 
   _isSelected: computed('_selectedItemValues.[]', 'selectionValue', function () {
     const {
@@ -130,6 +133,13 @@ export default Component.extend({
   }),
 
   _isCheckboxActive: notEmpty('selectionValue'),
+
+  /**
+   * @type {ComputedProperty<() => void>}
+   */
+  closeCallback: computed(function closeCallback() {
+    return () => this.toggleOpen(false);
+  }),
 
   _searchQueryObserver: observer('_searchQuery', function () {
     this._checkSearchQuery();
@@ -183,7 +193,7 @@ export default Component.extend({
       selectionValue,
     } = this.getProperties('closeEventName', 'eventsBus', 'selectionValue');
     if (closeEventName) {
-      eventsBus.on(closeEventName, () => this.set('isActive', false));
+      eventsBus.on(closeEventName, this.closeCallback);
     }
     if (selectionValue !== null) {
       this.set('oldSelectionValue', selectionValue);
@@ -202,7 +212,7 @@ export default Component.extend({
         this.notifySelectionValue(selectionValue, false);
       }
       if (closeEventName) {
-        eventsBus.off(closeEventName);
+        eventsBus.off(closeEventName, this.closeCallback);
       }
     } finally {
       this._super(...arguments);
@@ -233,27 +243,31 @@ export default Component.extend({
     this.set('_matchesSearchQuery', matches);
   },
 
+  toggleOpen(opened) {
+    if (!this.get('isCollapsible')) {
+      return;
+    }
+    const {
+      toggle,
+      elementId,
+      accordionMode,
+    } = this.getProperties('toggle', 'elementId', 'accordionMode');
+    if (accordionMode) {
+      if (toggle) {
+        toggle(elementId, opened);
+      }
+    } else {
+      if (opened !== undefined) {
+        this.set('supposedToBeActive', !!opened);
+      } else {
+        this.toggleProperty('supposedToBeActive');
+      }
+    }
+  },
+
   actions: {
     toggle(opened) {
-      if (!this.get('isCollapsible')) {
-        return;
-      }
-      const {
-        toggle,
-        elementId,
-        accordionMode,
-      } = this.getProperties('toggle', 'elementId', 'accordionMode');
-      if (accordionMode) {
-        if (toggle) {
-          toggle(elementId, opened);
-        }
-      } else {
-        if (opened !== undefined) {
-          this.set('isActive', !!opened);
-        } else {
-          this.toggleProperty('isActive');
-        }
-      }
+      this.toggleOpen(opened);
     },
     toggleSelection() {
       const {

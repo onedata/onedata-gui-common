@@ -81,16 +81,21 @@ export default function computedCurrentUserPrivileges({
   effPrivilegesProperty = 'currentUserEffPrivileges',
   isOwnerProperty = 'currentUserIsOwner',
 }) {
+  let newValue = null;
   return computed(
     `${effPrivilegesProperty}.[]`,
-    isOwnerProperty,
-    function getCurrentUserPrivileges() {
-      return currentUserPrivileges({
-        allFlags,
-        flagsPrefix,
-        currentUserEffPrivileges: this.get(effPrivilegesProperty),
-        currentUserIsOwner: this.get(isOwnerProperty),
-      });
-    }
+    isOwnerProperty, {
+      get() {
+        return newValue ?? currentUserPrivileges({
+          allFlags,
+          flagsPrefix,
+          currentUserEffPrivileges: this.get(effPrivilegesProperty),
+          currentUserIsOwner: this.get(isOwnerProperty),
+        });
+      },
+      set(key, value) {
+        return newValue = value;
+      },
+    },
   );
 }
