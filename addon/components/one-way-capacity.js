@@ -42,7 +42,7 @@ export default Component.extend({
    */
   inputId: computed('elementId', {
     get() {
-      return this.elementId + '-capacity';
+      return this.injectedInputId ?? (this.elementId + '-capacity');
     },
     set(key, value) {
       return this.injectedInputId = value;

@@ -87,7 +87,7 @@ export default Component.extend(I18n, {
    */
   inputId: computed('elementId', {
     get() {
-      return this.elementId + '-textarea';
+      return this.injectedInputId ?? (this.elementId + '-textarea');
     },
     set(key, value) {
       return this.injectedInputId = value;
