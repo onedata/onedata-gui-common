@@ -36,14 +36,18 @@
     {{else if (not hideEditIcons)}}
       {{#one-icon
         icon="checked"
-        class=(concat-classes "save-icon" (if isSaveDisabled "disabled"))
+        class=(concat-classes "save-icon" (if isSaveDisabled "disabled" "clickable"))
         click=(action "saveEdition")
       }}
         {{#if saveButtonTip}}
           {{one-tooltip title=saveButtonTip}}
         {{/if}}
       {{/one-icon}}
-      {{one-icon icon="ban-left" class="cancel-icon" click=(action "cancelEdition")}}
+      {{one-icon
+        icon="ban-left"
+        class="cancel-icon clickable"
+        click=(action "cancelEdition")
+      }}
     {{/if}}
   </span>
 {{else}}
@@ -71,7 +75,7 @@
   {{/if}}
   <span class="action-icons">
     {{#if (not hideViewIcons)}}
-      {{one-icon icon="rename" class="edit-icon" click=(action "startEdition")}}
+      {{one-icon icon="rename" class="edit-icon clickable" click=(action "startEdition")}}
       {{#if editHint}}
         {{one-tooltip title=editHint placement="bottom"}}
       {{/if}}
