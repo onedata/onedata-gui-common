@@ -262,6 +262,7 @@ const Series = ElementBase.extend({
   toJson() {
     const yAxisId = this.axis?.id ?? null;
     const groupId = this.group?.id ?? null;
+    const color = this.repeatPerPrefixedTimeSeries ? null : this.color;
     const dataProvider = this.dataProvider?.toJson();
 
     if (this.repeatPerPrefixedTimeSeries) {
@@ -314,7 +315,7 @@ const Series = ElementBase.extend({
             colorProvider: {
               functionName: 'literal',
               functionArguments: {
-                data: this.color,
+                data: color,
               },
             },
             dataProvider,
@@ -332,7 +333,7 @@ const Series = ElementBase.extend({
           type: this.type,
           yAxisId,
           groupId,
-          color: this.color,
+          color,
           dataProvider,
         },
       },

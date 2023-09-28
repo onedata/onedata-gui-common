@@ -73,12 +73,12 @@ export default Action.extend({
     set(this.functionToRemove, 'isRemoved', true);
 
     this.detachArgumentFunctions();
-    [...this.functionToRemove.attachedFunctions()].forEach((attachedFunc) => {
+    for (const attachedFunc of this.functionToRemove.attachedFunctions()) {
       changedElements.addElement(attachedFunc);
       if (attachedFunc.parent) {
         changedElements.addElement(attachedFunc.parent);
       }
-    });
+    }
 
     this.removeReferences();
     this.removedReferences?.forEach(({ referencingElement }) =>
@@ -103,12 +103,12 @@ export default Action.extend({
     );
 
     this.reattachArgumentFunctions();
-    [...this.functionToRemove.attachedFunctions()].forEach((attachedFunc) => {
+    for (const attachedFunc of this.functionToRemove.attachedFunctions()) {
       changedElements.addElement(attachedFunc);
       if (attachedFunc.parent) {
         changedElements.addElement(attachedFunc.parent);
       }
-    });
+    }
 
     set(this.functionToRemove, 'isRemoved', false);
     changedElements.notifyAboutChange();
