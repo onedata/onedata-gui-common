@@ -81,12 +81,12 @@ export default function computedCurrentUserPrivileges({
   effPrivilegesProperty = 'currentUserEffPrivileges',
   isOwnerProperty = 'currentUserIsOwner',
 }) {
-  let newValue = null;
+  const assignedCustomValues = new WeakMap();
   return computed(
     `${effPrivilegesProperty}.[]`,
     isOwnerProperty, {
       get() {
-        return newValue ?? currentUserPrivileges({
+        return assignedCustomValues.get(this) ?? currentUserPrivileges({
           allFlags,
           flagsPrefix,
           currentUserEffPrivileges: this.get(effPrivilegesProperty),
@@ -94,7 +94,8 @@ export default function computedCurrentUserPrivileges({
         });
       },
       set(key, value) {
-        return newValue = value;
+        assignedCustomValues.set(this, value);
+        return value;
       },
     },
   );
