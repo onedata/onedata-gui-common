@@ -234,7 +234,7 @@ const complicatedSpecExample = {
               colorProvider: {
                 functionName: 'literal',
                 functionArguments: {
-                  data: '#00ff00',
+                  data: null,
                 },
               },
               dataProvider: {
