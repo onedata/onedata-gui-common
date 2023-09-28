@@ -96,7 +96,7 @@ const Axis = ElementBase.extend({
   referencingPropertyNames: Object.freeze([
     'series',
     'parent',
-    'dataProvider',
+    'valueProvider',
     'detachedFunctions',
   ]),
 
@@ -200,9 +200,9 @@ const Axis = ElementBase.extend({
       if (this.series.length) {
         this.set('series', []);
       }
-      if (this.dataProvider) {
-        this.dataProvider.destroy();
-        this.set('dataProvider', null);
+      if (this.valueProvider) {
+        this.valueProvider.destroy();
+        this.set('valueProvider', null);
       }
       if (this.detachedFunctions.length) {
         this.detachedFunctions.forEach((chartFunction) => chartFunction.destroy());
@@ -220,7 +220,7 @@ const Axis = ElementBase.extend({
    * @override
    */
   clone() {
-    return Axis.create({
+    const axisClone = Axis.create({
       elementOwner: this.elementOwner,
       id: generateId(),
       name: this.name,
@@ -228,9 +228,20 @@ const Axis = ElementBase.extend({
       unitOptions: this.unitOptions ?
         EmberObject.create(this.unitOptions) : this.unitOptions,
       minInterval: this.minInterval,
+      valueProvider: this.valueProvider?.clone(),
+      detachedFunctions: this.detachedFunctions.map((func) => func.clone()),
       series: [],
       parent: this.parent,
     });
+
+    if (axisClone.valueProvider) {
+      set(axisClone.valueProvider, 'parent', axisClone);
+    }
+    axisClone.detachedFunctions.forEach((func) =>
+      set(func, 'parent', axisClone)
+    );
+
+    return axisClone;
   },
 
   /**

@@ -9,6 +9,7 @@
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { ChangedElementsSet } from './utils';
 
 /**
  * @typedef {Object} RemoveFunctionActionContext
@@ -64,13 +65,27 @@ export default Action.extend({
    * @override
    */
   onExecute() {
+    const changedElements = new ChangedElementsSet();
     // It is important to first set `isRemoved` and detach nested elements
     // after that. When element detaches, then it tries to figure out why detach
     // ocurred by checking i.a. `isRemoved` flag of the parent. See more in
     // function-renderer component.
     set(this.functionToRemove, 'isRemoved', true);
+
     this.detachArgumentFunctions();
+    for (const attachedFunc of this.functionToRemove.attachedFunctions()) {
+      changedElements.addElement(attachedFunc);
+      if (attachedFunc.parent) {
+        changedElements.addElement(attachedFunc.parent);
+      }
+    }
+
     this.removeReferences();
+    this.removedReferences?.forEach(({ referencingElement }) =>
+      changedElements.addElement(referencingElement)
+    );
+
+    changedElements.notifyAboutChange();
 
     this.changeViewState({
       elementsToDeselect: [this.functionToRemove],
@@ -81,9 +96,22 @@ export default Action.extend({
    * @override
    */
   onExecuteUndo() {
+    const changedElements = new ChangedElementsSet();
     this.rollbackReferencesRemoval();
+    this.removedReferences?.forEach(({ referencingElement }) =>
+      changedElements.addElement(referencingElement)
+    );
+
     this.reattachArgumentFunctions();
+    for (const attachedFunc of this.functionToRemove.attachedFunctions()) {
+      changedElements.addElement(attachedFunc);
+      if (attachedFunc.parent) {
+        changedElements.addElement(attachedFunc.parent);
+      }
+    }
+
     set(this.functionToRemove, 'isRemoved', false);
+    changedElements.notifyAboutChange();
   },
 
   /**

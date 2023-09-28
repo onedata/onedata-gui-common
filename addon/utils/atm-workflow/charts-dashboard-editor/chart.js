@@ -19,6 +19,13 @@ const Chart = ElementBase.extend({
 
   /**
    * @public
+   * @virtual
+   * @type {Array<ChartsDashboardEditorDataSource>}
+   */
+  dataSources: undefined,
+
+  /**
+   * @public
    * @virtual optional
    * @type {string}
    */
@@ -56,6 +63,11 @@ const Chart = ElementBase.extend({
    * @override
    */
   referencingPropertyNames: Object.freeze(['axes', 'seriesGroups', 'series', 'parent']),
+
+  /**
+   * @override
+   */
+  needsDataSources: true,
 
   /**
    * @override
@@ -134,6 +146,7 @@ const Chart = ElementBase.extend({
   clone() {
     const clonedInstance = Chart.create({
       elementOwner: this.elementOwner,
+      dataSources: this.dataSources,
       title: this.title,
       titleTip: this.titleTip,
       axes: this.axes.map((axis) => axis.clone()),

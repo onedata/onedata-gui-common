@@ -23,6 +23,16 @@ const CurrentValueFunction = FunctionBase.extend({
   /**
    * @override
    */
+  clone() {
+    return CurrentValueFunction.create({
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
+  },
+
+  /**
+   * @override
+   */
   toJson() {
     return {
       functionName: 'currentValue',

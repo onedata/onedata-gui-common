@@ -54,6 +54,24 @@ const RateFunction = FunctionBase.extend({
   /**
    * @override
    */
+  clone() {
+    const functionClone = RateFunction.create({
+      data: this.data?.clone(),
+      timeSpan: this.timeSpan,
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
+
+    if (functionClone.data) {
+      set(functionClone.data, 'parent', functionClone);
+    }
+
+    return functionClone;
+  },
+
+  /**
+   * @override
+   */
   toJson() {
     const functionJson = {
       functionName: 'rate',
@@ -91,7 +109,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
     timeSpan,
   });
   if (funcElement.data) {
-    set(funcElement.data, 'parentElement', funcElement);
+    set(funcElement.data, 'parent', funcElement);
   }
   return funcElement;
 }

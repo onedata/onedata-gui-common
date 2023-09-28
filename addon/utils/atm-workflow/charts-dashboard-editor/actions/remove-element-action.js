@@ -9,6 +9,7 @@
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { ChangedElementsSet } from './utils';
 
 /**
  * @typedef {Object} RemoveElementActionContext
@@ -71,13 +72,22 @@ export default Action.extend({
    * @override
    */
   onExecute() {
+    const changedElements = new ChangedElementsSet();
     this.set('oldParent', this.elementToRemove.parent);
 
     this.removeReferences();
+    this.removedReferences?.forEach(({ referencingElement }) =>
+      changedElements.addElement(referencingElement)
+    );
     set(this.elementToRemove, 'parent', null);
     [this.elementToRemove, ...this.elementToRemove.nestedElements()]
     .forEach((element) => set(element, 'isRemoved', true));
 
+    if (this.oldParent) {
+      changedElements.addElement(this.oldParent);
+    }
+
+    changedElements.notifyAboutChange();
     this.changeViewState({
       elementsToDeselect: [
         this.elementToRemove,
@@ -90,10 +100,18 @@ export default Action.extend({
    * @override
    */
   onExecuteUndo() {
+    const changedElements = new ChangedElementsSet();
     set(this.elementToRemove, 'parent', this.oldParent);
     [this.elementToRemove, ...this.elementToRemove.nestedElements()]
     .forEach((element) => set(element, 'isRemoved', false));
     this.rollbackReferencesRemoval();
+    this.removedReferences?.forEach(({ referencingElement }) =>
+      changedElements.addElement(referencingElement)
+    );
+    if (this.oldParent) {
+      changedElements.addElement(this.oldParent);
+    }
+    changedElements.notifyAboutChange();
   },
 
   /**

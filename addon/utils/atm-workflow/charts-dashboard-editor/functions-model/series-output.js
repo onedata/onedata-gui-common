@@ -47,6 +47,23 @@ const SeriesOutputFunction = FunctionBase.extend({
   /**
    * @override
    */
+  clone() {
+    const functionClone = SeriesOutputFunction.create({
+      data: this.data?.clone(),
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
+
+    if (functionClone.data) {
+      set(functionClone.data, 'parent', functionClone);
+    }
+
+    return functionClone;
+  },
+
+  /**
+   * @override
+   */
   toJson() {
     if (!this.data) {
       return null;
@@ -67,7 +84,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
     data: convertAnySpecToFunction(spec),
   });
   if (funcElement.data) {
-    set(funcElement.data, 'parentElement', funcElement);
+    set(funcElement.data, 'parent', funcElement);
   }
   return funcElement;
 }

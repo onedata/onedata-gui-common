@@ -52,6 +52,18 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
   /**
    * @override
    */
+  clone() {
+    return LoadRepeatedSeriesFunction.create({
+      replaceEmptyParameters: this.replaceEmptyParameters ?
+        EmberObject.create(this.replaceEmptyParameters) : null,
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
+  },
+
+  /**
+   * @override
+   */
   toJson() {
     return {
       functionName: 'loadSeries',
@@ -70,14 +82,14 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
               strategyProvider: {
                 functionName: 'literal',
                 functionArguments: {
-                  data: this.replaceEmptyParameters.strategy ??
+                  data: this.replaceEmptyParameters?.strategy ??
                     ReplaceEmptyStrategy.UseFallback,
                 },
               },
               fallbackValueProvider: {
                 functionName: 'literal',
                 functionArguments: {
-                  data: this.replaceEmptyParameters.fallbackValue ?? null,
+                  data: this.replaceEmptyParameters?.fallbackValue ?? null,
                 },
               },
             },

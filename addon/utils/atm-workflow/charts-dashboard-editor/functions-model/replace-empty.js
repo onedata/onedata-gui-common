@@ -61,6 +61,25 @@ const ReplaceEmptyFunction = FunctionBase.extend({
   /**
    * @override
    */
+  clone() {
+    const functionClone = ReplaceEmptyFunction.create({
+      data: this.data?.clone(),
+      strategy: this.strategy,
+      fallbackValue: this.fallbackValue,
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
+
+    if (functionClone.data) {
+      set(functionClone.data, 'parent', functionClone);
+    }
+
+    return functionClone;
+  },
+
+  /**
+   * @override
+   */
   toJson() {
     return {
       functionName: 'replaceEmpty',
@@ -102,7 +121,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
       ?.functionArguments?.data,
   });
   if (funcElement.data) {
-    set(funcElement.data, 'parentElement', funcElement);
+    set(funcElement.data, 'parent', funcElement);
   }
   return funcElement;
 }

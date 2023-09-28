@@ -36,7 +36,7 @@ const LoadSeriesFunction = FunctionBase.extend({
 
   /**
    * @public
-   * @virtual optional
+   * @virtual
    * @type {EmberObject<TimeSeriesRef>}
    */
   timeSeriesRef: undefined,
@@ -44,7 +44,7 @@ const LoadSeriesFunction = FunctionBase.extend({
   /**
    * @public
    * @virtual optional
-   * @type {EmberObject<ReplaceEmptyParameters>}
+   * @type {EmberObject<ReplaceEmptyParameters> | null}
    */
   replaceEmptyParameters: null,
 
@@ -115,6 +115,20 @@ const LoadSeriesFunction = FunctionBase.extend({
     } finally {
       this._super(...arguments);
     }
+  },
+
+  /**
+   * @override
+   */
+  clone() {
+    return LoadSeriesFunction.create({
+      dataSources: this.dataSources,
+      timeSeriesRef: EmberObject.create(this.timeSeriesRef),
+      replaceEmptyParameters: this.replaceEmptyParameters ?
+        EmberObject.create(this.replaceEmptyParameters) : null,
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
   },
 
   /**

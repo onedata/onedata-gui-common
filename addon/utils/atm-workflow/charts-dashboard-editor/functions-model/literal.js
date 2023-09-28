@@ -14,7 +14,7 @@ const LiteralFunction = FunctionBase.extend({
    * @public
    * @type {number | null}
    */
-  data: null,
+  data: 1,
 
   /**
    * @override
@@ -30,6 +30,17 @@ const LiteralFunction = FunctionBase.extend({
    * @override
    */
   returnedTypes: Object.freeze([FunctionDataType.Number]),
+
+  /**
+   * @override
+   */
+  clone() {
+    return LiteralFunction.create({
+      data: this.data,
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
+  },
 
   /**
    * @override

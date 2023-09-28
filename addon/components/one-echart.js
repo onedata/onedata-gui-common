@@ -10,7 +10,6 @@
 import Component from '@ember/component';
 import layout from '../templates/components/one-echart';
 import { observer, computed } from '@ember/object';
-import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { inject as service } from '@ember/service';
 import { next } from '@ember/runloop';
@@ -22,7 +21,7 @@ import globals from 'onedata-gui-common/utils/globals';
  * https://github.com/apache/echarts/blob/master/src/util/types.ts
  */
 
-export default Component.extend(WindowResizeHandler, {
+export default Component.extend({
   layout,
   classNames: ['one-echart'],
 
@@ -39,9 +38,9 @@ export default Component.extend(WindowResizeHandler, {
   option: undefined,
 
   /**
-   * @override
+   * @type {ResizeObserver | null}
    */
-  callWindowResizeHandlerOnInsert: false,
+  resizeObserver: null,
 
   /**
    * @type {ECharts}
@@ -80,6 +79,7 @@ export default Component.extend(WindowResizeHandler, {
   didInsertElement() {
     this._super(...arguments);
     this.setupChart();
+    this.setupResizeObserver();
   },
 
   /**
@@ -88,18 +88,42 @@ export default Component.extend(WindowResizeHandler, {
   willDestroyElement() {
     try {
       this.destroyChart();
+      this.teardownResizeObserver();
     } finally {
       this._super(...arguments);
     }
   },
 
   /**
-   * @override
+   * Resize observer is responsible for triggering rerender of the chart
+   * on component resize.
+   * @returns {void}
    */
-  onWindowResize() {
-    safeExec(this, () => {
-      this.resizeChart();
+  setupResizeObserver() {
+    if (this.resizeObserver) {
+      return;
+    }
+
+    // Check whether ResizeObserver API and component node are available
+    if (!ResizeObserver || !this.element) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      safeExec(this, () => {
+        this.resizeChart();
+      });
     });
+    resizeObserver.observe(this.element);
+
+    this.set('resizeObserver', resizeObserver);
+  },
+
+  /**
+   * @returns {void}
+   */
+  teardownResizeObserver() {
+    this.resizeObserver?.disconnect();
   },
 
   async setupChart() {

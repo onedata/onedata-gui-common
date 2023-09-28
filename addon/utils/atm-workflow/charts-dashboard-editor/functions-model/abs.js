@@ -43,6 +43,23 @@ const AbsFunction = FunctionBase.extend({
   /**
    * @override
    */
+  clone() {
+    const functionClone = AbsFunction.create({
+      data: this.data?.clone(),
+      positionRelativeToRootFunc: this.positionRelativeToRootFunc,
+      parent: this.parent,
+    });
+
+    if (functionClone.data) {
+      set(functionClone.data, 'parent', functionClone);
+    }
+
+    return functionClone;
+  },
+
+  /**
+   * @override
+   */
   toJson() {
     return {
       functionName: 'abs',
@@ -65,7 +82,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
     data: convertAnySpecToFunction(spec.functionArguments?.inputDataProvider),
   });
   if (funcElement.data) {
-    set(funcElement.data, 'parentElement', funcElement);
+    set(funcElement.data, 'parent', funcElement);
   }
   return funcElement;
 }

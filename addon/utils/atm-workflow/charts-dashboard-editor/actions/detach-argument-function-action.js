@@ -9,6 +9,7 @@
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
 import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { ChangedElementsSet } from './utils';
 
 /**
  * @typedef {Object} DetachArgumentFunctionActionContext
@@ -70,9 +71,13 @@ export default Action.extend({
    * @override
    */
   onExecute() {
+    const changedElements = new ChangedElementsSet();
     this.set('oldParent', this.functionToDetach.parent);
 
     this.removeReferencesInParent();
+    if (this.oldParent) {
+      changedElements.addElement(this.oldParent);
+    }
 
     let closestParentWithDetachedFuncs;
     let possibleParentWithDetachedFuncs = this.oldParent;
@@ -90,14 +95,18 @@ export default Action.extend({
         'detachedFunctions',
         [...closestParentWithDetachedFuncs.detachedFunctions, this.functionToDetach]
       );
+      changedElements.addElement(closestParentWithDetachedFuncs);
       set(this.functionToDetach, 'parent', closestParentWithDetachedFuncs);
     } else {
       set(this.functionToDetach, 'parent', null);
     }
+    changedElements.addElement(this.functionToDetach);
 
     // Due to some unknown Ember issues `functionToDetach.isDetached` does not always
     // recalculate on parent change (but only in Firefox). Enforcing recalculation.
     this.functionToDetach.notifyPropertyChange('isDetached');
+
+    changedElements.notifyAboutChange();
 
     this.changeViewState({
       elementToSelect: this.functionToDetach,
@@ -108,9 +117,11 @@ export default Action.extend({
    * @override
    */
   onExecuteUndo() {
+    const changedElements = new ChangedElementsSet();
     const parentWithDetachedFuncs = this.functionToDetach.parent;
 
     set(this.functionToDetach, 'parent', this.oldParent);
+    changedElements.addElement(this.functionToDetach);
 
     // Due to some unknown Ember issues `functionToDetach.isDetached` does not always
     // recalculate on parent change (but only in Firefox). Enforcing recalculation.
@@ -124,8 +135,14 @@ export default Action.extend({
           x !== this.functionToDetach
         )
       );
+      changedElements.addElement(parentWithDetachedFuncs);
     }
     this.rollbackReferencesRemovalInParent();
+    if (this.oldParent) {
+      changedElements.addElement(this.oldParent);
+    }
+
+    changedElements.notifyAboutChange();
   },
 
   /**

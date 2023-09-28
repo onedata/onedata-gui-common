@@ -17,6 +17,12 @@ import { array } from 'ember-awesome-macros';
  * @property {number} [positionInArray]
  */
 
+/**
+ * @typedef {Object} ChangeEvent
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.ElementBase} target
+ * @property {Utils.AtmWorkflow.ChartsDashboardEditor.ElementBase} currentTarget
+ */
+
 const ElementBase = EmberObject.extend({
   /**
    * @public
@@ -66,6 +72,11 @@ const ElementBase = EmberObject.extend({
   nestedValidationErrors: undefined,
 
   /**
+   * @type {Set<ChartsDashboardEditorElementChangeEvent>}
+   */
+  changeListeners: undefined,
+
+  /**
    * An array of properties, which may contain references to other dashboard
    * elements.
    * @private
@@ -86,6 +97,7 @@ const ElementBase = EmberObject.extend({
   init() {
     this._super(...arguments);
 
+    this.set('changeListeners', new Set());
     if (!this.directValidationErrors) {
       this.set('directValidationErrors', []);
     }
@@ -123,6 +135,41 @@ const ElementBase = EmberObject.extend({
    * @returns {unknown}
    */
   toJson() {},
+
+  /**
+   * @param {Utils.AtmWorkflow.ChartsDashboardEditor.ChangeEvent} changeListener
+   * @returns {void}
+   */
+  addChangeListener(changeListener) {
+    this.changeListeners.add(changeListener);
+  },
+
+  /**
+   * @param {Utils.AtmWorkflow.ChartsDashboardEditor.ChangeEvent} changeListener
+   * @returns {void}
+   */
+  removeChangeListener(changeListener) {
+    this.changeListeners.delete(changeListener);
+  },
+
+  /**
+   * Notifies about change of this element. It doesn't have to be a direct change -
+   * changes in child element will also trigger such notification in every parent,
+   * so called "event bubbling".
+   * @param {Utils.AtmWorkflow.ChartsDashboardEditor.ElementBase} [changeTarget]
+   *   Element which triggered the event. Might be different than `this` when
+   *   event bubbles up through the elements tree. In that case it points to
+   *   one of the child elements.
+   * @returns {void}
+   */
+  notifyAboutChange(changeTarget = this) {
+    const event = {
+      target: changeTarget,
+      currentTarget: this,
+    };
+    this.changeListeners.forEach((listener) => listener(event));
+    this.parent?.notifyAboutChange(changeTarget);
+  },
 
   /**
    * @public

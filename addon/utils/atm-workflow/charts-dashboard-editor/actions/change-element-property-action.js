@@ -98,6 +98,7 @@ export default Action.extend({
       this.set('previousValue', get(this.element, this.propertyName));
     }
     set(this.element, this.propertyName, this.newValue);
+    this.element.notifyAboutChange();
   },
 
   /**
@@ -106,5 +107,6 @@ export default Action.extend({
   onExecuteUndo() {
     this.changeViewState({ elementToSelect: this.element });
     set(this.element, this.propertyName, this.previousValue);
+    this.element.notifyAboutChange();
   },
 });
