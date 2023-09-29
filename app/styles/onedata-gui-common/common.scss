@@ -426,6 +426,14 @@ ul.info {
   }
 }
 
+a, [href] {
+  cursor: pointer;
+
+  &.disabled {
+    cursor: initial;
+  }
+}
+
 a,
 .link {
   color: $color-one-mint;

@@ -17,7 +17,7 @@ import {
 import layout from '../templates/components/one-button';
 
 @classNames('one-button')
-@classNameBindings('isInPendingState:pending')
+@classNameBindings('isInPendingState:pending', 'isEffDisabled::clickable')
 @attributeBindings('isEffDisabled:disabled')
 export default class OneButton extends BsButton {
   layout = layout;
