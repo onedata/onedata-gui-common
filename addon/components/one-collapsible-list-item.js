@@ -86,6 +86,9 @@ export default Component.extend({
   oldSelectionValue: null,
 
   /**
+   * The state of "activeness" as was demanded from the outside (via component
+   * action). It will become a real state (via `isActive`) only if collapse
+   * is not in the accordion mode.
    * @type {boolean}
    */
   supposedToBeActive: false,
