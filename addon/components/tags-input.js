@@ -72,7 +72,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {Array<Tag>}
    */
-  tags: computed(() => []),
+  tags: undefined,
 
   /**
    * @virtual optional
@@ -324,6 +324,13 @@ export default Component.extend(I18n, {
       this.endTagCreation();
     }
   }),
+
+  init() {
+    this._super(...arguments);
+    if (!this.tags) {
+      this.set('tags', []);
+    }
+  },
 
   didInsertElement() {
     this._super(...arguments);

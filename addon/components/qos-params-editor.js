@@ -116,11 +116,9 @@ export default Component.extend(I18n, {
 
   /**
    * The same as `paramRecords`, but for edition purposes.
-   * @type {Ember.ComputedProperty<Ember.A<QosParamRecord>>}
+   * @type {Ember.A<QosParamRecord>}
    */
-  paramEditRecords: computed(function paramEditRecords() {
-    return A();
-  }),
+  paramEditRecords: undefined,
 
   /**
    * `paramEditRecords` without records, that are considered as unavailable
@@ -149,6 +147,9 @@ export default Component.extend(I18n, {
   init() {
     this._super(...arguments);
 
+    if (!this.paramEditRecords) {
+      this.set('paramEditRecords', A());
+    }
     this.modeObserver();
   },
 

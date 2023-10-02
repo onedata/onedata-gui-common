@@ -63,28 +63,46 @@ export default Component.extend(I18n, {
   copyButtonTagName: 'button',
 
   /**
-   * Computes global clipboard target selector for local element selector
-   * @type {Ember.ComputedProperty<function>}
+   * Global clipboard target selector for local element selector
+   * @virtual optional
+   * @type {Ember.ComputedProperty<string>}
    */
   clipboardTarget: computed(
     'parentElementId',
-    'localTarget',
-    function clipboardTarget() {
-      const {
-        parentElementId,
-        localTarget,
-      } = this.getProperties('parentElementId', 'localTarget');
-      return `#${parentElementId} ${localTarget}`;
+    'localTarget', {
+      get() {
+        return this.injectedClipboardTarget ??
+          `#${this.parentElementId} ${this.localTarget}`;
+      },
+      set(key, value) {
+        return this.injectedClipboardTarget = value;
+      },
     }
   ),
 
   /**
    * Override this to get custom notifications like: "<textType> successfully copied..."
-   * @type {Ember.ComputedProperty<string>|string}
+   * @virtual optional
+   * @type {Ember.ComputedProperty<string>}
    */
-  textType: computed(function textType() {
-    return this.t('defaultTextType');
+  textType: computed({
+    get() {
+      return this.injectedTextType ?? this.t('defaultTextType');
+    },
+    set(key, value) {
+      return this.injectedTextType = value;
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedClipboardTarget: null,
+
+  /**
+   * @type {string | null}
+   */
+  injectedTextType: null,
 
   /**
    * @type {Ember.ComputedProperty<function>}

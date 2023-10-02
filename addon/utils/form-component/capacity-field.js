@@ -53,9 +53,20 @@ export default FormField.extend({
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  placeholder: computed('i18nPrefix', 'translationPath', function placeholder() {
-    return this.getTranslation('placeholder', {}, { defaultValue: '' });
+  placeholder: computed('i18nPrefix', 'translationPath', {
+    get() {
+      return this.injectedPlaceholder ??
+        this.getTranslation('placeholder', {}, { defaultValue: '' });
+    },
+    set(key, value) {
+      return this.injectedPlaceholder = value;
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedPlaceholder: null,
 
   /**
    * @type {ComputedProperty<Object>}

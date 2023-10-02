@@ -73,16 +73,26 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @virtual optional
    * @type {ComputedProperty<String>}
    */
-  title: computed('i18nPrefix', function title() {
-    return this.t('title', {}, { defaultValue: '' });
+  title: computed('i18nPrefix', {
+    get() {
+      return this.injectedTitle ?? this.t('title', {}, { defaultValue: '' });
+    },
+    set(key, value) {
+      return this.injectedTitle = value;
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedTitle: null,
 
   /**
    * Will be called just after the onExecute() method. Are executed in order and if some
    * of them fails, then the following rest is not called. Errors change action result.
-   * @type {ComputedProperty<Array<Function>>}
+   * @type {Array<Function>}
    */
-  executeHooks: computed(() => []),
+  executeHooks: undefined,
 
   /**
    * @type {Ember.ComputedProperty<Function>}
@@ -98,6 +108,14 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * action object. Maybe to remove in future.
    */
   action: reads('executeCallback'),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    this.set('executeHooks', []);
+  },
 
   /**
    * Executes action (onExecute and then execute hooks)

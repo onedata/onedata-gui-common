@@ -293,7 +293,7 @@ describe('Integration | Utility | form-component/form-element', function () {
 
   it('returns value as a dumpValue() result', function () {
     const formElement = FormElement.create({
-      valuePath: 'a',
+      name: 'a',
       valuesSource: {
         a: 'b',
       },

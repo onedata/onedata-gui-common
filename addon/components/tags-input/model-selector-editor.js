@@ -165,7 +165,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {Array<Tag>}
    */
-  selectedTags: computed(() => []),
+  selectedTags: undefined,
 
   /**
    * @virtual
@@ -383,6 +383,16 @@ export default Component.extend(I18n, {
       this.repositionPopover();
     }
   ),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    if (!this.selectedTags) {
+      this.set('selectedTags', []);
+    }
+  },
 
   didInsertElement() {
     this._super(...arguments);
