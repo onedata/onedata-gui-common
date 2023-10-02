@@ -20,7 +20,7 @@ export default Component.extend({
   tagName: 'li',
   classNames: ['one-collapsible-list-item', 'collapse-animation', 'collapse-medium'],
   classNameBindings: [
-    'isActive:active',
+    'effIsActive:active',
     '_isItemCollapsed:collapse-hidden',
     '_isSelected:selected',
   ],
@@ -87,11 +87,11 @@ export default Component.extend({
 
   /**
    * The state of "activeness" as was demanded from the outside (via component
-   * action). It will become a real state (via `isActive`) only if collapse
+   * action). It will become a real state (via `effIsActive`) only if collapse
    * is not in the accordion mode.
    * @type {boolean}
    */
-  supposedToBeActive: false,
+  isActive: false,
 
   _isItemCollapsed: computed('_isListCollapsed', '_matchesSearchQuery',
     '_isSelected',
@@ -117,13 +117,13 @@ export default Component.extend({
     return !_matchesSearchQuery && _isSelected;
   }),
 
-  isActive: computed(
+  effIsActive: computed(
     'activeElementId',
     'accordionMode',
-    'supposedToBeActive',
-    function isActive() {
+    'isActive',
+    function effIsActive() {
       return this.accordionMode ?
-        this.activeElementId === this.elementId : this.supposedToBeActive;
+        this.activeElementId === this.elementId : this.isActive;
     }
   ),
 
@@ -261,9 +261,9 @@ export default Component.extend({
       }
     } else {
       if (opened !== undefined) {
-        this.set('supposedToBeActive', !!opened);
+        this.set('isActive', !!opened);
       } else {
-        this.toggleProperty('supposedToBeActive');
+        this.toggleProperty('isActive');
       }
     }
   },
