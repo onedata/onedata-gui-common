@@ -5,7 +5,7 @@
   }}
 {{/if}}
 
-{{#if (or section.title section.titleTip)}}
+{{#if (or section.title section.titleTip isChartNavigationShared)}}
   <div class="section-header">
     {{#if section.title}}
       {{#truncated-string tagName="h3" class="section-title"}}
@@ -16,6 +16,12 @@
       {{#one-label-tip class="section-title-tip" tooltipClass="tooltip-lg"}}
         {{section.titleTip}}
       {{/one-label-tip}}
+    {{/if}}
+    {{#if isChartNavigationShared}}
+      {{one-time-series-chart/toolbar
+        class="section-charts-shared-navigation"
+        models=(array)
+      }}
     {{/if}}
   </div>
 {{/if}}

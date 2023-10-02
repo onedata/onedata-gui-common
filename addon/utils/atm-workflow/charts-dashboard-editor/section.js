@@ -8,6 +8,7 @@
 
 import { computed, set } from '@ember/object';
 import _ from 'lodash';
+import { ChartNavigation } from 'onedata-gui-common/utils/time-series-dashboard';
 import ElementBase from './element-base';
 import { ElementType } from './common';
 
@@ -47,6 +48,13 @@ const Section = ElementBase.extend({
    * @type {string}
    */
   description: '',
+
+  /**
+   * @public
+   * @virtual optional
+   * @type {Utils.TimeSeriesDashboard.ChartNavigation}
+   */
+  chartNavigation: ChartNavigation.Independent,
 
   /**
    * @public
@@ -126,6 +134,7 @@ const Section = ElementBase.extend({
       title: this.title,
       titleTip: this.titleTip,
       description: this.description,
+      chartNavigation: this.chartNavigation,
       charts: this.charts.map((chart) => chart.clone()),
       sections: this.sections.map((section) => section.clone()),
       parent: this.parent,
@@ -146,7 +155,7 @@ const Section = ElementBase.extend({
         tip: this.titleTip,
       },
       description: this.description,
-      chartNavigation: 'independent',
+      chartNavigation: this.chartNavigation,
       charts: this.charts.map((chart) => chart.toJson()),
       sections: this.sections.map((section) => section.toJson()),
     };

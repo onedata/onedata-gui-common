@@ -16,6 +16,7 @@ import Axis, { getUnitOptionsTypeForUnitName } from './axis';
 import SeriesGroup from './series-group';
 import Series from './series';
 import { functions } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import { ChartNavigation } from 'onedata-gui-common/utils/time-series-dashboard';
 
 /**
  * @type {string}
@@ -161,6 +162,7 @@ export function createSectionModelFromSpec(
     title: sectionSpec.title?.content ?? '',
     titleTip: sectionSpec.title?.tip ?? '',
     description: sectionSpec.description ?? '',
+    chartNavigation: sectionSpec.chartNavigation ?? ChartNavigation.Independent,
     charts: sectionSpec.charts
       ?.filter(Boolean)
       .map((chartSpec) =>

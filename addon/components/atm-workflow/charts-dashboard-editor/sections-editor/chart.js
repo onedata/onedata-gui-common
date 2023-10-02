@@ -9,7 +9,7 @@
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { reads } from '@ember/object/computed';
-import { equal, not } from 'ember-awesome-macros';
+import { equal, not, raw } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor/chart';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
@@ -18,6 +18,7 @@ import {
   translateValidationErrorsBatch,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
+import { ChartNavigation } from 'onedata-gui-common/utils/time-series-dashboard';
 
 export default OneDraggableObject.extend(I18n, {
   layout,
@@ -105,6 +106,14 @@ export default OneDraggableObject.extend(I18n, {
    * @type {ComputedProperty<boolean>}
    */
   isMeDragged: equal('chart', 'draggedChart'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isChartNavigationVisible: equal(
+    'chart.parent.chartNavigation',
+    raw(ChartNavigation.Independent)
+  ),
 
   /**
    * @override

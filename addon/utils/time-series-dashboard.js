@@ -12,6 +12,34 @@ import _ from 'lodash';
 const i18nPrefix = 'utils.timeSeriesDashboard';
 
 /**
+ * @typedef {'independent' | 'sharedWithinSection'} ChartNavigation
+ */
+
+export const ChartNavigation = Object.freeze({
+  Independent: 'independent',
+  SharedWithinSection: 'sharedWithinSection',
+});
+
+export const chartNavigationsArray = Object.freeze([
+  ChartNavigation.Independent,
+  ChartNavigation.SharedWithinSection,
+]);
+
+assert(
+  'chartNavigationsArray must have the same items as ChartNavigation enum.',
+  _.isEqual(Object.values(ChartNavigation).sort(), [...chartNavigationsArray].sort())
+);
+
+/**
+ * @param {Ember.Service} i18n
+ * @param {ChartNavigation} seriesType
+ * @returns {SafeString}
+ */
+export function translateChartNavigation(i18n, chartNavigation) {
+  return i18n.t(`${i18nPrefix}.chartNavigations.${chartNavigation}`);
+}
+
+/**
  * @typedef {'bar' | 'line'} SeriesType
  */
 
