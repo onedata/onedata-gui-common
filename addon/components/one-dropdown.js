@@ -34,6 +34,10 @@ export default class OneDropdown extends PowerSelect {
     return safeExec(this, () => super.updateState(...arguments));
   }
 
+  set() {
+    return safeExec(this, () => super.set(...arguments));
+  }
+
   handlePageScroll() {
     if (!this.renderInPlace && this.publicAPI.isOpen) {
       if (this.media.isTablet || this.media.isMobile) {

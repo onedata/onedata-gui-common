@@ -11,7 +11,7 @@
     transform: translateY(-50%) rotate(0deg);
     transition: transition-ease(transform);
   }
-  
+
   @include btn-toolbar-float-right();
   &.toolbar-when-opened {
     .btn-toolbar {
@@ -41,8 +41,7 @@
     }
   }
   &.header-fixed {
-    // override inline styles
-    cursor: not-allowed !important;
+    cursor: not-allowed;
     > *:not(.item-checkbox) {
       opacity: 0.4;
     }
@@ -69,7 +68,7 @@
       2*$collapsible-list-item-btn-toggle-padding +
         $collapsible-list-item-padding + 12px;
   }
-  
+
   .form-state {
     padding-left: 4px;
     padding-right: 4px;
