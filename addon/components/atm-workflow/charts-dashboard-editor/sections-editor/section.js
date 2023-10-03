@@ -9,12 +9,13 @@
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { not, and, or } from 'ember-awesome-macros';
+import { not, and, or, eq, raw } from 'ember-awesome-macros';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor/section';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
+import { ChartNavigation } from 'onedata-gui-common/utils/time-series-dashboard';
 
 export default OneDraggableObject.extend(I18n, {
   layout,
@@ -140,6 +141,14 @@ export default OneDraggableObject.extend(I18n, {
     not('section.isRoot'),
     'draggedSection',
     not('isMeOrParentDragged'),
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isChartNavigationShared: eq(
+    'section.chartNavigation',
+    raw(ChartNavigation.SharedWithinSection)
   ),
 
   /**

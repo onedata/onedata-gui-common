@@ -1,5 +1,5 @@
 /**
- * Allows edition of section details - title, title tip and description.
+ * Allows edition of section details - title, title tip, description and more.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2023 ACK CYFRONET AGH
@@ -13,9 +13,11 @@ import { inject as service } from '@ember/service';
 import { tag, not } from 'ember-awesome-macros';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
+import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/sections-editor/section-details-editor';
+import { chartNavigationsArray, translateChartNavigation } from 'onedata-gui-common/utils/time-series-dashboard';
 
 export default Component.extend(I18n, {
   classNames: ['section-details-editor'],
@@ -50,9 +52,9 @@ export default Component.extend(I18n, {
   }),
 
   formValuesUpdater: observer(
-    'section.{title,titleTip,description}',
+    'section.{title,titleTip,description,chartNavigation}',
     function formValuesUpdater() {
-      ['title', 'titleTip', 'description'].forEach((fieldName) => {
+      ['title', 'titleTip', 'description', 'chartNavigation'].forEach((fieldName) => {
         const newValue = this.section?.[fieldName] ?? '';
         if (newValue !== this.detailsForm.valuesSource[fieldName]) {
           set(this.detailsForm.valuesSource, fieldName, newValue);
@@ -83,6 +85,7 @@ export default Component.extend(I18n, {
       case 'description':
         changeType = 'continuous';
         break;
+      case 'chartNavigation':
       default:
         changeType = 'discrete';
         break;
@@ -137,6 +140,21 @@ const DescriptionField = TextareaField.extend({
   isOptional: true,
 });
 
+/**
+ * @type {Utils.FormComponent.DropdownField}
+ */
+const ChartNavigationField = DropdownField.extend({
+  ...disableValidation,
+  name: 'chartNavigation',
+  showSearch: false,
+  options: computed(function options() {
+    return chartNavigationsArray.map((value) => ({
+      label: translateChartNavigation(this.i18n, value),
+      value,
+    }));
+  }),
+});
+
 const DetailsForm = FormFieldsRootGroup.extend({
   /**
    * @override
@@ -171,6 +189,7 @@ const DetailsForm = FormFieldsRootGroup.extend({
     TitleField.create(),
     TitleTipField.create(),
     DescriptionField.create(),
+    ChartNavigationField.create(),
   ]),
 
   /**
