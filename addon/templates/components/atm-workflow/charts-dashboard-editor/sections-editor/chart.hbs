@@ -1,6 +1,6 @@
 {{#if (and chart.series.length chart.axes.length)}}
   {{#if isChartNavigationVisible}}
-    {{one-time-series-chart/toolbar models=(array)}}
+    {{one-time-series-chart/toolbar}}
   {{/if}}
   {{atm-workflow/charts-dashboard-editor/chart-preview chart=chart}}
 {{else}}
