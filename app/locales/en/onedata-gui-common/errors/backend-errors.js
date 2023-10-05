@@ -125,7 +125,7 @@ export default {
   filePopularityDisabled: 'File popularity is disabled.',
   spaceNotSupportedBy: 'Space (ID: {{spaceId}}) is not supported by the Oneprovider (ID: {{providerId}}).',
   notALocalStorageSupportingSpace: 'Storage backend (ID: {{storageId}}) does not belong to this Oneprovider (ID: {{providerId}}) and/or does not support the space (ID: {{spaceId}}).',
-  storageInUse: 'Specified storage backend supports a space.',
+  storageInUse: 'Specified storage backend already supports another space.',
   requiresAutoStorageImportMode: 'Operation requires space with auto storage import mode.',
   storageTestFailed: 'Failed to {{operation}} test file on storage backend.',
   requiresNonImportedStorage: 'Cannot apply for storage backend (ID: {{storageId}}) – this operation requires a non-imported storage backend.',
