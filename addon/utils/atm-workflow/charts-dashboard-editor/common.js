@@ -6,6 +6,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import joinStrings from 'onedata-gui-common/utils/i18n/join-strings';
+import {
+  getFunctionNameTranslation,
+  getFunctionArgumentNameTranslation,
+} from './functions-model/common';
+
 const i18nPrefix = 'utils.atmWorkflow.chartsDashboardEditor.common';
 
 /**
@@ -72,14 +78,46 @@ export function isChartElementType(elementType) {
  */
 
 /**
+ * @type {Object<string, (i18n: Ember.Service, validationError: DashboardElementValidationError) => Object<string, string | SafeString>}
+ */
+const validationErrorTranslationPlaceholdersGetters = Object.freeze({
+  chartFunctionUndefinedReturnType: (i18n, { element }) => {
+    return {
+      functionName: getFunctionNameTranslation(i18n, element.name),
+    };
+  },
+  chartFunctionWrongArgumentTypeAssigned: (i18n, { element, errorDetails }) => {
+    const compatibleTypes =
+      errorDetails?.relatedAttachableArgumentSpec?.compatibleTypes ?? [];
+    const translatedCompatibleTypes = compatibleTypes.map((type) => String(i18n.t(
+      `${i18nPrefix}.validationErrorParts.chartFunctionWrongArgumentTypeAssigned.compatibleTypes.${type}`
+    )));
+    return {
+      functionName: getFunctionNameTranslation(i18n, element.name),
+      argumentName: getFunctionArgumentNameTranslation(
+        i18n,
+        element.name,
+        errorDetails?.relatedAttachableArgumentSpec?.name
+      ),
+      compatibleTypes: joinStrings(i18n, translatedCompatibleTypes, 'or'),
+    };
+  },
+});
+
+/**
  * @param {Ember.Service} i18n
  * @param {DashboardElementValidationError} validationError
  * @returns {SafeString}
  */
 export function translateValidationError(i18n, validationError) {
+  const errorId = validationError.errorId;
+  const placeholderGetter =
+    validationErrorTranslationPlaceholdersGetters[errorId] ?? (() => ({}));
   return i18n.t(
-    `${i18nPrefix}.validationErrors.${validationError.errorId}`,
-    validationError
+    `${i18nPrefix}.validationErrors.${validationError.errorId}`, {
+      ...validationError,
+      placeholders: placeholderGetter(i18n, validationError),
+    }
   );
 }
 

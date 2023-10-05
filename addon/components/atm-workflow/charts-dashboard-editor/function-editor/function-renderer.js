@@ -16,6 +16,7 @@ import {
   getFunctionNameTranslation,
   getFunctionArgumentNameTranslation,
   ElementType,
+  translateValidationErrorsBatch,
 } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import dom from 'onedata-gui-common/utils/dom';
@@ -84,12 +85,59 @@ export default OneDraggableObject.extend(I18n, {
   dragHandle: '.function-block-header',
 
   /**
+   * @type {ComputedProperty<SafeString | null>}
+   */
+  functionOnlyValidationErrorsMessage: computed(
+    'chartFunction.directValidationErrors',
+    function validationErrorsMessage() {
+      const functionOnlyValidationErrors = this.chartFunction.directValidationErrors
+        .filter(({ errorDetails }) =>
+          !errorDetails?.relatedAttachedArgumentFunction
+        );
+      return translateValidationErrorsBatch(
+        this.i18n,
+        functionOnlyValidationErrors,
+      );
+    }
+  ),
+
+  /**
+   * Maps argument function id -> translation of errors regarding assignment
+   * of that function to our argument slot. If for some function there are no
+   * errors, then it will not be present in the map.
+   * @type {ComputedProperty<Object<string, SafeString>>}
+   */
+  perArgumentValidationErrorsMessages: computed(
+    'chartFunction.directValidationErrors',
+    function perArgumentValidationErrorsMessages() {
+      const errorsPerArgument = {};
+      for (const validationError of this.chartFunction.directValidationErrors) {
+        const argumentFunctionId = validationError.errorDetails
+          ?.relatedAttachedArgumentFunction?.id;
+        if (argumentFunctionId) {
+          if (!errorsPerArgument[argumentFunctionId]) {
+            errorsPerArgument[argumentFunctionId] = [];
+          }
+          errorsPerArgument[argumentFunctionId].push(validationError);
+        }
+      }
+      return Object.keys(errorsPerArgument).reduce((acc, funcId) => {
+        acc[funcId] = translateValidationErrorsBatch(
+          this.i18n,
+          errorsPerArgument[funcId],
+        );
+        return acc;
+      }, {});
+    }
+  ),
+
+  /**
    * Contains open state of adder popovers. Each argument can have multiple adders
    * - one before each attached function and one at the end to create new argument.
    * Because of that Ember object for containing open state has format:
    * EmberObject({ [argumentName]: EmberObject({ [indexOfAttachedFunction]: boolean})).
    * Adder which adds new function at the end has index -1.
-   * @type {EmberObject}
+   * @type {ComputedProperty<EmberObject>}
    */
   adderOpenState: computed('chartFunction', function adderOpenState() {
     const argumentNames =

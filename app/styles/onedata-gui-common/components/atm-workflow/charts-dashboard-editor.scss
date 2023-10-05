@@ -771,7 +771,8 @@
       .function-block,
       .function-actions,
       .attachment-actions,
-      .add-selector-trigger {
+      .add-selector-trigger,
+      .warning-icon {
         pointer-events: initial;
       }
     }
@@ -836,7 +837,6 @@
 
     .function-block-header {
       display: flex;
-      justify-content: space-between;
       gap: 0.5em;
       padding: 0.5em;
       font-size: 1.2em;
@@ -853,6 +853,7 @@
     .function-actions {
       display: flex;
       align-items: center;
+      margin-left: auto;
     }
 
     .function-block-body {
@@ -975,6 +976,12 @@
         display: block;
         border: 1px solid $color-one-azure;
       }
+
+      .over-line-content {
+        padding: 0 0.3em;
+        height: 0;
+        transform: translateY(-1.7em);
+      }
     }
 
     .argument-start-line {
@@ -1019,11 +1026,7 @@
     }
 
     .attachment-actions {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%) translateY(-100%) translateY(-0.2em);
-      display: flex;
+      display: inline-flex;
       border: $main-border;
       border-radius: $border-radius-small;
       background-color: $color-one-white;

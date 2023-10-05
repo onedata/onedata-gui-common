@@ -6,10 +6,22 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import { computed, defineProperty } from '@ember/object';
+import _ from 'lodash';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import ElementBase from '../element-base';
 import { ElementType } from '../common';
+
+/**
+ * @typedef {DashboardElementValidationError} ChartFunctionUndefinedReturnTypeValidationError
+ * @property {'chartFunctionUndefinedReturnType'} errorId
+ */
+
+/**
+ * @typedef {DashboardElementValidationError} ChartFunctionWrongArgumentTypeAssignedValidationError
+ * @property {'chartFunctionWrongArgumentTypeAssigned'} errorId
+ * @property {{ relatedAttachedArgumentFunction: Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase }} errorDetails
+ */
 
 export default ElementBase.extend({
   /**
@@ -82,11 +94,78 @@ export default ElementBase.extend({
   }),
 
   /**
+   * @override
+   */
+  directValidationErrors: computed(
+    'returnedTypes',
+    'attachedFunctionsRelatedValidationErrors',
+    function directValidationErrors() {
+      const errors = [...this.attachedFunctionsRelatedValidationErrors];
+
+      if (this.returnedTypes.length > 1) {
+        errors.push({
+          element: this,
+          errorId: 'chartFunctionUndefinedReturnType',
+        });
+      }
+
+      return errors;
+    }
+  ),
+
+  /**
+   * @override
+   */
+  nestedValidationErrors: computed(
+    'collectedAttachedFunctions.@each.validationErrors',
+    function nestedValidationErrors() {
+      return _.flatten(
+        this.collectedAttachedFunctions
+        .map(({ validationErrors }) => validationErrors)
+      );
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase>>}
+   */
+  collectedAttachedFunctions: undefined,
+
+  /**
    * @type {ComputedProperty<boolean>}
    */
   isDetached: computed('parent.detachedFunctions.[]', function isDetached() {
     return Boolean(this.parent?.detachedFunctions?.includes(this));
   }),
+
+  /**
+   * @type {ComputedProperty<Array<DashboardElementValidationError>}
+   */
+  attachedFunctionsRelatedValidationErrors: computed(
+    'collectedAttachedFunctions.@each.returnedTypes',
+    function attachedFunctionsRelatedValidationErrors() {
+      return (this.collectedAttachedFunctions ?? []).map((attachedFunction) => {
+        const argumentName = this.getArgumentNameForAttachedFunction(attachedFunction);
+        const argumentSpec = this.attachableArgumentSpecs
+          .find(({ name }) => name === argumentName);
+        if (
+          argumentSpec &&
+          attachedFunction.returnedTypes.length === 1 &&
+          !argumentSpec.compatibleTypes.includes(attachedFunction.returnedTypes[0])
+        ) {
+          return {
+            element: this,
+            errorId: 'chartFunctionWrongArgumentTypeAssigned',
+            errorDetails: {
+              relatedAttachableArgumentSpec: argumentSpec,
+              relatedAttachedArgumentFunction: attachedFunction,
+            },
+          };
+        }
+        return null;
+      }).filter(Boolean);
+    }
+  ),
 
   /**
    * @override
@@ -95,6 +174,14 @@ export default ElementBase.extend({
     if (!this.id) {
       this.set('id', generateId());
     }
+
+    defineProperty(this, 'collectedAttachedFunctions', computed(
+      ...this.attachableArgumentSpecs.map((spec) => `${spec.name}.[]`),
+      function collectedAttachedFunctions() {
+        return [...this.attachedFunctions()];
+      }
+    ));
+
     this._super(...arguments);
   },
 
