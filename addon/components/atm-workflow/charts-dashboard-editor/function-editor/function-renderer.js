@@ -89,7 +89,7 @@ export default OneDraggableObject.extend(I18n, {
    */
   functionOnlyValidationErrorsMessage: computed(
     'chartFunction.directValidationErrors',
-    function validationErrorsMessage() {
+    function functionOnlyValidationErrorsMessage() {
       const functionOnlyValidationErrors = this.chartFunction.directValidationErrors
         .filter(({ errorDetails }) =>
           !errorDetails?.relatedAttachedArgumentFunction

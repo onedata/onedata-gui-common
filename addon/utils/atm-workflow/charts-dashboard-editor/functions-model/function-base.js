@@ -89,9 +89,12 @@ export default ElementBase.extend({
   /**
    * @override
    */
-  referencingPropertyNames: computed('attachableArgumentSpecs.[]', function referencingPropertyNames() {
-    return [...this.attachableArgumentSpecs.map(({ name }) => name), 'parent'];
-  }),
+  referencingPropertyNames: computed(
+    'attachableArgumentSpecs.[]',
+    function referencingPropertyNames() {
+      return [...this.attachableArgumentSpecs.map(({ name }) => name), 'parent'];
+    }
+  ),
 
   /**
    * @override
@@ -175,8 +178,12 @@ export default ElementBase.extend({
       this.set('id', generateId());
     }
 
+    const observedPropsForCollectedAttachedFunctions =
+      this.attachableArgumentSpecs.map((spec) =>
+        spec.isArray ? `${spec.name}.[]` : spec.name
+      );
     defineProperty(this, 'collectedAttachedFunctions', computed(
-      ...this.attachableArgumentSpecs.map((spec) => `${spec.name}.[]`),
+      ...observedPropsForCollectedAttachedFunctions,
       function collectedAttachedFunctions() {
         return [...this.attachedFunctions()];
       }
