@@ -7,6 +7,7 @@
  */
 
 import EmberObject, { computed, set } from '@ember/object';
+import _ from 'lodash';
 import ElementBase from './element-base';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
@@ -155,6 +156,20 @@ const Series = ElementBase.extend({
         });
       }
       return errors;
+    }
+  ),
+
+  /**
+   * @override
+   */
+  nestedValidationErrors: computed(
+    'dataProvider.validationErrors',
+    'detachedFunctions.@each.validationErrors',
+    function nestedValidationErrors() {
+      return _.flatten(
+        [this.dataProvider, ...this.detachedFunctions]
+        .map(({ validationErrors }) => validationErrors)
+      );
     }
   ),
 

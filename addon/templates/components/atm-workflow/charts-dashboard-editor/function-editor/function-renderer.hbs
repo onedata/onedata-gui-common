@@ -1,6 +1,9 @@
 <div class="function-block">
   <div class="function-block-header">
     <span class="function-name">{{readableName}}</span>
+    {{#if functionOnlyValidationErrorsMessage}}
+      {{warning-icon tooltipText=functionOnlyValidationErrorsMessage}}
+    {{/if}}
     {{#if (and (not editorContext.isReadOnly) (not chartFunction.isRoot))}}
       <div class="function-actions">
         {{one-icon
@@ -54,35 +57,42 @@
           >
             <div class="argument-middle-line argument-line"></div>
             <div class="argument-end-line argument-line">
-              {{#if (not editorContext.isReadOnly)}}
-                <div class="attachment-actions">
-                  {{one-icon
-                    class="add-action action"
-                    icon="plus"
-                    click=(action "toggleAdder" argumentInfo.name index)
+              <div class="over-line-content">
+                {{#if (get perArgumentValidationErrorsMessages func.id)}}
+                  {{warning-icon
+                    tooltipText=(get perArgumentValidationErrorsMessages func.id)
                   }}
-                  {{one-icon
-                    class="remove-action action"
-                    icon="x"
-                    click=(action "detachFunction" func)
-                  }}
-                  {{atm-workflow/charts-dashboard-editor/function-editor/function-adder
-                    executionContext=executionContext
-                    editorContext=editorContext
-                    parentFunction=chartFunction
-                    parentFunctionArgumentName=argumentInfo.name
-                    insertAtIndex=index
-                    functionToAttach=func
-                    triggerSelector=(evaluate-function
-                      (action getInChainFunctionAdderTriggerSelector)
-                      argumentInfo.name
-                      index
-                    )
-                    isOpened=(or (get (get adderOpenState argumentInfo.name) index) false)
-                    onClose=(action "toggleAdder" argumentInfo.name index false)
-                  }}
-                </div>
-              {{/if}}
+                {{/if}}
+                {{#if (not editorContext.isReadOnly)}}
+                  <div class="attachment-actions">
+                    {{one-icon
+                      class="add-action action"
+                      icon="plus"
+                      click=(action "toggleAdder" argumentInfo.name index)
+                    }}
+                    {{one-icon
+                      class="remove-action action"
+                      icon="x"
+                      click=(action "detachFunction" func)
+                    }}
+                    {{atm-workflow/charts-dashboard-editor/function-editor/function-adder
+                      executionContext=executionContext
+                      editorContext=editorContext
+                      parentFunction=chartFunction
+                      parentFunctionArgumentName=argumentInfo.name
+                      insertAtIndex=index
+                      functionToAttach=func
+                      triggerSelector=(evaluate-function
+                        (action getInChainFunctionAdderTriggerSelector)
+                        argumentInfo.name
+                        index
+                      )
+                      isOpened=(or (get (get adderOpenState argumentInfo.name) index) false)
+                      onClose=(action "toggleAdder" argumentInfo.name index false)
+                    }}
+                  </div>
+                {{/if}}
+              </div>
             </div>
             {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
               chartFunction=func

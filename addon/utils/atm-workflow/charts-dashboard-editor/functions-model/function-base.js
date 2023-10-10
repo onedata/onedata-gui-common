@@ -6,10 +6,22 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import { computed, defineProperty } from '@ember/object';
+import _ from 'lodash';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import ElementBase from '../element-base';
 import { ElementType } from '../common';
+
+/**
+ * @typedef {DashboardElementValidationError} ChartFunctionUndefinedReturnTypeValidationError
+ * @property {'chartFunctionUndefinedReturnType'} errorId
+ */
+
+/**
+ * @typedef {DashboardElementValidationError} ChartFunctionWrongArgumentTypeAssignedValidationError
+ * @property {'chartFunctionWrongArgumentTypeAssigned'} errorId
+ * @property {{ relatedAttachedArgumentFunction: Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase }} errorDetails
+ */
 
 export default ElementBase.extend({
   /**
@@ -77,9 +89,50 @@ export default ElementBase.extend({
   /**
    * @override
    */
-  referencingPropertyNames: computed('attachableArgumentSpecs.[]', function referencingPropertyNames() {
-    return [...this.attachableArgumentSpecs.map(({ name }) => name), 'parent'];
-  }),
+  referencingPropertyNames: computed(
+    'attachableArgumentSpecs.[]',
+    function referencingPropertyNames() {
+      return [...this.attachableArgumentSpecs.map(({ name }) => name), 'parent'];
+    }
+  ),
+
+  /**
+   * @override
+   */
+  directValidationErrors: computed(
+    'returnedTypes',
+    'attachedFunctionsRelatedValidationErrors',
+    function directValidationErrors() {
+      const errors = [...this.attachedFunctionsRelatedValidationErrors];
+
+      if (this.returnedTypes.length > 1) {
+        errors.push({
+          element: this,
+          errorId: 'chartFunctionUndefinedReturnType',
+        });
+      }
+
+      return errors;
+    }
+  ),
+
+  /**
+   * @override
+   */
+  nestedValidationErrors: computed(
+    'collectedAttachedFunctions.@each.validationErrors',
+    function nestedValidationErrors() {
+      return _.flatten(
+        this.collectedAttachedFunctions
+        .map(({ validationErrors }) => validationErrors)
+      );
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase>>}
+   */
+  collectedAttachedFunctions: undefined,
 
   /**
    * @type {ComputedProperty<boolean>}
@@ -89,12 +142,53 @@ export default ElementBase.extend({
   }),
 
   /**
+   * @type {ComputedProperty<Array<DashboardElementValidationError>}
+   */
+  attachedFunctionsRelatedValidationErrors: computed(
+    'collectedAttachedFunctions.@each.returnedTypes',
+    function attachedFunctionsRelatedValidationErrors() {
+      return (this.collectedAttachedFunctions ?? []).map((attachedFunction) => {
+        const argumentName = this.getArgumentNameForAttachedFunction(attachedFunction);
+        const argumentSpec = this.attachableArgumentSpecs
+          .find(({ name }) => name === argumentName);
+        if (
+          argumentSpec &&
+          attachedFunction.returnedTypes.length === 1 &&
+          !argumentSpec.compatibleTypes.includes(attachedFunction.returnedTypes[0])
+        ) {
+          return {
+            element: this,
+            errorId: 'chartFunctionWrongArgumentTypeAssigned',
+            errorDetails: {
+              relatedAttachableArgumentSpec: argumentSpec,
+              relatedAttachedArgumentFunction: attachedFunction,
+            },
+          };
+        }
+        return null;
+      }).filter(Boolean);
+    }
+  ),
+
+  /**
    * @override
    */
   init() {
     if (!this.id) {
       this.set('id', generateId());
     }
+
+    const observedPropsForCollectedAttachedFunctions =
+      this.attachableArgumentSpecs.map((spec) =>
+        spec.isArray ? `${spec.name}.[]` : spec.name
+      );
+    defineProperty(this, 'collectedAttachedFunctions', computed(
+      ...observedPropsForCollectedAttachedFunctions,
+      function collectedAttachedFunctions() {
+        return [...this.attachedFunctions()];
+      }
+    ));
+
     this._super(...arguments);
   },
 
