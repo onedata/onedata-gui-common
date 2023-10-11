@@ -6,7 +6,7 @@ export default {
     certificate: 'Web certificate',
     emergencyPassphrase: 'Emergency passphrase',
     provider: 'Provider',
-    storages: 'Storages',
+    storages: 'Storage backends',
     spaces: 'Spaces',
     guiSettings: 'GUI settings',
     members: 'Members',
