@@ -48,6 +48,13 @@ export default Component.extend(I18n, {
   model: null,
 
   /**
+   * Name of oneicon that should be displayed for each first-level element
+   * @virtual
+   * @type {string}
+   */
+  firstLevelItemIcon: 'unknown',
+
+  /**
    * @type {EmberObject}
    */
   context: computed(() => EmberObject.create({
@@ -86,15 +93,6 @@ export default Component.extend(I18n, {
     return resourcesType ?
       this.get('i18n').t(`tabs.${camelize(resourcesType)}.menuItem`) : '';
   }),
-
-  /**
-   * Name of oneicon that should be displayed for each first-level element
-   * To inject.
-   *
-   * @type {string}
-   */
-  // TODO some generic icon
-  firstLevelItemIcon: 'chceckbox-option',
 
   /**
    * Name of custom component used to render first level items.

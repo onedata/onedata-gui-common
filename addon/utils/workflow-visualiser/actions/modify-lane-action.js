@@ -29,7 +29,7 @@ export default Action.extend({
   /**
    * @override
    */
-  icon: 'rename',
+  icon: 'browser-rename',
 
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}

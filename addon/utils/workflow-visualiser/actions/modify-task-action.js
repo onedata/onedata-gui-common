@@ -32,7 +32,7 @@ export default Action.extend({
   /**
    * @override
    */
-  icon: 'rename',
+  icon: 'browser-rename',
 
   /**
    * @type {ComputedProperty<Object>}

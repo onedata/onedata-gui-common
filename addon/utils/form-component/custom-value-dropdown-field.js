@@ -36,7 +36,7 @@ export default DropdownField.extend({
    * @virtual optional
    * @type {string}
    */
-  customValueOptionIcon: 'rename',
+  customValueOptionIcon: 'browser-rename',
 
   /**
    * @virtual optional

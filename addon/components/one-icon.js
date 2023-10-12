@@ -3,7 +3,7 @@
  * Typical usage: ``{{one-icon icon='home'}}``
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2016-2019 ACK CYFRONET AGH
+ * @copyright (C) 2016-2023 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -11,6 +11,8 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-icon';
 import { htmlSafe } from '@ember/template';
+import isOneicon from 'onedata-gui-common/utils/is-oneicon';
+import config from 'ember-get-config';
 
 export default Component.extend({
   layout,
@@ -37,7 +39,15 @@ export default Component.extend({
    * @type {Ember.ComputedProperty<string>}
    */
   iconClass: computed('icon', function iconClass() {
-    return `oneicon-${this.get('icon')}`;
+    if (config.environment !== 'production' && !isOneicon(this.icon)) {
+      const message = `Unknown oneicon used: "${this.icon}"`;
+      if (config.environment === 'test' && this.icon) {
+        throw new Error(message);
+      } else {
+        console.warn(message);
+      }
+    }
+    return `oneicon-${this.icon}`;
   }),
 
   /**

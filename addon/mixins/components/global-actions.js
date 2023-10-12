@@ -29,23 +29,13 @@ export default Mixin.create({
     'globalActions',
     'globalActionsTitle',
     function () {
-      const {
-        globalActionsTitle,
-        globalActions,
-        navigationState,
-      } = this.getProperties('globalActions', 'globalActionsTitle', 'navigationState');
-      if (!navigationState.isDestroyed) {
-        navigationState.setProperties({
-          aspectActions: globalActions,
-          aspectActionsTitle: globalActionsTitle,
-        });
-      }
+      scheduleOnce('afterRender', this, 'injectGlobalActions');
     }
   ),
 
   init() {
     this._super(...arguments);
-    scheduleOnce('afterRender', this, 'globalActionsObserver');
+    this.globalActionsObserver();
   },
 
   willDestroyElement() {
@@ -56,5 +46,19 @@ export default Mixin.create({
       });
     });
     this._super(...arguments);
+  },
+
+  injectGlobalActions() {
+    const {
+      globalActionsTitle,
+      globalActions,
+      navigationState,
+    } = this.getProperties('globalActions', 'globalActionsTitle', 'navigationState');
+    if (!navigationState.isDestroyed) {
+      navigationState.setProperties({
+        aspectActions: globalActions,
+        aspectActionsTitle: globalActionsTitle,
+      });
+    }
   },
 });
