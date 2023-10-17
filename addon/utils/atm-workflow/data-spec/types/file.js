@@ -96,7 +96,7 @@ export const atmDataSpecTypeDefinition = Object.freeze({
   },
   getDefaultValue() {
     return {
-      file_id: '',
+      fileId: '',
     };
   },
 });
@@ -188,22 +188,36 @@ export function translateAtmFileType(i18n, atmFileType, { upperFirst = false } =
 
 /**
  * @typedef {
- * 'name' |
- * 'type' |
- * 'mode' |
- * 'size' |
- * 'atime' |
- * 'mtime' |
- * 'ctime' |
- * 'owner_id' |
- * 'file_id' |
- * 'parent_id' |
- * 'provider_id' |
- * 'storage_user_id' |
- * 'storage_group_id' |
- * 'shares' |
- * 'hardlinks_count' |
- * 'index'
+ *   'acl' |
+ *   'activePermissionsType' |
+ *   'atime' |
+ *   'conflictingName' |
+ *   'ctime' |
+ *   'directShareIds' |
+ *   'displayGid' |
+ *   'displayUid' |
+ *   'effDatasetMembership' |
+ *   'effDatasetProtectionFlags' |
+ *   'effProtectionFlags' |
+ *   'effQosMembership' |
+ *   'fileId' |
+ *   'hardlinkCount' |
+ *   'hasCustomMetadata' |
+ *   'index' |
+ *   'isFullyReplicatedLocally' |
+ *   'localReplicationRate' |
+ *   'mtime' |
+ *   'name' |
+ *   'originProviderId' |
+ *   'ownerUserId' |
+ *   'parentFileId' |
+ *   'path' |
+ *   'posixPermissions' |
+ *   'qosStatus' |
+ *   'recallRootFileId' |
+ *   'size' |
+ *   'symlinkValue' |
+ *   'type' |
  * } AtmFileAttribute
  */
 
@@ -211,44 +225,72 @@ export function translateAtmFileType(i18n, atmFileType, { upperFirst = false } =
  * @type {Object<string, AtmFileAttribute>}
  */
 export const AtmFileAttribute = Object.freeze({
-  Name: 'name',
-  Type: 'type',
-  Mode: 'mode',
-  Size: 'size',
+  Acl: 'acl',
+  ActivePermissionsType: 'activePermissionsType',
   Atime: 'atime',
-  Mtime: 'mtime',
+  ConflictingName: 'conflictingName',
   Ctime: 'ctime',
-  OwnerId: 'owner_id',
-  FileId: 'file_id',
-  ParentId: 'parent_id',
-  ProviderId: 'provider_id',
-  StorageUserId: 'storage_user_id',
-  StorageGroupId: 'storage_group_id',
-  Shares: 'shares',
-  HardlinksCount: 'hardlinks_count',
+  DirectShareIds: 'directShareIds',
+  DisplayGid: 'displayGid',
+  DisplayUid: 'displayUid',
+  EffDatasetMembership: 'effDatasetMembership',
+  EffDatasetProtectionFlags: 'effDatasetProtectionFlags',
+  EffProtectionFlags: 'effProtectionFlags',
+  EffQosMembership: 'effQosMembership',
+  FileId: 'fileId',
+  HardlinkCount: 'hardlinkCount',
+  HasCustomMetadata: 'hasCustomMetadata',
   Index: 'index',
+  IsFullyReplicatedLocally: 'isFullyReplicatedLocally',
+  LocalReplicationRate: 'localReplicationRate',
+  Mtime: 'mtime',
+  Name: 'name',
+  OriginProviderId: 'originProviderId',
+  OwnerUserId: 'ownerUserId',
+  ParentFileId: 'parentFileId',
+  Path: 'path',
+  PosixPermissions: 'posixPermissions',
+  QosStatus: 'qosStatus',
+  RecallRootFileId: 'recallRootFileId',
+  Size: 'size',
+  SymlinkValue: 'symlinkValue',
+  Type: 'type',
 });
 
 /**
  * @type {Array<AtmFileAttribute>}
  */
 export const atmFileAttributesArray = Object.freeze([
-  AtmFileAttribute.Name,
-  AtmFileAttribute.Type,
-  AtmFileAttribute.Mode,
-  AtmFileAttribute.Size,
+  AtmFileAttribute.Acl,
+  AtmFileAttribute.ActivePermissionsType,
   AtmFileAttribute.Atime,
-  AtmFileAttribute.Mtime,
+  AtmFileAttribute.ConflictingName,
   AtmFileAttribute.Ctime,
-  AtmFileAttribute.OwnerId,
+  AtmFileAttribute.DirectShareIds,
+  AtmFileAttribute.DisplayGid,
+  AtmFileAttribute.DisplayUid,
+  AtmFileAttribute.EffDatasetMembership,
+  AtmFileAttribute.EffDatasetProtectionFlags,
+  AtmFileAttribute.EffProtectionFlags,
+  AtmFileAttribute.EffQosMembership,
   AtmFileAttribute.FileId,
-  AtmFileAttribute.ParentId,
-  AtmFileAttribute.ProviderId,
-  AtmFileAttribute.StorageUserId,
-  AtmFileAttribute.StorageGroupId,
-  AtmFileAttribute.Shares,
-  AtmFileAttribute.HardlinksCount,
+  AtmFileAttribute.HardlinkCount,
+  AtmFileAttribute.HasCustomMetadata,
   AtmFileAttribute.Index,
+  AtmFileAttribute.IsFullyReplicatedLocally,
+  AtmFileAttribute.LocalReplicationRate,
+  AtmFileAttribute.Mtime,
+  AtmFileAttribute.Name,
+  AtmFileAttribute.OriginProviderId,
+  AtmFileAttribute.OwnerUserId,
+  AtmFileAttribute.ParentFileId,
+  AtmFileAttribute.Path,
+  AtmFileAttribute.PosixPermissions,
+  AtmFileAttribute.QosStatus,
+  AtmFileAttribute.RecallRootFileId,
+  AtmFileAttribute.Size,
+  AtmFileAttribute.SymlinkValue,
+  AtmFileAttribute.Type,
 ]);
 
 assert(

@@ -100,7 +100,7 @@ const dataSpecs = [{
     fileType: 'ANY',
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
-  exampleConstValue: { file_id: 'someid' },
+  exampleConstValue: { fileId: 'someid' },
   inputExampleConstValue: async (fieldSelector) => {
     await click(`${fieldSelector} .file-value-editor-selector`);
     await click('.provide-file-id-action-trigger');

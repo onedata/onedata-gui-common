@@ -82,16 +82,16 @@ describe('Unit | Utility | atm-workflow/value-validators', function () {
   );
 
   [{
-    file_id: 'abc',
+    fileId: 'abc',
   }, {
-    file_id: 'abc',
+    fileId: 'abc',
     someKey: 'xyz',
   }].forEach((value) =>
     itRecognizesValueAsValid(value, fileDataSpec)
   );
   [
-    { file_id: '' },
-    { file_id: null },
+    { fileId: '' },
+    { fileId: null },
     'abc',
     132,
     NaN,
