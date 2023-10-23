@@ -165,4 +165,26 @@ export default EmberObject.extend({
       traceIds
     );
   },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Store}
+   * @returns {Promise<string>}
+   */
+  getAuditLogDownloadUrl(store) {
+    if (!this.executionDataFetcher) {
+      console.error(
+        'util:workflow-visualiser/workflow-data-provider#getAuditLogDownloadUrl: executionDataFetcher is not set',
+      );
+      return reject(new Error('executionDataFetcher is not set'));
+    }
+    const storeInstanceId = store?.instanceId;
+    if (!storeInstanceId) {
+      console.error(
+        'util:workflow-visualiser/workflow-data-provider#getAuditLogDownloadUrl: provided store does not have instance id',
+      );
+      return reject(new Error('Provided store does not have instance id.'));
+    }
+
+    return this.executionDataFetcher.getAuditLogDownloadUrl(storeInstanceId);
+  },
 });

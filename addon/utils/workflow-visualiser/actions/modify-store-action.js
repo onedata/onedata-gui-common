@@ -22,22 +22,20 @@ export default Action.extend({
   store: reads('context.store'),
 
   /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.ActionsFactory>}
+   */
+  actionsFactory: reads('context.actionsFactory'),
+
+  /**
    * @override
    */
   onExecute() {
-    const {
-      store,
-      modalManager,
-    } = this.getProperties(
-      'store',
-      'modalManager'
-    );
-
     const result = ActionResult.create();
-    return modalManager
+    return this.modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'edit',
-        store,
+        store: this.store,
+        actionsFactory: this.actionsFactory,
         onSubmit: storeProvidedByForm =>
           result.interceptPromise(this.modifyStore(storeProvidedByForm)),
       }).hiddenPromise
