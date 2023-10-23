@@ -189,7 +189,7 @@ export class Globals {
           }
           return true;
         },
-      })  as typeof window[T];
+      }) as typeof window[T];
     } else {
       this.mocks[globalName] = mock as typeof window[T];
     }
@@ -217,7 +217,10 @@ export class Globals {
   private getNativeGlobal<T extends GlobalName>(globalName: T): typeof window[T] {
     /* eslint-disable-next-line no-restricted-globals */
     const nativeGlobal = window[globalName];
-    return (typeof nativeGlobal === 'function' ? nativeGlobal.bind(window) : nativeGlobal) as typeof window[T];
+    return (
+      typeof nativeGlobal === 'function' ?
+        nativeGlobal.bind(window) : nativeGlobal
+    ) as typeof window[T];
   }
 }
 
