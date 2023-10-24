@@ -15,7 +15,7 @@
  *
  * Example 1:
  * ```
- * globals.mock('window', {
+ * globals.mock(GlobalName.Window, {
  *   innerWidth: 1234,
  * });
  * ```
@@ -42,7 +42,7 @@
  *
  * Example 2:
  * ```
- * globals.mock('window', {
+ * globals.mock(GlobalName.Window, {
  *   resizeListeners: new Set(),
  *   addEventListener(event, listener) {
  *     if (event === 'resize') {
@@ -78,143 +78,78 @@
 
 import config from 'ember-get-config';
 
-/**
- * @typedef {'window' | 'document' | 'location' | 'navigator' | 'localStorage' | 'sessionStorage' | 'fetch'} GlobalName
- */
+export enum GlobalName {
+  Window = 'window',
+  Document = 'document',
+  Location = 'location',
+  Navigator = 'navigator',
+  LocalStorage = 'localStorage',
+  SessionStorage = 'sessionStorage',
+  Fetch = 'fetch',
+}
 
 const isTestingEnv = config.environment === 'test';
 
 export class Globals {
-  /**
-   * @public
-   * @type {Window}
-   */
-  get window() {
-    return this.getGlobal('window');
+  public get window(): Window {
+    return this.getGlobal(GlobalName.Window);
   }
 
-  /**
-   * @public
-   * @type {Document}
-   */
-  get document() {
-    return this.getGlobal('document');
+  public get document(): Document {
+    return this.getGlobal(GlobalName.Document);
   }
 
-  /**
-   * @public
-   * @type {Location}
-   */
-  get location() {
-    return this.getGlobal('location');
+  public get location(): Location {
+    return this.getGlobal(GlobalName.Location);
   }
 
-  /**
-   * @public
-   * @type {Navigator}
-   */
-  get navigator() {
-    return this.getGlobal('navigator');
+  public get navigator(): Navigator {
+    return this.getGlobal(GlobalName.Navigator);
   }
 
-  /**
-   * @public
-   * @type {Storage}
-   */
-  get localStorage() {
-    return this.getGlobal('localStorage');
+  public get localStorage(): Storage {
+    return this.getGlobal(GlobalName.LocalStorage);
   }
 
-  /**
-   * @public
-   * @type {Storage}
-   */
-  get sessionStorage() {
-    return this.getGlobal('sessionStorage');
+  public get sessionStorage(): Storage {
+    return this.getGlobal(GlobalName.SessionStorage);
   }
 
-  /**
-   * @public
-   * @type {typeof fetch}
-   */
-  get fetch() {
-    return this.getGlobal('fetch');
+  public get fetch(): typeof fetch {
+    return this.getGlobal(GlobalName.Fetch);
   }
 
-  /**
-   * @public
-   * @type {Window}
-   */
-  get nativeWindow() {
-    return this.getNativeGlobal('window');
+  public get nativeWindow(): Window {
+    return this.getNativeGlobal(GlobalName.Window);
   }
 
-  /**
-   * @public
-   * @type {Document}
-   */
-  get nativeDocument() {
-    return this.getNativeGlobal('document');
+  public get nativeDocument(): Document {
+    return this.getNativeGlobal(GlobalName.Document);
   }
 
-  /**
-   * @public
-   * @type {Location}
-   */
-  get nativeLocation() {
-    return this.getNativeGlobal('location');
+  public get nativeLocation(): Location {
+    return this.getNativeGlobal(GlobalName.Location);
   }
 
-  /**
-   * @public
-   * @type {Navigator}
-   */
-  get nativeNavigator() {
-    return this.getNativeGlobal('navigator');
+  public get nativeNavigator(): Navigator {
+    return this.getNativeGlobal(GlobalName.Navigator);
   }
 
-  /**
-   * @public
-   * @type {Storage}
-   */
-  get nativeLocalStorage() {
-    return this.getNativeGlobal('localStorage');
+  public get nativeLocalStorage(): Storage {
+    return this.getNativeGlobal(GlobalName.LocalStorage);
   }
 
-  /**
-   * @public
-   * @type {Storage}
-   */
-  get nativeSessionStorage() {
-    return this.getNativeGlobal('sessionStorage');
+  public get nativeSessionStorage(): Storage {
+    return this.getNativeGlobal(GlobalName.SessionStorage);
   }
 
-  /**
-   * @public
-   * @type {typeof fetch}
-   */
-  get nativeFetch() {
-    return this.getNativeGlobal('fetch');
+  public get nativeFetch(): typeof fetch {
+    return this.getNativeGlobal(GlobalName.Fetch);
   }
 
-  /**
-   * @public
-   */
-  constructor() {
-    /**
-     * @private
-     * @type {Object<GlobalName, unknown>}
-     */
-    this.mocks = {};
-  }
+  private mocks: { [key in GlobalName]?: typeof window[key] } = {};
 
-  /**
-   * @public
-   * @param {GlobalName} globalName
-   * @param {unknown} mock
-   * @returns {void}
-   */
-  mock(globalName, mock) {
+  public mock<T extends GlobalName>(globalName: T, mock: unknown): void {
     if (!isTestingEnv) {
       throw new Error(
         `Mocking global object ${globalName} in a non-testing environment is not allowed.`
@@ -236,35 +171,34 @@ export class Globals {
       // target).
       this.mocks[globalName] = new Proxy({}, {
         get(target, propertyName) {
-          if (propertyName in mock) {
-            return mock[propertyName];
+          if (mock && typeof mock === 'object' && propertyName in mock) {
+            return mock[propertyName as keyof typeof mock];
           } else {
-            const nativeValue = nativeGlobal[propertyName];
+            const nativeValue = nativeGlobal[
+              propertyName as keyof typeof nativeGlobal
+            ] as Function | unknown;
             return typeof nativeValue === 'function' ?
               nativeValue.bind(nativeGlobal) : nativeValue;
           }
         },
         set(target, propertyName, value) {
-          if (propertyName in mock) {
-            mock[propertyName] = value;
+          if (mock && typeof mock === 'object') {
+            (mock[propertyName as keyof typeof mock] as unknown) = value;
           } else {
-            nativeGlobal[propertyName] = value;
+            nativeGlobal[propertyName as keyof typeof nativeGlobal] = value;
           }
           return true;
         },
-      });
+      }) as typeof window[T];
     } else {
-      this.mocks[globalName] = mock;
+      this.mocks[globalName] = mock as typeof window[T];
     }
   }
 
   /**
-   * @public
-   * @param {GlobalName} [globalName] If not provided, all mocked globals will
-   *   be unmocked.
-   * @returns {void}
+   * @param globalName If not provided, all mocked globals will be unmocked.
    */
-  unmock(globalName) {
+  public unmock(globalName?: GlobalName): void {
     if (globalName) {
       delete this.mocks[globalName];
     } else {
@@ -272,29 +206,21 @@ export class Globals {
     }
   }
 
-  /**
-   * @private
-   * @param {GlobalName} globalName
-   * @returns {unknown}
-   */
-  getGlobal(globalName) {
+  private getGlobal<T extends GlobalName>(globalName: T): typeof window[T] {
     if (isTestingEnv && this.mocks[globalName]) {
-      return this.mocks[globalName];
+      return this.mocks[globalName] as typeof window[T];
     }
 
     return this.getNativeGlobal(globalName);
   }
 
-  /**
-   * @private
-   * @param {GlobalName} globalName
-   * @returns {unknown}
-   */
-  getNativeGlobal(globalName) {
+  private getNativeGlobal<T extends GlobalName>(globalName: T): typeof window[T] {
     /* eslint-disable-next-line no-restricted-globals */
     const nativeGlobal = window[globalName];
-    /* eslint-disable-next-line no-restricted-globals */
-    return typeof nativeGlobal === 'function' ? nativeGlobal.bind(window) : nativeGlobal;
+    return (
+      typeof nativeGlobal === 'function' ?
+        nativeGlobal.bind(window) : nativeGlobal
+    ) as typeof window[T];
   }
 }
 
