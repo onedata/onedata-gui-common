@@ -144,4 +144,12 @@ export default EmberObject.extend({
   getStoreContentPresenterContext() {
     return undefined;
   },
+
+  /**
+   * @param {string} storeInstanceId
+   * @returns {Promise<string>} download url
+   */
+  getAuditLogDownloadUrl() {
+    return notImplementedReject();
+  },
 });

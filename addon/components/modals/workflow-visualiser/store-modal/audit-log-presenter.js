@@ -26,6 +26,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {Utils.WorkflowVisualiser.Store}
+   */
+  store: undefined,
+
+  /**
+   * @virtual
    * @type {(browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>}
    */
   getStoreContentCallback: undefined,
@@ -48,6 +54,13 @@ export default Component.extend(I18n, {
    * @type {((taskInstanceId: string) => { task: Utils.WorkflowVisualiser.Lane.Task, runNumber: number } | null) | undefined}
    */
   getTaskRunForInstanceIdCallback: undefined,
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  downloadAction: computed('actionsFactory', 'store', function downloadAction() {
+    return this.actionsFactory.createDownloadAuditLogAction({ atmStore: this.store });
+  }),
 
   /**
    * @type {ComputedProperty<Array<AuditLogBrowserCustomColumnHeader>>}
