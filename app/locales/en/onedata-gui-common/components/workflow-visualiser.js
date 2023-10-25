@@ -159,6 +159,9 @@ export default {
         title: 'Audit log',
         subjectName: 'Workflow',
       },
+      downloadAuditLog: {
+        title: 'Download as JSON',
+      },
     },
   },
   storesList: {

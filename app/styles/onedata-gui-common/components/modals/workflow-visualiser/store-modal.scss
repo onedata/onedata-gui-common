@@ -71,6 +71,8 @@
   .audit-log-presenter {
     display: grid;
     place-items: stretch;
+    grid-template-rows: min-content 1fr;
+    gap: 0.5em;
   }
 
   .exception-presenter {

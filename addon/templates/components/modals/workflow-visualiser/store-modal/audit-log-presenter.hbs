@@ -1,3 +1,14 @@
+<div class="audit-log-actions">
+  {{#one-button
+    type="default"
+    size="sm"
+    class=downloadAction.className
+    onClick=downloadAction.executeCallback
+  }}
+    {{one-icon icon=downloadAction.icon}}
+    <span class="text">{{downloadAction.title}}</span>
+  {{/one-button}}
+</div>
 {{#audit-log-browser
   onFetchLogEntries=fetchLogEntriesCallback
   customColumnHeaders=customColumnHeaders

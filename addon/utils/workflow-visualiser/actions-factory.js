@@ -45,6 +45,7 @@ import ModifyWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workfl
 import ViewWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-charts-dashboard-action';
 import ModifyLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-charts-dashboard-action';
 import ViewLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-charts-dashboard-action';
+import DownloadAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/download-audit-log-action';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default EmberObject.extend(OwnerInjector, {
@@ -339,6 +340,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ViewStoreAction.create({
       ownerSource: this,
       context: Object.assign({
+        actionsFactory: this,
         getStoreContentCallback: (...args) =>
           this.workflowDataProvider.getStoreContent(...args),
         getTimeSeriesCollectionRefsMapCallback: (...args) =>
@@ -354,7 +356,13 @@ export default EmberObject.extend(OwnerInjector, {
    * @returns {Utils.WorkflowVisualiser.Actions.ModifyStoreAction}
    */
   createModifyStoreAction(context) {
-    return ModifyStoreAction.create({ ownerSource: this, context });
+    return ModifyStoreAction.create({
+      ownerSource: this,
+      context: {
+        actionsFactory: this,
+        ...context,
+      },
+    });
   },
 
   /**
@@ -535,6 +543,21 @@ export default EmberObject.extend(OwnerInjector, {
         getTimeSeriesCollectionRefsMapCallback: (...args) =>
           this.workflowDataProvider.getTimeSeriesCollectionReferencesMap(...args),
       }, context),
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Store} context.atmStore
+   * @returns {Utils.WorkflowVisualiser.Actions.DownloadAuditLogAction}
+   */
+  createDownloadAuditLogAction(context) {
+    return DownloadAuditLogAction.create({
+      ownerSource: this,
+      context: {
+        onGetAuditLogDownloadUrl: (...args) =>
+          this.workflowDataProvider.getAuditLogDownloadUrl(...args),
+        ...context,
+      },
     });
   },
 
