@@ -7,6 +7,11 @@ export default _.merge(replaceEmptySettings, {
     timeSeriesSelector: {
       collectionRef: {
         label: 'Store',
+        sourceLabels: {
+          store: 'Store "{{originName}}"',
+          task: 'Task "{{originName}}" time series store',
+          unknown: 'Unknown',
+        },
       },
       timeSeriesNameGenerator: {
         label: 'Time series name generator',

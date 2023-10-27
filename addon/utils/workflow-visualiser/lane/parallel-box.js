@@ -6,6 +6,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { computed } from '@ember/object';
+import _ from 'lodash';
 import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
 
 export default VisualiserRecord.extend({
@@ -30,6 +32,27 @@ export default VisualiserRecord.extend({
    * @type {Array<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   elements: undefined,
+
+  /**
+   * @type {Array<Utils.WorkflowVisualiser.Lane.Task>}
+   */
+  tasks: computed('element.[]', function tasks() {
+    return this.elements?.filter((element) =>
+      element.__modelType === 'task'
+    ) ?? [];
+  }),
+
+  /**
+   * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
+   */
+  chartsDashboardEditorDataSources: computed(
+    'tasks.@each.chartsDashboardEditorDataSources',
+    function chartsDashboardEditorDataSources() {
+      return _.flatten(
+        this.tasks.map((task) => task.chartsDashboardEditorDataSources ?? [])
+      );
+    }
+  ),
 
   init() {
     this._super(...arguments);

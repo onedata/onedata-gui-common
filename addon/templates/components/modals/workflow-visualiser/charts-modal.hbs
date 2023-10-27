@@ -7,7 +7,7 @@
   )
   allowClose=(not isSubmitting)
   modalId=modalId
-  size="lg"
+  size=(if (eq activeTab "definition") "full" "lg")
   as |modal|
 }}
 
@@ -20,7 +20,7 @@
   {{#modal.body}}
     {{#bs-tab
       customTabs=true
-      class="bs-tab-onedata bs-tab-modern fill-flex-using-column"
+      class="bs-tab-onedata bs-tab-modern"
       as |tab|
     }}
       {{#if (eq mode "view")}}
@@ -37,21 +37,21 @@
           {{/nav.item}}
         {{/bs-nav}}
       {{/if}}
-      {{#if (eq activeTab "visualisation")}}
-        {{workflow-visualiser/charts-presenter
-          class="charts-visualisation"
-          dashboardSpec=dashboardSpec
-          onGetStoreContent=getStoreContentCallback
-          onGetTimeSeriesCollectionRefsMap=getTimeSeriesCollectionRefsMapCallback
-          live=isLiveProxy.content
-        }}
-      {{else}}
-        <form class="charts-definition form form-horizontal form-component">
-          <p>{{tt this "tabs.definition.editorDisclaimer"}}</p>
-          {{form-component/field-renderer field=definitionFieldsRootGroup}}
-        </form>
-      {{/if}}
     {{/bs-tab}}
+    {{#if (eq activeTab "visualisation")}}
+      {{workflow-visualiser/charts-presenter
+        class="charts-visualisation"
+        dashboardSpec=dashboardSpec
+        onGetStoreContent=getStoreContentCallback
+        onGetTimeSeriesCollectionRefsMap=getTimeSeriesCollectionRefsMapCallback
+        live=isLiveProxy.content
+      }}
+    {{else}}
+      {{atm-workflow/charts-dashboard-editor
+        dashboardModel=dashboardModel
+        isReadOnly=(eq mode "view")
+      }}
+    {{/if}}
   {{/modal.body}}
 
   {{#if (not-eq mode "view")}}
@@ -70,7 +70,6 @@
         buttonType="submit"
         class="btn-submit"
         onClick=(action "submit" modal.submit)
-        disabled=(not definitionFieldsRootGroup.isValid)
       }}
         {{tt this "buttons.submit"}}
       {{/one-button}}

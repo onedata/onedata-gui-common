@@ -19,13 +19,6 @@ const Chart = ElementBase.extend({
 
   /**
    * @public
-   * @virtual
-   * @type {Array<ChartsDashboardEditorDataSource>}
-   */
-  dataSources: undefined,
-
-  /**
-   * @public
    * @virtual optional
    * @type {string}
    */
@@ -60,14 +53,16 @@ const Chart = ElementBase.extend({
   series: undefined,
 
   /**
-   * @override
+   * @public
+   * @virtual optional
+   * @type {boolean}
    */
-  referencingPropertyNames: Object.freeze(['axes', 'seriesGroups', 'series', 'parent']),
+  isSelected: false,
 
   /**
    * @override
    */
-  needsDataSources: true,
+  referencingPropertyNames: Object.freeze(['axes', 'seriesGroups', 'series', 'parent']),
 
   /**
    * @override

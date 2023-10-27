@@ -7,7 +7,7 @@
  */
 
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
-import { set, computed } from '@ember/object';
+import { set, setProperties, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { createNewFunction, ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 import { ChangedElementsSet } from './utils';
@@ -19,7 +19,6 @@ import { ChangedElementsSet } from './utils';
  * @property {string} targetArgumentName
  * @property {number} [insertAtIndex]
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase | null} [functionToAttach]
- * @property {Array<ChartsDashboardEditorDataSource>} dataSources
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
@@ -79,11 +78,6 @@ export default Action.extend({
   functionToAttach: reads('context.functionToAttach'),
 
   /**
-   * @type {ComputedProperty<AddFunctionActionContext['dataSources']>}
-   */
-  dataSources: reads('context.dataSources'),
-
-  /**
    * @type {ComputedProperty<AddFunctionActionContext['changeViewState']>}
    */
   changeViewState: reads('context.changeViewState'),
@@ -126,7 +120,10 @@ export default Action.extend({
       }
     } else {
       [this.newFunction, ...this.newFunction.nestedElements()].forEach((element) =>
-        set(element, 'isRemoved', false)
+        setProperties(element, {
+          isRemoved: false,
+          dataSources: this.targetFunction.dataSources,
+        })
       );
     }
 
@@ -231,7 +228,7 @@ export default Action.extend({
     return createNewFunction(
       this.newFunctionName,
       this.targetFunction.elementOwner,
-      this.dataSources
+      this.targetFunction.dataSources
     );
   },
 });

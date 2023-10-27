@@ -46,13 +46,6 @@ const Series = ElementBase.extend({
 
   /**
    * @public
-   * @virtual
-   * @type {Array<ChartsDashboardEditorDataSource>}
-   */
-  dataSources: undefined,
-
-  /**
-   * @public
    * @virtual optional
    * @type {boolean}
    */
@@ -111,11 +104,6 @@ const Series = ElementBase.extend({
    * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.FunctionBase>}
    */
   detachedFunctions: undefined,
-
-  /**
-   * @override
-   */
-  needsDataSources: true,
 
   /**
    * Set in `init`.
@@ -246,8 +234,8 @@ const Series = ElementBase.extend({
   clone() {
     const seriesClone = Series.create({
       elementOwner: this.elementOwner,
-      id: generateId(),
       dataSources: this.dataSources,
+      id: generateId(),
       repeatPerPrefixedTimeSeries: this.repeatPerPrefixedTimeSeries,
       prefixedTimeSeriesRef: this.prefixedTimeSeriesRef ?
         EmberObject.create(this.prefixedTimeSeriesRef) : this.prefixedTimeSeriesRef,
@@ -353,6 +341,20 @@ const Series = ElementBase.extend({
         },
       },
     };
+  },
+
+  /**
+   * @override
+   */
+  * nestedElements() {
+    if (this.dataProvider) {
+      yield this.dataProvider;
+      yield* this.dataProvider.nestedElements();
+    }
+    for (const detachedFunction of this.detachedFunctions) {
+      yield detachedFunction;
+      yield* detachedFunction.nestedElements();
+    }
   },
 
   /**

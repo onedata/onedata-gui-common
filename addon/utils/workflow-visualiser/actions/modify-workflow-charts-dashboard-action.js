@@ -43,16 +43,15 @@ export default Action.extend({
     await this.modalManager.show('workflow-visualiser/charts-modal', {
       mode: 'edit',
       dashboardOwnerType: 'workflow',
-      dashboardSpec: this.workflow.dashboardSpec,
-      onSubmit: (newDashboardSpec) =>
-        result.interceptPromise(this.modifyWorkflowChartsDashboard(newDashboardSpec)),
+      dashboardOwner: this.workflow,
+      onSubmit: () => result.interceptPromise(this.modifyWorkflowChartsDashboard()),
     }).hiddenPromise;
 
     result.cancelIfPending();
     return result;
   },
 
-  async modifyWorkflowChartsDashboard(newDashboardSpec) {
-    return this.workflow.modify({ dashboardSpec: newDashboardSpec });
+  async modifyWorkflowChartsDashboard() {
+    return this.workflow.chartsDashboardEditorModelContainer.propagateChange();
   },
 });

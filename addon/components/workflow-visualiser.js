@@ -278,9 +278,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
    */
-  workflow: computed('rawData', 'executionState', function workflow() {
-    return this.getWorkflow();
-  }),
+  workflow: computed(
+    'rawData',
+    'executionState',
+    'visualiserElements',
+    'definedStores',
+    function workflow() {
+      return this.getWorkflow();
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.VisualiserElement>>}
@@ -705,30 +711,39 @@ export default Component.extend(I18n, WindowResizeHandler, {
         !this.isExecutionEnded && !this.isExecutionSuspended
       );
     }
+    const lanes = this.visualiserElements.filter((element) =>
+      element.__modelType === 'lane'
+    );
 
-    const existingWorkflow = this.getCachedElement('workflow');
-
-    if (existingWorkflow) {
-      this.updateElement(existingWorkflow, {
+    let workflow = this.getCachedElement('workflow');
+    if (workflow) {
+      this.updateElement(workflow, {
         instanceId,
         systemAuditLogStore,
         status,
         dashboardSpec: this.rawData?.dashboardSpec ?? null,
+        lanes,
+        stores: this.definedStores,
       });
-      return existingWorkflow;
     } else {
-      const newWorkflow = Workflow.create({
+      workflow = Workflow.create({
         instanceId,
         systemAuditLogStore,
         status,
         dashboardSpec: this.rawData?.dashboardSpec ?? null,
+        lanes,
+        stores: this.definedStores,
         onModify: (workflow, modifiedProps) =>
           this.modifyElement(workflow, modifiedProps),
       });
-      this.addElementToCache('workflow', newWorkflow);
-
-      return newWorkflow;
+      this.addElementToCache('workflow', workflow);
     }
+
+    if (systemAuditLogStore && systemAuditLogStore.containerElement !== workflow) {
+      set(systemAuditLogStore, 'containerElement', workflow);
+    }
+
+    return workflow;
   },
 
   /**
@@ -1207,6 +1222,18 @@ export default Component.extend(I18n, WindowResizeHandler, {
       });
       this.addElementToCache('task', task);
     }
+
+    const internalStores = _.flatten(
+      Object.values(task.runsRegistry).map((run) => [
+        run.systemAuditLogStore,
+        run.timeSeriesStore,
+      ])
+    ).filter(Boolean);
+    internalStores.forEach((store) => {
+      if (store.containerElement !== task) {
+        set(store, 'containerElement', task);
+      }
+    });
 
     const usedStoreSchemaIds = task.getUsedStoreSchemaIds();
     const usedStores = usedStoreSchemaIds

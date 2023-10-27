@@ -153,6 +153,7 @@ const SeriesGroup = ElementBase.extend({
   clone() {
     const clonedInstance = SeriesGroup.create({
       elementOwner: this.elementOwner,
+      dataSources: this.dataSources,
       id: generateId(),
       name: this.name,
       stacked: this.stacked,

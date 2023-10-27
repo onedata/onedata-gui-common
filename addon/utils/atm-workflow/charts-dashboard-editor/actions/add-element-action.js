@@ -7,7 +7,7 @@
  */
 
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
-import { set, computed } from '@ember/object';
+import { set, setProperties, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import {
   createNewSection,
@@ -23,7 +23,6 @@ import { getCollectionFieldName, ChangedElementsSet } from './utils';
  * @typedef {Object} AddElementActionContext
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.ElementType} newElementType
  * @property {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup} targetElement
- * @property {Array<ChartsDashboardEditorDataSource>} dataSources
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
@@ -64,11 +63,6 @@ export default Action.extend({
   targetElement: reads('context.targetElement'),
 
   /**
-   * @type {ComputedProperty<AddFunctionActionContext['dataSources']>}
-   */
-  dataSources: reads('context.dataSources'),
-
-  /**
    * @type {ComputedProperty<AddElementActionContext['changeViewState']>}
    */
   changeViewState: reads('context.changeViewState'),
@@ -107,7 +101,10 @@ export default Action.extend({
       }
     } else {
       [this.newElement, ...this.newElement.nestedElements()].forEach((element) =>
-        set(element, 'isRemoved', false)
+        setProperties(element, {
+          isRemoved: false,
+          dataSources: this.targetElement.dataSources,
+        })
       );
     }
 
@@ -182,14 +179,15 @@ export default Action.extend({
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null}
    */
   createNewElement() {
-    const elementOwner = this.targetElement.elementOwner;
+    const {
+      elementOwner,
+      dataSources,
+    } = this.targetElement;
 
     const creatorFunction = creatorFunctions[this.newElementType];
     if (creatorFunction) {
-      const element = creatorFunction(this.i18n, elementOwner);
-      if (element.needsDataSources && this.dataSources) {
-        set(element, 'dataSources', this.dataSources);
-      }
+      const element = creatorFunction(this.i18n, elementOwner, dataSources);
+      set(element, 'dataSources', this.targetElement.dataSources);
       return element;
     } else {
       console.error(

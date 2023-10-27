@@ -6,15 +6,41 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { observer, set } from '@ember/object';
 
 export default EmberObject.extend({
+  /**
+   * @public
+   * @virtual
+   * @type {unknown}
+   */
+  elementsOwner: undefined,
+
+  /**
+   * @public
+   * @virtual
+   * @type {Array<ChartsDashboardEditorDataSource>}
+   */
+  dataSources: undefined,
+
   /**
    * @public
    * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
    */
   rootSection: null,
+
+  dataSourcesAssigner: observer('dataSources', function dataSourcesAssigner() {
+    if (!this.rootSection) {
+      return;
+    }
+
+    const allElements = [
+      this.rootSection,
+      ...this.rootSection.nestedElements(),
+    ];
+    allElements.forEach((element) => set(element, 'dataSources', this.dataSources));
+  }),
 
   /**
    * @override

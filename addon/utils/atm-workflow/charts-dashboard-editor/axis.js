@@ -222,6 +222,7 @@ const Axis = ElementBase.extend({
   clone() {
     const axisClone = Axis.create({
       elementOwner: this.elementOwner,
+      dataSources: this.dataSources,
       id: generateId(),
       name: this.name,
       unitName: this.unitName,

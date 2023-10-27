@@ -41,17 +41,17 @@ const ElementBase = EmberObject.extend({
 
   /**
    * @public
-   * @virtual optional
-   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null}
+   * @virtual
+   * @type {Array<ChartsDashboardEditorDataSource>}
    */
-  parent: null,
+  dataSources: undefined,
 
   /**
    * @public
    * @virtual optional
-   * @type {boolean}
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement | null}
    */
-  needsDataSources: false,
+  parent: null,
 
   /**
    * @public

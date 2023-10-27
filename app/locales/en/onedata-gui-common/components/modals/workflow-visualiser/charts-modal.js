@@ -9,7 +9,6 @@ export default {
     },
     definition: {
       title: 'Definition',
-      editorDisclaimer: 'Charts dashboard is an experimental feature, which will evolve in the future releases. Current dashboard editor is limited to JSON format only.',
     },
   },
   buttons: {

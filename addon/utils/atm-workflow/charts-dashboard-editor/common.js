@@ -189,8 +189,8 @@ export function getRepeatedSeriesName(i18n, timeSeriesNameGenerator) {
 
 /**
  * @typedef {Object} ChartsDashboardEditorDataSource
- * @property {string} name
+ * @property {string} originName Name of a model, which produced that data source
+ *   (e.g. store/task name).
  * @property {string} collectionRef
  * @property {TimeSeriesCollectionSchema} timeSeriesCollectionSchema
- * @property {boolean} [isDefault]
  */

@@ -9,7 +9,6 @@
 import Component from '@ember/component';
 import { computed, observer, set } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { A } from '@ember/array';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor';
 import {
   EditorContext,
@@ -28,19 +27,22 @@ export default Component.extend({
   i18n: service(),
 
   /**
+   * One of dashboardSpec or dashboardModel has to be provided
    * @virtual optional
    * @type {AtmTimeSeriesDashboardSpec}
    */
   dashboardSpec: undefined,
 
   /**
+   * One of dashboardSpec or dashboardModel has to be provided
    * @virtual optional
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Model}
    */
   dashboardModel: undefined,
 
   /**
-   * @virtual
+   * Required if dashboardSpec has been provided
+   * @virtual optional
    * @type {Array<ChartsDashboardEditorDataSource>}
    */
   dataSources: undefined,
@@ -62,11 +64,6 @@ export default Component.extend({
   undoManager: undefined,
 
   /**
-   * @type {Ember.Array<Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement>}
-   */
-  allElements: undefined,
-
-  /**
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext | null}
    */
   editorContextCache: null,
@@ -74,7 +71,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.EditorContext>}
    */
-  editorContext: computed('isReadOnly', 'dataSources', function editorContext() {
+  editorContext: computed('isReadOnly', function editorContext() {
     if (!this.editorContextCache) {
       const newContext = this.createNewEditorContext();
       this.set('editorContextCache', newContext);
@@ -83,9 +80,6 @@ export default Component.extend({
 
     if (this.editorContextCache.isReadOnly !== this.isReadOnly) {
       set(this.editorContextCache, 'isReadOnly', this.isReadOnly);
-    }
-    if (this.editorContextCache.actionsFactory.dataSources !== this.dataSources) {
-      this.editorContextCache.actionsFactory.dataSources = this.dataSources;
     }
     return this.editorContextCache;
   }),
@@ -98,21 +92,10 @@ export default Component.extend({
   }),
 
   dataSourcesObserver: observer('dataSources', function dataSourcesObserver() {
-    this.allElements.forEach((element) => {
-      if (element.needsDataSources) {
-        set(element, 'dataSources', this.dataSources);
-      }
-    });
-  }),
-
-  destroyedElementsRemover: observer(
-    'allElements.@each.isDestroyed',
-    function destroyedElementsRemover() {
-      this.allElements.removeObjects(
-        this.allElements.filter(({ isDestroyed }) => isDestroyed)
-      );
+    if (this.model !== this.dashboardModel) {
+      set(this.model, 'dataSources', this.dataSources ?? []);
     }
-  ),
+  }),
 
   /**
    * @override
@@ -120,19 +103,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    const allElements = A();
-    if (this.model.rootSection) {
-      allElements.pushObjects([
-        this.model.rootSection,
-        ...this.model.rootSection.nestedElements(),
-      ]);
-    }
-
-    this.setProperties({
-      undoManager: UndoManager.create(),
-      allElements,
-    });
-
+    this.set('undoManager', UndoManager.create());
     this.resetViewState();
   },
 
@@ -141,6 +112,7 @@ export default Component.extend({
    */
   willDestroyElement() {
     try {
+      this.removeSelectionFromModel();
       if (this.cacheFor('model') !== this.dashboardModel) {
         this.cacheFor('model')?.destroy();
       }
@@ -153,6 +125,21 @@ export default Component.extend({
     } finally {
       this._super(...arguments);
     }
+  },
+
+  /**
+   * @returns {void}
+   */
+  removeSelectionFromModel() {
+    const rootSection = this.cacheFor('model')?.rootSection;
+    if (!rootSection) {
+      return;
+    }
+    [rootSection, ...rootSection.nestedElements()].forEach((element) => {
+      if (element.isSelected) {
+        set(element, 'isSelected', false);
+      }
+    });
   },
 
   /**
@@ -252,16 +239,12 @@ export default Component.extend({
   createNewEditorContext() {
     const actionsFactory = new ActionsFactory({
       ownerSource: this,
-      dataSources: this.dataSources,
       changeViewState: (...args) => this.changeViewState(...args),
     });
     actionsFactory.addExecutionListener((action, result) => {
       if (!result.undo) {
         this.undoManager.addActionToHistory(action);
       }
-    });
-    actionsFactory.addElementCreationListener((newElement) => {
-      this.allElements.pushObject(newElement);
     });
 
     return EditorContext.create({

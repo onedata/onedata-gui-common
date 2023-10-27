@@ -25,6 +25,7 @@ const CurrentValueFunction = FunctionBase.extend({
    */
   clone() {
     return CurrentValueFunction.create({
+      dataSources: this.dataSources,
       positionRelativeToRootFunc: this.positionRelativeToRootFunc,
       parent: this.parent,
     });

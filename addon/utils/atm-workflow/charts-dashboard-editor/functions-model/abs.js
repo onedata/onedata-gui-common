@@ -45,6 +45,7 @@ const AbsFunction = FunctionBase.extend({
    */
   clone() {
     const functionClone = AbsFunction.create({
+      dataSources: this.dataSources,
       data: this.data?.clone(),
       positionRelativeToRootFunc: this.positionRelativeToRootFunc,
       parent: this.parent,

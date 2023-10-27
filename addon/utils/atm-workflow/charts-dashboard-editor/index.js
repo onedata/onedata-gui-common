@@ -14,6 +14,7 @@ export { default as EdgeScroller } from './edge-scroller';
 export { default as ActionsFactory } from './actions-factory';
 export {
   createModelFromSpec,
+  useNewSpecInModel,
   createSectionModelFromSpec,
   createChartModelFromSpec,
   createNewSection,

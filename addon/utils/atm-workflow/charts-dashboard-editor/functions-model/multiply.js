@@ -71,6 +71,7 @@ const MultiplyFunction = FunctionBase.extend({
    */
   clone() {
     const functionClone = MultiplyFunction.create({
+      dataSources: this.dataSources,
       operands: this.operands.map((func) => func.clone()),
       positionRelativeToRootFunc: this.positionRelativeToRootFunc,
       parent: this.parent,

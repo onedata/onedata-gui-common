@@ -170,10 +170,16 @@ const CollectionRefField = DropdownField.extend({
    * @override
    */
   options: computed('parent.dataSources', function options() {
-    return this.parent.dataSources?.map(({ name, collectionRef }) => ({
-      label: name,
-      value: collectionRef,
-    })) ?? [];
+    return this.parent.dataSources?.map(({ originName, collectionRef }) => {
+      const originType = collectionRef.split('-')[0] ?? 'unknown';
+
+      return {
+        label: this.getTranslation(`sourceLabels.${originType}`, { originName }, {
+          defaultValue: this.getTranslation('sourceLabels.unknown'),
+        }),
+        value: collectionRef,
+      };
+    }) ?? [];
   }),
 });
 

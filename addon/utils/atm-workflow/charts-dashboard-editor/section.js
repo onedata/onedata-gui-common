@@ -71,6 +71,13 @@ const Section = ElementBase.extend({
   sections: undefined,
 
   /**
+   * @public
+   * @virtual optional
+   * @type {boolean}
+   */
+  isSelected: false,
+
+  /**
    * @override
    */
   referencingPropertyNames: Object.freeze(['charts', 'sections', 'parent']),
@@ -130,6 +137,7 @@ const Section = ElementBase.extend({
   clone() {
     const clonedInstance = Section.create({
       elementOwner: this.elementOwner,
+      dataSources: this.dataSources,
       isRoot: this.isRoot,
       title: this.title,
       titleTip: this.titleTip,

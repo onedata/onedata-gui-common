@@ -32,7 +32,6 @@ import RemoveFunctionAction from './actions/remove-function-action';
 /**
  * @typedef {Object} ActionsFactoryInitOptions
  * @property {unknown} ownerSource
- * @property {Array<ChartsDashboardEditorDataSource>} dataSources
  * @property {(viewStateChange: Utils.AtmWorkflow.ChartsDashboardEditor.ViewStateChange) => void} changeViewState
  */
 
@@ -40,17 +39,7 @@ export default class ActionsFactory {
   /**
    * @param {ActionsFactoryInitOptions} initOptions
    */
-  constructor({
-    ownerSource,
-    dataSources,
-    changeViewState,
-  } = {}) {
-    /**
-     * @public
-     * @type {Array<ChartsDashboardEditorDataSource>}
-     */
-    this.dataSources = dataSources;
-
+  constructor({ ownerSource, changeViewState } = {}) {
     /**
      * @private
      * @type {ActionsFactoryInitOptions['ownerSource']}
@@ -70,12 +59,6 @@ export default class ActionsFactory {
     this.executionListeners = new Set();
 
     /**
-     * @private
-     * @type {Set<ElementCreationListener>}
-     */
-    this.elementCreationListeners = new Set();
-
-    /**
      * May contain only action with `changeType` equal to `'continuous'`
      * @private
      * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.ChangeElementPropertyAction | null}
@@ -91,7 +74,6 @@ export default class ActionsFactory {
     this.ownerSource = null;
     this.onSelectElement = () => {};
     this.executionListeners.clear();
-    this.elementCreationListeners.clear();
   }
 
   /**
@@ -114,39 +96,18 @@ export default class ActionsFactory {
 
   /**
    * @public
-   * @param {ElementCreationListener} listener
-   * @returns {void}
-   */
-  addElementCreationListener(listener) {
-    this.elementCreationListeners.add(listener);
-  }
-
-  /**
-   * @public
-   * @param {ElementCreationListener} listener
-   * @returns {void}
-   */
-  removeElementCreationListener(listener) {
-    this.elementCreationListeners.delete(listener);
-  }
-
-  /**
-   * @public
-   * @param {Omit<AddElementActionContext, 'changeViewState' | 'dataSources'>} context
+   * @param {Omit<AddElementActionContext, 'changeViewState'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.AddElementAction}
    */
   createAddElementAction(context) {
-    return this.attachElementCreationListener(
-      this.attachExecutionListener(
-        AddElementAction.create({
-          ownerSource: this.ownerSource,
-          context: {
-            dataSources: this.dataSources,
-            changeViewState: this.changeViewState,
-            ...context,
-          },
-        })
-      )
+    return this.attachExecutionListener(
+      AddElementAction.create({
+        ownerSource: this.ownerSource,
+        context: {
+          changeViewState: this.changeViewState,
+          ...context,
+        },
+      })
     );
   }
 
@@ -306,21 +267,18 @@ export default class ActionsFactory {
 
   /**
    * @public
-   * @param {Omit<AddFunctionActionContext, 'changeViewState' | 'dataSources'>} context
+   * @param {Omit<AddFunctionActionContext, 'changeViewState'>} context
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Actions.AddFunctionAction}
    */
   createAddFunctionAction(context) {
-    return this.attachElementCreationListener(
-      this.attachExecutionListener(
-        AddFunctionAction.create({
-          ownerSource: this.ownerSource,
-          context: {
-            dataSources: this.dataSources,
-            changeViewState: this.changeViewState,
-            ...context,
-          },
-        })
-      )
+    return this.attachExecutionListener(
+      AddFunctionAction.create({
+        ownerSource: this.ownerSource,
+        context: {
+          changeViewState: this.changeViewState,
+          ...context,
+        },
+      })
     );
   }
 
@@ -367,23 +325,6 @@ export default class ActionsFactory {
     action.addExecuteHook((result) => {
       if (result?.status === 'done') {
         this.executionListeners.forEach((listener) => listener(action, result));
-      }
-    });
-    return action;
-  }
-
-  /**
-   * @private
-   * @param {Utils.Action} action
-   * @returns {Utils.Action}
-   */
-  attachElementCreationListener(action) {
-    let wasCalled = false;
-    action.addExecuteHook((result) => {
-      const createdElement = action.newFunction ?? action.newElement;
-      if (result?.status === 'done' && !result?.undo && createdElement && !wasCalled) {
-        wasCalled = true;
-        this.elementCreationListeners.forEach((listener) => listener(createdElement));
       }
     });
     return action;

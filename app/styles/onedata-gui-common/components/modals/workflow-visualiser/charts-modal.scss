@@ -1,28 +1,15 @@
 .charts-modal {
+  .modal-full {
+    max-width: 120em;
+  }
+
   .representation-tabs {
     margin-bottom: 1em;
   }
 
-  .charts-definition {
-    &,
-    .fields-group-collapse,
-    .fields-group-children,
-    .field-component,
-    .json-editor {
-      @include fill-flex-using-column;
-    }
-
-    .dashboardSpec-field {
-      flex-direction: column;
-
-      .field-message {
-        flex-basis: initial;
-      }
-    }
-
-    textarea {
-      height: 100%;
-    }
+  .charts-dashboard-editor {
+    flex-grow: 1;
+    min-height: 0;
   }
 
   &.mode-edit {
@@ -33,9 +20,5 @@
     .modal-body {
       flex-grow: 1;
     }
-  }
-
-  .form-group {
-    margin-bottom: 0;
   }
 }

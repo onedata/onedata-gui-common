@@ -63,6 +63,7 @@ const ReplaceEmptyFunction = FunctionBase.extend({
    */
   clone() {
     const functionClone = ReplaceEmptyFunction.create({
+      dataSources: this.dataSources,
       data: this.data?.clone(),
       strategy: this.strategy,
       fallbackValue: this.fallbackValue,

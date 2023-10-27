@@ -49,6 +49,7 @@ const AxisOutputFunction = FunctionBase.extend({
    */
   clone() {
     const functionClone = AxisOutputFunction.create({
+      dataSources: this.dataSources,
       data: this.data?.clone(),
       positionRelativeToRootFunc: this.positionRelativeToRootFunc,
       parent: this.parent,

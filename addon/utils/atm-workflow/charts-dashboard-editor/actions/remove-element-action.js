@@ -7,7 +7,7 @@
  */
 
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
-import { set } from '@ember/object';
+import { set, setProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { ChangedElementsSet } from './utils';
 
@@ -103,7 +103,12 @@ export default Action.extend({
     const changedElements = new ChangedElementsSet();
     set(this.elementToRemove, 'parent', this.oldParent);
     [this.elementToRemove, ...this.elementToRemove.nestedElements()]
-    .forEach((element) => set(element, 'isRemoved', false));
+    .forEach((element) => {
+      setProperties(element, {
+        isRemoved: false,
+        dataSources: this.oldParent.dataSources,
+      });
+    });
     this.rollbackReferencesRemoval();
     this.removedReferences?.forEach(({ referencingElement }) =>
       changedElements.addElement(referencingElement)

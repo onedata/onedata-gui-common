@@ -56,6 +56,7 @@ const TimeDerivativeFunction = FunctionBase.extend({
    */
   clone() {
     const functionClone = TimeDerivativeFunction.create({
+      dataSources: this.dataSources,
       data: this.data?.clone(),
       timeSpan: this.timeSpan,
       positionRelativeToRootFunc: this.positionRelativeToRootFunc,

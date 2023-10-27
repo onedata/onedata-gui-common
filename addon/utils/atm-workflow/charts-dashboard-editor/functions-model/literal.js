@@ -36,6 +36,7 @@ const LiteralFunction = FunctionBase.extend({
    */
   clone() {
     return LiteralFunction.create({
+      dataSources: this.dataSources,
       data: this.data,
       positionRelativeToRootFunc: this.positionRelativeToRootFunc,
       parent: this.parent,
