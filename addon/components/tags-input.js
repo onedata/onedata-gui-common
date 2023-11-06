@@ -25,6 +25,8 @@ import {
   or,
   and,
   raw,
+  difference,
+  gt,
 } from 'ember-awesome-macros';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import config from 'ember-get-config';
@@ -113,6 +115,14 @@ export default Component.extend(I18n, {
   tagsLimit: undefined,
 
   /**
+   * If provided, limits tags displayed in readonly mode. When number of tags exceed
+   * this number, the "more tags" text is displayed with tooltip showing the rest of tags.
+   * @virtual optional
+   * @type {number}
+   */
+  readonlyTagsDisplayLimit: undefined,
+
+  /**
    * @virtual optional
    * @type {string}
    */
@@ -147,9 +157,60 @@ export default Component.extend(I18n, {
   onFocusLost: notImplementedIgnore,
 
   /**
+   * @virtual optional
+   * @type {(moreTagsCount: number) => SafeString|string}
+   */
+  onEvaluateMoreTagsText: undefined,
+
+  /**
    * @type {boolan}
    */
   isCreatingTag: false,
+
+  tagsLimitExceeded: and(
+    'readonlyTagsDisplayLimit',
+    gt('tags.length', 'readonlyTagsDisplayLimit')
+  ),
+
+  tagsDisplayedOnLimitExceed: difference('readonlyTagsDisplayLimit', 1),
+
+  displayedTags: computed(
+    'tags.[]',
+    'readonly',
+    'tagsLimitExceeded',
+    'tagsDisplayedOnLimitExceed',
+    function limitedTags() {
+      if (this.readonly && this.tagsLimitExceeded) {
+        return this.tags.slice(0, this.tagsDisplayedOnLimitExceed);
+      } else {
+        return this.tags;
+      }
+    }
+  ),
+
+  moreTags: computed(
+    'tagsLimitExceeded',
+    'tagsDisplayedOnLimitExceed',
+    function moreTags() {
+      if (this.tagsLimitExceeded) {
+        return this.tags.slice(this.tagsDisplayedOnLimitExceed);
+      } else {
+        return [];
+      }
+    }
+  ),
+
+  moreTagsText: computed(
+    'moreTags.length',
+    'onEvaluateMoreTagsText',
+    function moreTagsText() {
+      if (typeof this.onEvaluateMoreTagsText === 'function') {
+        return this.onEvaluateMoreTagsText(this.moreTags.length);
+      } else {
+        return this.t('moreTags', { count: this.moreTags.length });
+      }
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Boolean>}

@@ -45,6 +45,7 @@ export default Component.extend(I18n, {
   ],
 
   i18n: service(),
+  workflowManager: service(),
 
   /**
    * @override
@@ -103,6 +104,22 @@ export default Component.extend(I18n, {
   modeClass: tag `mode-${'mode'}`,
 
   /**
+   * @type {ComputedProperty<string>}
+   */
+  defaultInstantFailureExceptionThreshold: computed(
+    'workflowManager.atmInstantFailureExceptionThreshold',
+    function defaultInstantFailureExceptionThreshold() {
+      const atmInstantFailureExceptionThreshold =
+        this.workflowManager.atmInstantFailureExceptionThreshold;
+      if (typeof atmInstantFailureExceptionThreshold === 'number') {
+        return String(atmInstantFailureExceptionThreshold);
+      } else {
+        return '1';
+      }
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   passedFormValues: computed(
@@ -119,10 +136,12 @@ export default Component.extend(I18n, {
     const {
       nameField,
       maxRetriesField,
+      instantFailureExceptionThresholdField,
       iteratorOptionsFieldsGroup,
     } = this.getProperties(
       'nameField',
       'maxRetriesField',
+      'instantFailureExceptionThresholdField',
       'iteratorOptionsFieldsGroup'
     );
 
@@ -139,6 +158,7 @@ export default Component.extend(I18n, {
       fields: [
         nameField,
         maxRetriesField,
+        instantFailureExceptionThresholdField,
         iteratorOptionsFieldsGroup,
       ],
     });
@@ -167,6 +187,24 @@ export default Component.extend(I18n, {
         integer: true,
       });
   }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.NumberField>}
+   */
+  instantFailureExceptionThresholdField: computed(
+    function instantFailureExceptionThresholdField() {
+      return NumberField
+        .extend(defaultValueGenerator(
+          this,
+          'defaultValueSource.defaultInstantFailureExceptionThreshold'
+        ))
+        .create({
+          name: 'instantFailureExceptionThreshold',
+          gte: 0,
+          lte: 1,
+        });
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
@@ -333,8 +371,15 @@ function laneToFormData(lane) {
   const {
     name,
     maxRetries,
+    instantFailureExceptionThreshold,
     storeIteratorSpec,
-  } = getProperties(lane || {}, 'name', 'maxRetries', 'storeIteratorSpec');
+  } = getProperties(
+    lane || {},
+    'name',
+    'maxRetries',
+    'instantFailureExceptionThreshold',
+    'storeIteratorSpec'
+  );
   const {
     storeSchemaId,
     maxBatchSize,
@@ -343,6 +388,7 @@ function laneToFormData(lane) {
   return {
     name,
     maxRetries,
+    instantFailureExceptionThreshold,
     iteratorOptions: {
       sourceStore: storeSchemaId,
       maxBatchSize,
@@ -354,11 +400,13 @@ function formDataToLane(formData) {
   const {
     name,
     maxRetries,
+    instantFailureExceptionThreshold,
     iteratorOptions,
   } = getProperties(
     formData,
     'name',
     'maxRetries',
+    'instantFailureExceptionThreshold',
     'iteratorOptions',
   );
   const {
@@ -378,6 +426,9 @@ function formDataToLane(formData) {
   return {
     name,
     maxRetries: Number.parseInt(maxRetries) || 0,
+    instantFailureExceptionThreshold: Number.parseFloat(
+      instantFailureExceptionThreshold
+    ) || 1,
     storeIteratorSpec,
   };
 }

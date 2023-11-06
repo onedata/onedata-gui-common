@@ -8,8 +8,6 @@
  */
 
 import Action from 'onedata-gui-common/utils/action';
-import ActionResult from 'onedata-gui-common/utils/action-result';
-import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import {
@@ -64,6 +62,11 @@ export default Action.extend({
   runNumber: reads('context.runNumber'),
 
   /**
+   * @type {ComputedProperty<Array<string> | undefined>}
+   */
+  itemTraceIdsToHighlight: reads('context.itemTraceIdsToHighlight'),
+
+  /**
    * @param {Utils.WorkflowVisualiser.Store} store
    * @type {ComputedProperty<Function>}
    */
@@ -73,6 +76,11 @@ export default Action.extend({
    * @type {ComputedProperty<AtmValuePresenterContext | undefined>}
    */
   storeContentPresenterContext: reads('context.storeContentPresenterContext'),
+
+  /**
+   * @type {ComputedProperty<(store: Utils.WorkflowVisualiser.Store, traceIds: Array<string>) => Promise<Object>>}
+   */
+  convertTraceIdsToIndicesCallback: reads('context.convertTraceIdsToIndicesCallback'),
 
   /**
    * @type {ComputedProperty<Object>}
@@ -91,8 +99,28 @@ export default Action.extend({
   /**
    * @override
    */
-  onExecute() {
-    const result = ActionResult.create();
+  async onExecute() {
+    let indicesToHighlight;
+    if (this.itemTraceIdsToHighlight?.length && this.convertTraceIdsToIndicesCallback) {
+      try {
+        const traceIdsToIndicesMap = await this.convertTraceIdsToIndicesCallback(
+          this.exceptionStore,
+          this.itemTraceIdsToHighlight
+        );
+        indicesToHighlight = this.itemTraceIdsToHighlight.reduce((acc, traceId) => {
+          if (traceIdsToIndicesMap?.[traceId]) {
+            acc.push(traceIdsToIndicesMap[traceId]);
+          }
+          return acc;
+        }, []);
+      } catch (error) {
+        console.error(
+          'Could not convert trace IDs to exception store indices due to error:',
+          error
+        );
+      }
+    }
+
     return this.modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
@@ -100,10 +128,7 @@ export default Action.extend({
         getStoreContentCallback: (...args) =>
           this.getStoreContentCallback(this.exceptionStore, ...args),
         storeContentPresenterContext: this.storeContentPresenterContext,
-      }).hiddenPromise
-      .then(() => {
-        set(result, 'status', 'done');
-        return result;
-      });
+        indicesToHighlight,
+      }).hiddenPromise;
   },
 });

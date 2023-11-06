@@ -130,9 +130,26 @@ export default EmberObject.extend({
   },
 
   /**
+   * @param {String} storeInstanceId
+   * @param {Array<string>} traceIds
+   * @returns {Promise<Object<string, string>>} map traceId -> index
+   */
+  async convertAtmExceptionStoreTraceIdsToIndices() {
+    return notImplementedReject();
+  },
+
+  /**
    * @returns {AtmValuePresenterContext|undefined}
    */
   getStoreContentPresenterContext() {
     return undefined;
+  },
+
+  /**
+   * @param {string} storeInstanceId
+   * @returns {Promise<string>} download url
+   */
+  getAuditLogDownloadUrl() {
+    return notImplementedReject();
   },
 });

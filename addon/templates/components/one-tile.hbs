@@ -13,6 +13,11 @@
           {{moreText}} &raquo;
         </a>
       {{/if}}
+    {{else if showDismissButton}}
+      <div class="dismiss-button clickable" onclick={{action "dismiss"}}>
+        {{one-icon icon="close"}}
+        {{one-tooltip title=(tt this "dismissTip")}}
+      </div>
     {{/if}}
   </h1>
   <div class="tile-content">
@@ -28,9 +33,8 @@
         {{#if footerTextIcon}}
           <div class="inline-icon-container footer-text-icon-container">
             {{one-icon icon=footerTextIcon class="tile-footer-icon"}}
-          </div>
-        {{/if}}
-        {{footerText}}
+          </div>{{/if}}{{footerText}}
+          {{!-- ^ no space for Firefox --}}
       {{/link-to}}
     {{else}}
       {{#if footerTextIcon}}

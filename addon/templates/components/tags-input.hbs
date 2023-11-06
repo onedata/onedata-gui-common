@@ -1,4 +1,4 @@
-{{#each tags as |tag|}}
+{{#each displayedTags as |tag|}}
   <li class={{concat-classes
     "tag-item input-element"
     (if (contains tag currentTagsToHighlight) "animated fadeIn")
@@ -50,5 +50,27 @@
       onClick=(action "clearInput")
     }}
   {{/if}}
+{{/if}}
+{{#if moreTags.length}}
+  <li class="tag-item tag-item-plaintext more-tag clickable">
+    <div class="tag-label more-tag-text">
+      {{moreTagsText}}
+    </div>
+    {{#one-tooltip class="tooltip-with-tags"}}
+      <ul class="tags-input">
+        {{#each moreTags as |tag|}}
+          <li class="tag-item">
+            {{#if tag.icon}}
+              {{one-icon icon=tag.icon class="tag-icon"}}
+            {{/if}}
+            {{!-- Using truncated-string component is not necessary here --}}
+            <span class="tag-label">
+              {{tag.label}}
+            </span>
+          </li>
+        {{/each}}
+      </ul>
+    {{/one-tooltip}}
+  </li>
 {{/if}}
 {{yield}}

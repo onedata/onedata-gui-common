@@ -14,6 +14,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import { get, set } from '@ember/object';
 import OneTooltipHelper from '../../helpers/one-tooltip';
+import _ from 'lodash';
 
 const disabledCreateTriggerTip = 'Maximum number of elements has been reached.';
 
@@ -70,8 +71,7 @@ describe('Integration | Component | tags-input', function () {
       .to.deep.equal(oldTags.slice(1).toArray());
   });
 
-  it(
-    'does not perform tag removing if "onChange" property is not specified',
+  it('does not perform tag removing if "onChange" property is not specified',
     async function () {
       await render(hbs `{{tags-input tags=tags}}`);
 
@@ -81,8 +81,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'notifies about lost focus through onFocusLost',
+  it('notifies about lost focus through onFocusLost',
     async function () {
       const focusLostSpy = sinon.spy();
       this.set('focusLost', focusLostSpy);
@@ -99,8 +98,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'goes into creating new tag mode on tag-creator-trigger click',
+  it('goes into creating new tag mode on tag-creator-trigger click',
     async function () {
       await render(hbs `{{tags-input tags=tags}}`);
 
@@ -112,8 +110,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'goes into creating new tag mode on click',
+  it('goes into creating new tag mode on click',
     async function () {
       await render(hbs `{{tags-input tags=tags}}`);
 
@@ -124,8 +121,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'uses "tagEditorComponentName" property to render tag creation editor component',
+  it('uses "tagEditorComponentName" property to render tag creation editor component',
     async function () {
       await render(hbs `
         {{tags-input tags=tags tagEditorComponentName="test-component"}}
@@ -137,8 +133,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'uses tags-input/text-editor as a default tag creation editor component',
+  it('uses tags-input/text-editor as a default tag creation editor component',
     async function () {
       await render(hbs `{{tags-input tags=tags}}`);
 
@@ -147,8 +142,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'allows to end creating tag operation from within tag creation editor',
+  it('allows to end creating tag operation from within tag creation editor',
     async function () {
       await render(hbs `
         {{tags-input tags=tags tagEditorComponentName="test-component"}}
@@ -164,8 +158,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'allows to add tags through "onTagsAdded" action passed to tag creation editor',
+  it('allows to add tags through "onTagsAdded" action passed to tag creation editor',
     async function () {
       const newTags = [{
         label: 'c',
@@ -189,8 +182,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'injects currently selected tags into creation editor',
+  it('injects currently selected tags into creation editor',
     async function () {
       await render(hbs `{{tags-input
         tags=tags
@@ -228,10 +220,10 @@ describe('Integration | Component | tags-input', function () {
 
       const testComponent = find('.tag-creator .test-component').componentInstance;
       expect(get(testComponent, 'tagsLimit')).to.be.undefined;
-    });
+    }
+  );
 
-  it(
-    'passess tagEditorSettings to the tag creation editor',
+  it('passess tagEditorSettings to the tag creation editor',
     async function () {
       const settings = Object.freeze({
         a: 1,
@@ -250,8 +242,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'focuses editor after tag-creator-trigger click in creation mode',
+  it('focuses editor after tag-creator-trigger click in creation mode',
     async function () {
       const focusSpy = sinon.spy();
 
@@ -269,8 +260,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'does not allow to add and remove tags when disabled',
+  it('does not allow to add and remove tags when disabled',
     async function () {
       await render(hbs `{{tags-input
         disabled=true
@@ -289,8 +279,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'stops tag creation when becomes disabled',
+  it('stops tag creation when becomes disabled',
     async function () {
       this.set('disabled', false);
 
@@ -309,8 +298,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'does not allow to add and remove tags in readonly mode',
+  it('does not allow to add and remove tags in readonly mode',
     async function () {
       await render(hbs `{{tags-input
         readonly=true
@@ -329,8 +317,7 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it(
-    'stops tag creation when becomes readonly',
+  it('stops tag creation when becomes readonly',
     async function () {
       this.set('readonly', false);
 
@@ -363,7 +350,8 @@ describe('Integration | Component | tags-input', function () {
 
       expect(find('.tag-creator')).to.not.exist;
       expect(await getCreateTriggerTip()).to.equal(disabledCreateTriggerTip);
-    });
+    }
+  );
 
   it('disables tag creation when number of already provided tags is greater that the limit',
     async function () {
@@ -379,7 +367,8 @@ describe('Integration | Component | tags-input', function () {
 
       expect(find('.tag-creator')).to.not.exist;
       expect(await getCreateTriggerTip()).to.equal(disabledCreateTriggerTip);
-    });
+    }
+  );
 
   it('does not disable tag creation when number of already provided tags is lower that the limit',
     async function () {
@@ -396,7 +385,8 @@ describe('Integration | Component | tags-input', function () {
 
       expect(find('.tag-creator')).to.exist;
       expect(await getCreateTriggerTip()).to.be.undefined;
-    });
+    }
+  );
 
   it('stops tag creation when tags limit changes and tags number exceeds it',
     async function () {
@@ -414,7 +404,8 @@ describe('Integration | Component | tags-input', function () {
 
       expect(find('.tags-input')).to.not.have.class('creating-tag');
       expect(find('.tag-creator')).to.not.exist;
-    });
+    }
+  );
 
   it('does not stop tag creation when tags limit changes and tags number is within it',
     async function () {
@@ -432,7 +423,8 @@ describe('Integration | Component | tags-input', function () {
 
       expect(find('.tags-input')).to.have.class('creating-tag');
       expect(find('.tag-creator')).to.exist;
-    });
+    }
+  );
 
   it('stops tag creation when tags number changes and it exceeds tags limit',
     async function () {
@@ -450,14 +442,16 @@ describe('Integration | Component | tags-input', function () {
 
       expect(find('.tags-input')).to.not.have.class('creating-tag');
       expect(find('.tag-creator')).to.not.exist;
-    });
+    }
+  );
 
   it('does not show clear-input button when input is not empty and isClearButtonVisible is false',
     async function () {
       await render(hbs `{{tags-input tags=tags isClearButtonVisible=false}}`);
 
       expect(find('.input-clear-trigger')).to.not.exist;
-    });
+    }
+  );
 
   it('does not show clear-input button when input is empty and isClearButtonVisible is true',
     async function () {
@@ -466,7 +460,8 @@ describe('Integration | Component | tags-input', function () {
       await render(hbs `{{tags-input tags=tags isClearButtonVisible=true}}`);
 
       expect(find('.input-clear-trigger')).to.not.exist;
-    });
+    }
+  );
 
   it('has working clear-input button when input is not empty and isClearButtonVisible is true',
     async function () {
@@ -481,7 +476,70 @@ describe('Integration | Component | tags-input', function () {
       expect(clearBtn).to.exist;
       await click(clearBtn);
       expect(this.get('tags')).to.have.length(0);
-    });
+    }
+  );
+
+  it('shows limited tags number with more tags text if readonlyTagsDisplayLimit is set in readonly mode',
+    async function () {
+      const tags = _.range(5).map(i => ({ label: `tag-${i}` }));
+      this.set('tags', tags);
+      await render(hbs `{{tags-input
+        readonly=true
+        tags=tags
+        readonlyTagsDisplayLimit=3
+        tagEditorComponentName="test-component"
+      }}`);
+
+      /** @type {HTMLElement} */
+      const tagsInput = find('.tags-input');
+      const tagItems = tagsInput.querySelectorAll('.tag-item.input-element');
+      expect(tagItems).to.have.lengthOf(2);
+      const moreTag = tagsInput.querySelector('.more-tag');
+      expect(moreTag).to.exist;
+      expect(moreTag).to.contain.text('...and 3 more tags');
+    }
+  );
+
+  it('shows all tags if readonlyTagsDisplayLimit is set to exact tags number',
+    async function () {
+      const tags = _.range(3).map(i => ({ label: `tag-${i}` }));
+      this.set('tags', tags);
+      await render(hbs `{{tags-input
+        readonly=true
+        tags=tags
+        readonlyTagsDisplayLimit=3
+        tagEditorComponentName="test-component"
+      }}`);
+
+      /** @type {HTMLElement} */
+      const tagsInput = find('.tags-input');
+      const tagItems = tagsInput.querySelectorAll('.tag-item');
+      expect(tagItems).to.have.lengthOf(3);
+    }
+  );
+
+  it('shows custom more tags text if onEvaluateMoreTagsText function is provided',
+    async function () {
+      const tags = _.range(5).map(i => ({ label: `tag-${i}` }));
+      this.set('tags', tags);
+      this.set('onEvaluateMoreTagsText', (moreTagsCount) => {
+        return `lorem ${moreTagsCount} ipsum`;
+      });
+      await render(hbs `{{tags-input
+        readonly=true
+        tags=tags
+        readonlyTagsDisplayLimit=3
+        tagEditorComponentName="test-component"
+        onEvaluateMoreTagsText=onEvaluateMoreTagsText
+      }}`);
+
+      /** @type {HTMLElement} */
+      const tagsInput = find('.tags-input');
+      const moreTag = tagsInput.querySelector('.more-tag');
+      expect(moreTag).to.exist;
+      expect(moreTag).to.contain.text('lorem 3 ipsum');
+    }
+  );
 });
 
 async function getCreateTriggerTip() {

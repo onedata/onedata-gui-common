@@ -28,9 +28,15 @@ export default VisualiserRecord.extend({
 
   /**
    * @virtual
-   * @type {Number}
+   * @type {number}
    */
   maxRetries: undefined,
+
+  /**
+   * @virtual
+   * @type {number}
+   */
+  instantFailureExceptionThreshold: undefined,
 
   /**
    * @virtual

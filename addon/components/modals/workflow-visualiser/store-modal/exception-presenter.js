@@ -20,6 +20,12 @@ export default ListPresenter.extend({
   i18nPrefix: 'components.modals.workflowVisualiser.storeModal.exceptionPresenter',
 
   /**
+   * @virtual optional
+   * @type {Array<string> | undefined}
+   */
+  indicesToHighlight: undefined,
+
+  /**
    * @type {Object<string, string>}
    */
   itemIndexToTraceIdMap: undefined,

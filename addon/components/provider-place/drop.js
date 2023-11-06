@@ -51,7 +51,7 @@ export default Component.extend(I18n, {
    * Spaces list sort order
    * @type {Array<string>}
    */
-  _spacesSorting: Object.freeze(['isDefault:desc', 'name']),
+  _spacesSorting: Object.freeze(['name']),
 
   /**
    * PromiseObject proxy to the list of spaces.

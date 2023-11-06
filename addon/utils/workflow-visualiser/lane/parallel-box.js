@@ -20,6 +20,12 @@ export default VisualiserRecord.extend({
   renderer: 'workflow-visualiser/lane/parallel-box',
 
   /**
+   * @virtual
+   * @type {Utils.WorkflowVisualiser.Lane}
+   */
+  parent: undefined,
+
+  /**
    * @virtual optional
    * @type {Array<Utils.WorkflowVisualiser.VisualiserElement>}
    */

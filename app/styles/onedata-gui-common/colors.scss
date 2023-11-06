@@ -44,8 +44,10 @@ $block-background-transparent-color: #00000005;
 $block-border-color: $main-border-color;
 $block-border-transparent-color: #00000029;
 
+$color-highlight: hsl(47, 100%, 86%);
+
 $color-directory: #555D72;
 $color-file: #596E99;
 $color-symlink: darken($color-one-azure, 10%);
 $color-file-selected: lighten(#E5E9F1, 3%);
-$color-file-highlighted: hsl(47, 100%, 86%);
+$color-file-highlighted: $color-highlight;

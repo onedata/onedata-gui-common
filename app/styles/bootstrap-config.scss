@@ -484,6 +484,12 @@ label {
   }
 }
 
+.mark,
+mark {
+  background-color: $color-highlight;
+  padding: 0.2em 0;
+}
+
 // Utility classes
 @import "bootstrap/utilities";
 @import "bootstrap/responsive-utilities";

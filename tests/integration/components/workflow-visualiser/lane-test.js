@@ -23,7 +23,7 @@ import globals from 'onedata-gui-common/utils/globals';
 const editLaneActionsSpec = [{
   className: 'modify-lane-action-trigger',
   label: 'Modify',
-  icon: 'rename',
+  icon: 'browser-rename',
 }, {
   className: 'modify-lane-charts-dashboard-action-trigger',
   label: 'Configure charts',
@@ -43,7 +43,7 @@ const editLaneActionsSpec = [{
 }, {
   className: 'remove-lane-action-trigger',
   label: 'Remove',
-  icon: 'remove',
+  icon: 'browser-delete',
 }];
 
 const viewLaneActionsSpec = [{
@@ -73,6 +73,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
       actionsFactory,
       name: 'lane1',
       maxRetries: 0,
+      instantFailureExceptionThreshold: 0.1,
       storeIteratorSpec: {
         storeSchemaId: 's1',
         maxBatchSize: 10,

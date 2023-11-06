@@ -13,12 +13,12 @@
 /**
  * @typedef {Object} AtmAuditLogEntryContent
  * @property {string} description
- * @property {AtmAuditLogEntryReferencedComponents} [referencedComponents] references to
+ * @property {AtmAuditLogEntryReferencedElements} [referencedElements] references to
  * subjects related to this specific log entry
  * @property {Object} [reason] error in the standard backend format
  */
 
 /**
- * @typedef {Object} AtmAuditLogEntryReferencedComponents
+ * @typedef {Object} AtmAuditLogEntryReferencedElements
  * @property {Array<string>} tasks array of task execution IDs
  */

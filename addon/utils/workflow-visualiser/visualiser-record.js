@@ -32,6 +32,13 @@ export default VisualiserElement.extend({
   runsRegistry: undefined,
 
   /**
+   * Starts from 1
+   * @virtual
+   * @type {number}
+   */
+  positionInParent: 1,
+
+  /**
    * @virtual
    * @type {Boolean}
    */
