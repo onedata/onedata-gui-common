@@ -14,7 +14,7 @@ import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 
 const editContentActionSpec = {
   className: 'editContent-action',
-  icon: 'rename',
+  icon: 'browser-rename',
   tip: 'Edit content',
 };
 const duplicateActionSpec = {

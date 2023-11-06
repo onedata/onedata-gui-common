@@ -58,7 +58,7 @@ export default Component.extend(I18n, {
       if (this.model?.elementType === ElementType.Chart) {
         actions.unshift({
           name: 'editContent',
-          icon: 'rename',
+          icon: 'browser-rename',
         });
       }
 
