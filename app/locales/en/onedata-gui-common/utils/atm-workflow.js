@@ -1,6 +1,7 @@
 import atmLambda from './atm-workflow/atm-lambda';
 import atmTask from './atm-workflow/atm-task';
 import chartsDashboardEditor from './atm-workflow/charts-dashboard-editor';
+import chartsDashboardEditorField from './atm-workflow/charts-dashboard-editor-field';
 import dataSpec from './atm-workflow/data-spec';
 import dataSpecEditor from './atm-workflow/data-spec-editor';
 import storeConfigEditors from './atm-workflow/store-config-editors';
@@ -13,6 +14,7 @@ export default {
   atmLambda,
   atmTask,
   chartsDashboardEditor,
+  chartsDashboardEditorField,
   dataSpec,
   dataSpecEditor,
   storeConfigEditors,

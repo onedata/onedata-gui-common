@@ -10,7 +10,7 @@ import EmberObject, { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { resolve } from 'rsvp';
 import { getStoreReadDataSpec } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
-import ChartsDashboardEditorModelContainer from './charts-dashboard-editor-model-container';
+import ChartsDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-model-container';
 
 export default EmberObject.extend({
   /**

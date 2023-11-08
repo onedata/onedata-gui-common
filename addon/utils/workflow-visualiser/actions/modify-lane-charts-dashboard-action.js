@@ -42,7 +42,6 @@ export default Action.extend({
 
     await this.modalManager.show('workflow-visualiser/charts-modal', {
       mode: 'edit',
-      dashboardOwnerType: 'lane',
       dashboardOwner: this.lane,
       onSubmit: () =>
         result.interceptPromise(this.modifyLaneChartsDashboard()),

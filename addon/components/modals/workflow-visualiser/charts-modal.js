@@ -7,19 +7,22 @@
  */
 
 import Component from '@ember/component';
+import { set } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/modals/workflow-visualiser/charts-modal';
 import { reads } from '@ember/object/computed';
 import { trySet } from '@ember/object';
+import { and, raw, eq } from 'ember-awesome-macros';
 /**
  * @typedef {Object} WorkflowVisualiserChartsModalOptions
  * @property {'edit'|'view'} mode
- * @property {'lane'|'workflow'} dashboardOwnerType
  * @property {EmberObject} dashboardOwner
  * @property {ObjectProxy<boolean>} isLiveProxy Needed only in `view` mode
- * @property {(store: Utils.WorkflowVisualiser.Store, browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>} getStoreContentCallback Needed only in `view` mode
- * @property {() => AtmTimeSeriesCollectionReferencesMap} getTimeSeriesCollectionRefsMapCallback Needed only in `view` mode
+ * @property {(store: Utils.WorkflowVisualiser.Store, browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>} [getStoreContentCallback]
+ *   Useful only in `view` mode. If not provided, only chart definition will be visible.
+ * @property {() => AtmTimeSeriesCollectionReferencesMap} [getTimeSeriesCollectionRefsMapCallback]
+ *   Needed only in `view` mode. If not provided, only chart definition will be visible.
  */
 
 export default Component.extend(I18n, {
@@ -62,11 +65,6 @@ export default Component.extend(I18n, {
   mode: reads('modalOptions.mode'),
 
   /**
-   * @type {ComputedProperty<'lane'|'workflow'>}
-   */
-  dashboardOwnerType: reads('modalOptions.dashboardOwnerType'),
-
-  /**
    * @type {ComputedProperty<AtmTimeSeriesDashboardSpec>}
    */
   dashboardSpec: reads('dashboardOwner.chartsDashboardEditorModelContainer.dashboardSpec'),
@@ -99,14 +97,45 @@ export default Component.extend(I18n, {
   ),
 
   /**
+   * @type {ComputedProperty<'store'|'task'|'lane'|'workflow'>}
+   */
+  dashboardOwnerType: reads('dashboardOwner.__modelType'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  canShowVisualisation: and(
+    eq('mode', raw('view')),
+    'getStoreContentCallback',
+    'getTimeSeriesCollectionRefsMapCallback'
+  ),
+
+  /**
+   * Contains backup of the root section in case of "cancel" button click
+   * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Section | null}
+   */
+  rootSectionBackup: null,
+
+  /**
    * @override
    */
   init() {
     this._super(...arguments);
-    this.set('activeTab', this.mode === 'view' ? 'visualisation' : 'definition');
+    this.setProperties({
+      activeTab: this.canShowVisualisation ? 'visualisation' : 'definition',
+      rootSectionBackup: this.dashboardModel.rootSection?.clone() ?? null,
+    });
   },
 
   actions: {
+    cancel(closeCallback) {
+      if (this.dashboardModel) {
+        // restore rootSection from backup to undo any changes.
+        this.dashboardModel.rootSection?.destroy();
+        set(this.dashboardModel, 'rootSection', this.rootSectionBackup);
+      }
+      closeCallback();
+    },
     async submit(submitCallback) {
       this.set('isSubmitting', true);
       try {

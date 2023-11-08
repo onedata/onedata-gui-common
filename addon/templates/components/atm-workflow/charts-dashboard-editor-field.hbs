@@ -1,0 +1,12 @@
+{{#one-button
+  class="open-charts-dashboard"
+  size="sm"
+  disabled=(not isEffectivelyEnabled)
+  disableWhenPending=false
+  showSpinnerWhenPending=false
+  onClick=(action "showEditor")
+}}
+  {{one-icon icon="overview"}}
+  <span class="text">{{buttonLabel}}</span>
+{{/one-button}}
+{{yield}}

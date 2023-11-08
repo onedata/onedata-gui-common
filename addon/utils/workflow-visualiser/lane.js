@@ -11,7 +11,7 @@ import { reads } from '@ember/object/computed';
 import _ from 'lodash';
 import { resolve } from 'rsvp';
 import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
-import ChartsDashboardEditorModelContainer from './charts-dashboard-editor-model-container';
+import ChartsDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-model-container';
 
 export default VisualiserRecord.extend({
   /**

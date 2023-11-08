@@ -1436,7 +1436,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     if (!newElementProps.id) {
-      newElementProps.id = generateId();
+      newElementProps.id = newElementProps.schemaId ?? generateId();
     }
 
     targetElementsArray.splice(

@@ -30,17 +30,21 @@ export default EmberObject.extend({
    */
   rootSection: null,
 
-  dataSourcesAssigner: observer('dataSources', function dataSourcesAssigner() {
-    if (!this.rootSection) {
-      return;
-    }
+  dataSourcesAssigner: observer(
+    'rootSection',
+    'dataSources',
+    function dataSourcesAssigner() {
+      if (!this.rootSection) {
+        return;
+      }
 
-    const allElements = [
-      this.rootSection,
-      ...this.rootSection.nestedElements(),
-    ];
-    allElements.forEach((element) => set(element, 'dataSources', this.dataSources));
-  }),
+      const allElements = [
+        this.rootSection,
+        ...this.rootSection.nestedElements(),
+      ];
+      allElements.forEach((element) => set(element, 'dataSources', this.dataSources));
+    }
+  ),
 
   /**
    * @override
@@ -54,11 +58,10 @@ export default EmberObject.extend({
   },
 
   /**
-   * @returns {AtmTimeSeriesDashboardSpec}
+   * @returns {AtmTimeSeriesDashboardSpec | null}
    */
   toJson() {
-    return {
-      rootSection: this.rootSection?.toJson() ?? null,
-    };
+    const rootSectionJson = this.rootSection?.toJson();
+    return rootSectionJson ? { rootSection: rootSectionJson } : null;
   },
 });

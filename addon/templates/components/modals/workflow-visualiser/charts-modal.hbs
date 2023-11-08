@@ -10,7 +10,6 @@
   size=(if (eq activeTab "definition") "full" "lg")
   as |modal|
 }}
-
   {{#modal.header}}
     <h1>
       {{tt this (concat "header." dashboardOwnerType)}}
@@ -23,7 +22,7 @@
       class="bs-tab-onedata bs-tab-modern"
       as |tab|
     }}
-      {{#if (eq mode "view")}}
+      {{#if canShowVisualisation}}
         {{#bs-nav class="representation-tabs" type="tabs" as |nav|}}
           {{#nav.item active=(eq activeTab "visualisation")}}
             <a class="nav-link" role="tab" {{action (mut activeTab) "visualisation"}}>
@@ -59,7 +58,7 @@
       {{#bs-button
         type="default"
         class="btn-cancel"
-        onClick=modal.close
+        onClick=(action "cancel" modal.close)
         disabled=isSubmitting
       }}
         {{tt this (concat "buttons.cancel." mode)}}

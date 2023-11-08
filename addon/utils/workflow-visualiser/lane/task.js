@@ -11,7 +11,7 @@ import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { raw, or } from 'ember-awesome-macros';
 import _ from 'lodash';
-import ChartsDashboardEditorModelContainer from '../charts-dashboard-editor-model-container';
+import ChartsDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-model-container';
 
 export default VisualiserRecord.extend({
   /**
@@ -102,7 +102,7 @@ export default VisualiserRecord.extend({
   ),
 
   /**
-   * @type {ComputedPropertyChartsDashboardEditorModelContainer>}
+   * @type {ComputedProperty<ChartsDashboardEditorModelContainer>}
    */
   chartsDashboardEditorModelContainer: computed(
     function chartsDashboardEditorModelContainer() {

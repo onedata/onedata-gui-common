@@ -4,7 +4,7 @@ import _ from 'lodash';
 import {
   createModelFromSpec,
   useNewSpecInModel,
-} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+} from './charts-dashboard-editor';
 
 export default EmberObject.extend({
   /**
@@ -15,7 +15,7 @@ export default EmberObject.extend({
 
   /**
    * @virtual
-   * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
+   * @type {ComputedProperty<AtmTimeSeriesDashboardSpec>}
    */
   dashboardSpec: undefined,
 

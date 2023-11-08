@@ -10,7 +10,7 @@ import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import _ from 'lodash';
 import EmberObject from '@ember/object';
-import ChartsDashboardEditorModelContainer from './charts-dashboard-editor-model-container';
+import ChartsDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-model-container';
 
 export default EmberObject.extend({
   /**

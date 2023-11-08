@@ -17,6 +17,7 @@ import {
   raw,
   notEmpty,
   or,
+  conditional,
 } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 import {
@@ -69,6 +70,8 @@ import {
   migrateAtmLambdaConfigEditorValueToNewSpecs,
 } from 'onedata-gui-common/utils/atm-workflow/atm-task';
 import findTypedElementsMigration from 'onedata-gui-common/utils/atm-workflow/find-typed-elements-migration';
+import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
+import generateId from 'onedata-gui-common/utils/generate-id';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -181,6 +184,32 @@ export default Component.extend(I18n, {
    * @type {Utils.WorkflowVisualiser.ActionsFactory}
    */
   actionsFactory: undefined,
+
+  /**
+   * @type {Object | null}
+   */
+  lastFormValues: null,
+
+  /**
+   * @type {Utils.WorkflowVisualiser.Lane.Task | null}
+   */
+  taskBasedOnFormValuesCache: null,
+
+  /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.Task>}
+   */
+  taskBasedOnFormValues: conditional(
+    eq('mode', raw('view')),
+    'task',
+    computed('lastFormValues', function taskBasedOnFormValues() {
+      if (!this.taskBasedOnFormValuesCache) {
+        this.taskBasedOnFormValuesCache = Task.create(this.lastFormValues ?? {});
+      } else {
+        setProperties(this.taskBasedOnFormValuesCache, this.lastFormValues ?? {});
+      }
+      return this.taskBasedOnFormValuesCache;
+    }),
+  ),
 
   /**
    * @type {Utils.WorkflowVisualiser.Store|null}
@@ -562,6 +591,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
    */
   timeSeriesStoreSectionFields: computed(function timeSeriesStoreSectionFields() {
+    const component = this;
     return FormFieldsGroup.create({
       classes: 'task-form-section',
       name: 'timeSeriesStoreSection',
@@ -571,9 +601,11 @@ export default Component.extend(I18n, {
           name: 'createTimeSeriesStore',
         }),
         storeConfigEditors.timeSeries.FormElement.extend({
+          dashboardModelOwner: reads('component.taskBasedOnFormValues'),
           isExpanded: reads('parent.value.createTimeSeriesStore'),
         }).create({
           name: 'timeSeriesStoreConfig',
+          component,
         }),
       ],
     });
@@ -684,12 +716,15 @@ export default Component.extend(I18n, {
       'mode',
     );
 
+    const data = this.dumpToTask();
+    this.set('lastFormValues', data);
+
     if (mode === 'view') {
       return;
     }
 
     onChange && onChange({
-      data: this.dumpToTask(),
+      data,
       isValid: get(fields, 'isValid'),
     });
   },
@@ -864,7 +899,7 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
     atmLambdaRevisionNumber: atmLambdaRevisionNumber,
   });
   const detailsSection = createValuesContainer({
-    schemaId,
+    schemaId: schemaId ?? generateId(),
     name: name || atmLambdaName,
   });
 
@@ -1061,6 +1096,7 @@ function formDataToTask(formData, atmLambda, stores) {
   } = getProperties(resources || {}, 'overrideResources', 'resourcesSections');
 
   const task = {
+    schemaId: details.schemaId,
     lambdaId: atmLambdaId,
     lambdaRevisionNumber: atmLambdaRevisionNumber,
     lambdaConfig: atmLambdaConfigEditorValueToRawValue(formData?.lambdaConfigSection),

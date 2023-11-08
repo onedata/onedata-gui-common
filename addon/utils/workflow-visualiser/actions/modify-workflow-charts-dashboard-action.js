@@ -42,7 +42,6 @@ export default Action.extend({
 
     await this.modalManager.show('workflow-visualiser/charts-modal', {
       mode: 'edit',
-      dashboardOwnerType: 'workflow',
       dashboardOwner: this.workflow,
       onSubmit: () => result.interceptPromise(this.modifyWorkflowChartsDashboard()),
     }).hiddenPromise;

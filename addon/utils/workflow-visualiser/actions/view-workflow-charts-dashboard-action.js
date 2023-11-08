@@ -70,7 +70,6 @@ export default Action.extend({
   async onExecute() {
     await this.modalManager.show('workflow-visualiser/charts-modal', {
       mode: 'view',
-      dashboardOwnerType: 'workflow',
       dashboardOwner: this.workflow,
       isLiveProxy: this.isLiveProxy,
       getStoreContentCallback: this.getStoreContentCallback,
