@@ -81,11 +81,9 @@ export default EmberObject.extend({
         dashboardSpec: reads('relatedElement.dashboardSpec'),
       }).create({
         relatedElement: this,
-        onPropagateChange: (newDashboardSpec) => {
-          this.modify({
-            dashboardSpec: newDashboardSpec,
-          });
-        },
+        onPropagateChange: (newDashboardSpec) => this.modify({
+          dashboardSpec: newDashboardSpec,
+        }),
       });
     }
   ),

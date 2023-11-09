@@ -956,7 +956,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
       lane = Lane.create({
         id,
-        schemaId: id,
         name,
         maxRetries,
         instantFailureExceptionThreshold,
@@ -1082,7 +1081,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
       const newParallelBox = ParallelBox.create({
         id,
-        schemaId: id,
         name,
         parent,
         runsRegistry: normalizedRunsRegistry,
@@ -1202,7 +1200,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
       task = Task.create({
         id,
-        schemaId: id,
         runsRegistry: normalizedRunsRegistry,
         name,
         parent,
@@ -1293,7 +1290,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   getStoreForRawData(storeRawData) {
     const {
-      id: schemaId,
+      id,
       instanceId: rawInstanceId,
       name,
       description,
@@ -1312,22 +1309,22 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'defaultInitialContent',
       'requiresInitialContent'
     );
-    const instanceId = rawInstanceId || (schemaId &&
-      this.get(`executionState.store.defined.${schemaId}.instanceId`)
+    const instanceId = rawInstanceId || (id &&
+      this.get(`executionState.store.defined.${id}.instanceId`)
     );
     const contentMayChange = instanceId && !this.isExecutionEnded &&
       !this.isExecutionSuspended;
-    const isStoreGenerated = !schemaId;
+    const isStoreGenerated = !id;
 
     const existingStore =
       (instanceId && this.getCachedElement('store', { instanceId })) ||
-      (schemaId && this.getCachedElement('store', { schemaId }));
+      (id && this.getCachedElement('store', { id }));
 
     if (existingStore) {
       const prevInstanceId = get(existingStore, 'instanceId');
       if (prevInstanceId && prevInstanceId !== instanceId) {
         console.error(
-          `component:workflow-visualiser#getStoreForRawData: instanceId of a store changed during runtime. schemaId: ${schemaId}, previous instanceId: ${prevInstanceId}, new instanceId: ${instanceId}`
+          `component:workflow-visualiser#getStoreForRawData: instanceId of a store changed during runtime. id: ${id}, previous instanceId: ${prevInstanceId}, new instanceId: ${instanceId}`
         );
       }
 
@@ -1347,8 +1344,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return existingStore;
     } else {
       const newStore = Store.create({
-        id: schemaId || generateId(),
-        schemaId,
+        id: id || generateId(),
         instanceId,
         name,
         description,
@@ -1436,7 +1432,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     if (!newElementProps.id) {
-      newElementProps.id = newElementProps.schemaId ?? generateId();
+      newElementProps.id = generateId();
     }
 
     targetElementsArray.splice(
@@ -1749,7 +1745,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return null;
     }
 
-    return this.get('stores').findBy('schemaId', schemaId) || null;
+    return this.get('stores').findBy('id', schemaId) || null;
   },
 
   getStoreByInstanceId(instanceId) {

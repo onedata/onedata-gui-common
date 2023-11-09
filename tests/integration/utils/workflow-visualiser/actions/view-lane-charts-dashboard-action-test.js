@@ -21,6 +21,8 @@ describe('Integration | Utility | workflow-visualiser/actions/view-lane-charts-d
       context: {
         lane,
         runNumber: 2,
+        getStoreContentCallback: () => {},
+        getTimeSeriesCollectionRefsMapCallback: () => {},
       },
     });
     this.setProperties({ lane, action });
@@ -34,9 +36,13 @@ describe('Integration | Utility | workflow-visualiser/actions/view-lane-charts-d
   });
 
   it('shows modal with lane charts dashboard in view mode on execute', async function () {
-    const dashboardSpec = this.set('lane.dashboardSpec', {
+    this.set('lane.dashboardSpec', {
       rootSection: {
-        charts: [],
+        sections: [{
+          title: {
+            content: 'test',
+          },
+        }],
       },
     });
     await executeAction(this);
@@ -48,9 +54,9 @@ describe('Integration | Utility | workflow-visualiser/actions/view-lane-charts-d
     expect(getModalBody().querySelector('.charts-visualisation')).to.exist;
 
     await click(getModalBody().querySelectorAll('.nav-tabs .nav-link')[1]);
-    const dashboardTextarea = getModalBody().querySelector('textarea');
-    expect(dashboardTextarea).to.have.value(JSON.stringify(dashboardSpec, null, 2));
-    expect(dashboardTextarea).to.have.attr('readonly');
+    const dashboardEditor = getModalBody().querySelector('.charts-dashboard-editor');
+    expect(dashboardEditor).to.contain.text('test');
+    expect(dashboardEditor).to.have.class('read-only');
   });
 });
 

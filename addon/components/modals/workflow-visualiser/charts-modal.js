@@ -65,16 +65,6 @@ export default Component.extend(I18n, {
   mode: reads('modalOptions.mode'),
 
   /**
-   * @type {ComputedProperty<AtmTimeSeriesDashboardSpec>}
-   */
-  dashboardSpec: reads('dashboardOwner.chartsDashboardEditorModelContainer.dashboardSpec'),
-
-  /**
-   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Model>}
-   */
-  dashboardModel: reads('dashboardOwner.chartsDashboardEditorModelContainer.dashboardModel'),
-
-  /**
    * @type {ComputedProperty<EmberObject>}
    */
   dashboardOwner: reads('modalOptions.dashboardOwner'),
@@ -95,6 +85,16 @@ export default Component.extend(I18n, {
   getTimeSeriesCollectionRefsMapCallback: reads(
     'modalOptions.getTimeSeriesCollectionRefsMapCallback'
   ),
+
+  /**
+   * @type {ComputedProperty<AtmTimeSeriesDashboardSpec>}
+   */
+  dashboardSpec: reads('dashboardOwner.chartsDashboardEditorModelContainer.dashboardSpec'),
+
+  /**
+   * @type {ComputedProperty<Utils.AtmWorkflow.ChartsDashboardEditor.Model>}
+   */
+  dashboardModel: reads('dashboardOwner.chartsDashboardEditorModelContainer.dashboardModel'),
 
   /**
    * @type {ComputedProperty<'store'|'task'|'lane'|'workflow'>}
@@ -123,7 +123,7 @@ export default Component.extend(I18n, {
     this._super(...arguments);
     this.setProperties({
       activeTab: this.canShowVisualisation ? 'visualisation' : 'definition',
-      rootSectionBackup: this.dashboardModel.rootSection?.clone() ?? null,
+      rootSectionBackup: this.dashboardModel?.rootSection?.clone() ?? null,
     });
   },
 

@@ -17,12 +17,12 @@
   {{/modal.header}}
 
   {{#modal.body}}
-    {{#bs-tab
-      customTabs=true
-      class="bs-tab-onedata bs-tab-modern"
-      as |tab|
-    }}
-      {{#if canShowVisualisation}}
+    {{#if canShowVisualisation}}
+      {{#bs-tab
+        customTabs=true
+        class="bs-tab-onedata bs-tab-modern"
+        as |tab|
+      }}
         {{#bs-nav class="representation-tabs" type="tabs" as |nav|}}
           {{#nav.item active=(eq activeTab "visualisation")}}
             <a class="nav-link" role="tab" {{action (mut activeTab) "visualisation"}}>
@@ -35,8 +35,8 @@
             </a>
           {{/nav.item}}
         {{/bs-nav}}
-      {{/if}}
-    {{/bs-tab}}
+      {{/bs-tab}}
+    {{/if}}
     {{#if (eq activeTab "visualisation")}}
       {{workflow-visualiser/charts-presenter
         class="charts-visualisation"
@@ -47,6 +47,7 @@
       }}
     {{else}}
       {{atm-workflow/charts-dashboard-editor
+        class="charts-definition"
         dashboardModel=dashboardModel
         isReadOnly=(eq mode "view")
       }}

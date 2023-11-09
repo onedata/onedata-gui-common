@@ -23,6 +23,7 @@ import { ElementType } from 'onedata-gui-common/utils/atm-workflow/charts-dashbo
 export default Component.extend({
   layout,
   classNames: ['charts-dashboard-editor'],
+  classNameBindings: ['isReadOnly:read-only'],
 
   i18n: service(),
 

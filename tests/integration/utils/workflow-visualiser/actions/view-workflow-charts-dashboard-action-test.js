@@ -20,6 +20,8 @@ describe('Integration | Utility | workflow-visualiser/actions/view-workflow-char
       ownerSource: this.owner,
       context: {
         workflow,
+        getStoreContentCallback: () => {},
+        getTimeSeriesCollectionRefsMapCallback: () => {},
       },
     });
     this.setProperties({ workflow, action });
@@ -33,9 +35,13 @@ describe('Integration | Utility | workflow-visualiser/actions/view-workflow-char
   });
 
   it('shows modal with workflow charts dashboard in view mode on execute', async function () {
-    const dashboardSpec = this.set('workflow.dashboardSpec', {
+    this.set('workflow.dashboardSpec', {
       rootSection: {
-        charts: [],
+        sections: [{
+          title: {
+            content: 'test',
+          },
+        }],
       },
     });
     await executeAction(this);
@@ -47,9 +53,9 @@ describe('Integration | Utility | workflow-visualiser/actions/view-workflow-char
     expect(getModalBody().querySelector('.charts-visualisation')).to.exist;
 
     await click(getModalBody().querySelectorAll('.nav-tabs .nav-link')[1]);
-    const dashboardTextarea = getModalBody().querySelector('textarea');
-    expect(dashboardTextarea).to.have.value(JSON.stringify(dashboardSpec, null, 2));
-    expect(dashboardTextarea).to.have.attr('readonly');
+    const dashboardEditor = getModalBody().querySelector('.charts-dashboard-editor');
+    expect(dashboardEditor).to.contain.text('test');
+    expect(dashboardEditor).to.have.class('read-only');
   });
 });
 

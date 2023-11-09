@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click, fillIn } from '@ember/test-helpers';
+import { render, settled, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import ModifyLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-charts-dashboard-action';
 import {
@@ -36,9 +36,13 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-lane-charts
   });
 
   it('shows modal with lane charts dashboard in edit mode on execute', async function () {
-    const dashboardSpec = this.set('lane.dashboardSpec', {
+    this.set('lane.dashboardSpec', {
       rootSection: {
-        charts: [],
+        sections: [{
+          title: {
+            content: 'test',
+          },
+        }],
       },
     });
     await executeAction(this);
@@ -47,9 +51,9 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-lane-charts
     expect(getModalHeader().querySelector('h1'))
       .to.have.trimmed.text('Lane charts dashboard');
     expect(getModal()).to.have.class('mode-edit');
-    const dashboardTextarea = getModalBody().querySelector('textarea');
-    expect(dashboardTextarea).to.have.value(JSON.stringify(dashboardSpec, null, 2));
-    expect(dashboardTextarea).to.not.have.attr('readonly');
+    const dashboardEditor = getModalBody().querySelector('.charts-dashboard-editor');
+    expect(dashboardEditor).to.contain.text('test');
+    expect(dashboardEditor).to.not.have.class('read-only');
   });
 
   it('returns promise with cancelled ActionResult after execute() and modal close using "Cancel"',
@@ -65,20 +69,23 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-lane-charts
 
   it('executes modifying charts dashboard on submit and returns promise with successful ActionResult',
     async function () {
-      const dashboardSpec = {
-        rootSection: {
-          charts: [],
-        },
-      };
       const modifyStub = sinon.stub(this.get('lane'), 'modify').resolves();
 
       const { resultPromise } = await executeAction(this);
-      await fillIn('textarea', JSON.stringify(dashboardSpec));
+      await click(getModalBody().querySelector('.create-btn'));
       await click(getModalFooter().querySelector('.btn-submit'));
       const actionResult = await resultPromise;
 
       expect(modifyStub).to.be.calledOnce.and.to.be.calledWith({
-        dashboardSpec,
+        dashboardSpec: {
+          rootSection: {
+            chartNavigation: 'independent',
+            charts: [],
+            description: '',
+            sections: [],
+            title: { content: 'Untitled section', tip: '' },
+          },
+        },
       });
       expect(actionResult.status).to.equal('done');
     }
@@ -86,17 +93,12 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-lane-charts
 
   it('executes modifying charts dashboard on submit and returns promise with failed ActionResult on error',
     async function () {
-      const dashboardSpec = {
-        rootSection: {
-          charts: [],
-        },
-      };
       let rejectModify;
       const modifyStub = sinon.stub(this.get('lane'), 'modify')
         .returns(new Promise((resolve, reject) => rejectModify = reject));
 
       const { resultPromise } = await executeAction(this);
-      await fillIn('textarea', JSON.stringify(dashboardSpec));
+      await click(getModalBody().querySelector('.create-btn'));
       await click(getModalFooter().querySelector('.btn-submit'));
       rejectModify();
       await settled();

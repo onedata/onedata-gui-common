@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { hbs } from 'ember-cli-htmlbars';
-import { render, click, find, fillIn } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import { lookupService } from '../../../../helpers/stub-service';
 import {
   getModal,
@@ -11,14 +11,25 @@ import {
   getModalFooter,
 } from '../../../../helpers/modal';
 import sinon from 'sinon';
+import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
+import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
+import { resolve } from 'rsvp';
 
 describe('Integration | Component | modals/workflow-visualiser/charts-modal', function () {
   setupRenderingTest();
 
   beforeEach(function () {
+    const onModifySpy = sinon.spy(() => resolve());
     this.setProperties({
       modalManager: lookupService(this, 'modal-manager'),
-      modalOptions: {},
+      modalOptions: {
+        dashboardOwner: Workflow.create({
+          onModify: onModifySpy,
+        }),
+        getStoreContentCallback: () => {},
+        getTimeSeriesCollectionRefsMapCallback: () => {},
+      },
+      onModifySpy,
     });
   });
 
@@ -29,7 +40,7 @@ describe('Integration | Component | modals/workflow-visualiser/charts-modal', fu
   });
 
   it('has header correct for lane dashboard', async function () {
-    this.set('modalOptions.dashboardOwnerType', 'lane');
+    this.set('modalOptions.dashboardOwner', Lane.create());
     await showModal(this);
 
     expect(getModalHeader().querySelector('h1'))
@@ -37,7 +48,7 @@ describe('Integration | Component | modals/workflow-visualiser/charts-modal', fu
   });
 
   it('has header correct for workflow dashboard', async function () {
-    this.set('modalOptions.dashboardOwnerType', 'workflow');
+    this.set('modalOptions.dashboardOwner', Workflow.create());
     await showModal(this);
 
     expect(getModalHeader().querySelector('h1'))
@@ -71,45 +82,41 @@ describe('Integration | Component | modals/workflow-visualiser/charts-modal', fu
     });
 
     it('shows dashboard definition content', async function () {
-      const dashboardSpec = this.set('modalOptions.dashboardSpec', {
-        rootSection: {
-          charts: [],
+      this.set('modalOptions.dashboardOwner', Workflow.create({
+        dashboardSpec: {
+          rootSection: {
+            title: { content: 'testDashboard' },
+          },
         },
-      });
-      const stringifiedDashboardSpec = JSON.stringify(dashboardSpec, null, 2);
+      }));
 
       await showModal(this);
 
-      expect(find('textarea')).to.have.value(stringifiedDashboardSpec);
-    });
-
-    it('does not allow to save dashboard definition when it is incorrect', async function () {
-      const stringifiedDashboardSpec = '{';
-      const submitSpy = this.set('modalOptions.onSubmit', sinon.spy());
-
-      await showModal(this);
-
-      await fillIn('textarea', stringifiedDashboardSpec);
-      expect(find('.btn-submit')).to.have.attr('disabled');
-      await click('.btn-submit');
-      expect(submitSpy).to.not.have.been.called;
+      expect(find('.section-title')).to.contain.text('testDashboard');
     });
 
     it('allows to save dashboard definition', async function () {
-      const dashboardSpec = {
-        rootSection: {
-          charts: [],
-        },
-      };
-      const stringifiedDashboardSpec = JSON.stringify(dashboardSpec, null, 2);
       const submitSpy = this.set('modalOptions.onSubmit', sinon.spy());
 
       await showModal(this);
 
-      await fillIn('textarea', stringifiedDashboardSpec);
-      await click('.btn-submit');
-      expect(submitSpy).to.have.been.calledOnce
-        .and.to.have.been.calledWith(sinon.match(dashboardSpec));
+      await click(getModalBody().querySelector('.create-btn'));
+      await click(getModalFooter().querySelector('.btn-submit'));
+      this.modalOptions.dashboardOwner
+        .chartsDashboardEditorModelContainer.propagateChange();
+      expect(submitSpy).to.have.been.calledOnce;
+      expect(this.onModifySpy).to.be.calledOnce
+        .and.to.be.calledWith(this.modalOptions.dashboardOwner, {
+          dashboardSpec: {
+            rootSection: {
+              chartNavigation: 'independent',
+              charts: [],
+              description: '',
+              sections: [],
+              title: { content: 'Untitled section', tip: '' },
+            },
+          },
+        });
     });
   });
 
@@ -147,20 +154,20 @@ describe('Integration | Component | modals/workflow-visualiser/charts-modal', fu
     });
 
     it('shows dashboard definition content in readonly editor', async function () {
-      const dashboardSpec = this.set('modalOptions.dashboardSpec', {
-        rootSection: {
-          charts: [],
+      this.set('modalOptions.dashboardOwner', Workflow.create({
+        dashboardSpec: {
+          rootSection: {
+            title: { content: 'testDashboard' },
+          },
         },
-      });
-      const stringifiedDashboardSpec = JSON.stringify(dashboardSpec, null, 2);
+      }));
 
       await showModal(this);
       const definitionTab = getTabs()[1];
       await click(definitionTab);
 
-      const textarea = find('textarea');
-      expect(textarea).to.have.value(stringifiedDashboardSpec);
-      expect(textarea).to.have.attr('readonly');
+      expect(find('.section-title')).to.contain.text('testDashboard');
+      expect(find('.charts-dashboard-editor')).to.have.class('read-only');
     });
   });
 });

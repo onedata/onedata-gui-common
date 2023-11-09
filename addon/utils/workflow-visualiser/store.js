@@ -25,12 +25,6 @@ export default EmberObject.extend({
   id: undefined,
 
   /**
-   * @virtual
-   * @type {String}
-   */
-  schemaId: undefined,
-
-  /**
    * @virtual optional
    * @type {String}
    */
@@ -121,7 +115,7 @@ export default EmberObject.extend({
    * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
    */
   chartsDashboardEditorDataSources: computed(
-    'schemaId',
+    'id',
     'name',
     'config.timeSeriesCollectionSchema',
     'containerElement.chartsDashboardEditorDataSources',
@@ -131,12 +125,12 @@ export default EmberObject.extend({
       const dataSources = this.containerElement?.chartsDashboardEditorDataSources ?? [];
 
       if (
-        this.schemaId &&
+        this.id &&
         this.config?.timeSeriesCollectionSchema
       ) {
         dataSources.push({
           originName: this.name ?? '',
-          collectionRef: `store-${this.schemaId}`,
+          collectionRef: `store-${this.id}`,
           timeSeriesCollectionSchema: this.config.timeSeriesCollectionSchema,
         });
       }
@@ -154,14 +148,12 @@ export default EmberObject.extend({
         dashboardSpec: reads('relatedElement.config.dashboardSpec'),
       }).create({
         relatedElement: this,
-        onPropagateChange: (newDashboardSpec) => {
-          this.modify({
-            config: {
-              ...this.config,
-              dashboardSpec: newDashboardSpec,
-            },
-          });
-        },
+        onPropagateChange: (newDashboardSpec) => this.modify({
+          config: {
+            ...this.config,
+            dashboardSpec: newDashboardSpec,
+          },
+        }),
       });
     }
   ),

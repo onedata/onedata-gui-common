@@ -82,12 +82,12 @@ export default VisualiserRecord.extend({
    * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
    */
   chartsDashboardEditorDataSources: computed(
-    'schemaId',
+    'id',
     'name',
     'timeSeriesStoreConfig.timeSeriesCollectionSchema',
     function chartsDashboardEditorDataSources() {
       if (
-        !this.schemaId ||
+        !this.id ||
         !this.timeSeriesStoreConfig?.timeSeriesCollectionSchema
       ) {
         return [];
@@ -95,7 +95,7 @@ export default VisualiserRecord.extend({
 
       return [{
         originName: this.name ?? '',
-        collectionRef: `task-${this.schemaId}`,
+        collectionRef: `task-${this.id}`,
         timeSeriesCollectionSchema: this.timeSeriesStoreConfig.timeSeriesCollectionSchema,
       }];
     }
@@ -110,11 +110,9 @@ export default VisualiserRecord.extend({
         dashboardSpec: reads('relatedElement.timeSeriesStoreConfig.dashboardSpec'),
       }).create({
         relatedElement: this,
-        onPropagateChange: (newDashboardSpec) => {
-          this.modify({
-            dashboardSpec: newDashboardSpec,
-          });
-        },
+        onPropagateChange: (newDashboardSpec) => this.modify({
+          dashboardSpec: newDashboardSpec,
+        }),
       });
     }
   ),

@@ -43,6 +43,11 @@ export default FormField.extend({
 
   /**
    * @virtual
+   */
+  defaultValue: null,
+
+  /**
+   * @virtual
    * @type {DashboardModelOwner}
    */
   dashboardModelOwner: undefined,

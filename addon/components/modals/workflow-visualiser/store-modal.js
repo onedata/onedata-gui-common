@@ -163,13 +163,13 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<AtmTimeSeriesCollectionReference>}
    */
   defaultTimeSeriesCollectionRef: computed(
-    'store.schemaId',
-    'storeOwner.{__modelType,schemaId}',
+    'store.id',
+    'storeOwner.{__modelType,id}',
     function defaultTimeSeriesCollectionRef() {
       if (this.storeOwner?.__modelType === 'task') {
-        return `task-${this.storeOwner.schemaId}`;
+        return `task-${this.storeOwner.id}`;
       } else {
-        return `store-${this.store.schemaId}`;
+        return `store-${this.store.id}`;
       }
     }
   ),

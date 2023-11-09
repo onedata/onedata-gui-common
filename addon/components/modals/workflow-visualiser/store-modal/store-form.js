@@ -585,10 +585,8 @@ export default Component.extend(I18n, {
 
 function storeToFormData(store, { defaultType }) {
   if (!store) {
-    const id = generateId();
     return createValuesContainer({
-      id,
-      schemaId: id,
+      id: generateId(),
       name: '',
       description: '',
       type: defaultType,
@@ -602,7 +600,7 @@ function storeToFormData(store, { defaultType }) {
   }
 
   const {
-    schemaId,
+    id,
     instanceId,
     name,
     description,
@@ -612,7 +610,7 @@ function storeToFormData(store, { defaultType }) {
     requiresInitialContent,
   } = getProperties(
     store,
-    'schemaId',
+    'id',
     'instanceId',
     'name',
     'description',
@@ -623,7 +621,7 @@ function storeToFormData(store, { defaultType }) {
   );
 
   const formData = {
-    id: schemaId,
+    id,
     instanceId,
     name,
     description,
@@ -672,7 +670,6 @@ function formDataToStore(formData) {
 
   const store = {
     id,
-    schemaId: id,
     name,
     description,
     type,

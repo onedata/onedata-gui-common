@@ -863,7 +863,7 @@ export default Component.extend(I18n, {
 
 function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
   const {
-    schemaId,
+    id,
     name,
     argumentMappings,
     resultMappings,
@@ -871,7 +871,7 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
     timeSeriesStoreConfig,
   } = getProperties(
     task || {},
-    'schemaId',
+    'id',
     'name',
     'argumentMappings',
     'resultMappings',
@@ -899,7 +899,7 @@ function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {
     atmLambdaRevisionNumber: atmLambdaRevisionNumber,
   });
   const detailsSection = createValuesContainer({
-    schemaId: schemaId ?? generateId(),
+    schemaId: id ?? generateId(),
     name: name || atmLambdaName,
   });
 
@@ -1096,7 +1096,7 @@ function formDataToTask(formData, atmLambda, stores) {
   } = getProperties(resources || {}, 'overrideResources', 'resourcesSections');
 
   const task = {
-    schemaId: details.schemaId,
+    id: details.schemaId,
     lambdaId: atmLambdaId,
     lambdaRevisionNumber: atmLambdaRevisionNumber,
     lambdaConfig: atmLambdaConfigEditorValueToRawValue(formData?.lambdaConfigSection),

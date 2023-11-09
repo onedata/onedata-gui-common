@@ -21,7 +21,7 @@ export default EmberObject.extend({
 
   /**
    * @virtual
-   * @type {(newDashboardSpec: AtmTimeSeriesDashboardSpec) => void}
+   * @type {(newDashboardSpec: AtmTimeSeriesDashboardSpec) => Promise<void>}
    */
   onPropagateChange: undefined,
 
@@ -62,7 +62,7 @@ export default EmberObject.extend({
     this.dashboardModelUpdater();
   },
 
-  propagateChange() {
-    this.onPropagateChange?.(this.dashboardModel.toJson());
+  async propagateChange() {
+    await this.onPropagateChange?.(this.dashboardModel.toJson());
   },
 });
