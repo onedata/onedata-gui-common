@@ -93,7 +93,7 @@ export default VisualiserRecord.extend({
   /**
    * @type {Array<Utils.WorkflowVisualiser.Lane.ParallelBox>}
    */
-  parallelBoxes: computed('element.[]', function parallelBoxes() {
+  parallelBoxes: computed('elements.[]', function parallelBoxes() {
     return this.elements?.filter((element) =>
       element.__modelType === 'parallelBox'
     ) ?? [];

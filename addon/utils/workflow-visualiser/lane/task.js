@@ -111,7 +111,10 @@ export default VisualiserRecord.extend({
       }).create({
         relatedElement: this,
         onPropagateChange: (newDashboardSpec) => this.modify({
-          dashboardSpec: newDashboardSpec,
+          timeSeriesStoreConfig: {
+            ...this.timeSeriesStoreConfig,
+            dashboardSpec: newDashboardSpec,
+          },
         }),
       });
     }

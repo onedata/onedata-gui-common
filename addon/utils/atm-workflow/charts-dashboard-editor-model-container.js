@@ -1,3 +1,15 @@
+/**
+ * Is a special container, which aim is to provide consistent charts dashboard access
+ * API for different models containing that dashboard.
+ *
+ * Exposes a ready to use `dashboardModel` created from spec and data sources
+ * injected by owning model (task, store, etc).
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import EmberObject, { observer, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import _ from 'lodash';
@@ -20,12 +32,14 @@ export default EmberObject.extend({
   dashboardSpec: undefined,
 
   /**
+   * Should apply changed dashboard spec (save it, mark model as modified etc.)
    * @virtual
    * @type {(newDashboardSpec: AtmTimeSeriesDashboardSpec) => Promise<void>}
    */
   onPropagateChange: undefined,
 
   /**
+   * Will be calculated and updated by `dashboardModelUpdater`
    * @type {Utils.AtmWorkflow.ChartsDashboardEditor.Model}
    */
   dashboardModel: undefined,

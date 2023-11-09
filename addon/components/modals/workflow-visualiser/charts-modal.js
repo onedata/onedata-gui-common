@@ -17,7 +17,7 @@ import { and, raw, eq } from 'ember-awesome-macros';
 /**
  * @typedef {Object} WorkflowVisualiserChartsModalOptions
  * @property {'edit'|'view'} mode
- * @property {EmberObject} dashboardOwner
+ * @property {DashboardModelOwner} dashboardOwner
  * @property {ObjectProxy<boolean>} isLiveProxy Needed only in `view` mode
  * @property {(store: Utils.WorkflowVisualiser.Store, browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>} [getStoreContentCallback]
  *   Useful only in `view` mode. If not provided, only chart definition will be visible.
@@ -65,7 +65,7 @@ export default Component.extend(I18n, {
   mode: reads('modalOptions.mode'),
 
   /**
-   * @type {ComputedProperty<EmberObject>}
+   * @type {ComputedProperty<DashboardModelOwner>}
    */
   dashboardOwner: reads('modalOptions.dashboardOwner'),
 

@@ -108,6 +108,12 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.modals.workflowVisualiser.storeModal.storeForm',
 
   /**
+   * @virtual
+   * @type {'create'|'view'|'edit'}
+   */
+  mode: undefined,
+
+  /**
    * Needed when `mode` is `'create'` or `'edit'`
    * @virtual optional
    * @type {Function}
@@ -126,11 +132,6 @@ export default Component.extend(I18n, {
    * @type {Utils.WorkflowVisualiser.Store}
    */
   store: undefined,
-
-  /**
-   * @type {'create'|'view'|'edit'}
-   */
-  mode: undefined,
 
   /**
    * @virtual optional

@@ -1,3 +1,11 @@
+/**
+ * Allows to edit/view charts dashboard using modal with dashboard editor.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2023 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
@@ -9,6 +17,12 @@ import FormField from 'onedata-gui-common/utils/form-component/form-field';
 
 export default FormField.extend({
   modalManager: service(),
+
+  /**
+   * @virtual
+   * @type {DashboardModelOwner}
+   */
+  dashboardModelOwner: undefined,
 
   /**
    * @override
@@ -34,23 +48,17 @@ export default FormField.extend({
   /**
    * @override
    */
+  defaultValue: null,
+
+  /**
+   * @override
+   */
   withValidationIcon: false,
 
   /**
    * @override
    */
   withValidationMessage: false,
-
-  /**
-   * @virtual
-   */
-  defaultValue: null,
-
-  /**
-   * @virtual
-   * @type {DashboardModelOwner}
-   */
-  dashboardModelOwner: undefined,
 
   /**
    * @type {ComputedProperty<SafeString>}
@@ -64,7 +72,7 @@ export default FormField.extend({
    */
   async showEditor() {
     await this.modalManager.show('workflow-visualiser/charts-modal', {
-      mode: 'edit',
+      mode: this.isInViewMode ? 'view' : 'edit',
       dashboardOwner: this.dashboardModelOwner,
       onSubmit: () => {
         const newDashboardSpec = this.dashboardModelOwner
