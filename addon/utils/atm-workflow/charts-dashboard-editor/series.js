@@ -231,7 +231,7 @@ const Series = ElementBase.extend({
   /**
    * @override
    */
-  clone() {
+  clone(preserveReferences = false) {
     const seriesClone = Series.create({
       elementOwner: this.elementOwner,
       dataSources: this.dataSources,
@@ -244,8 +244,9 @@ const Series = ElementBase.extend({
       axis: this.axis,
       color: this.color,
       group: this.group,
-      dataProvider: this.dataProvider?.clone(),
-      detachedFunctions: this.detachedFunctions.map((func) => func.clone()),
+      dataProvider: this.dataProvider?.clone(preserveReferences),
+      detachedFunctions: this.detachedFunctions
+        .map((func) => func.clone(preserveReferences)),
       parent: this.parent,
     });
 

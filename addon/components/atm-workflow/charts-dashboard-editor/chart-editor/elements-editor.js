@@ -227,7 +227,7 @@ const ElementsEditorTab = EmberObject.extend(OwnerInjector, {
     function name() {
       if (this.element.repeatPerPrefixedTimeSeries) {
         const timeSeriesNameGenerator =
-          this.element.prefixedTimeSeriesRef.timeSeriesNameGenerator ?? null;
+          this.element.prefixedTimeSeriesRef?.timeSeriesNameGenerator ?? null;
         return getRepeatedSeriesName(this.i18n, timeSeriesNameGenerator);
       } else {
         return this.element.name;

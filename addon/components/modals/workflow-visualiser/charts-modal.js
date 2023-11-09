@@ -131,8 +131,9 @@ export default Component.extend(I18n, {
     cancel(closeCallback) {
       if (this.dashboardModel) {
         // restore rootSection from backup to undo any changes.
-        this.dashboardModel.rootSection?.destroy();
+        const currentRootSection = this.dashboardModel.rootSection;
         set(this.dashboardModel, 'rootSection', this.rootSectionBackup);
+        currentRootSection?.destroy();
       }
       closeCallback();
     },

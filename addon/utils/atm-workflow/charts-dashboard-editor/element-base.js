@@ -125,9 +125,48 @@ const ElementBase = EmberObject.extend({
   /**
    * @public
    * @virtual
+   * @param {boolean} [preserveReferences=false] if true, then all non-children and
+   *   non-parent references are being preserved, even if it would cause logical issues.
+   *   Needed by some cloning implementations when there are cross references. It allows
+   *   to later call `replaceReference()` and replace old refs with new ones.
    * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement}
    */
   clone() {},
+
+  /**
+   * @public
+   * @virtual
+   * @param {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} oldElement
+   * @param {Utils.AtmWorkflow.ChartsDashboardEditor.DashboardElement} newElement
+   * @param {boolean} [deep=true]
+   */
+  replaceReference(oldElement, newElement, deep = true) {
+    for (const propertyName of this.referencingPropertyNames) {
+      const propertyValue = this[propertyName];
+
+      if (Array.isArray(propertyValue)) {
+        let replaceCollection = false;
+        const newCollection = propertyValue.map((element) => {
+          if (element === oldElement) {
+            replaceCollection = true;
+            return newElement;
+          } else {
+            return element;
+          }
+        });
+        if (replaceCollection) {
+          this.set(propertyName, newCollection);
+        }
+      } else if (propertyValue === oldElement) {
+        this.set(propertyName, newElement);
+      }
+    }
+    if (deep) {
+      for (const nestedElement of this.nestedElements()) {
+        nestedElement.replaceReference(oldElement, newElement, false);
+      }
+    }
+  },
 
   /**
    * @public

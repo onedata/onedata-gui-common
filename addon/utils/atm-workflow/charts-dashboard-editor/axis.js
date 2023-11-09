@@ -219,7 +219,7 @@ const Axis = ElementBase.extend({
   /**
    * @override
    */
-  clone() {
+  clone(preserveReferences = false) {
     const axisClone = Axis.create({
       elementOwner: this.elementOwner,
       dataSources: this.dataSources,
@@ -229,9 +229,10 @@ const Axis = ElementBase.extend({
       unitOptions: this.unitOptions ?
         EmberObject.create(this.unitOptions) : this.unitOptions,
       minInterval: this.minInterval,
-      valueProvider: this.valueProvider?.clone(),
-      detachedFunctions: this.detachedFunctions.map((func) => func.clone()),
-      series: [],
+      valueProvider: this.valueProvider?.clone(preserveReferences),
+      detachedFunctions: this.detachedFunctions
+        .map((func) => func.clone(preserveReferences)),
+      series: preserveReferences ? [...this.series] : [],
       parent: this.parent,
     });
 
