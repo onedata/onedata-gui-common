@@ -50,7 +50,7 @@ export default VisualiserRecord.extend({
     function chartsDashboardEditorDataSources() {
       return _.flatten(
         this.tasks.map((task) => task.chartsDashboardEditorDataSources ?? [])
-      );
+      ).map((dataSource) => ({ ...dataSource, isDefault: false }));
     }
   ),
 

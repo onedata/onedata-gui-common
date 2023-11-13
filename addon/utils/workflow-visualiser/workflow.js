@@ -68,7 +68,7 @@ export default EmberObject.extend({
         ...(this.lanes?.map((lane) =>
           lane.chartsDashboardEditorDataSources ?? []
         ) ?? []),
-      ]);
+      ]).map((dataSource) => ({ ...dataSource, isDefault: false }));
     }
   ),
 

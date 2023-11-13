@@ -278,7 +278,8 @@ const Series = ElementBase.extend({
             sourceSpec: {
               externalSourceName: 'store',
               externalSourceParameters: {
-                collectionRef: this.prefixedTimeSeriesRef.collectionRef,
+                collectionRef: this.prefixedTimeSeriesRef.collectionRef ??
+                  this.defaultDataSource?.collectionRef,
                 timeSeriesNameGenerator: this.prefixedTimeSeriesRef
                   .timeSeriesNameGenerator,
                 metricNames: this.prefixedTimeSeriesRef.metricNames,

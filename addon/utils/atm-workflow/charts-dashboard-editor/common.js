@@ -193,4 +193,5 @@ export function getRepeatedSeriesName(i18n, timeSeriesNameGenerator) {
  *   (e.g. store/task name).
  * @property {string} collectionRef
  * @property {TimeSeriesCollectionSchema} timeSeriesCollectionSchema
+ * @property {boolean} isDefault
  */
