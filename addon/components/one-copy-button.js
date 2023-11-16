@@ -51,16 +51,16 @@ export default Component.extend(I18n, {
   localTarget: undefined,
 
   /**
+   * @virtual optional
+   * @type {string | undefined}
+   */
+  clipboardText: undefined,
+
+  /**
    * @virtual
    * @type {Function}
    */
   notify: notImplementedIgnore,
-
-  /**
-   * @virtual
-   * @type {String}
-   */
-  copyButtonTagName: 'button',
 
   /**
    * Global clipboard target selector for local element selector
@@ -71,8 +71,11 @@ export default Component.extend(I18n, {
     'parentElementId',
     'localTarget', {
       get() {
-        return this.injectedClipboardTarget ??
-          `#${this.parentElementId} ${this.localTarget}`;
+        if (this.injectedClipboardTarget) {
+          return this.injectedClipboardTarget;
+        } else if (this.parentElementId && this.localTarget) {
+          return `#${this.parentElementId} ${this.localTarget}`;
+        }
       },
       set(key, value) {
         return this.injectedClipboardTarget = value;
@@ -90,7 +93,7 @@ export default Component.extend(I18n, {
       return this.injectedTextType ?? this.t('defaultTextType');
     },
     set(key, value) {
-      return this.injectedTextType = value;
+      return this.injectedTextType = value ?? this.t('defaultTextType');
     },
   }),
 
@@ -119,26 +122,20 @@ export default Component.extend(I18n, {
   }),
 
   _success() {
-    const {
-      notify,
-      globalNotify,
-      textType,
-    } = this.getProperties('notify', 'globalNotify', 'textType');
-    notify(true);
-    globalNotify.info(this.t(
+    this.globalNotify.info(this.t(
       'copySuccess', {
-        textType: capitalize(String(textType)),
+        textType: capitalize(String(this.textType)),
       }
     ));
+    this.notify?.(true);
   },
 
   _error() {
-    this.get('notify')(false);
-    this.get('globalNotify').info(this.t(
-      'copyError', {
+    this.globalNotify.info(this.t(
+      'copyFailure', {
         textType: this.get('textType'),
       }
     ));
+    this.notify?.(false);
   },
-
 });
