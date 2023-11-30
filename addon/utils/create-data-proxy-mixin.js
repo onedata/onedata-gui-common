@@ -94,7 +94,7 @@ export default function createDataProxyMixin(name, options) {
               if (get(internalDataProxy, 'isFulfilled')) {
                 setProperties(internalDataProxy, {
                   isRejected: true,
-                  isFulfilled: true,
+                  isFulfilled: false,
                 });
               }
               throw error;
