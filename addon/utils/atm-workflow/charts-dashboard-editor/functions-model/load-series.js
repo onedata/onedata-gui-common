@@ -133,7 +133,8 @@ const LoadSeriesFunction = FunctionBase.extend({
             data: {
               externalSourceName: 'store',
               externalSourceParameters: {
-                collectionRef: this.timeSeriesRef.collectionRef,
+                collectionRef: this.timeSeriesRef.collectionRef ??
+                  this.defaultDataSource?.collectionRef,
                 timeSeriesNameGenerator: this.timeSeriesRef.timeSeriesNameGenerator,
                 timeSeriesName: this.timeSeriesRef.timeSeriesName,
                 metricNames: this.timeSeriesRef.metricNames,

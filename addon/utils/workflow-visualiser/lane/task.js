@@ -97,6 +97,7 @@ export default VisualiserRecord.extend({
         originName: this.name ?? '',
         collectionRef: `task-${this.id}`,
         timeSeriesCollectionSchema: this.timeSeriesStoreConfig.timeSeriesCollectionSchema,
+        isDefault: true,
       }];
     }
   ),

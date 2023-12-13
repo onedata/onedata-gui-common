@@ -132,6 +132,7 @@ export default EmberObject.extend({
           originName: this.name ?? '',
           collectionRef: `store-${this.id}`,
           timeSeriesCollectionSchema: this.config.timeSeriesCollectionSchema,
+          isDefault: dataSources.length === 0,
         });
       }
 

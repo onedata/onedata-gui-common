@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import { array } from 'ember-awesome-macros';
 
 /**
@@ -55,26 +55,24 @@ const ElementBase = EmberObject.extend({
 
   /**
    * @public
+   * @virtual optional
    * @type {boolean}
    */
   isRemoved: false,
 
   /**
    * @public
+   * @virtual optional
    * @type {Array<DashboardElementValidationError>}
    */
   directValidationErrors: undefined,
 
   /**
    * @public
+   * @virtual optional
    * @type {Array<DashboardElementValidationError>}
    */
   nestedValidationErrors: undefined,
-
-  /**
-   * @type {Set<ChartsDashboardEditorElementChangeEvent>}
-   */
-  changeListeners: undefined,
 
   /**
    * An array of properties, which may contain references to other dashboard
@@ -86,10 +84,28 @@ const ElementBase = EmberObject.extend({
   referencingPropertyNames: Object.freeze(['parent']),
 
   /**
+   * @private
+   * @type {Set<ChartsDashboardEditorElementChangeEvent>}
+   */
+  changeListeners: undefined,
+
+  /**
    * @public
-   * @type {Computed<Array<DashboardElementValidationError>>}
+   * @type {ComputedProperty<Array<DashboardElementValidationError>>}
    */
   validationErrors: array.concat('directValidationErrors', 'nestedValidationErrors'),
+
+  /**
+   * @public
+   * @type {ComputedProperty<ChartsDashboardEditorDataSource | null>}
+   */
+  defaultDataSource: computed('dataSources', function defaultDataSource() {
+    const defaultDataSources = this.dataSources?.filter(({ isDefault }) => isDefault);
+    if (defaultDataSources?.length !== 1) {
+      return null;
+    }
+    return defaultDataSources[0];
+  }),
 
   /**
    * @override
@@ -103,9 +119,6 @@ const ElementBase = EmberObject.extend({
     }
     if (!this.nestedValidationErrors) {
       this.set('nestedValidationErrors', []);
-    }
-    if (!this.referencingPropertySpecs) {
-      this.set('referencingPropertySpecs', []);
     }
   },
 

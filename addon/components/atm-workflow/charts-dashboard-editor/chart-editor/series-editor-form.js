@@ -79,7 +79,7 @@ export default Component.extend(I18n, {
   }),
 
   formValuesUpdater: observer(
-    'series.{repeatPerPrefixedTimeSeries,name,type,color,axis,group}',
+    'series.{repeatPerPrefixedTimeSeries,name,type,color,axis,group,defaultDataSource}',
     'prefixedTimeSeriesRef.{collectionRef,timeSeriesNameGenerator,metricNames}',
     function formValuesUpdater() {
       const repeatPerPrefixedTimeSeries =
@@ -97,7 +97,8 @@ export default Component.extend(I18n, {
 
       updateTimeSeriesSelectorFormValues(
         this.form.valuesSource.timeSeriesSelector,
-        this.series?.prefixedTimeSeriesRef
+        this.series?.prefixedTimeSeriesRef,
+        this.series?.defaultDataSource
       );
 
       ['name', 'type', 'axis'].forEach((fieldName) => {
