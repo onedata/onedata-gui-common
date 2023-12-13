@@ -14,20 +14,27 @@ export default Service.extend({
   /**
    * @type {string}
    */
-  textToCopy: '',
+  textToCopy: undefined,
 
   /**
    * @type {string}
    */
-  textType: '',
+  textType: undefined,
 
-  copy(textToUpdate, textType) {
+  copy(textToCopy, textType) {
     this.setProperties({
-      textToCopy: textToUpdate,
-      textType: textType,
+      textToCopy,
+      textType,
     });
     scheduleOnce('afterRender', () => {
       $('.btn-global-copy-button').click();
+    });
+  },
+
+  endCopy() {
+    this.setProperties({
+      textToCopy: undefined,
+      textType: undefined,
     });
   },
 });
