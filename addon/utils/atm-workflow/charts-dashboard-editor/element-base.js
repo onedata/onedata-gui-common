@@ -120,9 +120,6 @@ const ElementBase = EmberObject.extend({
     if (!this.nestedValidationErrors) {
       this.set('nestedValidationErrors', []);
     }
-    if (!this.referencingPropertySpecs) {
-      this.set('referencingPropertySpecs', []);
-    }
   },
 
   /**
