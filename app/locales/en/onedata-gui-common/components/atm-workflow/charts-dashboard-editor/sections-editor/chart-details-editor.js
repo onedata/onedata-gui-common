@@ -10,4 +10,5 @@ export default {
     },
   },
   editContent: 'Edit content',
+  viewContent: 'View content',
 };

@@ -18,6 +18,11 @@ import {
   useNewSpecInModel,
 } from './charts-dashboard-editor';
 
+/**
+ * @typedef {EmberObject} DashboardModelOwner
+ * @property {ChartsDashboardEditorModelContainer} chartsDashboardEditorModelContainer
+ */
+
 export default EmberObject.extend({
   /**
    * @virtual

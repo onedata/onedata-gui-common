@@ -1,13 +1,7 @@
-{{!-- TODO: VFS-10331 unify modal layout in zone and provider --}}
 {{#global-modal
-  classNames=(concat-classes
-    "charts-modal"
-    (concat "mode-" mode)
-    (if (eq mode "view") "without-footer modal-content-overlay with-close-button")
-  )
-  allowClose=(not isSubmitting)
+  classNames="charts-modal without-footer modal-content-overlay with-close-button"
   modalId=modalId
-  size=(if (eq activeTab "definition") "full" "lg")
+  size="lg"
   as |modal|
 }}
   {{#modal.header}}
@@ -17,63 +11,11 @@
   {{/modal.header}}
 
   {{#modal.body}}
-    {{#if canShowVisualisation}}
-      {{#bs-tab
-        customTabs=true
-        class="bs-tab-onedata bs-tab-modern"
-        as |tab|
-      }}
-        {{#bs-nav class="representation-tabs" type="tabs" as |nav|}}
-          {{#nav.item active=(eq activeTab "visualisation")}}
-            <a class="nav-link" role="tab" {{action (mut activeTab) "visualisation"}}>
-              {{tt this "tabs.visualisation.title"}}
-            </a>
-          {{/nav.item}}
-          {{#nav.item active=(eq activeTab "definition")}}
-            <a class="nav-link" role="tab" {{action (mut activeTab) "definition"}}>
-              {{tt this "tabs.definition.title"}}
-            </a>
-          {{/nav.item}}
-        {{/bs-nav}}
-      {{/bs-tab}}
-    {{/if}}
-    {{#if (eq activeTab "visualisation")}}
-      {{workflow-visualiser/charts-presenter
-        class="charts-visualisation"
-        dashboardSpec=dashboardSpec
-        onGetStoreContent=getStoreContentCallback
-        onGetTimeSeriesCollectionRefsMap=getTimeSeriesCollectionRefsMapCallback
-        live=isLiveProxy.content
-      }}
-    {{else}}
-      {{atm-workflow/charts-dashboard-editor
-        class="charts-definition"
-        dashboardModel=dashboardModel
-        isReadOnly=(eq mode "view")
-      }}
-    {{/if}}
+    {{workflow-visualiser/charts-presenter
+      dashboardModelOwner=dashboardOwner
+      onGetStoreContent=getStoreContentCallback
+      onGetTimeSeriesCollectionRefsMap=getTimeSeriesCollectionRefsMapCallback
+      live=isLiveProxy.content
+    }}
   {{/modal.body}}
-
-  {{#if (not-eq mode "view")}}
-    {{#modal.footer class="btn-toolbar"}}
-      {{#bs-button
-        type="default"
-        class="btn-cancel"
-        onClick=(action "cancel" modal.close)
-        disabled=isSubmitting
-      }}
-        {{tt this (concat "buttons.cancel." mode)}}
-      {{/bs-button}}
-
-      {{#one-button
-        type="primary"
-        buttonType="submit"
-        class="btn-submit"
-        onClick=(action "submit" modal.submit)
-      }}
-        {{tt this "buttons.submit"}}
-      {{/one-button}}
-    {{/modal.footer}}
-  {{/if}}
-
 {{/global-modal}}

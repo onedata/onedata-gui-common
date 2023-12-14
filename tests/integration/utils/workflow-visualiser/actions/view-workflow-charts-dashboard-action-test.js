@@ -1,13 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import ViewWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-charts-dashboard-action';
 import {
   getModal,
   getModalHeader,
-  getModalBody,
 } from '../../../../helpers/modal';
 import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
 
@@ -20,8 +19,6 @@ describe('Integration | Utility | workflow-visualiser/actions/view-workflow-char
       ownerSource: this.owner,
       context: {
         workflow,
-        getStoreContentCallback: () => {},
-        getTimeSeriesCollectionRefsMapCallback: () => {},
       },
     });
     this.setProperties({ workflow, action });
@@ -49,13 +46,6 @@ describe('Integration | Utility | workflow-visualiser/actions/view-workflow-char
     expect(getModal()).to.have.class('charts-modal');
     expect(getModalHeader().querySelector('h1'))
       .to.have.trimmed.text('Workflow charts dashboard');
-    expect(getModal()).to.have.class('mode-view');
-    expect(getModalBody().querySelector('.charts-visualisation')).to.exist;
-
-    await click(getModalBody().querySelectorAll('.nav-tabs .nav-link')[1]);
-    const dashboardEditor = getModalBody().querySelector('.charts-dashboard-editor');
-    expect(dashboardEditor).to.contain.text('test');
-    expect(dashboardEditor).to.have.class('read-only');
   });
 });
 

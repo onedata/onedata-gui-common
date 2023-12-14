@@ -10,11 +10,6 @@ import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 
-/**
- * @typedef {EmberObject} DashboardModelOwner
- * @property {ChartsDashboardEditorModelContainer} chartsDashboardEditorModelContainer
- */
-
 export default FormField.extend({
   modalManager: service(),
 
@@ -71,7 +66,7 @@ export default FormField.extend({
    * @public
    */
   async showEditor() {
-    await this.modalManager.show('workflow-visualiser/charts-modal', {
+    await this.modalManager.show('workflow-visualiser/charts-dashboard-editor-modal', {
       mode: this.isInViewMode ? 'view' : 'edit',
       dashboardOwner: this.dashboardModelOwner,
       onSubmit: () => {

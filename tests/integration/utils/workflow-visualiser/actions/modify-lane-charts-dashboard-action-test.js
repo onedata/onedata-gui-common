@@ -48,9 +48,9 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-lane-charts
     });
     await executeAction(this);
 
-    expect(getModal()).to.have.class('charts-modal');
+    expect(getModal()).to.have.class('charts-dashboard-editor-modal');
     expect(getModalHeader().querySelector('h1'))
-      .to.have.trimmed.text('Lane charts dashboard');
+      .to.have.trimmed.text('Lane charts dashboard editor');
     expect(getModal()).to.have.class('mode-edit');
     const dashboardEditor = getModalBody().querySelector('.charts-dashboard-editor');
     expect(dashboardEditor).to.contain.text('test');

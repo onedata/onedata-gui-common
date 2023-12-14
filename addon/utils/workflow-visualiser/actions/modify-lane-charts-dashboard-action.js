@@ -40,7 +40,7 @@ export default Action.extend({
   async onExecute() {
     const result = ActionResult.create();
 
-    await this.modalManager.show('workflow-visualiser/charts-modal', {
+    await this.modalManager.show('workflow-visualiser/charts-dashboard-editor-modal', {
       mode: 'edit',
       dashboardOwner: this.lane,
       onSubmit: () =>
