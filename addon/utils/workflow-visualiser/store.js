@@ -120,9 +120,11 @@ export default EmberObject.extend({
     'config.timeSeriesCollectionSchema',
     'containerElement.chartsDashboardEditorDataSources',
     function chartsDashboardEditorDataSources() {
-      // We include container element's data sources as internal stores are considered
+      // We include container element's data sources, because internal stores are considered
       // a part of its container, hence they have access to container's time series data.
-      const dataSources = this.containerElement?.chartsDashboardEditorDataSources ?? [];
+      const dataSources = [
+        ...(this.containerElement?.chartsDashboardEditorDataSources ?? []),
+      ];
 
       if (
         this.id &&

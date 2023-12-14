@@ -187,7 +187,7 @@ export default Action.extend({
     const creatorFunction = creatorFunctions[this.newElementType];
     if (creatorFunction) {
       const element = creatorFunction(this.i18n, elementOwner, dataSources);
-      set(element, 'dataSources', this.targetElement.dataSources);
+      set(element, 'dataSources', dataSources);
       return element;
     } else {
       console.error(

@@ -112,7 +112,7 @@ export default Action.extend({
 
     setProperties(this.functionToRemove, {
       isRemoved: false,
-      dataSources: this.functionToRemove.parent.dataSources,
+      dataSources: this.functionToRemove.parent?.dataSources ?? [],
     });
     changedElements.notifyAboutChange();
   },

@@ -10,6 +10,7 @@ import {
   getModalBody,
   getModalFooter,
 } from '../../../../helpers/modal';
+import { initialDashboardSpec } from '../../../../helpers/charts-dashboard.editor';
 import sinon from 'sinon';
 import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
@@ -107,15 +108,7 @@ describe('Integration | Component | modals/workflow-visualiser/charts-modal', fu
       expect(submitSpy).to.have.been.calledOnce;
       expect(this.onModifySpy).to.be.calledOnce
         .and.to.be.calledWith(this.modalOptions.dashboardOwner, {
-          dashboardSpec: {
-            rootSection: {
-              chartNavigation: 'independent',
-              charts: [],
-              description: '',
-              sections: [],
-              title: { content: 'Untitled section', tip: '' },
-            },
-          },
+          dashboardSpec: initialDashboardSpec,
         });
     });
   });

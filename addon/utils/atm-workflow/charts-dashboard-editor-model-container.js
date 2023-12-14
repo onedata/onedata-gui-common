@@ -21,7 +21,7 @@ import {
 export default EmberObject.extend({
   /**
    * @virtual
-   * @type {EmberObject}
+   * @type {EmberObject<{ chartsDashboardEditorDataSources: Array<ChartsDashboardEditorDataSource> }>}
    */
   relatedElement: undefined,
 
@@ -50,6 +50,7 @@ export default EmberObject.extend({
   dataSources: reads('relatedElement.chartsDashboardEditorDataSources'),
 
   dashboardModelUpdater: observer(
+    'relatedElement',
     'dashboardSpec',
     'dataSources',
     function dashboardModelUpdater() {

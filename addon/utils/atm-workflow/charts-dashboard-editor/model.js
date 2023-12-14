@@ -42,7 +42,11 @@ export default EmberObject.extend({
         this.rootSection,
         ...this.rootSection.nestedElements(),
       ];
-      allElements.forEach((element) => set(element, 'dataSources', this.dataSources));
+      allElements.forEach((element) => {
+        if (element.dataSources !== this.dataSources) {
+          set(element, 'dataSources', this.dataSources);
+        }
+      });
     }
   ),
 

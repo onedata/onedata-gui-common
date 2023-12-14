@@ -10,7 +10,12 @@
   {{/one-button}}
 {{/if}}
 
-{{#truncated-string class="view-title"}}{{title}}{{/truncated-string}}
+{{#truncated-string class="view-title"}}
+  {{title}}
+  {{#if (not editedChart)}}
+    <span class="space"></span>{{one-label-tip title=(tt this "simulationInfo")}}
+  {{/if}}
+{{/truncated-string}}
 
 {{#if (not editorContext.isReadOnly)}}
   {{#one-button

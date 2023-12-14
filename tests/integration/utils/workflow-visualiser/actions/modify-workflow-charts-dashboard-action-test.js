@@ -10,6 +10,7 @@ import {
   getModalBody,
   getModalFooter,
 } from '../../../../helpers/modal';
+import { initialDashboardSpec } from '../../../../helpers/charts-dashboard.editor';
 import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
 import { Promise } from 'rsvp';
 import sinon from 'sinon';
@@ -77,15 +78,7 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-workflow-ch
       const actionResult = await resultPromise;
 
       expect(modifyStub).to.be.calledOnce.and.to.be.calledWith({
-        dashboardSpec: {
-          rootSection: {
-            chartNavigation: 'independent',
-            charts: [],
-            description: '',
-            sections: [],
-            title: { content: 'Untitled section', tip: '' },
-          },
-        },
+        dashboardSpec: initialDashboardSpec,
       });
       expect(actionResult.status).to.equal('done');
     }

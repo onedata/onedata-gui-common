@@ -10,6 +10,7 @@ import {
   getModalBody,
   getModalFooter,
 } from '../../../../helpers/modal';
+import { initialDashboardSpec } from '../../../../helpers/charts-dashboard.editor';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import { Promise } from 'rsvp';
 import sinon from 'sinon';
@@ -77,15 +78,7 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-lane-charts
       const actionResult = await resultPromise;
 
       expect(modifyStub).to.be.calledOnce.and.to.be.calledWith({
-        dashboardSpec: {
-          rootSection: {
-            chartNavigation: 'independent',
-            charts: [],
-            description: '',
-            sections: [],
-            title: { content: 'Untitled section', tip: '' },
-          },
-        },
+        dashboardSpec: initialDashboardSpec,
       });
       expect(actionResult.status).to.equal('done');
     }
