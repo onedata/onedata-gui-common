@@ -7,12 +7,14 @@
  */
 
 import Component from '@ember/component';
-import { set } from '@ember/object';
+import { set, computed } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/modals/workflow-visualiser/charts-dashboard-editor-modal';
 import { reads } from '@ember/object/computed';
 import { trySet } from '@ember/object';
+import _ from 'lodash';
+
 /**
  * @typedef {Object} WorkflowVisualiserChartsDashboardEditorModalOptions
  * @property {'edit'|'view'} mode
@@ -48,6 +50,11 @@ export default Component.extend(I18n, {
   isSubmitting: false,
 
   /**
+   * @type {boolean}
+   */
+  isModelChanged: false,
+
+  /**
    * @type {ComputedProperty<'edit'|'view'>}
    */
   mode: reads('modalOptions.mode'),
@@ -74,11 +81,37 @@ export default Component.extend(I18n, {
   rootSectionBackup: null,
 
   /**
+   * @private
+   * @type {ComputedProperty<() => void>}
+   */
+  modelChangeListener: computed(function modelChangeListener() {
+    return () => {
+      const isModelChanged = !_.isEqual(
+        this.dashboardModel?.rootSection?.toJson() ?? null,
+        this.rootSectionBackup?.toJson() ?? null
+      );
+
+      if (this.isModelChanged !== isModelChanged) {
+        this.set('isModelChanged', isModelChanged);
+      }
+    };
+  }),
+
+  /**
    * @override
    */
   init() {
     this._super(...arguments);
     this.set('rootSectionBackup', this.dashboardModel?.rootSection?.clone() ?? null);
+    this.dashboardModel?.addChangeListener(this.modelChangeListener);
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    this._super(...arguments);
+    this.dashboardModel?.removeChangeListener(this.modelChangeListener);
   },
 
   actions: {

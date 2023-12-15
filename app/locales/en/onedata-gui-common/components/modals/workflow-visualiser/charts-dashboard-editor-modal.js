@@ -6,10 +6,8 @@ export default {
     workflow: 'Workflow charts dashboard editor',
   },
   buttons: {
-    cancel: {
-      edit: 'Cancel',
-      view: 'Close',
-    },
-    submit: 'Save',
+    cancel: 'Discard',
+    submit: 'Apply',
+    close: 'Close',
   },
 };

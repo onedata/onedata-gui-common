@@ -57,11 +57,11 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-workflow-ch
     expect(dashboardEditor).to.not.have.class('read-only');
   });
 
-  it('returns promise with cancelled ActionResult after execute() and modal close using "Cancel"',
+  it('returns promise with cancelled ActionResult after execute() and modal close using "Close"',
     async function () {
       const { resultPromise } = await executeAction(this);
 
-      await click(getModalFooter().querySelector('.btn-cancel'));
+      await click(getModalFooter().querySelector('.btn-close'));
       const actionResult = await resultPromise;
 
       expect(actionResult.status).to.equal('cancelled');

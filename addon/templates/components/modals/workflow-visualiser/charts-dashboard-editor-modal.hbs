@@ -5,7 +5,7 @@
     (concat "mode-" mode)
     (if (eq mode "view") "without-footer modal-content-overlay with-close-button")
   )
-  allowClose=(not isSubmitting)
+  allowClose=isReadOnly
   modalId=modalId
   size="full"
   as |modal|
@@ -25,23 +25,33 @@
 
   {{#if (not-eq mode "view")}}
     {{#modal.footer class="btn-toolbar"}}
-      {{#bs-button
-        type="default"
-        class="btn-cancel"
-        onClick=(action "cancel" modal.close)
-        disabled=isSubmitting
-      }}
-        {{tt this (concat "buttons.cancel." mode)}}
-      {{/bs-button}}
+      {{#if isModelChanged}}
+        {{#bs-button
+          type="warning"
+          class="btn-cancel"
+          onClick=(action "cancel" modal.close)
+          disabled=isSubmitting
+        }}
+          {{tt this (concat "buttons.cancel")}}
+        {{/bs-button}}
 
-      {{#one-button
-        type="primary"
-        buttonType="submit"
-        class="btn-submit"
-        onClick=(action "submit" modal.submit)
-      }}
-        {{tt this "buttons.submit"}}
-      {{/one-button}}
+        {{#one-button
+          type="primary"
+          buttonType="submit"
+          class="btn-submit"
+          onClick=(action "submit" modal.submit)
+        }}
+          {{tt this "buttons.submit"}}
+        {{/one-button}}
+      {{else}}
+        {{#one-button
+          type="default"
+          class="btn-close"
+          onClick=modal.close
+        }}
+          {{tt this "buttons.close"}}
+        {{/one-button}}
+      {{/if}}
     {{/modal.footer}}
   {{/if}}
 

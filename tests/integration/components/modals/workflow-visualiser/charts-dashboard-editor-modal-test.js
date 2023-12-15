@@ -59,18 +59,33 @@ describe('Integration | Component | modals/workflow-visualiser/charts-dashboard-
       this.set('modalOptions.mode', 'edit');
     });
 
-    it('has a cancel and a save button in the footer', async function () {
-      await showModal(this);
+    it('has only a close button in the footer when nothing is modified',
+      async function () {
+        await showModal(this);
 
-      const modalFooter = getModalFooter();
-      const cancelBtn = modalFooter.querySelector('.btn-cancel');
-      const saveBtn = modalFooter.querySelector('.btn-submit');
+        const modalFooter = getModalFooter();
+        const closeBtn = modalFooter.querySelector('.btn-close');
 
-      expect(cancelBtn).to.have.class('btn-default');
-      expect(cancelBtn).to.have.trimmed.text('Cancel');
-      expect(saveBtn).to.have.class('btn-primary');
-      expect(saveBtn).to.have.trimmed.text('Save');
-    });
+        expect(closeBtn).to.have.class('btn-default');
+        expect(closeBtn).to.have.trimmed.text('Close');
+        expect(modalFooter.querySelectorAll('button')).to.have.length(1);
+      });
+
+    it('has a discard and an apply button in the footer when something is modified',
+      async function () {
+        await showModal(this);
+        await click(getModalBody().querySelector('.create-btn'));
+
+        const modalFooter = getModalFooter();
+        const discardBtn = modalFooter.querySelector('.btn-cancel');
+        const applyBtn = modalFooter.querySelector('.btn-submit');
+
+        expect(discardBtn).to.have.class('btn-warning');
+        expect(discardBtn).to.have.trimmed.text('Discard');
+        expect(applyBtn).to.have.class('btn-primary');
+        expect(applyBtn).to.have.trimmed.text('Apply');
+        expect(modalFooter.querySelectorAll('button')).to.have.length(2);
+      });
 
     it('shows dashboard definition content', async function () {
       this.set('modalOptions.dashboardOwner', Workflow.create({
