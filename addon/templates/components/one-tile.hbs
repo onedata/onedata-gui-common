@@ -3,6 +3,9 @@
     <span class="one-label">
       {{title}}
     </span>
+    {{#if titleTip}}
+      {{one-label-tip tooltipClass=titleTooltipClass title=titleTip}}
+    {{/if}}
     {{#if moreText}}
       {{#if linkToParams}}
         {{#link-to params=linkToParams class="more-link"}}
