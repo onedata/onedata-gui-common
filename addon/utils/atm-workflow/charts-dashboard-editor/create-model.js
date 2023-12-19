@@ -40,8 +40,28 @@ export function createModelFromSpec(dashboardSpec, elementsOwner, dataSources) {
     ) : null;
 
   return Model.create({
+    elementsOwner,
+    dataSources: dataSources ?? [],
     rootSection,
   });
+}
+
+/**
+ * Generates and assigns new content for existing dashboard model using passed spec.
+ * @param {AtmTimeSeriesDashboardSpec | null} newDashboardSpec
+ * @param {Utils.AtmWorkflow.ChartsDashboardEditor.Model} dashboardModel
+ */
+export function useNewSpecInModel(newDashboardSpec, dashboardModel) {
+  const newRootSection = newDashboardSpec?.rootSection ?
+    createSectionModelFromSpec(
+      newDashboardSpec.rootSection,
+      dashboardModel.elementsOwner,
+      true,
+      dashboardModel.dataSources
+    ) : null;
+  const oldRootSection = dashboardModel.rootSection;
+  set(dashboardModel, 'rootSection', newRootSection);
+  oldRootSection?.destroy();
 }
 
 /**
@@ -67,9 +87,10 @@ export function createNewSection(
  * Returns new, empty chart.
  * @param {Ember.Service} i18n
  * @param {unknown} [elementOwner]
+ * @param {Array<ChartsDashboardEditorDataSource>} [dataSources]
  * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Chart}
  */
-export function createNewChart(i18n, elementOwner = null) {
+export function createNewChart(i18n, elementOwner = null, dataSources = []) {
   return createChartModelFromSpec({
     title: {
       content: String(i18n.t(`${i18nPrefix}.newChart.title`)),
@@ -78,33 +99,35 @@ export function createNewChart(i18n, elementOwner = null) {
       id: generateId(),
       name: String(i18n.t(`${i18nPrefix}.newAxis.name`)),
     }],
-  }, elementOwner);
+  }, elementOwner, dataSources);
 }
 
 /**
  * Returns new, empty axis.
  * @param {Ember.Service} i18n
  * @param {unknown} [elementOwner]
+ * @param {Array<ChartsDashboardEditorDataSource>} [dataSources]
  * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Axis}
  */
-export function createNewAxis(i18n, elementOwner = null) {
+export function createNewAxis(i18n, elementOwner = null, dataSources = []) {
   return createAxisModelFromSpec({
     id: generateId(),
     name: String(i18n.t(`${i18nPrefix}.newAxis.name`)),
-  }, elementOwner);
+  }, elementOwner, dataSources);
 }
 
 /**
  * Returns new, empty series group.
  * @param {Ember.Service} i18n
  * @param {unknown} [elementOwner]
+ * @param {Array<ChartsDashboardEditorDataSource>} [dataSources]
  * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup}
  */
-export function createNewSeriesGroup(i18n, elementOwner = null) {
+export function createNewSeriesGroup(i18n, elementOwner = null, dataSources = []) {
   return createSeriesGroupModelFromSpec({
     id: generateId(),
     name: String(i18n.t(`${i18nPrefix}.newSeriesGroup.name`)),
-  }, elementOwner);
+  }, elementOwner, dataSources);
 }
 
 /**
@@ -135,12 +158,7 @@ export function createNewSeries(i18n, elementOwner = null, dataSources = []) {
  */
 export function createNewFunction(functionName, elementOwner = null, dataSources = []) {
   const functionElemSpec = functions[functionName];
-  const functionProps = { elementOwner };
-  if (functionElemSpec?.needsDataSources) {
-    functionProps.dataSources = dataSources;
-  }
-
-  return functionElemSpec.modelClass.create(functionProps);
+  return functionElemSpec.modelClass.create({ elementOwner, dataSources });
 }
 
 /**
@@ -159,6 +177,7 @@ export function createSectionModelFromSpec(
   const section = Section.create({
     elementOwner,
     isRoot,
+    dataSources,
     title: sectionSpec.title?.content ?? '',
     titleTip: sectionSpec.title?.tip ?? '',
     description: sectionSpec.description ?? '',
@@ -192,11 +211,14 @@ export function createChartModelFromSpec(
 ) {
   const chart = Chart.create({
     elementOwner,
+    dataSources,
     title: chartSpec.title?.content ?? '',
     titleTip: chartSpec.title?.tip ?? '',
     axes: chartSpec.yAxes
       ?.filter(Boolean)
-      .map((axisSpec) => createAxisModelFromSpec(axisSpec, elementOwner)) ?? [],
+      .map((axisSpec) =>
+        createAxisModelFromSpec(axisSpec, elementOwner, dataSources)
+      ) ?? [],
     seriesGroups: chartSpec.seriesGroupBuilders
       ?.filter((builder) =>
         builder?.builderType === 'static' &&
@@ -204,7 +226,8 @@ export function createChartModelFromSpec(
       )
       .map((builder) => createSeriesGroupModelFromSpec(
         builder.builderRecipe.seriesGroupTemplate,
-        elementOwner
+        elementOwner,
+        dataSources
       )) ?? [],
   });
   const axesMap = {};
@@ -245,9 +268,10 @@ export function createChartModelFromSpec(
 /**
  * @param {Partial<OTSCRawYAxis>} axisSpec
  * @param {unknown} [elementOwner]
+ * @param {Array<ChartsDashboardEditorDataSource>} [dataSources]
  * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.Axis}
  */
-function createAxisModelFromSpec(axisSpec, elementOwner = null) {
+function createAxisModelFromSpec(axisSpec, elementOwner = null, dataSources = []) {
   const unitOptionsType = getUnitOptionsTypeForUnitName(axisSpec.unitName);
   let unitOptions = null;
   if (unitOptionsType === 'BytesUnitOptions') {
@@ -263,14 +287,16 @@ function createAxisModelFromSpec(axisSpec, elementOwner = null) {
 
   const axisOutputFunc = functions.axisOutput.modelClass.create({
     elementOwner,
+    dataSources,
   });
   let valueProviderFunction;
   if (axisSpec.valueProvider) {
     valueProviderFunction =
-      createFunctionFromSpec(axisSpec.valueProvider, elementOwner);
+      createFunctionFromSpec(axisSpec.valueProvider, elementOwner, dataSources);
   } else {
     valueProviderFunction = functions.currentValue.modelClass.create({
       elementOwner,
+      dataSources,
     });
   }
   set(valueProviderFunction, 'parent', axisOutputFunc);
@@ -278,6 +304,7 @@ function createAxisModelFromSpec(axisSpec, elementOwner = null) {
 
   const axis = Axis.create({
     elementOwner,
+    dataSources,
     id: axisSpec.id,
     name: axisSpec.name,
     unitName: axisSpec.unitName ?? 'none',
@@ -295,11 +322,17 @@ function createAxisModelFromSpec(axisSpec, elementOwner = null) {
 /**
  * @param {Partial<OTSCRawSeriesGroup>} seriesGroupSpec
  * @param {unknown} [elementOwner]
+ * @param {Array<ChartsDashboardEditorDataSource>} [dataSources]
  * @returns {Utils.AtmWorkflow.ChartsDashboardEditor.SeriesGroup}
  */
-function createSeriesGroupModelFromSpec(seriesGroupSpec, elementOwner = null) {
+function createSeriesGroupModelFromSpec(
+  seriesGroupSpec,
+  elementOwner = null,
+  dataSources = []
+) {
   const seriesGroup = SeriesGroup.create({
     elementOwner,
+    dataSources,
     id: seriesGroupSpec.id,
     name: seriesGroupSpec.name,
     stacked: Boolean(seriesGroupSpec.stacked),
@@ -307,7 +340,7 @@ function createSeriesGroupModelFromSpec(seriesGroupSpec, elementOwner = null) {
     seriesGroups: seriesGroupSpec.subgroups
       ?.filter(Boolean)
       .map((subgroupSpec) =>
-        createSeriesGroupModelFromSpec(subgroupSpec, elementOwner)
+        createSeriesGroupModelFromSpec(subgroupSpec, elementOwner, dataSources)
       ) ?? [],
   });
   seriesGroup.seriesGroups.forEach((subgroup) =>
@@ -394,6 +427,7 @@ function createSeriesModelFromSpec(
   }
   const seriesOutputFunc = functions.seriesOutput.modelClass.create({
     elementOwner,
+    dataSources,
     parent: series,
   });
   if (dataProvider) {
@@ -431,10 +465,7 @@ export function createFunctionFromSpec(
     functionName = 'loadRepeatedSeries';
   }
   const functionElemSpec = functions[functionName];
-  const functionProps = { elementOwner };
-  if (functionElemSpec?.needsDataSources) {
-    functionProps.dataSources = dataSources;
-  }
+  const functionProps = { elementOwner, dataSources };
   const convertAnySpecToFunction = (nestedFuncSpec) => {
     if (!nestedFuncSpec) {
       return null;

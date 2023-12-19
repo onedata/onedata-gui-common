@@ -46,13 +46,6 @@ const Series = ElementBase.extend({
 
   /**
    * @public
-   * @virtual
-   * @type {Array<ChartsDashboardEditorDataSource>}
-   */
-  dataSources: undefined,
-
-  /**
-   * @public
    * @virtual optional
    * @type {boolean}
    */
@@ -111,11 +104,6 @@ const Series = ElementBase.extend({
    * @type {Array<Utils.AtmWorkflow.ChartsDashboardEditor.FunctionsModel.FunctionBase>}
    */
   detachedFunctions: undefined,
-
-  /**
-   * @override
-   */
-  needsDataSources: true,
 
   /**
    * Set in `init`.
@@ -243,11 +231,11 @@ const Series = ElementBase.extend({
   /**
    * @override
    */
-  clone() {
+  clone(preserveReferences = false) {
     const seriesClone = Series.create({
       elementOwner: this.elementOwner,
-      id: generateId(),
       dataSources: this.dataSources,
+      id: generateId(),
       repeatPerPrefixedTimeSeries: this.repeatPerPrefixedTimeSeries,
       prefixedTimeSeriesRef: this.prefixedTimeSeriesRef ?
         EmberObject.create(this.prefixedTimeSeriesRef) : this.prefixedTimeSeriesRef,
@@ -256,8 +244,9 @@ const Series = ElementBase.extend({
       axis: this.axis,
       color: this.color,
       group: this.group,
-      dataProvider: this.dataProvider?.clone(),
-      detachedFunctions: this.detachedFunctions.map((func) => func.clone()),
+      dataProvider: this.dataProvider?.clone(preserveReferences),
+      detachedFunctions: this.detachedFunctions
+        .map((func) => func.clone(preserveReferences)),
       parent: this.parent,
     });
 
@@ -289,7 +278,8 @@ const Series = ElementBase.extend({
             sourceSpec: {
               externalSourceName: 'store',
               externalSourceParameters: {
-                collectionRef: this.prefixedTimeSeriesRef.collectionRef,
+                collectionRef: this.prefixedTimeSeriesRef.collectionRef ??
+                  this.defaultDataSource?.collectionRef,
                 timeSeriesNameGenerator: this.prefixedTimeSeriesRef
                   .timeSeriesNameGenerator,
                 metricNames: this.prefixedTimeSeriesRef.metricNames,
@@ -353,6 +343,20 @@ const Series = ElementBase.extend({
         },
       },
     };
+  },
+
+  /**
+   * @override
+   */
+  * nestedElements() {
+    if (this.dataProvider) {
+      yield this.dataProvider;
+      yield* this.dataProvider.nestedElements();
+    }
+    for (const detachedFunction of this.detachedFunctions) {
+      yield detachedFunction;
+      yield* detachedFunction.nestedElements();
+    }
   },
 
   /**

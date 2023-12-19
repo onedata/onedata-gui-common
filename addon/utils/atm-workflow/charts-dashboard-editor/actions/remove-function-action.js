@@ -7,7 +7,7 @@
  */
 
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
-import { set } from '@ember/object';
+import { set, setProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { ChangedElementsSet } from './utils';
 
@@ -110,7 +110,10 @@ export default Action.extend({
       }
     }
 
-    set(this.functionToRemove, 'isRemoved', false);
+    setProperties(this.functionToRemove, {
+      isRemoved: false,
+      dataSources: this.functionToRemove.parent?.dataSources ?? [],
+    });
     changedElements.notifyAboutChange();
   },
 

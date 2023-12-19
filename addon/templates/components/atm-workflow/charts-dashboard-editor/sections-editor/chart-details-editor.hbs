@@ -7,6 +7,8 @@
   size="sm"
   onClick=(action "editContent")
 }}
-  {{one-icon icon="browser-rename"}}
-  <span class="text">{{tt this "editContent"}}</span>
+  {{one-icon icon=(if editorContext.isReadOnly "view" "browser-rename")}}
+  <span class="text">
+    {{tt this (if editorContext.isReadOnly "viewContent" "editContent")}}
+  </span>
 {{/one-button}}

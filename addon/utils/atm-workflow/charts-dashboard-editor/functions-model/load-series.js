@@ -30,13 +30,6 @@ const LoadSeriesFunction = FunctionBase.extend({
   /**
    * @public
    * @virtual
-   * @type {Array<ChartsDashboardEditorDataSource>}
-   */
-  dataSources: undefined,
-
-  /**
-   * @public
-   * @virtual
    * @type {EmberObject<TimeSeriesRef>}
    */
   timeSeriesRef: undefined,
@@ -52,11 +45,6 @@ const LoadSeriesFunction = FunctionBase.extend({
    * @override
    */
   name: 'loadSeries',
-
-  /**
-   * @override
-   */
-  needsDataSources: true,
 
   /**
    * @override
@@ -145,7 +133,8 @@ const LoadSeriesFunction = FunctionBase.extend({
             data: {
               externalSourceName: 'store',
               externalSourceParameters: {
-                collectionRef: this.timeSeriesRef.collectionRef,
+                collectionRef: this.timeSeriesRef.collectionRef ??
+                  this.defaultDataSource?.collectionRef,
                 timeSeriesNameGenerator: this.timeSeriesRef.timeSeriesNameGenerator,
                 timeSeriesName: this.timeSeriesRef.timeSeriesName,
                 metricNames: this.timeSeriesRef.metricNames,
@@ -217,7 +206,6 @@ export default Object.freeze({
     FunctionExecutionContext.Series,
     FunctionExecutionContext.RepeatedSeries,
   ],
-  needsDataSources: true,
   modelClass: LoadSeriesFunction,
   createFromSpec,
 });

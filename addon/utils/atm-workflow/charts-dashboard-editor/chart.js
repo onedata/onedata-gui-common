@@ -19,13 +19,6 @@ const Chart = ElementBase.extend({
 
   /**
    * @public
-   * @virtual
-   * @type {Array<ChartsDashboardEditorDataSource>}
-   */
-  dataSources: undefined,
-
-  /**
-   * @public
    * @virtual optional
    * @type {string}
    */
@@ -60,14 +53,16 @@ const Chart = ElementBase.extend({
   series: undefined,
 
   /**
-   * @override
+   * @public
+   * @virtual optional
+   * @type {boolean}
    */
-  referencingPropertyNames: Object.freeze(['axes', 'seriesGroups', 'series', 'parent']),
+  isSelected: false,
 
   /**
    * @override
    */
-  needsDataSources: true,
+  referencingPropertyNames: Object.freeze(['axes', 'seriesGroups', 'series', 'parent']),
 
   /**
    * @override
@@ -149,9 +144,9 @@ const Chart = ElementBase.extend({
       dataSources: this.dataSources,
       title: this.title,
       titleTip: this.titleTip,
-      axes: this.axes.map((axis) => axis.clone()),
-      seriesGroups: this.seriesGroups.map((group) => group.clone()),
-      series: this.series.map((series) => series.clone()),
+      axes: this.axes.map((axis) => axis.clone(true)),
+      seriesGroups: this.seriesGroups.map((group) => group.clone(true)),
+      series: this.series.map((series) => series.clone(true)),
       parent: this.parent,
     });
     [
@@ -161,6 +156,14 @@ const Chart = ElementBase.extend({
     ].forEach((element) => {
       set(element, 'parent', clonedInstance);
     });
+    ['axes', 'deepSeriesGroups', 'series'].forEach((collectionName) => {
+      const oldCollection = this[collectionName];
+      const newCollection = clonedInstance[collectionName];
+      for (let i = 0; i < oldCollection.length; i++) {
+        clonedInstance.replaceReference(oldCollection[i], newCollection[i]);
+      }
+    });
+
     return clonedInstance;
   },
 

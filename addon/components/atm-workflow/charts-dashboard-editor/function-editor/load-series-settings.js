@@ -59,6 +59,7 @@ export default FunctionSettingsBase.extend({
   replaceEmptyParameters: reads('chartFunction.replaceEmptyParameters'),
 
   formValuesUpdater: observer(
+    'chartFunction.defaultDataSource',
     'timeSeriesRef.{collectionRef,timeSeriesNameGenerator,timeSeriesName,metricNames}',
     'replaceEmptyParameters{strategy,fallbackValue}',
     function formValuesUpdater() {
@@ -116,7 +117,8 @@ export default FunctionSettingsBase.extend({
   updateFormValues() {
     updateTimeSeriesSelectorFormValues(
       this.mainForm.valuesSource.timeSeriesSelector,
-      this.chartFunction?.timeSeriesRef
+      this.chartFunction?.timeSeriesRef,
+      this.chartFunction?.defaultDataSource
     );
 
     this.mainForm.invalidFields.forEach((field) => field.markAsModified());
@@ -140,9 +142,16 @@ export default FunctionSettingsBase.extend({
   },
 });
 
-export function updateTimeSeriesSelectorFormValues(valuesSource, timeSeriesRef) {
+export function updateTimeSeriesSelectorFormValues(
+  valuesSource,
+  timeSeriesRef,
+  defaultDataSource
+) {
+  const defaultValues = {
+    collectionRef: defaultDataSource?.collectionRef ?? '',
+  };
   ['collectionRef', 'timeSeriesNameGenerator', 'timeSeriesName'].forEach((propName) => {
-    const newValue = timeSeriesRef?.[propName] ?? '';
+    const newValue = timeSeriesRef?.[propName] ?? defaultValues[propName] ?? '';
     if (newValue !== valuesSource[propName]) {
       set(valuesSource, propName, newValue);
     }
@@ -170,10 +179,16 @@ const CollectionRefField = DropdownField.extend({
    * @override
    */
   options: computed('parent.dataSources', function options() {
-    return this.parent.dataSources?.map(({ name, collectionRef }) => ({
-      label: name,
-      value: collectionRef,
-    })) ?? [];
+    return this.parent.dataSources?.map(({ originName, collectionRef }) => {
+      const originType = collectionRef.split('-')[0] ?? 'unknown';
+
+      return {
+        label: this.getTranslation(`sourceLabels.${originType}`, { originName }, {
+          defaultValue: this.getTranslation('sourceLabels.unknown'),
+        }),
+        value: collectionRef,
+      };
+    }) ?? [];
   }),
 });
 

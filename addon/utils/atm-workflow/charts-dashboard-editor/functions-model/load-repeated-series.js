@@ -54,6 +54,7 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
    */
   clone() {
     return LoadRepeatedSeriesFunction.create({
+      dataSources: this.dataSources,
       replaceEmptyParameters: this.replaceEmptyParameters ?
         EmberObject.create(this.replaceEmptyParameters) : null,
       positionRelativeToRootFunc: this.positionRelativeToRootFunc,

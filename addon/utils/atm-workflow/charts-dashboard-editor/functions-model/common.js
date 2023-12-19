@@ -34,7 +34,6 @@ export const FunctionExecutionContext = Object.freeze({
  * @property {Array<FunctionDataType>} returnedTypes
  * @property {boolean} [isNotAvailableForUser]
  * @property {Array<FunctionExecutionContext>} [allowedContexts]
- * @property {boolean} needsDataSources
  * @property {{ new (): T }} modelClass
  * @property {(spec: unknown, fieldsToInject: Partial<T>, convertAnySpecToFunction: (spec: unknown) => FunctionBase) => T} createFromSpec
  */

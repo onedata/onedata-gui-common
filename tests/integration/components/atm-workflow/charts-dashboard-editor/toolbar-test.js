@@ -130,7 +130,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/toolbar
   it('shows "dashboard overview" title when chart editor is not active', async function () {
     await renderComponent();
 
-    expect(find('.view-title')).to.have.text('Dashboard overview');
+    expect(find('.view-title')).to.have.trimmed.text('Dashboard overview');
   });
 
   it('shows "chart X editor" title when chart editor is active and chart has a title',
@@ -143,7 +143,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/toolbar
 
       await renderComponent();
 
-      expect(find('.view-title')).to.have.text('Chart "abc" editor');
+      expect(find('.view-title')).to.have.trimmed.text('Chart "abc" editor');
     }
   );
 
@@ -157,7 +157,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor/toolbar
 
       await renderComponent();
 
-      expect(find('.view-title')).to.have.text('Chart editor');
+      expect(find('.view-title')).to.have.trimmed.text('Chart editor');
     }
   );
 

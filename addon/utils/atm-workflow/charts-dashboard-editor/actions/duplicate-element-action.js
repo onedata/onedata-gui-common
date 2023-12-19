@@ -7,7 +7,7 @@
  */
 
 import Action, { ActionUndoPossibility } from 'onedata-gui-common/utils/action';
-import { set, computed } from '@ember/object';
+import { set, setProperties, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { getCollectionFieldName } from './utils';
 
@@ -77,7 +77,12 @@ export default Action.extend({
       this.set('createdDuplicate', this.elementToDuplicate.clone());
     } else {
       [this.createdDuplicate, ...this.createdDuplicate.nestedElements()]
-      .forEach((element) => set(element, 'isRemoved', false));
+      .forEach((element) => {
+        setProperties(element, {
+          isRemoved: false,
+          dataSources: this.elementToDuplicate.dataSources,
+        });
+      });
     }
 
     const parent = this.elementToDuplicate.parent;

@@ -57,8 +57,8 @@ export default Component.extend(I18n, {
 
       if (this.model?.elementType === ElementType.Chart) {
         actions.unshift({
-          name: 'editContent',
-          icon: 'browser-rename',
+          name: this.editorContext.isReadOnly ? 'viewContent' : 'editContent',
+          icon: this.editorContext.isReadOnly ? 'view' : 'browser-rename',
         });
       }
 
@@ -66,15 +66,26 @@ export default Component.extend(I18n, {
     }
   ),
 
+  showChartEditor() {
+    const action = this.editorContext.actionsFactory.createEditChartContentAction({
+      chart: this.model,
+    });
+    action.execute();
+  },
+
   actions: {
     /**
      * @returns {void}
      */
+    viewContent() {
+      this.showChartEditor();
+    },
+
+    /**
+     * @returns {void}
+     */
     editContent() {
-      const action = this.editorContext.actionsFactory.createEditChartContentAction({
-        chart: this.model,
-      });
-      action.execute();
+      this.showChartEditor();
     },
 
     /**

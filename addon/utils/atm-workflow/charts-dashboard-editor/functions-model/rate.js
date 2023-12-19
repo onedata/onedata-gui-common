@@ -56,6 +56,7 @@ const RateFunction = FunctionBase.extend({
    */
   clone() {
     const functionClone = RateFunction.create({
+      dataSources: this.dataSources,
       data: this.data?.clone(),
       timeSpan: this.timeSpan,
       positionRelativeToRootFunc: this.positionRelativeToRootFunc,

@@ -150,15 +150,17 @@ const SeriesGroup = ElementBase.extend({
   /**
    * @override
    */
-  clone() {
+  clone(preserveReferences = false) {
     const clonedInstance = SeriesGroup.create({
       elementOwner: this.elementOwner,
+      dataSources: this.dataSources,
       id: generateId(),
       name: this.name,
       stacked: this.stacked,
       showSum: this.showSum,
-      seriesGroups: this.seriesGroups.map((subgroup) => subgroup.clone()),
-      series: [],
+      seriesGroups: this.seriesGroups
+        .map((subgroup) => subgroup.clone(preserveReferences)),
+      series: preserveReferences ? [...this.series] : [],
       parent: this.parent,
     });
     clonedInstance.seriesGroups.forEach((element) => {

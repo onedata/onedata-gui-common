@@ -7,8 +7,10 @@
  */
 
 import EmberObject, { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { resolve } from 'rsvp';
 import { getStoreReadDataSpec } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
+import ChartsDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-model-container';
 
 export default EmberObject.extend({
   /**
@@ -21,12 +23,6 @@ export default EmberObject.extend({
    * @type {String}
    */
   id: undefined,
-
-  /**
-   * @virtual
-   * @type {String}
-   */
-  schemaId: undefined,
 
   /**
    * @virtual optional
@@ -71,6 +67,13 @@ export default EmberObject.extend({
   requiresInitialContent: undefined,
 
   /**
+   * If this store is an internal store of some element (like audit log store
+   * of a task), then that element is a `containerElement` of this store.
+   * @type {Utils.WorkflowVisualiser.VisualiserRecord}
+   */
+  containerElement: undefined,
+
+  /**
    * If true, then the content of this store can change, hence any content preview
    * should be updated regularly.
    * @virtual optional
@@ -107,6 +110,56 @@ export default EmberObject.extend({
   readDataSpec: computed('type', 'config', function readDataSpec() {
     return getStoreReadDataSpec(this.getProperties('type', 'config'));
   }),
+
+  /**
+   * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
+   */
+  chartsDashboardEditorDataSources: computed(
+    'id',
+    'name',
+    'config.timeSeriesCollectionSchema',
+    'containerElement.chartsDashboardEditorDataSources',
+    function chartsDashboardEditorDataSources() {
+      // We include container element's data sources, because internal stores are considered
+      // a part of its container, hence they have access to container's time series data.
+      const dataSources = [
+        ...(this.containerElement?.chartsDashboardEditorDataSources ?? []),
+      ];
+
+      if (
+        this.id &&
+        this.config?.timeSeriesCollectionSchema
+      ) {
+        dataSources.push({
+          originName: this.name ?? '',
+          collectionRef: `store-${this.id}`,
+          timeSeriesCollectionSchema: this.config.timeSeriesCollectionSchema,
+          isDefault: dataSources.length === 0,
+        });
+      }
+
+      return dataSources;
+    }
+  ),
+
+  /**
+   * @type {ComputedPropertyChartsDashboardEditorModelContainer>}
+   */
+  chartsDashboardEditorModelContainer: computed(
+    function chartsDashboardEditorModelContainer() {
+      return ChartsDashboardEditorModelContainer.extend({
+        dashboardSpec: reads('relatedElement.config.dashboardSpec'),
+      }).create({
+        relatedElement: this,
+        onPropagateChange: (newDashboardSpec) => this.modify({
+          config: {
+            ...this.config,
+            dashboardSpec: newDashboardSpec,
+          },
+        }),
+      });
+    }
+  ),
 
   init() {
     this._super(...arguments);

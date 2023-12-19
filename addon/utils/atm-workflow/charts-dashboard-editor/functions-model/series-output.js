@@ -49,6 +49,7 @@ const SeriesOutputFunction = FunctionBase.extend({
    */
   clone() {
     const functionClone = SeriesOutputFunction.create({
+      dataSources: this.dataSources,
       data: this.data?.clone(),
       positionRelativeToRootFunc: this.positionRelativeToRootFunc,
       parent: this.parent,

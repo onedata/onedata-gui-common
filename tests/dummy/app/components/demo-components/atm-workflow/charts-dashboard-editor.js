@@ -7,12 +7,12 @@ import {
 export default Component.extend({
   isReadOnly: false,
 
-  dashboardModel: computed(() => {
-    return createModelFromSpec(null, this);
+  dashboardModel: computed('dataSources', function dashboardModel() {
+    return createModelFromSpec(null, this, this.dataSources);
   }),
 
   dataSources: Object.freeze([{
-    name: 'Store "abc"',
+    originName: 'abc',
     collectionRef: 'store-abc',
     timeSeriesCollectionSchema: {
       timeSeriesSchemas: [{
@@ -59,9 +59,8 @@ export default Component.extend({
         },
       }],
     },
-    isDefault: true,
   }, {
-    name: 'Task "task1" time series',
+    originName: 'task1',
     collectionRef: 'task-task1',
     timeSeriesCollectionSchema: {
       timeSeriesSchemas: [{

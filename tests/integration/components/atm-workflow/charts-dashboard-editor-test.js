@@ -779,7 +779,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     await click(helper.sectionsEditorStructure.charts[0].editContentTrigger);
 
     expect(find('.chart-editor')).to.exist;
-    expect(find('.view-title')).to.have.text('Chart "1" editor');
+    expect(find('.view-title')).to.have.trimmed.text('Chart "1" editor');
   });
 
   it('allows to edit charts content via "edit content" in sidebar', async function () {
@@ -797,7 +797,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     await click(find('.chart-details-editor .edit-content'));
 
     expect(find('.chart-editor')).to.exist;
-    expect(find('.view-title')).to.have.text('Chart "1" editor');
+    expect(find('.view-title')).to.have.trimmed.text('Chart "1" editor');
   });
 
   it('allows to close chart content editor via "back" button', async function () {
@@ -815,7 +815,7 @@ describe('Integration | Component | atm-workflow/charts-dashboard-editor (main)'
     await click('.back-btn');
 
     expect(find('.chart-editor')).to.not.exist;
-    expect(find('.view-title')).to.have.text('Dashboard overview');
+    expect(find('.view-title')).to.have.trimmed.text('Dashboard overview');
     expect(helper.sectionsEditorStructure.charts[0].isSelected).to.be.true;
   });
 
