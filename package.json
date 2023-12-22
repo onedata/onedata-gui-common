@@ -147,7 +147,7 @@
     "webui-popover": "git+https://github.com/michalborzecki/webui-popover.git#83d0eca5b89b1dec86bdcbba463fe7b94f2e3ae0"
   },
   "engines": {
-    "node": ">= 14.*"
+    "node": ">= 18.*"
   },
   "private": true,
   "ember-addon": {
