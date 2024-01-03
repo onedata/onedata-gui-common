@@ -91,7 +91,7 @@ export enum GlobalName {
 const isTestingEnv = config.environment === 'test';
 
 export class Globals {
-  public get window(): Window {
+  public get window(): Window & typeof globalThis {
     return this.getGlobal(GlobalName.Window);
   }
 
@@ -115,11 +115,11 @@ export class Globals {
     return this.getGlobal(GlobalName.SessionStorage);
   }
 
-  public get fetch(): typeof fetch {
+  public get fetch(): typeof this.nativeWindow['fetch'] {
     return this.getGlobal(GlobalName.Fetch);
   }
 
-  public get nativeWindow(): Window {
+  public get nativeWindow(): Window & typeof globalThis {
     return this.getNativeGlobal(GlobalName.Window);
   }
 
@@ -143,11 +143,11 @@ export class Globals {
     return this.getNativeGlobal(GlobalName.SessionStorage);
   }
 
-  public get nativeFetch(): typeof fetch {
+  public get nativeFetch(): typeof this.nativeWindow['fetch'] {
     return this.getNativeGlobal(GlobalName.Fetch);
   }
 
-  private mocks: { [key in GlobalName]?: typeof window[key] } = {};
+  private mocks: { [key in GlobalName]?: typeof this.nativeWindow[key] } = {};
 
   public mock<T extends GlobalName>(globalName: T, mock: unknown): void {
     if (!isTestingEnv) {
@@ -176,7 +176,7 @@ export class Globals {
           } else {
             const nativeValue = nativeGlobal[
               propertyName as keyof typeof nativeGlobal
-            ] as Function | unknown;
+            ] as unknown;
             return typeof nativeValue === 'function' ?
               nativeValue.bind(nativeGlobal) : nativeValue;
           }
@@ -189,9 +189,9 @@ export class Globals {
           }
           return true;
         },
-      }) as typeof window[T];
+      }) as typeof this.nativeWindow[T];
     } else {
-      this.mocks[globalName] = mock as typeof window[T];
+      this.mocks[globalName] = mock as typeof this.nativeWindow[T];
     }
   }
 
@@ -206,21 +206,23 @@ export class Globals {
     }
   }
 
-  private getGlobal<T extends GlobalName>(globalName: T): typeof window[T] {
+  private getGlobal<T extends GlobalName>(globalName: T): typeof this.nativeWindow[T] {
     if (isTestingEnv && this.mocks[globalName]) {
-      return this.mocks[globalName] as typeof window[T];
+      return this.mocks[globalName] as typeof this.nativeWindow[T];
     }
 
     return this.getNativeGlobal(globalName);
   }
 
-  private getNativeGlobal<T extends GlobalName>(globalName: T): typeof window[T] {
+  private getNativeGlobal<T extends GlobalName>(
+    globalName: T
+  ): typeof this.nativeWindow[T] {
     /* eslint-disable-next-line no-restricted-globals */
     const nativeGlobal = window[globalName];
     return (
       typeof nativeGlobal === 'function' ?
-        nativeGlobal.bind(window) : nativeGlobal
-    ) as typeof window[T];
+        nativeGlobal.bind(this.nativeWindow) : nativeGlobal
+    ) as typeof this.nativeWindow[T];
   }
 }
 
