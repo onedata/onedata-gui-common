@@ -104,7 +104,16 @@ $-tile-separator-color: #dcdcdc;
   }
 
   .tile-title {
+    display: flex;
+    align-items: flex-start;
     position: relative;
+    .one-label {
+      + .one-label-tip {
+        display: flex;
+        margin-left: 0.6em;
+        line-height: normal;
+      }
+    }
   }
 
   h1.tile-title, .more-link {
