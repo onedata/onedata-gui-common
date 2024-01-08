@@ -88,15 +88,18 @@ export default EmberObject.extend({
       } = (this.timeSeriesRef ?? {});
       if (collectionRef) {
         const collectionRefHistory =
-          this.historicalTimeSeriesRefs[collectionRef] ??= {};
+          this.historicalTimeSeriesRefs[collectionRef] ??= {
+            timeSeriesNameGenerators: {},
+          };
         collectionRefHistory.lastTimeSeriesNameGenerator =
           timeSeriesNameGenerator;
         if (timeSeriesNameGenerator) {
-          collectionRefHistory[timeSeriesNameGenerator] = {
+          collectionRefHistory.timeSeriesNameGenerators[timeSeriesNameGenerator] = {
             metricNames: metricNames,
           };
           if (!this.ignoreTimeSeriesName) {
-            collectionRefHistory[timeSeriesNameGenerator].timeSeriesName =
+            collectionRefHistory
+              .timeSeriesNameGenerators[timeSeriesNameGenerator].timeSeriesName =
               timeSeriesName;
           }
         }

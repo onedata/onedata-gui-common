@@ -119,7 +119,7 @@ function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
     strategy: spec.functionArguments?.strategyProvider?.functionArguments?.data ??
       ReplaceEmptyStrategy.UseFallback,
     fallbackValue: spec.functionArguments?.fallbackValueProvider
-      ?.functionArguments?.data,
+      ?.functionArguments?.data ?? null,
   });
   if (funcElement.data) {
     set(funcElement.data, 'parent', funcElement);
