@@ -93,7 +93,7 @@ describe('Unit | Utility | globals', function () {
   });
 });
 
-function expectIsNative(globalName: GlobalName, varToCheck: Function | unknown) {
+function expectIsNative(globalName: GlobalName, varToCheck: unknown): void {
   const global = nativeGlobals.find(({ name }) => name === globalName)?.global;
   if (typeof global === 'function' && typeof varToCheck === 'function') {
     expect(varToCheck.name).to.equal(`bound ${global.name}`);
