@@ -114,13 +114,13 @@ describe('Integration | Component | provider-place', function () {
   });
 
   it('resizes with parent one-atlas component', async function () {
-    this.set('atlasWidth', 800);
+    this.set('atlasWidth', 5000);
     await render(hbs `
       {{provider-place
         provider=provider
         atlasWidth=atlasWidth}}`);
     const prevWidth = parseFloat(find('.circle').style.width);
-    this.set('atlasWidth', 400);
+    this.set('atlasWidth', 2500);
     expect(parseFloat(find('.circle').style.width))
       .to.be.equal(prevWidth / 2);
   });

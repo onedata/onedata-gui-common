@@ -26,6 +26,8 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import globals from 'onedata-gui-common/utils/globals';
 
 const maxZoom = 14;
+const originalWidth = 900;
+const originalHeight = 440;
 
 export default Component.extend({
   layout,
@@ -82,6 +84,20 @@ export default Component.extend({
    * @type {number}
    */
   _containerHeight: 0,
+
+  /**
+   * @type {ComputedProperty<number>}
+   */
+  containerScale: computed(
+    '_containerWidth',
+    '_containerHeight',
+    function containerScale() {
+      return Math.min(
+        this._containerWidth / originalWidth,
+        this._containerHeight / originalHeight
+      );
+    }
+  ),
 
   /**
    * @type {Ember.ComputedProperty<object>}

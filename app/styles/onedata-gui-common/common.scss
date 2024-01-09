@@ -422,6 +422,12 @@ ul.info {
   }
 }
 
+ul.spaced-items, ol.spaced-items {
+  li:not(:last-child) {
+    margin-bottom: 0.5em;
+  }
+}
+
 a,
 .link {
   color: $color-one-mint;
