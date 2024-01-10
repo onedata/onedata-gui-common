@@ -1,0 +1,14 @@
+{{one-icon icon=icon}}
+<span class="name">
+  {{#if item.name}}
+    {{item.name}}
+  {{else}}
+    <em>{{namePlaceholder}}</em>
+  {{/if}}
+</span>
+<span class="additional-info">
+  <span class="unit-name">{{readableUnitName}}</span>
+  {{#if readableUnitName}}|{{/if}}
+  {{one-icon icon=seriesIcon}}
+  <span class="series-count">{{item.series.length}}</span>
+</span>

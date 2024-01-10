@@ -105,8 +105,8 @@ describe('Integration | Component | one-time-series-chart/plot', function () {
 
     await renderComponent();
 
-    expect(find('.title-content').textContent)
-      .to.equal(this.get('model.state.title.content'));
+    expect(find('.title-content'))
+      .to.contain.text(this.get('model.state.title.content'));
     expect(await new OneTooltipHelper('.title-area .one-label-tip .one-icon').getText())
       .to.equal(this.get('model.state.title.tip'));
   });

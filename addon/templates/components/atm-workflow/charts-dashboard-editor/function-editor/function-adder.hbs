@@ -1,0 +1,36 @@
+{{#render-later triggerRender=isOpened}}
+  {{#one-webui-popover
+    class="chart-function-selector"
+    open=isOpened
+    padding=false
+    triggerSelector=triggerSelector
+    as |popover|
+  }}
+    {{#click-outside
+      class="chart-function-selector-content"
+      onClickOutside=(if isOpened onClose noAction)
+      exceptSelector=triggerSelector
+    }}
+      <h3 class="header">{{tt this "header"}}</h3>
+      <input
+        type="text"
+        class="filter-input form-control input-sm"
+        placeholder={{tt this "filterPlaceholder"}}
+        value={{filterString}}
+        oninput={{action (mut filterString) value="target.value"}}
+      />
+      {{#perfect-scrollbar-element}}
+        <ul class="functions-list">
+          {{#each filteredFunctions as |func|}}
+            <li
+              class="clickable function"
+              onclick={{action "addFunction" func.name}}
+            >{{func.translatedName}}</li>
+          {{else}}
+            <li class="nothing-to-show-info">{{tt this "nothingToShow"}}</li>
+          {{/each}}
+        </ul>
+      {{/perfect-scrollbar-element}}
+    {{/click-outside}}
+  {{/one-webui-popover}}
+{{/render-later}}

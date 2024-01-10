@@ -483,6 +483,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
+          id: sinon.match.string,
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           lambdaConfig: {},
@@ -499,6 +500,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
+          id: sinon.match.string,
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           lambdaConfig: {},
@@ -590,6 +592,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
 
           expect(this.get('changeSpy')).to.be.calledWith({
             data: {
+              id: sinon.match.string,
               lambdaId: 'id1',
               lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
               lambdaConfig: {},
@@ -616,6 +619,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
 
             expect(this.get('changeSpy')).to.be.calledWith({
               data: {
+                id: sinon.match.string,
                 lambdaId: 'id1',
                 lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
                 lambdaConfig: {},
@@ -667,6 +671,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
 
             expect(this.get('changeSpy')).to.be.calledWith({
               data: {
+                id: sinon.match.string,
                 lambdaId: 'id1',
                 lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
                 lambdaConfig: {},
@@ -735,6 +740,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
 
             expect(this.get('changeSpy')).to.be.calledWith({
               data: {
+                id: sinon.match.string,
                 lambdaId: 'id1',
                 lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
                 lambdaConfig: {},
@@ -865,6 +871,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
 
         expect(this.get('changeSpy')).to.be.calledWith({
           data: {
+            id: sinon.match.string,
             lambdaId: 'id1',
             lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
             lambdaConfig: {},
@@ -889,6 +896,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
+          id: sinon.match.string,
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           lambdaConfig: {},
@@ -920,6 +928,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
+          id: sinon.match.string,
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           lambdaConfig: {},
@@ -1487,6 +1496,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
+          id: sinon.match.string,
           lambdaId: 'id1',
           lambdaRevisionNumber: 2,
           lambdaConfig: {
@@ -1682,6 +1692,7 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
+          id: sinon.match.string,
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           lambdaConfig: {},
@@ -1719,6 +1730,7 @@ function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
 
       expect(this.get('changeSpy')).to.be.calledWith({
         data: {
+          id: sinon.match.string,
           lambdaId: 'id1',
           lambdaRevisionNumber: this.get('atmLambdaRevisionNumber'),
           lambdaConfig: {},

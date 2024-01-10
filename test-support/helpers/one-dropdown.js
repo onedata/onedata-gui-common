@@ -58,13 +58,13 @@ export default class OneDropdownHelper {
 
   /**
    * @public
-   * @returns {Promise<HTMLDivElement>}
+   * @returns {Promise<HTMLDivElement | null>}
    */
   async getOptionsContainer() {
     await this.open();
     const trigger = this.getTrigger();
     const containerId = trigger.getAttribute('aria-owns');
-    return find(`#${containerId}`) ?? null;
+    return (containerId && find(`#${containerId}`)) ?? null;
   }
 
   /**
@@ -110,6 +110,18 @@ export default class OneDropdownHelper {
    * @public
    * @returns {boolean}
    */
+  doesExist() {
+    try {
+      return Boolean(this.getTrigger());
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * @public
+   * @returns {boolean}
+   */
   isOpened() {
     const trigger = this.getTrigger();
     return trigger.getAttribute('aria-expanded') === 'true';
@@ -121,7 +133,7 @@ export default class OneDropdownHelper {
    */
   async getOptions() {
     const optionsContainer = await this.getOptionsContainer();
-    return [...optionsContainer.querySelectorAll('li[aria-selected]')];
+    return [...(optionsContainer.querySelectorAll('li[aria-selected]') ?? [])];
   }
 
   /**

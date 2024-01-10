@@ -1,0 +1,42 @@
+{{#perfect-scrollbar-element class="form-column"}}
+  {{atm-workflow/charts-dashboard-editor/chart-editor/axis-editor-form
+    axis=chartElement
+    editorContext=editorContext
+  }}
+{{/perfect-scrollbar-element}}
+<div class="details-column">
+  {{#bs-tab
+    activeId=activeTabId
+    class="only-tab-bar bs-tab-onedata"
+    fade=false
+    onChange=(action "changeTab")
+    as |tab|
+  }}
+    {{#tab.pane
+      elementId=tabIds.attachedSeries
+      title=(tt this "detailsTabNames.attachedSeries")
+    }}
+      {{#if chartElement.series.length}}
+        {{atm-workflow/charts-dashboard-editor/chart-editor/series-list
+          chart=chart
+          seriesSource=chartElement
+          editorContext=editorContext
+        }}
+      {{else}}
+        <p class="empty-details-info">{{tt this "noSeriesAttached"}}</p>
+      {{/if}}
+    {{/tab.pane}}
+    {{#tab.pane
+      elementId=tabIds.labelsFormatting
+      title=(tt this "detailsTabNames.labelsFormatting")
+    }}
+      {{#render-later triggerRender=(eq activeTabId tabIds.labelsFormatting)}}
+        {{atm-workflow/charts-dashboard-editor/function-editor
+          outputFunction=chartElement.valueProvider
+          executionContext="axis"
+          editorContext=editorContext
+        }}
+      {{/render-later}}
+    {{/tab.pane}}
+  {{/bs-tab}}
+</div>

@@ -5,8 +5,6 @@
  *   Needed when mode is `'view'`,
  * - `subjectName` - name of a subject described by data in store. Needed when
  *   `viewModeLayout` is `'auditLog'` or `'timeSeries'`,
- * - `storeOwner` - (optional) workflow entity which owns passed store. It is a
- *   workflow model object like Workflow or Lane,
  * - `store` - will be used to fill form data. Needed when mode is `'edit'` or `'view'`,
  * - `allowedStoreTypes` - is taken into account when `mode` is `'create'`,
  * - `allowedDataTypes` - is taken into account when `mode` is `'create'`,
@@ -90,11 +88,6 @@ export default Component.extend(I18n, {
   subjectName: reads('modalOptions.subjectName'),
 
   /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserRecord|undefined>}
-   */
-  storeOwner: reads('modalOptions.storeOwner'),
-
-  /**
    * @type {ComputedProperty<Object>}
    */
   store: reads('modalOptions.store'),
@@ -158,21 +151,6 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<AtmValuePresenterContext | undefined>}
    */
   storeContentPresenterContext: reads('modalOptions.storeContentPresenterContext'),
-
-  /**
-   * @type {ComputedProperty<AtmTimeSeriesCollectionReference>}
-   */
-  defaultTimeSeriesCollectionRef: computed(
-    'store.schemaId',
-    'storeOwner.{__modelType,schemaId}',
-    function defaultTimeSeriesCollectionRef() {
-      if (this.storeOwner?.__modelType === 'task') {
-        return `task-${this.storeOwner.schemaId}`;
-      } else {
-        return `store-${this.store.schemaId}`;
-      }
-    }
-  ),
 
   /**
    * @type {ComputedProperty<String>}

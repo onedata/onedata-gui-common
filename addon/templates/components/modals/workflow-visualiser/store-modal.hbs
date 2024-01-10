@@ -86,8 +86,7 @@
         }}
       {{else if (eq store.type "timeSeries")}}
         {{workflow-visualiser/charts-presenter
-          dashboardSpec=store.config.dashboardSpec
-          defaultTimeSeriesCollectionRef=defaultTimeSeriesCollectionRef
+          dashboardModelOwner=(or store.containerElement store)
           onGetStoreContent=getStoreContentCallbackWithStoreArg
           onGetTimeSeriesCollectionRefsMap=getTimeSeriesCollectionRefsMapCallback
           live=store.contentMayChange

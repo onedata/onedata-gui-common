@@ -17,12 +17,6 @@ export default VisualiserElement.extend({
    * @virtual
    * @type {String}
    */
-  schemaId: undefined,
-
-  /**
-   * @virtual
-   * @type {String}
-   */
   name: undefined,
 
   /**
