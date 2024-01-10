@@ -38,6 +38,20 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
   /**
    * @override
    */
+  init() {
+    this._super(...arguments);
+
+    if (!this.replaceEmptyParameters) {
+      this.set('replaceEmptyParameters', EmberObject.create({
+        strategy: ReplaceEmptyStrategy.UseFallback,
+        fallbackValue: 0,
+      }));
+    }
+  },
+
+  /**
+   * @override
+   */
   willDestroy() {
     try {
       if (this.replaceEmptyParameters) {
@@ -116,8 +130,10 @@ function createFromSpec(spec, fieldsToInject) {
       // We assume here, that strategy and fallbackValue are always provided
       // by "literal" function. There is no other (sensible) function, which could be
       // used in this context.
-      strategy: replaceEmptyRawArgs?.strategyProvider?.functionArguments?.data,
-      fallbackValue: replaceEmptyRawArgs?.fallbackValueProvider?.functionArguments?.data,
+      strategy: replaceEmptyRawArgs?.strategyProvider?.functionArguments?.data ??
+        ReplaceEmptyStrategy.UseFallback,
+      fallbackValue: replaceEmptyRawArgs?.fallbackValueProvider
+        ?.functionArguments?.data ?? null,
     }),
   });
   return funcElement;
