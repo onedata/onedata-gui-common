@@ -67,6 +67,7 @@ describe('Integration | Component | workflow-visualiser/stores-list', function (
       await click(getModalFooter().querySelector('.btn-submit'));
 
       expect(this.get('createStoreStub')).to.be.calledOnce.and.to.be.calledWith({
+        id: sinon.match.string,
         name: 'store1',
         description: '',
         type: 'list',

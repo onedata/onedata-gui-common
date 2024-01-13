@@ -22,16 +22,23 @@ const initialEdgeScrollState = Object.freeze({
   right: true,
 });
 
+/**
+ * @typedef {Object} PerfectScrollbarApi
+ * @property {() => void} update
+ */
+
 export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
   classNames: ['perfect-scrollbar-element'],
   layout,
 
   /**
+   * @virtual optional
    * @type {boolean}
    */
   suppressScrollX: false,
 
   /**
+   * @virtual optional
    * @type {boolean}
    */
   suppressScrollY: false,
@@ -51,6 +58,12 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
    * @returns {any}
    */
   onEdgeScroll: notImplementedIgnore,
+
+  /**
+   * @virtual optional
+   * @type {((api: PerfectScrollbarApi) => void) | null}
+   */
+  registerApi: null,
 
   /**
    * Indicates if scroll has reached specific edge.
@@ -132,6 +145,15 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
     }];
   }),
 
+  /**
+   * @type {ComputedProperty<PerfectScrollbarApi>}
+   */
+  perfectScrollbarApi: computed(function perfectScrollbarApi() {
+    return {
+      update: () => this.perfectScrollbar.update(),
+    };
+  }),
+
   didInsertElement() {
     this._super(...arguments);
 
@@ -147,6 +169,8 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
     eventListeners.forEach(({ eventName, handler, passive }) =>
       element.addEventListener(eventName, handler, passive ? { passive: true } : false)
     );
+
+    this.registerApi?.(this.perfectScrollbarApi);
   },
 
   willDestroyElement() {

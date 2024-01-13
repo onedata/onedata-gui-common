@@ -30,10 +30,12 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.oneTimeSeriesChart.toolbar',
 
   /**
-   * @virtual
+   * If not provided, the component will act as a toolbar-like placeholder
+   * with no functionality enabled.
+   * @virtual optional
    * @type {Array<Utils.OneTimeSeriesChart.Model>}
    */
-  models: undefined,
+  models: Object.freeze([]),
 
   /**
    * @type {ComputedProperty<number>}

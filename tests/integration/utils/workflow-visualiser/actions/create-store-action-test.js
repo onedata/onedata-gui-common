@@ -67,6 +67,7 @@ describe('Integration | Utility | workflow-visualiser/actions/create-store-actio
       const actionResult = await resultPromise;
 
       expect(createStub).to.be.calledOnce.and.to.be.calledWith({
+        id: sinon.match.string,
         name: 'store1',
         description: '',
         type: 'list',

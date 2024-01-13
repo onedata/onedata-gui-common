@@ -11,6 +11,7 @@ import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { raw, or } from 'ember-awesome-macros';
 import _ from 'lodash';
+import ChartsDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-model-container';
 
 export default VisualiserRecord.extend({
   /**
@@ -76,6 +77,49 @@ export default VisualiserRecord.extend({
    * @type {Object}
    */
   resourceSpecOverride: undefined,
+
+  /**
+   * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
+   */
+  chartsDashboardEditorDataSources: computed(
+    'id',
+    'name',
+    'timeSeriesStoreConfig.timeSeriesCollectionSchema',
+    function chartsDashboardEditorDataSources() {
+      if (
+        !this.id ||
+        !this.timeSeriesStoreConfig?.timeSeriesCollectionSchema
+      ) {
+        return [];
+      }
+
+      return [{
+        originName: this.name ?? '',
+        collectionRef: `task-${this.id}`,
+        timeSeriesCollectionSchema: this.timeSeriesStoreConfig.timeSeriesCollectionSchema,
+        isDefault: true,
+      }];
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<ChartsDashboardEditorModelContainer>}
+   */
+  chartsDashboardEditorModelContainer: computed(
+    function chartsDashboardEditorModelContainer() {
+      return ChartsDashboardEditorModelContainer.extend({
+        dashboardSpec: reads('relatedElement.timeSeriesStoreConfig.dashboardSpec'),
+      }).create({
+        relatedElement: this,
+        onPropagateChange: (newDashboardSpec) => this.modify({
+          timeSeriesStoreConfig: {
+            ...this.timeSeriesStoreConfig,
+            dashboardSpec: newDashboardSpec,
+          },
+        }),
+      });
+    }
+  ),
 
   /**
    * @type {ComputedProperty<AtmLambdaRevision>}

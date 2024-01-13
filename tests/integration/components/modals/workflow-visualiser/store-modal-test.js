@@ -17,6 +17,7 @@ import { Promise, resolve } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
 const simplestStore = {
+  id: 'store1id',
   name: 'store1',
   description: '',
   type: 'list',
@@ -90,7 +91,10 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal', fun
       await fillIn('.name-field .form-control', 'store1');
       await selectChoose('.data-spec-editor', 'Number');
     };
-    itPassesStoreProvidedByFormOnSubmit(fillForm, simplestStore);
+    itPassesStoreProvidedByFormOnSubmit(fillForm, {
+      ...simplestStore,
+      id: sinon.match.string,
+    });
     itDisablesAllControlsWhileSubmitting(fillForm);
     itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm);
   });

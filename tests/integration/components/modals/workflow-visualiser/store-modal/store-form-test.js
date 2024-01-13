@@ -126,11 +126,20 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
       expect(find(`.${componentClass}`)).to.have.class('mode-create');
     });
 
-    it('does not render "id" and "instance id" fields', async function () {
+    it('does not render "instance id" field', async function () {
       await renderComponent();
 
-      expect(find('.id-field')).to.not.exist;
       expect(find('.instanceId-field')).to.not.exist;
+    });
+
+    it('renders non-empty "id" field', async function () {
+      await renderComponent();
+
+      const label = find('.id-field .control-label');
+      const field = find('.id-field .form-control');
+      expect(label.textContent.trim()).to.equal('ID:');
+      expect(field.type).to.equal('text');
+      expect(field.value).to.be.a('string').and.to.have.length.gte(1);
     });
 
     it('renders empty "name" field', async function () {
@@ -196,6 +205,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
+          id: sinon.match.string,
           name: '',
           description: '',
           type: 'list',
@@ -214,6 +224,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
+          id: sinon.match.string,
           name: 'someName',
           description: '',
           type: 'list',
@@ -279,6 +290,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
         expect(find('.has-error')).to.not.exist;
         const expectedJson = {
           data: {
+            id: sinon.match.string,
             name: 'someName',
             description: 'someDescription',
             type,
@@ -326,6 +338,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
+          id: sinon.match.string,
           name: 'someName',
           description: 'someDescription',
           type: 'timeSeries',
@@ -387,7 +400,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
     }) => {
       it(`fills fields with data of passed "${label}" store on init`, async function () {
         this.set('store', Store.create({
-          schemaId: 'store1id',
+          id: 'store1id',
           instanceId: 'incorrect value that should not exist',
           name: 'store1',
           description: 'desc',
@@ -426,7 +439,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
 
     it('fills fields with data of passed "Time series" store on init', async function () {
       this.set('store', Store.create({
-        schemaId: 'store1id',
+        id: 'store1id',
         instanceId: 'incorrect value that should not exist',
         name: 'store1',
         description: 'desc',
@@ -508,7 +521,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
     }) => {
       it(`fills fields with data of passed "${label}" store`, async function () {
         this.set('store', Store.create({
-          schemaId: 'store1id',
+          id: 'store1id',
           instanceId: 'store1instanceId',
           name: 'store1',
           description: 'desc',
@@ -552,7 +565,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
 
     it('fills fields with data of passed "Time series" store on init', async function () {
       this.set('store', Store.create({
-        schemaId: 'store1id',
+        id: 'store1id',
         instanceId: 'store1instanceId',
         name: 'store1',
         description: 'desc',

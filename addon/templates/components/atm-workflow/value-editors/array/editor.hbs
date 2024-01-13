@@ -30,7 +30,7 @@
         {{action "toggleClearConfirmation" (not isClearConfirmationOpened)}}
       >
         {{tt this "clear"}}
-        {{atm-workflow/value-editors/commons/remove-ack-popover
+        {{remove-ack-popover
           triggerSelector=clearTriggerSelector
           isOpened=isClearConfirmationOpened
           question=(tt this "clearConfirmationQuestion")

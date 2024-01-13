@@ -55,6 +55,7 @@ import userInfoContent from './onedata-gui-common/components/user-info-content';
 import spaceInfoContent from './onedata-gui-common/components/space-info-content';
 import harvesterInfoContent from './onedata-gui-common/components/harvester-info-content';
 import groupInfoContent from './onedata-gui-common/components/group-info-content';
+import removeAckPopover from './onedata-gui-common/components/remove-ack-popover';
 import providerInfoContent from './onedata-gui-common/components/provider-info-content';
 import atmInventoryInfoContent from './onedata-gui-common/components/atm-inventory-info-content';
 import clusterInfoContent from './onedata-gui-common/components/cluster-info-content';
@@ -71,6 +72,7 @@ import unsavedChangesQuestionModal from './onedata-gui-common/components/modals/
 import workflowVisualiserStoreModal from './onedata-gui-common/components/modals/workflow-visualiser/store-modal';
 import workflowVisualiserLaneModal from './onedata-gui-common/components/modals/workflow-visualiser/lane-modal';
 import workflowVisualiserChartsModal from './onedata-gui-common/components/modals/workflow-visualiser/charts-modal';
+import workflowVisualiserChartsDashboardEditorModal from './onedata-gui-common/components/modals/workflow-visualiser/charts-dashboard-editor-modal';
 import workflowVisualiserRemoveStoreModal from './onedata-gui-common/components/modals/workflow-visualiser/remove-store-modal';
 import toggleDirStatsQuestionModal from './onedata-gui-common/components/modals/toggle-dir-stats-question-modal';
 
@@ -90,6 +92,7 @@ import clipboardActions from './onedata-gui-common/utils/clipboard-actions';
 import utilsAtmWorkflow from './onedata-gui-common/utils/atm-workflow';
 import auditLog from './onedata-gui-common/utils/audit-log';
 import timeSeries from './onedata-gui-common/utils/time-series';
+import timeSeriesDashboard from './onedata-gui-common/utils/time-series-dashboard';
 import file from './onedata-gui-common/utils/file';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
@@ -157,6 +160,7 @@ const translations = {
     spaceInfoContent,
     harvesterInfoContent,
     groupInfoContent,
+    removeAckPopover,
     providerInfoContent,
     atmInventoryInfoContent,
     clusterInfoContent,
@@ -179,6 +183,7 @@ const translations = {
         storeModal: workflowVisualiserStoreModal,
         laneModal: workflowVisualiserLaneModal,
         chartsModal: workflowVisualiserChartsModal,
+        chartsDashboardEditorModal: workflowVisualiserChartsDashboardEditorModal,
         removeStoreModal: workflowVisualiserRemoveStoreModal,
       },
     },
@@ -205,6 +210,7 @@ const translations = {
     atmWorkflow: utilsAtmWorkflow,
     auditLog,
     timeSeries,
+    timeSeriesDashboard,
     file,
   },
   errors: {

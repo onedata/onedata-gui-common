@@ -115,7 +115,7 @@ export default EmberObject.extend({
     // Add references to defined time series stores (don't depend on run number).
     this.definedStores
       .filter((store) => store.type === 'timeSeries')
-      .forEach((store) => referencesMap.set(`store-${store.schemaId}`, store));
+      .forEach((store) => referencesMap.set(`store-${store.id}`, store));
 
     // Add references to task time series stores (depend on run number).
     const tasks = this.get('visualiserComponent.elementsCache')?.task || [];
@@ -141,7 +141,7 @@ export default EmberObject.extend({
         });
       }
       if (timeSeriesStore) {
-        referencesMap.set(`task-${task.schemaId}`, timeSeriesStore);
+        referencesMap.set(`task-${task.id}`, timeSeriesStore);
       }
     });
 

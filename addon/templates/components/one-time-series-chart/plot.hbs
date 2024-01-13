@@ -11,10 +11,12 @@
   </div>
   {{#if title}}
     <div class="title-area">
-      <span class="title-content">{{title}}</span>
+      {{#truncated-string tagName="span" class="title-content"}}
+        {{title}}
+      {{/truncated-string}}
       {{#if titleTip}}
         <span class="space"></span>
-        {{one-label-tip title=titleTip}}
+        {{one-label-tip class="title-tip" title=titleTip}}
       {{/if}}
     </div>
   {{/if}}

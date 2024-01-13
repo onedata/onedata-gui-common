@@ -1,13 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import ViewWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-charts-dashboard-action';
 import {
   getModal,
   getModalHeader,
-  getModalBody,
 } from '../../../../helpers/modal';
 import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
 
@@ -33,9 +32,13 @@ describe('Integration | Utility | workflow-visualiser/actions/view-workflow-char
   });
 
   it('shows modal with workflow charts dashboard in view mode on execute', async function () {
-    const dashboardSpec = this.set('workflow.dashboardSpec', {
+    this.set('workflow.dashboardSpec', {
       rootSection: {
-        charts: [],
+        sections: [{
+          title: {
+            content: 'test',
+          },
+        }],
       },
     });
     await executeAction(this);
@@ -43,13 +46,6 @@ describe('Integration | Utility | workflow-visualiser/actions/view-workflow-char
     expect(getModal()).to.have.class('charts-modal');
     expect(getModalHeader().querySelector('h1'))
       .to.have.trimmed.text('Workflow charts dashboard');
-    expect(getModal()).to.have.class('mode-view');
-    expect(getModalBody().querySelector('.charts-visualisation')).to.exist;
-
-    await click(getModalBody().querySelectorAll('.nav-tabs .nav-link')[1]);
-    const dashboardTextarea = getModalBody().querySelector('textarea');
-    expect(dashboardTextarea).to.have.value(JSON.stringify(dashboardSpec, null, 2));
-    expect(dashboardTextarea).to.have.attr('readonly');
   });
 });
 

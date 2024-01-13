@@ -7,24 +7,16 @@ import { get } from '@ember/object';
 import { lookupService } from '../../helpers/stub-service';
 import { setupTest } from 'ember-mocha';
 import { resolve, reject } from 'rsvp';
-import { suppressRejections } from '../../helpers/suppress-rejections';
 
 describe('Integration | Utility | action', function () {
   setupTest();
 
-  it('throws "not implemented" error on execute() call', function () {
-    let error;
+  it('rejects with "not implemented" error on execute() call', async function () {
+    const action = Action.create({ ownerSource: this.owner });
+    const result = await action.execute();
 
-    const action = Action.create();
-
-    try {
-      action.execute();
-    } catch (e) {
-      error = e;
-    }
-
-    expect(error).to.be.ok;
-    expect(error.message).to.equal('not implemented');
+    expect(result.status).to.equal('failed');
+    expect(result.error.message).to.equal('not implemented');
   });
 
   it('provides callback to execute() through property executeCallback', function () {
@@ -251,7 +243,6 @@ describe('Integration | Utility | action', function () {
   it(
     'calls onExecute and passes its result when execute is called (onExecute rejects with non-ActionResult object)',
     async function () {
-      suppressRejections();
       const onExecute = sinon.stub().rejects(123);
       const action = Action.create({
         ownerSource: this.owner,
@@ -269,7 +260,6 @@ describe('Integration | Utility | action', function () {
   it(
     'calls onExecute and passes its result when execute is called (onExecute rejects with ActionResult object)',
     async function () {
-      suppressRejections();
       const actionResult = ActionResult.create({ status: 'failed', error: { a: 1 } });
       const onExecute = sinon.stub().rejects(actionResult);
       const action = Action.create({
@@ -287,7 +277,6 @@ describe('Integration | Utility | action', function () {
   it(
     'changes result and stops hooks execution when one of the hooks fails',
     async function () {
-      suppressRejections();
       const error = { id: 'err' };
       const actionResult = ActionResult.create({ status: 'done' });
       const onExecute = sinon.stub().resolves(actionResult);

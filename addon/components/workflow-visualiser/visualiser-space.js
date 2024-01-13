@@ -9,7 +9,6 @@
 import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import { computed, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { next } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 
 export default VisualiserElement.extend({
@@ -69,11 +68,7 @@ export default VisualiserElement.extend({
       return this.get('isTargetForDrop');
     },
     acceptDraggedElement(draggedElement) {
-      // Using `next` to allows dragged component to notify `dragEnd` before destroy
-      // due to incoming update and rerender.
-      next(() =>
-        this.get('elementModel').dragDropElement(draggedElement)
-      );
+      this.get('elementModel').dragDropElement(draggedElement);
     },
   },
 });

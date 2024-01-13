@@ -114,7 +114,7 @@ describe('Integration | Component | one-time-series-charts-section', function ()
     });
     await renderComponent();
 
-    expect(find('.section-title').textContent).to.equal(title);
+    expect(find('.section-title')).to.contain.text(title);
   });
 
   it('renders section title tip', async function () {

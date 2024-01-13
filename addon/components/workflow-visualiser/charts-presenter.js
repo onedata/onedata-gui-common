@@ -7,11 +7,13 @@
  */
 
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { browseModes } from 'onedata-gui-common/utils/atm-workflow/store-content-browse-options/time-series';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/charts-presenter';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 /**
  * @typedef {TsNamesForCollectionGeneratorsCache}
@@ -21,15 +23,22 @@ import layout from 'onedata-gui-common/templates/components/workflow-visualiser/
  *   not necessary
  */
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['workflow-visualiser-charts-presenter'],
 
+  modalManager: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.workflowVisualiser.chartsPresenter',
+
   /**
    * @virtual
-   * @type {AtmTimeSeriesDashboardSpec}
+   * @type {DashboardModelOwner}
    */
-  dashboardSpec: undefined,
+  dashboardModelOwner: undefined,
 
   /**
    * @virtual
@@ -42,12 +51,6 @@ export default Component.extend({
    * @type {(store: Utils.WorkflowVisualiser.Store, browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>}
    */
   onGetStoreContent: undefined,
-
-  /**
-   * @virtual optional
-   * @type {AtmTimeSeriesCollectionReference}
-   */
-  defaultTimeSeriesCollectionRef: undefined,
 
   /**
    * @virtual optional
@@ -71,6 +74,17 @@ export default Component.extend({
   tsNamesPerGeneratorCache: undefined,
 
   /**
+   * @type {AtmTimeSeriesCollectionReference | undefined}
+   */
+  defaultTimeSeriesCollectionRef: computed(
+    'dashboardModelOwner.chartsDashboardEditorDataSources',
+    function defaultTimeSeriesCollectionRef() {
+      return this.dashboardModelOwner.chartsDashboardEditorDataSources
+        .find(({ isDefault }) => isDefault)?.collectionRef;
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<(collectionId?: AtmTimeSeriesCollectionReference) => Promise<Array<TimeSeriesSchema>>>}
    */
   onGetTimeSeriesSchemas: computed(function onGetTimeSeriesSchemas() {
@@ -87,7 +101,9 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<OneTimeSeriesChartsSectionSpec>}
    */
-  rootChartsSection: reads('dashboardSpec.rootSection'),
+  rootChartsSection: reads(
+    'dashboardModelOwner.chartsDashboardEditorModelContainer.dashboardSpec.rootSection'
+  ),
 
   /**
    * @type {ComputedProperty<OTSCExternalDataSources>}
@@ -276,5 +292,14 @@ export default Component.extend({
       mode: browseModes.layout,
     });
     return result?.layout ?? {};
+  },
+
+  actions: {
+    showDashboardEditor() {
+      this.modalManager.show('workflow-visualiser/charts-dashboard-editor-modal', {
+        mode: 'view',
+        dashboardOwner: this.dashboardModelOwner,
+      });
+    },
   },
 });

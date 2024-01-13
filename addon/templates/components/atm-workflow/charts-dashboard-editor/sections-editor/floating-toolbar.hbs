@@ -1,0 +1,9 @@
+{{#each actionsToRender as |actionSpec|}}
+  <span
+    class="action {{actionSpec.name}}-action clickable"
+    onClick={{action actionSpec.name}}
+  >
+    {{one-icon icon=actionSpec.icon}}
+    {{one-tooltip title=(tt this actionSpec.name)}}
+  </span>
+{{/each}}

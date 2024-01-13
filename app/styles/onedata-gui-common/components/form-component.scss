@@ -73,6 +73,24 @@ $form-component-view-margin: $padding-base-vertical;
     }
   }
 
+  .color-field-renderer {
+    align-items: center;
+
+    .form-control {
+      padding: 0.3em;
+      width: 4em;
+
+      &:not([disabled]) {
+        cursor: pointer;
+      }
+    }
+
+    .control-label {
+      padding-top: 0;
+      margin: 0;
+    }
+  }
+
   .loading-field-renderer {
     .spinner {
       z-index: initial !important;
@@ -247,7 +265,8 @@ $form-component-view-margin: $padding-base-vertical;
       width: 100%;
     }
 
-    .toggle-field-renderer {
+    .toggle-field-renderer,
+    .color-field-renderer {
       flex-wrap: nowrap;
 
       .control-label {

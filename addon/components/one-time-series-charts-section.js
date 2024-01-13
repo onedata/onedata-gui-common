@@ -348,7 +348,7 @@ export default Component.extend(I18n, {
 
 // Contains default implementations of some of the callbacks needed by the component
 // and which are optional to provide through component API.
-class DefaultCallbacks {
+export class DefaultCallbacks {
   constructor({ onGetTimeSeriesSchemas, queryBatchers }) {
     // Default `onGetTimeResolutionSpecs` when none was provided to the component
     this.onGetTimeResolutionSpecs = ({ chartDefinition }) =>

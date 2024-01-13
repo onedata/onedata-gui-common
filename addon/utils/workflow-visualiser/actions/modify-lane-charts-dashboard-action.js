@@ -40,19 +40,18 @@ export default Action.extend({
   async onExecute() {
     const result = ActionResult.create();
 
-    await this.modalManager.show('workflow-visualiser/charts-modal', {
+    await this.modalManager.show('workflow-visualiser/charts-dashboard-editor-modal', {
       mode: 'edit',
-      dashboardOwnerType: 'lane',
-      dashboardSpec: this.lane.dashboardSpec,
-      onSubmit: (newDashboardSpec) =>
-        result.interceptPromise(this.modifyLaneChartsDashboard(newDashboardSpec)),
+      dashboardOwner: this.lane,
+      onSubmit: () =>
+        result.interceptPromise(this.modifyLaneChartsDashboard()),
     }).hiddenPromise;
 
     result.cancelIfPending();
     return result;
   },
 
-  async modifyLaneChartsDashboard(newDashboardSpec) {
-    return this.lane.modify({ dashboardSpec: newDashboardSpec });
+  async modifyLaneChartsDashboard() {
+    return this.lane.chartsDashboardEditorModelContainer.propagateChange();
   },
 });

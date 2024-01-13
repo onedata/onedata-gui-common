@@ -1,5 +1,6 @@
 export default [
   'animations',
+  'atm-workflow/charts-dashboard-editor',
   'atm-workflow/data-spec-editor',
   'atm-workflow/value-editors',
   'atm-workflow/value-presenters',

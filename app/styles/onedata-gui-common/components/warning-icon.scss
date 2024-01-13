@@ -1,0 +1,10 @@
+// Using additional .ember-view selector to avoid overriding style of
+// other .warning-icon usages.
+.warning-icon.ember-view {
+  display: inline-grid;
+  place-content: center;
+
+  .warning-icon-image {
+    height: 1em;
+  }
+}
