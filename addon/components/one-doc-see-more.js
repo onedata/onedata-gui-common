@@ -49,6 +49,6 @@ export default Component.extend(I18n, {
   linkName: '',
 
   href: computed('docPath', function url() {
-    return oneDocUrl([this.get('docPath')]);
+    return oneDocUrl(this, this.docPath);
   }),
 });
