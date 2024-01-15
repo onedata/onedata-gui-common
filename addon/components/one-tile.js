@@ -48,6 +48,18 @@ export default Component.extend(I18n, {
   customLink: undefined,
 
   /**
+   * If provided, renders `(?)` on the right of title with the tooltip on hover.
+   * @virtual optional
+   */
+  titleTip: undefined,
+
+  /**
+   * Adds classname to the title tooltip shown on hover (if applicable).
+   * @virtual optional
+   */
+  titleTooltipClass: '',
+
+  /**
    * If set, the tile will be a link to some aspect of currently loaded resource
    * @type {string}
    */

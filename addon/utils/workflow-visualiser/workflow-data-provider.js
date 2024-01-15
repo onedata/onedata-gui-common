@@ -115,7 +115,7 @@ export default EmberObject.extend({
     // Add references to defined time series stores (don't depend on run number).
     this.definedStores
       .filter((store) => store.type === 'timeSeries')
-      .forEach((store) => referencesMap.set(`store-${store.schemaId}`, store));
+      .forEach((store) => referencesMap.set(`store-${store.id}`, store));
 
     // Add references to task time series stores (depend on run number).
     const tasks = this.get('visualiserComponent.elementsCache')?.task || [];
@@ -141,7 +141,7 @@ export default EmberObject.extend({
         });
       }
       if (timeSeriesStore) {
-        referencesMap.set(`task-${task.schemaId}`, timeSeriesStore);
+        referencesMap.set(`task-${task.id}`, timeSeriesStore);
       }
     });
 
@@ -164,5 +164,27 @@ export default EmberObject.extend({
       store?.instanceId,
       traceIds
     );
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Store}
+   * @returns {Promise<string>}
+   */
+  getAuditLogDownloadUrl(store) {
+    if (!this.executionDataFetcher) {
+      console.error(
+        'util:workflow-visualiser/workflow-data-provider#getAuditLogDownloadUrl: executionDataFetcher is not set',
+      );
+      return reject(new Error('executionDataFetcher is not set'));
+    }
+    const storeInstanceId = store?.instanceId;
+    if (!storeInstanceId) {
+      console.error(
+        'util:workflow-visualiser/workflow-data-provider#getAuditLogDownloadUrl: provided store does not have instance id',
+      );
+      return reject(new Error('Provided store does not have instance id.'));
+    }
+
+    return this.executionDataFetcher.getAuditLogDownloadUrl(storeInstanceId);
   },
 });

@@ -321,6 +321,11 @@
     content: $oneicon-data-send;
   }
 }
+.oneicon-drag {
+  &:before {
+    content: $oneicon-drag;
+  }
+}
 .oneicon-flatten {
   &:before {
     content: $oneicon-flatten;

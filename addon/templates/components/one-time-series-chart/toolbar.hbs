@@ -5,6 +5,8 @@
   @options={{timeResolutionOptions}}
   @onChange={{action "changeTimeResolution"}}
   @selected={{find-by "value" selectedTimeResolution timeResolutionOptions}}
+  @placeholder={{tt this "emptyResolution"}}
+  @disabled={{eq timeResolutionOptions.length 0}}
   as |option|
 >
   {{option.label}}

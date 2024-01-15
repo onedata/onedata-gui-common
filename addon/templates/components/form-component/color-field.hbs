@@ -1,0 +1,10 @@
+<input
+  id={{fieldId}}
+  class="form-control"
+  type="color"
+  disabled={{or (not isEffectivelyEnabled) isInViewMode}}
+  onblur={{action "focusLost"}}
+  oninput={{action "valueChanged" value="target.value"}}
+  value={{value}}
+/>
+{{yield}}

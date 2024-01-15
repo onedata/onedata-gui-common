@@ -19,6 +19,7 @@ import {
   and,
   isEmpty,
   notEmpty,
+  conditional,
 } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
@@ -33,6 +34,7 @@ import {
   computed,
   observer,
   getProperties,
+  setProperties,
   get,
   set,
 } from '@ember/object';
@@ -57,6 +59,8 @@ import {
   getDataSpecForStoreDefaultValue,
   canStoreTypeHaveDefaultValue,
 } from 'onedata-gui-common/utils/atm-workflow/store-config';
+import generateId from 'onedata-gui-common/utils/generate-id';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
 const storeTypes = Object.freeze([
   'list',
@@ -104,6 +108,12 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.modals.workflowVisualiser.storeModal.storeForm',
 
   /**
+   * @virtual
+   * @type {'create'|'view'|'edit'}
+   */
+  mode: undefined,
+
+  /**
    * Needed when `mode` is `'create'` or `'edit'`
    * @virtual optional
    * @type {Function}
@@ -116,6 +126,12 @@ export default Component.extend(I18n, {
    *   ```
    */
   onChange: notImplementedIgnore,
+
+  /**
+   * @virtual optional
+   * @type {Utils.WorkflowVisualiser.Store}
+   */
+  store: undefined,
 
   /**
    * @virtual optional
@@ -134,6 +150,16 @@ export default Component.extend(I18n, {
    * @type {AtmDataSpec|undefined}
    */
   allowedStoreWriteDataSpec: undefined,
+
+  /**
+   * @type {Object | null}
+   */
+  lastFormValues: null,
+
+  /**
+   * @type {Utils.WorkflowVisualiser.Store | null}
+   */
+  storeBasedOnFormValuesCache: null,
 
   /**
    * @type {ComputedProperty<Array<string>>}
@@ -220,6 +246,22 @@ export default Component.extend(I18n, {
   ),
 
   /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
+   */
+  storeBasedOnFormValues: conditional(
+    eq('mode', raw('view')),
+    'store',
+    computed('lastFormValues', function storeBasedOnFormValues() {
+      if (!this.storeBasedOnFormValuesCache) {
+        this.storeBasedOnFormValuesCache = Store.create(this.lastFormValues ?? {});
+      } else {
+        setProperties(this.storeBasedOnFormValuesCache, this.lastFormValues ?? {});
+      }
+      return this.storeBasedOnFormValuesCache;
+    }),
+  ),
+
+  /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
   fields: computed(function fields() {
@@ -253,7 +295,7 @@ export default Component.extend(I18n, {
   idField: computed(function idField() {
     return ClipboardField
       .extend({
-        isVisible: and(neq('component.mode', raw('create')), notEmpty('value')),
+        isVisible: not(and('isInViewMode', isEmpty('value'))),
       }).create({
         component: this,
         name: 'id',
@@ -400,13 +442,17 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
    */
   timeSeriesStoreConfigFieldsGroup: computed(function timeSeriesStoreConfigFieldsGroup() {
+    const component = this;
     return FormFieldsGroup.extend({
       isExpanded: eq('valuesSource.type', raw('timeSeries')),
       isVisible: or(eq('mode', raw('edit')), 'isExpanded'),
     }).create({
       name: 'timeSeriesStoreConfig',
       fields: [
-        storeConfigEditors.timeSeries.FormElement.create({
+        storeConfigEditors.timeSeries.FormElement.extend({
+          dashboardModelOwner: reads('component.storeBasedOnFormValues'),
+        }).create({
+          component,
           name: 'configEditor',
         }),
       ],
@@ -476,12 +522,15 @@ export default Component.extend(I18n, {
       mode,
     } = this.getProperties('onChange', 'fields', 'mode');
 
+    const data = formDataToStore(fields.dumpValue());
+    this.set('lastFormValues', data);
+
     if (mode === 'view') {
       return;
     }
 
     onChange({
-      data: formDataToStore(fields.dumpValue()),
+      data,
       isValid: get(fields, 'isValid'),
     });
   },
@@ -538,6 +587,7 @@ export default Component.extend(I18n, {
 function storeToFormData(store, { defaultType }) {
   if (!store) {
     return createValuesContainer({
+      id: generateId(),
       name: '',
       description: '',
       type: defaultType,
@@ -551,7 +601,7 @@ function storeToFormData(store, { defaultType }) {
   }
 
   const {
-    schemaId,
+    id,
     instanceId,
     name,
     description,
@@ -561,7 +611,7 @@ function storeToFormData(store, { defaultType }) {
     requiresInitialContent,
   } = getProperties(
     store,
-    'schemaId',
+    'id',
     'instanceId',
     'name',
     'description',
@@ -572,7 +622,7 @@ function storeToFormData(store, { defaultType }) {
   );
 
   const formData = {
-    id: schemaId,
+    id,
     instanceId,
     name,
     description,
@@ -599,6 +649,7 @@ function storeToFormData(store, { defaultType }) {
 
 function formDataToStore(formData) {
   const {
+    id,
     name,
     description,
     type,
@@ -608,6 +659,7 @@ function formDataToStore(formData) {
     needsUserInput,
   } = getProperties(
     formData,
+    'id',
     'name',
     'description',
     'type',
@@ -618,6 +670,7 @@ function formDataToStore(formData) {
   );
 
   const store = {
+    id,
     name,
     description,
     type,

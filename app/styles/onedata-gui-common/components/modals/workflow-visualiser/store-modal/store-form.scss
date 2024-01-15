@@ -1,4 +1,8 @@
 .store-form {
+  .control-label {
+    width: 25%;
+  }
+
   .dataSpec-field.field-view-mode > .control-label {
     padding-top: $padding-base-vertical;
   }
@@ -10,7 +14,7 @@
   }
 
   @media (min-width: $screen-sm-min) {
-    .defaultValue-field .control-label {
+    .defaultValue-field > .control-label {
       padding-top: 0.5em;
     }
   }

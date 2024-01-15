@@ -1,0 +1,74 @@
+<h2>{{tt this "header"}}</h2>
+{{#bs-tab
+  activeId=selectedTab.id
+  class="only-tab-bar bs-tab-onedata"
+  fade=false
+  customTabs=true
+  as |tab|
+}}
+  {{#perfect-scrollbar-element suppressScrollY=true}}
+    {{#bs-nav type="tabs" as |nav|}}
+      {{#each tabs as |tabSpec|}}
+        {{#nav.item active=(eq selectedTab tabSpec)}}
+          <a
+            class={{concat-classes
+              "nav-link element-editor-nav-link"
+              (if (not-eq selectedTab tabSpec) "clickable")
+            }}
+            role="tab"
+            onclick={{action "openTab" tabSpec}}
+          >
+            {{one-icon icon=tabSpec.icon}}
+            {{#truncated-string}}
+              {{#if tabSpec.name}}
+                {{#if tabSpec.element.repeatPerPrefixedTimeSeries}}
+                  <em>{{tabSpec.name}}</em>
+                {{else}}
+                  {{tabSpec.name}}
+                {{/if}}
+              {{else}}
+                <em>{{namePlaceholder}}</em>
+              {{/if}}
+            {{/truncated-string}}
+            {{#if tabSpec.validationErrorsMessage}}
+              {{warning-icon tooltipText=tabSpec.validationErrorsMessage}}
+            {{/if}}
+            {{one-icon
+              icon="close"
+              click=(action "closeTab" tabSpec)
+              class="close-trigger clickable"
+            }}
+          </a>
+        {{/nav.item}}
+      {{/each}}
+    {{/bs-nav}}
+  {{/perfect-scrollbar-element}}
+  <div class="tab-content">
+    {{#if (not tabs.length)}}
+      <div class="no-elements-info info-box">
+        <h3 class="header">
+          {{tt this (concat
+            "noElements.header."
+            (if editorContext.isReadOnly "view" "edit")
+          )}}
+        </h3>
+        <p class="description">
+          {{tt this (concat
+            "noElements.description."
+            (if editorContext.isReadOnly "view" "edit")
+          )}}
+        </p>
+      </div>
+    {{/if}}
+    {{#each tabs as |tabSpec|}}
+      {{#tab.pane class="element-editor-tab-pane" elementId=tabSpec.id}}
+        {{component
+          (concat "atm-workflow/charts-dashboard-editor/chart-editor/" tabSpec.editorComponentName)
+          chartElement=tabSpec.element
+          chart=chart
+          editorContext=editorContext
+        }}
+      {{/tab.pane}}
+    {{/each}}
+  </div>
+{{/bs-tab}}

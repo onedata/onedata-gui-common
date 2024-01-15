@@ -1,8 +1,10 @@
 import taskForm from './workflow-visualiser/task-form';
+import chartsPresenter from './workflow-visualiser/charts-presenter';
 
 export default {
   status: 'Status',
   taskForm,
+  chartsPresenter,
   workflow: {
     actions: {
       modifyWorkflowChartsDashboard: {
@@ -158,6 +160,9 @@ export default {
       viewWorkflowAuditLog: {
         title: 'Audit log',
         subjectName: 'Workflow',
+      },
+      downloadAuditLog: {
+        title: 'Download as JSON',
       },
     },
   },

@@ -66,6 +66,7 @@ export const knownOneicons = new Set([
   'create-time',
   'data-receive',
   'data-send',
+  'drag',
   'flatten',
   'globe-cursor',
   'globe-filled',

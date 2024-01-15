@@ -22,6 +22,11 @@ export default Action.extend({
   store: reads('context.store'),
 
   /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.ActionsFactory>}
+   */
+  actionsFactory: reads('context.actionsFactory'),
+
+  /**
    * @type {ComputedProperty<Function>}
    */
   getStoreContentCallback: reads('context.getStoreContentCallback'),
@@ -42,27 +47,17 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    const {
-      store,
-      getStoreContentCallback,
-      modalManager,
-      storeContentPresenterContext,
-    } = this.getProperties(
-      'store',
-      'getStoreContentCallback',
-      'modalManager',
-      'storeContentPresenterContext'
-    );
-
     const result = ActionResult.create();
-    return modalManager
+    return this.modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
-        store,
-        getStoreContentCallback: (...args) => getStoreContentCallback(store, ...args),
+        store: this.store,
+        actionsFactory: this.actionsFactory,
+        getStoreContentCallback: (...args) =>
+          this.getStoreContentCallback(this.store, ...args),
         getTimeSeriesCollectionRefsMapCallback: (...args) =>
           this.getTimeSeriesCollectionRefsMapCallback(...args),
-        storeContentPresenterContext,
+        storeContentPresenterContext: this.storeContentPresenterContext,
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');
