@@ -11,7 +11,9 @@ describe('Integration | Helper | one-doc-url', function () {
   it('generates valid URL when guiUtils service has no version info', async function () {
     await render(hbs `{{one-doc-url "hello_world.html"}}`);
 
-    expect(this.element.textContent.trim()).to.match(/https?:\/\/.*\/hello_world\.html/);
+    expect(this.element.textContent.trim()).to.match(
+      /https?:\/\/.*\/stable\/.*hello_world\.html/
+    );
   });
 
   it('generates valid URL when guiUtils service has version info', async function () {

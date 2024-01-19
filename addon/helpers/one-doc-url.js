@@ -19,7 +19,7 @@ import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 const fallbackDocsVersion = 'stable';
 
 /**
- * Simplifies version numer to the one that is used in onedata.org homeage for
+ * Simplifies version numer to the one that is used in onedata.org homepage for
  * documentation.
  * @param {string} version For example: '21.02.3'
  * @returns {string|undefined} For example: '21.02'. Returns undefined if version is in
