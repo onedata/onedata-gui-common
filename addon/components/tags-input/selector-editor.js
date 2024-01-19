@@ -32,7 +32,7 @@ export default Component.extend({
    * @virtual
    * @type {Array<Tag>}
    */
-  selectedTags: computed(() => []),
+  selectedTags: undefined,
 
   /**
    * @virtual
@@ -100,9 +100,14 @@ export default Component.extend({
     }
   ),
 
+  /**
+   * @override
+   */
   init() {
     this._super(...arguments);
-
+    if (!this.selectedTags) {
+      this.set('selectedTags', []);
+    }
     this.tagsToSelectObserver();
   },
 

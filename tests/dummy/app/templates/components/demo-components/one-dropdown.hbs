@@ -2,16 +2,17 @@
   <div class="row row-content">
     <h3>OneDropdown small</h3>
     <div class="row">
-      {{#one-dropdown
-        triggerClass="small"
-        dropdownClass="small"
-        options=(array "one" "two" "three")
-        selected=valueSmall
-        onchange=(action (mut valueSmall))
+      <OneDropdown
+        @triggerClass="small"
+        @dropdownClass="small"
+        @options={{array "one" "two" "three"}}
+        @selected={{valueSmall}}
+        @searchEnabled={{true}}
+        @onChange={{action (mut valueSmall)}}
         as |value|
-      }}
+      >
         {{value}}
-      {{/one-dropdown}}
+      </OneDropdown>
     </div>
   </div>
   <div class="row row-content">
@@ -21,23 +22,22 @@
       <div class="row">
         <div class="col-xs-4 text-with-power-select text-right">
           Text on left
-        </div>        
+        </div>
         <div class="col-xs-4">
-          {{#one-dropdown
-            triggerClass="small text-like"
-            dropdownClass="small"
-            options=(array "very long text very" "two" "three")
-            searchEnabled=false
-            selected=valueSmallText
-            onchange=(action (mut valueSmallText))
+          <OneDropdown
+            @triggerClass="small text-like"
+            @dropdownClass="small"
+            @options={{array "very long text very" "two" "three"}}
+            @selected={{valueSmallText}}
+            @onChange={{action (mut valueSmallText)}}
             as |value|
-          }}
+          >
             {{value}}
-          {{/one-dropdown}}
+          </OneDropdown>
         </div>
         <div class="col-xs-4 text-with-power-select">
           Some text on right
-        </div>        
+        </div>
       </div>
       <p>Foo bar</p>
     </div>

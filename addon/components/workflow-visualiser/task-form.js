@@ -1384,15 +1384,16 @@ const SingleResultMappingsCollectionGroup = FormFieldsCollectionGroup.extend({
           classes: 'floating-field-label',
           name: 'targetStore',
           customValidators: [
-            validator(function (value, options, model) {
-              const field = get(model, 'field');
-              const notEnabledTsStoreSelected =
-                value === taskTimeSeriesDropdownOptionValue &&
-                !get(field, 'parent.parent.component.isTimeSeriesStoreEnabled');
-              return notEnabledTsStoreSelected ?
-                String(field.getTranslation('errors.notEnabledTsStoreSelected')) :
-                true;
-            }, {
+            validator('inline', {
+              validate(value, options, model) {
+                const field = get(model, 'field');
+                const notEnabledTsStoreSelected =
+                  value === taskTimeSeriesDropdownOptionValue &&
+                  !get(field, 'parent.parent.component.isTimeSeriesStoreEnabled');
+                return notEnabledTsStoreSelected ?
+                  String(field.getTranslation('errors.notEnabledTsStoreSelected')) :
+                  true;
+              },
               dependentKeys: [
                 'model.field.parent.parent.component.isTimeSeriesStoreEnabled',
               ],

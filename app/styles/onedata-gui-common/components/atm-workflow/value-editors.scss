@@ -53,8 +53,7 @@
 
   .action-link {
     &.disabled {
-      // Using !important to override inline styles added by click() Ember handler
-      cursor: not-allowed !important;
+      cursor: not-allowed;
       color: $main-text-color-disabled;
       &:hover {
         color: $main-text-color-disabled;

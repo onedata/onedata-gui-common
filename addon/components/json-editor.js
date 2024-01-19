@@ -82,11 +82,22 @@ export default Component.extend(I18n, {
   onFocusLost: notImplementedIgnore,
 
   /**
+   * @virtual optional
    * @type {Ember.ComputedProperty<string>}
    */
-  inputId: computed('elementId', function inputId() {
-    return this.get('elementId') + '-textarea';
+  inputId: computed('elementId', {
+    get() {
+      return this.injectedInputId ?? (this.elementId + '-textarea');
+    },
+    set(key, value) {
+      return this.injectedInputId = value;
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedInputId: null,
 
   /**
    * @type {Ember.ComputedProperty<string>}

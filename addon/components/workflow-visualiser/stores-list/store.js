@@ -13,7 +13,12 @@ import { computed } from '@ember/object';
 
 export default Component.extend({
   layout,
-  classNames: ['workflow-visualiser-stores-list-store', 'tag-item', 'input-element'],
+  classNames: [
+    'workflow-visualiser-stores-list-store',
+    'tag-item',
+    'input-element',
+    'clickable',
+  ],
   classNameBindings: [
     'modeClass',
     'store.requiresInitialContent:tag-item-warning',

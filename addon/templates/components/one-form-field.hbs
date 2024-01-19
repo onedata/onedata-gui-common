@@ -28,18 +28,17 @@
         isReadOnly=disabled
         onFocusOut=(action "onFocusOut")}}
     {{else if (eq field.type "dropdown")}}
-      {{#power-select
-        options=(map-by "value" field.options)
-        selected=value
-        onchange=(action "inputChanged" field.name)
-        onblur=(action "onFocusOut")
-        searchEnabled=false
-        renderInPlace=true
-        triggerClass=inputClasses
+      <PowerSelect
+        @options={{map-by "value" field.options}}
+        @selected={{value}}
+        @onChange={{action "inputChanged" field.name}}
+        @onBlur={{action "onFocusOut"}}
+        @renderInPlace={{true}}
+        @triggerClass={{inputClasses}}
         as |optionValue|
-      }}
+      >
         {{get (find-by "value" optionValue field.options) "label"}}
-      {{/power-select}}
+      </PowerSelect>
     {{else if (eq field.type "clipboard-line")}}
       {{one-clipboard-line
         class=inputClasses

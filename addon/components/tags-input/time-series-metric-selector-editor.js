@@ -160,7 +160,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {Array<Tag>}
    */
-  selectedTags: computed(() => []),
+  selectedTags: undefined,
 
   /**
    * @virtual
@@ -297,16 +297,17 @@ export default Component.extend(I18n, {
           component: this,
           name: 'name',
           customValidators: [
-            validator(function (value, options, model) {
-              if (!value) {
-                return true;
-              }
-              const field = get(model, 'field');
-              const usedNames = get(field, 'component.usedNames');
-              const errorMsg =
-                String(field.t(`${get(field, 'path')}.errors.notUnique`));
-              return usedNames.has(value) ? errorMsg : true;
-            }, {
+            validator('inline', {
+              validate(value, options, model) {
+                if (!value) {
+                  return true;
+                }
+                const field = get(model, 'field');
+                const usedNames = get(field, 'component.usedNames');
+                const errorMsg =
+                  String(field.t(`${get(field, 'path')}.errors.notUnique`));
+                return usedNames.has(value) ? errorMsg : true;
+              },
               dependentKeys: ['model.field.component.usedNames'],
             }),
           ],
@@ -324,18 +325,19 @@ export default Component.extend(I18n, {
           name: 'resolution',
           defaultValue: timeSeriesMetricResolutions[0],
           customValidators: [
-            validator(function (value, options, model) {
-              if (!value) {
-                return true;
-              }
-              const field = get(model, 'field');
-              const usedResolutions = get(field, 'component.usedResolutions');
-              const aggregator = get(field, 'component.selectedAggregatorOption.value');
-              const errorMsg =
-                String(field.t(`${get(field, 'path')}.errors.notUnique`));
-              return usedResolutions.has(stringifyUsedResolution(aggregator, value)) ?
-                errorMsg : true;
-            }, {
+            validator('inline', {
+              validate(value, options, model) {
+                if (!value) {
+                  return true;
+                }
+                const field = get(model, 'field');
+                const usedResolutions = get(field, 'component.usedResolutions');
+                const aggregator = get(field, 'component.selectedAggregatorOption.value');
+                const errorMsg =
+                  String(field.t(`${get(field, 'path')}.errors.notUnique`));
+                return usedResolutions.has(stringifyUsedResolution(aggregator, value)) ?
+                  errorMsg : true;
+              },
               dependentKeys: [
                 'model.field.component.usedResolutions',
                 'model.field.component.selectedAggregatorOption.value',
@@ -370,8 +372,14 @@ export default Component.extend(I18n, {
     }
   ),
 
+  /**
+   * @override
+   */
   init() {
     this._super(...arguments);
+    if (!this.selectedTags) {
+      this.set('selectedTags', []);
+    }
     this.set('selectedAggregatorOption', this.get('aggregatorOptions')[0]);
     // Mark as modified to show selected resolution conflict from the beginning
     this.get('customMetricFields').getFieldByPath('resolution').markAsModified();

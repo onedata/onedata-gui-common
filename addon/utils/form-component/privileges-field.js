@@ -7,7 +7,6 @@
  */
 
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
-import { computed } from '@ember/object';
 
 export default FormField.extend({
   /**
@@ -26,16 +25,11 @@ export default FormField.extend({
   isOptional: true,
 
   /**
-   * @override
-   */
-  defaultValue: computed(() => []),
-
-  /**
    * Grouped privileges used to construct tree nodes
    * @virtual
    * @type {Array<Object>}
    */
-  privilegesGroups: computed(() => []),
+  privilegesGroups: undefined,
 
   /**
    * Path to the translations of privilege groups names
@@ -50,4 +44,14 @@ export default FormField.extend({
    * @type {String}
    */
   privilegesTranslationsPath: undefined,
+
+  init() {
+    this._super(...arguments);
+    if (!this.defaultValue) {
+      this.set('defaultValue', []);
+    }
+    if (!this.privilegesGroups) {
+      this.set('privilegesGroups', []);
+    }
+  },
 });

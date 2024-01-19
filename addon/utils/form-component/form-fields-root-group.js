@@ -7,6 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { A } from '@ember/array';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import { set, get } from '@ember/object';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
@@ -55,6 +56,9 @@ export default FormFieldsGroup.extend({
   valuesSource: undefined,
 
   init() {
+    if (!this.fields) {
+      this.set('fields', A());
+    }
     if (!this.get('valuesSource')) {
       this.reset();
     }

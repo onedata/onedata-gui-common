@@ -25,7 +25,18 @@ export default FormField.extend({
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  text: computed('i18nPrefix', 'translationPath', function text() {
-    return this.getTranslation('text', {}, { defaultValue: '' });
+  text: computed('i18nPrefix', 'translationPath', {
+    get() {
+      return this.injectedText ?? this.getTranslation('text', {}, { defaultValue: '' });
+    },
+    set(key, value) {
+      return this.injectedText = value;
+    },
   }),
+
+  /**
+   * Custom text injected during field creation.
+   * @type {string | null}
+   */
+  injectedText: null,
 });
