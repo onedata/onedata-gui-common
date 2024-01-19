@@ -82,6 +82,7 @@
     padding-left: 68px;
   }
   .content-back-link {
+    @extend .clickable;
     font-size: 28px;
     position: absolute;
     top: 50%;

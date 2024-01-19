@@ -28,7 +28,7 @@
       icon="arrow-left"
       click=(action "scrollLeft")
       class=(concat-classes
-        "left-edge-scroll-step-trigger"
+        "left-edge-scroll-step-trigger clickable"
         (if (not-eq laneIdxForNextLeftScroll null) "visible")
       )
     }}
@@ -36,7 +36,7 @@
       icon="arrow-right"
       click=(action "scrollRight")
       class=(concat-classes
-        "right-edge-scroll-step-trigger"
+        "right-edge-scroll-step-trigger clickable"
         (if (not-eq laneIdxForNextRightScroll null) "visible")
       )
     }}

@@ -140,10 +140,14 @@ strong {
 
 .disable-user-select {
   @include vendor-prefix(user-select, none);
-  cursor: default;
+  &:not(.clickable) {
+    cursor: default;
+  }
   > * {
     @include vendor-prefix(user-select, none);
-    cursor: default;
+    &:not(.clickable) {
+      cursor: default;
+    }
   }
 }
 
@@ -428,6 +432,14 @@ ul.spaced-items, ol.spaced-items {
   }
 }
 
+a, [href] {
+  cursor: pointer;
+
+  &.disabled {
+    cursor: initial;
+  }
+}
+
 a,
 .link {
   color: $color-one-mint;
@@ -706,11 +718,6 @@ textarea + .btn-container {
       height: 44px;
     }
   }
-}
-
-// An ugly hack for bug in ember-hammertime
-textarea[style^="touch-action: manipulation"] {
-  cursor: inherit !important;
 }
 
 .inline-icon-container {

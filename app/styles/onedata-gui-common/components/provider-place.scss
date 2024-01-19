@@ -23,7 +23,7 @@ $super-circle-animation-duration: 2s;
     background-color: transparentize($color-provider-online, 0.5);
   }
 }
-    
+
 @mixin min-super-circle {
   width: 100%;
   height: 100%;
@@ -79,12 +79,12 @@ $super-circle-animation-duration: 2s;
   $-btn-container-height: 30px;
 
   height: $provider-place-drop-height;
-  
+
   // TODO: experimental style
   .space-redirect-link:not(:hover) {
     color: $main-text-color;
   }
-  
+
   &.in-content {
     &.online {
       .drop-title-bar {
@@ -155,13 +155,16 @@ $super-circle-animation-duration: 2s;
         right: 0;
         top: 0;
         bottom: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
         width: 60px;
         border-left: 1px solid $main-border-color;
         line-height: inherit;
         text-align: center;
         color: inherit;
         font-size: 40px;
-  
+
         &:hover {
           background-color: darken($color-one-semiwhite, 20%);
         }
@@ -172,7 +175,7 @@ $super-circle-animation-duration: 2s;
           transform: translateX(-50%) translateY(-50%);
         }
       }
-    }    
+    }
   }
   &.outside-content {
     $drop-padding: $padding-xs-horizontal * 1.5;
@@ -261,6 +264,9 @@ $super-circle-animation-duration: 2s;
         position: absolute;
         top: 0;
         left: 0.2em;
+        padding: 0;
+        border: 0;
+        background: transparent;
         line-height: inherit;
         font-size: 28px;
         color: $color-one-azure;
@@ -341,7 +347,7 @@ $super-circle-animation-duration: 2s;
       }
     }
   }
-  
+
   .drop-provider-host-container {
     .provider-host-text {
       border: none;
@@ -358,7 +364,7 @@ $super-circle-animation-duration: 2s;
       }
     }
   }
-  
+
   .spaces-list {
     color: $color-one-dark-gray;
   }
@@ -405,24 +411,24 @@ $super-circle-animation-duration: 2s;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
   z-index: -1;
-  
+
   border-radius: 50%;
-  
+
   animation-delay: 0s;
   animation-iteration-count: infinite;
-  
+
   &.destination {
     animation-name: gather-circle;
     animation-timing-function: ease-out;
     animation-duration: $super-circle-animation-duration;
   }
-  
+
   &.source {
     animation-name: broadcast-circle;
     animation-timing-function: ease-in;
     animation-duration: $super-circle-animation-duration;
   }
-  
+
   &.destination.source {
     animation-name: full-duplex-circle;
     animation-timing-function: ease;

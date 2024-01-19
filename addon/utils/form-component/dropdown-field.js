@@ -25,8 +25,19 @@ export default OptionsField.extend({
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  placeholder: computed('i18nPrefix', 'translationPath', function placeholder() {
-    // Null value, because powerselect converts `undefined` to string 'undefined'
-    return this.getTranslation('placeholder', {}, { defaultValue: null });
+  placeholder: computed('i18nPrefix', 'translationPath', {
+    get() {
+      return this.injectedPlaceholder ??
+        // Null value, because powerselect converts `undefined` to string 'undefined'
+        this.getTranslation('placeholder', {}, { defaultValue: null });
+    },
+    set(key, value) {
+      return this.injectedPlaceholder = value;
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedPlaceholder: null,
 });

@@ -246,25 +246,27 @@ export const FormElement = FormField.extend({
   /**
    * @type {ComputedProperty<Object>}
    */
-  nestedFormsValidator: computed(() => validator(function (value, options, model) {
-    const field = get(model, 'field');
-    return field.areNestedFormsValid;
-  }, {
-    depependentKeys: ['model.field.areNestedFormsValid'],
+  nestedFormsValidator: computed(() => validator('inline', {
+    validate(value, options, model) {
+      const field = get(model, 'field');
+      return field.areNestedFormsValid;
+    },
   })),
 
   /**
    * @type {ComputedProperty<Object>}
    */
   leftDataTypeSelectorsValidator: computed(() =>
-    validator(function (value, options, model) {
-      const editorElementsContextMap = get(model, 'field.editorElementsContextMap');
-      for (const { element } of editorElementsContextMap.values()) {
-        if (get(element, 'type') === 'dataTypeSelector') {
-          return false;
+    validator('inline', {
+      validate(value, options, model) {
+        const editorElementsContextMap = get(model, 'field.editorElementsContextMap');
+        for (const { element } of editorElementsContextMap.values()) {
+          if (get(element, 'type') === 'dataTypeSelector') {
+            return false;
+          }
         }
-      }
-      return true;
+        return true;
+      },
     })
   ),
 
