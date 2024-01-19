@@ -3,6 +3,7 @@ import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import { lookupService } from '../../helpers/stub-service';
 
 describe('Integration | Component | one-doc-see-more', function () {
   setupRenderingTest();
@@ -18,9 +19,15 @@ describe('Integration | Component | one-doc-see-more', function () {
   });
 
   it('renders anchor with documentation href', async function () {
+    lookupService(this, 'guiUtils').set('softwareVersionDetails', {
+      serviceVersion: '21.02.3',
+      serviceBuildVersion: 'aabbcc',
+    });
+
     await render(hbs `{{one-doc-see-more docPath="hello/world.html"}}`);
+
     expect(find('.documentation-link').href).to.equal(
-      'https://onedata.org/#/home/documentation/doc/hello/world.html'
+      'https://onedata.org/#/home/documentation/21.02/doc/hello/world.html'
     );
   });
 
