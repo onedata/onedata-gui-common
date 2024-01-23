@@ -22,6 +22,7 @@ import {
 import Evented from '@ember/object/evented';
 import OneSingletonTaskQueue from 'onedata-gui-common/utils/one-singleton-task-queue';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
+import globals from 'onedata-gui-common/utils/globals';
 
 export const emptyItem = {};
 
@@ -434,10 +435,14 @@ export default ArraySlice.extend(Evented, {
     const lengthBeforeFetch = this.length || (this.endIndex - this.startIndex);
 
     try {
+      globals.window.globalNotify.info('replacing-chunks-array, will reload, fetch');
       const { arrayUpdate, endReached } = await this.fetchWrapper(
         fetchStartIndex,
         size,
         offset,
+      );
+      globals.window.globalNotify.info(
+        `replacing-chunks-array, reloaded: ${arrayUpdate.map(f => get(f, 'name')).join(',')}`
       );
       const fetchedCount = get(arrayUpdate, 'length');
       const updatedEnd = _start + fetchedCount;
