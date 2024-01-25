@@ -44,12 +44,21 @@ export default ArrayProxy.extend({
    */
   defaultId: undefined,
 
+  /**
+   * Which property should contain a generated conflict label. If `undefined`,
+   * then the default property name will be used.
+   * @virtual optional
+   * @type {string | undefined}
+   */
+  conflictLabelProperty: undefined,
+
   init() {
     this._super(...arguments);
     let {
       diffProperty,
       conflictProperty,
-    } = this.getProperties('conflictProperty', 'diffProperty');
+      conflictLabelProperty,
+    } = this.getProperties('conflictProperty', 'diffProperty', 'conflictLabelProperty');
 
     if (!diffProperty) {
       this.set('diffProperty', 'id');
@@ -59,6 +68,9 @@ export default ArrayProxy.extend({
       this.set('conflictProperty', 'name');
       conflictProperty = 'name';
     }
+    if (!conflictLabelProperty) {
+      conflictLabelProperty = this.set('conflictLabelProperty', 'conflictLabel');
+    }
 
     /**
      * Assigns a `conflictLabel` property for each record in array.
@@ -66,18 +78,32 @@ export default ArrayProxy.extend({
      * records with the same name.
      */
     const computeConflictIds = observer('content.[]',
-      `content.@each.{${diffProperty},${conflictProperty}}`, 'defaultId',
+      `content.@each.{${diffProperty},${conflictProperty}}`,
+      'defaultId',
+      'conflictLabelProperty',
       function () {
         const {
           content: records,
           diffProperty,
           conflictProperty,
           defaultId,
-        } = this.getProperties('content', 'conflictProperty', 'diffProperty',
-          'defaultId');
+          conflictLabelProperty,
+        } = this.getProperties(
+          'content',
+          'conflictProperty',
+          'diffProperty',
+          'defaultId',
+          'conflictLabelProperty'
+        );
 
         if (isArray(records)) {
-          addConflictLabels(records, conflictProperty, diffProperty, defaultId);
+          addConflictLabels(
+            records,
+            conflictProperty,
+            diffProperty,
+            defaultId,
+            conflictLabelProperty
+          );
         }
       });
 
