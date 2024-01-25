@@ -16,6 +16,10 @@ import { defer } from 'rsvp';
  * @property {string} [insertBeforeType] If provided, the task will be insterted not on
  *   the queue end, but before the specified type (if the task of specified type exists)
  *   in the queue).
+ * @property {string} [ignoreCurrentTask] If set to true, the current task is considered
+ *   to be in the queue, so you can add task with the same `taskType` without using
+ *   `forceScheduleTask` as the currently executed task (of course if there is no task
+ *   duplicated in the queue).
  */
 
 export default class OneSingletonTaskQueue {
@@ -36,7 +40,13 @@ export default class OneSingletonTaskQueue {
    */
   scheduleTask(taskType, fun, options = {}) {
     console.debug('util:one-singleton-task-queue: schedule', taskType);
-    const existingTask = this.queue.findBy('type', taskType);
+    let effQueue;
+    if (options?.ignoreCurrentTask && this.currentTask) {
+      effQueue = this.queue.slice(1);
+    } else {
+      effQueue = this.queue;
+    }
+    const existingTask = effQueue.findBy('type', taskType);
     if (existingTask) {
       console.debug('util:one-singleton-task-queue: already exists', taskType);
       return existingTask.deferred.promise;

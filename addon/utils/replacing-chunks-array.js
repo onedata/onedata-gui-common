@@ -156,7 +156,17 @@ export default ArraySlice.extend(Evented, {
     return Boolean(blockingTask);
   },
 
-  async scheduleTask(taskName, methodName = taskName, ...args) {
+  /**
+   * @param {string} taskName Same as in `OneSingletonTaskQueue.scheduleTask`.
+   * @param {Object} options Additional options.
+   * @param {boolean} options.ignoreCurrentTask Passed to queue's `scheduleTask`, same as
+   *   in `OneSingletonTaskQueueScheduleOptions`.
+   * @param {string} methodName Method to invoke in `ReplacingChunksArray`.
+   * @param {...any} args Arguments for method invoked in `ReplacingChunksArray`.
+   * @returns {Promise} Promise as in `OneSingletonTaskQueue.scheduleTask` after
+   *   scheduling the task.
+   */
+  async scheduleTask(taskName, options, methodName = taskName, ...args) {
     if (
       (taskName === 'fetchPrev' || taskName === 'fetchNext') &&
       this.isFetchExpandLocked()
@@ -166,9 +176,12 @@ export default ArraySlice.extend(Evented, {
     }
     const fun = () => this[methodName](...args);
     let taskFun = fun;
-    let options = {};
+    let taskQueueOptions = {};
+    if (options?.ignoreCurrentTask) {
+      taskQueueOptions.ignoreCurrentTask = options.ignoreCurrentTask;
+    }
     if (taskName === 'fetchPrev') {
-      options = { insertBeforeType: 'reload' };
+      taskQueueOptions = { insertBeforeType: 'reload' };
       // For fetch prev: schedule check if user did scroll to region that is still not
       // loaded - if so, we need to schedule next fetchPrev.
       // We need to do this, because auto-fetchPrev scheduling is locked when fetchPrev
@@ -177,7 +190,11 @@ export default ArraySlice.extend(Evented, {
         await waitForRender();
         if (this.isFetchPrevNeeded()) {
           console.debug('util:replacing-chunks-array: next serial fetchPrev needed');
-          this.taskQueue.forceScheduleTask('fetchPrev', () => this.fetchPrev(), options);
+          this.taskQueue.forceScheduleTask(
+            'fetchPrev',
+            () => this.fetchPrev(),
+            taskQueueOptions
+          );
         }
         return result;
       });
@@ -185,7 +202,7 @@ export default ArraySlice.extend(Evented, {
     return await this.taskQueue.scheduleTask(
       taskName,
       taskFun,
-      options
+      taskQueueOptions
     );
   },
 
@@ -435,13 +452,15 @@ export default ArraySlice.extend(Evented, {
     const lengthBeforeFetch = this.length || (this.endIndex - this.startIndex);
 
     try {
-      globals.window.globalNotify.info('replacing-chunks-array, will reload, fetch');
+      // FIXME: debug
+      globals.window.globalNotify?.info('replacing-chunks-array, will reload, fetch');
       const { arrayUpdate, endReached } = await this.fetchWrapper(
         fetchStartIndex,
         size,
         offset,
       );
-      globals.window.globalNotify.info(
+      // FIXME: debug
+      globals.window.globalNotify?.info(
         `replacing-chunks-array, reloaded: ${arrayUpdate.map(f => get(f, 'name')).join(',')}`
       );
       const fetchedCount = get(arrayUpdate, 'length');
@@ -484,9 +503,9 @@ export default ArraySlice.extend(Evented, {
     }
   },
 
-  scheduleReload({ head, minSize, offset } = {}) {
+  scheduleReload({ head, minSize, offset, forced } = {}) {
     return this.scheduleTask(
-      `reload-${head}-${minSize}-${offset}`,
+      `reload-${head}-${minSize}-${offset}`, { ignoreCurrentTask: forced },
       '_reload', { head, minSize, offset }
     );
   },
@@ -543,7 +562,7 @@ export default ArraySlice.extend(Evented, {
 
   scheduleJump(index, size) {
     return this.scheduleTask(
-      `jump-${index}-${size}`,
+      `jump-${index}-${size}`, {},
       '_jump',
       index,
       size
