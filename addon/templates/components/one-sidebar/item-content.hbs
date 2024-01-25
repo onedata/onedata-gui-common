@@ -7,7 +7,7 @@
   {{#unless (media "isMobile")}}
     {{one-tooltip
       title=item.warningMessage
-      triggerElement=(concat ".item-" item.id " .warning-icon")
+      triggerElement=(concat ".item-" (or item.itemClassId item.id) " .warning-icon")
       triggerEvent="hover"
     }}
   {{/unless}}

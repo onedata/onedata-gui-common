@@ -2,7 +2,7 @@
   <li class={{concat-classes
     "one-list-item clickable"
     (if (eq secondaryItemId sli.id) "active")
-    (concat "item-" sli.id)
+    (concat "item-" (or sli.itemClassId sli.id))
     (if (or sli.disabled sli.forbidden) "disabled")
   }}>
     {{#link-to
