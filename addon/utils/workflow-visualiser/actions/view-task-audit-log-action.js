@@ -9,7 +9,7 @@
 
 import Action from 'onedata-gui-common/utils/action';
 import ActionResult from 'onedata-gui-common/utils/action-result';
-import { set, get } from '@ember/object';
+import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { not } from 'ember-awesome-macros';
@@ -90,8 +90,6 @@ export default Action.extend({
     return modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
-        viewModeLayout: 'auditLog',
-        subjectName: this.t('subjectName', { taskName: get(task, 'name') }),
         store: systemAuditLogStore,
         taskExecutionId,
         actionsFactory: this.actionsFactory,

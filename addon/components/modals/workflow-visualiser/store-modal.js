@@ -1,10 +1,6 @@
 /**
  * A modal that allows create, view and modify workflow stores. `modalOptions` fields:
  * - `mode` - one of `'create'`, `'edit'`, `'view'`,
- * - `viewModeLayout` - one of `'store'`, `'auditLog'`, `'timeSeries'`.
- *   Needed when mode is `'view'`,
- * - `subjectName` - name of a subject described by data in store. Needed when
- *   `viewModeLayout` is `'auditLog'` or `'timeSeries'`,
  * - `store` - will be used to fill form data. Needed when mode is `'edit'` or `'view'`,
  * - `allowedStoreTypes` - is taken into account when `mode` is `'create'`,
  * - `allowedDataTypes` - is taken into account when `mode` is `'create'`,
@@ -25,7 +21,7 @@ import { inject as service } from '@ember/service';
 import layout from '../../../templates/components/modals/workflow-visualiser/store-modal';
 import { reads } from '@ember/object/computed';
 import { computed, trySet } from '@ember/object';
-import { raw, or, eq } from 'ember-awesome-macros';
+import { raw, eq } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -76,16 +72,6 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<String>}
    */
   mode: reads('modalOptions.mode'),
-
-  /**
-   * @type {ComputedProperty<String>}
-   */
-  viewModeLayout: or('modalOptions.viewModeLayout', raw('store')),
-
-  /**
-   * @type {ComputedProperty<String|undefined>}
-   */
-  subjectName: reads('modalOptions.subjectName'),
 
   /**
    * @type {ComputedProperty<Object>}
@@ -152,26 +138,40 @@ export default Component.extend(I18n, {
    */
   storeContentPresenterContext: reads('modalOptions.storeContentPresenterContext'),
 
-  /**
-   * @type {ComputedProperty<String>}
-   */
   headerText: computed(
     'mode',
-    'viewModeLayout',
-    'subjectName',
+    'store.containerElement.___modelType',
     function headerText() {
-      const {
-        mode,
-        viewModeLayout,
-        subjectName,
-      } = this.getProperties('mode', 'viewModeLayout', 'subjectName');
-
-      let translationKey = `header.${mode}`;
-      if (mode === 'view') {
-        translationKey += `.${viewModeLayout}`;
+      let translationKey = `header.${this.mode}`;
+      if (this.mode === 'view') {
+        const containerModelType = this.store?.containerElement?.__modelType;
+        const storeType = this.store?.type;
+        if (
+          (containerModelType === 'task' || containerModelType === 'workflow') &&
+          (storeType === 'timeSeries' || storeType === 'auditLog')
+        ) {
+          translationKey += `.${containerModelType}.${storeType}`;
+        } else {
+          translationKey += '.any.any';
+        }
       }
 
-      return this.t(translationKey, { subjectName });
+      return this.t(translationKey);
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<string | null>}
+   */
+  subheaderText: computed(
+    'mode',
+    'store.{name,containerElement.name}',
+    function subheaderText() {
+      if (this.mode === 'create') {
+        return null;
+      }
+
+      return this.store?.containerElement?.name ?? this.store?.name ?? null;
     }
   ),
 

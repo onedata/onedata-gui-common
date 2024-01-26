@@ -67,8 +67,6 @@ export default Action.extend({
     return modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
-        viewModeLayout: 'timeSeries',
-        subjectName: this.t('subjectName', { taskName: get(task, 'name') }),
         store: timeSeriesStore,
         getStoreContentCallback: (...args) =>
           getTimeSeriesContentCallback(timeSeriesStore, ...args),
