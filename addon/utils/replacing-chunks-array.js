@@ -22,7 +22,6 @@ import {
 import Evented from '@ember/object/evented';
 import OneSingletonTaskQueue from 'onedata-gui-common/utils/one-singleton-task-queue';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
-import globals from 'onedata-gui-common/utils/globals';
 
 export const emptyItem = {};
 
@@ -176,12 +175,12 @@ export default ArraySlice.extend(Evented, {
     }
     const fun = () => this[methodName](...args);
     let taskFun = fun;
-    let taskQueueOptions = {};
+    const taskQueueOptions = {};
     if (options?.ignoreCurrentTask) {
       taskQueueOptions.ignoreCurrentTask = options.ignoreCurrentTask;
     }
     if (taskName === 'fetchPrev') {
-      taskQueueOptions = { insertBeforeType: 'reload' };
+      taskQueueOptions.insertBeforeType = 'reload';
       // For fetch prev: schedule check if user did scroll to region that is still not
       // loaded - if so, we need to schedule next fetchPrev.
       // We need to do this, because auto-fetchPrev scheduling is locked when fetchPrev
