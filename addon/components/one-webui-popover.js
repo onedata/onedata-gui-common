@@ -15,7 +15,6 @@
  */
 
 import Component from '@ember/component';
-
 import { assert } from '@ember/debug';
 import { get, computed, observer } from '@ember/object';
 import { run, scheduleOnce, next } from '@ember/runloop';
@@ -266,7 +265,14 @@ export default Component.extend({
       this.set('suppressContentSizeChangeObserver', true);
       return;
     }
-    this.reposition();
+    this.set('suppressContentSizeChangeObserver', true);
+    (async () => {
+      try {
+        this.reposition();
+      } finally {
+        this.set('suppressContentSizeChangeObserver', false);
+      }
+    })();
   },
 
   willDestroyElement() {
