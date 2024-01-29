@@ -8,8 +8,8 @@
   }
   .linked-account {
     position: relative;
-    min-height: $large-social-box-size + 2 * $content-row-vertical-padding;
-    padding-left: $large-social-box-size + $padding-base-horizontal;    
+    min-height: $large-auth-icon-box-size + 2 * $content-row-vertical-padding;
+    padding-left: $large-auth-icon-box-size + $padding-base-horizontal;
   }
   .login-icon-box:not(.add) {
     cursor: default !important;
@@ -17,7 +17,7 @@
   .login-icon-box.add:hover {
     background-color: transparentize($color: #026381, $amount: 0.9)
   }
-  .social-box {
+  .auth-icon-box {
     position: absolute;
     top: $content-row-vertical-padding;
     left: 0;
@@ -35,7 +35,7 @@
   }
   .login-icon-box.add {
     $border-width: 2px;
-    $add-box-size: $large-social-box-size - 2 * $border-width;
+    $add-box-size: $large-auth-icon-box-size - 2 * $border-width;
     background-color: $color-one-white;
     border: 2px solid $color-one-blue-gray;
     color: $color-one-blue-gray;
@@ -43,7 +43,7 @@
       line-height: $add-box-size;
     }
   }
-  .social-box-linked-account .login-icon-box {
+  .auth-icon-box-linked-account .login-icon-box {
     display: block;
     border-style: dotted;
     .plus-icon {
