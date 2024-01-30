@@ -15,7 +15,6 @@
  */
 
 import Component from '@ember/component';
-
 import { assert } from '@ember/debug';
 import { get, computed, observer } from '@ember/object';
 import { run, scheduleOnce, next } from '@ember/runloop';
@@ -27,6 +26,12 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import { resolve } from 'rsvp';
 import dom from 'onedata-gui-common/utils/dom';
 import globals from 'onedata-gui-common/utils/globals';
+
+/**
+ * @typedef {Object} OneWebuiPopoverApi
+ * @property {() => void} reposition Recalculates popover position.
+ * @property {() => void} hide Hides popover.
+ */
 
 export default Component.extend({
   layout,
@@ -81,13 +86,8 @@ export default Component.extend({
 
   /**
    * @type {Function}
-   * @param {Object} publicApi Object with callbacks, which interacts with popover:
-   *   ```
-   *   {
-   *     reposition(): undefined // recalculates popover position
-   *     hide(): undefined // hides popover
-   *   }
-   *   ```
+   * @param {OneWebuiPopoverApi} publicApi Object with callbacks, which interacts with the
+   *   popover.
    */
   registerApi: notImplementedIgnore,
 
@@ -95,6 +95,18 @@ export default Component.extend({
    * @type {WebuiPopover}
    */
   popoverInstance: undefined,
+
+  /**
+   * @type {ResizeObserver}
+   */
+  contentResizeObserver: undefined,
+
+  /**
+   * If set to true, the resize observer will not launch reposition.
+   * Used for suppressing size changes from zero and to zero.
+   * @type {boolean}
+   */
+  suppressContentSizeChangeObserver: false,
 
   /**
    * @type {functions}
@@ -232,17 +244,43 @@ export default Component.extend({
     this.set('popoverInstance', $triggerElement.data('plugin_webuiPopover'));
 
     globals.window.addEventListener(windowEvent, _resizeHandler);
+    if (!this.element.clientWidth || !this.element.clientHeight) {
+      this.set('suppressContentSizeChangeObserver', true);
+    }
+    this.set(
+      'contentResizeObserver',
+      new ResizeObserver(this.onContentSizeChanged.bind(this))
+    );
+    this.contentResizeObserver.observe(this.element);
+  },
+
+  onContentSizeChanged() {
+    if (this.suppressContentSizeChangeObserver) {
+      if (this.element.clientWidth && this.element.clientHeight) {
+        this.set('suppressContentSizeChangeObserver', false);
+      }
+      return;
+    }
+    if (!this.element.clientWidth || !this.element.clientHeight) {
+      this.set('suppressContentSizeChangeObserver', true);
+      return;
+    }
+    this.set('suppressContentSizeChangeObserver', true);
+    (async () => {
+      try {
+        this.reposition();
+      } finally {
+        this.set('suppressContentSizeChangeObserver', false);
+      }
+    })();
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
     next(() => this._popover('destroy'));
-    const {
-      _resizeHandler,
-      windowEvent,
-    } = this.getProperties('_resizeHandler', 'windowEvent');
-    globals.window.removeEventListener(windowEvent, _resizeHandler);
+    globals.window.removeEventListener(this.windowEvent, this._resizeHandler);
+    this.contentResizeObserver?.disconnect();
   },
 
   _popover() {
