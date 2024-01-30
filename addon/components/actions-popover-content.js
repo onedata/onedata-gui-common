@@ -68,7 +68,7 @@ export default Component.extend(I18n, {
    * If true, enables hide transition for nested actions.
    * @type {boolean}
    */
-  withNestedActionsTransition: config.environment !== 'test',
+  withoutNestedActionsTransition: config.environment === 'test',
 
   /**
    * True, if there are no functional actions in `actionsArray` (eg. only separators)
