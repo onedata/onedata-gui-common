@@ -265,7 +265,9 @@ input[type=number] {
 .collapse-animation {
   max-height: 99999em;
   opacity: 1;
-  transition: $collapse-transition;
+  &.with-transition {
+    transition: $collapse-transition;
+  }
   &.collapse-small {
     max-height: 1000px;
   }

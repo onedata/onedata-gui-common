@@ -17,6 +17,7 @@ import layout from '../templates/components/actions-popover-content';
 import { get, computed } from '@ember/object';
 import { scheduleOnce } from '@ember/runloop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import config from 'ember-get-config';
 
 export default Component.extend(I18n, {
   layout,
@@ -62,6 +63,12 @@ export default Component.extend(I18n, {
    * @type {Action|null}
    */
   nestedActionsOpened: null,
+
+  /**
+   * If true, enables hide transition for nested actions.
+   * @type {boolean}
+   */
+  withNestedActionsTransition: config.environment !== 'test',
 
   /**
    * True, if there are no functional actions in `actionsArray` (eg. only separators)
