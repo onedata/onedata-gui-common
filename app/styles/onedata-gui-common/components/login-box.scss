@@ -211,7 +211,7 @@
   }
 }
 
-.social-box {
+.auth-icon-box {
   position: relative;
   display: inline-block;
   vertical-align: top;
@@ -225,7 +225,7 @@
       cursor: default;
     }
   }
-  .social-icon-image {
+  .auth-icon-image {
     width: 100%;
     height: 100%;
     background-size: 50px 50px;
@@ -234,12 +234,12 @@
   }
 }
 
-.login-box, .full-social-icon {
+.login-box, .full-auth-icon {
   .login-icon-box {
     display: inline-block;
-    height: $large-social-box-size;
-    width: $large-social-box-size;
-    line-height: $large-social-box-size;
+    height: $large-auth-icon-box-size;
+    width: $large-auth-icon-box-size;
+    line-height: $large-auth-icon-box-size;
     font-size: 35px;
     cursor: pointer;
 
@@ -317,7 +317,7 @@
     }
     .authorizers-dropdown {
       .ember-power-select-trigger {
-        .social-box {
+        .auth-icon-box {
           left: 100px;
         }
       }
@@ -338,7 +338,7 @@
     .ember-power-select-trigger {
       min-height: 45px;
       padding: 11px 40px 11px 110px;
-      .social-box-component {
+      .auth-icon-box-component {
         left: 94px;
       }
       .ember-power-select-selected-item {
