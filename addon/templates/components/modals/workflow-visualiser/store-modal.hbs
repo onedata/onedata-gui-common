@@ -15,6 +15,11 @@
 
   {{#modal.header}}
     <h1>{{#truncated-string}}{{headerText}}{{/truncated-string}}</h1>
+    {{#if subheaderText}}
+      <h2 class="normal-case">
+        {{#truncated-string}}{{subheaderText}}{{/truncated-string}}
+      </h2>
+    {{/if}}
   {{/modal.header}}
 
   {{#modal.body}}
