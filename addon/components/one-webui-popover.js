@@ -268,7 +268,9 @@ export default Component.extend({
     this.set('suppressContentSizeChangeObserver', true);
     (async () => {
       try {
-        this.reposition();
+        if (this._isPopoverVisible) {
+          this.reposition();
+        }
       } finally {
         this.set('suppressContentSizeChangeObserver', false);
       }
