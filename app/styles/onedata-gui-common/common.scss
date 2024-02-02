@@ -140,10 +140,14 @@ strong {
 
 .disable-user-select {
   @include vendor-prefix(user-select, none);
-  cursor: default;
+  &:not(.clickable) {
+    cursor: default;
+  }
   > * {
     @include vendor-prefix(user-select, none);
-    cursor: default;
+    &:not(.clickable) {
+      cursor: default;
+    }
   }
 }
 
@@ -262,6 +266,9 @@ input[type=number] {
   max-height: 99999em;
   opacity: 1;
   transition: $collapse-transition;
+  &.without-transition {
+    transition: none;
+  }
   &.collapse-small {
     max-height: 1000px;
   }
@@ -419,6 +426,20 @@ ul.info {
     @include oneicon-content($oneicon-arrow-right);
     font-family: 'oneicons' !important;
     font-weight: bold;
+  }
+}
+
+ul.spaced-items, ol.spaced-items {
+  li:not(:last-child) {
+    margin-bottom: 0.5em;
+  }
+}
+
+a, [href] {
+  cursor: pointer;
+
+  &.disabled {
+    cursor: initial;
   }
 }
 
@@ -700,11 +721,6 @@ textarea + .btn-container {
       height: 44px;
     }
   }
-}
-
-// An ugly hack for bug in ember-hammertime
-textarea[style^="touch-action: manipulation"] {
-  cursor: inherit !important;
 }
 
 .inline-icon-container {

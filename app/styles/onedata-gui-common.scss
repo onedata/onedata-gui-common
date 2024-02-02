@@ -21,6 +21,7 @@ $letter-spacing-base: 0.07em;
 $control-box-shadow: inset 1px 1px 2px $color-one-semiwhite;
 $control-box-shadow-focus: inset 0 1px 1px $color-one-semiwhite, 0 0 8px rgba($color-one-blue-gray, 0.2);
 $control-focus-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+$main-border: 1px solid $main-border-color;
 
 $color-main-menu-bg: $color-one-semiblack;
 $color-sidebar-background: $color-one-semiwhite;
@@ -31,7 +32,7 @@ $color-one-list-item-separator: $main-border-color;
 $main-content-hover-background: lighten($color-one-semiwhite, 3%);
 $main-content-light-background: lighten($color-one-semiwhite, 5%);
 
-$large-social-box-size: 50px;
+$large-auth-icon-box-size: 50px;
 
 $disabled-opacity: 0.6;
 
@@ -212,5 +213,7 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 @import 'onedata-gui-common/components/flippable-icons';
 @import 'onedata-gui-common/components/record-name';
 @import 'onedata-gui-common/components/group-info-content';
+@import 'onedata-gui-common/components/remove-ack-popover';
+@import 'onedata-gui-common/components/warning-icon';
 @import 'onedata-gui-common/components/pages-control';
 @import 'onedata-gui-common/components/websocket-reconnection-modal';

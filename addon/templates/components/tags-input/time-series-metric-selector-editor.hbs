@@ -16,23 +16,22 @@
   }}
 
     <div class="aggregator-dropdown">
-      {{#one-dropdown
-        triggerClass="small"
-        dropdownClass="small"
-        options=aggregatorOptions
-        onchange=(action (mut selectedAggregatorOption))
-        selected=selectedAggregatorOption
-        searchEnabled=false
-        renderInPlace=true
-        verticalPosition="bottom"
+      <OneDropdown
+        @triggerClass="small"
+        @dropdownClass="small"
+        @options={{aggregatorOptions}}
+        @onChange={{action (mut selectedAggregatorOption)}}
+        @selected={{selectedAggregatorOption}}
+        @renderInPlace={{true}}
+        @verticalPosition="bottom"
         as |option|
-      }}
+      >
         <div class="option-container">
           {{#truncated-string class="text"}}
             {{option.label}}
           {{/truncated-string}}
         </div>
-      {{/one-dropdown}}
+      </OneDropdown>
     </div>
 
     {{#bs-button-group

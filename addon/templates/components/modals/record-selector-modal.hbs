@@ -12,20 +12,21 @@
   {{#modal.body}}
     <p class="description">{{descriptionText}}</p>
     {{#promise-proxy-container proxy=recordOptionsProxy}}
-      {{#one-dropdown
-        options=recordOptionsProxy
-        onchange=(action (mut selectedRecordOption))
-        selected=selectedRecordOption
-        placeholder=selectorPlaceholderText
+      <OneDropdown
+        @options={{recordOptionsProxy}}
+        @onChange={{action (mut selectedRecordOption)}}
+        @selected={{selectedRecordOption}}
+        @placeholder={{selectorPlaceholderText}}
+        @searchEnabled={{true}}
         as |recordOption|
-      }}
+      >
         <div class="option-container">
           {{one-icon icon=recordOption.icon}}
           {{#truncated-string class="text"}}
             {{recordOption.label}}
           {{/truncated-string}}
         </div>
-      {{/one-dropdown}}
+      </OneDropdown>
     {{/promise-proxy-container}}
   {{/modal.body}}
 

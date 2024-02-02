@@ -1,0 +1,27 @@
+{{one-icon icon=icon}}
+<span class="name">
+  {{#if name}}
+    {{#if this.item.repeatPerPrefixedTimeSeries}}
+      <em>{{name}}</em>
+    {{else}}
+      {{name}}
+    {{/if}}
+  {{else}}
+    <em>{{namePlaceholder}}</em>
+  {{/if}}
+</span>
+<span class="additional-info">
+  {{#if colorStyle}}
+    <span class="color-mark" style={{colorStyle}}></span>
+  {{/if}}
+  <span class="type">{{typeTranslation}}</span>
+  {{#if (or item.group item.axis)}}|{{/if}}
+  {{#if item.group}}
+    {{one-icon icon=seriesGroupIcon}}
+    <span class="series-group-name">{{item.group.name}}</span>
+    {{#if item.axis}}|{{/if}}
+  {{/if}}
+  {{#if item.axis}}
+    {{one-icon icon=axisIcon}} <span class="axis-name">{{item.axis.name}}</span>
+  {{/if}}
+</span>

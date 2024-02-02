@@ -24,6 +24,7 @@ import {
   not,
   or,
   and,
+  raw,
   difference,
   gt,
 } from 'ember-awesome-macros';
@@ -72,13 +73,13 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {Array<Tag>}
    */
-  tags: computed(() => []),
+  tags: undefined,
 
   /**
    * @virtual optional
    * @type {ComputedProperty<number>}
    */
-  tabindex: writable(conditional('disabled', -1, 0)),
+  tabindex: writable(conditional('disabled', raw(undefined), raw(0))),
 
   /**
    * @virtual optional
@@ -324,6 +325,13 @@ export default Component.extend(I18n, {
       this.endTagCreation();
     }
   }),
+
+  init() {
+    this._super(...arguments);
+    if (!this.tags) {
+      this.set('tags', []);
+    }
+  },
 
   didInsertElement() {
     this._super(...arguments);

@@ -60,33 +60,78 @@ export const ValueEditorField = FormField.extend({
   editorContext: undefined,
 
   /**
-   * @type {Utils.AtmWorkflow.ValueEditors.ValueEditorStateManager}
+   * @virtual optional
+   * @type {ComputedProperty<SafeString>}
    */
-  editorStateManager: undefined,
+  valueCreatorButtonLabel: computed(
+    'i18nPrefix',
+    'translationPath', {
+      get() {
+        return this.injectedValueCreatorButtonLabel ??
+          this.getTranslation('valueCreatorButtonLabel', {}, {
+            defaultValue: this.t(
+              `${defaultI18nPrefix}.valueCreatorButtonLabel`, {}, {
+                defaultValue: '',
+                usePrefix: false,
+              },
+            ),
+          });
+      },
+      set(key, value) {
+        return this.injectedValueCreatorButtonLabel = value;
+      },
+    }
+  ),
 
   /**
-   * @type {ValueEditorStateManagerDump}
+   * @virtual optional
+   * @type {ComputedProperty<SafeString>}
    */
-  lastEditorStateManagerDump: undefined,
+  invalidAtmDataSpecMessage: computed(
+    'i18nPrefix',
+    'translationPath', {
+      get() {
+        return this.injectedInvalidAtmDataSpecMessage ??
+          this.getTranslation('invalidAtmDataSpecMessage', {}, {
+            defaultValue: this.t(
+              `${defaultI18nPrefix}.invalidAtmDataSpecMessage`, {}, {
+                defaultValue: '',
+                usePrefix: false,
+              },
+            ),
+          });
+      },
+      set(key, value) {
+        return this.injectedInvalidAtmDataSpecMessage = value;
+      },
+    }
+  ),
 
   /**
    * @override
    */
   defaultValue: computed(
     'editorStateManager',
-    'isOptional',
-    function defaultValue() {
-      if (this.isOptional) {
-        return {
-          hasValue: false,
-          value: null,
-        };
-      } else {
-        return {
-          hasValue: true,
-          value: this.editorStateManager.defaultValue,
-        };
-      }
+    'isOptional', {
+      get() {
+        if (this.injectedDefaultValue) {
+          return this.injectedDefaultValue;
+        }
+        if (this.isOptional) {
+          return {
+            hasValue: false,
+            value: null,
+          };
+        } else {
+          return {
+            hasValue: true,
+            value: this.editorStateManager.defaultValue,
+          };
+        }
+      },
+      set(key, value) {
+        return this.injectedDefaultValue = value;
+      },
     }
   ),
 
@@ -116,40 +161,29 @@ export const ValueEditorField = FormField.extend({
   ),
 
   /**
-   * @type {ComputedProperty<SafeString>}
+   * @type {Utils.AtmWorkflow.ValueEditors.ValueEditorStateManager}
    */
-  valueCreatorButtonLabel: computed(
-    'i18nPrefix',
-    'translationPath',
-    function valueCreatorButtonLabel() {
-      return this.getTranslation('valueCreatorButtonLabel', {}, {
-        defaultValue: this.t(
-          `${defaultI18nPrefix}.valueCreatorButtonLabel`, {}, {
-            defaultValue: '',
-            usePrefix: false,
-          },
-        ),
-      });
-    }
-  ),
+  editorStateManager: undefined,
 
   /**
-   * @type {ComputedProperty<SafeString>}
+   * @type {ValueEditorStateManagerDump}
    */
-  invalidAtmDataSpecMessage: computed(
-    'i18nPrefix',
-    'translationPath',
-    function invalidAtmDataSpecMessage() {
-      return this.getTranslation('invalidAtmDataSpecMessage', {}, {
-        defaultValue: this.t(
-          `${defaultI18nPrefix}.invalidAtmDataSpecMessage`, {}, {
-            defaultValue: '',
-            usePrefix: false,
-          },
-        ),
-      });
-    }
-  ),
+  lastEditorStateManagerDump: undefined,
+
+  /**
+   * @type {ValueEditorFieldValue | null}
+   */
+  injectedDefaultValue: null,
+
+  /**
+   * @type {SafeString | null}
+   */
+  injectedValueCreatorButtonLabel: null,
+
+  /**
+   * @type {SafeString | null}
+   */
+  injectedInvalidAtmDataSpecMessage: null,
 
   /**
    * @type {ComputedProperty<ValueEditorStateManagerChangeListener>}

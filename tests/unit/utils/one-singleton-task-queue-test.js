@@ -23,6 +23,66 @@ describe('Unit | Utility | one-singleton-task-queue', function () {
     expect(globalCounter).to.equal(1);
   });
 
+  it('does not schedule task with the same type if it is currently executing (by default)', async function () {
+    const taskQueue = new OneSingletonTaskQueue();
+    let globalCounter = 0;
+    const fun = async (value) => {
+      for (let i = 0; i < value; ++i) {
+        globalCounter += 1;
+        await sleep(0);
+      }
+    };
+
+    const fun3 = () => fun(3);
+    const fun4 = () => fun(4);
+    const fun5 = () => fun(5);
+    taskQueue.scheduleTask('increment', fun3);
+
+    // let the first task start
+    await sleep(0);
+    // assert that the task started
+    expect(taskQueue.currentTask?.fun).to.equal(fun3);
+
+    taskQueue.scheduleTask('increment', fun4);
+    taskQueue.scheduleTask('increment', fun5);
+
+    await taskQueue.executionPromiseObject;
+
+    expect(globalCounter).to.equal(3);
+  });
+
+  it('schedules task with the same type if it is currently executing (with ignoreCurrentTask flag)',
+    async function () {
+      const taskQueue = new OneSingletonTaskQueue();
+      let globalCounter = 0;
+      const fun = async (value) => {
+        for (let i = 0; i < value; ++i) {
+          globalCounter += 1;
+          await sleep(0);
+        }
+      };
+
+      const fun3 = () => fun(3);
+      const fun4 = () => fun(4);
+      const fun5 = () => fun(5);
+      taskQueue.scheduleTask('increment', fun3, { ignoreCurrentTask: true });
+
+      // let the first task start
+      await sleep(0);
+      // assert that the task started
+      expect(taskQueue.currentTask?.fun).to.equal(fun3);
+
+      taskQueue.scheduleTask('increment', fun4, { ignoreCurrentTask: true });
+
+      // this task should not be scheduled, because fun4 is in queue and not in progress
+      taskQueue.scheduleTask('increment', fun5, { ignoreCurrentTask: true });
+
+      await taskQueue.executionPromiseObject;
+
+      expect(globalCounter).to.equal(7);
+    }
+  );
+
   it('schedules task with existing type if forceScheduleTask is used', async function () {
     const taskQueue = new OneSingletonTaskQueue();
     let globalCounter = 0;

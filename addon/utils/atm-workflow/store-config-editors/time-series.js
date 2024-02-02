@@ -16,6 +16,7 @@ import {
   observer,
   defineProperty,
 } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { eq, raw } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
@@ -31,11 +32,7 @@ import {
   timeSeriesMetricAggregators,
   translateTimeSeriesNameGeneratorType,
 } from 'onedata-gui-common/utils/time-series';
-import {
-  default as ChartsDashboardEditor,
-  formValueToChartsDashboardSpec,
-  chartsDashboardSpecToFormValue,
-} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
+import ChartsDashboardEditorField from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-field';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import { Tag as MetricTag } from 'onedata-gui-common/components/tags-input/time-series-metric-selector-editor';
 
@@ -43,10 +40,17 @@ import { Tag as MetricTag } from 'onedata-gui-common/components/tags-input/time-
 const customPseudoUnit = 'custom';
 
 const FormElement = FormFieldsGroup.extend({
+  /**
+   * @virtual
+   * @type {DashboardModelOwner}
+   */
+  dashboardModelOwner: undefined,
+
   classes: 'time-series-store-config-editor',
   i18nPrefix: 'utils.atmWorkflow.storeConfigEditors.timeSeries.fields',
   // Does not take parent fields group translation path into account
   translationPath: '',
+
   fields: computed(() => [
     timeSeriesSchemasField.create(),
     dashboardSpecField.create(),
@@ -105,21 +109,22 @@ const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
         TextField.create({
           name: 'nameGenerator',
           customValidators: [
-            validator(function (value, options, model) {
-              const trimmedValue = (value || '').trim();
-              if (!trimmedValue) {
-                return true;
-              }
-              const field = get(model, 'field');
-              const errorMsg = String(field.getTranslation('errors.notUnique'));
-              const usedNameGenerators = get(model, 'field.parent.parent.usedNameGenerators');
-              return usedNameGenerators
-                .filter((usedNameGenerator) => {
-                  const trimmedUsedNameGenerator = usedNameGenerator.trim();
-                  return trimmedUsedNameGenerator.startsWith(trimmedValue) ||
-                    trimmedValue.startsWith(trimmedUsedNameGenerator);
-                }).length <= 1 ? true : errorMsg;
-            }, {
+            validator('inline', {
+              validate(value, options, model) {
+                const trimmedValue = (value || '').trim();
+                if (!trimmedValue) {
+                  return true;
+                }
+                const field = get(model, 'field');
+                const errorMsg = String(field.getTranslation('errors.notUnique'));
+                const usedNameGenerators = get(model, 'field.parent.parent.usedNameGenerators');
+                return usedNameGenerators
+                  .filter((usedNameGenerator) => {
+                    const trimmedUsedNameGenerator = usedNameGenerator.trim();
+                    return trimmedUsedNameGenerator.startsWith(trimmedValue) ||
+                      trimmedValue.startsWith(trimmedUsedNameGenerator);
+                  }).length <= 1 ? true : errorMsg;
+              },
               dependentKeys: ['model.field.parent.parent.usedNameGenerators'],
             }),
           ],
@@ -182,8 +187,9 @@ const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
   },
 });
 
-const dashboardSpecField = ChartsDashboardEditor.extend({
+const dashboardSpecField = ChartsDashboardEditorField.extend({
   name: 'dashboardSpec',
+  dashboardModelOwner: reads('parent.dashboardModelOwner'),
 });
 
 /**
@@ -240,7 +246,7 @@ function formValuesToStoreConfig(values) {
     timeSeriesCollectionSchema: {
       timeSeriesSchemas,
     },
-    dashboardSpec: formValueToChartsDashboardSpec(dashboardSpec),
+    dashboardSpec,
   };
 }
 
@@ -255,7 +261,7 @@ function storeConfigToFormValues(storeConfig) {
   });
   const values = createValuesContainer({
     timeSeriesSchemas,
-    dashboardSpec: chartsDashboardSpecToFormValue(storeConfig?.dashboardSpec),
+    dashboardSpec: storeConfig?.dashboardSpec ?? null,
   });
 
   const rawTimeseriesSchemas =

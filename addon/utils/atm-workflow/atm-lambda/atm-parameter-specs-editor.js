@@ -174,20 +174,21 @@ const EntryNameField = TextField.extend({
    * @override
    */
   customValidators: Object.freeze([
-    validator(function validator(value, options, model) {
-      const field = model?.field;
-      const trimmedValued = value?.trim();
-      if (!trimmedValued || !field) {
-        return true;
-      }
+    validator('inline', {
+      validate(value, options, model) {
+        const field = model?.field;
+        const trimmedValued = value?.trim();
+        if (!trimmedValued || !field) {
+          return true;
+        }
 
-      const usedNames = (field.usedNames ?? []).map((name) => name.trim());
-      if (usedNames.filter((name) => name === trimmedValued).length > 1) {
-        return String(field.getTranslation('errors.notUnique'));
-      } else {
-        return true;
-      }
-    }, {
+        const usedNames = (field.usedNames ?? []).map((name) => name.trim());
+        if (usedNames.filter((name) => name === trimmedValued).length > 1) {
+          return String(field.getTranslation('errors.notUnique'));
+        } else {
+          return true;
+        }
+      },
       dependentKeys: ['model.field.usedNames'],
     }),
   ]),

@@ -6,8 +6,8 @@
 
   .section-header {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
+    min-width: 0;
 
     .one-time-series-chart-toolbar {
       margin-left: auto;
@@ -43,6 +43,7 @@
     display: grid;
     place-items: stretch;
     gap: 1em;
+    min-width: 0;
   }
 
   .section-charts {

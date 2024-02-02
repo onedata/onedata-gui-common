@@ -1,0 +1,15 @@
+{{#perfect-scrollbar-element
+  class="dashboard-visualiser"
+  click=(action "workspaceClick")
+}}
+  {{atm-workflow/charts-dashboard-editor/sections-editor/section
+    section=rootSection
+    editorContext=editorContext
+  }}
+{{/perfect-scrollbar-element}}
+{{atm-workflow/charts-dashboard-editor/sections-editor/sidebar
+  class="editor-sidebar"
+  selectedElement=selectedElement
+  hasValidationErrors=(bool rootSection.validationErrors.length)
+  editorContext=editorContext
+}}

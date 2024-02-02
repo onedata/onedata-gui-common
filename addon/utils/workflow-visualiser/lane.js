@@ -6,9 +6,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
-import { resolve } from 'rsvp';
+import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import _ from 'lodash';
+import { resolve } from 'rsvp';
+import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
+import ChartsDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-model-container';
 
 export default VisualiserRecord.extend({
   /**
@@ -45,7 +48,13 @@ export default VisualiserRecord.extend({
   storeIteratorSpec: undefined,
 
   /**
-   * @virtual optional
+   * @virtual
+   * @type {AtmTimeSeriesDashboardSpec | null}
+   */
+  dashboardSpec: null,
+
+  /**
+   * @virtual
    * @type {Array<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   elements: undefined,
@@ -80,6 +89,45 @@ export default VisualiserRecord.extend({
    * @returns {Promise}
    */
   onShowLatestRun: undefined,
+
+  /**
+   * @type {Array<Utils.WorkflowVisualiser.Lane.ParallelBox>}
+   */
+  parallelBoxes: computed('elements.[]', function parallelBoxes() {
+    return this.elements?.filter((element) =>
+      element.__modelType === 'parallelBox'
+    ) ?? [];
+  }),
+
+  /**
+   * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
+   */
+  chartsDashboardEditorDataSources: computed(
+    'parallelBoxes.@each.chartsDashboardEditorDataSources',
+    function chartsDashboardEditorDataSources() {
+      return _.flatten(
+        this.parallelBoxes.map((parallelBox) =>
+          parallelBox.chartsDashboardEditorDataSources ?? []
+        )
+      );
+    }
+  ),
+
+  /**
+   * @type {ComputedPropertyChartsDashboardEditorModelContainer>}
+   */
+  chartsDashboardEditorModelContainer: computed(
+    function chartsDashboardEditorModelContainer() {
+      return ChartsDashboardEditorModelContainer.extend({
+        dashboardSpec: reads('relatedElement.dashboardSpec'),
+      }).create({
+        relatedElement: this,
+        onPropagateChange: (newDashboardSpec) => this.modify({
+          dashboardSpec: newDashboardSpec,
+        }),
+      });
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}

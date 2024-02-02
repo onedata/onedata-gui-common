@@ -118,28 +118,29 @@ const FormRootGroup = FormFieldsRootGroup.extend({
       integer: true,
       withValidationMessage: false,
       customValidators: [
-        validator(function (value, options, model) {
-          const field = model.field;
-          const fieldPath = field.path;
-          const parsedValue = parseRangeNumberString(value);
-          const rangeEnd = parseRangeNumberString(model.valuesSource.end);
-          const rangeStep = parseRangeNumberString(model.valuesSource.step);
-          if (
-            Number.isNaN(parsedValue) ||
-            Number.isNaN(rangeEnd) ||
-            Number.isNaN(rangeStep) ||
-            rangeStep === 0
-          ) {
-            return true;
-          }
+        validator('inline', {
+          validate(value, options, model) {
+            const field = model.field;
+            const fieldPath = field.path;
+            const parsedValue = parseRangeNumberString(value);
+            const rangeEnd = parseRangeNumberString(model.valuesSource.end);
+            const rangeStep = parseRangeNumberString(model.valuesSource.step);
+            if (
+              Number.isNaN(parsedValue) ||
+              Number.isNaN(rangeEnd) ||
+              Number.isNaN(rangeStep) ||
+              rangeStep === 0
+            ) {
+              return true;
+            }
 
-          if (rangeStep > 0 && parsedValue > rangeEnd) {
-            return String(field.t(`${fieldPath}.errors.gtEndForPositiveStep`));
-          } else if (rangeStep < 0 && parsedValue < rangeEnd) {
-            return String(field.t(`${fieldPath}.errors.ltEndForNegativeStep`));
-          }
-          return true;
-        }, {
+            if (rangeStep > 0 && parsedValue > rangeEnd) {
+              return String(field.t(`${fieldPath}.errors.gtEndForPositiveStep`));
+            } else if (rangeStep < 0 && parsedValue < rangeEnd) {
+              return String(field.t(`${fieldPath}.errors.ltEndForNegativeStep`));
+            }
+            return true;
+          },
           dependentKeys: ['model.valuesSource.end', 'model.valuesSource.step'],
         }),
       ],
@@ -149,28 +150,29 @@ const FormRootGroup = FormFieldsRootGroup.extend({
       integer: true,
       withValidationMessage: false,
       customValidators: [
-        validator(function (value, options, model) {
-          const field = model.field;
-          const fieldPath = field.path;
-          const parsedValue = parseRangeNumberString(value);
-          const rangeStart = parseRangeNumberString(model.valuesSource.start);
-          const rangeStep = parseRangeNumberString(model.valuesSource.step);
-          if (
-            Number.isNaN(parsedValue) ||
-            Number.isNaN(rangeStart) ||
-            Number.isNaN(rangeStep) ||
-            rangeStep === 0
-          ) {
-            return true;
-          }
+        validator('inline', {
+          validate(value, options, model) {
+            const field = model.field;
+            const fieldPath = field.path;
+            const parsedValue = parseRangeNumberString(value);
+            const rangeStart = parseRangeNumberString(model.valuesSource.start);
+            const rangeStep = parseRangeNumberString(model.valuesSource.step);
+            if (
+              Number.isNaN(parsedValue) ||
+              Number.isNaN(rangeStart) ||
+              Number.isNaN(rangeStep) ||
+              rangeStep === 0
+            ) {
+              return true;
+            }
 
-          if (rangeStep > 0 && parsedValue < rangeStart) {
-            return String(field.t(`${fieldPath}.errors.ltStartForPositiveStep`));
-          } else if (rangeStep < 0 && parsedValue > rangeStart) {
-            return String(field.t(`${fieldPath}.errors.gtStartForPositiveStep`));
-          }
-          return true;
-        }, {
+            if (rangeStep > 0 && parsedValue < rangeStart) {
+              return String(field.t(`${fieldPath}.errors.ltStartForPositiveStep`));
+            } else if (rangeStep < 0 && parsedValue > rangeStart) {
+              return String(field.t(`${fieldPath}.errors.gtStartForPositiveStep`));
+            }
+            return true;
+          },
           dependentKeys: [
             'model.valuesSource.start',
             'model.valuesSource.step',

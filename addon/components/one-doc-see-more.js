@@ -2,7 +2,7 @@
  * General text with link to documentation with customizable documentation path and text
  *
  * @author Jakub Liput
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -48,7 +48,21 @@ export default Component.extend(I18n, {
    */
   linkName: '',
 
-  href: computed('docPath', function url() {
-    return oneDocUrl([this.get('docPath')]);
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<string>}
+   */
+  href: computed('docPath', {
+    get() {
+      return this.injectedHref ?? oneDocUrl(this, this.docPath);
+    },
+    set(key, value) {
+      return this.injectedHref = value;
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedHref: null,
 });

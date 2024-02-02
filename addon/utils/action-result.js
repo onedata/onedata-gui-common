@@ -30,6 +30,13 @@ export default EmberObject.extend({
   error: null,
 
   /**
+   * If true, then action execution which created that result was an "undo"
+   * execution.
+   * @type {boolean}
+   */
+  undo: false,
+
+  /**
    * Place for some additional data which is not a result/error
    * @type {any}
    */

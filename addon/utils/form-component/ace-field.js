@@ -42,11 +42,12 @@ export default FormField.extend({
   /**
    * @type {ComputedProperty<Object>}
    */
-  anyEditorHasErrorValidator: computed(() => validator(function (value, options, model) {
-    const field = model.field;
-    const errorMsg = String(field.t(`${defaultI18nPrefix}.errors.invalidValue`));
-    return Object.values(field.hasErrorPerEditor).includes(true) ? errorMsg : true;
-  }, {
+  anyEditorHasErrorValidator: computed(() => validator('inline', {
+    validate(value, options, model) {
+      const field = model.field;
+      const errorMsg = String(field.t(`${defaultI18nPrefix}.errors.invalidValue`));
+      return Object.values(field.hasErrorPerEditor).includes(true) ? errorMsg : true;
+    },
     dependentKeys: ['model.field.hasErrorPerEditor'],
   })),
 

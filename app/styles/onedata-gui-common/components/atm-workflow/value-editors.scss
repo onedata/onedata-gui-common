@@ -53,8 +53,7 @@
 
   .action-link {
     &.disabled {
-      // Using !important to override inline styles added by click() Ember handler
-      cursor: not-allowed !important;
+      cursor: not-allowed;
       color: $main-text-color-disabled;
       &:hover {
         color: $main-text-color-disabled;
@@ -232,15 +231,5 @@
   > .string-editor {
     flex-basis: 100%;
     min-width: 0;
-  }
-}
-
-.remove-atm-value-ack-popover {
-  width: 12em;
-
-  .buttons-container {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5em;
   }
 }

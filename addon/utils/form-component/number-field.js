@@ -47,6 +47,7 @@ export default TextField.extend({
   integer: false,
 
   /**
+   * @virtual optional
    * @type {string|number}
    */
   step: 'any',

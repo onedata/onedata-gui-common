@@ -7,7 +7,7 @@
  */
 
 export default function oneproviderPlaceSizes(mapSize, scale) {
-  const base = mapSize * 0.01 * scale;
+  const base = Math.max(mapSize * 0.01 * scale, 20);
   return {
     width: base,
     borderWidth: base / 15,

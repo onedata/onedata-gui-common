@@ -9,12 +9,12 @@
 import BsCollapse from 'ember-bootstrap/components/bs-collapse';
 import config from 'ember-get-config';
 
-export default BsCollapse.extend({
+export default class OneCollapse extends BsCollapse {
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     if (config.environment === 'test') {
       this.set('transitionDuration', 0);
     }
-  },
-});
+  }
+}

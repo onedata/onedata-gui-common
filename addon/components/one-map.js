@@ -25,6 +25,10 @@ import _ from 'lodash';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import globals from 'onedata-gui-common/utils/globals';
 
+const maxZoom = 14;
+const originalWidth = 900;
+const originalHeight = 440;
+
 export default Component.extend({
   layout,
 
@@ -82,6 +86,20 @@ export default Component.extend({
   _containerHeight: 0,
 
   /**
+   * @type {ComputedProperty<number>}
+   */
+  containerScale: computed(
+    '_containerWidth',
+    '_containerHeight',
+    function containerScale() {
+      return Math.min(
+        this._containerWidth / originalWidth,
+        this._containerHeight / originalHeight
+      );
+    }
+  ),
+
+  /**
    * @type {Ember.ComputedProperty<object>}
    */
   _initialState: computed('initialState', function () {
@@ -98,7 +116,7 @@ export default Component.extend({
     // map focus. So zeros are converted to zero-like truthy values (0.0001).
     resultState.lat = Math.min(90, Math.max(-90, resultState.lat) || 0.0001);
     resultState.lng = Math.min(180, Math.max(-180, resultState.lng) || 0.0001);
-    resultState.scale = Math.min(8, Math.max(1, resultState.scale) || 1);
+    resultState.scale = Math.min(maxZoom, Math.max(1, resultState.scale) || 1);
     return resultState;
   }),
 
@@ -117,6 +135,7 @@ export default Component.extend({
         map: 'world_mill',
         backgroundColor: 'transparent',
         focusOn: _initialState,
+        zoomMax: maxZoom,
         zoomOnScroll,
         onViewportChange: (event, scale) =>
           safeExec(this, '_handleViewportChange', event, scale),

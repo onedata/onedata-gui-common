@@ -14,19 +14,19 @@
     {{else}}
       {{tt this "offline"}}
     {{/if}}
-  </div>  
+  </div>
 </div>
 <div class="drop-provider-host-container">
   <input class="provider-host-text truncate {{concat "host-input-" (model-routable-id provider.id)}}" value={{provider.host}} readonly>
   <div class="provider-host-copy-btn-container">
-    {{#copy-button
-      tagName="div"
-      success=(action "copySuccess")
-      error=(action "copyError")
+    <CopyButton
+      @clipboardTarget={{concat ".host-input-" (model-routable-id provider.id)}}
+      @success={{action "copySuccess"}}
+      @error={{action "copyError"}}
       class="provider-host-copy-btn clickable"
-      clipboardTarget=(concat ".host-input-" (model-routable-id provider.id))}}
+    >
       {{one-icon tagName="div" icon="browser-copy"}}
-    {{/copy-button}}
+    </CopyButton>
   </div>
 </div>
 <div class="drop-body">
@@ -44,7 +44,7 @@
               provider=provider
               providerVersion=providerVersion
             }}
-          {{/each}} 
+          {{/each}}
         </ul>
       {{/loading-container}}
     {{/perfect-scrollbar-element}}
