@@ -17,9 +17,17 @@ export default {
     create: 'Create new store',
     edit: 'Modify store',
     view: {
-      store: 'Store details',
-      auditLog: '{{subjectName}} audit log',
-      timeSeries: '{{subjectName}} time series',
+      task: {
+        timeSeries: 'Task time series',
+        auditLog: 'Task audit log',
+      },
+      workflow: {
+        timeSeries: 'Workflow time series',
+        auditLog: 'Workflow audit log',
+      },
+      any: {
+        any: 'Store details',
+      },
     },
   },
   tabs: {
