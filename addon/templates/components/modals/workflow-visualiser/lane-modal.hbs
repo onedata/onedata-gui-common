@@ -7,6 +7,11 @@
 
   {{#modal.header}}
     <h1>{{headerText}}</h1>
+    {{#if lane.name}}
+      <h2 class="normal-case">
+        {{#truncated-string}}{{lane.name}}{{/truncated-string}}
+      </h2>
+    {{/if}}
   {{/modal.header}}
 
   {{#modal.body}}
