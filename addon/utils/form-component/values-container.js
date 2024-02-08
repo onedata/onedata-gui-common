@@ -44,3 +44,18 @@ export function createValuesContainer(content) {
 export function isValuesContainer(obj) {
   return Boolean(typeOf(obj) === 'instance' && obj[isValuesContainerFlag]);
 }
+
+/**
+ * @param {T} value
+ * @returns {T}
+ */
+export function cloneFormValue(value) {
+  if (!isValuesContainer(value)) {
+    return value;
+  }
+
+  return createValuesContainer(Object.keys(value).reduce((acc, key) => {
+    acc[key] = cloneFormValue(value[key]);
+    return acc;
+  }, {}));
+}

@@ -48,7 +48,10 @@ export default FormField.extend({
   init() {
     this._super(...arguments);
     if (!this.defaultValue) {
-      this.set('defaultValue', []);
+      this.set('defaultValue', {
+        privilegesTarget: undefined,
+        privileges: [],
+      });
     }
     if (!this.privilegesGroups) {
       this.set('privilegesGroups', []);
