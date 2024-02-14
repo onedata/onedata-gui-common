@@ -20,8 +20,8 @@ export function getEmberApp(): Application | null {
 }
 
 export function lookupInEmberApp<T>(lookupString: string): T | undefined {
-  // Types are a bit ahead of the current ember version. To trick the missing
+  // Types are a bit ahead of the current Ember version. To trick the missing
   // `.resolve()` method we use private `__container__` property.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (getEmberApp() as any)?.__container__.lookup(lookupString);
+  return (getEmberApp() as any)?.__container__?.lookup(lookupString);
 }
