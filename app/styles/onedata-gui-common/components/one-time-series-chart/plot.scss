@@ -48,11 +48,12 @@
     user-select: auto;
 
     .tooltip-click-info {
+      @include font-regular();
       position: sticky;
       bottom: 0;
       padding: var(--one-echart-tooltip-spacing) 0;
       transform: translateY(var(--one-echart-tooltip-spacing));
-      border-top: $main-border;
+      border-top: 1px solid $hr-border;
       background-color: $color-one-white;
       text-align: center;
     }
