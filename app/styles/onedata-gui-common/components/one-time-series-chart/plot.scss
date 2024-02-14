@@ -42,4 +42,32 @@
       line-height: 0;
     }
   }
+
+  .chart-tooltip {
+    overflow: auto !important;
+    user-select: auto;
+
+    .tooltip-click-info {
+      position: sticky;
+      bottom: 0;
+      padding: var(--one-echart-tooltip-spacing) 0;
+      transform: translateY(var(--one-echart-tooltip-spacing));
+      border-top: $main-border;
+      background-color: $color-one-white;
+      text-align: center;
+    }
+  }
+
+  &.echarts-tooltip-fixed {
+    .chart-tooltip .tooltip-click-info {
+      // Using `visibility: hidden` to still take horizontal space after being
+      // hidden and prevent tooltip width from jumping.
+      visibility: hidden;
+      pointer-events: none;
+      height: 0;
+      overflow: hidden;
+      border-width: 0;
+      padding: 0;
+    }
+  }
 }

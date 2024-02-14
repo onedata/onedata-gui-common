@@ -38,6 +38,17 @@ export default Component.extend({
   option: undefined,
 
   /**
+   * @virtual optional
+   * @type {((chart: Echarts) => void) | null}
+   */
+  registerApi: null,
+
+  /**
+   * @type {((chart: Echarts) => void) | null}
+   */
+  lastUsedRegisterApi: null,
+
+  /**
    * @type {ResizeObserver | null}
    */
   resizeObserver: null,
@@ -48,11 +59,11 @@ export default Component.extend({
   chart: undefined,
 
   /**
-   * Binded version of `persistRawDataInCanvas` method. Needed for
+   * Bound version of `handleRenderedEvent` method. Needed for
    * (de)registering event handlers.
    * @type {() => void}
    */
-  persistRawDataInCanvasFunction: undefined,
+  handleRenderedEventFunction: undefined,
 
   /**
    * @type {ComputedProperty<PromiseObject<ECharts>>}
@@ -70,7 +81,7 @@ export default Component.extend({
    */
   init() {
     this._super(...arguments);
-    this.set('persistRawDataInCanvasFunction', this.persistRawDataInCanvas.bind(this));
+    this.set('handleRenderedEventFunction', this.handleRenderedEvent.bind(this));
   },
 
   /**
@@ -134,7 +145,7 @@ export default Component.extend({
       }
 
       const chart = echarts.init(this.element.querySelector('.chart'));
-      chart.on('rendered', this.persistRawDataInCanvasFunction);
+      chart.on('rendered', this.handleRenderedEventFunction);
       this.set('chart', chart);
       this.applyChartOption();
     })));
@@ -155,7 +166,7 @@ export default Component.extend({
 
   destroyChart() {
     if (this.chart) {
-      this.chart.off('rendered', this.persistRawDataInCanvasFunction);
+      this.chart.off('rendered', this.handleRenderedEventFunction);
       this.chart.dispose();
     }
   },
@@ -166,7 +177,12 @@ export default Component.extend({
    * data without guessing from canvas pixels.
    * @returns {void}
    */
-  persistRawDataInCanvas() {
+  handleRenderedEvent() {
+    if (this.registerApi && this.lastUsedRegisterApi !== this.registerApi) {
+      this.registerApi(this.chart);
+      this.set('lastUsedRegisterApi', this.registerApi);
+    }
+
     // Setting raw data works only for data specified inside each series (via
     // `data` property). More advanced data-defining approaches (like via
     // `dataset`) are not supported.
