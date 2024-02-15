@@ -7,21 +7,18 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Application from '@ember/application';
+import ApplicationInstance from '@ember/application/instance';
 
-let emberApp: Application | null = null;
+let emberApp: ApplicationInstance | null = null;
 
-export function setEmberApp(app: Application): void {
+export function setEmberApp(app: ApplicationInstance): void {
   emberApp = app;
 }
 
-export function getEmberApp(): Application | null {
+export function getEmberApp(): ApplicationInstance | null {
   return emberApp;
 }
 
-export function lookupInEmberApp<T>(lookupString: string): T | undefined {
-  // Types are a bit ahead of the current Ember version. To trick the missing
-  // `.resolve()` method we use private `__container__` property.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (getEmberApp() as any)?.__container__?.lookup(lookupString);
+export function lookupInEmberApp<T>(lookupString: `${string}:${string}`): T | null {
+  return (getEmberApp()?.lookup(lookupString) ?? null) as (T | null);
 }

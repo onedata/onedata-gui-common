@@ -44,6 +44,9 @@ export default Component.extend({
   registerApi: null,
 
   /**
+   * Used to preserve information which `registerApi` value was used recently
+   * to register Echarts API. Allows to reregister API when `registerApi` callback
+   * changes.
    * @type {((chart: Echarts) => void) | null}
    */
   lastUsedRegisterApi: null,
