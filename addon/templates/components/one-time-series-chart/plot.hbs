@@ -1,7 +1,10 @@
 {{#promise-proxy-container proxy=stateProxy sizeClass="sm"}}
   <div class="canvas-area">
     {{#if hasDataToShow}}
-      {{one-echart option=echartState}}
+      {{one-echart
+        option=echartState
+        registerApi=(action "registerApi")
+      }}
     {{else}}
       <div class="no-data-message">
         <div class="no-data-img"></div>
