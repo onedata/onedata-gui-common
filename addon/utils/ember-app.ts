@@ -20,5 +20,10 @@ export function getEmberApp(): ApplicationInstance | null {
 }
 
 export function lookupInEmberApp<T>(lookupString: `${string}:${string}`): T | null {
-  return (getEmberApp()?.lookup(lookupString) ?? null) as (T | null);
+  const app = getEmberApp();
+  if (!app || app.isDestroyed) {
+    return null;
+  }
+
+  return (app.lookup(lookupString) ?? null) as (T | null);
 }
