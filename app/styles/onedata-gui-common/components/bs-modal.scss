@@ -53,6 +53,15 @@ $modal-scroll-margin: 14px;
         margin-top: -0.5em;
         line-height: normal;
       }
+
+      > .header-content {
+        display: flex;
+        align-items: center;
+
+        .header-icon {
+          margin-left: -0.3em;
+        }
+      }
     }
   }
   .modal-body {
