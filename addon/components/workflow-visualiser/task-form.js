@@ -94,6 +94,7 @@ const taskAuditLogStore = Store.create({
       type: 'object',
     },
   },
+  icon: 'store-audit-log',
 });
 const workflowAuditLogStore = Store.create({
   id: workflowAuditLogDropdownOptionValue,
@@ -103,6 +104,7 @@ const workflowAuditLogStore = Store.create({
       type: 'object',
     },
   },
+  icon: 'store-audit-log',
 });
 
 export default Component.extend(I18n, {
@@ -476,9 +478,10 @@ export default Component.extend(I18n, {
                       getSourceStoreForDataSpec(argumentStores, dataSpec);
                     const opts = possibleStores
                       .sortBy('name')
-                      .map(({ id, name }) => ({
+                      .map(({ id, name, icon }) => ({
                         value: id,
                         label: name,
+                        icon,
                       }));
                     opts.unshift({
                       value: createStoreDropdownOptionValue,
@@ -750,6 +753,7 @@ export default Component.extend(I18n, {
         timeSeriesSchemas: [],
       },
       dashboardSpec: null,
+      icon: 'store-time-series',
     };
     this.set('timeSeriesStore.config', newConfig);
   },
@@ -1350,6 +1354,7 @@ const SingleResultMappingsCollectionGroup = FormFieldsCollectionGroup.extend({
                 .map(store => ({
                   value: get(store, 'id'),
                   label: get(store, 'name'),
+                  icon: get(store, 'icon'),
                 }))
                 .sortBy('label');
               opts.unshift({

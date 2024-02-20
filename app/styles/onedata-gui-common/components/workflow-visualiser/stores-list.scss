@@ -15,8 +15,17 @@
     font-size: 170%;
     margin-right: 0.1em;
   }
+}
 
-  .tag-item .store-name {
+.workflow-visualiser-stores-list-store {
+  .store-name {
     max-width: 250px;
+
+    .one-icon {
+      font-size: 170%;
+      margin-right: 0.1em;
+      line-height: 0;
+      vertical-align: middle;
+    }
   }
 }
