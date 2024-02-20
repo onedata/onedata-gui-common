@@ -79,11 +79,14 @@ describe('Integration | Component | form-component/privileges-field', function (
 
     await click(toggle);
     expect(valueChangedSpy).to.be.calledOnce;
-    expect(valueChangedSpy).to.be.calledWith(['g0a', 'g0b']);
+    expect(valueChangedSpy).to.be.calledWith({
+      privilegesTarget: undefined,
+      privileges: ['g0a', 'g0b'],
+    });
   });
 
   it('sets tree value to privileges specified in field object', async function () {
-    this.set('field.value', ['g1a']);
+    this.set('field.value', { privileges: ['g1a'] });
 
     await render(hbs `{{form-component/privileges-field field=field}}`);
     const toggle = findToggleNextToText(this, 'privilege1a');
@@ -95,8 +98,8 @@ describe('Integration | Component | form-component/privileges-field', function (
 
   it('shows diff using actual value and default value', async function () {
     setProperties(this.get('field'), {
-      value: ['g0a', 'g0b', 'g1a'],
-      defaultValue: ['g0a', 'g1a'],
+      value: { privileges: ['g0a', 'g0b', 'g1a'] },
+      defaultValue: { privileges: ['g0a', 'g1a'] },
     });
 
     await render(hbs `{{form-component/privileges-field field=field}}`);
@@ -109,7 +112,7 @@ describe('Integration | Component | form-component/privileges-field', function (
 
   it('renders readonly active privileges when field is in "view" mode', async function () {
     const field = this.get('field');
-    set(field, 'value', ['g1a']);
+    set(field, 'value', { privileges: ['g1a'] });
     field.changeMode('view');
 
     await render(hbs `{{form-component/privileges-field field=field}}`);
