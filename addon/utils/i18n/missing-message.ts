@@ -7,21 +7,23 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { SafeString } from 'onedata-gui-common/utils/missing-types';
+
 export const missingMessagePrefixes = [
   '<missing-',
   // Default one sometimes used by i18n in test environment
   'Missing translation: ',
-];
+] as const;
 
-export function isMissingMessage(message) {
+export function isMissingMessage(message: SafeString | string): boolean {
   if (message) {
     const messageString = String(message);
-    return missingMessagePrefixes.any(prefix => messageString.startsWith(prefix));
+    return missingMessagePrefixes.some((prefix) => messageString.startsWith(prefix));
   } else {
     return false;
   }
 }
 
-export default function (locale, key /*, context*/ ) {
+export default function (locale: string, key: string /*, context*/ ): string {
   return `<missing-${locale}: ${key}>`;
 }
