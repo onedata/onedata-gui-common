@@ -61,6 +61,7 @@ import atmInventoryInfoContent from './onedata-gui-common/components/atm-invento
 import clusterInfoContent from './onedata-gui-common/components/cluster-info-content';
 import pagesControl from './onedata-gui-common/components/pages-control';
 import websocketReconnectionModal from './onedata-gui-common/components/websocket-reconnection-modal';
+import iframedOnedataError from './onedata-gui-common/components/iframed-onedata-error';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -167,6 +168,7 @@ const translations = {
     clusterInfoContent,
     pagesControl,
     websocketReconnectionModal,
+    iframedOnedataError,
     alerts: {
       endpointError,
     },
