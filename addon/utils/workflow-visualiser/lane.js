@@ -91,6 +91,11 @@ export default VisualiserRecord.extend({
   onShowLatestRun: undefined,
 
   /**
+   * @type {string}
+   */
+  icon: 'atm-lane',
+
+  /**
    * @type {Array<Utils.WorkflowVisualiser.Lane.ParallelBox>}
    */
   parallelBoxes: computed('elements.[]', function parallelBoxes() {

@@ -176,6 +176,21 @@ export default Component.extend(I18n, {
   ),
 
   /**
+   * @type {ComputedProperty<string | null>}
+   */
+  subheaderIcon: computed(
+    'subheaderText',
+    'store.{icon,containerElement.icon}',
+    function subheaderIcon() {
+      if (!this.subheaderText) {
+        return null;
+      }
+
+      return this.store?.containerElement?.icon ?? this.store?.icon ?? null;
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<Boolean>}
    */
   areTabsVisible: eq('mode', raw('view')),

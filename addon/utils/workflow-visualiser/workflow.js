@@ -61,6 +61,11 @@ export default EmberObject.extend({
   lanes: undefined,
 
   /**
+   * @type {string}
+   */
+  icon: 'atm-workflow',
+
+  /**
    * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
    */
   chartsDashboardEditorDataSources: computed(

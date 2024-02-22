@@ -175,7 +175,7 @@ input.light {
 }
 
 @mixin oneicon-content($glyph) {
-  content: unquote("\"#{$glyph}\"");
+  content: $glyph;
 }
 
 input {
