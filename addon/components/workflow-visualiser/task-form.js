@@ -94,7 +94,6 @@ const taskAuditLogStore = Store.create({
       type: 'object',
     },
   },
-  icon: 'store-audit-log',
 });
 const workflowAuditLogStore = Store.create({
   id: workflowAuditLogDropdownOptionValue,
@@ -104,7 +103,6 @@ const workflowAuditLogStore = Store.create({
       type: 'object',
     },
   },
-  icon: 'store-audit-log',
 });
 
 export default Component.extend(I18n, {
