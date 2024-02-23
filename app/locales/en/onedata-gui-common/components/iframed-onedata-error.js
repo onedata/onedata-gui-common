@@ -1,5 +1,5 @@
 export default {
-  pathNotExists: 'The path provided for the embedded Onedata web application is invalid.',
-  contactAdmin: 'Contact the administrator of the hosting site if the problem persists.',
+  pathNotExists: 'This page is not available when the Onedata Web application is embedded.',
+  contactAdmin: 'Contact the site administrator if you think something is not working as it should.',
   learnMore: 'Learn more about Onedata at',
 };
