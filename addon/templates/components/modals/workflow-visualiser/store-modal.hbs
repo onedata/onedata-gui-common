@@ -17,7 +17,14 @@
     <h1>{{#truncated-string}}{{headerText}}{{/truncated-string}}</h1>
     {{#if subheaderText}}
       <h2 class="normal-case">
-        {{#truncated-string}}{{subheaderText}}{{/truncated-string}}
+        {{#truncated-string class="header-content"}}
+          {{#if subheaderIcon}}
+            <div class="inline-icon-container header-icon">
+              <OneIcon @icon={{subheaderIcon}} />
+            </div>
+          {{/if}}
+          {{subheaderText}}
+        {{/truncated-string}}
       </h2>
     {{/if}}
   {{/modal.header}}

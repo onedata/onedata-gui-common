@@ -9,7 +9,12 @@
     <h1>{{headerText}}</h1>
     {{#if lane.name}}
       <h2 class="normal-case">
-        {{#truncated-string}}{{lane.name}}{{/truncated-string}}
+        {{#truncated-string class="header-content"}}
+            <div class="inline-icon-container header-icon">
+              <OneIcon @icon="atm-lane" />
+            </div>
+          {{lane.name}}
+        {{/truncated-string}}
       </h2>
     {{/if}}
   {{/modal.header}}
