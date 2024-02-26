@@ -77,9 +77,9 @@
       }
       .onedata-org-link {
         @include font-semibold;
-        color: #EF3F3F;
+        color: $color-one-red;
         &:hover {
-          color: darken(#EF3F3F, 20%);
+          color: darken($color-one-red, 20%);
         }
       }
     }
