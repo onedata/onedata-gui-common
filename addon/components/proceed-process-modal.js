@@ -35,18 +35,14 @@ export default Component.extend(I18n, {
 
   /**
    * If true, modal is opened
+   * @virtual
    * @type {boolean}
    */
   opened: false,
 
   /**
-   * If true, modal cannot be closed and proceed button has active spinner
-   * @type {boolean}
-   */
-  processing: false,
-
-  /**
    * Action called to close modal
+   * @virtual
    * @type {function}
    * @returns {*}
    */
@@ -54,18 +50,28 @@ export default Component.extend(I18n, {
 
   /**
    * Action called to proceed
+   * @virtual
    * @type {function}
    * @returns {*}
    */
   proceed: notImplementedThrow,
 
   /**
+   * If true, modal cannot be closed and proceed button has active spinner
+   * @virtual optional
+   * @type {boolean}
+   */
+  processing: false,
+
+  /**
    * Classes assigned to the modal element
+   * @virtual optional
    * @type {string}
    */
   modalClass: 'proceed-modal',
 
   /**
+   * @virtual optional
    * Optionally set `size` property of bs-modal
    */
   size: undefined,
@@ -73,76 +79,127 @@ export default Component.extend(I18n, {
   /**
    * If true, the `processing` property will be updated when `proceed` promise starts and
    * settles. Set false to get the old behaviour, where `processing` property was injected.
+   * @virtual optional
    * @type {boolean}
    */
   autoDetectProcessing: true,
 
   /**
+   * @virtual optional
    * @type {string}
    */
   modalIcon: null,
 
   /**
    * Classes assigned to the proceed button
+   * @virtual optional
    * @type {string}
    */
   proceedButtonClass: 'btn btn-danger proceed',
 
   /**
    * If true, proceed button is disabled
+   * @virtual optional
    * @type {boolean}
    */
   proceedDisabled: false,
 
   /**
    * Called when modal has been shown
+   * @virtual optional
    * @type {Function}
    */
   onShown: notImplementedIgnore,
 
   /**
    * Called when modal has been hidden
+   * @virtual optional
    * @type {Function}
    */
   onHidden: notImplementedIgnore,
 
   /**
    * If true, content text will be centered.
+   * @virtual optional
    * @type {boolean}
    */
   textCenter: false,
 
   /**
    * Modal header text.
+   * @virtual optional
    * @type {Ember.ComputedString<string>}
    */
-  headerText: computed(function headerText() {
-    return this.t('headerText');
+  headerText: computed({
+    get() {
+      return this.injectedHeaderText ?? this.t('headerText');
+    },
+    set(key, value) {
+      return this.injectedHeaderText = value;
+    },
   }),
 
   /**
    * Modal content text (usually it will be something like "Are you sure...?").
+   * @virtual optional
    * @type {Ember.ComputedString<string>}
    */
-  messageText: computed(function messageText() {
-    return this.t('messageText');
+  messageText: computed({
+    get() {
+      return this.injectedMessageText ?? this.t('messageText');
+    },
+    set(key, value) {
+      return this.injectedMessageText = value;
+    },
   }),
 
   /**
    * Cancel button text.
+   * @virtual optional
    * @type {Ember.ComputedProperty<string>}
    */
-  cancelButtonText: computed(function cancelButtonText() {
-    return this.t('cancel');
+  cancelButtonText: computed({
+    get() {
+      return this.injectedCancelButtonText ?? this.t('cancel');
+    },
+    set(key, value) {
+      return this.injectedCancelButtonText = value;
+    },
   }),
 
   /**
    * Proceed button text.
+   * @virtual optional
    * @type {Ember.ComputedProperty<string>}
    */
-  proceedButtonText: computed(function proceedButtonText() {
-    return this.t('proceed');
+  proceedButtonText: computed({
+    get() {
+      return this.injectedProceedButtonText ?? this.t('proceed');
+    },
+    set(key, value) {
+      return this.injectedProceedButtonText = value;
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedHeaderText: null,
+
+  /**
+   * @type {string | null}
+   */
+  injectedMessageText: null,
+
+  /**
+   * @type {string | null}
+   */
+  injectedCancelButtonText: null,
+
+  /**
+   * @type {string | null}
+   */
+  injectedProceedButtonText: null,
 
   actions: {
     proceed() {

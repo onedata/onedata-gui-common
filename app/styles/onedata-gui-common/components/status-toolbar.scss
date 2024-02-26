@@ -26,10 +26,6 @@ $status-toolbar-height: 20px;
       color: $color-one-mint;
     }
 
-    &.not-clickable {
-      cursor: initial !important;
-    }
-    
     .one-icon {
       position: relative;
       .inner-text {

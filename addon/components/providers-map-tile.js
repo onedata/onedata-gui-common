@@ -7,10 +7,10 @@
  */
 
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 import layout from '../templates/components/providers-map-tile';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import ProvidersColors from 'onedata-gui-common/mixins/components/providers-colors';
-import computedT from 'onedata-gui-common/utils/computed-t';
 
 export default Component.extend(I18n, ProvidersColors, {
   layout,
@@ -34,17 +34,44 @@ export default Component.extend(I18n, ProvidersColors, {
   aspect: undefined,
 
   /**
+   * @virtual optional
    * @type {string|undefined}
    */
   customLink: undefined,
 
   /**
+   * @virtual optional
    * @type {Ember.ComputedProperty<string>}
    */
-  title: computedT('title'),
+  title: computed({
+    get() {
+      return this.injectedTitle ?? this.t('title');
+    },
+    set(key, value) {
+      this.injectedTitle = value;
+    },
+  }),
 
   /**
+   * @virtual optional
    * @type {Ember.ComputedProperty<string>}
    */
-  moreText: computedT('moreText'),
+  moreText: computed({
+    get() {
+      return this.injectedMoreText ?? this.t('moreText');
+    },
+    set(key, value) {
+      return this.injectedMoreText = value;
+    },
+  }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedTitle: null,
+
+  /**
+   * @type {string | null}
+   */
+  injectedMoreText: null,
 });

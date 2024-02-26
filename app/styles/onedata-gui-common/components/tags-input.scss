@@ -34,7 +34,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   }
 
   &.creation-disabled {
-    cursor: initial !important;
+    cursor: initial;
   }
 
   &.readonly {
@@ -124,7 +124,6 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
 
     &.disabled {
       background-color: $color-one-light-gray;
-      cursor: initial !important;
 
       &:hover {
         background-color: $color-one-light-gray;

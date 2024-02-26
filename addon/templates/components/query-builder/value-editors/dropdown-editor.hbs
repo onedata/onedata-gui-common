@@ -1,14 +1,15 @@
-{{#power-select
-  triggerClass=(concat-classes "small comparator-value truncate dropdown-editor-trigger" guid)
-  dropdownClass="small ember-basic-dropdown-content-comparator-value over-popover-over-modals dropdown-editor-options"
-  options=options
-  selected=value
-  renderInPlace=false
-  placeholder=(tt this "dropdownPlaceholder")
-  onchange=(action onValueChange)
-  onclose=(action onFinishEdit)
-  onblur=(action "onSelectorBlur")
+<OneDropdown
+  @triggerClass={{concat-classes "small comparator-value truncate dropdown-editor-trigger" guid}}
+  @dropdownClass="small ember-basic-dropdown-content-comparator-value over-popover-over-modals dropdown-editor-options"
+  @options={{options}}
+  @selected={{value}}
+  @renderInPlace={{false}}
+  @placeholder={{tt this "dropdownPlaceholder"}}
+  @searchEnabled={{true}}
+  @onChange={{action onValueChange}}
+  @onClose={{action onFinishEdit}}
+  @onBlur={{action "onSelectorBlur"}}
   as |itemValue|
-}}
+>
   {{if (eq itemValue 0) "0" itemValue}}
-{{/power-select}}
+</OneDropdown>

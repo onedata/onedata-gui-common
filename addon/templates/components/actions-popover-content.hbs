@@ -52,6 +52,7 @@
             actionClicked=actionClicked
             class=(concat-classes
               "nested-actions collapse-animation"
+              (if withoutNestedActionsTransition "without-transition")
               (if (eq nestedActionsOpened act) "collapse-small" "collapse-hidden")
             )}}
         {{/if}}

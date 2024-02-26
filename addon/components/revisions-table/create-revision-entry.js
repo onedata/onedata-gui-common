@@ -13,7 +13,7 @@ import { computed, get } from '@ember/object';
 export default Component.extend({
   layout,
   tagName: 'tr',
-  classNames: ['revisions-table-create-revision-entry'],
+  classNames: ['revisions-table-create-revision-entry', 'clickable'],
   classNameBindings: [
     'createRevisionAction.className',
     'createRevisionAction.disabled:disabled:enabled',

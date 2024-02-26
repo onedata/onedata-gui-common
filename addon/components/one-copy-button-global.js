@@ -6,78 +6,30 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import CopyButton from 'ember-cli-clipboard/components/copy-button';
+import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { reads } from '@ember/object/computed';
-import { computed } from '@ember/object';
-import { capitalize } from '@ember/string';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { or } from 'ember-awesome-macros';
-import computedT from 'onedata-gui-common/utils/computed-t';
+import layout from 'onedata-gui-common/templates/components/one-copy-button-global';
 
-export default CopyButton.extend(I18n, {
+export default Component.extend({
+  tagName: '',
+  layout,
+
   globalClipboard: service(),
-  globalNotify: service(),
-  i18n: service(),
 
   /**
-   * @override
-   * Use translation from one-copy-button component
-   */
-  i18nPrefix: 'components.oneCopyButton',
-
-  /**
-   * @override
-   */
-  classNames: ['hidden', 'btn-global-copy-button'],
-
-  /**
-   * @type {Ember.ComputedProperty<string>}
+   * @type {ComputedProperty<string | undefined>}
    */
   clipboardText: reads('globalClipboard.textToCopy'),
 
   /**
-   * @type {Ember.ComputedProperty<string>}
+   * @type {ComputedProperty<string | undefined>}
    */
-  textType: or('globalClipboard.textType', computedT('defaultTextType')),
+  textType: reads('globalClipboard.textType'),
 
-  /**
-   * @override
-   * @type {Ember.ComputedProperty<function>}
-   */
-  success: computed(function success() {
-    return this._success.bind(this);
-  }),
-
-  /**
-   * @override
-   * @type {Ember.ComputedProperty<function>}
-   */
-  error: computed(function error() {
-    return this._error.bind(this);
-  }),
-
-  _success() {
-    const {
-      globalNotify,
-      textType,
-    } = this.getProperties('globalNotify', 'textType');
-    globalNotify.success(this.t(
-      'copySuccess', {
-        textType: capitalize(String(textType)),
-      }
-    ));
-  },
-
-  _error() {
-    const {
-      globalNotify,
-      textType,
-    } = this.getProperties('globalNotify', 'textType');
-    globalNotify.error(this.t(
-      'copyFailure', {
-        textType: textType,
-      }
-    ));
+  actions: {
+    copyEnded() {
+      this.globalClipboard.endCopy();
+    },
   },
 });

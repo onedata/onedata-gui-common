@@ -2,7 +2,7 @@
   {{#one-icon
     click=(action "packIntoArray")
     icon="collection"
-    class="pack-into-array"
+    class=(concat-classes "pack-into-array" (if isEnabled "clickable"))
   }}
     {{#if isEnabled}}
       {{one-tooltip title=(tt this "actions.packIntoArray")}}
@@ -13,7 +13,7 @@
   {{#one-icon
     click=(action "unpackFromArray")
     icon="flatten"
-    class="unpack-from-array"
+    class=(concat-classes "unpack-from-array" (if isEnabled "clickable"))
   }}
     {{#if isEnabled}}
       {{one-tooltip title=(tt this "actions.unpackFromArray")}}
@@ -23,7 +23,7 @@
 {{#one-icon
   click=(action (if shouldWarnOnRemove "toggleRemoveWarn" "remove"))
   icon="close"
-  class="remove-trigger"
+  class=(concat-classes "remove-trigger" (if isEnabled "clickable"))
 }}
   {{#if isEnabled}}
     {{one-tooltip title=(tt this "actions.remove")}}

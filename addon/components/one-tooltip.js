@@ -12,37 +12,27 @@
  */
 
 import BsTooltip from 'ember-bootstrap/components/bs-tooltip';
-import { inject } from '@ember/service';
-import { observer } from '@ember/object';
+import { inject as service } from '@ember/service';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import config from 'ember-get-config';
 
-export default BsTooltip.extend({
-  scrollState: inject(),
+export default class OneTooltip extends BsTooltip {
+  @service scrollState;
 
   /**
    * If true, the global scrollState will be observed and tooltip will be hidden
    * when user scrolls.
    * @type {boolean}
    */
-  hideOnScroll: true,
+  hideOnScroll = true;
 
   /**
-   * Hides tooltip on page scroll
+   * @type {ScrollListener}
    */
-  _scrollStateObserver: observer('scrollState.lastScrollEvent', function () {
-    const {
-      hideOnScroll,
-      inDom,
-    } = this.getProperties('hideOnScroll', 'inDom');
-    if (hideOnScroll && inDom) {
-      this.hide();
-    }
-  }),
+  scrollListener = undefined;
 
   init() {
-    this._super(...arguments);
-    this.get('scrollState');
+    super.init(...arguments);
 
     if (config.environment === 'test') {
       this.setProperties({
@@ -50,7 +40,15 @@ export default BsTooltip.extend({
         delay: 0,
       });
     }
-  },
+
+    this.set('scrollListener', () => this.handlePageScroll());
+    this.scrollState.addScrollListener(this.scrollListener);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.scrollState.removeScrollListener(this.scrollListener);
+  }
 
   /**
    * @override
@@ -88,7 +86,13 @@ export default BsTooltip.extend({
       }
       // End of the "fast changing `visible` property not closes tooltip" bugfix
 
-      this._super(...args);
+      super._show(...args);
     });
-  },
-});
+  }
+
+  handlePageScroll() {
+    if (this.hideOnScroll && this.inDom) {
+      this.hide();
+    }
+  }
+}

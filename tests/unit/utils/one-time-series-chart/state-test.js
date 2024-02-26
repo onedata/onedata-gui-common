@@ -280,6 +280,7 @@ describe('Unit | Utility | one-time-series-chart/state', function () {
 
       expect(asPlainJson(echartState.tooltip)).to.deep.equal({
         trigger: 'axis',
+        triggerOn: 'none',
         confine: true,
         axisPointer: {
           type: 'cross',
@@ -499,7 +500,7 @@ describe('Unit | Utility | one-time-series-chart/state', function () {
         }]), 'text/html');
 
         const tooltipEntries = tooltipDom.querySelectorAll('.tooltip-header ~ *');
-        expect(tooltipEntries).to.have.length(8);
+        expect(tooltipEntries).to.have.length(9);
 
         // separator after header
         expect(tooltipEntries[0].matches('.tooltip-series-separator')).to.be.true;
@@ -510,6 +511,7 @@ describe('Unit | Utility | one-time-series-chart/state', function () {
         expect(tooltipEntries[5].matches('.tooltip-series-group')).to.be.true;
         expect(tooltipEntries[6].matches('.tooltip-series-separator')).to.be.true;
         expect(tooltipEntries[7].matches('.tooltip-series-group')).to.be.true;
+        expect(tooltipEntries[8].matches('.tooltip-click-info')).to.be.true;
 
         // ungrouped series
         expect(tooltipEntries[1].children).to.have.length(1);
@@ -620,7 +622,7 @@ describe('Unit | Utility | one-time-series-chart/state', function () {
         }]), 'text/html');
 
         const tooltipEntries = tooltipDom.querySelectorAll('.tooltip-header ~ *');
-        expect(tooltipEntries).to.have.length(2);
+        expect(tooltipEntries).to.have.length(3);
         // separator after header
         expect(tooltipEntries[0].matches('.tooltip-series-separator')).to.be.true;
 

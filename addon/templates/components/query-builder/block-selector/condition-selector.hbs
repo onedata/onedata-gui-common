@@ -1,40 +1,40 @@
 <div class="form-group property-selector-container">
-  {{#power-select
-    options=queryPropertiesForSelector
-    selected=selectedConditionProperty
-    onchange=(action "conditionPropertyChanged")
-    searchEnabled=true
-    searchField="key"
-    renderInPlace=true
-    placeholder=(tt this "propertySelectorPlaceholder")
-    class="property-selector"
-    triggerClass="small"
-    dropdownClass="small"
+  <OneDropdown
+    @options={{queryPropertiesForSelector}}
+    @selected={{selectedConditionProperty}}
+    @onChange={{action "conditionPropertyChanged"}}
+    @searchEnabled={{true}}
+    @searchField="key"
+    @renderInPlace={{true}}
+    @placeholder={{tt this "propertySelectorPlaceholder"}}
+    @class="property-selector"
+    @triggerClass="small"
+    @dropdownClass="small"
     as |queryProperty|
-  }}
+  >
     <span
       class="parameter-suggestion-name {{if queryProperty.isSpecialKey "is-special-key"}}"
     >
       {{queryProperty.displayedKey}}
     </span>
-  {{/power-select}}
+  </OneDropdown>
 </div>
 <div class="comparator-main-container">
   {{#if comparators.length}}
     <div class="form-group form-group-no-shrink comparator-selector-container">
       {{#if (gt comparators.length 1)}}
-        {{#power-select
-          options=comparators
-          selected=selectedConditionComparator
-          onchange=(action "conditionComparatorChanged")
-          renderInPlace=true
-          triggerClass="small"
-          dropdownClass="small"
+        <OneDropdown
+          @options={{comparators}}
+          @selected={{selectedConditionComparator}}
+          @onChange={{action "conditionComparatorChanged"}}
+          @renderInPlace={{true}}
+          @triggerClass="small"
+          @dropdownClass="small"
           class="comparator-selector"
           as |comparator|
-        }}
+        >
           {{tt this (concat "comparators." comparator)}}
-        {{/power-select}}
+        </OneDropdown>
       {{else}}
         <span class="comparator-selector">
           {{tt this (concat "comparators." comparators.firstObject)}}

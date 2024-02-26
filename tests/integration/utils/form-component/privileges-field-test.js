@@ -23,8 +23,11 @@ describe('Integration | Utility | form-component/privileges-field', function () 
     expect(get(field, 'privilegesGroups')).to.an('array').that.is.empty;
   });
 
-  it('overrides defaultValue to []', function () {
+  it('overrides defaultValue to the empty privileges representation', function () {
     const field = PrivilegesField.create();
-    expect(get(field, 'defaultValue')).to.an('array').that.is.empty;
+    expect(get(field, 'defaultValue')).to.deep.equal({
+      privilegesTarget: undefined,
+      privileges: [],
+    });
   });
 });

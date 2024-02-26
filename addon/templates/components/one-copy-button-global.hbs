@@ -1,0 +1,8 @@
+{{#if (not-eq clipboardText undefined)}}
+  {{one-copy-button
+    clipboardText=clipboardText
+    textType=textType
+    class="hidden btn-global-copy-button"
+    notify=(action "copyEnded")
+  }}
+{{/if}}

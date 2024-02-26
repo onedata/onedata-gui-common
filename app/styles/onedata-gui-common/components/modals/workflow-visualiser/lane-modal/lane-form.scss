@@ -20,6 +20,12 @@
       flex: 0 0 calc(100% - #{$min-label-width});
     }
   }
+
+  .sourceStore-field.field-view-mode {
+    .one-icon {
+      margin-left: -0.15em;
+    }
+  }
 }
 
 .option-__createStore {

@@ -234,19 +234,14 @@ export default Component.extend(I18n, {
   sourceStoreField: computed(function sourceStoreField() {
     const component = this;
     return DropdownField
-      // using options.1 becase options.firstObject is the "createStore" item
+      // using options.1 because options.firstObject is the "createStore" item
       .extend(defaultValueGenerator(this, 'options.1.value'), {
         options: computed('component.definedStores.@each.name', function options() {
-          const storeOptions = (this.get('component.definedStores') || []).map(store => {
-            const {
-              id,
-              name,
-            } = getProperties(store, 'id', 'name');
-            return {
-              value: id,
-              label: name,
-            };
-          }).sortBy('label');
+          const storeOptions = (this.get('component.definedStores') || []).map(store => ({
+            value: store.id,
+            label: store.name,
+            icon: store.icon,
+          })).sortBy('label');
           return [{
             value: createStoreDropdownOptionValue,
           }, ...storeOptions];

@@ -158,8 +158,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * ```
    * {
+   *   name: string,
    *   lanes: Array<Object>,
    *   stores: Array<Object>,
+   *   dashboardSpec: AtmTimeSeriesDashboardSpec | null,
    * }
    * ```
    * @virtual
@@ -719,6 +721,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     if (workflow) {
       this.updateElement(workflow, {
         instanceId,
+        name: this.rawData?.name,
         systemAuditLogStore,
         status,
         dashboardSpec: this.rawData?.dashboardSpec ?? null,
@@ -728,6 +731,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     } else {
       workflow = Workflow.create({
         instanceId,
+        name: this.rawData?.name,
         systemAuditLogStore,
         status,
         dashboardSpec: this.rawData?.dashboardSpec ?? null,

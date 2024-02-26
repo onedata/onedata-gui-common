@@ -262,14 +262,15 @@ const TimeSeriesNameField = TextField.extend({
    * @override
    */
   customValidators: Object.freeze([
-    validator(function (value, options, model) {
-      const selectedNameGeneratorSpec = model.field.parent.selectedNameGeneratorSpec;
-      if (selectedNameGeneratorSpec?.nameGeneratorType !== 'addPrefix') {
-        return true;
-      }
-      return (value || '').startsWith(selectedNameGeneratorSpec?.nameGenerator) &&
-        value.length > selectedNameGeneratorSpec?.nameGenerator.length;
-    }, {
+    validator('inline', {
+      validate(value, options, model) {
+        const selectedNameGeneratorSpec = model.field.parent.selectedNameGeneratorSpec;
+        if (selectedNameGeneratorSpec?.nameGeneratorType !== 'addPrefix') {
+          return true;
+        }
+        return (value || '').startsWith(selectedNameGeneratorSpec?.nameGenerator) &&
+          value.length > selectedNameGeneratorSpec?.nameGenerator.length;
+      },
       dependentKeys: ['model.field.parent.selectedNameGeneratorSpec'],
     }),
   ]),

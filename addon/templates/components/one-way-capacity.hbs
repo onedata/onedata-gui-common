@@ -9,17 +9,16 @@
   placeholder={{placeholder}}
 >
 <span class="input-group-basic-dropdown size-unit-select-group">
-  {{#one-dropdown
-    triggerClass=size
-    dropdownClass=size
-    disabled=disabled
-    options=sizeUnits
-    selected=sizeUnit
-    onchange=(action "sizeUnitChanged")
-    searchEnabled=false
+  <OneDropdown
+    @triggerClass={{size}}
+    @dropdownClass={{size}}
+    @disabled={{disabled}}
+    @options={{sizeUnits}}
+    @selected={{sizeUnit}}
+    @onChange={{action "sizeUnitChanged"}}
     as |unit|
-  }}
+  >
     {{unit.name}}
-  {{/one-dropdown}}
-  </span>
+  </OneDropdown>
+</span>
 {{yield}}

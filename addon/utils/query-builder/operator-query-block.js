@@ -53,7 +53,7 @@ export default QueryBlock.extend({
   /**
    * @type {Array<Utils.QueryBuilder.QueryBlock>}
    */
-  operands: computed(() => A()),
+  operands: undefined,
 
   updateNotifierObserver: observer('notifyUpdate', function updateNotifierObserver() {
     this.bindOperands();
@@ -66,6 +66,9 @@ export default QueryBlock.extend({
 
   init() {
     this._super(...arguments);
+    if (!this.operands) {
+      this.set('operands', A());
+    }
     this.bindOperands();
   },
 

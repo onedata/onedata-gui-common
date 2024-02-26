@@ -1,33 +1,34 @@
 /* eslint-disable no-restricted-globals */
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import globals from 'onedata-gui-common/utils/globals';
+import globals, { GlobalName } from 'onedata-gui-common/utils/globals';
 import _ from 'lodash';
 
 const nativeGlobals = [{
-  name: 'window',
+  name: GlobalName.Window,
   global: window,
   exampleProperty: 'document',
 }, {
-  name: 'document',
+  name: GlobalName.Document,
   global: document,
   exampleProperty: 'body',
 }, {
-  name: 'location',
+  name: GlobalName.Location,
   global: location,
   exampleProperty: 'hostname',
 }, {
-  name: 'localStorage',
+  name: GlobalName.LocalStorage,
   global: localStorage,
   exampleProperty: 'length',
 }, {
-  name: 'sessionStorage',
+  name: GlobalName.SessionStorage,
   global: sessionStorage,
   exampleProperty: 'length',
 }, {
-  name: 'fetch',
+  name: GlobalName.Fetch,
   global: fetch,
-}];
+  exampleProperty: undefined,
+}] as const;
 
 describe('Unit | Utility | globals', function () {
   nativeGlobals.forEach(({ name, global, exampleProperty }, idx) => {
@@ -39,15 +40,22 @@ describe('Unit | Utility | globals', function () {
     });
 
     it(`allows to mock ${name} global`, function () {
-      const mock = { a: 1 };
+      const mock: Record<string, unknown> = { a: 1 };
       globals.mock(name, mock);
-      mock.b = 2;
+      mock['b'] = 2;
 
       Object.keys(mock).forEach((propName) => {
-        expect(globals[name][propName]).to.equal(mock[propName]);
-        expect(globals[`native${_.upperFirst(name)}`][propName]).to.be.undefined;
+        const globalToCheck = globals[name];
+        const nativeGlobalToCheck = globals[
+          `native${_.upperFirst(name)}` as keyof typeof globals
+        ] as typeof window[GlobalName];
+        expect(globalToCheck[propName as keyof typeof globalToCheck])
+          .to.equal(mock[propName as keyof typeof mock]);
+        expect(nativeGlobalToCheck[propName as keyof typeof nativeGlobalToCheck])
+          .to.be.undefined;
         if (exampleProperty) {
-          expect(globals[name][exampleProperty]).to.equal(global[exampleProperty]);
+          expect(globalToCheck[exampleProperty as keyof typeof globalToCheck])
+            .to.equal(global[exampleProperty as keyof typeof global]);
         }
       });
       otherNativeGlobals.forEach(({ name: otherName }) => {
@@ -65,7 +73,8 @@ describe('Unit | Utility | globals', function () {
 
       expectIsNative(name, globals[name]);
       otherNativeGlobals.forEach(({ name: otherName }) => {
-        expect(globals[otherName].a).to.equal(1);
+        const globalToCheck = globals[otherName];
+        expect(globalToCheck['a' as keyof typeof globalToCheck]).to.equal(1);
       });
     });
   });
@@ -84,9 +93,9 @@ describe('Unit | Utility | globals', function () {
   });
 });
 
-function expectIsNative(globalName, varToCheck) {
-  const { global } = nativeGlobals.find(({ name }) => name === globalName);
-  if (typeof global === 'function') {
+function expectIsNative(globalName: GlobalName, varToCheck: unknown): void {
+  const global = nativeGlobals.find(({ name }) => name === globalName)?.global;
+  if (typeof global === 'function' && typeof varToCheck === 'function') {
     expect(varToCheck.name).to.equal(`bound ${global.name}`);
   } else {
     expect(varToCheck).to.equal(global);

@@ -11,9 +11,19 @@
   as |modal|
 }}
   {{#modal.header}}
-    <h1>
-      {{tt this (concat "header." dashboardOwnerType)}}
-    </h1>
+    <h1>{{tt this (concat "header." dashboardOwnerType)}}</h1>
+    {{#if dashboardOwner.name}}
+      <h2 class="normal-case">
+        {{#truncated-string class="header-content"}}
+          {{#if dashboardOwner.icon}}
+            <div class="inline-icon-container header-icon">
+              <OneIcon @icon={{dashboardOwner.icon}} />
+            </div>
+          {{/if}}
+          {{dashboardOwner.name}}
+        {{/truncated-string}}
+      </h2>
+    {{/if}}
   {{/modal.header}}
 
   {{#modal.body}}

@@ -120,9 +120,19 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @public
    * @type {ComputedProperty<String>}
    */
-  title: computed('i18nPrefix', function title() {
-    return this.t('title', {}, { defaultValue: '' });
+  title: computed('i18nPrefix', {
+    get() {
+      return this.injectedTitle ?? this.t('title', {}, { defaultValue: '' });
+    },
+    set(key, value) {
+      return this.injectedTitle = value;
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedTitle: null,
 
   /**
    * `true` when action has been executed, `false` otherwise.
@@ -139,7 +149,7 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * Errors change action result.
    * @type {ComputedProperty<Array<ActionExecuteHook>>}
    */
-  executeHooks: computed(() => []),
+  executeHooks: undefined,
 
   /**
    * Callback ready to use inside hbs action helper
@@ -159,6 +169,14 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @type {Ember.ComputedProperty<() => Promise<Utils.ActionResult>>}
    */
   action: reads('executeCallback'),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    this.set('executeHooks', []);
+  },
 
   /**
    * @override

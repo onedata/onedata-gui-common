@@ -13,6 +13,12 @@
     }
   }
 
+  .type-field.field-view-mode {
+    .one-icon {
+      margin-left: -0.15em;
+    }
+  }
+
   @media (min-width: $screen-sm-min) {
     .defaultValue-field > .control-label {
       padding-top: 0.5em;

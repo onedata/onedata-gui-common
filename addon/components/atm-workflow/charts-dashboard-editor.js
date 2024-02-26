@@ -119,10 +119,7 @@ export default Component.extend({
       }
       this.cacheFor('editorContext')?.destroy();
       this.undoManager.destroy();
-      this.setProperties({
-        model: undefined,
-        undoManager: undefined,
-      });
+      this.set('undoManager', undefined);
     } finally {
       this._super(...arguments);
     }

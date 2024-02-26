@@ -41,6 +41,9 @@ export default function emberObjectReplace(dest, source) {
     }
   });
   for (const k in copy) {
+    if (_.isEqual(dest[k], copy[k])) {
+      continue;
+    }
     // do not copy value to computed property. Let it recalculate on its own
     if (!dest[k] || dest[k].constructor !== fakeComputed.constructor) {
       set(dest, k, copy[k]);

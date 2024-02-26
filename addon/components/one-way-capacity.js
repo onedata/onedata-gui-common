@@ -37,11 +37,22 @@ export default Component.extend({
   allowedUnits: Object.freeze(['MiB', 'GiB', 'TiB', 'PiB']),
 
   /**
-   * @type {string}
+   * @virtual optional
+   * @type {Ember.ComputedProperty<string>}
    */
-  inputId: computed('elementId', function inputId() {
-    return this.get('elementId') + '-capacity';
+  inputId: computed('elementId', {
+    get() {
+      return this.injectedInputId ?? (this.elementId + '-capacity');
+    },
+    set(key, value) {
+      return this.injectedInputId = value;
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedInputId: null,
 
   /**
    * Currently used size unit, like in `iecUnits`

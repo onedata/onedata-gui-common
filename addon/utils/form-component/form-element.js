@@ -244,7 +244,6 @@ import {
   getBy,
   notEmpty,
   writable,
-  or,
 } from 'ember-awesome-macros';
 import { A } from '@ember/array';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
@@ -267,12 +266,6 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   name: undefined,
 
   /**
-   * @virtual
-   * @type {Array<Utils.FormComponent.FormElement>}
-   */
-  fields: computed(() => A()),
-
-  /**
    * Component used to render this form element. Each concrete form element
    * extension has specified `fieldComponentName`, but you can override it to
    * customize rendering on your own.
@@ -282,35 +275,96 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   fieldComponentName: undefined,
 
   /**
-   * @virtual
+   * @virtual optional
+   * @type {Array<Utils.FormComponent.FormElement>}
+   */
+  fields: undefined,
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<HtmlSafe>}
+   */
+  label: computed('i18nPrefix', 'translationPath', {
+    get() {
+      return this.injectedLabel ?? this.getTranslation('label', {}, { defaultValue: '' });
+    },
+    set(key, value) {
+      return this.injectedLabel = value;
+    },
+  }),
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<HtmlSafe>}
+   */
+  tip: computed('i18nPrefix', 'translationPath', {
+    get() {
+      return this.injectedTip ?? this.getTranslation('tip', {}, { defaultValue: '' });
+    },
+    set(key, value) {
+      return this.injectedTip = value;
+    },
+  }),
+
+  /**
+   * @virtual optional
    * @type {any}
    */
   defaultValue: undefined,
 
   /**
-   * @virtual
+   * @virtual optional
    * @type {boolean}
    */
   isEnabled: true,
 
   /**
    * Hiding/showing without animation
-   * @virtual
+   * @virtual optional
    * @type {boolean}
    */
   isVisible: true,
 
   /**
    * CSS classes for field component
-   * @virtual
+   * @virtual optional
    * @type {String}
    */
   classes: '',
 
   /**
+   * Currently supported values: 'md', 'sm'.
+   * NOTE: Due to the styling strategy, all nested fields of the element, which has size
+   * 'sm', will be mostly rendered as small regardless their own size value.
+   * @virtual optional
+   * @type {ComputedProperty<FormElementSize>}
+   */
+  size: computed('parent.sizeForChildren', {
+    get() {
+      return this.injectedSize ?? this.parent?.sizeForChildren ?? 'md';
+    },
+    set(key, value) {
+      return this.injectedSize = value;
+    },
+  }),
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<FormElementSize>}
+   */
+  sizeForChildren: computed('size', {
+    get() {
+      return this.injectedSizeForChildren ?? this.size;
+    },
+    set(key, value) {
+      return this.injectedSizeForChildren = value;
+    },
+  }),
+
+  /**
    * Should validation "ok" and "x" icon be rendered for this field to indicate
    * validation status.
-   * @virtual
+   * @virtual optional
    * @type {boolean}
    */
   withValidationIcon: true,
@@ -326,14 +380,14 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * If false, then bootstrap classes ("has-success", "has-error") will not be
    * added to the field component. Along with withValidationIcon it can be used
    * to hide validation status notification.
-   * @virtual
+   * @virtual optional
    * @type {boolean}
    */
   areValidationClassesEnabled: true,
 
   /**
    * If true, then a colon ':' will be automatically added to the end of a label.
-   * @virtual
+   * @virtual optional
    * @type {boolean}
    */
   addColonToLabel: true,
@@ -385,19 +439,28 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   isGroup: false,
 
   /**
-   * Currently supported values: 'md', 'sm'.
-   * NOTE: Due to the styling strategy, all nested fields of the element, which has size
-   * 'sm', will be mostly rendered as small regardless their own size value.
-   * @virtual optional
-   * @type {ComputedProperty<FormElementSize>}
+   * Custom size injected during element creation.
+   * @type {string | null}
    */
-  size: writable(or('parent.sizeForChildren', raw('md'))),
+  injectedSize: null,
 
   /**
-   * @virtual optional
-   * @type {ComputedProperty<FormElementSize>}
+   * Custom sizeForChildren injected during element creation.
+   * @type {string | null}
    */
-  sizeForChildren: reads('size'),
+  injectedSizeForChildren: null,
+
+  /**
+   * Custom label injected during field creation.
+   * @type {string | null}
+   */
+  injectedLabel: null,
+
+  /**
+   * Custom tip injected during field creation.
+   * @type {string | null}
+   */
+  injectedTip: null,
 
   /**
    * CSS classes for field component, which are calculated internally by field
@@ -405,6 +468,12 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @type {String}
    */
   internalClasses: '',
+
+  /**
+   * Used only for testing purposes
+   * @type {{ wasSet: boolean, value: unknown}}
+   */
+  injectedValue: Object.freeze({ wasSet: false, value: null }),
 
   /**
    * @virtual optional
@@ -458,12 +527,12 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  valuePath: computed('parent.valuePath', 'valueName', function valuePath() {
+  valuePath: writable(computed('parent.valuePath', 'valueName', function valuePath() {
     return this.buildPath(
       this.get('parent.valuePath'),
       this.get('valueName')
     );
-  }),
+  }), (value) => value),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.ValuesContainer>}
@@ -471,13 +540,20 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   valuesSource: reads('parent.valuesSource'),
 
   /**
+   * Value in production code should be never overwritten. It is writable only
+   * for testing purposes.
    * @type {ComputedProperty<any>}
    */
-  value: writable(conditional(
+  value: writable(conditional('injectedValue.wasSet', 'injectedValue.value', conditional(
     notEmpty('valuePath'),
     getBy('valuesSource', 'valuePath'),
     'valuesSource'
-  )),
+  )), {
+    set(value) {
+      this.injectedValue = { wasSet: true, value };
+      return value;
+    },
+  }),
 
   /**
    * @override
@@ -489,20 +565,6 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @type {ComputedProperty<any>}
    */
   ownerSource: reads('parent.ownerSource'),
-
-  /**
-   * @type {ComputedProperty<HtmlSafe>}
-   */
-  label: computed('i18nPrefix', 'translationPath', function label() {
-    return this.getTranslation('label', {}, { defaultValue: '' });
-  }),
-
-  /**
-   * @type {ComputedProperty<HtmlSafe>}
-   */
-  tip: computed('i18nPrefix', 'translationPath', function tip() {
-    return this.getTranslation('tip', {}, { defaultValue: '' });
-  }),
 
   /**
    * @type {ComputedProperty<boolean>}
@@ -540,6 +602,9 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   init() {
     this._super(...arguments);
 
+    if (!this.fields) {
+      this.set('fields', A());
+    }
     this.fieldsParentSetter();
   },
 

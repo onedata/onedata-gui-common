@@ -19,8 +19,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { reads } from '@ember/object/computed';
-
+import { computed } from '@ember/object';
 import LoadingContainer from 'onedata-gui-common/components/loading-container';
 import layout from 'onedata-gui-common/templates/components/loading-container';
 
@@ -34,8 +33,71 @@ export default LoadingContainer.extend({
    */
   proxy: null,
 
-  isLoaded: reads('proxy.isFulfilled'),
-  isLoading: reads('proxy.isPending'),
-  isError: reads('proxy.isRejected'),
-  errorReason: reads('proxy.reason'),
+  /**
+   * @override
+   */
+  isLoaded: computed('proxy.isFulfilled', {
+    get() {
+      return this.injectedIsLoaded ?? this.proxy?.isFulfilled;
+    },
+    set(key, value) {
+      return this.injectedIsLoaded = value;
+    },
+  }),
+
+  /**
+   * @override
+   */
+  isLoading: computed('proxy.isPending', {
+    get() {
+      return this.injectedIsLoading ?? this.proxy?.isPending;
+    },
+    set(key, value) {
+      return this.injectedIsLoading = value;
+    },
+  }),
+
+  /**
+   * @override
+   */
+  isError: computed('proxy.isRejected', {
+    get() {
+      return this.injectedIsError ?? this.proxy?.isRejected;
+    },
+    set(key, value) {
+      return this.injectedIsError = value;
+    },
+  }),
+
+  /**
+   * @override
+   */
+  errorReason: computed('proxy.reason', {
+    get() {
+      return this.injectedErrorReason ?? this.proxy?.reason;
+    },
+    set(key, value) {
+      return this.injectedErrorReason = value;
+    },
+  }),
+
+  /**
+   * @type {boolean | null}
+   */
+  injectedIsLoaded: null,
+
+  /**
+   * @type {boolean | null}
+   */
+  injectedIsLoading: null,
+
+  /**
+   * @type {boolean | null}
+   */
+  injectedIsError: null,
+
+  /**
+   * @type {boolean | null}
+   */
+  injectedErrorReason: null,
 });

@@ -21,7 +21,10 @@ import escapeHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-ht
 export default Component.extend(I18n, {
   layout,
   classNames: ['one-time-series-chart-plot'],
-  classNameBindings: ['hasDataToShow::no-data'],
+  classNameBindings: [
+    'hasDataToShow::no-data',
+    'isEchartsTooltipFixed:echarts-tooltip-fixed',
+  ],
 
   i18n: service(),
 
@@ -35,6 +38,12 @@ export default Component.extend(I18n, {
    * @type {Utils.OneTimeSeriesChart.Model}
    */
   model: undefined,
+
+  /**
+   * If true, then echarts tooltip stops floating and can be entered by mouse.
+   * @type {boolean}
+   */
+  isEchartsTooltipFixed: false,
 
   /**
    * @type {ComputedProperty<PromiseObject<Utils.OneTimeSeriesChart.State>>}
@@ -93,4 +102,79 @@ export default Component.extend(I18n, {
       );
     }
   ),
+
+  attachEventHandlersToChart(chart) {
+    this.set('isEchartsTooltipFixed', false);
+    const hideTooltip = () => {
+      this.set('isEchartsTooltipFixed', false);
+      // Using `hideTip` doesn't hide hover lines.
+      chart.dispatchAction({
+        type: 'showTip',
+        x: -1,
+        y: -1,
+      });
+      chart.setOption({
+        tooltip: {
+          enterable: false,
+        },
+      });
+    };
+    const tooltipNode = this.element.querySelector('.chart-tooltip');
+    const isTooltipVisuallyHidden = () =>
+      !tooltipNode?.getAttribute('style') ||
+      tooltipNode.style.opacity === '0';
+
+    chart.getZr().on('mousemove', (event) => {
+      if (!this.isEchartsTooltipFixed) {
+        chart.dispatchAction({
+          type: 'showTip',
+          x: event.offsetX,
+          y: event.offsetY,
+        });
+      }
+    });
+
+    chart.getZr().on('click', (event) => {
+      chart.setOption({
+        tooltip: {
+          enterable: true,
+        },
+      });
+      chart.dispatchAction({
+        type: 'showTip',
+        x: event.offsetX,
+        y: event.offsetY,
+      });
+      if (isTooltipVisuallyHidden()) {
+        hideTooltip();
+      } else {
+        this.set('isEchartsTooltipFixed', true);
+      }
+    });
+
+    chart.on('globalout', () => {
+      hideTooltip();
+    });
+
+    if (tooltipNode) {
+      const tooltipMutationObserver = new MutationObserver(() => {
+        // There is no event, which would tell us, that tooltip was closed.
+        // In order to detect that situation we are forced to monitor changes
+        // on the tooltip node directly.
+        if (this.isEchartsTooltipFixed && isTooltipVisuallyHidden()) {
+          hideTooltip();
+        }
+      });
+      tooltipMutationObserver.observe(tooltipNode, {
+        attributes: true,
+        attributeFilter: ['style'],
+      });
+    }
+  },
+
+  actions: {
+    registerApi(chart) {
+      this.attachEventHandlersToChart(chart);
+    },
+  },
 });

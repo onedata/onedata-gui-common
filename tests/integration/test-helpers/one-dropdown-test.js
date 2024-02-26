@@ -523,49 +523,49 @@ async function renderOneDropdown() {
   await render(hbs`
     {{!-- dropdown "0" to check if helpers will omit dropdown, which is outside
     given element/selector --}}
-    {{#one-dropdown
-      triggerClass="trigger0"
-      renderInPlace=renderInPlace
-      onchange=onChange0
-      options=options0
-      selected=selected0
-      placeholder=placeholder0
-      disabled=disabled0
-      searchEnabled=searchEnabled0
+    <OneDropdown
+      @triggerClass="trigger0"
+      @renderInPlace={{renderInPlace}}
+      @onChange={{onChange0}}
+      @options={{options0}}
+      @selected={{selected0}}
+      @placeholder={{placeholder0}}
+      @disabled={{disabled0}}
+      @searchEnabled={{searchEnabled0}}
       as |option|
-    }}
+    >
       {{option}}
-    {{/one-dropdown}}
+    </OneDropdown>
     <div class="testing-dropdowns">
       {{!-- dropdown "1" is the main dropdown to be tested --}}
-      {{#one-dropdown
-        triggerClass="trigger1"
-        renderInPlace=renderInPlace
-        onchange=onChange1
-        options=options1
-        selected=selected1
-        placeholder=placeholder1
-        disabled=disabled1
-        searchEnabled=searchEnabled1
+      <OneDropdown
+        @triggerClass="trigger1"
+        @renderInPlace={{renderInPlace}}
+        @onChange={{onChange1}}
+        @options={{options1}}
+        @selected={{selected1}}
+        @placeholder={{placeholder1}}
+        @disabled={{disabled1}}
+        @searchEnabled={{searchEnabled1}}
         as |option|
-      }}
+      >
         {{option}}
-      {{/one-dropdown}}
+      </OneDropdown>
       {{!-- dropdown "2" to check if helpers will take the first found
       dropdown and omit the rest of matching dropdowns --}}
-      {{#one-dropdown
-        triggerClass="trigger2"
-        renderInPlace=renderInPlace
-        onchange=onChange2
-        options=options2
-        selected=selected2
-        placeholder=placeholder2
-        disabled=disabled2
-        searchEnabled=searchEnabled2
+      <OneDropdown
+        @triggerClass="trigger2"
+        @renderInPlace={{renderInPlace}}
+        @onChange={{onChange2}}
+        @options={{options2}}
+        @selected={{selected2}}
+        @placeholder={{placeholder2}}
+        @disabled={{disabled2}}
+        @searchEnabled={{searchEnabled2}}
         as |option|
-      }}
+      >
         {{option}}
-      {{/one-dropdown}}
+      </OneDropdown>
     </div>
   `);
 }

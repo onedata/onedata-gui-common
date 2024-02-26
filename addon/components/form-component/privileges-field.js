@@ -36,14 +36,8 @@ export default FieldComponentBase.extend({
   /**
    * @type {ComputedProperty<Object>}
    */
-  treeValue: computed('privilegesGroups', 'value', function treeValue() {
-    let {
-      privilegesGroups,
-      value,
-    } = this.getProperties('privilegesGroups', 'value');
-    value = value || [];
-
-    return privilegesArrayToObject(value, privilegesGroups);
+  treeValue: computed('privilegesGroups', 'value.privileges', function treeValue() {
+    return privilegesArrayToObject(this.value?.privileges ?? [], this.privilegesGroups);
   }),
 
   /**
@@ -51,25 +45,25 @@ export default FieldComponentBase.extend({
    */
   compareTreeValue: computed(
     'privilegesGroups',
-    'defaultValue',
+    'defaultValue.privileges',
     function compareTreeValue() {
-      let {
-        privilegesGroups,
-        defaultValue,
-      } = this.getProperties('privilegesGroups', 'defaultValue');
-      defaultValue = defaultValue || [];
-
-      return privilegesArrayToObject(defaultValue, privilegesGroups);
+      return privilegesArrayToObject(
+        this.defaultValue?.privileges ?? [],
+        this.privilegesGroups
+      );
     }
   ),
 
   actions: {
     valueChanged(value) {
       const oneLevelTree = _.assign({}, ..._.values(value));
-      const flattenedValue = _.keys(oneLevelTree)
+      const flattenedPrivileges = _.keys(oneLevelTree)
         .filter(privilegeName => oneLevelTree[privilegeName]);
 
-      return this._super(flattenedValue);
+      return this._super({
+        privilegesTarget: this.value?.privilegesTarget,
+        privileges: flattenedPrivileges,
+      });
     },
   },
 });

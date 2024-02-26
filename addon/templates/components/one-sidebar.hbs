@@ -41,14 +41,11 @@
           <ul class="one-list">
             {{#each filteredCollection as |item|}}
               <li class="one-list-item clickable resource-item {{if (eq primaryItem item) "active"}}">
-                {{#link-to
+                {{#one-sidebar/link-to
                   "onedata.sidebar.content.index"
                   sidebarType
                   (model-routable-id item)
                   class="item-header"
-                  active=false
-                  willBeActive=false
-                  loading=false
                 }}
                   {{#if firstLevelItemComponent}}
                     {{component firstLevelItemComponent item=item inSidenav=inSidenav sidebar=this}}
@@ -60,7 +57,7 @@
                       {{name-conflict item=item tagName="span" class="one-label"}}
                     {{/truncated-string}}
                   {{/if}}
-                {{/link-to}}
+                {{/one-sidebar/link-to}}
                 {{#if (eq primaryItem item)}}
                   <ul class="one-list one-list-level-2">
                     {{component secondLevelItemsComponent

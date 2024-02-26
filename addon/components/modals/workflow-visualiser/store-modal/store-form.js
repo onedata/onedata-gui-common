@@ -61,6 +61,7 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/store-config';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import { dasherize } from '@ember/string';
 
 const storeTypes = Object.freeze([
   'list',
@@ -352,6 +353,7 @@ export default Component.extend(I18n, {
         function options() {
           return this.get('component.effAllowedStoreTypes').map((type) => ({
             value: type,
+            icon: `store-${dasherize(type)}`,
           }));
         }
       ),

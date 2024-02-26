@@ -51,40 +51,61 @@ export default Component.extend(I18n, {
   localTarget: undefined,
 
   /**
+   * @virtual optional
+   * @type {string | undefined}
+   */
+  clipboardText: undefined,
+
+  /**
    * @virtual
    * @type {Function}
    */
   notify: notImplementedIgnore,
 
   /**
-   * @virtual
-   * @type {String}
-   */
-  copyButtonTagName: 'button',
-
-  /**
-   * Computes global clipboard target selector for local element selector
-   * @type {Ember.ComputedProperty<function>}
+   * Global clipboard target selector for local element selector
+   * @virtual optional
+   * @type {Ember.ComputedProperty<string>}
    */
   clipboardTarget: computed(
     'parentElementId',
-    'localTarget',
-    function clipboardTarget() {
-      const {
-        parentElementId,
-        localTarget,
-      } = this.getProperties('parentElementId', 'localTarget');
-      return `#${parentElementId} ${localTarget}`;
+    'localTarget', {
+      get() {
+        if (this.injectedClipboardTarget) {
+          return this.injectedClipboardTarget;
+        } else if (this.parentElementId && this.localTarget) {
+          return `#${this.parentElementId} ${this.localTarget}`;
+        }
+      },
+      set(key, value) {
+        return this.injectedClipboardTarget = value;
+      },
     }
   ),
 
   /**
    * Override this to get custom notifications like: "<textType> successfully copied..."
-   * @type {Ember.ComputedProperty<string>|string}
+   * @virtual optional
+   * @type {Ember.ComputedProperty<string>}
    */
-  textType: computed(function textType() {
-    return this.t('defaultTextType');
+  textType: computed({
+    get() {
+      return this.injectedTextType ?? this.t('defaultTextType');
+    },
+    set(key, value) {
+      return this.injectedTextType = value ?? this.t('defaultTextType');
+    },
   }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedClipboardTarget: null,
+
+  /**
+   * @type {string | null}
+   */
+  injectedTextType: null,
 
   /**
    * @type {Ember.ComputedProperty<function>}
@@ -101,26 +122,20 @@ export default Component.extend(I18n, {
   }),
 
   _success() {
-    const {
-      notify,
-      globalNotify,
-      textType,
-    } = this.getProperties('notify', 'globalNotify', 'textType');
-    notify(true);
-    globalNotify.info(this.t(
+    this.globalNotify.info(this.t(
       'copySuccess', {
-        textType: capitalize(String(textType)),
+        textType: capitalize(String(this.textType)),
       }
     ));
+    this.notify?.(true);
   },
 
   _error() {
-    this.get('notify')(false);
-    this.get('globalNotify').info(this.t(
-      'copyError', {
+    this.globalNotify.info(this.t(
+      'copyFailure', {
         textType: this.get('textType'),
       }
     ));
+    this.notify?.(false);
   },
-
 });

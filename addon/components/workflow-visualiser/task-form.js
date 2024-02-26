@@ -476,9 +476,10 @@ export default Component.extend(I18n, {
                       getSourceStoreForDataSpec(argumentStores, dataSpec);
                     const opts = possibleStores
                       .sortBy('name')
-                      .map(({ id, name }) => ({
+                      .map(({ id, name, icon }) => ({
                         value: id,
                         label: name,
+                        icon,
                       }));
                     opts.unshift({
                       value: createStoreDropdownOptionValue,
@@ -750,6 +751,7 @@ export default Component.extend(I18n, {
         timeSeriesSchemas: [],
       },
       dashboardSpec: null,
+      icon: 'store-time-series',
     };
     this.set('timeSeriesStore.config', newConfig);
   },
@@ -1350,6 +1352,7 @@ const SingleResultMappingsCollectionGroup = FormFieldsCollectionGroup.extend({
                 .map(store => ({
                   value: get(store, 'id'),
                   label: get(store, 'name'),
+                  icon: get(store, 'icon'),
                 }))
                 .sortBy('label');
               opts.unshift({
@@ -1384,15 +1387,16 @@ const SingleResultMappingsCollectionGroup = FormFieldsCollectionGroup.extend({
           classes: 'floating-field-label',
           name: 'targetStore',
           customValidators: [
-            validator(function (value, options, model) {
-              const field = get(model, 'field');
-              const notEnabledTsStoreSelected =
-                value === taskTimeSeriesDropdownOptionValue &&
-                !get(field, 'parent.parent.component.isTimeSeriesStoreEnabled');
-              return notEnabledTsStoreSelected ?
-                String(field.getTranslation('errors.notEnabledTsStoreSelected')) :
-                true;
-            }, {
+            validator('inline', {
+              validate(value, options, model) {
+                const field = get(model, 'field');
+                const notEnabledTsStoreSelected =
+                  value === taskTimeSeriesDropdownOptionValue &&
+                  !get(field, 'parent.parent.component.isTimeSeriesStoreEnabled');
+                return notEnabledTsStoreSelected ?
+                  String(field.getTranslation('errors.notEnabledTsStoreSelected')) :
+                  true;
+              },
               dependentKeys: [
                 'model.field.parent.parent.component.isTimeSeriesStoreEnabled',
               ],

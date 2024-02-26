@@ -6,16 +6,16 @@
       </td>
       <td class="property-value">
         <div class="api-operation-row">
-          {{#one-dropdown
-            triggerClass="small api-command-type-selector-trigger"
-            dropdownClass="small api-command-type-selector-dropdown"
-            renderInPlace=false
-            options=apiSamples
-            selected=effSelectedApiCommand
-            searchEnabled=false
-            onchange=(action "selectApiCommand")
+          <OneDropdown
+            @triggerClass="small api-command-type-selector-trigger"
+            @dropdownClass="small api-command-type-selector-dropdown"
+            @renderInPlace={{false}}
+            @options={{apiSamples}}
+            @selected={{effSelectedApiCommand}}
+            @searchEnabled={{false}}
+            @onChange={{action "selectApiCommand"}}
             as |apiCommand|
-          }}
+          >
             <div class="option-container">
               {{#truncated-string class="text api-command-container"}}
                 <span class="api-command-title">
@@ -31,7 +31,7 @@
                 </span>
               {{/truncated-string}}
             </div>
-          {{/one-dropdown}}
+          </OneDropdown>
         </div>
       </td>
     </tr>

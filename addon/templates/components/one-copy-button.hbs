@@ -1,14 +1,14 @@
-{{#copy-button
-  tagName=copyButtonTagName
-  class=class
-  parentElementId=elementId
-  clipboardTarget=clipboardTarget
-  success=success
-  error=error
-}}
+<CopyButton
+  @clipboardText={{clipboardText}}
+  @clipboardTarget={{clipboardTarget}}
+  @container=".modal-content, body:not(.modal-open)"
+  @success={{success}}
+  @error={{error}}
+  class={{class}}
+>
   {{#if hasBlock}}
     {{yield}}
   {{else}}
     {{one-icon icon="browser-copy"}} {{tt this "copyBtn"}}
   {{/if}}
-{{/copy-button}}
+</CopyButton>

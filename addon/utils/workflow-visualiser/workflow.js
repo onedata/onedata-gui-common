@@ -26,6 +26,12 @@ export default EmberObject.extend({
 
   /**
    * @virtual optional
+   * @type {string | undefined}
+   */
+  name: undefined,
+
+  /**
+   * @virtual optional
    * @type {Utils.WorkflowVisualiser.Store}
    */
   systemAuditLogStore: undefined,
@@ -53,6 +59,11 @@ export default EmberObject.extend({
    * @type {Array<Utils.WorkflowVisualiser.Lane>}
    */
   lanes: undefined,
+
+  /**
+   * @type {string}
+   */
+  icon: 'atm-workflow',
 
   /**
    * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}

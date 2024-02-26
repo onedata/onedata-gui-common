@@ -94,6 +94,7 @@ import auditLog from './onedata-gui-common/utils/audit-log';
 import timeSeries from './onedata-gui-common/utils/time-series';
 import timeSeriesDashboard from './onedata-gui-common/utils/time-series-dashboard';
 import file from './onedata-gui-common/utils/file';
+import utilOneTimeSeriesChart from './onedata-gui-common/utils/one-time-series-chart';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
 
@@ -212,6 +213,7 @@ const translations = {
     timeSeries,
     timeSeriesDashboard,
     file,
+    oneTimeSeriesChart: utilOneTimeSeriesChart,
   },
   errors: {
     backendErrors,

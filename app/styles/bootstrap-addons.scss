@@ -454,13 +454,14 @@ $first-table-column-padding-left: 16px;
 .bs-tab-onedata {
   .nav-tabs {
     li.disabled {
-      cursor: not-allowed !important;
+      cursor: not-allowed;
       > a {
         pointer-events: none;
         color: $main-text-color-disabled;
       }
     }
     li > a {
+      cursor: pointer;
       .tab-icon {
         @include vertical-align-middle();
         left: 8px;

@@ -33,7 +33,7 @@ export default Service.extend({
 
   /**
    * @param {*} error
-   * @returns {string}
+   * @returns {'forbidden'|'error'}
    */
   getType(error) {
     const errorId = (error || {}).id;

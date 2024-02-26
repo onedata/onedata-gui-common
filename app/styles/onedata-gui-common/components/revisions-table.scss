@@ -36,7 +36,7 @@
 
     &.disabled {
       color: $main-text-color-disabled;
-      cursor: initial !important;
+      cursor: initial;
     }
 
     .one-icon {
@@ -48,10 +48,6 @@
   }
 
   .revisions-table-revision-entry {
-    &:not(.clickable) {
-      cursor: initial !important;
-    }
-
     &.clickable {
       &:hover {
         background-color: $main-content-hover-background;

@@ -31,10 +31,6 @@ $workflow-visualiser-run-indicator-size: 25px;
   align-items: center;
   justify-content: center;
 
-  &:not(.clickable) {
-    cursor: initial !important;
-  }
-
   &.two-digit-run .run-number {
     font-size: 0.9em;
   }

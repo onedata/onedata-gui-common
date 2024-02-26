@@ -16,7 +16,5 @@
 
   &.disabled {
     opacity: 0.3;
-    // `!important` to override inline styles of clickable components
-    cursor: not-allowed !important;
   }
 }

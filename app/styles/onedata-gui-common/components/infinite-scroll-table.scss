@@ -30,7 +30,6 @@ $infinite-scroll-table-container-padding: 2 * $infinite-scroll-table-cell-paddin
 
   .table-scrollable-container {
     height: 100%;
-    cursor: initial !important;
 
     &.on-top .table-head tr:last-child th {
       @include hide-before-shadow;

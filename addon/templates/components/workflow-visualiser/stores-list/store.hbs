@@ -1,4 +1,7 @@
-{{#truncated-string class="store-name"}}{{store.name}}{{/truncated-string}}
+{{#truncated-string class="store-name"}}
+  <OneIcon @icon={{store.icon}} />
+  {{store.name}}
+{{/truncated-string}}
 {{#if (and (eq mode "edit") isRemovingAllowed)}}
   {{one-icon
     icon="close"

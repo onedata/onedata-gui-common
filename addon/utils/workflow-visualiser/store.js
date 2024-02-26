@@ -8,6 +8,7 @@
 
 import EmberObject, { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { dasherize } from '@ember/string';
 import { resolve } from 'rsvp';
 import { getStoreReadDataSpec } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import ChartsDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-model-container';
@@ -103,6 +104,13 @@ export default EmberObject.extend({
    * @returns {Promise}
    */
   onRemove: undefined,
+
+  /**
+   * @type {string | null}
+   */
+  icon: computed('type', function icon() {
+    return this.type ? `store-${dasherize(this.type)}` : null;
+  }),
 
   /**
    * @type {ComputedProperty<AtmDataSpec>}

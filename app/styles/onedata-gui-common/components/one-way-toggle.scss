@@ -53,11 +53,6 @@ $toggle-icon-size: 1.24em;
     width: auto;
   }
 
-  &.disabled {
-    // override HammerJS inline styles
-    cursor: initial !important;
-  }
-
   input[type="checkbox"] {
     opacity: 0;
     position: absolute;

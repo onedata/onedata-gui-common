@@ -109,21 +109,22 @@ const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
         TextField.create({
           name: 'nameGenerator',
           customValidators: [
-            validator(function (value, options, model) {
-              const trimmedValue = (value || '').trim();
-              if (!trimmedValue) {
-                return true;
-              }
-              const field = get(model, 'field');
-              const errorMsg = String(field.getTranslation('errors.notUnique'));
-              const usedNameGenerators = get(model, 'field.parent.parent.usedNameGenerators');
-              return usedNameGenerators
-                .filter((usedNameGenerator) => {
-                  const trimmedUsedNameGenerator = usedNameGenerator.trim();
-                  return trimmedUsedNameGenerator.startsWith(trimmedValue) ||
-                    trimmedValue.startsWith(trimmedUsedNameGenerator);
-                }).length <= 1 ? true : errorMsg;
-            }, {
+            validator('inline', {
+              validate(value, options, model) {
+                const trimmedValue = (value || '').trim();
+                if (!trimmedValue) {
+                  return true;
+                }
+                const field = get(model, 'field');
+                const errorMsg = String(field.getTranslation('errors.notUnique'));
+                const usedNameGenerators = get(model, 'field.parent.parent.usedNameGenerators');
+                return usedNameGenerators
+                  .filter((usedNameGenerator) => {
+                    const trimmedUsedNameGenerator = usedNameGenerator.trim();
+                    return trimmedUsedNameGenerator.startsWith(trimmedValue) ||
+                      trimmedValue.startsWith(trimmedUsedNameGenerator);
+                  }).length <= 1 ? true : errorMsg;
+              },
               dependentKeys: ['model.field.parent.parent.usedNameGenerators'],
             }),
           ],

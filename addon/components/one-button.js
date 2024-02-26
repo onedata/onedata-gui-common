@@ -8,45 +8,73 @@
  */
 
 import BsButton from 'ember-bootstrap/components/bs-button';
+import { computed } from '@ember/object';
+import {
+  attributeBindings,
+  classNameBindings,
+  classNames,
+} from '@ember-decorators/component';
 import layout from '../templates/components/one-button';
-import { or, eq, raw, and } from 'ember-awesome-macros';
 
-export default BsButton.extend({
-  layout,
-  classNames: ['one-button'],
-  classNameBindings: ['isInPendingState:pending'],
-  attributeBindings: ['isEffDisabled:disabled'],
+@classNames('one-button')
+@classNameBindings('isInPendingState:pending', 'isEffDisabled::clickable')
+@attributeBindings('isEffDisabled:disabled')
+export default class OneButton extends BsButton {
+  layout = layout;
+
+  /**
+   * It has to be computed, because BsButton class has it defined as a computed
+   * which breaks direct setting of this property.
+   * @virtual optional
+   * @type {boolean}
+   */
+  @computed()
+  get isPending() {
+    return this.injectedIsPending ?? false;
+  }
+
+  set isPending(value) {
+    this.injectedIsPending = value;
+  }
 
   /**
    * @virtual optional
    * @type {boolean}
    */
-  isPending: false,
+  disableWhenPending = true;
 
   /**
    * @virtual optional
    * @type {boolean}
    */
-  disableWhenPending: true,
+  showSpinnerWhenPending = true;
 
   /**
-   * @virtual optional
+   * @type {boolean | null}
+   */
+  injectedIsPending = false;
+
+  /**
    * @type {boolean}
    */
-  showSpinnerWhenPending: true,
+  @computed('isPending', 'state')
+  get isInPendingState() {
+    return this.isPending || this.state === 'pending';
+  }
 
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isInPendingState: or('isPending', eq('state', raw('pending'))),
+  @computed('isInPendingState', 'showSpinnerWhenPending')
+  get isSpinnerVisible() {
+    return this.isInPendingState && this.showSpinnerWhenPending;
+  }
 
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isSpinnerVisible: and('isInPendingState', 'showSpinnerWhenPending'),
-
-  /**
-   * @type {ComputedProperty<boolean>}
-   */
-  isEffDisabled: or('disabled', and('isInPendingState', 'disableWhenPending')),
-});
+  @computed('disabled', 'isInPendingState', 'disableWhenPending')
+  get isEffDisabled() {
+    return this.disabled || (this.isInPendingState && this.disableWhenPending);
+  }
+}

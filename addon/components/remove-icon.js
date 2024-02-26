@@ -13,7 +13,7 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 export default Component.extend({
   layout,
   classNames: ['remove-icon'],
-  classNameBindings: ['isDisabled:disabled:enabled'],
+  classNameBindings: ['isDisabled::clickable', 'isDisabled:disabled:enabled'],
 
   /**
    * @virtual optional

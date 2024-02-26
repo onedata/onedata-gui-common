@@ -31,23 +31,23 @@ export default FormFieldsGroup.extend({
   isCollectionManipulationAllowed: true,
 
   /**
-   * @type {number}
-   */
-  createdFieldsCounter: 0,
-
-  /**
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  addButtonText: computed('translationPath', 'i18nPrefix', function addButtonText() {
-    return this.getTranslation('addButtonText', {}, {
-      defaultValue: this.t(
-        `${defaultI18nPrefix}.addButtonText`, {}, {
-          defaultValue: '',
-          usePrefix: false,
-        },
-      ),
-    });
+  addButtonText: computed('translationPath', 'i18nPrefix', {
+    get() {
+      return this.injectedAddButtonText ?? this.getTranslation('addButtonText', {}, {
+        defaultValue: this.t(
+          `${defaultI18nPrefix}.addButtonText`, {}, {
+            defaultValue: '',
+            usePrefix: false,
+          },
+        ),
+      });
+    },
+    set(key, value) {
+      return this.injectedAddButtonText = value;
+    },
   }),
 
   /**
@@ -56,23 +56,45 @@ export default FormFieldsGroup.extend({
    */
   emptyCollectionViewModeText: computed(
     'translationPath',
-    'i18nPrefix',
-    function emptyCollectionViewModeText() {
-      return this.getTranslation('emptyCollectionViewModeText', {}, {
-        defaultValue: this.t(
-          `${defaultI18nPrefix}.emptyCollectionViewModeText`, {}, {
-            defaultValue: '',
-            usePrefix: false,
-          },
-        ),
-      });
+    'i18nPrefix', {
+      get() {
+        return this.injectedEmptyCollectionViewModeText ??
+          this.getTranslation('emptyCollectionViewModeText', {}, {
+            defaultValue: this.t(
+              `${defaultI18nPrefix}.emptyCollectionViewModeText`, {}, {
+                defaultValue: '',
+                usePrefix: false,
+              },
+            ),
+          });
+      },
+      set(key, value) {
+        this.injectedEmptyCollectionViewModeText = value;
+      },
     }
   ),
 
   /**
-   * @type {ComputedProperty<Array<Utils.FormComponent.FormElement>>}
+   * @type {number}
    */
-  fieldsToAdd: computed(() => []),
+  createdFieldsCounter: 0,
+
+  /**
+   * Custom addButtonText injected during field creation.
+   * @type {string | null}
+   */
+  injectedAddButtonText: null,
+
+  /**
+   * Custom emptyCollectionViewModeText injected during field creation.
+   * @type {string | null}
+   */
+  injectedEmptyCollectionViewModeText: null,
+
+  /**
+   * @type {Array<Utils.FormComponent.FormElement>}
+   */
+  fieldsToAdd: undefined,
 
   incomingFieldsValueNamesObserver: observer(
     'value.__fieldsValueNames.[]',
@@ -112,6 +134,7 @@ export default FormFieldsGroup.extend({
 
   init() {
     this._super(...arguments);
+    this.set('fieldsToAdd', []);
     this.incomingFieldsValueNamesObserver();
   },
 

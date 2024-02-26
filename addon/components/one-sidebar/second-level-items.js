@@ -3,13 +3,28 @@
  * aspects).
  *
  * @author Jakub Liput
- * @copyright (C) 2019 ACK CYFRONET AGH
+ * @copyright (C) 2019-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 import { reads } from '@ember/object/computed';
 import layout from '../../templates/components/one-sidebar/second-level-items';
+
+/**
+ * @typedef {Object} OneSidebarSecondLevelItem
+ * @property {string} id
+ * @property {string|SafeString} label
+ * @property {string} icon
+ * @property {string} [itemClassId] If provided, the `li` element will have a
+ *   `item-{itemClassId}` class instead of `item-{id}`. This optional property has been
+ *   introduced to avoid names coupled with aspect name, which should not be used in
+ *   classname.
+ * @property {string|SafeString} [warningMessage]
+ * @property {boolean} [forbidden]
+ * @property {boolean} [disabled]
+ * @property {string|SafeString} [tip]
+ */
 
 export default Component.extend({
   layout,
@@ -22,30 +37,27 @@ export default Component.extend({
   item: undefined,
 
   /**
-   * @virtual
    * Current active aspect ID
+   * @virtual
    * @type {string}
    */
   secondaryItemId: undefined,
 
   /**
-   * @virtual
    * Reference to sidebar component instance
+   * @virtual
    */
   sidebar: undefined,
 
   /**
    * @virtual
-   * @type {Array<object>} each:
-   * ```
-   * { id, label, icon, [warningMessage], [forbidden], [disabled], [tip] }`
-   * ```
+   * @type {Array<OneSidebarSecondLevelItem>}
    */
   secondLevelItems: undefined,
 
   /**
-   * @virtual
    * Typically ID of sidebar route (eg. `groups`)
+   * @virtual
    * @type {string}
    */
   sidebarType: undefined,

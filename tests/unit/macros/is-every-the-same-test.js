@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import isEveryTheSame from 'onedata-gui-common/macros/is-every-the-same';
 import { describe, it } from 'mocha';
-import EmberObject, { get, set, computed } from '@ember/object';
+import EmberObject, { get, set } from '@ember/object';
 
 const HostObject = EmberObject.extend({
-  arr: computed(() => []),
+  arr: Object.freeze([]),
   byKey: undefined,
   isEveryTheSame: isEveryTheSame('arr', 'byKey'),
 });

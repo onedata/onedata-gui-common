@@ -1,0 +1,1 @@
+../../../../onedata-gui-utils/project-common/app/config/environment.d.ts

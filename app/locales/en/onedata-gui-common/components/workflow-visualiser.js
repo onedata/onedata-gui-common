@@ -130,11 +130,9 @@ export default {
       },
       viewTaskAuditLog: {
         title: 'Audit log',
-        subjectName: '"{{taskName}}" task',
       },
       viewTaskTimeSeries: {
         title: 'Time series',
-        subjectName: '"{{taskName}}" task',
       },
       viewTaskPodsActivity: {
         title: 'Pods activity',
@@ -159,7 +157,6 @@ export default {
       },
       viewWorkflowAuditLog: {
         title: 'Audit log',
-        subjectName: 'Workflow',
       },
       downloadAuditLog: {
         title: 'Download as JSON',

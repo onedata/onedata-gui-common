@@ -18,7 +18,7 @@ export default Component.extend({
   classNameBindings: [
     'status',
     'enabled::hidden',
-    'clickAction::not-clickable',
+    'clickAction:clickable',
   ],
 
   /**

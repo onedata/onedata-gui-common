@@ -16,7 +16,6 @@ import { computed, observer } from '@ember/object';
 import { debounce, next } from '@ember/runloop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import $ from 'jquery';
-import computedT from 'onedata-gui-common/utils/computed-t';
 import globals from 'onedata-gui-common/utils/globals';
 import { bool } from 'ember-awesome-macros';
 
@@ -152,6 +151,19 @@ export default Component.extend(I18n, {
   sizeClass: '',
 
   /**
+   * @virtual optional
+   * @type {Ember.ComputedProperty<string>}
+   */
+  moreText: computed({
+    get() {
+      return this.injectedMoreText ?? this.t('more');
+    },
+    set(key, value) {
+      return this.injectedMoreText = value;
+    },
+  }),
+
+  /**
    * @type {Ember.ComputedProperty<boolean>}
    */
   _isLink: computed('isLink', 'aspect', 'route', 'customLink', function _isLink() {
@@ -197,9 +209,9 @@ export default Component.extend(I18n, {
   ),
 
   /**
-   * @type {Ember.ComputedProperty<string>}
+   * @type {string | null}
    */
-  moreText: computedT('more'),
+  injectedMoreText: null,
 
   /**
    * @type {Ember.ComputedProperty<Function>}

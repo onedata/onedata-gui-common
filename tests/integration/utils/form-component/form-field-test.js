@@ -175,7 +175,7 @@ describe('Integration | Utility | form-component/form-field', function () {
 
   it('returns undefined as a dumpValue() result when isValueless is true', function () {
     const formField = FormField.create({
-      valuePath: 'a',
+      name: 'a',
       valuesSource: {
         a: 'b',
       },

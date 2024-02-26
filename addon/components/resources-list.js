@@ -22,7 +22,7 @@ export default Component.extend({
    * @virtual
    * @type {Array<ResourceListItem>}
    */
-  items: computed(() => []),
+  items: undefined,
 
   /**
    * @virtual optional
@@ -34,6 +34,16 @@ export default Component.extend({
    * @type {ComputedProperty<Array<ResourceListItem>>}
    */
   sortedItems: array.sort('items', ['label']),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    if (!this.items) {
+      this.set('items', []);
+    }
+  },
 
   actions: {
     itemInfoHovered(item, hasHover) {
@@ -68,6 +78,19 @@ export const ResourceListItem = EmberObject.extend({
   link: undefined,
 
   /**
+   * @virtual optional
+   * @type {String}
+   */
+  icon: computed('record', {
+    get() {
+      return this.injectedIcon ?? recordIcon(this.record);
+    },
+    set(key, value) {
+      return this.injectedIcon = value;
+    },
+  }),
+
+  /**
    * Item label. Used to render item label when `conflictingLabelSource` is not defined.
    * Always used for sorting (hence must be set even when
    * `conflictingLabelSource` is defined).
@@ -86,13 +109,6 @@ export const ResourceListItem = EmberObject.extend({
   /**
    * @type {String}
    */
-  icon: computed('record', function icon() {
-    return recordIcon(this.record);
-  }),
-
-  /**
-   * @type {String}
-   */
   itemInfoTriggerSelector: computed('record', function itemInfoTriggerSelector() {
     return `.item-icon-container[data-record-id="${this.record.entityId}"]`;
   }),
@@ -106,6 +122,11 @@ export const ResourceListItem = EmberObject.extend({
    * @type {boolean}
    */
   hasItemInfoHovered: false,
+
+  /**
+   * @type {string | null}
+   */
+  injectedIcon: null,
 
   init() {
     this._super(...arguments);

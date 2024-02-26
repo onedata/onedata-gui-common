@@ -41,7 +41,7 @@
     &.disabled {
       .one-icon {
         opacity: 0.3;
-        cursor: not-allowed !important;
+        cursor: not-allowed;
 
         &:hover {
           color: $main-text-color;

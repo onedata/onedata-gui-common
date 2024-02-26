@@ -14,16 +14,16 @@
     onClickOutside=onEndTagCreation
     exceptSelector=parentTagsInputSelector
   }}
-    {{#one-dropdown
-      triggerClass="small"
-      dropdownClass="small"
-      options=modelOptions
-      onchange=(action (mut selectedModelOption))
-      selected=selectedModelOption
-      searchEnabled=false
-      renderInPlace=true
-      verticalPosition="bottom"
-      as |modelType|}}
+    <OneDropdown
+      @triggerClass="small"
+      @dropdownClass="small"
+      @options={{modelOptions}}
+      @onChange={{action (mut selectedModelOption)}}
+      @selected={{selectedModelOption}}
+      @renderInPlace={{true}}
+      @verticalPosition="bottom"
+      as |modelType|
+    >
       <div class="option-container">
         {{#if modelType.icon}}
           {{one-icon icon=modelType.icon}}
@@ -32,7 +32,7 @@
           {{modelType.label}}
         {{/truncated-string}}
       </div>
-    {{/one-dropdown}}
+    </OneDropdown>
     {{#bs-button-group
       value=selectedView
       class="view-selector btn-group-justified"

@@ -68,8 +68,6 @@ export default Action.extend({
     return modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
-        viewModeLayout: 'auditLog',
-        subjectName: this.t('subjectName'),
         store: systemAuditLogStore,
         getStoreContentCallback: (...args) => getAuditLogContentCallback(...args),
         getTaskRunForInstanceIdCallback,

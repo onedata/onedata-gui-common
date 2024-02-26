@@ -7,8 +7,9 @@
  */
 
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { tag, writable, equal, not, raw } from 'ember-awesome-macros';
+import { equal, not, raw } from 'ember-awesome-macros';
 
 export default Component.extend({
   classNames: ['field-component'],
@@ -20,9 +21,22 @@ export default Component.extend({
   field: undefined,
 
   /**
+   * @virtual optional
    * @type {ComputedProperty<String>}
    */
-  fieldId: writable(tag `${'elementId'}-field`),
+  fieldId: computed('elementId', {
+    get() {
+      return this.injectedFieldId ?? `${this.elementId}-field`;
+    },
+    set(key, value) {
+      return this.injectedFieldId = value;
+    },
+  }),
+
+  /**
+   * @type {string | null}
+   */
+  injectedFieldId: null,
 
   /**
    * @type {ComputedProperty<String>}

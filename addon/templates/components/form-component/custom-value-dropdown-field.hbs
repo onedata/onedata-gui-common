@@ -4,36 +4,36 @@
   {{/if}}
   <span class="text">{{selectedOption.label}}</span>
 {{else}}
-  {{#one-dropdown
-    tagName="div"
-    triggerClass=(concat-classes
+  <OneDropdown
+    @tagName="div"
+    @triggerClass={{concat-classes
       "dropdown-field-trigger"
       (if (eq size "sm") "small")
       "custom-value-dropdown-field-trigger"
       (if isCustomInputFocused "ember-power-select-trigger--active")
-    )
-    dropdownClass=(concat-classes
+    }}
+    @dropdownClass={{concat-classes
       "dropdown-field-dropdown"
       (concat field.name "-field-dropdown")
       (if (eq size "sm") "small")
       "custom-value-dropdown-field-dropdown"
-    )
-    disabled=(not isEffectivelyEnabled)
-    options=preparedOptions
-    selected=selectedOption
-    placeholder=placeholder
-    renderInPlace=false
-    triggerId=fieldId
-    searchEnabled=showSearch
-    matcher=matchDropdownOption
-    onchange=(action "valueChanged")
-    onfocus=(action "focus")
-    onblur=(action "triggerFocusLost")
-    onclose=(action "focusLost")
-    onkeydown=(action "keyDown")
-    onopen=(action "open")
+    }}
+    @disabled={{not isEffectivelyEnabled}}
+    @options={{preparedOptions}}
+    @selected={{selectedOption}}
+    @placeholder={{placeholder}}
+    @renderInPlace={{false}}
+    @triggerId={{fieldId}}
+    @searchEnabled={{showSearch}}
+    @matcher={{matchDropdownOption}}
+    @onChange={{action "valueChanged"}}
+    @onFocus={{action "focus"}}
+    @onBlur={{action "triggerFocusLost"}}
+    @onClose={{action "focusLost"}}
+    @onKeydown={{action "keyDown"}}
+    @onOpen={{action "open"}}
     as |option|
-  }}
+  >
     {{#if (eq option customValueOption)}}
       <div class="option-container custom-value-option">
         {{!-- rendered both in dropdown option and trigger selected option --}}
@@ -80,6 +80,6 @@
         {{/truncated-string}}
       </div>
     {{/if}}
-  {{/one-dropdown}}
+  </OneDropdown>
 {{/if}}
 {{yield}}

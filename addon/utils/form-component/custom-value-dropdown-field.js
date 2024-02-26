@@ -44,19 +44,22 @@ export default DropdownField.extend({
    */
   customValueInputPlaceholder: computed(
     'i18nPrefix',
-    'translationPath',
-    function customInputPlaceholder() {
-      // Null value, because powerselect converts `undefined` to string 'undefined'
-      return this.getTranslation(
-        'customValueInputPlaceholder', {}, {
-          defaultValue: this.t(
-            `${defaultI18nPrefix}.customValueInputPlaceholder`, {}, {
-              defaultValue: '',
-              usePrefix: false,
-            },
-          ),
-        }
-      );
+    'translationPath', {
+      get() {
+        return this.injectedCustomValueInputPlaceholder ?? this.getTranslation(
+          'customValueInputPlaceholder', {}, {
+            defaultValue: this.t(
+              `${defaultI18nPrefix}.customValueInputPlaceholder`, {}, {
+                defaultValue: '',
+                usePrefix: false,
+              },
+            ),
+          }
+        );
+      },
+      set(key, value) {
+        return this.injectedCustomValueInputPlaceholder = value;
+      },
     }
   ),
 
@@ -66,19 +69,32 @@ export default DropdownField.extend({
    */
   customValueOptionTextPrefix: computed(
     'i18nPrefix',
-    'translationPath',
-    function customInputPlaceholder() {
-      // Null value, because powerselect converts `undefined` to string 'undefined'
-      return this.getTranslation(
-        'customValueOptionTextPrefix', {}, {
-          defaultValue: this.t(
-            `${defaultI18nPrefix}.customValueOptionTextPrefix`, {}, {
-              defaultValue: '',
-              usePrefix: false,
-            },
-          ),
-        }
-      );
+    'translationPath', {
+      get() {
+        return this.injectedCustomValueOptionTextPrefix ?? this.getTranslation(
+          'customValueOptionTextPrefix', {}, {
+            defaultValue: this.t(
+              `${defaultI18nPrefix}.customValueOptionTextPrefix`, {}, {
+                defaultValue: '',
+                usePrefix: false,
+              },
+            ),
+          }
+        );
+      },
+      set(key, value) {
+        return this.injectedCustomValueOptionTextPrefix = value;
+      },
     }
   ),
+
+  /**
+   * @type {string | null}
+   */
+  injectedCustomValueInputPlaceholder: null,
+
+  /**
+   * @type {string | null}
+   */
+  injectedCustomValueOptionTextPrefix: null,
 });

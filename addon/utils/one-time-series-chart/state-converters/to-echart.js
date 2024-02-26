@@ -8,6 +8,7 @@
 
 import _ from 'lodash';
 import { isHTMLSafe } from '@ember/string';
+import { t } from 'onedata-gui-common/utils/i18n/t';
 
 /**
  * @param {Utils.OneTimeSeriesChart.State} state
@@ -17,6 +18,7 @@ export default function toEchart(state) {
   return {
     tooltip: {
       trigger: 'axis',
+      triggerOn: 'none',
       axisPointer: {
         type: 'cross',
         label: {
@@ -108,7 +110,16 @@ function getEchartTooltipFormatter(state) {
       return htmlContent;
     }).filter(Boolean).join('<hr class="tooltip-series-separator" />');
 
-    return `${headerHtml}${seriesGroupsHtml ? '<hr class="tooltip-series-separator" />' : ''}${seriesGroupsHtml}`;
+    let tooltipHtml = headerHtml;
+    if (seriesGroupsHtml) {
+      const footerText = String(t(
+        'utils.oneTimeSeriesChart.stateConverters.toEchart.tooltip.clickToPin'
+      ));
+      const footerHtml = `<div class="tooltip-click-info">${footerText}</div>`;
+      tooltipHtml +=
+        `<hr class="tooltip-series-separator" />${seriesGroupsHtml}${footerHtml}`;
+    }
+    return tooltipHtml;
   };
 }
 

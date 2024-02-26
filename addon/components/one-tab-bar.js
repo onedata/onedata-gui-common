@@ -10,7 +10,7 @@
 import Component from '@ember/component';
 import layout from '../templates/components/one-tab-bar';
 import { sort } from '@ember/object/computed';
-import { get, computed } from '@ember/object';
+import { get } from '@ember/object';
 import { or, raw, conditional, and, eq, not } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 
@@ -48,6 +48,16 @@ export default Component.extend({
    * @type {string}
    */
   tabBarLiComponentName: undefined,
+
+  /**
+   * In most cases, it should be implemented in parent component
+   * to set new item, and pass the new item down.
+   * If the item wasn't changed (eg. parent component blocked the change)
+   * it should return false to stop tab bar change behavior.
+   * @virtual optional
+   * @type {(item: Object|EmberObject) => boolean | undefined}
+   */
+  selectedItemChanged: undefined,
 
   /**
    * @virtual optional
@@ -139,26 +149,15 @@ export default Component.extend({
     if (this.get('selectDefaultOnInit') && this.get('selectedItem') === undefined) {
       this.set('selectedItem', this.get('sortedItems')[0]);
     }
+    if (!this.selectedItemChanged) {
+      this.set('selectedItemChanged', (item) => this.set('selectedItem', item));
+    }
   },
 
   didInsertElement() {
     this._super(...arguments);
     this.jumpToItem(this.get('selectedItem.id'));
   },
-
-  /**
-   * Default implementation of method invoked when the item is selected from
-   * tab bar. In most cases, it should be imlpemented in parent component
-   * to set new item, and pass the new item down.
-   * If the item wasn't changed (eg. parent component blocked the change)
-   * it should return false to stop tab bar change behaviour.
-   * @param {object|EmberObject} item
-   */
-  selectedItemChanged: computed(function selectedItemChanged() {
-    return (item) => {
-      this.set('selectedItem', item);
-    };
-  }),
 
   jumpToItem(itemId) {
     const item = this.element.querySelector(`.item-${itemId}`);

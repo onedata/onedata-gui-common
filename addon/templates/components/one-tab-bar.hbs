@@ -22,25 +22,25 @@
 {{/unless}}
 {{#if isDropdownRendered}}
   <div class="tab-bar-selector">
-    {{#power-select
-      triggerClass="small"
-      dropdownClass="small"
-      disabled=disabled
-      options=sortedItems
-      selected=selectedItem
-      onchange=(action "selectItem" "selector")
-      searchField="name"
-      searchEnabled=true
-      renderInPlace=true
+    <PowerSelect
+      @triggerClass="small"
+      @dropdownClass="small"
+      @disabled={{disabled}}
+      @options={{sortedItems}}
+      @selected={{selectedItem}}
+      @onChange={{action "selectItem" "selector"}}
+      @searchField="name"
+      @searchEnabled={{true}}
+      @renderInPlace={{true}}
       as |item|
-    }}
+    >
       {{#truncated-string class=(concat "oneprovider-select-item truncate " item.elementClass)}}
         <div class="inline-icon-container">
           {{one-icon icon=item.icon}}
         </div>
         <span class="oneprovider-name">{{item.name}}</span>
       {{/truncated-string}}
-    {{/power-select}}
+    </PowerSelect>
   </div>
 {{/if}}
 {{yield}}

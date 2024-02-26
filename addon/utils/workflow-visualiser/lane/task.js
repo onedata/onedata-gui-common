@@ -79,6 +79,11 @@ export default VisualiserRecord.extend({
   resourceSpecOverride: undefined,
 
   /**
+   * @type {string}
+   */
+  icon: 'atm-lambda',
+
+  /**
    * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
    */
   chartsDashboardEditorDataSources: computed(

@@ -9,15 +9,15 @@
 import Body from 'ember-bootstrap/components/bs-modal/body';
 import layout from 'onedata-gui-common/templates/components/one-modal/body';
 import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
 
-export default Body.extend({
-  layout,
+export default class OneModalBody extends Body {
+  layout = layout;
 
-  scrollState: service(),
+  @service scrollState;
 
-  actions: {
-    scrollOccurred(event) {
-      this.get('scrollState').scrollOccurred(event);
-    },
-  },
-});
+  @action
+  scrollOccurred(event) {
+    this.scrollState.scrollOccurred(event);
+  }
+}
