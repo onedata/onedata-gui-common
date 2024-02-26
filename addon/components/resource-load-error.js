@@ -40,6 +40,13 @@ export default Component.extend(I18n, {
   message: undefined,
 
   /**
+   * If provided, overrides the computed `type` property.
+   * @virtual optional
+   * @type {'forbidden'|'error'}
+   */
+  customType: undefined,
+
+  /**
    * Displayed error details generated from reason error object
    * @type {string}
    */
@@ -53,14 +60,13 @@ export default Component.extend(I18n, {
 
   /**
    * Error type generated from reason error object
-   * @type {string}
+   * @type {'forbidden'|'error'}
    */
-  type: computed('reason', function () {
-    const {
-      reason,
-      errorExtractor,
-    } = this.getProperties('reason', 'errorExtractor');
-    return errorExtractor.getType(reason);
+  type: computed('customType', 'reason', function type() {
+    if (this.customType) {
+      return this.customType;
+    }
+    return this.errorExtractor.getType(this.reason);
   }),
 
   /**
