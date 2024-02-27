@@ -7,6 +7,7 @@
  */
 
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
+import { formatNumber } from 'onedata-gui-common/helpers/format-number';
 import { computed } from '@ember/object';
 import { validator } from 'ember-cp-validations';
 
@@ -51,6 +52,46 @@ export default TextField.extend({
    * @type {string|number}
    */
   step: 'any',
+
+  /**
+   * If true, then field in view mode will format number to be more human readable.
+   * @virtual optional
+   * @type {boolean}
+   */
+  isViewFormatted: true,
+
+  /**
+   * When provided, overrides number format used in the view mode (only if
+   * `isViewFormatted` is `true`).
+   * @virtual optional
+   * @type {string | undefined}
+   */
+  viewFormat: undefined,
+
+  /**
+   * @override
+   */
+  valueForViewMode: computed(
+    'value',
+    'isViewFormatted',
+    'viewFormat',
+    function valueForViewMode() {
+      if (
+        !this.isViewFormatted ||
+        (typeof this.value !== 'string' && typeof this.value !== 'number') ||
+        this.value === ''
+      ) {
+        return this.value;
+      }
+
+      const formatOptions = {};
+      if (this.viewFormat) {
+        formatOptions.format = this.viewFormat;
+      }
+
+      return formatNumber(Number(this.value), formatOptions);
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Object>}

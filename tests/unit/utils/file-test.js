@@ -110,6 +110,6 @@ function testTranslateFileCount(type, count, result) {
   it(`returns ${JSON.stringify(result)} for type ${JSON.stringify(type)} and count ${count}`,
     function () {
       const i18n = lookupService(this, 'i18n');
-      expect(translateFileCount(i18n, type, count)).to.equal(result);
+      expect(String(translateFileCount(i18n, type, count))).to.equal(result);
     });
 }

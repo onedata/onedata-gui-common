@@ -27,6 +27,11 @@ export default FieldComponentBase.extend({
   inputType: reads('field.inputType'),
 
   /**
+   * @type {ComputedProperty<string | SafeString>}
+   */
+  valueForViewMode: reads('field.valueForViewMode'),
+
+  /**
    * Field used by numeric inputs only
    * @type {ComputedProperty<String>}
    */

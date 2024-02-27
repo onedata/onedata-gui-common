@@ -14,6 +14,7 @@ import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 import { translateLaneStatus } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
+import { formatNumber } from 'onedata-gui-common/helpers/format-number';
 
 export default VisualiserElement.extend({
   layout,
@@ -55,7 +56,9 @@ export default VisualiserElement.extend({
   iteratorLabel: computed(
     'lane.storeIteratorSpec.maxBatchSize',
     function iteratorLabel() {
-      const maxBatchSize = this.get('lane.storeIteratorSpec.maxBatchSize') || 1;
+      const maxBatchSize = formatNumber(
+        this.get('lane.storeIteratorSpec.maxBatchSize') || 1
+      );
       return this.t('iterator', { maxBatchSize });
     }
   ),

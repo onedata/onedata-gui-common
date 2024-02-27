@@ -21,6 +21,9 @@ type FormatNumberOptions = {
   allowHtml?: boolean,
 };
 
+// Many `#` for fractional part to handle any fraction length.
+const defaultFormat = '# ##0.######################################################';
+
 export function formatNumber(
   number: number,
   options: FormatNumberOptions & { allowHtml: false }
@@ -34,7 +37,7 @@ export function formatNumber(
   options?: FormatNumberOptions
 ): SafeString | string {
   const normalizedNumber = Number.isNaN(number) ? 0 : number;
-  const format = options?.format ?? '# ##0.';
+  const format = options?.format ?? defaultFormat;
 
   const formattedNumber = numberFormatter(format, normalizedNumber);
 

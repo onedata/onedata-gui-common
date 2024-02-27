@@ -6,7 +6,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { htmlSafe } from '@ember/template';
 import _ from 'lodash';
+import { formatNumber } from 'onedata-gui-common/helpers/format-number';
 
 /**
  * @typedef {'REG'|'DIR'|'SYMLNK'} FileType
@@ -88,7 +90,7 @@ export function getFileNameFromPath(filePath) {
   let lastPathElement = pathElements[pathElements.length - 1];
 
   // If path ends with a directory separator, then the last element is `''`.
-  // In that case we should take the previoius element.
+  // In that case we should take the previous element.
   if (lastPathElement === '') {
     lastPathElement = pathElements[pathElements.length - 2];
   }
@@ -135,7 +137,9 @@ export function translateFileCount(i18n, fileType, count) {
   const normalizedCount = Number.isInteger(count) ? count : 0;
   const form = normalizedCount === 1 || normalizedCount === -1 ?
     'singular' : 'plural';
-  return `${count} ${translateFileType(i18n, fileType, { form })}`;
+  return htmlSafe(
+    `${formatNumber(count)} ${translateFileType(i18n, fileType, { form })}`
+  );
 }
 
 /**

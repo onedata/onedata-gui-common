@@ -16,6 +16,7 @@ export default Component.extend({
             type: 'serial',
           },
           storeSchemaId: 's1',
+          maxBatchSize: 100,
         },
         parallelBoxes: [{
           id: 'b0.0',
@@ -100,6 +101,7 @@ export default Component.extend({
             type: 'serial',
           },
           storeSchemaId: 's1',
+          maxBatchSize: 100,
         },
         parallelBoxes: [{
           id: 'b1.0',
@@ -176,6 +178,7 @@ export default Component.extend({
             type: 'serial',
           },
           storeSchemaId: 's1',
+          maxBatchSize: 100,
         },
         parallelBoxes: [{
           id: 'b2.0',
