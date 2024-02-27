@@ -21,8 +21,8 @@ type FormatNumberOptions = {
   allowHtml?: boolean,
 };
 
-// Many `#` for fractional part to handle any fraction length.
-const defaultFormat = '# ##0.######################################################';
+// Many `#` for fractional part to handle any meaningful fraction length.
+const defaultFormat = '# ##0.########';
 
 export function formatNumber(
   number: number,
