@@ -1,4 +1,20 @@
-{{#if error.isOnedataCustomError}}
+{{#if isCrossOriginIframeRoutingError}}
+  <div class="iframed-onedata-error">
+    <div class="row absolute-align-middle-center error-row routing-error">
+      <div class="routing-error-onedata-logo"></div>
+      <div class="routing-error-text">{{tt this "pathNotExists"}}</div>
+      <div class="routing-error-text">{{tt this "contactAdmin"}}</div>
+      <div class="routing-error-text learn-more-text">
+        {{tt this "learnMore"}}
+        <a
+          href="https://onedata.org"
+          target="_blank"
+          class="onedata-org-link"
+        >onedata.org</a>.
+      </div>
+    </div>
+  </div>
+{{else if error.isOnedataCustomError}}
   {{component (concat "errors/" error.type) error=error}}
 {{else}}
   <div class="row absolute-align-middle-center error-row">
@@ -8,14 +24,14 @@
     </div>
     {{#if error}}
       <div class="error-details active">
-        {{#if _reasonDetails.message}}
-          <p>{{_reasonDetails.message}}</p>
+        {{#if reasonDetails.message}}
+          <p>{{reasonDetails.message}}</p>
         {{/if}}
-        {{#if (and _reasonDetails.message _reasonDetails.errorJsonString)}}
+        {{#if (and reasonDetails.message reasonDetails.errorJsonString)}}
           <br>
         {{/if}}
-        {{#if _reasonDetails.errorJsonString}}
-          <div class="error-json">{{_reasonDetails.errorJsonString}}</div>
+        {{#if reasonDetails.errorJsonString}}
+          <div class="error-json">{{reasonDetails.errorJsonString}}</div>
         {{/if}}
       </div>
     {{else}}
