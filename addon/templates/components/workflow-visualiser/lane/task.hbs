@@ -85,15 +85,15 @@
         </div>
         <div class="detail-entry items-in-processing-detail">
           <div class="detail-label">{{tt this "details.itemsInProcessing"}}:</div>
-          <div class="detail-value">{{itemsInProcessing}}</div>
+          <div class="detail-value">{{format-number itemsInProcessing}}</div>
         </div>
         <div class="detail-entry items-processed-detail">
           <div class="detail-label">{{tt this "details.itemsProcessed"}}:</div>
-          <div class="detail-value">{{itemsProcessed}}</div>
+          <div class="detail-value">{{format-number itemsProcessed}}</div>
         </div>
         <div class="detail-entry items-failed-detail">
           <div class="detail-label">{{tt this "details.itemsFailed"}}:</div>
-          <div class="detail-value">{{itemsFailed}}</div>
+          <div class="detail-value">{{format-number itemsFailed}}</div>
         </div>
         {{#if viewTaskActions.length}}
           <div class="detail-entry actions-detail">
