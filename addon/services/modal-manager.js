@@ -57,6 +57,7 @@ export default Service.extend({
    *     `modalManager.modalOptions`.
    * @returns {Object} Object with fields:
    *   - id: String - modal instance id
+   *   - api: ModalInstanceApi - allows to directly close or submit modal
    *   - shownPromise: Promise - resolves when modal is fully visible (after all transitions),
    *   - hiddenPromise: Promise - resolves when modal is fully closed (after all transitions).
    */
@@ -69,7 +70,7 @@ export default Service.extend({
 
     set(modalInstance, 'isOpened', true);
 
-    return getProperties(modalInstance, 'id', 'shownPromise', 'hiddenPromise');
+    return getProperties(modalInstance, 'id', 'api', 'shownPromise', 'hiddenPromise');
   },
 
   /**
@@ -147,10 +148,16 @@ export default Service.extend({
   },
 
   createModalInstance({ componentName, options }) {
-    return ModalInstance.create({
+    const instance = ModalInstance.create({
       componentName,
       options,
+      api: {
+        submit: (data) => this.onModalSubmit(instance.id, data),
+        close: () => this.hide(instance.id),
+      },
     });
+
+    return instance;
   },
 
   getModalInstanceById(id) {

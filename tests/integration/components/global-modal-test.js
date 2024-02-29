@@ -488,6 +488,34 @@ describe('Integration | Component | global-modal', function () {
     expect(isGlobalModalOpened()).to.be.true;
   });
 
+  it('closes modal after calling "close" callback returned from "show" method',
+    async function () {
+      await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
+
+      const { api, shownPromise } = this.get('modalManager').show();
+      await shownPromise;
+      api.close();
+      await settled();
+
+      expect(isGlobalModalOpened()).to.be.false;
+    });
+
+  it('submits modal after calling "submit" callback returned from "show" method',
+    async function () {
+      const submitSpy = sinon.spy();
+      await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
+
+      const { api, shownPromise } = this.get('modalManager').show('someComponent', {
+        onSubmit: submitSpy,
+      });
+      await shownPromise;
+      api.submit('testData');
+      await settled();
+
+      expect(isGlobalModalOpened()).to.be.false;
+      expect(submitSpy).to.be.calledOnce.and.to.be.calledWith('testData');
+    });
+
   it('renders modal in specified size', async function () {
     this.set('modalInstance.isOpened', true);
 
