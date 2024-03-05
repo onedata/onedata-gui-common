@@ -20,7 +20,24 @@ import { ElementType } from '../common';
 /**
  * @typedef {DashboardElementValidationError} ChartFunctionWrongArgumentTypeAssignedValidationError
  * @property {'chartFunctionWrongArgumentTypeAssigned'} errorId
- * @property {{ relatedAttachedArgumentFunction: Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase }} errorDetails
+ * @property {{ relatedAttachableArgumentSpec: FunctionAttachableArgumentSpec, relatedAttachedArgumentFunction: Utils.AtmWorkflow.ChartsDashboardEditor.FunctionBase }} errorDetails
+ */
+
+/**
+ * @typedef {DashboardElementValidationError} ChartFunctionEmptyArgumentValidationError
+ * @property {'chartFunctionEmptyArgument'} errorId
+ * @property {{ relatedAttachableArgumentSpec: FunctionAttachableArgumentSpec }} errorDetails
+ */
+
+/**
+ * @typedef {DashboardElementValidationError} ChartFunctionParameterInvalidValidationError
+ * @property {'chartFunctionParameterInvalid'} errorId
+ * @property {{ parameterName: string }} errorDetails
+ */
+
+/**
+ * @typedef {DashboardElementValidationError} ChartFunctionDetachedValidationError
+ * @property {'chartFunctionDetached'} errorId
  */
 
 export default ElementBase.extend({
@@ -73,6 +90,12 @@ export default ElementBase.extend({
   isRoot: false,
 
   /**
+   * @virtual optional
+   * @type {Array<DashboardElementValidationError>}
+   */
+  functionSpecificValidationErrors: Object.freeze([]),
+
+  /**
    * Defined when function is detached. Represents position of this function
    * relative to the root (output) function. The root function is always in the
    * left-center placement of the editor, so can be considered a fixed element -
@@ -102,13 +125,25 @@ export default ElementBase.extend({
   directValidationErrors: computed(
     'returnedTypes',
     'attachedFunctionsRelatedValidationErrors',
+    'functionSpecificValidationErrors',
+    'isDetached',
     function directValidationErrors() {
-      const errors = [...this.attachedFunctionsRelatedValidationErrors];
+      const errors = [
+        ...this.functionSpecificValidationErrors,
+        ...this.attachedFunctionsRelatedValidationErrors,
+      ];
 
       if (this.returnedTypes.length > 1) {
         errors.push({
           element: this,
           errorId: 'chartFunctionUndefinedReturnType',
+        });
+      }
+
+      if (this.isDetached) {
+        errors.push({
+          element: this,
+          errorId: 'chartFunctionDetached',
         });
       }
 
@@ -147,26 +182,43 @@ export default ElementBase.extend({
   attachedFunctionsRelatedValidationErrors: computed(
     'collectedAttachedFunctions.@each.returnedTypes',
     function attachedFunctionsRelatedValidationErrors() {
-      return (this.collectedAttachedFunctions ?? []).map((attachedFunction) => {
+      const argumentsWithFunctions = new Set();
+
+      const errors = [];
+      (this.collectedAttachedFunctions ?? []).forEach((attachedFunction) => {
         const argumentName = this.getArgumentNameForAttachedFunction(attachedFunction);
         const argumentSpec = this.attachableArgumentSpecs
           .find(({ name }) => name === argumentName);
+        argumentsWithFunctions.add(argumentName);
         if (
           argumentSpec &&
           attachedFunction.returnedTypes.length === 1 &&
           !argumentSpec.compatibleTypes.includes(attachedFunction.returnedTypes[0])
         ) {
-          return {
+          errors.push({
             element: this,
             errorId: 'chartFunctionWrongArgumentTypeAssigned',
             errorDetails: {
               relatedAttachableArgumentSpec: argumentSpec,
               relatedAttachedArgumentFunction: attachedFunction,
             },
-          };
+          });
         }
-        return null;
-      }).filter(Boolean);
+      });
+
+      this.attachableArgumentSpecs.forEach((spec) => {
+        if (!argumentsWithFunctions.has(spec.name)) {
+          errors.push({
+            element: this,
+            errorId: 'chartFunctionEmptyArgument',
+            errorDetails: {
+              relatedAttachableArgumentSpec: spec,
+            },
+          });
+        }
+      });
+
+      return errors;
     }
   ),
 

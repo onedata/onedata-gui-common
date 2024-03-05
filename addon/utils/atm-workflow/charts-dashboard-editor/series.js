@@ -13,6 +13,7 @@ import generateId from 'onedata-gui-common/utils/generate-id';
 import { ElementType } from './common';
 import functions from './functions-model';
 import TimeSeriesRefChangesHandler from './time-series-ref-changes-handler';
+import { validateTimeSeriesRef } from './functions-model/load-series';
 
 /**
  * @typedef {Object} TimeSeriesGeneratorRef
@@ -129,6 +130,8 @@ const Series = ElementBase.extend({
     'repeatPerPrefixedTimeSeries',
     'name',
     'axis',
+    'prefixedTimeSeriesRef.{collectionRef,timeSeriesNameGenerator,metricNames.[]}',
+    'dataSources.[]',
     function directValidationErrors() {
       const errors = [];
       if (!this.repeatPerPrefixedTimeSeries && !this.name) {
@@ -142,6 +145,13 @@ const Series = ElementBase.extend({
           element: this,
           errorId: 'seriesAxisNotAssigned',
         });
+      }
+      if (this.repeatPerPrefixedTimeSeries) {
+        errors.push(...validateTimeSeriesRef(
+          this.prefixedTimeSeriesRef,
+          this.dataSources,
+          true
+        ));
       }
       return errors;
     }

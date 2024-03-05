@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { computed, set } from '@ember/object';
 import { ReplaceEmptyStrategy } from 'onedata-gui-common/utils/time-series-dashboard';
 import { FunctionDataType, FunctionExecutionContext } from './common';
 import FunctionBase from './function-base';
@@ -25,6 +25,87 @@ import TimeSeriesRefChangesHandler from '../time-series-ref-changes-handler';
  * @property {ReplaceEmptyStrategy} strategy
  * @property {number | null} fallbackValue
  */
+
+/**
+ * @typedef {DashboardElementValidationError} StoreNotAssignedValidationError
+ * @property {'storeNotAssigned'} errorId
+ */
+
+/**
+ * @typedef {DashboardElementValidationError} TimeSeriesNameGeneratorNotAssignedValidationError
+ * @property {'timeSeriesNameGeneratorNotAssigned'} errorId
+ */
+
+/**
+ * @typedef {DashboardElementValidationError} InvalidTimeSeriesNameValidationError
+ * @property {'invalidTimeSeriesName'} errorId
+ */
+
+/**
+ * @typedef {DashboardElementValidationError} InvalidTimeSeriesMetricsValidationError
+ * @property {'invalidTimeSeriesMetrics'} errorId
+ */
+
+/**
+ *
+ * @param {TimeSeriesRef | TimeSeriesGeneratorRef} ref
+ * @param {boolean} prefixedTimeSeriesOnly
+ * @returns {Array<DashboardElementValidationError>}
+ */
+export function validateTimeSeriesRef(ref, dataSources, prefixedTimeSeriesOnly = false) {
+  const {
+    collectionRef,
+    timeSeriesNameGenerator,
+    timeSeriesName,
+    metricNames,
+  } = (ref ?? {});
+
+  const errors = [];
+
+  const dataSource = dataSources?.find((ds) => ds.collectionRef === collectionRef);
+  if (!dataSource) {
+    errors.push({
+      errorId: 'storeNotAssigned',
+    });
+  } else {
+    const timeSeriesSchemas =
+      dataSource.timeSeriesCollectionSchema.timeSeriesSchemas ?? [];
+    const matchingTimeSeriesSchema = timeSeriesSchemas.find(
+      ({ nameGeneratorType, nameGenerator }) =>
+      (!prefixedTimeSeriesOnly || nameGeneratorType === 'addPrefix') &&
+      nameGenerator === timeSeriesNameGenerator
+    );
+    if (!matchingTimeSeriesSchema) {
+      errors.push({
+        errorId: 'timeSeriesNameGeneratorNotAssigned',
+      });
+    } else {
+      const {
+        nameGeneratorType,
+        nameGenerator,
+        metrics,
+      } = matchingTimeSeriesSchema;
+      if (!prefixedTimeSeriesOnly && (nameGeneratorType === 'addPrefix' && (
+          !(timeSeriesName ?? '').startsWith(nameGenerator) ||
+          (timeSeriesName ?? '').length <= nameGenerator.length
+        )) || (nameGeneratorType !== 'addPrefix' &&
+          timeSeriesName !== nameGenerator
+        )) {
+        errors.push({
+          errorId: 'invalidTimeSeriesName',
+        });
+      }
+
+      if (!metricNames?.length || metricNames.some((name) => !(name in metrics))) {
+        errors.push({
+          errorId: 'invalidTimeSeriesMetrics',
+        });
+      }
+    }
+  }
+
+  return errors;
+}
 
 const LoadSeriesFunction = FunctionBase.extend({
   /**
@@ -55,6 +136,17 @@ const LoadSeriesFunction = FunctionBase.extend({
    * @override
    */
   returnedTypes: Object.freeze([FunctionDataType.Points]),
+
+  /**
+   * @override
+   */
+  functionSpecificValidationErrors: computed(
+    'timeSeriesRef.{collectionRef,timeSeriesNameGenerator,timeSeriesName,metricNames.[]}',
+    'dataSources.[]',
+    function functionSpecificValidationErrors() {
+      return validateTimeSeriesRef(this.timeSeriesRef, this.dataSources);
+    }
+  ),
 
   /**
    * Set in `init`.
@@ -181,9 +273,23 @@ function createFromSpec(spec, fieldsToInject) {
   const replaceEmptyRawArgs = spec.functionArguments
     ?.replaceEmptyParametersProvider?.functionArguments?.data;
 
+  const timeSeriesRef = EmberObject.create(externalSourceParameters ?? {});
+  if (!timeSeriesRef.collectionRef) {
+    let defaultDataSource = null;
+    const defaultDataSources =
+      fieldsToInject.dataSources?.filter(({ isDefault }) => isDefault);
+    if (defaultDataSources?.length === 1) {
+      defaultDataSource = defaultDataSources[0];
+    }
+
+    if (defaultDataSource) {
+      set(timeSeriesRef, 'collectionRef', defaultDataSource.collectionRef);
+    }
+  }
+
   const funcElement = LoadSeriesFunction.create({
     ...fieldsToInject,
-    timeSeriesRef: EmberObject.create(externalSourceParameters ?? {}),
+    timeSeriesRef,
     replaceEmptyParameters: EmberObject.create({
       // We assume here, that strategy and fallbackValue are always provided
       // by "literal" function. There is no other (sensible) function, which could be

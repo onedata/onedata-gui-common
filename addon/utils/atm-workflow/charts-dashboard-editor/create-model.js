@@ -390,6 +390,18 @@ function createSeriesModelFromSpec(
       seriesTemplate.colorProvider.functionArguments?.data : null;
     if (externalSourceParameters) {
       prefixedTimeSeriesRef = EmberObject.create(externalSourceParameters);
+      if (!prefixedTimeSeriesRef.collectionRef) {
+        let defaultDataSource = null;
+        const defaultDataSources =
+          dataSources?.filter(({ isDefault }) => isDefault);
+        if (defaultDataSources?.length === 1) {
+          defaultDataSource = defaultDataSources[0];
+        }
+
+        if (defaultDataSource) {
+          set(prefixedTimeSeriesRef, 'collectionRef', defaultDataSource.collectionRef);
+        }
+      }
     }
   } else {
     id = seriesTemplate?.id;
