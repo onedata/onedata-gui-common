@@ -117,8 +117,7 @@ export default FunctionSettingsBase.extend({
   updateFormValues() {
     updateTimeSeriesSelectorFormValues(
       this.mainForm.valuesSource.timeSeriesSelector,
-      this.chartFunction?.timeSeriesRef,
-      this.chartFunction?.defaultDataSource
+      this.chartFunction?.timeSeriesRef
     );
 
     this.mainForm.invalidFields.forEach((field) => field.markAsModified());
@@ -144,14 +143,10 @@ export default FunctionSettingsBase.extend({
 
 export function updateTimeSeriesSelectorFormValues(
   valuesSource,
-  timeSeriesRef,
-  defaultDataSource
+  timeSeriesRef
 ) {
-  const defaultValues = {
-    collectionRef: defaultDataSource?.collectionRef ?? '',
-  };
   ['collectionRef', 'timeSeriesNameGenerator', 'timeSeriesName'].forEach((propName) => {
-    const newValue = timeSeriesRef?.[propName] ?? defaultValues[propName] ?? '';
+    const newValue = timeSeriesRef?.[propName] ?? '';
     if (newValue !== valuesSource[propName]) {
       set(valuesSource, propName, newValue);
     }

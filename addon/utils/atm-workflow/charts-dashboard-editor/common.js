@@ -10,6 +10,7 @@ import joinStrings from 'onedata-gui-common/utils/i18n/join-strings';
 import {
   getFunctionNameTranslation,
   getFunctionArgumentNameTranslation,
+  getFunctionParameterNameTranslation,
 } from './functions-model/common';
 
 const i18nPrefix = 'utils.atmWorkflow.chartsDashboardEditor.common';
@@ -86,6 +87,16 @@ const validationErrorTranslationPlaceholdersGetters = Object.freeze({
       functionName: getFunctionNameTranslation(i18n, element.name),
     };
   },
+  chartFunctionParameterInvalid: (i18n, { element, errorDetails }) => {
+    return {
+      functionName: getFunctionNameTranslation(i18n, element.name),
+      parameterName: getFunctionParameterNameTranslation(
+        i18n,
+        element.name,
+        errorDetails.parameterName
+      ),
+    };
+  },
   chartFunctionWrongArgumentTypeAssigned: (i18n, { element, errorDetails }) => {
     const compatibleTypes =
       errorDetails?.relatedAttachableArgumentSpec?.compatibleTypes ?? [];
@@ -100,6 +111,21 @@ const validationErrorTranslationPlaceholdersGetters = Object.freeze({
         errorDetails?.relatedAttachableArgumentSpec?.name
       ),
       compatibleTypes: joinStrings(i18n, translatedCompatibleTypes, 'or'),
+    };
+  },
+  chartFunctionEmptyArgument: (i18n, { element, errorDetails }) => {
+    return {
+      functionName: getFunctionNameTranslation(i18n, element.name),
+      argumentName: getFunctionArgumentNameTranslation(
+        i18n,
+        element.name,
+        errorDetails?.relatedAttachableArgumentSpec?.name
+      ),
+    };
+  },
+  chartFunctionDetached: (i18n, { element }) => {
+    return {
+      functionName: getFunctionNameTranslation(i18n, element.name),
     };
   },
 });

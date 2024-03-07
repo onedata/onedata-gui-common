@@ -27,7 +27,7 @@ const RateFunction = FunctionBase.extend({
    * @public
    * @type {number | null}
    */
-  timeSpan: null,
+  timeSpan: 1,
 
   /**
    * @override
@@ -50,6 +50,26 @@ const RateFunction = FunctionBase.extend({
   returnedTypes: computed('data.returnedTypes', function returnedTypes() {
     return this.data?.returnedTypes ?? dataArgument.compatibleTypes;
   }),
+
+  /**
+   * @override
+   */
+  functionSpecificValidationErrors: computed(
+    'timeSpan',
+    function functionSpecificValidationErrors() {
+      if (!this.timeSpan || this.timeSpan < 0) {
+        return [{
+          errorId: 'chartFunctionParameterInvalid',
+          errorDetails: {
+            parameterName: 'timeSpan',
+          },
+          element: this,
+        }];
+      }
+
+      return [];
+    }
+  ),
 
   /**
    * @override
@@ -103,7 +123,7 @@ const RateFunction = FunctionBase.extend({
 function createFromSpec(spec, fieldsToInject, convertAnySpecToFunction) {
   const timeSpanProvider = spec.functionArguments.timeSpanProvider;
   const timeSpan = timeSpanProvider?.functionName === 'literal' ?
-    timeSpanProvider.functionArguments.data : null;
+    timeSpanProvider.functionArguments.data : 1;
   const funcElement = RateFunction.create({
     ...fieldsToInject,
     data: convertAnySpecToFunction(spec.functionArguments?.inputDataProvider),

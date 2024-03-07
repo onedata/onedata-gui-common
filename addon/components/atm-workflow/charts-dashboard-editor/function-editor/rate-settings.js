@@ -21,7 +21,7 @@ export default FunctionSettingsBase.extend({
   }),
 
   formValuesUpdater: observer('chartFunction.timeSpan', function formValuesUpdater() {
-    const newTimeSpan = this.chartFunction?.timeSpan ?? '1';
+    const newTimeSpan = String(this.chartFunction?.timeSpan ?? '');
     if (newTimeSpan !== this.form.valuesSource.timeSpan) {
       set(this.form.valuesSource, 'timeSpan', newTimeSpan);
     }

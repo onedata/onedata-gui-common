@@ -17,6 +17,9 @@ export default {
     },
     literal: {
       name: 'Constant',
+      parameters: {
+        data: 'Value',
+      },
     },
     loadSeries: {
       name: 'Load series',
@@ -35,6 +38,9 @@ export default {
       arguments: {
         data: 'Data',
       },
+      parameters: {
+        timeSpan: 'Time span',
+      },
     },
     replaceEmpty: {
       name: 'Replace empty',
@@ -52,6 +58,9 @@ export default {
       name: 'Time derivative',
       arguments: {
         data: 'Data',
+      },
+      parameters: {
+        timeSpan: 'Time span',
       },
     },
   },
