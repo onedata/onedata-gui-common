@@ -2,7 +2,7 @@
  * Contains type definitions, data and utils related to "file" automation data spec.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2022 ACK CYFRONET AGH
+ * @copyright (C) 2022-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -15,7 +15,7 @@ import { assert } from '@ember/debug';
  * @typedef {Object} AtmFileDataSpec
  * @property {'file'} type
  * @property {AtmFileType} fileType
- * @property {Array<AtmFileAttribute> | null} attributes
+ * @property {Array<FileAttribute> | null} attributes
  */
 
 /**
@@ -185,115 +185,3 @@ export function translateAtmFileType(i18n, atmFileType, { upperFirst = false } =
   const translation = i18n.t(`utils.atmWorkflow.dataSpec.file.fileTypes.${atmFileType}`);
   return upperFirst ? _.upperFirst(translation) : translation;
 }
-
-/**
- * @typedef {
- *   'acl' |
- *   'activePermissionsType' |
- *   'atime' |
- *   'conflictingName' |
- *   'ctime' |
- *   'directShareIds' |
- *   'displayGid' |
- *   'displayUid' |
- *   'effDatasetMembership' |
- *   'effDatasetProtectionFlags' |
- *   'effProtectionFlags' |
- *   'effQosMembership' |
- *   'fileId' |
- *   'hardlinkCount' |
- *   'hasCustomMetadata' |
- *   'index' |
- *   'isFullyReplicatedLocally' |
- *   'localReplicationRate' |
- *   'mtime' |
- *   'name' |
- *   'originProviderId' |
- *   'ownerUserId' |
- *   'parentFileId' |
- *   'path' |
- *   'posixPermissions' |
- *   'qosStatus' |
- *   'recallRootFileId' |
- *   'size' |
- *   'symlinkValue' |
- *   'type' |
- * } AtmFileAttribute
- */
-
-/**
- * @type {Object<string, AtmFileAttribute>}
- */
-export const AtmFileAttribute = Object.freeze({
-  Acl: 'acl',
-  ActivePermissionsType: 'activePermissionsType',
-  Atime: 'atime',
-  ConflictingName: 'conflictingName',
-  Ctime: 'ctime',
-  DirectShareIds: 'directShareIds',
-  DisplayGid: 'displayGid',
-  DisplayUid: 'displayUid',
-  EffDatasetMembership: 'effDatasetMembership',
-  EffDatasetProtectionFlags: 'effDatasetProtectionFlags',
-  EffProtectionFlags: 'effProtectionFlags',
-  EffQosMembership: 'effQosMembership',
-  FileId: 'fileId',
-  HardlinkCount: 'hardlinkCount',
-  HasCustomMetadata: 'hasCustomMetadata',
-  Index: 'index',
-  IsFullyReplicatedLocally: 'isFullyReplicatedLocally',
-  LocalReplicationRate: 'localReplicationRate',
-  Mtime: 'mtime',
-  Name: 'name',
-  OriginProviderId: 'originProviderId',
-  OwnerUserId: 'ownerUserId',
-  ParentFileId: 'parentFileId',
-  Path: 'path',
-  PosixPermissions: 'posixPermissions',
-  QosStatus: 'qosStatus',
-  RecallRootFileId: 'recallRootFileId',
-  Size: 'size',
-  SymlinkValue: 'symlinkValue',
-  Type: 'type',
-});
-
-/**
- * @type {Array<AtmFileAttribute>}
- */
-export const atmFileAttributesArray = Object.freeze([
-  AtmFileAttribute.Acl,
-  AtmFileAttribute.ActivePermissionsType,
-  AtmFileAttribute.Atime,
-  AtmFileAttribute.ConflictingName,
-  AtmFileAttribute.Ctime,
-  AtmFileAttribute.DirectShareIds,
-  AtmFileAttribute.DisplayGid,
-  AtmFileAttribute.DisplayUid,
-  AtmFileAttribute.EffDatasetMembership,
-  AtmFileAttribute.EffDatasetProtectionFlags,
-  AtmFileAttribute.EffProtectionFlags,
-  AtmFileAttribute.EffQosMembership,
-  AtmFileAttribute.FileId,
-  AtmFileAttribute.HardlinkCount,
-  AtmFileAttribute.HasCustomMetadata,
-  AtmFileAttribute.Index,
-  AtmFileAttribute.IsFullyReplicatedLocally,
-  AtmFileAttribute.LocalReplicationRate,
-  AtmFileAttribute.Mtime,
-  AtmFileAttribute.Name,
-  AtmFileAttribute.OriginProviderId,
-  AtmFileAttribute.OwnerUserId,
-  AtmFileAttribute.ParentFileId,
-  AtmFileAttribute.Path,
-  AtmFileAttribute.PosixPermissions,
-  AtmFileAttribute.QosStatus,
-  AtmFileAttribute.RecallRootFileId,
-  AtmFileAttribute.Size,
-  AtmFileAttribute.SymlinkValue,
-  AtmFileAttribute.Type,
-]);
-
-assert(
-  'atmFileAttributesArray must have the same items as AtmFileAttribute enum.',
-  _.isEqual(Object.values(AtmFileAttribute).sort(), [...atmFileAttributesArray].sort())
-);
