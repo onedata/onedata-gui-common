@@ -30,7 +30,7 @@ describe('Integration | Component | global-modal-mounter', function () {
     expect(find('.test-component')).to.exist;
   });
 
-  it('passes modal options and modal id to modal component', async function () {
+  it('passes modal id, options and api to modal component', async function () {
     const modalOptions = Object.freeze({ a: 1 });
     this.owner.register('component:modals/some-modal', TestComponent);
     await render(hbs `{{global-modal-mounter}}`);
