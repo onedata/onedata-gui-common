@@ -12,6 +12,9 @@ import { guidFor } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/charts-dashboard-editor/chart-editor/axis-editor';
+import {
+  translateValidationErrorsBatch,
+} from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor';
 
 export default Component.extend(I18n, {
   classNames: ['axis-editor', 'element-editor'],
@@ -50,6 +53,19 @@ export default Component.extend(I18n, {
       labelsFormatting: `${guidFor(this)}-labels-formatting`,
     };
   }),
+
+  /**
+   * @type {ComputedProperty<SafeString | null>}
+   */
+  labelsFormattingValidationErrorsMessage: computed(
+    'chartElement.labelsFormattingValidationErrors',
+    function labelsFormattingValidationErrorsMessage() {
+      return translateValidationErrorsBatch(
+        this.i18n,
+        this.chartElement.labelsFormattingValidationErrors,
+      );
+    }
+  ),
 
   /**
    * @override

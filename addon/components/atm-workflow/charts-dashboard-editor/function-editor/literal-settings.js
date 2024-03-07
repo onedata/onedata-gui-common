@@ -21,7 +21,7 @@ export default FunctionSettingsBase.extend({
   }),
 
   formValuesUpdater: observer('chartFunction.data', function formValuesUpdater() {
-    const newValue = this.chartFunction?.data ?? '1';
+    const newValue = this.chartFunction?.data ?? '';
     if (newValue !== this.form.valuesSource.value) {
       set(this.form.valuesSource, 'value', newValue);
     }

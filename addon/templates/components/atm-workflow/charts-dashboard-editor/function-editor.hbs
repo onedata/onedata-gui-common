@@ -4,11 +4,13 @@
 }}
   {{#perfect-scrollbar-element registerApi=(action "registerScrollbarApi")}}
     <div class="functions-container">
-      {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
-        chartFunction=outputFunction
-        executionContext=executionContext
-        editorContext=editorContext
-      }}
+      {{#if outputFunction}}
+        {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer
+          chartFunction=outputFunction
+          executionContext=executionContext
+          editorContext=editorContext
+        }}
+      {{/if}}
       <div class="detached-functions-container">
         {{#each detachedFunctions as |detachedFunction|}}
           {{atm-workflow/charts-dashboard-editor/function-editor/function-renderer

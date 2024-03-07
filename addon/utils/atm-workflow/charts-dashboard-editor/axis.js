@@ -7,8 +7,10 @@
  */
 
 import EmberObject, { set, computed, observer } from '@ember/object';
-import ElementBase from './element-base';
+import { reads } from '@ember/object/computed';
+import _ from 'lodash';
 import generateId from 'onedata-gui-common/utils/generate-id';
+import ElementBase from './element-base';
 import { ElementType } from './common';
 import functions from './functions-model';
 
@@ -121,6 +123,25 @@ const Axis = ElementBase.extend({
         });
       }
       return errors;
+    }
+  ),
+
+  /**
+   * @override
+   */
+  nestedValidationErrors: reads('labelsFormattingValidationErrors'),
+
+  /**
+   * @type {ComputedProperty<Array<DashboardElementValidationError>>}
+   */
+  labelsFormattingValidationErrors: computed(
+    'valueProvider.validationErrors',
+    'detachedFunctions.@each.validationErrors',
+    function labelsFormattingValidationErrors() {
+      return _.flatten(
+        [this.valueProvider, ...this.detachedFunctions]
+        .map(({ validationErrors }) => validationErrors)
+      );
     }
   ),
 

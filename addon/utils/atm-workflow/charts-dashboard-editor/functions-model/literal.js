@@ -6,6 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { computed } from '@ember/object';
 import { FunctionDataType } from './common';
 import FunctionBase from './function-base';
 
@@ -30,6 +31,26 @@ const LiteralFunction = FunctionBase.extend({
    * @override
    */
   returnedTypes: Object.freeze([FunctionDataType.Number]),
+
+  /**
+   * @override
+   */
+  functionSpecificValidationErrors: computed(
+    'data',
+    function functionSpecificValidationErrors() {
+      if (typeof this.data !== 'number') {
+        return [{
+          errorId: 'chartFunctionParameterInvalid',
+          errorDetails: {
+            parameterName: 'data',
+          },
+          element: this,
+        }];
+      }
+
+      return [];
+    }
+  ),
 
   /**
    * @override
