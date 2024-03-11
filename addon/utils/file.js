@@ -7,7 +7,6 @@
  */
 
 import { htmlSafe } from '@ember/template';
-import { assert } from '@ember/debug';
 import _ from 'lodash';
 import { formatNumber } from 'onedata-gui-common/helpers/format-number';
 
@@ -161,42 +160,7 @@ export function convertFromLegacyFileTypeIfNeeded(fileType) {
 }
 
 /**
- * @typedef {
- *   'acl' |
- *   'activePermissionsType' |
- *   'aggregateQosStatus' |
- *   'archiveRecallRootFileId' |
- *   'atime' |
- *   'conflictingName' |
- *   'ctime' |
- *   'directShareIds' |
- *   'displayGid' |
- *   'displayUid' |
- *   'effDatasetInheritancePath' |
- *   'effDatasetProtectionFlags' |
- *   'effProtectionFlags' |
- *   'effQosInheritancePath' |
- *   'fileId' |
- *   'hardlinkCount' |
- *   'hasCustomMetadata' |
- *   'index' |
- *   'isFullyReplicatedLocally' |
- *   'localReplicationRate' |
- *   'mtime' |
- *   'name' |
- *   'originProviderId' |
- *   'ownerUserId' |
- *   'parentFileId' |
- *   'path' |
- *   'posixPermissions' |
- *   'size' |
- *   'symlinkValue' |
- *   'type'
- * } FileAttribute
- */
-
-/**
- * @type {Object<string, FileAttribute>}
+ * @type {Object<string, string>}
  */
 export const FileAttribute = Object.freeze({
   Acl: 'acl',
@@ -232,42 +196,10 @@ export const FileAttribute = Object.freeze({
 });
 
 /**
- * @type {Array<FileAttribute>}
+ * @typedef {typeof FileAttribute[keyof typeof FileAttribute]} FileAttribute
  */
-export const fileAttributesArray = Object.freeze([
-  FileAttribute.Acl,
-  FileAttribute.ActivePermissionsType,
-  FileAttribute.AggregateQosStatus,
-  FileAttribute.ArchiveRecallRootFileId,
-  FileAttribute.Atime,
-  FileAttribute.ConflictingName,
-  FileAttribute.Ctime,
-  FileAttribute.DirectShareIds,
-  FileAttribute.DisplayGid,
-  FileAttribute.DisplayUid,
-  FileAttribute.EffDatasetInheritancePath,
-  FileAttribute.EffDatasetProtectionFlags,
-  FileAttribute.EffProtectionFlags,
-  FileAttribute.EffQosInheritancePath,
-  FileAttribute.FileId,
-  FileAttribute.HardlinkCount,
-  FileAttribute.HasCustomMetadata,
-  FileAttribute.Index,
-  FileAttribute.IsFullyReplicatedLocally,
-  FileAttribute.LocalReplicationRate,
-  FileAttribute.Mtime,
-  FileAttribute.Name,
-  FileAttribute.OriginProviderId,
-  FileAttribute.OwnerUserId,
-  FileAttribute.ParentFileId,
-  FileAttribute.Path,
-  FileAttribute.PosixPermissions,
-  FileAttribute.Size,
-  FileAttribute.SymlinkValue,
-  FileAttribute.Type,
-]);
 
-assert(
-  'fileAttributesArray must have the same items as FileAttribute enum.',
-  _.isEqual(Object.values(FileAttribute).sort(), [...fileAttributesArray].sort())
-);
+/**
+ * @type {ReadonlyArray<FileAttribute>}
+ */
+export const fileAttributesArray = Object.freeze(Object.values(FileAttribute).sort());
