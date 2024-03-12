@@ -1,3 +1,3 @@
 export default {
-  showDashboardEditor: 'See charts dashboard details',
+  showDashboardEditor: 'See chart dashboard details',
 };

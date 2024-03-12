@@ -32,7 +32,7 @@ import {
   timeSeriesMetricAggregators,
   translateTimeSeriesNameGeneratorType,
 } from 'onedata-gui-common/utils/time-series';
-import ChartsDashboardEditorField from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-field';
+import ChartDashboardEditorField from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor-field';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import { Tag as MetricTag } from 'onedata-gui-common/components/tags-input/time-series-metric-selector-editor';
 
@@ -187,7 +187,7 @@ const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
   },
 });
 
-const dashboardSpecField = ChartsDashboardEditorField.extend({
+const dashboardSpecField = ChartDashboardEditorField.extend({
   name: 'dashboardSpec',
   dashboardModelOwner: reads('parent.dashboardModelOwner'),
 });
