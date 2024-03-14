@@ -15,6 +15,7 @@ import OneDraggableObject from 'onedata-gui-common/components/one-draggable-obje
 import {
   getFunctionNameTranslation,
   getFunctionArgumentNameTranslation,
+  getFunctionTipTranslation,
   ElementType,
   translateValidationErrorsBatch,
 } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
@@ -154,6 +155,13 @@ export default OneDraggableObject.extend(I18n, {
    */
   readableName: computed('chartFunction.name', function readableName() {
     return getFunctionNameTranslation(this.i18n, this.chartFunction.name);
+  }),
+
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  tip: computed('chartFunction.name', function tip() {
+    return getFunctionTipTranslation(this.i18n, this.chartFunction.name);
   }),
 
   /**

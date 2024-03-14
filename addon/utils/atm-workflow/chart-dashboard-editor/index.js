@@ -37,6 +37,7 @@ export {
   FunctionExecutionContext,
   getFunctionNameTranslation,
   getFunctionArgumentNameTranslation,
+  getFunctionTipTranslation,
 }
 from './functions-model';
 export { default as EditorContext } from './editor-context';

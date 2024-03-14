@@ -1,8 +1,8 @@
 export default {
   back: 'Back',
   dashboardOverview: 'Dashboard overview',
-  simulationInfo: 'Presented sections and charts are a simulation of the dashboard as seen by the user. It is based on the current configuration of dashboard elements and random input data. It may be incomplete if the configuration is incorrect.',
-  chartEditor: 'Chart "{{chartTitle}}" editor',
+  chartDashboardTooltip: 'A dashboard is a collection of charts organized into sections. Each chart can visualize the time series collected during a workflow execution. Such a presentation will help users track the progress of data processing and make workflows easier to understand.',
+  chartEditor: 'Chart editor: <span class="chart-title">{{chartTitle}}</span>',
   chartEditorUnnamed: 'Chart editor',
   undo: 'Undo',
   redo: 'Redo',

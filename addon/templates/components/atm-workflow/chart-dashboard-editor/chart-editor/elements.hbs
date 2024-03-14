@@ -18,6 +18,21 @@
         </a>
       {{/nav.item}}
     {{/each}}
+    {{one-icon
+      icon="sign-question-rounded"
+      class="elements-info-trigger clickable"
+    }}
+    {{#one-switchable-popover-modal
+      class="elements-info-popover"
+      triggersConfiguration=(local-selector elementId ".elements-info-trigger")
+    }}
+      <h1>{{tt this "info.series.header"}}</h1>
+      <p>{{tt this "info.series.content"}}</p>
+      <h1>{{tt this "info.seriesGroups.header"}}</h1>
+      <p>{{tt this "info.seriesGroups.content"}}</p>
+      <h1>{{tt this "info.axes.header"}}</h1>
+      <p>{{tt this "info.axes.content"}}</p>
+    {{/one-switchable-popover-modal}}
   {{/bs-nav}}
   <div class="tab-content">
     {{#each tabs as |tabSpec|}}

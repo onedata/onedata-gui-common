@@ -12,4 +12,6 @@ export default {
   sidebar,
   sectionDetailsEditor,
   chartDetailsEditor,
+  preview: 'Preview',
+  previewTooltip: 'Sections and charts presented in the preview are a simulation of the dashboard as seen by the user. It is based on the current configuration of dashboard elements and random input data. May be incomplete if the configuration is incorrect.',
 };

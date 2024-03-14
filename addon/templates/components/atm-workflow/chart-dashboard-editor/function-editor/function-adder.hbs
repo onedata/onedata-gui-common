@@ -25,7 +25,10 @@
             <li
               class="clickable function"
               onclick={{action "addFunction" func.name}}
-            >{{func.translatedName}}</li>
+            >
+              {{func.translatedName}}
+              {{one-label-tip title=func.tip}}
+            </li>
           {{else}}
             <li class="nothing-to-show-info">{{tt this "nothingToShow"}}</li>
           {{/each}}

@@ -32,5 +32,6 @@ export {
   FunctionExecutionContext,
   getFunctionNameTranslation,
   getFunctionArgumentNameTranslation,
+  getFunctionTipTranslation,
 }
 from './common';

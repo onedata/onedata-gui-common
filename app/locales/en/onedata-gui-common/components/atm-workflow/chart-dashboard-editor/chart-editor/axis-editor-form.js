@@ -29,6 +29,7 @@ export default {
     minInterval: {
       label: 'Minimum value interval',
       placeholder: 'Auto',
+      tip: 'Defines what is the minimal value step on the axis. Example: when set to "1", it will show only integer values.',
     },
   },
 };

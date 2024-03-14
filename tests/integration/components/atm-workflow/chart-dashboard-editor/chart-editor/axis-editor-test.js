@@ -33,7 +33,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
       expect(navLinks).to.have.length(2);
       expect(navLinks[0]).to.contain.text('Attached series');
       expect(navLinks[0].parentElement).to.have.class('active');
-      expect(navLinks[1]).to.contain.text('Labels formatting');
+      expect(navLinks[1]).to.contain.text('Label formatting');
       const tabPanes = findAll('.tab-pane');
       expect(tabPanes).to.have.length(2);
       expect(tabPanes[0]).to.have.class('active').and.to.contain('.series-list');

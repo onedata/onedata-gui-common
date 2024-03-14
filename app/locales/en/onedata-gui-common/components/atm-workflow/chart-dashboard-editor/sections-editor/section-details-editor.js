@@ -14,7 +14,7 @@ export default {
     },
     chartNavigation: {
       label: 'Chart navigation',
-      tip: 'It determines how the navigation (time and resolution) of charts contained directly in the selected section is controlled.',
+      tip: 'Determines the method of navigation (regarding time and resolution) in the charts contained directly in the selected section.',
     },
   },
 };

@@ -129,15 +129,15 @@ const Axis = ElementBase.extend({
   /**
    * @override
    */
-  nestedValidationErrors: reads('labelsFormattingValidationErrors'),
+  nestedValidationErrors: reads('labelFormattingValidationErrors'),
 
   /**
    * @type {ComputedProperty<Array<DashboardElementValidationError>>}
    */
-  labelsFormattingValidationErrors: computed(
+  labelFormattingValidationErrors: computed(
     'valueProvider.validationErrors',
     'detachedFunctions.@each.validationErrors',
-    function labelsFormattingValidationErrors() {
+    function labelFormattingValidationErrors() {
       return _.flatten(
         [this.valueProvider, ...this.detachedFunctions]
         .map(({ validationErrors }) => validationErrors)

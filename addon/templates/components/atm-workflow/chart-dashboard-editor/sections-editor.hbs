@@ -2,6 +2,10 @@
   class="dashboard-visualiser"
   click=(action "workspaceClick")
 }}
+  <div class="dashboard-visualiser-info">
+    <span class="one-label">{{tt this "preview"}}</span>
+    {{one-label-tip title=(tt this "previewTooltip")}}
+  </div>
   {{atm-workflow/chart-dashboard-editor/sections-editor/section
     section=rootSection
     editorContext=editorContext

@@ -16,6 +16,7 @@ import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-d
 import {
   functions as functionDefs,
   getFunctionNameTranslation,
+  getFunctionTipTranslation,
 } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
 
 export default Component.extend(I18n, {
@@ -123,6 +124,7 @@ export default Component.extend(I18n, {
         .map((funcDef) => ({
           ...funcDef,
           translatedName: String(getFunctionNameTranslation(this.i18n, funcDef.name)),
+          tip: getFunctionTipTranslation(this.i18n, funcDef.name),
         }));
       return functionsArray.sort((a, b) =>
         a.translatedName.localeCompare(b.translatedName)

@@ -25,18 +25,18 @@
           {{tt this "detailsTabNames.attachedSeries"}}
         </a>
       {{/nav.item}}
-      {{#nav.item active=(eq activeTabId tabIds.labelsFormatting)}}
+      {{#nav.item active=(eq activeTabId tabIds.labelFormatting)}}
         <a
           class={{concat-classes
             "nav-link"
-            (if (not-eq activeTabId tabIds.labelsFormatting) "clickable")
+            (if (not-eq activeTabId tabIds.labelFormatting) "clickable")
           }}
           role="tab"
-          onclick={{action "changeTab" tabIds.labelsFormatting}}
+          onclick={{action "changeTab" tabIds.labelFormatting}}
         >
-          {{tt this "detailsTabNames.labelsFormatting"}}
-          {{#if labelsFormattingValidationErrorsMessage}}
-            {{warning-icon tooltipText=labelsFormattingValidationErrorsMessage}}
+          {{tt this "detailsTabNames.labelFormatting"}}
+          {{#if labelFormattingValidationErrorsMessage}}
+            {{warning-icon tooltipText=labelFormattingValidationErrorsMessage}}
           {{/if}}
         </a>
       {{/nav.item}}
@@ -53,13 +53,14 @@
           <p class="empty-details-info">{{tt this "noSeriesAttached"}}</p>
         {{/if}}
       {{/tab.pane}}
-      {{#tab.pane elementId=tabIds.labelsFormatting}}
-        {{#render-later triggerRender=(eq activeTabId tabIds.labelsFormatting)}}
+      {{#tab.pane elementId=tabIds.labelFormatting}}
+        {{#render-later triggerRender=(eq activeTabId tabIds.labelFormatting)}}
           {{atm-workflow/chart-dashboard-editor/function-editor
             outputFunction=chartElement.valueProvider
             detachedFunctions=chartElement.detachedFunctions
             executionContext="axis"
             editorContext=editorContext
+            tip=(tt this "labelFormatterEditorTip")
           }}
         {{/render-later}}
       {{/tab.pane}}

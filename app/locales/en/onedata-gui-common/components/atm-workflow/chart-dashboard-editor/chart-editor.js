@@ -6,6 +6,7 @@ import axesList from './chart-editor/axes-list';
 import elementsListItem from './chart-editor/elements-list-item';
 import preview from './chart-editor/preview';
 import elementsEditor from './chart-editor/elements-editor';
+import seriesEditor from './chart-editor/series-editor';
 import seriesEditorForm from './chart-editor/series-editor-form';
 import seriesGroupEditor from './chart-editor/series-group-editor';
 import seriesGroupEditorForm from './chart-editor/series-group-editor-form';
@@ -21,6 +22,7 @@ export default {
   elementsListItem,
   preview,
   elementsEditor,
+  seriesEditor,
   seriesEditorForm,
   seriesGroupEditor,
   seriesGroupEditorForm,

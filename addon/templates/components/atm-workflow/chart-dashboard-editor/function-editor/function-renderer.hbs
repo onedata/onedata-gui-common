@@ -1,6 +1,11 @@
 <div class="function-block">
   <div class="function-block-header">
-    <span class="function-name">{{readableName}}</span>
+    <span class="function-name">
+      {{readableName}}
+      {{#if tip}}
+        {{one-tooltip title=tip}}
+      {{/if}}
+    </span>
     {{#if functionOnlyValidationErrorsMessage}}
       {{warning-icon tooltipText=functionOnlyValidationErrorsMessage}}
     {{/if}}

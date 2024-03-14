@@ -15,12 +15,19 @@ import {
   ElementType,
   EdgeScroller,
 } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['sections-editor'],
 
   dragDrop: service(),
+  i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.atmWorkflow.chartDashboardEditor.sectionsEditor',
 
   /**
    * @virtual

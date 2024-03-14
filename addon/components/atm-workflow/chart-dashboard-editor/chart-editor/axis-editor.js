@@ -50,19 +50,19 @@ export default Component.extend(I18n, {
   tabIds: computed(function tabIds() {
     return {
       attachedSeries: `${guidFor(this)}-attached-series`,
-      labelsFormatting: `${guidFor(this)}-labels-formatting`,
+      labelFormatting: `${guidFor(this)}-label-formatting`,
     };
   }),
 
   /**
    * @type {ComputedProperty<SafeString | null>}
    */
-  labelsFormattingValidationErrorsMessage: computed(
-    'chartElement.labelsFormattingValidationErrors',
-    function labelsFormattingValidationErrorsMessage() {
+  labelFormattingValidationErrorsMessage: computed(
+    'chartElement.labelFormattingValidationErrors',
+    function labelFormattingValidationErrorsMessage() {
       return translateValidationErrorsBatch(
         this.i18n,
-        this.chartElement.labelsFormattingValidationErrors,
+        this.chartElement.labelFormattingValidationErrors,
       );
     }
   ),

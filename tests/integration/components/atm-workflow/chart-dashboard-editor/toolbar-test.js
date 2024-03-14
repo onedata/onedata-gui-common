@@ -133,7 +133,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/toolbar'
     expect(find('.view-title')).to.have.trimmed.text('Dashboard overview');
   });
 
-  it('shows "chart X editor" title when chart editor is active and chart has a title',
+  it('shows "chart editor: X" title when chart editor is active and chart has a title',
     async function () {
       const editedChart = this.set(
         'editedChart',
@@ -143,7 +143,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/toolbar'
 
       await renderComponent();
 
-      expect(find('.view-title')).to.have.trimmed.text('Chart "abc" editor');
+      expect(find('.view-title')).to.have.trimmed.text('Chart editor: abc');
     }
   );
 

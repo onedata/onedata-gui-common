@@ -219,6 +219,14 @@ const TimeSeriesNameGeneratorField = DropdownField.extend({
         }));
     }
   ),
+
+  /**
+   * @override
+   */
+  tip: computed('parent.allowPrefixedTimeSeriesOnly', function tip() {
+    const prefixedOnly = !!this.parent.allowPrefixedTimeSeriesOnly;
+    return this.getTranslation(`tip.${prefixedOnly ? 'prefixedOnly' : 'all'}`);
+  }),
 });
 
 /**

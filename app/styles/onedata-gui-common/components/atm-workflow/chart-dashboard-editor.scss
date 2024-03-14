@@ -96,6 +96,10 @@
       flex-grow: 1;
       min-width: 0;
       padding: 0 1em;
+
+      .chart-title {
+        text-transform: none;
+      }
     }
   }
 
@@ -125,6 +129,27 @@
       );
       background-size: 1em 1em;
       border-bottom-left-radius: $border-radius-base;
+    }
+
+    .dashboard-visualiser-info {
+      position: absolute;
+      right: 0;
+      top: 0;
+      padding: 0.75em;
+      display: flex;
+      align-items: center;
+      opacity: 0.5;
+      font-size: 85%;
+
+      .one-label {
+        line-height: 1;
+        font-style: italic;
+      }
+
+      .one-label-tip {
+        margin-left: 0.5em;
+        line-height: 0;
+      }
     }
 
     .chart,
@@ -463,6 +488,13 @@
       border-bottom: $main-border;
       padding: 0.5em;
       background-color: $block-background-color;
+
+      .elements-info-trigger {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        color: $color-one-light-gray;
+      }
     }
 
     .chart-editor-preview {
@@ -758,6 +790,7 @@
     --workspace-padding: 3em;
     --between-args-space: 1em;
 
+    position: relative;
     display: grid;
     margin: -1em;
     min-height: 0;
@@ -782,6 +815,13 @@
 
     *:not(input) {
       user-select: none;
+    }
+
+    .function-editor-tooltip {
+      position: absolute;
+      top: 1em;
+      right: 1em;
+      font-size: 1.2em;
     }
 
     .is-dragging-object {
@@ -1161,6 +1201,13 @@
       &.clickable:hover {
         background-color: $main-content-hover-background;
       }
+    }
+
+    .one-label-tip {
+      position: relative;
+      bottom: -1px;
+      margin-left: 0.3em;
+      font-size: 0.9em;
     }
 
     .nothing-to-show-info {

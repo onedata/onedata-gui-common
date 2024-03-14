@@ -73,3 +73,16 @@ export function getFunctionArgumentNameTranslation(i18n, functionName, argumentN
 export function getFunctionParameterNameTranslation(i18n, functionName, parameterName) {
   return i18n.t(`${i18nPrefix}.functions.${functionName}.parameters.${parameterName}`);
 }
+
+/**
+ * @param {Ember.Service} i18n
+ * @param {string} functionName
+ * @returns {SafeString}
+ */
+export function getFunctionTipTranslation(i18n, functionName) {
+  const translation = i18n.t(`${i18nPrefix}.functions.${functionName}.tip`);
+  if (!String(translation)) {
+    return null;
+  }
+  return translation;
+}
