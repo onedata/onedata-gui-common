@@ -1,0 +1,714 @@
+$oneicons-font: "oneicons";
+
+@font-face {
+    font-family: $oneicons-font;
+    src: url("#{$icomoon-font-path}/oneicons.woff2") format("woff2"),
+url("#{$icomoon-font-path}/oneicons.woff") format("woff");
+}
+
+[class^="oneicon-"], [class*=" oneicon-"] {
+    font-family: oneicons !important;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+$oneicons-map: (
+    "add-filled": "\f101",
+    "arrow-circle-down": "\f102",
+    "arrow-down": "\f103",
+    "arrow-left": "\f104",
+    "arrow-right-full": "\f105",
+    "arrow-right": "\f106",
+    "arrow-up": "\f107",
+    "atm-inventory": "\f108",
+    "atm-lambda": "\f109",
+    "atm-lane": "\f10a",
+    "atm-workflow": "\f10b",
+    "axes": "\f10c",
+    "ban-left": "\f10d",
+    "browser-archive-add": "\f10e",
+    "browser-archive-recall": "\f10f",
+    "browser-archive-upload": "\f110",
+    "browser-archive": "\f111",
+    "browser-attribute": "\f112",
+    "browser-copy": "\f113",
+    "browser-cut": "\f114",
+    "browser-dataset-file": "\f115",
+    "browser-dataset": "\f116",
+    "browser-delete": "\f117",
+    "browser-directory": "\f118",
+    "browser-download": "\f119",
+    "browser-file": "\f11a",
+    "browser-info": "\f11b",
+    "browser-metadata": "\f11c",
+    "browser-new-directory": "\f11d",
+    "browser-paste": "\f11e",
+    "browser-permission": "\f11f",
+    "browser-permissions": "\f120",
+    "browser-rename": "\f121",
+    "browser-share": "\f122",
+    "browser-upload": "\f123",
+    "cancelled": "\f124",
+    "cart-checked": "\f125",
+    "cart": "\f126",
+    "certificate": "\f127",
+    "chart": "\f128",
+    "checkbox-filled-warning": "\f129",
+    "checkbox-filled-x": "\f12a",
+    "checkbox-filled": "\f12b",
+    "checkbox-pending": "\f12c",
+    "checkbox-x": "\f12d",
+    "checked": "\f12e",
+    "circle-copy": "\f12f",
+    "circle-id": "\f130",
+    "circle-not-available": "\f131",
+    "circle": "\f132",
+    "clean-filled": "\f133",
+    "clipboard-copy": "\f134",
+    "close": "\f135",
+    "cluster": "\f136",
+    "collection": "\f137",
+    "columns": "\f138",
+    "consume-token": "\f139",
+    "create-time": "\f13a",
+    "data-receive": "\f13b",
+    "data-send": "\f13c",
+    "drag": "\f13d",
+    "flatten": "\f13e",
+    "globe-cursor": "\f13f",
+    "globe-filled": "\f140",
+    "globe": "\f141",
+    "group-invite": "\f142",
+    "group-leave-group": "\f143",
+    "group": "\f144",
+    "groups": "\f145",
+    "hierarchy": "\f146",
+    "home": "\f147",
+    "index": "\f148",
+    "info-modal": "\f149",
+    "inheritance": "\f14a",
+    "invalidate": "\f14b",
+    "items-grid": "\f14c",
+    "join-plug": "\f14d",
+    "key": "\f14e",
+    "leave-space": "\f14f",
+    "light-bulb": "\f150",
+    "link-external": "\f151",
+    "lock-checked": "\f152",
+    "lock": "\f153",
+    "logout": "\f154",
+    "markdown": "\f155",
+    "move-down": "\f156",
+    "move-left": "\f157",
+    "move-right": "\f158",
+    "move-up": "\f159",
+    "move": "\f15a",
+    "navigate-first": "\f15b",
+    "navigate-last": "\f15c",
+    "navigate-next": "\f15d",
+    "navigate-prev": "\f15e",
+    "no-view": "\f15f",
+    "node": "\f160",
+    "onepanel": "\f161",
+    "onezone": "\f162",
+    "organization": "\f163",
+    "overview": "\f164",
+    "pause": "\f165",
+    "permissions": "\f166",
+    "play": "\f167",
+    "plug-in": "\f168",
+    "plug-out": "\f169",
+    "plus": "\f16a",
+    "properties": "\f16b",
+    "provider-add": "\f16c",
+    "provider": "\f16d",
+    "providers": "\f16e",
+    "qos": "\f16f",
+    "redo": "\f170",
+    "refresh": "\f171",
+    "rerun": "\f172",
+    "rest": "\f173",
+    "role-holders": "\f174",
+    "search": "\f175",
+    "settings-circle-filled": "\f176",
+    "settings": "\f177",
+    "shortcut": "\f178",
+    "sign-error-rounded": "\f179",
+    "sign-info-rounded": "\f17a",
+    "sign-question-rounded": "\f17b",
+    "sign-warning-rounded": "\f17c",
+    "skipped": "\f17d",
+    "space-add": "\f17e",
+    "space-empty": "\f17f",
+    "space-import": "\f180",
+    "space": "\f181",
+    "square-empty": "\f182",
+    "square-minus-empty": "\f183",
+    "square-plus-empty": "\f184",
+    "store-audit-log": "\f185",
+    "store-exception": "\f186",
+    "store-list": "\f187",
+    "store-range": "\f188",
+    "store-single-value": "\f189",
+    "store-time-series": "\f18a",
+    "store-tree-forest": "\f18b",
+    "support": "\f18c",
+    "team": "\f18d",
+    "text-bold": "\f18e",
+    "text-clear-formatting": "\f18f",
+    "text-heading1": "\f190",
+    "text-heading2": "\f191",
+    "text-heading3": "\f192",
+    "text-italic": "\f193",
+    "text-link": "\f194",
+    "text-olist": "\f195",
+    "text-paragraph": "\f196",
+    "text-strikethrough": "\f197",
+    "text-ulist": "\f198",
+    "text-underline": "\f199",
+    "time-outline": "\f19a",
+    "time": "\f19b",
+    "token-access": "\f19c",
+    "token-identity": "\f19d",
+    "token-invite": "\f19e",
+    "tokens": "\f19f",
+    "transfers": "\f1a0",
+    "undo": "\f1a1",
+    "unit": "\f1a2",
+    "unknown": "\f1a3",
+    "update": "\f1a4",
+    "user-profile": "\f1a5",
+    "user": "\f1a6",
+    "view-grid": "\f1a7",
+    "view-list": "\f1a8",
+    "view": "\f1a9",
+    "visual-editor": "\f1aa",
+    "warning": "\f1ab",
+    "x": "\f1ac",
+    "xml-file": "\f1ad",
+);
+
+.oneicon-add-filled:before {
+    content: map-get($oneicons-map, "add-filled");
+}
+.oneicon-arrow-circle-down:before {
+    content: map-get($oneicons-map, "arrow-circle-down");
+}
+.oneicon-arrow-down:before {
+    content: map-get($oneicons-map, "arrow-down");
+}
+.oneicon-arrow-left:before {
+    content: map-get($oneicons-map, "arrow-left");
+}
+.oneicon-arrow-right-full:before {
+    content: map-get($oneicons-map, "arrow-right-full");
+}
+.oneicon-arrow-right:before {
+    content: map-get($oneicons-map, "arrow-right");
+}
+.oneicon-arrow-up:before {
+    content: map-get($oneicons-map, "arrow-up");
+}
+.oneicon-atm-inventory:before {
+    content: map-get($oneicons-map, "atm-inventory");
+}
+.oneicon-atm-lambda:before {
+    content: map-get($oneicons-map, "atm-lambda");
+}
+.oneicon-atm-lane:before {
+    content: map-get($oneicons-map, "atm-lane");
+}
+.oneicon-atm-workflow:before {
+    content: map-get($oneicons-map, "atm-workflow");
+}
+.oneicon-axes:before {
+    content: map-get($oneicons-map, "axes");
+}
+.oneicon-ban-left:before {
+    content: map-get($oneicons-map, "ban-left");
+}
+.oneicon-browser-archive-add:before {
+    content: map-get($oneicons-map, "browser-archive-add");
+}
+.oneicon-browser-archive-recall:before {
+    content: map-get($oneicons-map, "browser-archive-recall");
+}
+.oneicon-browser-archive-upload:before {
+    content: map-get($oneicons-map, "browser-archive-upload");
+}
+.oneicon-browser-archive:before {
+    content: map-get($oneicons-map, "browser-archive");
+}
+.oneicon-browser-attribute:before {
+    content: map-get($oneicons-map, "browser-attribute");
+}
+.oneicon-browser-copy:before {
+    content: map-get($oneicons-map, "browser-copy");
+}
+.oneicon-browser-cut:before {
+    content: map-get($oneicons-map, "browser-cut");
+}
+.oneicon-browser-dataset-file:before {
+    content: map-get($oneicons-map, "browser-dataset-file");
+}
+.oneicon-browser-dataset:before {
+    content: map-get($oneicons-map, "browser-dataset");
+}
+.oneicon-browser-delete:before {
+    content: map-get($oneicons-map, "browser-delete");
+}
+.oneicon-browser-directory:before {
+    content: map-get($oneicons-map, "browser-directory");
+}
+.oneicon-browser-download:before {
+    content: map-get($oneicons-map, "browser-download");
+}
+.oneicon-browser-file:before {
+    content: map-get($oneicons-map, "browser-file");
+}
+.oneicon-browser-info:before {
+    content: map-get($oneicons-map, "browser-info");
+}
+.oneicon-browser-metadata:before {
+    content: map-get($oneicons-map, "browser-metadata");
+}
+.oneicon-browser-new-directory:before {
+    content: map-get($oneicons-map, "browser-new-directory");
+}
+.oneicon-browser-paste:before {
+    content: map-get($oneicons-map, "browser-paste");
+}
+.oneicon-browser-permission:before {
+    content: map-get($oneicons-map, "browser-permission");
+}
+.oneicon-browser-permissions:before {
+    content: map-get($oneicons-map, "browser-permissions");
+}
+.oneicon-browser-rename:before {
+    content: map-get($oneicons-map, "browser-rename");
+}
+.oneicon-browser-share:before {
+    content: map-get($oneicons-map, "browser-share");
+}
+.oneicon-browser-upload:before {
+    content: map-get($oneicons-map, "browser-upload");
+}
+.oneicon-cancelled:before {
+    content: map-get($oneicons-map, "cancelled");
+}
+.oneicon-cart-checked:before {
+    content: map-get($oneicons-map, "cart-checked");
+}
+.oneicon-cart:before {
+    content: map-get($oneicons-map, "cart");
+}
+.oneicon-certificate:before {
+    content: map-get($oneicons-map, "certificate");
+}
+.oneicon-chart:before {
+    content: map-get($oneicons-map, "chart");
+}
+.oneicon-checkbox-filled-warning:before {
+    content: map-get($oneicons-map, "checkbox-filled-warning");
+}
+.oneicon-checkbox-filled-x:before {
+    content: map-get($oneicons-map, "checkbox-filled-x");
+}
+.oneicon-checkbox-filled:before {
+    content: map-get($oneicons-map, "checkbox-filled");
+}
+.oneicon-checkbox-pending:before {
+    content: map-get($oneicons-map, "checkbox-pending");
+}
+.oneicon-checkbox-x:before {
+    content: map-get($oneicons-map, "checkbox-x");
+}
+.oneicon-checked:before {
+    content: map-get($oneicons-map, "checked");
+}
+.oneicon-circle-copy:before {
+    content: map-get($oneicons-map, "circle-copy");
+}
+.oneicon-circle-id:before {
+    content: map-get($oneicons-map, "circle-id");
+}
+.oneicon-circle-not-available:before {
+    content: map-get($oneicons-map, "circle-not-available");
+}
+.oneicon-circle:before {
+    content: map-get($oneicons-map, "circle");
+}
+.oneicon-clean-filled:before {
+    content: map-get($oneicons-map, "clean-filled");
+}
+.oneicon-clipboard-copy:before {
+    content: map-get($oneicons-map, "clipboard-copy");
+}
+.oneicon-close:before {
+    content: map-get($oneicons-map, "close");
+}
+.oneicon-cluster:before {
+    content: map-get($oneicons-map, "cluster");
+}
+.oneicon-collection:before {
+    content: map-get($oneicons-map, "collection");
+}
+.oneicon-columns:before {
+    content: map-get($oneicons-map, "columns");
+}
+.oneicon-consume-token:before {
+    content: map-get($oneicons-map, "consume-token");
+}
+.oneicon-create-time:before {
+    content: map-get($oneicons-map, "create-time");
+}
+.oneicon-data-receive:before {
+    content: map-get($oneicons-map, "data-receive");
+}
+.oneicon-data-send:before {
+    content: map-get($oneicons-map, "data-send");
+}
+.oneicon-drag:before {
+    content: map-get($oneicons-map, "drag");
+}
+.oneicon-flatten:before {
+    content: map-get($oneicons-map, "flatten");
+}
+.oneicon-globe-cursor:before {
+    content: map-get($oneicons-map, "globe-cursor");
+}
+.oneicon-globe-filled:before {
+    content: map-get($oneicons-map, "globe-filled");
+}
+.oneicon-globe:before {
+    content: map-get($oneicons-map, "globe");
+}
+.oneicon-group-invite:before {
+    content: map-get($oneicons-map, "group-invite");
+}
+.oneicon-group-leave-group:before {
+    content: map-get($oneicons-map, "group-leave-group");
+}
+.oneicon-group:before {
+    content: map-get($oneicons-map, "group");
+}
+.oneicon-groups:before {
+    content: map-get($oneicons-map, "groups");
+}
+.oneicon-hierarchy:before {
+    content: map-get($oneicons-map, "hierarchy");
+}
+.oneicon-home:before {
+    content: map-get($oneicons-map, "home");
+}
+.oneicon-index:before {
+    content: map-get($oneicons-map, "index");
+}
+.oneicon-info-modal:before {
+    content: map-get($oneicons-map, "info-modal");
+}
+.oneicon-inheritance:before {
+    content: map-get($oneicons-map, "inheritance");
+}
+.oneicon-invalidate:before {
+    content: map-get($oneicons-map, "invalidate");
+}
+.oneicon-items-grid:before {
+    content: map-get($oneicons-map, "items-grid");
+}
+.oneicon-join-plug:before {
+    content: map-get($oneicons-map, "join-plug");
+}
+.oneicon-key:before {
+    content: map-get($oneicons-map, "key");
+}
+.oneicon-leave-space:before {
+    content: map-get($oneicons-map, "leave-space");
+}
+.oneicon-light-bulb:before {
+    content: map-get($oneicons-map, "light-bulb");
+}
+.oneicon-link-external:before {
+    content: map-get($oneicons-map, "link-external");
+}
+.oneicon-lock-checked:before {
+    content: map-get($oneicons-map, "lock-checked");
+}
+.oneicon-lock:before {
+    content: map-get($oneicons-map, "lock");
+}
+.oneicon-logout:before {
+    content: map-get($oneicons-map, "logout");
+}
+.oneicon-markdown:before {
+    content: map-get($oneicons-map, "markdown");
+}
+.oneicon-move-down:before {
+    content: map-get($oneicons-map, "move-down");
+}
+.oneicon-move-left:before {
+    content: map-get($oneicons-map, "move-left");
+}
+.oneicon-move-right:before {
+    content: map-get($oneicons-map, "move-right");
+}
+.oneicon-move-up:before {
+    content: map-get($oneicons-map, "move-up");
+}
+.oneicon-move:before {
+    content: map-get($oneicons-map, "move");
+}
+.oneicon-navigate-first:before {
+    content: map-get($oneicons-map, "navigate-first");
+}
+.oneicon-navigate-last:before {
+    content: map-get($oneicons-map, "navigate-last");
+}
+.oneicon-navigate-next:before {
+    content: map-get($oneicons-map, "navigate-next");
+}
+.oneicon-navigate-prev:before {
+    content: map-get($oneicons-map, "navigate-prev");
+}
+.oneicon-no-view:before {
+    content: map-get($oneicons-map, "no-view");
+}
+.oneicon-node:before {
+    content: map-get($oneicons-map, "node");
+}
+.oneicon-onepanel:before {
+    content: map-get($oneicons-map, "onepanel");
+}
+.oneicon-onezone:before {
+    content: map-get($oneicons-map, "onezone");
+}
+.oneicon-organization:before {
+    content: map-get($oneicons-map, "organization");
+}
+.oneicon-overview:before {
+    content: map-get($oneicons-map, "overview");
+}
+.oneicon-pause:before {
+    content: map-get($oneicons-map, "pause");
+}
+.oneicon-permissions:before {
+    content: map-get($oneicons-map, "permissions");
+}
+.oneicon-play:before {
+    content: map-get($oneicons-map, "play");
+}
+.oneicon-plug-in:before {
+    content: map-get($oneicons-map, "plug-in");
+}
+.oneicon-plug-out:before {
+    content: map-get($oneicons-map, "plug-out");
+}
+.oneicon-plus:before {
+    content: map-get($oneicons-map, "plus");
+}
+.oneicon-properties:before {
+    content: map-get($oneicons-map, "properties");
+}
+.oneicon-provider-add:before {
+    content: map-get($oneicons-map, "provider-add");
+}
+.oneicon-provider:before {
+    content: map-get($oneicons-map, "provider");
+}
+.oneicon-providers:before {
+    content: map-get($oneicons-map, "providers");
+}
+.oneicon-qos:before {
+    content: map-get($oneicons-map, "qos");
+}
+.oneicon-redo:before {
+    content: map-get($oneicons-map, "redo");
+}
+.oneicon-refresh:before {
+    content: map-get($oneicons-map, "refresh");
+}
+.oneicon-rerun:before {
+    content: map-get($oneicons-map, "rerun");
+}
+.oneicon-rest:before {
+    content: map-get($oneicons-map, "rest");
+}
+.oneicon-role-holders:before {
+    content: map-get($oneicons-map, "role-holders");
+}
+.oneicon-search:before {
+    content: map-get($oneicons-map, "search");
+}
+.oneicon-settings-circle-filled:before {
+    content: map-get($oneicons-map, "settings-circle-filled");
+}
+.oneicon-settings:before {
+    content: map-get($oneicons-map, "settings");
+}
+.oneicon-shortcut:before {
+    content: map-get($oneicons-map, "shortcut");
+}
+.oneicon-sign-error-rounded:before {
+    content: map-get($oneicons-map, "sign-error-rounded");
+}
+.oneicon-sign-info-rounded:before {
+    content: map-get($oneicons-map, "sign-info-rounded");
+}
+.oneicon-sign-question-rounded:before {
+    content: map-get($oneicons-map, "sign-question-rounded");
+}
+.oneicon-sign-warning-rounded:before {
+    content: map-get($oneicons-map, "sign-warning-rounded");
+}
+.oneicon-skipped:before {
+    content: map-get($oneicons-map, "skipped");
+}
+.oneicon-space-add:before {
+    content: map-get($oneicons-map, "space-add");
+}
+.oneicon-space-empty:before {
+    content: map-get($oneicons-map, "space-empty");
+}
+.oneicon-space-import:before {
+    content: map-get($oneicons-map, "space-import");
+}
+.oneicon-space:before {
+    content: map-get($oneicons-map, "space");
+}
+.oneicon-square-empty:before {
+    content: map-get($oneicons-map, "square-empty");
+}
+.oneicon-square-minus-empty:before {
+    content: map-get($oneicons-map, "square-minus-empty");
+}
+.oneicon-square-plus-empty:before {
+    content: map-get($oneicons-map, "square-plus-empty");
+}
+.oneicon-store-audit-log:before {
+    content: map-get($oneicons-map, "store-audit-log");
+}
+.oneicon-store-exception:before {
+    content: map-get($oneicons-map, "store-exception");
+}
+.oneicon-store-list:before {
+    content: map-get($oneicons-map, "store-list");
+}
+.oneicon-store-range:before {
+    content: map-get($oneicons-map, "store-range");
+}
+.oneicon-store-single-value:before {
+    content: map-get($oneicons-map, "store-single-value");
+}
+.oneicon-store-time-series:before {
+    content: map-get($oneicons-map, "store-time-series");
+}
+.oneicon-store-tree-forest:before {
+    content: map-get($oneicons-map, "store-tree-forest");
+}
+.oneicon-support:before {
+    content: map-get($oneicons-map, "support");
+}
+.oneicon-team:before {
+    content: map-get($oneicons-map, "team");
+}
+.oneicon-text-bold:before {
+    content: map-get($oneicons-map, "text-bold");
+}
+.oneicon-text-clear-formatting:before {
+    content: map-get($oneicons-map, "text-clear-formatting");
+}
+.oneicon-text-heading1:before {
+    content: map-get($oneicons-map, "text-heading1");
+}
+.oneicon-text-heading2:before {
+    content: map-get($oneicons-map, "text-heading2");
+}
+.oneicon-text-heading3:before {
+    content: map-get($oneicons-map, "text-heading3");
+}
+.oneicon-text-italic:before {
+    content: map-get($oneicons-map, "text-italic");
+}
+.oneicon-text-link:before {
+    content: map-get($oneicons-map, "text-link");
+}
+.oneicon-text-olist:before {
+    content: map-get($oneicons-map, "text-olist");
+}
+.oneicon-text-paragraph:before {
+    content: map-get($oneicons-map, "text-paragraph");
+}
+.oneicon-text-strikethrough:before {
+    content: map-get($oneicons-map, "text-strikethrough");
+}
+.oneicon-text-ulist:before {
+    content: map-get($oneicons-map, "text-ulist");
+}
+.oneicon-text-underline:before {
+    content: map-get($oneicons-map, "text-underline");
+}
+.oneicon-time-outline:before {
+    content: map-get($oneicons-map, "time-outline");
+}
+.oneicon-time:before {
+    content: map-get($oneicons-map, "time");
+}
+.oneicon-token-access:before {
+    content: map-get($oneicons-map, "token-access");
+}
+.oneicon-token-identity:before {
+    content: map-get($oneicons-map, "token-identity");
+}
+.oneicon-token-invite:before {
+    content: map-get($oneicons-map, "token-invite");
+}
+.oneicon-tokens:before {
+    content: map-get($oneicons-map, "tokens");
+}
+.oneicon-transfers:before {
+    content: map-get($oneicons-map, "transfers");
+}
+.oneicon-undo:before {
+    content: map-get($oneicons-map, "undo");
+}
+.oneicon-unit:before {
+    content: map-get($oneicons-map, "unit");
+}
+.oneicon-unknown:before {
+    content: map-get($oneicons-map, "unknown");
+}
+.oneicon-update:before {
+    content: map-get($oneicons-map, "update");
+}
+.oneicon-user-profile:before {
+    content: map-get($oneicons-map, "user-profile");
+}
+.oneicon-user:before {
+    content: map-get($oneicons-map, "user");
+}
+.oneicon-view-grid:before {
+    content: map-get($oneicons-map, "view-grid");
+}
+.oneicon-view-list:before {
+    content: map-get($oneicons-map, "view-list");
+}
+.oneicon-view:before {
+    content: map-get($oneicons-map, "view");
+}
+.oneicon-visual-editor:before {
+    content: map-get($oneicons-map, "visual-editor");
+}
+.oneicon-warning:before {
+    content: map-get($oneicons-map, "warning");
+}
+.oneicon-x:before {
+    content: map-get($oneicons-map, "x");
+}
+.oneicon-xml-file:before {
+    content: map-get($oneicons-map, "xml-file");
+}

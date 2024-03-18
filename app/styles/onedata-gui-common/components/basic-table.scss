@@ -39,7 +39,7 @@
             &:before {
               @include icon-toggle-float-right();
               margin-right: 0;
-              @include oneicon-content($oneicon-arrow-down);
+              @include oneicon-content('arrow-down');
               transform: translateY(-50%) rotate(0deg);
               transition: transition-ease(transform);
             }

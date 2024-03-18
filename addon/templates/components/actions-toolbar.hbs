@@ -13,7 +13,9 @@
       itemAction=(action act.action actionsArg)
       isDisabled=act.disabled
     }}
-      {{one-icon icon=act.icon}}
+      {{#if act.icon}}
+        {{one-icon icon=act.icon}}
+      {{/if}}
       <span class="text">{{act.title}}</span>
       {{#if act.tip}}
         {{one-tooltip title=act.tip placement=(or act.tipPlacement "top")}}

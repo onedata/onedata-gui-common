@@ -22,7 +22,10 @@
       disabled=(not isEffectivelyEnabled)
       onClick=(action "addField")
     }}
-      {{one-icon icon="add-filled"}}{{addButtonText}}
+      {{one-icon icon="add-filled"}}
+      {{#if addButtonText}}
+        <span class="text">{{addButtonText}}</span>
+      {{/if}}
     {{/bs-button}}
   {{/if}}
   {{#if (and (not nestedFields.length) isInViewMode emptyCollectionViewModeText)}}
