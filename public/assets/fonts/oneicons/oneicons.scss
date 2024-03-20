@@ -2,8 +2,8 @@ $oneicons-font: "oneicons";
 
 @font-face {
     font-family: $oneicons-font;
-    src: url("#{$icomoon-font-path}/oneicons.woff2") format("woff2"),
-url("#{$icomoon-font-path}/oneicons.woff") format("woff");
+    src: url("#{$oneicons-font-path}/oneicons.woff2") format("woff2"),
+url("#{$oneicons-font-path}/oneicons.woff") format("woff");
 }
 
 [class^="oneicon-"], [class*=" oneicon-"] {
