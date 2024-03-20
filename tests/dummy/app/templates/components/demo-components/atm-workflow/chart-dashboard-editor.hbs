@@ -1,0 +1,8 @@
+<button {{action (mut isReadOnly) (not isReadOnly)}}>Toggle readonly</button>
+<button {{action "logModelJson"}}>Log json</button>
+<div style="height: calc(100vh - 100px); display: grid;">
+  {{atm-workflow/chart-dashboard-editor
+    dashboardModel=dashboardModel
+    isReadOnly=isReadOnly
+  }}
+</div>

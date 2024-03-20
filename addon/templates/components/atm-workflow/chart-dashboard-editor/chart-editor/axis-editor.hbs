@@ -1,0 +1,69 @@
+{{#perfect-scrollbar-element class="form-column"}}
+  {{atm-workflow/chart-dashboard-editor/chart-editor/axis-editor-form
+    axis=chartElement
+    editorContext=editorContext
+  }}
+{{/perfect-scrollbar-element}}
+<div class="details-column">
+  {{#bs-tab
+    activeId=activeTabId
+    class="only-tab-bar bs-tab-onedata"
+    fade=false
+    customTabs=true
+    as |tab|
+  }}
+    {{#bs-nav type="tabs" as |nav|}}
+      {{#nav.item active=(eq activeTabId tabIds.attachedSeries)}}
+        <a
+          class={{concat-classes
+            "nav-link"
+            (if (not-eq activeTabId tabIds.attachedSeries) "clickable")
+          }}
+          role="tab"
+          onclick={{action "changeTab" tabIds.attachedSeries}}
+        >
+          {{tt this "detailsTabNames.attachedSeries"}}
+        </a>
+      {{/nav.item}}
+      {{#nav.item active=(eq activeTabId tabIds.labelFormatting)}}
+        <a
+          class={{concat-classes
+            "nav-link"
+            (if (not-eq activeTabId tabIds.labelFormatting) "clickable")
+          }}
+          role="tab"
+          onclick={{action "changeTab" tabIds.labelFormatting}}
+        >
+          {{tt this "detailsTabNames.labelFormatting"}}
+          {{#if labelFormattingValidationErrorsMessage}}
+            {{warning-icon tooltipText=labelFormattingValidationErrorsMessage}}
+          {{/if}}
+        </a>
+      {{/nav.item}}
+    {{/bs-nav}}
+    <div class="tab-content">
+      {{#tab.pane elementId=tabIds.attachedSeries}}
+        {{#if chartElement.series.length}}
+          {{atm-workflow/chart-dashboard-editor/chart-editor/series-list
+            chart=chart
+            seriesSource=chartElement
+            editorContext=editorContext
+          }}
+        {{else}}
+          <p class="empty-details-info">{{tt this "noSeriesAttached"}}</p>
+        {{/if}}
+      {{/tab.pane}}
+      {{#tab.pane elementId=tabIds.labelFormatting}}
+        {{#render-later triggerRender=(eq activeTabId tabIds.labelFormatting)}}
+          {{atm-workflow/chart-dashboard-editor/function-editor
+            outputFunction=chartElement.valueProvider
+            detachedFunctions=chartElement.detachedFunctions
+            executionContext="axis"
+            editorContext=editorContext
+            tip=(tt this "labelFormatterEditorTip")
+          }}
+        {{/render-later}}
+      {{/tab.pane}}
+    </div>
+  {{/bs-tab}}
+</div>

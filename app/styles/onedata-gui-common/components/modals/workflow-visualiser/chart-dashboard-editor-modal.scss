@@ -1,0 +1,20 @@
+.chart-dashboard-editor-modal {
+  .modal-full {
+    max-width: 120em;
+  }
+
+  .chart-dashboard-editor {
+    flex-grow: 1;
+    min-height: 0;
+  }
+
+  &.mode-edit {
+    .modal-content {
+      height: min(40em, 100vh - 5em);
+    }
+
+    .modal-body {
+      flex-grow: 1;
+    }
+  }
+}

@@ -32,7 +32,7 @@ describe('Integration | Component | modals/workflow-visualiser/charts-modal', fu
     await showModal(this);
 
     expect(getModalHeader().querySelector('h1'))
-      .to.have.trimmed.text('Lane charts dashboard');
+      .to.have.trimmed.text('Lane chart dashboard');
   });
 
   it('has header correct for workflow dashboard', async function () {
@@ -40,7 +40,7 @@ describe('Integration | Component | modals/workflow-visualiser/charts-modal', fu
     await showModal(this);
 
     expect(getModalHeader().querySelector('h1'))
-      .to.have.trimmed.text('Workflow charts dashboard');
+      .to.have.trimmed.text('Workflow chart dashboard');
   });
 });
 
