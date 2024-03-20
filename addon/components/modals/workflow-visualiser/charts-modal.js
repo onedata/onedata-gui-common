@@ -1,5 +1,5 @@
 /**
- * A modal that allows to view and modify charts dashboard.
+ * A modal that allows to view and modify chart dashboard.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022-2023 ACK CYFRONET AGH

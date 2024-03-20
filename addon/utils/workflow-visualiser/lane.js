@@ -11,7 +11,7 @@ import { reads } from '@ember/object/computed';
 import _ from 'lodash';
 import { resolve } from 'rsvp';
 import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
-import ChartsDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-model-container';
+import ChartDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor-model-container';
 
 export default VisualiserRecord.extend({
   /**
@@ -105,25 +105,25 @@ export default VisualiserRecord.extend({
   }),
 
   /**
-   * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
+   * @type {ComputedProperty<Array<ChartDashboardEditorDataSource>>}
    */
-  chartsDashboardEditorDataSources: computed(
-    'parallelBoxes.@each.chartsDashboardEditorDataSources',
-    function chartsDashboardEditorDataSources() {
+  chartDashboardEditorDataSources: computed(
+    'parallelBoxes.@each.chartDashboardEditorDataSources',
+    function chartDashboardEditorDataSources() {
       return _.flatten(
         this.parallelBoxes.map((parallelBox) =>
-          parallelBox.chartsDashboardEditorDataSources ?? []
+          parallelBox.chartDashboardEditorDataSources ?? []
         )
       );
     }
   ),
 
   /**
-   * @type {ComputedPropertyChartsDashboardEditorModelContainer>}
+   * @type {ComputedPropertyChartDashboardEditorModelContainer>}
    */
-  chartsDashboardEditorModelContainer: computed(
-    function chartsDashboardEditorModelContainer() {
-      return ChartsDashboardEditorModelContainer.extend({
+  chartDashboardEditorModelContainer: computed(
+    function chartDashboardEditorModelContainer() {
+      return ChartDashboardEditorModelContainer.extend({
         dashboardSpec: reads('relatedElement.dashboardSpec'),
       }).create({
         relatedElement: this,

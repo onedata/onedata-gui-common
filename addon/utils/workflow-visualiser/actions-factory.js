@@ -41,10 +41,10 @@ import ViewLaneFailedItemsAction from 'onedata-gui-common/utils/workflow-visuali
 import RetryLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/retry-lane-action';
 import RerunLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/rerun-lane-action';
 import ViewTaskPodsActivityAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-task-pods-activity-action';
-import ModifyWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-workflow-charts-dashboard-action';
-import ViewWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-charts-dashboard-action';
-import ModifyLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-charts-dashboard-action';
-import ViewLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-charts-dashboard-action';
+import ModifyWorkflowChartDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-workflow-chart-dashboard-action';
+import ViewWorkflowChartDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-chart-dashboard-action';
+import ModifyLaneChartDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-chart-dashboard-action';
+import ViewLaneChartDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-chart-dashboard-action';
 import DownloadAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/download-audit-log-action';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
@@ -491,10 +491,10 @@ export default EmberObject.extend(OwnerInjector, {
   },
 
   /**
-   * @returns {Utils.WorkflowVisualiser.Actions.ModifyWorkflowChartsDashboardAction}
+   * @returns {Utils.WorkflowVisualiser.Actions.ModifyWorkflowChartDashboardAction}
    */
-  createModifyWorkflowChartsDashboardAction() {
-    return ModifyWorkflowChartsDashboardAction.create({
+  createModifyWorkflowChartDashboardAction() {
+    return ModifyWorkflowChartDashboardAction.create({
       ownerSource: this,
       context: {
         workflow: this.getWorkflowProxy(),
@@ -503,10 +503,10 @@ export default EmberObject.extend(OwnerInjector, {
   },
 
   /**
-   * @returns {Utils.WorkflowVisualiser.Actions.ViewWorkflowChartsDashboardAction}
+   * @returns {Utils.WorkflowVisualiser.Actions.ViewWorkflowChartDashboardAction}
    */
-  createViewWorkflowChartsDashboardAction() {
-    return ViewWorkflowChartsDashboardAction.create({
+  createViewWorkflowChartDashboardAction() {
+    return ViewWorkflowChartDashboardAction.create({
       ownerSource: this,
       context: {
         workflow: this.getWorkflowProxy(),
@@ -520,10 +520,10 @@ export default EmberObject.extend(OwnerInjector, {
 
   /**
    * @param {Utils.WorkflowVisualiser.Lane} context.lane
-   * @returns {Utils.WorkflowVisualiser.Actions.ModifyLaneChartsDashboardAction}
+   * @returns {Utils.WorkflowVisualiser.Actions.ModifyLaneChartDashboardAction}
    */
-  createModifyLaneChartsDashboardAction(context) {
-    return ModifyLaneChartsDashboardAction.create({
+  createModifyLaneChartDashboardAction(context) {
+    return ModifyLaneChartDashboardAction.create({
       ownerSource: this,
       context,
     });
@@ -532,10 +532,10 @@ export default EmberObject.extend(OwnerInjector, {
   /**
    * @param {Utils.WorkflowVisualiser.Lane} context.lane
    * @param {AtmLaneRunNumber} context.runNumber
-   * @returns {Utils.WorkflowVisualiser.Actions.ViewLaneChartsDashboardAction}
+   * @returns {Utils.WorkflowVisualiser.Actions.ViewLaneChartDashboardAction}
    */
-  createViewLaneChartsDashboardAction(context) {
-    return ViewLaneChartsDashboardAction.create({
+  createViewLaneChartDashboardAction(context) {
+    return ViewLaneChartDashboardAction.create({
       ownerSource: this,
       context: Object.assign({
         getStoreContentCallback: (...args) =>

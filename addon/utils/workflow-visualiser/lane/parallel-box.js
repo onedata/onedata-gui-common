@@ -43,13 +43,13 @@ export default VisualiserRecord.extend({
   }),
 
   /**
-   * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
+   * @type {ComputedProperty<Array<ChartDashboardEditorDataSource>>}
    */
-  chartsDashboardEditorDataSources: computed(
-    'tasks.@each.chartsDashboardEditorDataSources',
-    function chartsDashboardEditorDataSources() {
+  chartDashboardEditorDataSources: computed(
+    'tasks.@each.chartDashboardEditorDataSources',
+    function chartDashboardEditorDataSources() {
       return _.flatten(
-        this.tasks.map((task) => task.chartsDashboardEditorDataSources ?? [])
+        this.tasks.map((task) => task.chartDashboardEditorDataSources ?? [])
       ).map((dataSource) => ({ ...dataSource, isDefault: false }));
     }
   ),
