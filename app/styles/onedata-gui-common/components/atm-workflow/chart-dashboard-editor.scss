@@ -138,12 +138,12 @@
       padding: 0.75em;
       display: flex;
       align-items: center;
-      opacity: 0.5;
       font-size: 85%;
 
       .one-label {
         line-height: 1;
         font-style: italic;
+        opacity: $disabled-opacity;
       }
 
       .one-label-tip {
