@@ -174,8 +174,8 @@ input.light {
   }
 }
 
-@mixin oneicon-content($glyph) {
-  content: $glyph;
+@mixin oneicon-content($iconName) {
+  content: map-get($oneicons-map, $iconName);
 }
 
 input {
@@ -294,6 +294,9 @@ input[type=number] {
 .item-icon-container {
   display: inline-block;
   margin-right: 0.6em;
+  > .one-icon {
+    line-height: 0;
+  }
   .item-icon {
     margin-right: 0;
   }
@@ -423,7 +426,7 @@ ol.info {
 
 ul.info {
   li::before {
-    @include oneicon-content($oneicon-arrow-right);
+    @include oneicon-content('arrow-right');
     font-family: 'oneicons' !important;
     font-weight: bold;
   }

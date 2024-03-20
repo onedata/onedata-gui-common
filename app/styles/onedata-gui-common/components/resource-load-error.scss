@@ -22,14 +22,14 @@ $inline-alert-left-border-width: 60px;
     border-color: $color-one-warning;
     &::before {
       font-weight: normal;
-      @include oneicon-content($oneicon-no-view);
+      @include oneicon-content('no-view');
     }
   }
   &.alert-danger {
     border-color: $color-one-danger;
   }
   &.alert-danger:before {
-    @include oneicon-content($oneicon-checkbox-x);
+    @include oneicon-content('checkbox-x');
   }
   .main-message {
     color: $main-text-color;

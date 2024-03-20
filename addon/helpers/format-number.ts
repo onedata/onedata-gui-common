@@ -45,7 +45,7 @@ export function formatNumber(
     return formattedNumber;
   } else {
     // Replace spaces with space-like spans to make copy-paste more user-friendly
-    const spacelessFormattedNumber = formattedNumber.replace(
+    const spacelessFormattedNumber = formattedNumber?.replace(
       / /g,
       '<span class="thousand-space"></span>'
     );

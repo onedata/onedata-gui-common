@@ -198,7 +198,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
       font-size: 1.1em;
       font-weight: bold;
       &:before {
-        @include oneicon-content($oneicon-arrow-down);
+        @include oneicon-content('arrow-down');
       }
     }
   }
@@ -213,7 +213,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
     font-size: 1.7em;
     font-weight: bold;
     &:before {
-      @include oneicon-content($oneicon-arrow-down);
+      @include oneicon-content('arrow-down');
     }
   }
 
@@ -225,7 +225,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
     .ember-power-select-status-icon {
       transform: none;
       &:before {
-        @include oneicon-content($oneicon-arrow-up);
+        @include oneicon-content('arrow-up');
       }
     }
   }
