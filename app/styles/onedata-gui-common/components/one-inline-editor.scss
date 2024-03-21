@@ -28,10 +28,7 @@
     right: 0;
     transform: translateY(-50%);
     font-size: 170%;
-    .one-icon {
-      position: relative;
-      top: 2px;
-    }
+    display: flex;
   }
   &:hover {
     .edit-icon {

@@ -425,13 +425,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  openWorkflowChartsDashboardAction: computed(
+  openWorkflowChartDashboardAction: computed(
     'mode',
-    function openWorkflowChartsDashboardAction() {
+    function openWorkflowChartDashboardAction() {
       if (this.mode === 'view') {
-        return this.actionsFactory.createViewWorkflowChartsDashboardAction();
+        return this.actionsFactory.createViewWorkflowChartDashboardAction();
       } else {
-        return this.actionsFactory.createModifyWorkflowChartsDashboardAction();
+        return this.actionsFactory.createModifyWorkflowChartDashboardAction();
       }
     }
   ),
