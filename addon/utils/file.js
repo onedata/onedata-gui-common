@@ -158,3 +158,48 @@ export function convertFromLegacyFileTypeIfNeeded(fileType) {
       return fileType;
   }
 }
+
+/**
+ * @type {Object<string, string>}
+ */
+export const FileAttribute = Object.freeze({
+  Acl: 'acl',
+  ActivePermissionsType: 'activePermissionsType',
+  AggregateQosStatus: 'aggregateQosStatus',
+  ArchiveRecallRootFileId: 'archiveRecallRootFileId',
+  Atime: 'atime',
+  ConflictingName: 'conflictingName',
+  Ctime: 'ctime',
+  DirectShareIds: 'directShareIds',
+  DisplayGid: 'displayGid',
+  DisplayUid: 'displayUid',
+  EffDatasetInheritancePath: 'effDatasetInheritancePath',
+  EffDatasetProtectionFlags: 'effDatasetProtectionFlags',
+  EffProtectionFlags: 'effProtectionFlags',
+  EffQosInheritancePath: 'effQosInheritancePath',
+  FileId: 'fileId',
+  HardlinkCount: 'hardlinkCount',
+  HasCustomMetadata: 'hasCustomMetadata',
+  Index: 'index',
+  IsFullyReplicatedLocally: 'isFullyReplicatedLocally',
+  LocalReplicationRate: 'localReplicationRate',
+  Mtime: 'mtime',
+  Name: 'name',
+  OriginProviderId: 'originProviderId',
+  OwnerUserId: 'ownerUserId',
+  ParentFileId: 'parentFileId',
+  Path: 'path',
+  PosixPermissions: 'posixPermissions',
+  Size: 'size',
+  SymlinkValue: 'symlinkValue',
+  Type: 'type',
+});
+
+/**
+ * @typedef {typeof FileAttribute[keyof typeof FileAttribute]} FileAttribute
+ */
+
+/**
+ * @type {ReadonlyArray<FileAttribute>}
+ */
+export const fileAttributesArray = Object.freeze(Object.values(FileAttribute).sort());

@@ -20,9 +20,11 @@ import { getAtmDataSpecParamsConditions } from 'onedata-gui-common/utils/atm-wor
 import {
   atmFileTypesArray,
   translateAtmFileType,
-  AtmFileAttribute,
-  atmFileAttributesArray,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
+import {
+  FileAttribute,
+  fileAttributesArray,
+} from 'onedata-gui-common/utils/file';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.paramsEditors.file';
@@ -96,10 +98,10 @@ const FileAttributesField = TagsField.extend({
   sort: true,
   isVisible: reads('parent.showExpandParams'),
   allowedTags: computed(function allowedTags() {
-    return [...atmFileAttributesArray].sort().map((attrName) => ({ label: attrName }));
+    return [...fileAttributesArray].sort().map((attrName) => ({ label: attrName }));
   }),
   tagEditorSettings: hash('allowedTags'),
-  defaultValue: raw([AtmFileAttribute.FileId]),
+  defaultValue: raw([FileAttribute.FileId]),
 });
 
 /**
@@ -131,7 +133,7 @@ function atmDataSpecParamsToFormValues(atmDataSpec, includeExpandParams = false)
   const fileType = atmDataSpec?.fileType ?? atmFileTypesArray[0];
   const valuesContainer = createValuesContainer({ fileType });
   if (includeExpandParams) {
-    const fileAttributes = atmDataSpec?.attributes ?? [AtmFileAttribute.FileId];
+    const fileAttributes = atmDataSpec?.attributes ?? [FileAttribute.FileId];
     set(valuesContainer, 'fileAttributes', fileAttributes);
   }
   return valuesContainer;

@@ -2,7 +2,7 @@
  * Contains type definitions, data and utils related to "file" automation data spec.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2022 ACK CYFRONET AGH
+ * @copyright (C) 2022-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -15,7 +15,7 @@ import { assert } from '@ember/debug';
  * @typedef {Object} AtmFileDataSpec
  * @property {'file'} type
  * @property {AtmFileType} fileType
- * @property {Array<AtmFileAttribute> | null} attributes
+ * @property {Array<FileAttribute> | null} attributes
  */
 
 /**
@@ -96,7 +96,7 @@ export const atmDataSpecTypeDefinition = Object.freeze({
   },
   getDefaultValue() {
     return {
-      file_id: '',
+      fileId: '',
     };
   },
 });
@@ -185,73 +185,3 @@ export function translateAtmFileType(i18n, atmFileType, { upperFirst = false } =
   const translation = i18n.t(`utils.atmWorkflow.dataSpec.file.fileTypes.${atmFileType}`);
   return upperFirst ? _.upperFirst(translation) : translation;
 }
-
-/**
- * @typedef {
- * 'name' |
- * 'type' |
- * 'mode' |
- * 'size' |
- * 'atime' |
- * 'mtime' |
- * 'ctime' |
- * 'owner_id' |
- * 'file_id' |
- * 'parent_id' |
- * 'provider_id' |
- * 'storage_user_id' |
- * 'storage_group_id' |
- * 'shares' |
- * 'hardlinks_count' |
- * 'index'
- * } AtmFileAttribute
- */
-
-/**
- * @type {Object<string, AtmFileAttribute>}
- */
-export const AtmFileAttribute = Object.freeze({
-  Name: 'name',
-  Type: 'type',
-  Mode: 'mode',
-  Size: 'size',
-  Atime: 'atime',
-  Mtime: 'mtime',
-  Ctime: 'ctime',
-  OwnerId: 'owner_id',
-  FileId: 'file_id',
-  ParentId: 'parent_id',
-  ProviderId: 'provider_id',
-  StorageUserId: 'storage_user_id',
-  StorageGroupId: 'storage_group_id',
-  Shares: 'shares',
-  HardlinksCount: 'hardlinks_count',
-  Index: 'index',
-});
-
-/**
- * @type {Array<AtmFileAttribute>}
- */
-export const atmFileAttributesArray = Object.freeze([
-  AtmFileAttribute.Name,
-  AtmFileAttribute.Type,
-  AtmFileAttribute.Mode,
-  AtmFileAttribute.Size,
-  AtmFileAttribute.Atime,
-  AtmFileAttribute.Mtime,
-  AtmFileAttribute.Ctime,
-  AtmFileAttribute.OwnerId,
-  AtmFileAttribute.FileId,
-  AtmFileAttribute.ParentId,
-  AtmFileAttribute.ProviderId,
-  AtmFileAttribute.StorageUserId,
-  AtmFileAttribute.StorageGroupId,
-  AtmFileAttribute.Shares,
-  AtmFileAttribute.HardlinksCount,
-  AtmFileAttribute.Index,
-]);
-
-assert(
-  'atmFileAttributesArray must have the same items as AtmFileAttribute enum.',
-  _.isEqual(Object.values(AtmFileAttribute).sort(), [...atmFileAttributesArray].sort())
-);

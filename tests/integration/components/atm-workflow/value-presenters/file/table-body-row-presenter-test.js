@@ -17,7 +17,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
         getFileUrlById: async (id) => this.get('fileUrl')(id),
       },
       symbolicLinkTarget: (id) => ({
-        file_id: `target-${id}`,
+        fileId: `target-${id}`,
         type: FileType.Directory,
         size: 512,
       }),
@@ -46,7 +46,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
 
   it('shows complete information about a regular file', async function () {
     const file = this.set('file', {
-      file_id: 'some_id',
+      fileId: 'some_id',
       name: 'file1',
       type: FileType.Regular,
       size: 1024,
@@ -59,9 +59,9 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
     expect(find('.column-name .one-file-icon')).to.have.class('main-type-regular');
     expect(find('.column-name .file-name')).to.have.trimmed.text(file.name)
       .and.to.match('a')
-      .and.to.have.attr('href', this.get('fileUrl')(this.get('file.file_id')));
+      .and.to.have.attr('href', this.get('fileUrl')(this.get('file.fileId')));
     expect(find('.column-path'))
-      .to.have.trimmed.text(this.get('filePath')(this.get('file.file_id')));
+      .to.have.trimmed.text(this.get('filePath')(this.get('file.fileId')));
     expect(find('.column-size'))
       .to.have.trimmed.text('1 KiB');
   });
@@ -83,7 +83,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
 
   it('handles case when all file properties are missing except ID', async function () {
     this.set('file', {
-      file_id: 'some_id',
+      fileId: 'some_id',
     });
     await render(hbs`{{atm-workflow/value-presenters/file/table-body-row-presenter
       context=context
@@ -93,15 +93,15 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
     expect(find('.column-name .one-file-icon')).to.have.class('main-type-regular');
     expect(find('.column-name .file-name')).to.have.trimmed.text('Unknown')
       .and.to.match('a')
-      .and.to.have.attr('href', this.get('fileUrl')(this.get('file.file_id')));
+      .and.to.have.attr('href', this.get('fileUrl')(this.get('file.fileId')));
     expect(find('.column-path'))
-      .to.have.trimmed.text(this.get('filePath')(this.get('file.file_id')));
+      .to.have.trimmed.text(this.get('filePath')(this.get('file.fileId')));
     expect(find('.column-size')).to.have.trimmed.text('Unknown');
   });
 
   it('shows complete information about a symbolic link file', async function () {
     const file = this.set('file', {
-      file_id: 'some_id',
+      fileId: 'some_id',
       name: 'file1',
       type: FileType.SymbolicLink,
       size: 1024,
@@ -115,9 +115,9 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
       .and.to.have.class('effective-type-directory');
     expect(find('.column-name .file-name')).to.have.trimmed.text(file.name)
       .and.to.match('a')
-      .and.to.have.attr('href', this.get('fileUrl')(this.get('file.file_id')));
+      .and.to.have.attr('href', this.get('fileUrl')(this.get('file.fileId')));
     expect(find('.column-path'))
-      .to.have.trimmed.text(this.get('filePath')(this.get('file.file_id')));
+      .to.have.trimmed.text(this.get('filePath')(this.get('file.fileId')));
     expect(find('.column-size')).to.have.trimmed.text('512 B');
   });
 
@@ -125,7 +125,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
     async function () {
       const { file } = this.setProperties({
         file: {
-          file_id: 'some_id',
+          fileId: 'some_id',
           name: 'file1',
           type: FileType.SymbolicLink,
           size: 1024,
@@ -154,7 +154,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
     async function () {
       const { file } = this.setProperties({
         file: {
-          file_id: 'some_id',
+          fileId: 'some_id',
           name: 'file1',
           type: FileType.SymbolicLink,
           size: 1024,
@@ -183,7 +183,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
     async function () {
       const { file } = this.setProperties({
         file: {
-          file_id: 'some_id',
+          fileId: 'some_id',
           name: 'file1',
           type: FileType.SymbolicLink,
           size: 1024,
@@ -212,7 +212,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
     async function () {
       const { file } = this.setProperties({
         file: {
-          file_id: 'some_id',
+          fileId: 'some_id',
           name: 'file1',
           type: FileType.SymbolicLink,
           size: 1024,

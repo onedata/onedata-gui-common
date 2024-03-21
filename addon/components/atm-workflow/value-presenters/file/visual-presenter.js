@@ -83,12 +83,12 @@ export const FileDetails = EmberObject.extend({
   fileWithDetailsProxy: promise.object(
     computed('file', 'context', async function fileWithDetailsProxy() {
       if (
-        this.file?.file_id &&
+        this.file?.fileId &&
         (!this.file?.name || !this.file?.type) &&
         this.context?.getFileDetailsById
       ) {
         try {
-          return (await this.context.getFileDetailsById(this.file.file_id)) || this.file;
+          return (await this.context.getFileDetailsById(this.file.fileId)) || this.file;
         } catch {
           return this.file;
         }
@@ -117,12 +117,12 @@ export const FileDetails = EmberObject.extend({
       if (
         !this.context?.getSymbolicLinkTargetById ||
         fileWithDetails?.type !== FileType.SymbolicLink ||
-        !fileWithDetails?.file_id
+        !fileWithDetails?.fileId
       ) {
         return null;
       }
 
-      return this.context.getSymbolicLinkTargetById(fileWithDetails.file_id);
+      return this.context.getSymbolicLinkTargetById(fileWithDetails.fileId);
     })
   ),
 
@@ -150,11 +150,11 @@ export const FileDetails = EmberObject.extend({
    */
   pathProxy: promise.object(
     computed('file', 'context', async function pathProxy() {
-      if (!this.file?.file_id) {
+      if (!this.file?.fileId) {
         return null;
       }
 
-      return this.context?.getFilePathById?.(this.file.file_id) ?? null;
+      return this.context?.getFilePathById?.(this.file.fileId) ?? null;
     })
   ),
 
@@ -163,11 +163,11 @@ export const FileDetails = EmberObject.extend({
    */
   urlProxy: promise.object(
     computed('file', 'context', async function urlProxy() {
-      if (!this.file?.file_id) {
+      if (!this.file?.fileId) {
         return null;
       }
 
-      return this.context?.getFileUrlById?.(this.file.file_id) ?? null;
+      return this.context?.getFileUrlById?.(this.file.fileId) ?? null;
     })
   ),
 

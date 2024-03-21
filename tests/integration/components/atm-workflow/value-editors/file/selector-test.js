@@ -96,7 +96,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/selector', f
 
   it('calls "onFilesSelected" when "select files" action has been clicked and files have been selected',
     async function () {
-      const filesToSelect = [{ file_id: '1' }];
+      const filesToSelect = [{ fileId: '1' }];
       let onSelectedCallback;
       this.set(
         'editorContext.selectFiles',
