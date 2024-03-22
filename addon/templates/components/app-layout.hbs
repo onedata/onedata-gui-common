@@ -76,7 +76,11 @@
     {{/one-webui-popover}}
   </div>
   <div class="row visible-xs-block resource-name-row">
-    {{name-conflict item=navigationState.activeResource tagName="span"}}
+    {{#if navigationState.activeResource}}
+      {{name-conflict item=navigationState.activeResource tagName="span"}}
+    {{else}}
+      {{navigationState.globalBarSpecialResourceTitle}}
+    {{/if}}
   </div>
   <div class={{rowAppClass}}>
     {{#one-sidenav opened=sidenavResourceType

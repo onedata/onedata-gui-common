@@ -24,6 +24,7 @@ import _ from 'lodash';
 import { resolve, Promise } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { next } from '@ember/runloop';
+import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
 
 /**
  * @typedef {object} Action
@@ -328,6 +329,34 @@ export default Service.extend(I18n, {
     'activeResourceType',
     function globalBarSidebarTitle() {
       return this.get('i18n').t(`tabs.${_.camelCase(this.get('activeResourceType'))}.menuItem`);
+    }
+  ),
+
+  /**
+   * Special resource name translation. Special resource is a resource, which is
+   * not a specific record. It's rather some functional page, like creation or join
+   * pages.
+   * @public
+   * @type {ComputedProperty<SafeString | null>}
+   */
+  globalBarSpecialResourceTitle: computed(
+    'activeResourceType',
+    'activeResourceId',
+    'activeResource',
+    function globalBarSpecialResourceTitle() {
+      if (
+        !this.activeResourceType ||
+        !this.activeResourceId ||
+        this.activeResource
+      ) {
+        return null;
+      }
+
+      const translationPath =
+        `tabs.${_.camelCase(this.activeResourceType)}.specialResources.${this.activeResourceId}`;
+      const translation = this.i18n.t(translationPath);
+
+      return isMissingMessage(translation) ? null : translation;
     }
   ),
 
