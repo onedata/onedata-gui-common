@@ -323,12 +323,14 @@ export default Service.extend(I18n, {
 
   /**
    * Global bar title for sidebar.
-   * @type {Ember.ComputedProperty<string>}
+   * @type {ComputedProperty<SafeString | null>}
    */
   globalBarSidebarTitle: computed(
     'activeResourceType',
     function globalBarSidebarTitle() {
-      return this.get('i18n').t(`tabs.${_.camelCase(this.get('activeResourceType'))}.menuItem`);
+      const translation =
+        this.i18n.t(`tabs.${_.camelCase(this.activeResourceType)}.menuItem`);
+      return isMissingMessage(translation) ? null : translation;
     }
   ),
 
