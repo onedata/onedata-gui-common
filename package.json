@@ -13,7 +13,7 @@
   },
   "repository": "https://git.onedata.org/projects/VFS/repos/onedata-gui-common",
   "scripts": {
-    "build": "ember build",
+    "build": "ember build --environment=production",
     "start": "ember server",
     "test-try": "ember try:each",
     "deps": "npm install",
@@ -48,8 +48,12 @@
     "@babel/eslint-parser": "7.22.15",
     "@ember/jquery": "2.0.0",
     "@ember/optional-features": "2.0.0",
+    "@glimmer/component": "1.1.2",
+    "@glimmer/tracking": "1.1.2",
     "@tsconfig/ember": "3.0.1",
     "@types/ember": "4.0.6",
+    "@types/ember-mocha": "0.16.1",
+    "@types/ember-resolver": "9.0.0",
     "@types/ember__application": "4.0.8",
     "@types/ember__array": "4.0.6",
     "@types/ember__component": "4.0.18",
@@ -68,8 +72,6 @@
     "@types/ember__test": "4.0.3",
     "@types/ember__test-helpers": "2.9.1",
     "@types/ember__utils": "4.0.4",
-    "@types/ember-mocha": "0.16.1",
-    "@types/ember-resolver": "9.0.0",
     "@types/jquery": "3.5.22",
     "@types/lodash": "^4.14.199",
     "@types/mocha": "10.0.2",
@@ -85,7 +87,7 @@
     "ember-ace": "2.0.1",
     "ember-awesome-macros": "6.0.0",
     "ember-bootstrap": "3.1.0",
-    "ember-cli": "3.12.1",
+    "ember-cli": "3.16.2",
     "ember-cli-bootstrap-sassy": "0.5.8",
     "ember-cli-chai": "0.5.0",
     "ember-cli-chartist": "1.2.3",
@@ -127,7 +129,7 @@
     "ember-side-menu": "0.2.0",
     "ember-simple-auth": "3.0.0",
     "ember-sinon": "4.1.1",
-    "ember-source": "3.12.4",
+    "ember-source": "3.16.10",
     "ember-source-channel-url": "3.0.0",
     "ember-sticky-element": "0.2.3",
     "ember-truth-helpers": "3.0.0",
@@ -151,6 +153,9 @@
     "node": ">= 18.*"
   },
   "private": true,
+  "ember": {
+    "edition": "octane"
+  },
   "ember-addon": {
     "configPath": "tests/dummy/config"
   }
