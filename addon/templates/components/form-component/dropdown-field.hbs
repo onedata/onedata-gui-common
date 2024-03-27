@@ -1,8 +1,5 @@
 {{#if isInViewMode}}
-  {{#if selectedOption.icon}}
-    {{one-icon icon=selectedOption.icon}}
-  {{/if}}
-  <span class="text">{{selectedOption.label}}</span>
+  {{#if selectedOption.icon}}{{one-icon icon=selectedOption.icon}}{{/if}}<span class="text">{{selectedOption.label}}</span>
 {{else}}
   <OneDropdown
     @tagName="div"

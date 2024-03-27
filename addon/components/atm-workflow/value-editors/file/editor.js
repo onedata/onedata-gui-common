@@ -64,7 +64,7 @@ export default EditorBase.extend(I18n, {
       set(
         this.idFormRootGroup.valuesSource,
         'fileId',
-        this.editorState.idFormFile?.file_id || ''
+        this.editorState.idFormFile?.fileId || ''
       );
     }
   },
@@ -74,7 +74,7 @@ export default EditorBase.extend(I18n, {
    */
   propagateIdFormValueChange() {
     this.editorState.idFormFile = {
-      file_id: this.idFormRootGroup.valuesSource.fileId,
+      fileId: this.idFormRootGroup.valuesSource.fileId,
     };
   },
 

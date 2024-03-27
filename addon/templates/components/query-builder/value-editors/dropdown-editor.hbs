@@ -11,5 +11,5 @@
   @onBlur={{action "onSelectorBlur"}}
   as |itemValue|
 >
-  {{if (eq itemValue 0) "0" itemValue}}
+  {{if (eq (typeof itemValue) "number") (format-number itemValue) itemValue}}
 </OneDropdown>

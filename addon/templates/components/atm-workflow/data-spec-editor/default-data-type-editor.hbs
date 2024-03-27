@@ -12,8 +12,7 @@
 {{#if formRootGroup}}
   {{#truncated-string}}
     <a class="azure clickable form-summary-toggle" {{action "toggleFormVisibility"}}>
-      {{one-icon class="form-summary-icon" icon="settings"}}
-      <span class="form-summary">{{formSummary}}</span>
+      {{one-icon class="form-summary-icon" icon="settings"}}<span class="form-summary">{{formSummary}}</span>
     </a>
   {{/truncated-string}}
   {{#if isFormVisible}}

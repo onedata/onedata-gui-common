@@ -7,10 +7,10 @@ export default {
   chartsPresenter,
   workflow: {
     actions: {
-      modifyWorkflowChartsDashboard: {
+      modifyWorkflowChartDashboard: {
         title: 'Charts',
       },
-      viewWorkflowChartsDashboard: {
+      viewWorkflowChartDashboard: {
         title: 'Charts',
       },
     },
@@ -77,10 +77,10 @@ export default {
           unknownReason: 'Rerun of this lane run is not possible.',
         },
       },
-      modifyLaneChartsDashboard: {
+      modifyLaneChartDashboard: {
         title: 'Configure charts',
       },
-      viewLaneChartsDashboard: {
+      viewLaneChartDashboard: {
         title: 'View charts',
       },
     },

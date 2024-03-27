@@ -49,16 +49,16 @@
     }}
     {{#one-button
       class=(concat-classes
-        openWorkflowChartsDashboardAction.className
-        "open-workflow-charts-dashboard"
+        openWorkflowChartDashboardAction.className
+        "open-workflow-chart-dashboard"
       )
       size="sm"
       disableWhenPending=false
       showSpinnerWhenPending=false
-      onClick=openWorkflowChartsDashboardAction.executeCallback
+      onClick=openWorkflowChartDashboardAction.executeCallback
     }}
-      {{one-icon icon=openWorkflowChartsDashboardAction.icon}}
-      <span class="text">{{openWorkflowChartsDashboardAction.title}}</span>
+      {{one-icon icon=openWorkflowChartDashboardAction.icon}}
+      <span class="text">{{openWorkflowChartDashboardAction.title}}</span>
     {{/one-button}}
   </div>
 {{/promise-proxy-container}}

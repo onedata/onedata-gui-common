@@ -11,7 +11,7 @@ import { reads } from '@ember/object/computed';
 import { dasherize } from '@ember/string';
 import { resolve } from 'rsvp';
 import { getStoreReadDataSpec } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
-import ChartsDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/charts-dashboard-editor-model-container';
+import ChartDashboardEditorModelContainer from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor-model-container';
 
 export default EmberObject.extend({
   /**
@@ -120,18 +120,18 @@ export default EmberObject.extend({
   }),
 
   /**
-   * @type {ComputedProperty<Array<ChartsDashboardEditorDataSource>>}
+   * @type {ComputedProperty<Array<ChartDashboardEditorDataSource>>}
    */
-  chartsDashboardEditorDataSources: computed(
+  chartDashboardEditorDataSources: computed(
     'id',
     'name',
     'config.timeSeriesCollectionSchema',
-    'containerElement.chartsDashboardEditorDataSources',
-    function chartsDashboardEditorDataSources() {
+    'containerElement.chartDashboardEditorDataSources',
+    function chartDashboardEditorDataSources() {
       // We include container element's data sources, because internal stores are considered
       // a part of its container, hence they have access to container's time series data.
       const dataSources = [
-        ...(this.containerElement?.chartsDashboardEditorDataSources ?? []),
+        ...(this.containerElement?.chartDashboardEditorDataSources ?? []),
       ];
 
       if (
@@ -151,11 +151,11 @@ export default EmberObject.extend({
   ),
 
   /**
-   * @type {ComputedPropertyChartsDashboardEditorModelContainer>}
+   * @type {ComputedPropertyChartDashboardEditorModelContainer>}
    */
-  chartsDashboardEditorModelContainer: computed(
-    function chartsDashboardEditorModelContainer() {
-      return ChartsDashboardEditorModelContainer.extend({
+  chartDashboardEditorModelContainer: computed(
+    function chartDashboardEditorModelContainer() {
+      return ChartDashboardEditorModelContainer.extend({
         dashboardSpec: reads('relatedElement.config.dashboardSpec'),
       }).create({
         relatedElement: this,

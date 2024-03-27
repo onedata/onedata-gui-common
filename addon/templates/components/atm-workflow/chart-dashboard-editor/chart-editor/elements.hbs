@@ -1,0 +1,48 @@
+<h2>{{tt this "header"}}</h2>
+{{#bs-tab
+  activeId=activeTabId
+  class="only-tab-bar bs-tab-onedata"
+  fade=false
+  customTabs=true
+  as |tab|
+}}
+  {{#bs-nav type="tabs" as |nav|}}
+    {{#each tabs as |tabSpec|}}
+      {{#nav.item active=(eq activeTabId tabSpec.id)}}
+        <a class="nav-link" role="tab" {{action (mut activeTabId) tabSpec.id}}>
+          {{one-icon icon=tabSpec.icon}}
+          {{tt this (concat "tabNames." tabSpec.name)}}
+          {{#if tabSpec.validationErrorsMessage}}
+            {{warning-icon tooltipText=tabSpec.validationErrorsMessage}}
+          {{/if}}
+        </a>
+      {{/nav.item}}
+    {{/each}}
+    {{one-icon
+      icon="sign-question-rounded"
+      class="elements-info-trigger clickable"
+    }}
+    {{#one-switchable-popover-modal
+      class="elements-info-popover"
+      triggersConfiguration=(local-selector elementId ".elements-info-trigger")
+    }}
+      <h1>{{tt this "info.series.header"}}</h1>
+      <p>{{tt this "info.series.content"}}</p>
+      <h1>{{tt this "info.seriesGroups.header"}}</h1>
+      <p>{{tt this "info.seriesGroups.content"}}</p>
+      <h1>{{tt this "info.axes.header"}}</h1>
+      <p>{{tt this "info.axes.content"}}</p>
+    {{/one-switchable-popover-modal}}
+  {{/bs-nav}}
+  <div class="tab-content">
+    {{#each tabs as |tabSpec|}}
+      {{#tab.pane elementId=tabSpec.id}}
+        {{component
+          (concat "atm-workflow/chart-dashboard-editor/chart-editor/" tabSpec.componentName)
+          chart=chart
+          editorContext=editorContext
+        }}
+      {{/tab.pane}}
+    {{/each}}
+  </div>
+{{/bs-tab}}

@@ -1,0 +1,51 @@
+<div class="list-item-header clickable" onClick={{action "select"}}>
+  {{component itemModel.renderer
+    class="list-item-header-content"
+    item=itemModel.item
+  }}
+  {{#if validationErrorsMessage}}
+    {{warning-icon tooltipText=validationErrorsMessage}}
+  {{/if}}
+  {{#if (and (not editorContext.isReadOnly) (not hideActions))}}
+    <div class="actions">
+      {{#if allowNesting}}
+        {{#one-icon
+          class="action add-action clickable"
+          icon="plus"
+          click=(action "add")
+        }}
+          {{one-tooltip
+            title=(tt this (concat "actions.add." itemModel.item.elementType))
+          }}
+        {{/one-icon}}
+      {{/if}}
+      {{#one-icon
+        class="action duplicate-action clickable"
+        icon="browser-copy"
+        click=(action "duplicate")
+      }}
+        {{one-tooltip title=(tt this "actions.duplicate")}}
+      {{/one-icon}}
+      {{#one-icon
+        class="action remove-action clickable"
+        icon="browser-delete"
+        click=(action "remove")
+      }}
+        {{one-tooltip title=(tt this "actions.remove")}}
+      {{/one-icon}}
+    </div>
+  {{/if}}
+</div>
+{{#if itemModel.nestedModels.length}}
+  <ol class="list-items nested-items">
+    {{#each itemModel.nestedModels as |subitemModel|}}
+      {{atm-workflow/chart-dashboard-editor/chart-editor/elements-list-item
+        itemModel=subitemModel
+        allowNesting=allowNesting
+        isDraggable=isDraggable
+        hideActions=hideActions
+        editorContext=editorContext
+      }}
+    {{/each}}
+  </ol>
+{{/if}}

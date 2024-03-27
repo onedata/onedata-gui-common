@@ -11,12 +11,24 @@ import { guidFor } from '@ember/object/internals';
 import { Promise } from 'rsvp';
 import { conditional, tag, raw } from 'ember-awesome-macros';
 
+/**
+ * @typedef {Object} ModalInstanceApi
+ * @property {(data: unknown) => void} submit
+ * @property {() => void} close
+ */
+
 export default EmberObject.extend({
   /**
    * @virtual
    * @type {String}
    */
   componentName: undefined,
+
+  /**
+   * @virtual
+   * @type {ModalInstanceApi}
+   */
+  api: undefined,
 
   /**
    * @virtual optional

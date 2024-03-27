@@ -1,0 +1,18 @@
+<div class="form-column">
+  {{atm-workflow/chart-dashboard-editor/chart-editor/series-group-editor-form
+    seriesGroup=chartElement
+    editorContext=editorContext
+  }}
+</div>
+<div class="details-column">
+  <h3 class="details-header">{{tt this "attachedSeries"}}</h3>
+  {{#if chartElement.series.length}}
+    {{atm-workflow/chart-dashboard-editor/chart-editor/series-list
+      chart=chart
+      seriesSource=chartElement
+      editorContext=editorContext
+    }}
+  {{else}}
+    <p class="empty-details-info">{{tt this "noSeriesAttached"}}</p>
+  {{/if}}
+</div>

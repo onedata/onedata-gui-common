@@ -1,0 +1,52 @@
+{{#if (and chart.series.length chart.axes.length)}}
+  {{#if isChartNavigationVisible}}
+    {{one-time-series-chart/toolbar}}
+  {{/if}}
+  {{atm-workflow/chart-dashboard-editor/chart-preview chart=chart}}
+{{else}}
+  <div class="canvas-area">
+    <div class="no-config-info info-box">
+      <h3 class="header">{{tt this "noConfig.header"}}</h3>
+      <p class="description">
+        <a
+          class="clickable underlined azure edit-chart-content-trigger"
+          onClick={{action "editContent"}}
+        >{{tt this "noConfig.description.editContent"}}</a>
+        {{tt this "noConfig.description.toDefineConfig"}}
+      </p>
+    </div>
+  </div>
+{{/if}}
+
+{{#if chart.title}}
+  <div class="title-area">
+    {{#truncated-string tagName="span" class="title-content"}}
+      {{chart.title}}
+    {{/truncated-string}}
+    {{#if chart.titleTip}}
+      <span class="space"></span>
+      {{one-label-tip class="title-tip" title=chart.titleTip}}
+    {{/if}}
+  </div>
+{{/if}}
+
+{{atm-workflow/chart-dashboard-editor/sections-editor/floating-toolbar
+  model=chart
+  editorContext=editorContext
+}}
+
+{{#if validationErrorsMessage}}
+  {{warning-icon tooltipText=validationErrorsMessage}}
+{{/if}}
+
+{{#if (and (not editorContext.isReadOnly) draggedChart (not isMeDragged))}}
+  {{one-draggable-object-target
+    class="before-drag-target"
+    action=(action "acceptDraggedElement" "before")
+  }}
+
+  {{one-draggable-object-target
+    class="after-drag-target"
+    action=(action "acceptDraggedElement" "after")
+  }}
+{{/if}}

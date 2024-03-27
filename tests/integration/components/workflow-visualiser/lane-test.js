@@ -25,7 +25,7 @@ const editLaneActionsSpec = [{
   label: 'Modify',
   icon: 'browser-rename',
 }, {
-  className: 'modify-lane-charts-dashboard-action-trigger',
+  className: 'modify-lane-chart-dashboard-action-trigger',
   label: 'Configure charts',
   icon: 'overview',
 }, {

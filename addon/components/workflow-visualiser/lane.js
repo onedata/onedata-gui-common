@@ -14,6 +14,7 @@ import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 import { translateLaneStatus } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
+import { formatNumber } from 'onedata-gui-common/helpers/format-number';
 
 export default VisualiserElement.extend({
   layout,
@@ -55,7 +56,9 @@ export default VisualiserElement.extend({
   iteratorLabel: computed(
     'lane.storeIteratorSpec.maxBatchSize',
     function iteratorLabel() {
-      const maxBatchSize = this.get('lane.storeIteratorSpec.maxBatchSize') || 1;
+      const maxBatchSize = formatNumber(
+        this.get('lane.storeIteratorSpec.maxBatchSize') || 1
+      );
       return this.t('iterator', { maxBatchSize });
     }
   ),
@@ -126,16 +129,16 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  modifyLaneChartsDashboardAction: computed(
+  modifyLaneChartDashboardAction: computed(
     'actionsFactory',
     'lane',
-    function modifyLaneChartsDashboardAction() {
+    function modifyLaneChartDashboardAction() {
       const {
         actionsFactory,
         lane,
       } = this.getProperties('actionsFactory', 'lane');
 
-      return actionsFactory.createModifyLaneChartsDashboardAction({ lane });
+      return actionsFactory.createModifyLaneChartDashboardAction({ lane });
     }
   ),
 
@@ -194,7 +197,7 @@ export default VisualiserElement.extend({
     'mode',
     'modifyLaneAction',
     'viewLaneAction',
-    'modifyLaneChartsDashboardAction',
+    'modifyLaneChartDashboardAction',
     'moveLeftLaneAction',
     'moveRightLaneAction',
     'clearLaneAction',
@@ -204,7 +207,7 @@ export default VisualiserElement.extend({
       if (this.mode === 'edit') {
         return [
           this.modifyLaneAction,
-          this.modifyLaneChartsDashboardAction,
+          this.modifyLaneChartDashboardAction,
           this.moveLeftLaneAction,
           this.moveRightLaneAction,
           this.clearLaneAction,

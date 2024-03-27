@@ -1,0 +1,68 @@
+{{!-- TODO: VFS-10331 unify modal layout in zone and provider --}}
+{{#global-modal
+  classNames=(concat-classes
+    "chart-dashboard-editor-modal"
+    (concat "mode-" mode)
+    (if (eq mode "view") "without-footer modal-content-overlay with-close-button")
+  )
+  allowClose=isReadOnly
+  modalId=modalId
+  size="full"
+  as |modal|
+}}
+  {{#modal.header}}
+    <h1>{{tt this (concat "header." dashboardOwnerType)}}</h1>
+    {{#if dashboardOwner.name}}
+      <h2 class="normal-case">
+        {{#truncated-string class="header-content"}}
+          {{#if dashboardOwner.icon}}
+            <div class="inline-icon-container header-icon">
+              <OneIcon @icon={{dashboardOwner.icon}} />
+            </div>
+          {{/if}}
+          {{dashboardOwner.name}}
+        {{/truncated-string}}
+      </h2>
+    {{/if}}
+  {{/modal.header}}
+
+  {{#modal.body}}
+    {{atm-workflow/chart-dashboard-editor
+      dashboardModel=dashboardModel
+      isReadOnly=(eq mode "view")
+    }}
+  {{/modal.body}}
+
+  {{#if (not-eq mode "view")}}
+    {{#modal.footer class="btn-toolbar"}}
+      {{#if isModelChanged}}
+        {{#bs-button
+          type="warning"
+          class="btn-cancel"
+          onClick=(action "cancel" modal.close)
+          disabled=isSubmitting
+        }}
+          {{tt this (concat "buttons.cancel")}}
+        {{/bs-button}}
+
+        {{#one-button
+          type="primary"
+          buttonType="submit"
+          class="btn-submit"
+          onClick=(action "submit" modal.submit)
+        }}
+          {{tt this "buttons.submit"}}
+        {{/one-button}}
+      {{else}}
+        {{#one-button
+          type="default"
+          class="btn-close"
+          onClick=modal.close
+        }}
+          {{tt this "buttons.close"}}
+        {{/one-button}}
+      {{/if}}
+    {{/modal.footer}}
+  {{/if}}
+
+{{/global-modal}}

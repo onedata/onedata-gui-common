@@ -24,10 +24,10 @@ import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/acti
 import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-store-action';
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
-import ModifyWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-workflow-charts-dashboard-action';
-import ViewWorkflowChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-charts-dashboard-action';
-import ModifyLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-charts-dashboard-action';
-import ViewLaneChartsDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-charts-dashboard-action';
+import ModifyWorkflowChartDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-workflow-chart-dashboard-action';
+import ViewWorkflowChartDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-chart-dashboard-action';
+import ModifyLaneChartDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-chart-dashboard-action';
+import ViewLaneChartDashboardAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-chart-dashboard-action';
 import { get } from '@ember/object';
 import sinon from 'sinon';
 
@@ -175,20 +175,20 @@ describe('Integration | Utility | workflow-visualiser/actions-factory', function
   itCreatesStoreAction('ModifyStoreAction', ModifyStoreAction);
   itCreatesStoreAction('RemoveStoreAction', RemoveStoreAction);
 
-  it('creates action "ModifyWorkflowChartsDashboardAction"', function () {
+  it('creates action "ModifyWorkflowChartDashboardAction"', function () {
     const factory = ActionsFactory.create({ ownerSource: this.owner });
     const workflowDataProvider = {
       workflow: {},
     };
     factory.setWorkflowDataProvider(workflowDataProvider);
 
-    const action = factory.createModifyWorkflowChartsDashboardAction();
+    const action = factory.createModifyWorkflowChartDashboardAction();
 
-    expect(action).to.be.instanceOf(ModifyWorkflowChartsDashboardAction);
+    expect(action).to.be.instanceOf(ModifyWorkflowChartDashboardAction);
     expect(get(action, 'workflow')).to.equal(workflowDataProvider.workflow);
   });
 
-  it('creates action "ViewWorkflowChartsDashboardAction"', function () {
+  it('creates action "ViewWorkflowChartDashboardAction"', function () {
     const factory = ActionsFactory.create({ ownerSource: this.owner });
     const workflow = {};
     const workflowDataProvider = {
@@ -198,9 +198,9 @@ describe('Integration | Utility | workflow-visualiser/actions-factory', function
     };
     factory.setWorkflowDataProvider(workflowDataProvider);
 
-    const action = factory.createViewWorkflowChartsDashboardAction();
+    const action = factory.createViewWorkflowChartDashboardAction();
 
-    expect(action).to.be.instanceOf(ViewWorkflowChartsDashboardAction);
+    expect(action).to.be.instanceOf(ViewWorkflowChartDashboardAction);
     expect(get(action, 'workflow')).to.equal(workflow);
     expect(workflowDataProvider.getStoreContent).to.be.not.called;
     expect(workflowDataProvider.getTimeSeriesCollectionReferencesMap).to.be.not.called;
@@ -212,17 +212,17 @@ describe('Integration | Utility | workflow-visualiser/actions-factory', function
     expect(workflowDataProvider.getTimeSeriesCollectionReferencesMap).to.be.calledOnce;
   });
 
-  it('creates action "ModifyLaneChartsDashboardAction"', function () {
+  it('creates action "ModifyLaneChartDashboardAction"', function () {
     const factory = ActionsFactory.create({ ownerSource: this.owner });
     const lane = Lane.create();
 
-    const action = factory.createModifyLaneChartsDashboardAction({ lane });
+    const action = factory.createModifyLaneChartDashboardAction({ lane });
 
-    expect(action).to.be.instanceOf(ModifyLaneChartsDashboardAction);
+    expect(action).to.be.instanceOf(ModifyLaneChartDashboardAction);
     expect(action.lane).to.equal(lane);
   });
 
-  it('creates action "ViewLaneChartsDashboardAction"', function () {
+  it('creates action "ViewLaneChartDashboardAction"', function () {
     const factory = ActionsFactory.create({ ownerSource: this.owner });
     const lane = Lane.create();
     const workflowDataProvider = {
@@ -231,9 +231,9 @@ describe('Integration | Utility | workflow-visualiser/actions-factory', function
     };
     factory.setWorkflowDataProvider(workflowDataProvider);
 
-    const action = factory.createViewLaneChartsDashboardAction({ lane, runNumber: 2 });
+    const action = factory.createViewLaneChartDashboardAction({ lane, runNumber: 2 });
 
-    expect(action).to.be.instanceOf(ViewLaneChartsDashboardAction);
+    expect(action).to.be.instanceOf(ViewLaneChartDashboardAction);
     expect(action.lane).to.equal(lane);
     expect(action.runNumber).to.equal(2);
     expect(workflowDataProvider.getStoreContent).to.be.not.called;

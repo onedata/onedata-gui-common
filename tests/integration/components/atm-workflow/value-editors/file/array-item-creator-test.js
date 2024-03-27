@@ -57,7 +57,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/array-item-c
 
   it('calls "onItemCreated" with newly created items after "select files" action click and files selection',
     async function () {
-      const filesToSelect = [{ file_id: '1' }, { file_id: '2' }];
+      const filesToSelect = [{ fileId: '1' }, { fileId: '2' }];
       this.set(
         'editorContext.selectFiles',
         ({ onSelected }) => onSelected(filesToSelect)
@@ -75,8 +75,8 @@ describe('Integration | Component | atm-workflow/value-editors/file/array-item-c
           sinon.match.instanceOf(FileValueEditorState),
         ])
         .and.to.be.calledWith([
-          sinon.match.hasNested('value.file_id', filesToSelect[0].file_id),
-          sinon.match.hasNested('value.file_id', filesToSelect[1].file_id),
+          sinon.match.hasNested('value.fileId', filesToSelect[0].fileId),
+          sinon.match.hasNested('value.fileId', filesToSelect[1].fileId),
         ]);
     }
   );
@@ -113,7 +113,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/array-item-c
           sinon.match.instanceOf(FileValueEditorState),
         ])
         .and.to.be.calledWith([
-          sinon.match.hasNested('value.file_id', 'id1'),
+          sinon.match.hasNested('value.fileId', 'id1'),
         ]);
       // creator came back to it's default look
       expect(find('.add-item-trigger')).to.exist;

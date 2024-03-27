@@ -77,9 +77,9 @@ export default Component.extend(I18n, {
    * @type {AtmTimeSeriesCollectionReference | undefined}
    */
   defaultTimeSeriesCollectionRef: computed(
-    'dashboardModelOwner.chartsDashboardEditorDataSources',
+    'dashboardModelOwner.chartDashboardEditorDataSources',
     function defaultTimeSeriesCollectionRef() {
-      return this.dashboardModelOwner.chartsDashboardEditorDataSources
+      return this.dashboardModelOwner.chartDashboardEditorDataSources
         .find(({ isDefault }) => isDefault)?.collectionRef;
     }
   ),
@@ -102,7 +102,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<OneTimeSeriesChartsSectionSpec>}
    */
   rootChartsSection: reads(
-    'dashboardModelOwner.chartsDashboardEditorModelContainer.dashboardSpec.rootSection'
+    'dashboardModelOwner.chartDashboardEditorModelContainer.dashboardSpec.rootSection'
   ),
 
   /**
@@ -296,7 +296,7 @@ export default Component.extend(I18n, {
 
   actions: {
     showDashboardEditor() {
-      this.modalManager.show('workflow-visualiser/charts-dashboard-editor-modal', {
+      this.modalManager.show('workflow-visualiser/chart-dashboard-editor-modal', {
         mode: 'view',
         dashboardOwner: this.dashboardModelOwner,
       });

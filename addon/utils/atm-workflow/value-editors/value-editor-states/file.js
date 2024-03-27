@@ -31,7 +31,7 @@ export default class FileValueEditorState extends ValueEditorState {
      * @private
      * @type {FileValueEditorStateMode}
      */
-    this.internalMode = this.value?.file_id ? 'selected' : 'empty';
+    this.internalMode = this.value?.fileId ? 'selected' : 'empty';
 
     /**
      * File provided by user using ID form.
@@ -101,7 +101,7 @@ export default class FileValueEditorState extends ValueEditorState {
       return;
     }
 
-    this.changeMode(this.value?.file_id ? 'selected' : 'empty');
+    this.changeMode(this.value?.fileId ? 'selected' : 'empty');
   }
 
   /**
@@ -139,9 +139,9 @@ export default class FileValueEditorState extends ValueEditorState {
    */
   setValue(newValue) {
     super.setValue(newValue);
-    if (this.mode === 'empty' && newValue?.file_id) {
+    if (this.mode === 'empty' && newValue?.fileId) {
       this.changeMode('selected');
-    } else if (this.mode === 'selected' && !newValue?.file_id) {
+    } else if (this.mode === 'selected' && !newValue?.fileId) {
       this.changeMode('empty');
     }
   }

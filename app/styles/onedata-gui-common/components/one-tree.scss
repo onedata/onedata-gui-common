@@ -178,7 +178,7 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
             position: relative;
             padding-left: $padding-large-horizontal * 2;
             &::before {
-              @include oneicon-content($oneicon-arrow-right);
+              @include oneicon-content('arrow-right');
               position: absolute;
               display: block;
               top: 50%;

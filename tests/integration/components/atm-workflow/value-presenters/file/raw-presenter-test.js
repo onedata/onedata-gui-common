@@ -21,13 +21,13 @@ describe('Integration | Component | atm-workflow/value-presenters/file/raw-prese
   });
 
   it('presents passed value', async function () {
-    this.set('value', { file_id: 'abc', name: 'file1.txt' });
+    this.set('value', { fileId: 'abc', name: 'file1.txt' });
     await render(hbs`{{atm-workflow/value-presenters/file/raw-presenter
       value=value
     }}`);
 
     const expectedValue = `{
-  "file_id": "abc",
+  "fileId": "abc",
   "name": "file1.txt"
 }`;
     expect(find('.raw-presenter textarea')).to.have.value(expectedValue);

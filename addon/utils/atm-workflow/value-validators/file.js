@@ -3,7 +3,7 @@
  *
  * NOTE: This validator does not check whether file type matches
  * `fileType` param from data spec. Atm file value (in JSON form) only requires
- * existence of correct `file_id` field. File type validation must be done on
+ * existence of correct `fileId` field. File type validation must be done on
  * another level of checking (e.g. in file value editor itself).
  *
  * @author Michał Borzęcki
@@ -20,7 +20,7 @@ export default function validate(value) {
     typeof value === 'object' &&
     !Array.isArray(value) &&
     // We don't have to check existence of any properties different than
-    // `file_id` as these will be automatically removed by backend.
-    typeof value.file_id === 'string' &&
-    value.file_id.length > 0;
+    // `fileId` as these will be automatically removed by backend.
+    typeof value.fileId === 'string' &&
+    value.fileId.length > 0;
 }

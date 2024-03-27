@@ -8,7 +8,7 @@ import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec
 import { AtmFileType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 import { ValueEditorStateManager } from 'onedata-gui-common/utils/atm-workflow/value-editors';
 
-const exampleFile = { file_id: 'f1id' };
+const exampleFile = { fileId: 'f1id' };
 
 describe('Integration | Component | atm-workflow/value-editors/file/editor', function () {
   setupRenderingTest();
@@ -23,7 +23,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/editor', fun
       },
       getFileDetailsById: async (fileId) => {
         return {
-          file_id: fileId,
+          fileId: fileId,
           name: 'dir1',
           type: AtmFileType.Directory,
           size: 1024,
@@ -99,7 +99,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/editor', fun
     await click('.file-value-editor-selector');
     await click('.select-upload-files-action-trigger');
 
-    expect(this.stateManager.value).to.deep.equal({ file_id: '' });
+    expect(this.stateManager.value).to.deep.equal({ fileId: '' });
     expect(this.stateManager.isValid).to.be.false;
     expect(find('.editor-box-content .file-value-editor-selector')).to.exist;
     expect(find('.file-visual-presenter')).to.not.exist;
@@ -132,7 +132,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/editor', fun
 
     await click('.file-value-editor-selector');
     await click('.provide-file-id-action-trigger');
-    await fillIn('.fileId-field input', exampleFile.file_id);
+    await fillIn('.fileId-field input', exampleFile.fileId);
     await click('.accept-btn');
 
     expect(this.stateManager.value).to.deep.equal(exampleFile);
@@ -146,7 +146,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/editor', fun
 
     await click('.file-value-editor-selector');
     await click('.provide-file-id-action-trigger');
-    await fillIn('.fileId-field input', exampleFile.file_id);
+    await fillIn('.fileId-field input', exampleFile.fileId);
     await fillIn('.fileId-field input', '');
 
     expect(find('.accept-btn')).to.have.attr('disabled');
@@ -159,7 +159,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/editor', fun
     await click('.provide-file-id-action-trigger');
     await click('.cancel-btn');
 
-    expect(this.stateManager.value).to.deep.equal({ file_id: '' });
+    expect(this.stateManager.value).to.deep.equal({ fileId: '' });
     expect(this.stateManager.isValid).to.be.false;
     expect(find('.editor-box-content .file-value-editor-selector')).to.exist;
     expect(find('form')).to.not.exist;
@@ -174,7 +174,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/editor', fun
     expect(find('.details-icon')).to.have.class('effective-type-directory');
     expect(find('.file-name')).to.have.trimmed.text('dir1');
     expect(find('.path-property .property-value')).to.have.trimmed.text(
-      await this.editorContext.getFilePathById(exampleFile.file_id)
+      await this.editorContext.getFilePathById(exampleFile.fileId)
     );
   });
 
@@ -189,7 +189,7 @@ describe('Integration | Component | atm-workflow/value-editors/file/editor', fun
   });
 
   it('allows to change selected file by selecting another one', async function () {
-    this.stateManager.value = { file_id: 'f0Id' };
+    this.stateManager.value = { fileId: 'f0Id' };
     await renderComponent();
 
     await click('.file-value-editor-selector');
@@ -217,12 +217,12 @@ describe('Integration | Component | atm-workflow/value-editors/file/editor', fun
   });
 
   it('allows to change selected file by providing ID of another one', async function () {
-    this.stateManager.value = { file_id: 'f0Id' };
+    this.stateManager.value = { fileId: 'f0Id' };
     await renderComponent();
 
     await click('.file-value-editor-selector');
     await click('.provide-file-id-action-trigger');
-    await fillIn('.fileId-field input', exampleFile.file_id);
+    await fillIn('.fileId-field input', exampleFile.fileId);
     await click('.accept-btn');
 
     await expectShowingExampleFile(this);
@@ -280,6 +280,6 @@ async function expectShowingExampleFile(testCase) {
   expect(testCase.stateManager.isValid).to.be.true;
   expect(find('.file-visual-presenter')).to.exist;
   expect(find('.path-property .property-value')).to.have.trimmed.text(
-    await testCase.editorContext.getFilePathById(exampleFile.file_id)
+    await testCase.editorContext.getFilePathById(exampleFile.fileId)
   );
 }

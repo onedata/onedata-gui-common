@@ -26,6 +26,8 @@ import {
   rawValueToFormValue as atmRawValueToFormValue,
   formValueToRawValue as atmFormValueToRawValue,
 } from 'onedata-gui-common/utils/atm-workflow/value-editors';
+import { formatNumber } from 'onedata-gui-common/helpers/format-number';
+import { htmlSafe } from '@ember/template';
 
 const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.paramsEditors.number';
 
@@ -183,7 +185,9 @@ function summarizeFormValues(i18n, values) {
       integersOnly,
     }));
     if (validAllowedValues?.length) {
-      allowedNumbersText = validAllowedValues.join(', ');
+      allowedNumbersText = htmlSafe(
+        validAllowedValues.map((val) => formatNumber(val)).join(', ')
+      );
     } else {
       allowedNumbersText = i18n.t(`${i18nPrefix}.summary.allowedNumbers.none`);
     }

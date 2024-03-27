@@ -16,7 +16,7 @@ export default Component.extend({
     },
     async getFileDetailsById(fileId) {
       return {
-        file_id: fileId,
+        fileId: fileId,
         name: 'file1.txt',
         type: FileType.Regular,
         size: 1024,
@@ -108,7 +108,7 @@ export default Component.extend({
     return new ValueEditorStateManager({
       type: AtmDataSpecType.File,
     }, this.context, {
-      file_id: '1234567890',
+      fileId: '1234567890',
     });
   }),
 

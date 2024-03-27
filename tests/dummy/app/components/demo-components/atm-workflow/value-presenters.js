@@ -8,7 +8,7 @@ export default Component.extend({
   }),
 
   file1: Object.freeze({
-    file_id: 'file1Id',
+    fileId: 'file1Id',
     name: 'file1.txt',
     size: 1024,
     type: FileType.Regular,

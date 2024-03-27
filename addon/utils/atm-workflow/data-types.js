@@ -24,7 +24,7 @@
 
 /**
  * @typedef {Object} AtmFile
- * @property {string} file_id CDMI object ID
+ * @property {string} fileId CDMI object ID
  * @property {FileType} [type]
  * @property {string} [name]
  * @property {number|null} [size]

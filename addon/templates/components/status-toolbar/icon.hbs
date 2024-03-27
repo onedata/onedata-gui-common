@@ -5,10 +5,7 @@
   {{#if _innerTextPresent}}
     <div class="inner-text">{{innerText}}</div>
   {{/if}}
-{{/one-icon}}
-{{#if (and _outerTextPresent (eq outerTextSide "right"))}}
-  <div class="outer-text">{{outerText}}</div>
-{{/if}}
+{{/one-icon}}{{#if (and _outerTextPresent (eq outerTextSide "right"))}}<div class="outer-text">{{outerText}}</div>{{/if}}
 {{#if subIcon}}
   {{one-icon class=(concat-classes "sub-status-icon" subIconClass) icon=subIcon}}
 {{/if}}

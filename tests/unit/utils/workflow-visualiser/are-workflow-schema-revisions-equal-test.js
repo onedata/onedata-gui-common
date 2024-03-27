@@ -253,7 +253,7 @@ function getExampleWorkflowSchemaRevision() {
             valueBuilder: {
               valueBuilderType: 'const',
               valueBuilderRecipe: {
-                file_id: 'asdf',
+                fileId: 'asdf',
               },
             },
             argumentName: 'file2',

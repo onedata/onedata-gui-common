@@ -11,13 +11,13 @@ describe('Integration | Helper | format-number', function () {
 
   checkNumberFormat({
     number: 123456.78,
-    expectedString: `123${thousandSpaceHtml}457`,
+    expectedString: `123${thousandSpaceHtml}456.78`,
     expectedStringDesc: '123 457',
   });
 
   checkNumberFormat({
     number: 123.45,
-    expectedString: '123',
+    expectedString: '123.45',
   });
 
   checkNumberFormat({

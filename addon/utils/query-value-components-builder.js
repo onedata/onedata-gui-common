@@ -137,11 +137,11 @@ export default EmberObject.extend({
     } else if (comparator.match(/^string(Options)?\.eq$/)) {
       return 'string-presenter';
     } else if (comparator.startsWith('number')) {
-      return 'raw-presenter';
+      return 'number-presenter';
     } else if (comparator.startsWith('mixedOptions')) {
       const operator = comparator.split('.')[1];
       if (operator.match(/^(lt|lte|gt|gte)$/)) {
-        return 'raw-presenter';
+        return 'number-presenter';
       } else if (operator === 'eq') {
         return 'string-presenter';
       } else {

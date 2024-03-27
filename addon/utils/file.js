@@ -6,7 +6,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { htmlSafe } from '@ember/template';
 import _ from 'lodash';
+import { formatNumber } from 'onedata-gui-common/helpers/format-number';
 
 /**
  * @typedef {'REG'|'DIR'|'SYMLNK'} FileType
@@ -88,7 +90,7 @@ export function getFileNameFromPath(filePath) {
   let lastPathElement = pathElements[pathElements.length - 1];
 
   // If path ends with a directory separator, then the last element is `''`.
-  // In that case we should take the previoius element.
+  // In that case we should take the previous element.
   if (lastPathElement === '') {
     lastPathElement = pathElements[pathElements.length - 2];
   }
@@ -135,7 +137,9 @@ export function translateFileCount(i18n, fileType, count) {
   const normalizedCount = Number.isInteger(count) ? count : 0;
   const form = normalizedCount === 1 || normalizedCount === -1 ?
     'singular' : 'plural';
-  return `${count} ${translateFileType(i18n, fileType, { form })}`;
+  return htmlSafe(
+    `${formatNumber(count)} ${translateFileType(i18n, fileType, { form })}`
+  );
 }
 
 /**
@@ -154,3 +158,48 @@ export function convertFromLegacyFileTypeIfNeeded(fileType) {
       return fileType;
   }
 }
+
+/**
+ * @type {Object<string, string>}
+ */
+export const FileAttribute = Object.freeze({
+  Acl: 'acl',
+  ActivePermissionsType: 'activePermissionsType',
+  AggregateQosStatus: 'aggregateQosStatus',
+  ArchiveRecallRootFileId: 'archiveRecallRootFileId',
+  Atime: 'atime',
+  ConflictingName: 'conflictingName',
+  Ctime: 'ctime',
+  DirectShareIds: 'directShareIds',
+  DisplayGid: 'displayGid',
+  DisplayUid: 'displayUid',
+  EffDatasetInheritancePath: 'effDatasetInheritancePath',
+  EffDatasetProtectionFlags: 'effDatasetProtectionFlags',
+  EffProtectionFlags: 'effProtectionFlags',
+  EffQosInheritancePath: 'effQosInheritancePath',
+  FileId: 'fileId',
+  HardlinkCount: 'hardlinkCount',
+  HasCustomMetadata: 'hasCustomMetadata',
+  Index: 'index',
+  IsFullyReplicatedLocally: 'isFullyReplicatedLocally',
+  LocalReplicationRate: 'localReplicationRate',
+  Mtime: 'mtime',
+  Name: 'name',
+  OriginProviderId: 'originProviderId',
+  OwnerUserId: 'ownerUserId',
+  ParentFileId: 'parentFileId',
+  Path: 'path',
+  PosixPermissions: 'posixPermissions',
+  Size: 'size',
+  SymlinkValue: 'symlinkValue',
+  Type: 'type',
+});
+
+/**
+ * @typedef {typeof FileAttribute[keyof typeof FileAttribute]} FileAttribute
+ */
+
+/**
+ * @type {ReadonlyArray<FileAttribute>}
+ */
+export const fileAttributesArray = Object.freeze(Object.values(FileAttribute).sort());

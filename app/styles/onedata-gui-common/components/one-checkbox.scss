@@ -1,6 +1,6 @@
 .one-checkbox {
   $checkbox-size: 16px;
-  
+
   display: inline-block;
   position: relative;
   width: $checkbox-size;
@@ -8,11 +8,11 @@
   border-radius: $border-radius-small;
   border: 1px solid $main-text-color;
   background-color: $color-one-white;
-  
+
   &.checked {
     border: 1px solid $color-one-mint;
     &::after {
-      @include oneicon-content($oneicon-checked);
+      @include oneicon-content('checked');
       font-family: 'oneicons';
       position: absolute;
       top: 0;
@@ -63,7 +63,7 @@
     z-index: -1;
     opacity: 0;
   }
-  
+
   &.danger {
     &.checked {
       border-color: $color-one-red;
