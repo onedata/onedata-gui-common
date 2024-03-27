@@ -40,7 +40,7 @@ export default Component.extend({
    * @virtual optional
    * @type {Ember.ComputedProperty<string>}
    */
-  inputId: computed('elementId', {
+  inputId: computed({
     get() {
       return this.injectedInputId ?? (this.elementId + '-capacity');
     },

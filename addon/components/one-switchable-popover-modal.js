@@ -250,8 +250,8 @@ export default Component.extend(ClickOutside, {
    * Unique class for popover component
    * @type {computed.string}
    */
-  _popoverIdClass: computed('elementId', function () {
-    return 'popover-' + this.get('elementId');
+  _popoverIdClass: computed(function () {
+    return 'popover-' + this.elementId;
   }),
 
   /**
@@ -278,8 +278,8 @@ export default Component.extend(ClickOutside, {
    * Unique class for modal component
    * @type {computed.string}
    */
-  _modalIdClass: computed('elementId', function () {
-    return 'modal-' + this.get('elementId');
+  _modalIdClass: computed(function () {
+    return 'modal-' + this.elementId;
   }),
 
   /**

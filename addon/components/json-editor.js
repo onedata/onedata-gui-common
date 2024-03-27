@@ -85,7 +85,7 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {Ember.ComputedProperty<string>}
    */
-  inputId: computed('elementId', {
+  inputId: computed({
     get() {
       return this.injectedInputId ?? (this.elementId + '-textarea');
     },

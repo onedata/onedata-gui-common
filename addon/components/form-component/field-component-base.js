@@ -24,7 +24,7 @@ export default Component.extend({
    * @virtual optional
    * @type {ComputedProperty<String>}
    */
-  fieldId: computed('elementId', {
+  fieldId: computed({
     get() {
       return this.injectedFieldId ?? `${this.elementId}-field`;
     },
