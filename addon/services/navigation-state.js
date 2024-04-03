@@ -24,7 +24,6 @@ import _ from 'lodash';
 import { resolve, Promise } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import { next } from '@ember/runloop';
-import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
 
 /**
  * @typedef {object} Action
@@ -328,9 +327,9 @@ export default Service.extend(I18n, {
   globalBarSidebarTitle: computed(
     'activeResourceType',
     function globalBarSidebarTitle() {
-      const translation =
-        this.i18n.t(`tabs.${_.camelCase(this.activeResourceType)}.menuItem`);
-      return isMissingMessage(translation) ? null : translation;
+      return this.t(`${_.camelCase(this.activeResourceType)}.menuItem`, {}, {
+        defaultValue: null,
+      });
     }
   ),
 
@@ -355,10 +354,8 @@ export default Service.extend(I18n, {
       }
 
       const translationPath =
-        `tabs.${_.camelCase(this.activeResourceType)}.specialResources.${this.activeResourceId}`;
-      const translation = this.i18n.t(translationPath);
-
-      return isMissingMessage(translation) ? null : translation;
+        `${_.camelCase(this.activeResourceType)}.specialResources.${this.activeResourceId}`;
+      return this.t(translationPath, {}, { defaultValue: null });
     }
   ),
 
