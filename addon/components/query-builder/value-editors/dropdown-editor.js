@@ -8,7 +8,7 @@
 
 import EditorBaseComponent from 'onedata-gui-common/components/query-builder/value-editors/-base-editor';
 import layout from '../../../templates/components/query-builder/value-editors/dropdown-editor';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { guidFor } from '@ember/object/internals';
 import { computed } from '@ember/object';
 import { next } from '@ember/runloop';

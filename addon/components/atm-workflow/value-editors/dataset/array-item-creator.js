@@ -8,7 +8,7 @@
 
 import { observer } from '@ember/object';
 import { and, not } from 'ember-awesome-macros';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/dataset/array-item-creator';
 import ArrayItemCreatorBase from '../commons/array-item-creator-base';
 

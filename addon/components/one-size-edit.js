@@ -10,7 +10,7 @@ import layout from '../templates/components/one-size-edit';
 import { computed } from '@ember/object';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import OneInlineEditor from 'onedata-gui-common/components/one-inline-editor';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { reject } from 'rsvp';
 

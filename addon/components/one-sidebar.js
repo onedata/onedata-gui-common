@@ -19,7 +19,7 @@ import EmberObject, {
 } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-sidebar';
 import { array, raw } from 'ember-awesome-macros';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { camelize } from '@ember/string';
 import globals from 'onedata-gui-common/utils/globals';
 

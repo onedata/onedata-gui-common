@@ -22,7 +22,7 @@ import { later, cancel } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import _ from 'lodash';
 import { resolve, Promise } from 'rsvp';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { next } from '@ember/runloop';
 import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
 

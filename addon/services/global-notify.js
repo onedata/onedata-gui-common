@@ -2,7 +2,7 @@ import { get } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import { htmlSafe, isHTMLSafe } from '@ember/string';
 import _ from 'lodash';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { capitalize } from '@ember/string';
 
 function aliasToShow(type) {

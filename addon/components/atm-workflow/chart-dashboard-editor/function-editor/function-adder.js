@@ -11,7 +11,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import _ from 'lodash';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/function-editor/function-adder';
 import {
   functions as functionDefs,

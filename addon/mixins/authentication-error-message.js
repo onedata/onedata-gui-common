@@ -9,7 +9,7 @@
 import { computed } from '@ember/object';
 import Mixin from '@ember/object/mixin';
 import _ from 'lodash';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 /**
  * List of known authentication errors

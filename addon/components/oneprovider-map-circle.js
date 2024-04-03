@@ -12,7 +12,7 @@ import layout from '../templates/components/oneprovider-map-circle';
 import { computed, get } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import { gt, raw } from 'ember-awesome-macros';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import oneproviderPlaceSizes from 'onedata-gui-common/utils/oneprovider-place-sizes';
 

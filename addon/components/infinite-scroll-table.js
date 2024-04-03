@@ -118,7 +118,7 @@ import { htmlSafe } from '@ember/string';
 import { inject as service } from '@ember/service';
 import { not, and } from 'ember-awesome-macros';
 import { schedule, next } from '@ember/runloop';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import ReplacingChunksArray from 'onedata-gui-common/utils/replacing-chunks-array';
 import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
 import layout from 'onedata-gui-common/templates/components/infinite-scroll-table';

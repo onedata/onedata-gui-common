@@ -11,7 +11,7 @@ import { computed } from '@ember/object';
 import { bool } from '@ember/object/computed';
 import { tag } from 'ember-awesome-macros';
 import EditorBase from '../commons/editor-base';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/array/editor';
 
 export default EditorBase.extend(I18n, {
