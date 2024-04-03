@@ -56,3 +56,27 @@ $iconified-block-padding: $padding-base-vertical;
     }
   }
 }
+
+.modern-iconified-block {
+  .icon-section {
+    padding: 20px 26px;
+
+    @media (max-width: $screen-md-max) {
+      padding: 14px;
+      .one-icon {
+        display: none;
+      }
+    }
+
+    // specific icon styles
+    .oneicon-space-empty {
+      font-weight: bold;
+    }
+  }
+  .content-section {
+    display: flex;
+    flex-direction: column;
+    // special adjustment for space item
+    padding: 18px 24px;
+  }
+}

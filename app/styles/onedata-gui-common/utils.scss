@@ -238,3 +238,10 @@ $top-shadow-zindex: 1002;
     }
   }
 }
+
+@mixin vertical-flex-gap($size: 0.5em, $additional-margin-top: 0) {
+  margin-top: -$size + $additional-margin-top;
+  > * {
+    padding-top: $size;
+  }
+}
