@@ -13,7 +13,7 @@ import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/alert-global';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 const icons = {
   error: 'sign-error-rounded',

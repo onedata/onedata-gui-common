@@ -9,7 +9,6 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
-import _ from 'lodash';
 import smoothscroll from 'smoothscroll-polyfill';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import globals from 'onedata-gui-common/utils/globals';
@@ -47,22 +46,22 @@ export default Route.extend(ApplicationRouteMixin, {
   },
 
   getNavTokens() {
-    const navigationState = this.get('navigationState');
     const {
       activeContentLevel,
-      activeResourceType,
       activeResource,
       globalBarAspectTitle,
-    } = navigationState.getProperties(
-      'activeContentLevel',
-      'activeResourceType',
-      'activeResource',
-      'globalBarAspectTitle'
-    );
+      globalBarSidebarTitle,
+      globalBarSpecialResourceTitle,
+    } = this.navigationState;
+
     switch (activeContentLevel) {
       case 'sidebar':
-      case 'contentIndex':
-        return [_.upperFirst(activeResourceType)];
+      case 'contentIndex': {
+        return [globalBarSpecialResourceTitle ?
+          globalBarSpecialResourceTitle :
+          globalBarSidebarTitle,
+        ];
+      }
       case 'index':
         return [get(activeResource, 'name')];
       case 'aspect':

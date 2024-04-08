@@ -8,7 +8,7 @@
 
 import OneSidebar from 'onedata-gui-common/components/one-sidebar';
 import layout from 'onedata-gui-common/templates/components/one-sidebar';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 export default OneSidebar.extend(I18n, {
   layout,

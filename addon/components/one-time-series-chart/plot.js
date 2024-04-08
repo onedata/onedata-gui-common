@@ -14,7 +14,7 @@ import { inject as service } from '@ember/service';
 import { computed, getProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { htmlSafe } from '@ember/string';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from '../../templates/components/one-time-series-chart/plot';
 import escapeHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-html';
 

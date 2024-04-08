@@ -1,9 +1,9 @@
 /**
  * Extends `ember-i18n` `t` helper by using translation prefix provided by
- * passed component object (which should implement `mixin:components/i18n`).
+ * passed component object (which should implement `mixin:i18n`).
  *
  * Example of usage:
- * If the using component is extended with `mixin:components/i18n`,
+ * If the using component is extended with `mixin:i18n`,
  * and `i18nPrefix` is set to "components.contentProviderRedirect":
  * ```
  * {{tt this "error" providerName="some provider"}}
@@ -27,7 +27,7 @@ export default t.extend({
    * Uses translation prefix provided by passed component object.
    *
    * @param {Ember.Object} component typically an Ember.Component
-   *    that uses `mixin:components/i18n`
+   *    that uses `mixin:i18n`
    * @param {string} key specific key of translation - will be appended
    *    to `tPrefix` of component
    * @param {object} contextObject for original `t` helper

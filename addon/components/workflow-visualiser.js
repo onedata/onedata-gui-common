@@ -91,7 +91,7 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { resolve, Promise } from 'rsvp';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
 import {

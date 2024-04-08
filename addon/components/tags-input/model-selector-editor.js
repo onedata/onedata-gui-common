@@ -19,7 +19,7 @@ import EmberObject, {
 import { reads } from '@ember/object/computed';
 import { or } from 'ember-awesome-macros';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
 import { promise, array, raw, isEmpty } from 'ember-awesome-macros';

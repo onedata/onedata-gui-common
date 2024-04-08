@@ -12,7 +12,7 @@ import { inject as service } from '@ember/service';
 import { not, and, or, eq, raw } from 'ember-awesome-macros';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/sections-editor/section';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 import { ChartNavigation } from 'onedata-gui-common/utils/time-series-dashboard';

@@ -9,7 +9,7 @@
 
 import Component from '@ember/component';
 import { reads } from '@ember/object/computed';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import layout from '../../templates/components/modals/unsaved-changes-question-modal';
