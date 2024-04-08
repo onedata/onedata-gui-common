@@ -10,7 +10,7 @@ import Component from '@ember/component';
 import layout from '../templates/components/id-info';
 import { tag } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { computed } from '@ember/object';
 
 export default Component.extend(I18n, {

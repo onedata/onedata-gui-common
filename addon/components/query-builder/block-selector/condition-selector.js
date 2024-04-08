@@ -10,7 +10,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-selector/condition-selector';
 import { and, or, not } from 'ember-awesome-macros';
 import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';

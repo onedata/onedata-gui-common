@@ -14,7 +14,7 @@ import {
   translateLaneStatus,
 } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { tag } from 'ember-awesome-macros';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 

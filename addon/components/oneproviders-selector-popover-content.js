@@ -9,7 +9,7 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/oneproviders-selector-popover-content';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { computed, get } from '@ember/object';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { inject as service } from '@ember/service';

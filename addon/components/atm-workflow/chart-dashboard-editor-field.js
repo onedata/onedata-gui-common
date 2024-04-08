@@ -12,7 +12,7 @@ import { inject as service } from '@ember/service';
 import FieldComponentBase from 'onedata-gui-common/components/form-component/field-component-base';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor-field';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 export default FieldComponentBase.extend(I18n, {
   layout,

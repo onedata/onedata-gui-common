@@ -13,7 +13,7 @@ import { htmlSafe } from '@ember/template';
 import layout from 'onedata-gui-common/templates/components/wysiwyg-editor';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import pell from 'ember-pell/pell';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 
 export default Component.extend(I18n, {

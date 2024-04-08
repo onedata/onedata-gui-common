@@ -13,7 +13,7 @@ import { reads } from '@ember/object/computed';
 import { browseModes } from 'onedata-gui-common/utils/atm-workflow/store-content-browse-options/time-series';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/charts-presenter';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 /**
  * @typedef {TsNamesForCollectionGeneratorsCache}

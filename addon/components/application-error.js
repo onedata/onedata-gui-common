@@ -11,7 +11,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/application-error';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import isCrossOriginIframe from 'onedata-gui-common/utils/is-cross-origin-iframe';
 
 export default Component.extend(I18n, {

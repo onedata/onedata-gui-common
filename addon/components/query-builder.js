@@ -12,7 +12,7 @@ import Component from '@ember/component';
 import { computed, get, set } from '@ember/object';
 import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-operator-query-block';
 import layout from 'onedata-gui-common/templates/components/query-builder';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import QueryValueComponentsBuilder from 'onedata-gui-common/utils/query-value-components-builder';
 

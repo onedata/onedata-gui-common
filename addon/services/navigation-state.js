@@ -22,7 +22,7 @@ import { later, cancel } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import _ from 'lodash';
 import { resolve, Promise } from 'rsvp';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { next } from '@ember/runloop';
 
 /**
@@ -322,12 +322,40 @@ export default Service.extend(I18n, {
 
   /**
    * Global bar title for sidebar.
-   * @type {Ember.ComputedProperty<string>}
+   * @type {ComputedProperty<SafeString | null>}
    */
   globalBarSidebarTitle: computed(
     'activeResourceType',
     function globalBarSidebarTitle() {
-      return this.get('i18n').t(`tabs.${_.camelCase(this.get('activeResourceType'))}.menuItem`);
+      return this.t(`${_.camelCase(this.activeResourceType)}.menuItem`, {}, {
+        defaultValue: null,
+      });
+    }
+  ),
+
+  /**
+   * Special resource name translation. Special resource is a resource, which is
+   * not a specific record. It's rather some functional page, like creation or join
+   * pages.
+   * @public
+   * @type {ComputedProperty<SafeString | null>}
+   */
+  globalBarSpecialResourceTitle: computed(
+    'activeResourceType',
+    'activeResourceId',
+    'activeResource',
+    function globalBarSpecialResourceTitle() {
+      if (
+        !this.activeResourceType ||
+        !this.activeResourceId ||
+        this.activeResource
+      ) {
+        return null;
+      }
+
+      const translationPath =
+        `${_.camelCase(this.activeResourceType)}.specialResources.${this.activeResourceId}`;
+      return this.t(translationPath, {}, { defaultValue: null });
     }
   ),
 

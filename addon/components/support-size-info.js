@@ -12,7 +12,7 @@ import EmberObject, { computed } from '@ember/object';
 import { A } from '@ember/array';
 import _ from 'lodash';
 import layout from 'onedata-gui-common/templates/components/support-size-info';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 export default Component.extend(I18n, {
   layout,

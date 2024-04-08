@@ -13,7 +13,7 @@ import layout from 'onedata-gui-common/templates/components/modals/workflow-visu
 import createDataProxyMixin from 'onedata-gui-common/utils/create-data-proxy-mixin';
 import Looper from 'onedata-gui-common/utils/looper';
 import computedT from 'onedata-gui-common/utils/computed-t';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 export default Component.extend(I18n, createDataProxyMixin('valueContainer'), {
   layout,

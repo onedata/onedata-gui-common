@@ -11,7 +11,7 @@ import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/modals/workflow-visualiser/store-modal/list-presenter';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import {
   getTableHeaderRowPresenter,
   getTableBodyRowPresenter,

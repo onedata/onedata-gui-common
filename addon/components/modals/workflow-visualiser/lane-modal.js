@@ -10,7 +10,7 @@
  */
 
 import Component from '@ember/component';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import layout from '../../../templates/components/modals/workflow-visualiser/lane-modal';
 import { reads } from '@ember/object/computed';
