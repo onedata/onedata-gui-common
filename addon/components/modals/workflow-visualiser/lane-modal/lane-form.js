@@ -17,7 +17,7 @@ import {
   eq,
   not,
 } from 'ember-awesome-macros';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';

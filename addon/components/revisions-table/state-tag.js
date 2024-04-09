@@ -9,7 +9,7 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/revisions-table/state-tag';
 import { computed } from '@ember/object';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { conditional, array, tag } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 

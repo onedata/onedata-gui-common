@@ -20,7 +20,7 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import { timeSeriesStandardUnits, translateTimeSeriesStandardUnit } from 'onedata-gui-common/utils/time-series';
 import { getUnitOptionsTypeForUnitName } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/chart-editor/axis-editor-form';
 
 export default Component.extend(I18n, {

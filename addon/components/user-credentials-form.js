@@ -16,7 +16,7 @@ import OneForm from 'onedata-gui-common/components/one-form';
 import { validator, buildValidations } from 'ember-cp-validations';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import createFieldValidator from 'onedata-gui-common/utils/create-field-validator';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 

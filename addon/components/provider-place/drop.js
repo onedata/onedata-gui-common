@@ -13,7 +13,7 @@ import { sort, reads } from '@ember/object/computed';
 import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { conditional, raw } from 'ember-awesome-macros';
 import getVisitOneproviderUrl from 'onedata-gui-common/utils/get-visit-oneprovider-url';
 import { promise } from 'ember-awesome-macros';

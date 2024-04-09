@@ -13,7 +13,7 @@ import { reads, gt } from '@ember/object/computed';
 import { computed, observer } from '@ember/object';
 import { Promise } from 'rsvp';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { later } from '@ember/runloop';
 import globals from 'onedata-gui-common/utils/globals';
 import browser, { BrowserName } from 'onedata-gui-common/utils/browser';

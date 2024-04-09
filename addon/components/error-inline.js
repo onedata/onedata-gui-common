@@ -10,7 +10,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from '../templates/components/error-inline';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import _ from 'lodash';
 
 export default Component.extend(I18n, {

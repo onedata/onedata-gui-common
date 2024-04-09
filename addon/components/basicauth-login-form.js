@@ -12,7 +12,7 @@ import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/basicauth-login-form';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 export default Component.extend(I18n, {
   layout,

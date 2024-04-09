@@ -8,7 +8,7 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/resource-not-found';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 export default Component.extend(I18n, {
   layout,

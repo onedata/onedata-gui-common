@@ -11,7 +11,7 @@ import { computed, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-block';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { or } from 'ember-awesome-macros';
 
 const mixins = [

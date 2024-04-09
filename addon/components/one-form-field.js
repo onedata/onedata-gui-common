@@ -11,7 +11,7 @@ import { computed, getProperties } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-form-field';
 import config from 'ember-get-config';
 import dotToDash from 'onedata-gui-common/utils/dot-to-dash';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { next } from '@ember/runloop';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';

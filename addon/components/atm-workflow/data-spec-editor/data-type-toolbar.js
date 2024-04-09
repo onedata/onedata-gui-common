@@ -22,7 +22,7 @@ import {
 import { isAtmDataSpecMatchingFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import { formValuesToDataSpec } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import paramsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/params-editors';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/data-type-toolbar';
 
 export default Component.extend(I18n, {
