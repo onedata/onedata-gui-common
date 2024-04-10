@@ -11,7 +11,7 @@ import {
 import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
 
 describe('Integration | Utility | workflow-visualiser/actions/view-workflow-chart-dashboard-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const workflow = Workflow.create();
@@ -22,6 +22,11 @@ describe('Integration | Utility | workflow-visualiser/actions/view-workflow-char
       },
     });
     this.setProperties({ workflow, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.workflow.destroy();
   });
 
   it('has correct className, icon and title', function () {

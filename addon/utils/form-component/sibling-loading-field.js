@@ -7,8 +7,8 @@
  */
 
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
-import { reads } from '@ember/object/computed';
-import { not, getBy, array, raw } from 'ember-awesome-macros';
+import { computed } from '@ember/object';
+import { reads, not } from '@ember/object/computed';
 
 export default LoadingField.extend({
   /**
@@ -25,18 +25,16 @@ export default LoadingField.extend({
   /**
    * @override
    */
-  label: getBy(
-    array.findBy('parent.fields', raw('name'), 'siblingName'),
-    raw('label')
-  ),
+  label: computed('parent.fields.@each.{name,label}', 'siblingName', function label() {
+    return this.parent?.fields.find(({ name }) => name === this.siblingName)?.label;
+  }),
 
   /**
    * @override
    */
-  tip: getBy(
-    array.findBy('parent.fields', raw('name'), 'siblingName'),
-    raw('tip')
-  ),
+  tip: computed('parent.fields.@each.{name,tip}', 'siblingName', function tip() {
+    return this.parent?.fields.find(({ name }) => name === this.siblingName)?.tip;
+  }),
 
   /**
    * @override

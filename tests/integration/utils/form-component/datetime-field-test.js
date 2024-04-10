@@ -5,11 +5,15 @@ import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form-component/datetime-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/datetime-field"', function () {
-    const textField = DatetimeField.create();
-    expect(get(textField, 'fieldComponentName'))
+    this.field = DatetimeField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/datetime-field');
   });
 });

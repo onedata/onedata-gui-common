@@ -134,13 +134,9 @@ const SeriesGroup = ElementBase.extend({
     try {
       if (this.seriesGroups.length) {
         this.seriesGroups.forEach((subgroup) => subgroup.destroy());
-        this.set('seriesGroups', []);
       }
       if (this.series.length) {
         this.set('series', []);
-      }
-      if (this.parent) {
-        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);

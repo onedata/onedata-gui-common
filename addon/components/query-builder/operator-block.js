@@ -181,6 +181,7 @@ export default Component.extend(...mixins, {
     removeBlock(queryBlock) {
       this.get('queryBlock.operands').removeObject(queryBlock);
       this.get('onBlockRemoved')(queryBlock);
+      queryBlock.destroy();
     },
   },
 });

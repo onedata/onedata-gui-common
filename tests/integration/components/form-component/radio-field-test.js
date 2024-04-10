@@ -16,7 +16,7 @@ import sinon from 'sinon';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form-component/radio-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     sinon.stub(lookupService(this, 'i18n'), 't')
@@ -42,6 +42,10 @@ describe('Integration | Component | form-component/radio-field', function () {
         name: 'third',
       }],
     }));
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it(

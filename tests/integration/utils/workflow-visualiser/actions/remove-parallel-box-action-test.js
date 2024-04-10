@@ -18,7 +18,7 @@ import { Promise } from 'rsvp';
 const parallelBoxName = 'box1';
 
 describe('Integration | Utility | workflow-visualiser/actions/remove-parallel-box-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const parallelBox = ParallelBox.create({ name: parallelBoxName });
@@ -27,6 +27,11 @@ describe('Integration | Utility | workflow-visualiser/actions/remove-parallel-bo
       context: { parallelBox },
     });
     this.setProperties({ parallelBox, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.parallelBox.destroy();
   });
 
   it('has correct className, icon and title', function () {

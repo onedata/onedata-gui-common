@@ -120,6 +120,18 @@ export default Component.extend({
     this.toggleProperty('areActionsOpened');
   },
 
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('selectDatasetsAction')?.destroy();
+      this.cacheFor('provideDatasetIdAction')?.destroy();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   actions: {
     toggleActionsOpen(state) {
       if (this.isDisabled) {

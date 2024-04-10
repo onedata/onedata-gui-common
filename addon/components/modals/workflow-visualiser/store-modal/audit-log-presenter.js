@@ -99,4 +99,15 @@ export default Component.extend(I18n, {
       };
     }
   ),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('downloadAction')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });

@@ -208,6 +208,11 @@ export default Component.extend(I18n, {
   idToAdd: '',
 
   /**
+   * @type {ComputedProperty<Set<Tag>>}
+   */
+  tagsToDestroyLater: computed(() => new Set()),
+
+  /**
    * @type {ComputedProperty<String>}
    */
   trimmedIdToAdd: computed('idToAdd', function trimmedIdToAdd() {
@@ -273,13 +278,17 @@ export default Component.extend(I18n, {
         const onezoneRecord = records.findBy('serviceType', 'onezone');
         return [onezoneRecord, allRecord].compact()
           .concat(records.without(onezoneRecord).sortBy('name'))
-          .map(record => Tag.create({
-            ownerSource: this,
-            value: {
-              model: selectedModelName,
-              record,
-            },
-          }));
+          .map(record => {
+            const tag = Tag.create({
+              ownerSource: this,
+              value: {
+                model: selectedModelName,
+                record,
+              },
+            });
+            this.tagsToDestroyLater.add(tag);
+            return tag;
+          });
       } else {
         return [];
       }
@@ -400,6 +409,18 @@ export default Component.extend(I18n, {
     const parentTagsInput = this.element.closest('.tags-input');
     if (parentTagsInput) {
       this.set('parentTagsInputSelector', `#${parentTagsInput.id}`);
+    }
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.tagsToDestroyLater.forEach((tag) => tag.destroy?.());
+      this.tagsToDestroyLater.clear();
+    } finally {
+      this._super(...arguments);
     }
   },
 

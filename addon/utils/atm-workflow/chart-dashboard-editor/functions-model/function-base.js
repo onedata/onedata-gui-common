@@ -256,7 +256,6 @@ export default ElementBase.extend({
           } else {
             this[name].destroy?.();
           }
-          this.set(name, null);
         }
       });
     } finally {

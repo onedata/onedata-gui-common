@@ -68,6 +68,17 @@ export default Component.extend(I18n, {
   },
 
   /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.detailsForm.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
    * @param {string} fieldName
    * @param {string} value
    * @returns {void}
@@ -112,7 +123,11 @@ export default Component.extend(I18n, {
       const action = this.editorContext.actionsFactory.createEditChartContentAction({
         chart: this.chart,
       });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroyAfterAllExecutions?.();
+      }
     },
   },
 });

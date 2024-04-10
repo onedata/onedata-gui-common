@@ -11,7 +11,7 @@ import { resolve } from 'rsvp';
 import { findInElementsByText } from '../../../../helpers/find';
 
 describe('Integration | Component | workflow-visualiser/stores-list/store', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -34,6 +34,11 @@ describe('Integration | Component | workflow-visualiser/stores-list/store', func
         requiresInitialContent: false,
       }),
     });
+  });
+
+  afterEach(function () {
+    this.actionsFactory.destroy();
+    this.store.destroy();
   });
 
   it('has class "workflow-visualiser-stores-list-store"', async function () {

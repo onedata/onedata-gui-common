@@ -8,12 +8,16 @@ import sinon from 'sinon';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form-component/text-like-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('textField', TextField.create({
       ownerSource: this.owner,
     }));
+  });
+
+  afterEach(function () {
+    this.textField.destroy();
   });
 
   it(

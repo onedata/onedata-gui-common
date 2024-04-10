@@ -11,6 +11,7 @@
 import Mixin from '@ember/object/mixin';
 import { observer } from '@ember/object';
 import { getOwner } from '@ember/application';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Mixin.create({
   /**
@@ -21,13 +22,15 @@ export default Mixin.create({
   ownerSource: undefined,
 
   ownerSourceObserver: observer('ownerSource', function ownerSourceObserver() {
-    const ownerSource = this.get('ownerSource');
+    safeExec(this, () => {
+      const ownerSource = this.get('ownerSource');
 
-    if (ownerSource && !getOwner(this)) {
-      const ownerInjection = typeof ownerSource.ownerInjection === 'function' ?
-        ownerSource.ownerInjection() : getOwner(ownerSource).ownerInjection();
-      this.setProperties(ownerInjection);
-    }
+      if (ownerSource && !getOwner(this)) {
+        const ownerInjection = typeof ownerSource.ownerInjection === 'function' ?
+          ownerSource.ownerInjection() : getOwner(ownerSource).ownerInjection();
+        this.setProperties(ownerInjection);
+      }
+    });
   }),
 
   init() {

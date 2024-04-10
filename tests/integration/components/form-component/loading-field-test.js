@@ -10,13 +10,17 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { suppressRejections } from '../../../helpers/suppress-rejections';
 
 describe('Integration | Component | form-component/loading-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', LoadingField.create({
       ownerSource: this.owner,
       loadingText: 'Loading...',
     }));
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it(

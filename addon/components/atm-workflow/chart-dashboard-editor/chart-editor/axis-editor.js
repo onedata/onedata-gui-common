@@ -62,7 +62,7 @@ export default Component.extend(I18n, {
     function labelFormattingValidationErrorsMessage() {
       return translateValidationErrorsBatch(
         this.i18n,
-        this.chartElement.labelFormattingValidationErrors,
+        this.chartElement?.labelFormattingValidationErrors ?? [],
       );
     }
   ),

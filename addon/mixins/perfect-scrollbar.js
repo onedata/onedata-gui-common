@@ -87,6 +87,6 @@ export default Mixin.create({
 
     element.removeEventListener('transitionend', updateScrollbarFun);
 
-    perfectScrollbar.destroy();
+    perfectScrollbar?.destroy();
   },
 });

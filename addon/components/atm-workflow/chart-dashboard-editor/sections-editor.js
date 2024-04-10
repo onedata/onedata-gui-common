@@ -114,7 +114,11 @@ export default Component.extend(I18n, {
       if (event.target === this.getWorkspaceElement()) {
         const action = this.editorContext.actionsFactory
           .createSelectElementAction({ elementToSelect: null });
-        action.execute();
+        try {
+          action.execute();
+        } finally {
+          action.destroy();
+        }
       }
     },
   },

@@ -99,6 +99,14 @@ export default Component.extend({
     },
   }]),
 
+  willDestroyElement() {
+    try {
+      this.cacheFor('dashboardModel')?.destroy();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   actions: {
     logModelJson() {
       console.log(this.dashboardModel.toJson());

@@ -27,7 +27,7 @@ const fileTypeOptions = [{
 const fileTypeHelper = new OneDropdownHelper('.fileType-field');
 
 describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/file', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('rootGroup', FormFieldsRootGroup.create({
@@ -38,6 +38,10 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/f
         }),
       ],
     }));
+  });
+
+  afterEach(function () {
+    this.rootGroup.destroy?.();
   });
 
   it('shows dropdown with file types', async function () {

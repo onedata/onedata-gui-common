@@ -22,7 +22,7 @@ import OneDropdownHelper from '../../../../helpers/one-dropdown';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 
 describe('Integration | Utility | atm-workflow/atm-lambda/atm-parameter-specs-editor', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -36,6 +36,10 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-parameter-specs-ed
       }),
       helper: new Helper(this),
     });
+  });
+
+  afterEach(function () {
+    this.rootGroup.destroy?.();
   });
 
   it('has no parameters defined on init', async function () {

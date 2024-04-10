@@ -37,6 +37,14 @@ export default Component.extend({
     rootGroup.useCurrentValueAsDefault();
     console.log(rootGroup);
   },
+
+  willDestroyElement() {
+    try {
+      this.rootGroup.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });
 
 const RootGroup = FormFieldsRootGroup.extend({

@@ -117,18 +117,12 @@ const Chart = ElementBase.extend({
     try {
       if (this.axes.length) {
         this.axes.forEach((axis) => axis.destroy());
-        this.set('axes', []);
       }
       if (this.seriesGroups.length) {
         this.seriesGroups.forEach((group) => group.destroy());
-        this.set('seriesGroups', []);
       }
       if (this.series.length) {
         this.series.forEach((series) => series.destroy());
-        this.set('series', []);
-      }
-      if (this.parent) {
-        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);

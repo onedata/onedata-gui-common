@@ -9,7 +9,11 @@ import { ResourceListItem } from 'onedata-gui-common/components/resources-list';
 import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | resources-list', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
+
+  afterEach(function () {
+    this.items?.forEach((item) => item.destroy());
+  });
 
   it('has class "resources-list', async function () {
     await render(hbs `{{resources-list}}`);

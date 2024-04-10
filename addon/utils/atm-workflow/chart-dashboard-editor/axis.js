@@ -215,22 +215,16 @@ const Axis = ElementBase.extend({
   willDestroy() {
     try {
       if (this.unitOptions) {
-        this.unitOptions.destroy();
-        this.set('unitOptions', null);
+        this.unitOptions.destroy?.();
       }
       if (this.series.length) {
         this.set('series', []);
       }
       if (this.valueProvider) {
         this.valueProvider.destroy();
-        this.set('valueProvider', null);
       }
       if (this.detachedFunctions.length) {
         this.detachedFunctions.forEach((chartFunction) => chartFunction.destroy());
-        this.set('detachedFunctions', []);
-      }
-      if (this.parent) {
-        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);

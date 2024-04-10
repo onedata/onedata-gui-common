@@ -177,7 +177,11 @@ export default OneDraggableObject.extend(I18n, {
     if (isDirectlyClicked(event)) {
       const action = this.editorContext.actionsFactory
         .createSelectElementAction({ elementToSelect: this.section });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroy();
+      }
     }
   },
 

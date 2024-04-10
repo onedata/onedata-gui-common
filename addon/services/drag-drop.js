@@ -7,9 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { observer } from '@ember/object';
+import { observer, defineProperty, computed } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
-import { getBy } from 'ember-awesome-macros';
 import { resolve } from 'rsvp';
 import browser, { BrowserName } from 'onedata-gui-common/utils/browser';
 import dom from 'onedata-gui-common/utils/dom';
@@ -18,13 +17,11 @@ export default Service.extend({
   dragCoordinator: service(),
 
   /**
+   * Set by `draggedElementModelSetter`
    * @public
    * @type {ComputedProperty<any>}
    */
-  draggedElementModel: getBy(
-    'dragCoordinator.currentDragObject',
-    'dragCoordinator.currentDragObject.unwrappingKey'
-  ),
+  draggedElementModel: undefined,
 
   /**
    * @public
@@ -45,6 +42,23 @@ export default Service.extend({
    * @type {Promise<void>}
    */
   latestDragPromise: resolve(),
+
+  draggedElementModelSetter: observer(
+    'dragCoordinator.currentDragObject.unwrappingKey',
+    function draggedElementModelSetter() {
+      const unwrappingKey = this.get('dragCoordinator.currentDragObject.unwrappingKey');
+      const propsToObserve =
+        unwrappingKey ? [`dragCoordinator.currentDragObject.${unwrappingKey}`] : [];
+      defineProperty(
+        this,
+        'draggedElementModel',
+        computed(...propsToObserve, function draggedElementModel() {
+          return propsToObserve.length ? this.get(propsToObserve[0]) : undefined;
+        })
+      );
+      this.draggedElementModel;
+      this.notifyPropertyChange('draggedElementModel');
+    }),
 
   lastDragEventUpdater: observer(
     'dragCoordinator.currentDragEvent',
@@ -79,6 +93,7 @@ export default Service.extend({
    */
   init() {
     this._super(...arguments);
+    this.draggedElementModelSetter();
     this.lastDragEventUpdater();
   },
 });

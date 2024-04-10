@@ -71,6 +71,17 @@ export default Action.extend({
   /**
    * @override
    */
+  willDestroy() {
+    try {
+      this.cacheFor('isLiveProxy')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
   async onExecute() {
     await this.modalManager.show('workflow-visualiser/charts-modal', {
       dashboardOwner: this.lane,

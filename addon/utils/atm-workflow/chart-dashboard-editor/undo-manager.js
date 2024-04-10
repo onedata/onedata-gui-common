@@ -71,7 +71,6 @@ export default EmberObject.extend({
   willDestroy() {
     try {
       this.history.forEach((action) => action.destroy());
-      this.set('history', []);
     } finally {
       this._super(...arguments);
     }

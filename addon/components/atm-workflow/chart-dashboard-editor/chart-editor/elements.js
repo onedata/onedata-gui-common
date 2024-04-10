@@ -12,10 +12,10 @@
 
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
-import EmberObject, { computed } from '@ember/object';
+import EmberObject, { computed, defineProperty } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { guidFor } from '@ember/object/internals';
 import { dasherize } from '@ember/string';
-import { getBy } from 'ember-awesome-macros';
 import _ from 'lodash';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
@@ -92,6 +92,17 @@ export default Component.extend(I18n, {
       this.set('activeTabId', this.tabs[0].id);
     }
   },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.tabs.forEach((t) => t.destroy());
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });
 
 const ElementsTab = EmberObject.extend(OwnerInjector, {
@@ -105,6 +116,7 @@ const ElementsTab = EmberObject.extend(OwnerInjector, {
   chart: undefined,
 
   /**
+   * Should be set only once, during creation
    * @public
    * @virtual
    * @type {string}
@@ -126,18 +138,19 @@ const ElementsTab = EmberObject.extend(OwnerInjector, {
   componentName: undefined,
 
   /**
+   * Set by `init()`
+   * @private
+   * @type {ComputedProperty<Array<Utils.AtmWorkflow.ChartDashboardEditor.ChartElement>>}
+   */
+  elements: undefined,
+
+  /**
    * @public
    * @type {ComputedProperty<string>}
    */
   id: computed('name', function id() {
     return `${guidFor(this)}-${dasherize(this.name)}`;
   }),
-
-  /**
-   * @private
-   * @type {ComputedProperty<Array<Utils.AtmWorkflow.ChartDashboardEditor.ChartElement>>}
-   */
-  elements: getBy('chart', 'name'),
 
   /**
    * @public
@@ -152,4 +165,12 @@ const ElementsTab = EmberObject.extend(OwnerInjector, {
       return translateValidationErrorsBatch(this.i18n, validationErrors);
     }
   ),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    defineProperty(this, 'elements', reads(`chart.${this.name}`));
+  },
 });

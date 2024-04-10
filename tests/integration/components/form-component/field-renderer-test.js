@@ -9,11 +9,15 @@ import { setProperties } from '@ember/object';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
 
 describe('Integration | Component | form-component/field-renderer', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.owner.register('util:i18n/missing-message', MissingMessage);
     this.set('textField', TextField.create({ ownerSource: this.owner }));
+  });
+
+  afterEach(function () {
+    this.textField.destroy();
   });
 
   it('has classes "form-group field-renderer" by default', async function () {

@@ -16,10 +16,14 @@ import sinon from 'sinon';
 import { setProperties, get } from '@ember/object';
 
 describe('Integration | Component | form-component/tags-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', TagsField.create());
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it(

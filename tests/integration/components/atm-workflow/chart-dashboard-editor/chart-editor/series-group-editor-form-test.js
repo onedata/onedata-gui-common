@@ -8,7 +8,11 @@ import { createNewSeriesGroup } from 'onedata-gui-common/utils/atm-workflow/char
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-editor/series-group-editor-form',
   function () {
-    setupRenderingTest();
+    const { afterEach } = setupRenderingTest();
+
+    afterEach(function () {
+      this.seriesGroup?.destroy();
+    });
 
     it('has class "series-group-editor-form"', async function () {
       await renderComponent();

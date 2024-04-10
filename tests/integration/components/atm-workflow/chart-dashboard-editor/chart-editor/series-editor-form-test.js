@@ -16,7 +16,7 @@ const axisDropdownHelper = new OneDropdownHelper('.axis-field');
 const groupDropdownHelper = new OneDropdownHelper('.group-field');
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-editor/series-editor-form', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -56,6 +56,11 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
       }),
       editorContext: EditorContext.create(),
     });
+  });
+
+  afterEach(function () {
+    this.chart.destroy();
+    this.series?.destroy();
   });
 
   it('has class "series-editor-form"', async function () {

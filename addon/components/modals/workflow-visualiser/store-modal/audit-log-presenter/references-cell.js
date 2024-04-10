@@ -135,4 +135,16 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.Action | null>}
    */
   actionToUse: or('openTaskAuditLogAction', 'openExceptionStoreAction'),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('openTaskAuditLogAction')?.destroy?.();
+      this.cacheFor('openExceptionStoreAction')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });

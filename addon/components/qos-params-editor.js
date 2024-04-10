@@ -18,7 +18,6 @@ import {
   observer,
 } from '@ember/object';
 import { A } from '@ember/array';
-import { array, raw, not } from 'ember-awesome-macros';
 import { later } from '@ember/runloop';
 import _ from 'lodash';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -125,13 +124,20 @@ export default Component.extend(I18n, {
    * (are removed).
    * @type {Ember.ComputedProperty<Ember.A<QosParamRecord>>}
    */
-  activeParamEditRecords: array.rejectBy('paramEditRecords', raw('isRemoved')),
+  activeParamEditRecords: computed(
+    'paramEditRecords.@each.isRemoved',
+    function activeParamEditRecords() {
+      return this.paramEditRecords?.filter(({ isRemoved }) => !isRemoved);
+    }
+  ),
 
   /**
    * If true, all records handled by editor are correct.
    * @type {Ember.ComputedProperty<boolean>}
    */
-  isValid: not(array.isAny('activeParamEditRecords', raw('hasKeyError'))),
+  isValid: computed('activeParamEditRecords.@each.hasKeyError', function isValid() {
+    return !this.activeParamEditRecords?.some(({ hasKeyError }) => hasKeyError);
+  }),
 
   modeObserver: observer(
     'mode',

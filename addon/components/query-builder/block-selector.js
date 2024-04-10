@@ -31,7 +31,9 @@ const operatorClasses = {
 
 const operatorsMaxOperandsNumber = Object.keys(operatorClasses)
   .reduce((obj, operatorName) => {
-    obj[operatorName] = get(operatorClasses[operatorName].create(), 'maxOperandsNumber');
+    const block = operatorClasses[operatorName].create();
+    obj[operatorName] = get(block, 'maxOperandsNumber');
+    block.destroy();
     return obj;
   }, {});
 
@@ -230,6 +232,9 @@ export default Component.extend(...mixins, {
         } else {
           onBlockReplace([this.createOperatorBlock(operatorName, operands)]);
         }
+        set(editBlock, 'notifyUpdate', null);
+        set(editBlock, 'operands', []);
+        editBlock.destroy();
       }
     },
   },

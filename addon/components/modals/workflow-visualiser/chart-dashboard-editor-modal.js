@@ -112,6 +112,9 @@ export default Component.extend(I18n, {
   willDestroyElement() {
     this._super(...arguments);
     this.dashboardModel?.removeChangeListener(this.modelChangeListener);
+    if (this.dashboardModel?.rootSection !== this.rootSectionBackup) {
+      this.rootSectionBackup?.destroy();
+    }
   },
 
   actions: {

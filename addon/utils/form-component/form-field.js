@@ -13,7 +13,7 @@ import { computed, defineProperty } from '@ember/object';
 import { union } from '@ember/object/computed';
 import { A } from '@ember/array';
 import { buildValidations } from 'ember-cp-validations';
-import { writable, conditional, or, not } from 'ember-awesome-macros';
+import { conditional, or, not } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';
 
 export default FormElement.extend({
@@ -45,6 +45,13 @@ export default FormElement.extend({
   customValidators: undefined,
 
   /**
+   * Value used to set `isValid` manually. It's used only in tests.
+   * @private
+   * @type {boolean | null}
+   */
+  injectedIsValid: null,
+
+  /**
    * Array of property names, which contain internal field validators (validators
    * which are predefined for field). Should not be modified directly but via
    * `registerInternalValidator` method.
@@ -64,24 +71,49 @@ export default FormElement.extend({
   validators: union('customValidators', 'internalValidators'),
 
   /**
+   * @type {Utils.FormComponent.FormFieldValidator | null}
+   */
+  lastFieldValidationChecker: null,
+
+  /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldValidator>}
    */
-  fieldValidationChecker: computed('validators.[]', function fieldValidationChecker() {
-    const validators = this.get('validators') || [];
-    return FormFieldValidator
-      .extend(buildValidations({ value: validators }))
-      .create({ field: this });
-  }),
+  fieldValidationChecker: computed(
+    'validators.[]',
+    'ownerSource',
+    function fieldValidationChecker() {
+      let ValidationCheckerClass = FormFieldValidator;
+      if (this.ownerSource) {
+        const validators = this.get('validators') || [];
+        ValidationCheckerClass = ValidationCheckerClass
+          .extend(buildValidations({ value: validators }));
+      }
+      const validationChecker = ValidationCheckerClass.create({ field: this });
+
+      this.lastFieldValidationChecker?.destroy();
+      this.set('lastFieldValidationChecker', validationChecker);
+      return validationChecker;
+    }
+  ),
 
   /**
    * Is writable for testing purposes
    * @override
    */
-  isValid: writable(or(
-    'isValueless',
-    'isInViewMode',
-    'fieldValidationChecker.isValid'
-  ), (value) => value),
+  isValid: computed('isValueless', 'isInViewMode', 'fieldValidationChecker.isValid', {
+    get() {
+      if (this.injectedIsValid !== null) {
+        return this.injectedIsValid;
+      }
+
+      return this.isValueless ||
+        this.isInViewMode ||
+        (this.fieldValidationChecker?.isValid ?? true);
+    },
+    set(key, value) {
+      return this.set('injectedIsValid', value);
+    },
+  }),
 
   /**
    * @override
@@ -115,6 +147,14 @@ export default FormElement.extend({
     }
 
     this.registerInternalValidator('presenceValidator');
+  },
+
+  willDestroy() {
+    try {
+      this.lastFieldValidationChecker?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   /**

@@ -284,6 +284,17 @@ export const FormElement = FormField.extend({
   /**
    * @override
    */
+  willDestroy() {
+    try {
+      this.nestedForms.forEach((form) => form.destroy?.());
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
   updateOwner() {
     this._super(...arguments);
 

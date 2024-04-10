@@ -63,4 +63,15 @@ export default Component.extend(I18n, {
   createAction: computed(function createAction() {
     return this.get('actionsFactory').createCreateStoreAction();
   }),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('createAction')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });

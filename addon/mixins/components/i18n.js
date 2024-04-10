@@ -10,6 +10,7 @@
  */
 
 import Mixin from '@ember/object/mixin';
+import { getOwner } from '@ember/application';
 import { computed } from '@ember/object';
 import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
 
@@ -57,6 +58,10 @@ export default Mixin.create({
       defaultValue: undefined,
     }
   ) {
+    if (getOwner(this)?.isDestroyed) {
+      return defaultValue;
+    }
+
     const {
       i18n,
       tPrefix,

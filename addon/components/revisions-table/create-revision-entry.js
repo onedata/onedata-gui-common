@@ -50,4 +50,15 @@ export default Component.extend({
       createRevisionAction.execute();
     }
   },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.createRevisionAction?.destroy();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });

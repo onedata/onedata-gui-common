@@ -202,7 +202,6 @@ export default VisualiserElement.extend({
     'moveRightLaneAction',
     'clearLaneAction',
     'removeLaneAction',
-    'viewFailedItemsAction',
     function laneActions() {
       if (this.mode === 'edit') {
         return [
@@ -235,6 +234,26 @@ export default VisualiserElement.extend({
       return laneRunActionsFactory.createActionsForRunNumber(get(lane, 'visibleRunNumber'));
     }
   ),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      [
+        'modifyLaneAction',
+        'viewLaneAction',
+        'modifyLaneChartDashboardAction',
+        'moveLeftLaneAction',
+        'moveRightLaneAction',
+        'clearLaneAction',
+        'removeLaneAction',
+      ].forEach((actionName) => this.cacheFor(actionName)?.destroy?.());
+      this.cacheFor('laneRunActions')?.forEach((action) => action.destroy?.());
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   actions: {
     changeName(newName) {

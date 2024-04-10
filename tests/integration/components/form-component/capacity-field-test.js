@@ -10,10 +10,14 @@ import { render, focus, blur, fillIn, find } from '@ember/test-helpers';
 import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | form-component/capacity-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', CapacityField.create({ ownerSource: this.owner }));
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it('has class "capacity-field"', async function () {

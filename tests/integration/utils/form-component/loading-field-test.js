@@ -11,11 +11,15 @@ import { Promise, resolve, reject } from 'rsvp';
 import { settled } from '@ember/test-helpers';
 
 describe('Integration | Utility | form-component/loading-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/loading-field"', function () {
-    const field = LoadingField.create();
-    expect(get(field, 'fieldComponentName'))
+    this.field = LoadingField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/loading-field');
   });
 
@@ -26,7 +30,7 @@ describe('Integration | Utility | form-component/loading-field', function () {
         .withArgs('some.parent.name.loadingText')
         .returns('someText');
 
-      const field = LoadingField.create({
+      this.field = LoadingField.create({
         ownerSource: this.owner,
         i18nPrefix: 'some',
         parent: {
@@ -35,7 +39,7 @@ describe('Integration | Utility | form-component/loading-field', function () {
         name: 'name',
       });
 
-      expect(get(field, 'loadingText')).to.equal('someText');
+      expect(get(this.field, 'loadingText')).to.equal('someText');
     }
   );
 
@@ -44,7 +48,7 @@ describe('Integration | Utility | form-component/loading-field', function () {
     function () {
       this.owner.register('util:i18n/missing-message', MissingMessage);
 
-      const field = LoadingField.create({
+      this.field = LoadingField.create({
         ownerSource: this.owner,
         i18nPrefix: 'some',
         parent: {
@@ -53,69 +57,69 @@ describe('Integration | Utility | form-component/loading-field', function () {
         name: 'name',
       });
 
-      expect(get(field, 'loadingText')).to.be.empty;
+      expect(get(this.field, 'loadingText')).to.be.empty;
     }
   );
 
   it(
     'has true isPending, false isFulfilled and false isRejected when loadingProxy is pending',
     async function () {
-      const field = LoadingField.create({
+      this.field = LoadingField.create({
         loadingProxy: PromiseObject.create({
           promise: new Promise(() => {}),
         }),
       });
 
       await settled();
-      expect(get(field, 'isPending')).to.be.true;
-      expect(get(field, 'isFulfilled')).to.be.false;
-      expect(get(field, 'isRejected')).to.be.false;
+      expect(get(this.field, 'isPending')).to.be.true;
+      expect(get(this.field, 'isFulfilled')).to.be.false;
+      expect(get(this.field, 'isRejected')).to.be.false;
     }
   );
 
   it(
     'has false isPending, true isFulfilled and false isRejected when loadingProxy is fulfilled',
     async function () {
-      const field = LoadingField.create({
+      this.field = LoadingField.create({
         loadingProxy: PromiseObject.create({
           promise: resolve(),
         }),
       });
 
       await settled();
-      expect(get(field, 'isPending')).to.be.false;
-      expect(get(field, 'isFulfilled')).to.be.true;
-      expect(get(field, 'isRejected')).to.be.false;
+      expect(get(this.field, 'isPending')).to.be.false;
+      expect(get(this.field, 'isFulfilled')).to.be.true;
+      expect(get(this.field, 'isRejected')).to.be.false;
     }
   );
 
   it(
     'has false isPending, false isFulfilled and true isRejected when loadingProxy is rejected',
     async function () {
-      const field = LoadingField.create({
+      this.field = LoadingField.create({
         loadingProxy: PromiseObject.create({
           promise: reject(),
         }),
       });
 
       await settled();
-      expect(get(field, 'isPending')).to.be.false;
-      expect(get(field, 'isFulfilled')).to.be.false;
-      expect(get(field, 'isRejected')).to.be.true;
+      expect(get(this.field, 'isPending')).to.be.false;
+      expect(get(this.field, 'isFulfilled')).to.be.false;
+      expect(get(this.field, 'isRejected')).to.be.true;
     }
   );
 
   it(
     'has false isPending, true isFulfilled and false isRejected when loadingProxy is not provided',
     async function () {
-      const field = LoadingField.create();
+      this.field = LoadingField.create();
       // Simulate accessing promise object to launch promise
-      get(field, 'loadingProxy');
+      get(this.field, 'loadingProxy');
 
       await settled();
-      expect(get(field, 'isPending')).to.be.false;
-      expect(get(field, 'isFulfilled')).to.be.true;
-      expect(get(field, 'isRejected')).to.be.false;
+      expect(get(this.field, 'isPending')).to.be.false;
+      expect(get(this.field, 'isFulfilled')).to.be.true;
+      expect(get(this.field, 'isRejected')).to.be.false;
     }
   );
 });

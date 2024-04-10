@@ -15,7 +15,6 @@ import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { resolve } from 'rsvp';
 import { isArray } from '@ember/array';
-import { array, raw } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -79,10 +78,12 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<ModalInstance>}
    */
-  modalInstance: array.findBy(
-    'modalManager.modalInstances',
-    raw('id'),
-    'modalId'
+  modalInstance: computed(
+    'modalManager.modalInstances.@each.id',
+    'modalId',
+    function modalInstance() {
+      return this.modalManager.modalInstances.find(({ id }) => id === this.modalId);
+    }
   ),
 
   /**
@@ -105,6 +106,16 @@ export default Component.extend({
 
     return classNamesString + ' global-modal';
   }),
+
+  willDestroyElement() {
+    try {
+      if (!this.modalInstance?.isDestroyed && this.modalId) {
+        this.modalManager.onModalHidden(this.modalId);
+      }
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   actions: {
     submit(data) {

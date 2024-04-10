@@ -56,7 +56,6 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
     try {
       if (this.replaceEmptyParameters) {
         this.replaceEmptyParameters.destroy();
-        this.set('replaceEmptyParameters', null);
       }
     } finally {
       this._super(...arguments);

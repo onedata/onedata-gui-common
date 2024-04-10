@@ -83,7 +83,7 @@ const unitOptions = [{
 
 describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/time-series-measurement',
   function () {
-    setupRenderingTest();
+    const { afterEach } = setupRenderingTest();
 
     beforeEach(function () {
       this.set('rootGroup', FormFieldsRootGroup.create({
@@ -94,6 +94,10 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/t
           }),
         ],
       }));
+    });
+
+    afterEach(function () {
+      this.rootGroup.destroy?.();
     });
 
     it('shows no specs at the beginning', async function () {

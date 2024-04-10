@@ -1,11 +1,15 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, afterEach } from 'mocha';
 import { createModelFromSpec } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
 
 describe('Unit | Utility | atm-workflow/chart-dashboard-editor/model', function () {
+  afterEach(function () {
+    this.model?.destroy();
+  });
+
   it('can be dumped to json format', function () {
-    const model = createModelFromSpec(complicatedSpecExample);
-    const modelJson = model.toJson();
+    this.model = createModelFromSpec(complicatedSpecExample);
+    const modelJson = this.model.toJson();
 
     expect(modelJson).to.deep.equal(complicatedSpecExample);
   });

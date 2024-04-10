@@ -14,14 +14,21 @@ import { dasherize } from '@ember/string';
 import { resolve } from 'rsvp';
 
 describe('Integration | Component | workflow-visualiser/lane/interblock-space', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const actionsFactory = ActionsFactory.create({ ownerSource: this.owner });
     actionsFactory.setGetTaskCreationDataCallback(
       () => resolve({ name: 'Untitled task' })
     );
-    this.set('blockSpace', InterblockSpace.create({ actionsFactory }));
+    this.setProperties({
+      blockSpace: InterblockSpace.create({ actionsFactory }),
+      actionsFactory,
+    });
+  });
+
+  afterEach(function () {
+    this.actionsFactory.destroy();
   });
 
   it(

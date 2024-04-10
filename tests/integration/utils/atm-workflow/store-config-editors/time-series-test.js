@@ -83,7 +83,7 @@ const unitOptions = [{
 }];
 
 describe('Integration | Utility | atm-workflow/store-config-editors/time-series', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('rootGroup', FormFieldsRootGroup.create({
@@ -94,6 +94,10 @@ describe('Integration | Utility | atm-workflow/store-config-editors/time-series'
         }),
       ],
     }));
+  });
+
+  afterEach(function () {
+    this.rootGroup.destroy?.();
   });
 
   it('shows no series at the beginning', async function () {

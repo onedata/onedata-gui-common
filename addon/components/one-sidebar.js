@@ -18,7 +18,6 @@ import EmberObject, {
   setProperties,
 } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-sidebar';
-import { array, raw } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { camelize } from '@ember/string';
 import globals from 'onedata-gui-common/utils/globals';
@@ -178,7 +177,13 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Object>}
    */
-  primaryItem: array.findBy('model.collection.list', raw('id'), 'primaryItemId'),
+  primaryItem: computed(
+    'model.collection.list.@each.id',
+    'primaryItemId',
+    function primaryItem() {
+      return this.model?.collection?.list?.find(({ id }) => id === this.primaryItemId);
+    }
+  ),
 
   /**
    * @type {ComputedProperty<String>}
@@ -188,7 +193,13 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Object>}
    */
-  secondaryItem: array.findBy('secondLevelItems', raw('id'), 'secondaryItemId'),
+  secondaryItem: computed(
+    'secondLevelItems.@each.id',
+    'secondaryItemId',
+    function secondaryItem() {
+      return this.secondLevelItems?.find(({ id }) => id === this.secondaryItemId);
+    }
+  ),
 
   /**
    * @type {Ember.ComputedProperty<Array<any>>}

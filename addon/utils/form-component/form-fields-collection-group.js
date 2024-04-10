@@ -127,6 +127,9 @@ export default FormFieldsGroup.extend({
       if (!areFieldsTheSame) {
         this.set('fields', newFields);
         this.fieldsParentSetter();
+        const newFieldsSet = new Set(newFields);
+        fields.filter((field) => !newFieldsSet.has(field))
+          .forEach((field) => field.destroy?.());
       }
       this.set('fieldsToAdd', newFieldsToAdd);
     }
@@ -138,6 +141,14 @@ export default FormFieldsGroup.extend({
     this.incomingFieldsValueNamesObserver();
   },
 
+  willDestroy() {
+    try {
+      this.fieldsToAdd.forEach((field) => field.destroy?.());
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   /**
    * @public
    */
@@ -146,6 +157,7 @@ export default FormFieldsGroup.extend({
     const newFieldValueName = this.generateUniqueFieldValueName();
     const newField = this.fieldFactoryMethod(newFieldValueName);
     set(newField, 'parent', this);
+    newField.updateOwner();
 
     set(newValue, newFieldValueName, newField.dumpDefaultValue());
     get(newValue, '__fieldsValueNames').push(newFieldValueName);

@@ -58,6 +58,17 @@ export default Component.extend(I18n, {
     this.calculateItemModels();
   },
 
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.itemModels?.forEach((item) => item.destroy());
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   calculateItemModels() {
     const existingModels = this.itemModels ?? [];
     const existingModelsMap = new Map(existingModels.map((model) => [model.item, model]));

@@ -9,7 +9,11 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections-editor/sidebar', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
+
+  afterEach(function () {
+    this.selectedElement?.destroy();
+  });
 
   it('has class "sidebar"', async function () {
     await renderComponent();

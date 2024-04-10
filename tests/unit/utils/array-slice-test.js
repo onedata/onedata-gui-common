@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, afterEach } from 'mocha';
 import ArraySlice from 'onedata-gui-common/utils/array-slice';
 import _ from 'lodash';
 import { settled } from '@ember/test-helpers';
@@ -17,6 +17,10 @@ const ArraySum = EmberObject.extend({
 });
 
 describe('Unit | Utility | array-slice', function () {
+  afterEach(function () {
+    this.as?.destroy();
+  });
+
   it('adds an item using pushObject method', function () {
     const sourceArrayTemplate = _.range(0, 10);
 
@@ -24,16 +28,16 @@ describe('Unit | Utility | array-slice', function () {
     const endIndex = 20;
     const indexMargin = 0;
 
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray: A([...sourceArrayTemplate]),
       startIndex,
       endIndex,
       indexMargin,
     });
 
-    as.pushObject('x');
+    this.as.pushObject('x');
 
-    expect(as.toArray()).to.deep.equal([...sourceArrayTemplate, 'x']);
+    expect(this.as.toArray()).to.deep.equal([...sourceArrayTemplate, 'x']);
   });
 
   it('adds multiple items using pushObjects method', function () {
@@ -43,16 +47,16 @@ describe('Unit | Utility | array-slice', function () {
     const endIndex = 20;
     const indexMargin = 0;
 
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray: A([...sourceArrayTemplate]),
       startIndex,
       endIndex,
       indexMargin,
     });
 
-    as.pushObjects(['x', 'y', 'z']);
+    this.as.pushObjects(['x', 'y', 'z']);
 
-    expect(as.toArray()).to.deep.equal([...sourceArrayTemplate, 'x', 'y', 'z']);
+    expect(this.as.toArray()).to.deep.equal([...sourceArrayTemplate, 'x', 'y', 'z']);
   });
 
   it('returns a slice of current range using slice method', function () {
@@ -62,14 +66,14 @@ describe('Unit | Utility | array-slice', function () {
     const endIndex = 15;
     const indexMargin = 0;
 
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray: A([...sourceArrayTemplate]),
       startIndex,
       endIndex,
       indexMargin,
     });
 
-    expect(as.slice(5, 10)).to.deep.equal(_.range(10, 15));
+    expect(this.as.slice(5, 10)).to.deep.equal(_.range(10, 15));
   });
 
   it('returns a slice to the end of current range using slice method with only begin argument', function () {
@@ -79,14 +83,14 @@ describe('Unit | Utility | array-slice', function () {
     const endIndex = 10;
     const indexMargin = 0;
 
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray: A([...sourceArrayTemplate]),
       startIndex,
       endIndex,
       indexMargin,
     });
 
-    expect(as.slice(5)).to.deep.equal(_.range(5, endIndex));
+    expect(this.as.slice(5)).to.deep.equal(_.range(5, endIndex));
   });
 
   it('returns a copy of sliced array using slice method without arguments', function () {
@@ -96,14 +100,14 @@ describe('Unit | Utility | array-slice', function () {
     const endIndex = 15;
     const indexMargin = 0;
 
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray: A([...sourceArrayTemplate]),
       startIndex,
       endIndex,
       indexMargin,
     });
 
-    expect(as.slice()).to.deep.equal(_.range(5, 15));
+    expect(this.as.slice()).to.deep.equal(_.range(5, 15));
   });
 
   it('returns a slice of current range using slice method with negative arguments', function () {
@@ -113,14 +117,14 @@ describe('Unit | Utility | array-slice', function () {
     const endIndex = 15;
     const indexMargin = 0;
 
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray: A([...sourceArrayTemplate]),
       startIndex,
       endIndex,
       indexMargin,
     });
 
-    expect(as.slice(-3, -1)).to.deep.equal(_.range(12, 14));
+    expect(this.as.slice(-3, -1)).to.deep.equal(_.range(12, 14));
   });
 
   [
@@ -135,7 +139,7 @@ describe('Unit | Utility | array-slice', function () {
       const endIndex = 20;
       const indexMargin = 0;
 
-      const as = ArraySlice.create({
+      this.as = ArraySlice.create({
         sourceArray: A([]),
         startIndex,
         endIndex,
@@ -143,7 +147,7 @@ describe('Unit | Utility | array-slice', function () {
       });
 
       try {
-        as[methodName]();
+        this.as[methodName]();
         throw new Error('method should throw');
       } catch (error) {
         expect(error.toString()).to.contain('not implemented in array-slice');
@@ -158,7 +162,7 @@ describe('Unit | Utility | array-slice', function () {
     const endIndex = 70;
     const indexMargin = 10;
 
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray,
       startIndex,
       endIndex,
@@ -166,7 +170,7 @@ describe('Unit | Utility | array-slice', function () {
     });
 
     expect(
-      as.toArray(),
+      this.as.toArray(),
       'should be slice of source array from 40 to 80'
     ).to.deep.equal(_.range(40, 80));
   });
@@ -176,19 +180,19 @@ describe('Unit | Utility | array-slice', function () {
     const startIndex = 50;
     const endIndex = 70;
     const indexMargin = 10;
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray,
       startIndex,
       endIndex,
       indexMargin,
     });
 
-    as.setProperties({
+    this.as.setProperties({
       startIndex: 30,
       endIndex: 35,
     });
 
-    const native = as.toArray();
+    const native = this.as.toArray();
     await settled();
     expect(
       native,
@@ -201,7 +205,7 @@ describe('Unit | Utility | array-slice', function () {
     const startIndex = 50;
     const endIndex = 70;
     const indexMargin = 10;
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray,
       startIndex,
       endIndex,
@@ -209,7 +213,7 @@ describe('Unit | Utility | array-slice', function () {
     });
 
     let j = 0;
-    as.forEach(() => j++);
+    this.as.forEach(() => j++);
     expect(j).to.equal(40);
   });
 
@@ -218,28 +222,28 @@ describe('Unit | Utility | array-slice', function () {
     const startIndex = 50;
     const endIndex = 70;
     const indexMargin = 10;
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray,
       startIndex,
       endIndex,
       indexMargin,
     });
 
-    as.pushObject('x');
+    this.as.pushObject('x');
 
     expect(
-      as.toArray(),
+      this.as.toArray(),
       'should be still a slice of source array from 40 to 80'
     ).to.deep.equal(_.range(40, 80));
 
-    as.setProperties({
+    this.as.setProperties({
       indexMargin: 1,
       startIndex: 100,
       endIndex: 101,
     });
 
     await settled();
-    const native = as.toArray();
+    const native = this.as.toArray();
 
     expect(
       native,
@@ -253,7 +257,7 @@ describe('Unit | Utility | array-slice', function () {
       const startIndex = 0;
       const endIndex = 5;
       const indexMargin = 1;
-      const as = ArraySlice.create({
+      this.as = ArraySlice.create({
         sourceArray,
         startIndex,
         endIndex,
@@ -263,7 +267,7 @@ describe('Unit | Utility | array-slice', function () {
       const spy = sinon.spy();
 
       const obj = EmberObject.extend({
-        as,
+        as: this.as,
         sum: computed('as.[]', function () {
           spy();
           return _.sum(this.get('as').toArray());
@@ -272,7 +276,7 @@ describe('Unit | Utility | array-slice', function () {
 
       expect(obj.get('sum')).to.equal(15);
 
-      as.pushObject(10000);
+      this.as.pushObject(10000);
 
       await settled();
       expect(obj.get('sum')).to.equal(15);
@@ -284,7 +288,7 @@ describe('Unit | Utility | array-slice', function () {
     const startIndex = 3;
     const endIndex = 10;
     const indexMargin = 0;
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray,
       startIndex,
       endIndex,
@@ -294,7 +298,7 @@ describe('Unit | Utility | array-slice', function () {
     const spy = sinon.spy();
 
     const obj = EmberObject.extend({
-      as,
+      as: this.as,
       sum: computed('as.[]', function () {
         spy();
         return _.sum(this.get('as').toArray());
@@ -303,7 +307,7 @@ describe('Unit | Utility | array-slice', function () {
 
     expect(obj.get('sum')).to.equal(15);
 
-    as.pushObject(10000);
+    this.as.pushObject(10000);
 
     await settled();
     expect(obj.get('sum')).to.equal(10015);
@@ -315,7 +319,7 @@ describe('Unit | Utility | array-slice', function () {
     const startIndex = 0;
     const endIndex = 3;
     const indexMargin = 0;
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray,
       startIndex,
       endIndex,
@@ -325,13 +329,13 @@ describe('Unit | Utility | array-slice', function () {
     const spy = sinon.spy();
 
     const obj = ArraySum.create({
-      as,
+      as: this.as,
       spy,
     });
 
     expect(obj.get('sum')).to.equal(_.sum([0, 1, 2]));
 
-    as.set('endIndex', 5);
+    this.as.set('endIndex', 5);
 
     await settled();
     const newSum = obj.get('sum');
@@ -344,7 +348,7 @@ describe('Unit | Utility | array-slice', function () {
     const startIndex = 0;
     const endIndex = 5;
     const indexMargin = 0;
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray,
       startIndex,
       endIndex,
@@ -354,13 +358,13 @@ describe('Unit | Utility | array-slice', function () {
     const spy = sinon.spy();
 
     const obj = ArraySum.create({
-      as,
+      as: this.as,
       spy,
     });
 
     expect(obj.get('sum')).to.equal(_.sum(_.range(0, 5)));
 
-    as.set('endIndex', 3);
+    this.as.set('endIndex', 3);
 
     await settled();
     const newSum = obj.get('sum');
@@ -373,7 +377,7 @@ describe('Unit | Utility | array-slice', function () {
     const startIndex = 7;
     const endIndex = 9;
     const indexMargin = 0;
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray,
       startIndex,
       endIndex,
@@ -383,13 +387,13 @@ describe('Unit | Utility | array-slice', function () {
     const spy = sinon.spy();
 
     const obj = ArraySum.create({
-      as,
+      as: this.as,
       spy,
     });
 
     expect(obj.get('sum')).to.equal(_.sum(_.range(7, 9)));
 
-    as.set('startIndex', 5);
+    this.as.set('startIndex', 5);
 
     await settled();
     const newSum = obj.get('sum');
@@ -402,7 +406,7 @@ describe('Unit | Utility | array-slice', function () {
     const startIndex = 7;
     const endIndex = 10;
     const indexMargin = 0;
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray,
       startIndex,
       endIndex,
@@ -412,13 +416,13 @@ describe('Unit | Utility | array-slice', function () {
     const spy = sinon.spy();
 
     const obj = ArraySum.create({
-      as,
+      as: this.as,
       spy,
     });
 
     expect(obj.get('sum')).to.equal(_.sum(_.range(7, 10)));
 
-    as.set('startIndex', 8);
+    this.as.set('startIndex', 8);
 
     await settled();
     const newSum = obj.get('sum');
@@ -431,7 +435,7 @@ describe('Unit | Utility | array-slice', function () {
     const startIndex = 20;
     const endIndex = 25;
     const indexMargin = 10;
-    const as = ArraySlice.create({
+    this.as = ArraySlice.create({
       sourceArray,
       startIndex,
       endIndex,
@@ -441,13 +445,13 @@ describe('Unit | Utility | array-slice', function () {
     const spy = sinon.spy();
 
     const obj = ArraySum.create({
-      as,
+      as: this.as,
       spy,
     });
 
     expect(obj.get('sum'), '10..35').to.equal(_.sum(_.range(10, 35)));
 
-    as.set('indexMargin', 5);
+    this.as.set('indexMargin', 5);
 
     await settled();
     const newSum = obj.get('sum');
@@ -459,19 +463,19 @@ describe('Unit | Utility | array-slice', function () {
   it('immediately returns new firstObject if changing startIndex and endIndex',
     function () {
       const sourceArray = A(_.concat(_.range(0, 20).map(i => ({ i }))));
-      const as = ArraySlice.create({
+      this.as = ArraySlice.create({
         sourceArray,
         startIndex: 7,
         endIndex: 10,
         indexMargin: 0,
       });
 
-      expect(as.get('firstObject')).to.deep.equal({ i: 7 });
-      expect(as.get('lastObject')).to.deep.equal({ i: 9 });
+      expect(this.as.get('firstObject')).to.deep.equal({ i: 7 });
+      expect(this.as.get('lastObject')).to.deep.equal({ i: 9 });
 
-      as.setProperties({ startIndex: 8, endIndex: 11 });
+      this.as.setProperties({ startIndex: 8, endIndex: 11 });
 
-      expect(as.get('firstObject')).to.deep.equal({ i: 8 });
-      expect(as.get('lastObject')).to.deep.equal({ i: 10 });
+      expect(this.as.get('firstObject')).to.deep.equal({ i: 8 });
+      expect(this.as.get('lastObject')).to.deep.equal({ i: 10 });
     });
 });

@@ -122,7 +122,7 @@ describe('Integration | Component | tags-input/selector-editor', function () {
     `);
 
     return click('.tags-input:first-child .tag-creator-trigger')
-      .then(() => click('.tags-input:last-child'))
+      .then(() => click('.tags-input:nth-child(2)'))
       .then(() => expect(getSelector()).to.not.exist);
   });
 

@@ -1,11 +1,18 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
+import { setupTest } from 'ember-mocha';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { get } from '@ember/object';
 
 describe('Unit | Utility | form-component/form-fields-root-group', function () {
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.formFieldsRootGroup.destroy();
+  });
+
   [
     'path',
     'valuePath',
@@ -13,9 +20,9 @@ describe('Unit | Utility | form-component/form-fields-root-group', function () {
     it(
       `has empty ${fieldName}`,
       function () {
-        const formFieldsRootGroup = FormFieldsRootGroup.create();
+        this.formFieldsRootGroup = FormFieldsRootGroup.create();
 
-        expect(get(formFieldsRootGroup, fieldName)).to.be.empty;
+        expect(get(this.formFieldsRootGroup, fieldName)).to.be.empty;
       }
     );
   });
@@ -31,7 +38,7 @@ describe('Unit | Utility | form-component/form-fields-root-group', function () {
         name: 'field2',
         defaultValue: 'f2',
       });
-      const formFieldsRootGroup = FormFieldsRootGroup.create({
+      this.formFieldsRootGroup = FormFieldsRootGroup.create({
         fields: [
           field1,
           FormFieldsGroup.create({
@@ -41,12 +48,12 @@ describe('Unit | Utility | form-component/form-fields-root-group', function () {
         ],
       });
 
-      formFieldsRootGroup.reset();
+      this.formFieldsRootGroup.reset();
 
       expect(get(field1, 'value')).to.equal('f1');
       expect(get(field2, 'value')).to.equal('f2');
-      expect(get(formFieldsRootGroup, 'valuesSource.field1')).to.equal('f1');
-      expect(get(formFieldsRootGroup, 'valuesSource.group1.field2')).to.equal('f2');
+      expect(get(this.formFieldsRootGroup, 'valuesSource.field1')).to.equal('f1');
+      expect(get(this.formFieldsRootGroup, 'valuesSource.group1.field2')).to.equal('f2');
     }
   );
 
@@ -54,7 +61,7 @@ describe('Unit | Utility | form-component/form-fields-root-group', function () {
     'persists (in valuesSource) changed value from nested field and marks it as modified',
     function () {
       const field = FormField.create({ name: 'field1' });
-      const formFieldsRootGroup = FormFieldsRootGroup.create({
+      this.formFieldsRootGroup = FormFieldsRootGroup.create({
         fields: [
           FormFieldsGroup.create({
             name: 'group1',
@@ -67,7 +74,7 @@ describe('Unit | Utility | form-component/form-fields-root-group', function () {
 
       expect(get(field, 'value')).to.equal('test');
       expect(get(field, 'isModified')).to.be.true;
-      expect(get(formFieldsRootGroup, 'valuesSource.group1.field1')).to.equal('test');
+      expect(get(this.formFieldsRootGroup, 'valuesSource.group1.field1')).to.equal('test');
     }
   );
 
@@ -75,7 +82,7 @@ describe('Unit | Utility | form-component/form-fields-root-group', function () {
     'changes nested field state to modified on focus lost',
     function () {
       const field = FormField.create({ name: 'field1' });
-      FormFieldsRootGroup.create({
+      this.formFieldsRootGroup = FormFieldsRootGroup.create({
         fields: [
           FormFieldsGroup.create({
             name: 'group1',

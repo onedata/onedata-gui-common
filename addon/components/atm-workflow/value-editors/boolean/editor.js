@@ -33,6 +33,17 @@ export default EditorBase.extend({
   /**
    * @override
    */
+  willDestroyElement() {
+    try {
+      this.formRootGroup.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
   handleStateChange() {
     this._super(...arguments);
     if (!this.editorState) {

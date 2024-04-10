@@ -11,7 +11,7 @@ import {
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 
 describe('Integration | Utility | workflow-visualiser/actions/view-lane-chart-dashboard-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create();
@@ -23,6 +23,11 @@ describe('Integration | Utility | workflow-visualiser/actions/view-lane-chart-da
       },
     });
     this.setProperties({ lane, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.lane.destroy();
   });
 
   it('has correct className, icon and title', function () {

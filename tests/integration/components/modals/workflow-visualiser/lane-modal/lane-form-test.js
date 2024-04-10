@@ -171,13 +171,15 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
         expect(find('.instantFailureExceptionThreshold-field')).to.have.class('has-error');
       });
 
-    it('marks "instant failure exception threshold" field as invalid when it contains a a number > 1', async function () {
-      await renderComponent();
+    it('marks "instant failure exception threshold" field as invalid when it contains a a number > 1',
+      async function () {
+        await renderComponent();
 
-      await fillIn('.instantFailureExceptionThreshold-field .form-control', '1.1');
+        await fillIn('.instantFailureExceptionThreshold-field .form-control', '1.1');
 
-      expect(find('.instantFailureExceptionThreshold-field')).to.have.class('has-error');
-    });
+        expect(find('.instantFailureExceptionThreshold-field')).to.have.class('has-error');
+      }
+    );
 
     it('marks "instant failure exception threshold" field as valid when it contains a positive number < 1',
       async function () {

@@ -378,7 +378,8 @@ export default Component.extend(I18n, {
   willDestroyElement() {
     try {
       this.teardownResizeObserver();
-      this.infiniteScroll.destroy();
+      this.infiniteScroll?.destroy();
+      this.entries?.destroy();
     } finally {
       this._super(...arguments);
     }

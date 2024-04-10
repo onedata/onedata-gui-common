@@ -16,7 +16,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed, observer } from '@ember/object';
+import EmberObject, { computed, observer } from '@ember/object';
 import { scheduleOnce } from '@ember/runloop';
 import _ from 'lodash';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
@@ -153,10 +153,10 @@ export const ValueEditorField = FormField.extend({
           this.value?.hasValue && this.lastEditorStateManagerDump?.isValid
         );
       }
-      return {
+      return EmberObject.create({
         isValid,
         errors: [],
-      };
+      });
     }
   ),
 

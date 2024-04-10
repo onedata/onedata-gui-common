@@ -506,6 +506,18 @@ export default Component.extend(I18n, {
     this.formModeUpdater();
   },
 
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.fields.destroy?.();
+      this.cacheFor('storeBasedOnFormValues')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   resetFormValues() {
     const {
       fields,

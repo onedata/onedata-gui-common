@@ -135,4 +135,15 @@ export const ResourceListItem = EmberObject.extend({
       this.set('actions', []);
     }
   },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.actions?.forEach((action) => action?.destroy());
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });

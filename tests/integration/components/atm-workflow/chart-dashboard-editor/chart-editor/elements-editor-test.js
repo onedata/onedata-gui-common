@@ -13,7 +13,7 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-editor/elements-editor', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const selectSpy = sinon.spy((elementToSelect) =>
@@ -26,10 +26,17 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
           createSelectElementAction: ({ elementToSelect, elementsToDeselect }) => ({
             execute: () => selectSpy(elementToSelect, elementsToDeselect),
           }),
+          destroy: () => {},
         },
       }),
       selectSpy,
+      elementsToDestroy: [],
     });
+  });
+
+  afterEach(function () {
+    this.elementsToDestroy.forEach((elem) => elem.destroy());
+    this.editorContext.destroy();
   });
 
   it('has class "chart-editor-elements-editor"', async function () {
@@ -55,6 +62,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
     set(seriesGroup, 'name', 'g1');
     const axis = createNewAxis(this.i18n);
     set(axis, 'name', 'a1');
+    this.elementsToDestroy.push(series, seriesGroup, axis);
     await renderComponent();
 
     this.set('selectedElement', series);
@@ -102,6 +110,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
     const seriesArr = [];
     for (let i = 0; i < 3; i++) {
       const series = createNewSeries(this.i18n);
+      this.elementsToDestroy.push(series);
       set(series, 'name', `s${i}`);
       seriesArr.push(series);
       this.set('selectedElement', series);
@@ -133,6 +142,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
     await renderComponent();
     for (let i = 0; i < 2; i++) {
       const series = createNewSeries(this.i18n);
+      this.elementsToDestroy.push(series);
       set(series, 'name', `s${i}`);
       this.set('selectedElement', series);
       await settled();
@@ -146,6 +156,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
   it('shows "unnamed" title for unnamed element', async function () {
     await renderComponent();
     const series = createNewSeries(this.i18n);
+    this.elementsToDestroy.push(series);
     set(series, 'name', '');
     this.set('selectedElement', series);
     await settled();
@@ -156,6 +167,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
   it('reacts to changing element name', async function () {
     await renderComponent();
     const series = createNewSeries(this.i18n);
+    this.elementsToDestroy.push(series);
     this.set('selectedElement', series);
     await settled();
 
@@ -170,6 +182,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
     const seriesArr = [];
     for (let i = 0; i < 2; i++) {
       const series = createNewSeries(this.i18n);
+      this.elementsToDestroy.push(series);
       set(series, 'name', `s${i}`);
       this.set('selectedElement', series);
       await settled();

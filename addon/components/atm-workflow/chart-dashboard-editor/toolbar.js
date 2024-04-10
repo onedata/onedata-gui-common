@@ -72,7 +72,11 @@ export default Component.extend(I18n, {
     back() {
       const action = this.editorContext.actionsFactory
         .createEndChartContentEditionAction();
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroy();
+      }
     },
 
     /**

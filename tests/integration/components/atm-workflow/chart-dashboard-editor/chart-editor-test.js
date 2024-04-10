@@ -8,10 +8,14 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-editor', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
+
+  afterEach(function () {
+    this.model?.destroy();
+  });
 
   it('renders chart elements', async function () {
-    this.set('chart', createChart({
+    this.set('model', createModel({
       seriesBuilders: [{
         builderType: 'static',
         builderRecipe: {
@@ -30,14 +34,14 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
 
 async function renderComponent() {
   await render(hbs`{{atm-workflow/chart-dashboard-editor/chart-editor
-    chart=chart
+    chart=model.rootSection.charts.[0]
   }}`);
 }
 
-function createChart(chartSpec = {}) {
+function createModel(chartSpec = {}) {
   return createModelFromSpec({
     rootSection: {
       charts: [chartSpec],
     },
-  }).rootSection.charts[0];
+  });
 }

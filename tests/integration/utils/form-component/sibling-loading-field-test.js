@@ -5,31 +5,35 @@ import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form-component/sibling-loading-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   [
     true,
     false,
   ].forEach(value => {
     it(`has isVisible equal ${!value} when isFulfilled is ${value}`, function () {
-      const field = SiblingLoadingField.create({
+      this.field = SiblingLoadingField.create({
         isFulfilled: value,
       });
 
-      expect(get(field, 'isVisible')).to.equal(!value);
+      expect(get(this.field, 'isVisible')).to.equal(!value);
     });
   });
 
   it('has isValid equal true when isFulfilled is true', function () {
-    const field = SiblingLoadingField.create({
+    this.field = SiblingLoadingField.create({
       isFulfilled: true,
     });
 
-    expect(get(field, 'isValid')).to.equal(true);
+    expect(get(this.field, 'isValid')).to.equal(true);
   });
 
   it('has label equal to sibling\'s label', function () {
-    const field = SiblingLoadingField.create({
+    this.field = SiblingLoadingField.create({
       siblingName: 'sibling1',
       parent: {
         fields: [{
@@ -39,11 +43,11 @@ describe('Integration | Utility | form-component/sibling-loading-field', functio
       },
     });
 
-    expect(get(field, 'label')).to.equal('test1');
+    expect(get(this.field, 'label')).to.equal('test1');
   });
 
   it('has tip equal to sibling\'s label', function () {
-    const field = SiblingLoadingField.create({
+    this.field = SiblingLoadingField.create({
       siblingName: 'sibling1',
       parent: {
         fields: [{
@@ -53,6 +57,6 @@ describe('Integration | Utility | form-component/sibling-loading-field', functio
       },
     });
 
-    expect(get(field, 'tip')).to.equal('test1');
+    expect(get(this.field, 'tip')).to.equal('test1');
   });
 });

@@ -80,7 +80,11 @@ export default OneDraggableObject.extend(I18n, {
       const action = this.editorContext.actionsFactory.createSelectElementAction({
         elementToSelect: this.itemModel.item,
       });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroy?.();
+      }
     },
     add() {
       if (!this.allowNesting) {

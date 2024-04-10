@@ -182,15 +182,12 @@ const LoadSeriesFunction = FunctionBase.extend({
     try {
       if (this.timeSeriesRef) {
         this.timeSeriesRef.destroy();
-        this.set('timeSeriesRef', undefined);
       }
       if (this.replaceEmptyParameters) {
         this.replaceEmptyParameters.destroy();
-        this.set('replaceEmptyParameters', null);
       }
       if (this.timeSeriesRefChangesHandler) {
         this.timeSeriesRefChangesHandler.destroy();
-        this.set('replaceEmptyParameters', undefined);
       }
     } finally {
       this._super(...arguments);

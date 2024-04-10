@@ -9,18 +9,22 @@ import { lookupService } from '../../../helpers/stub-service';
 const defaultUnits = ['MiB', 'GiB', 'TiB', 'PiB'];
 
 describe('Integration | Utility | form-component/capacity-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/capacity-field"', function () {
-    const field = CapacityField.create();
-    expect(get(field, 'fieldComponentName'))
+    this.field = CapacityField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/capacity-field');
   });
 
   it(`has "allowedUnits" set to ${JSON.stringify(defaultUnits)} by default`, function () {
-    const field = CapacityField.create();
+    this.field = CapacityField.create();
 
-    expect(get(field, 'allowedUnits')).to.deep.equal(defaultUnits);
+    expect(get(this.field, 'allowedUnits')).to.deep.equal(defaultUnits);
   });
 
   it('translates placeholder', function () {
@@ -28,13 +32,13 @@ describe('Integration | Utility | form-component/capacity-field', function () {
       .withArgs('somePrefix.field1.placeholder')
       .returns('field placeholder');
 
-    const field = CapacityField.create({
+    this.field = CapacityField.create({
       ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });
 
-    expect(get(field, 'placeholder')).to.equal('field placeholder');
+    expect(get(this.field, 'placeholder')).to.equal('field placeholder');
   });
 
   it('has empty placeholder if translation for it cannot be found', function () {
@@ -42,13 +46,13 @@ describe('Integration | Utility | form-component/capacity-field', function () {
       .withArgs('somePrefix.field1.placeholder')
       .returns('<missing-...');
 
-    const field = CapacityField.create({
+    this.field = CapacityField.create({
       ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });
 
-    expect(get(field, 'placeholder')).to.be.empty;
+    expect(get(this.field, 'placeholder')).to.be.empty;
   });
 
   [
@@ -59,17 +63,17 @@ describe('Integration | Utility | form-component/capacity-field', function () {
     it(
       `has empty "${boundingName}" field by default`,
       function () {
-        const field = CapacityField.create();
+        this.field = CapacityField.create();
 
-        expect(get(field, boundingName)).to.be.undefined;
+        expect(get(this.field, boundingName)).to.be.undefined;
       }
     );
   });
 
   it('has "gte" field equal to 0 by default', function () {
-    const field = CapacityField.create();
+    this.field = CapacityField.create();
 
-    expect(get(field, 'gte')).to.equal(0);
+    expect(get(this.field, 'gte')).to.equal(0);
   });
 
   [{
@@ -187,7 +191,7 @@ describe('Integration | Utility | form-component/capacity-field', function () {
       it(
         `has capacity validation error for value "${value}" and ${boundingDescription}`,
         function () {
-          const field = CapacityField.create(Object.assign({
+          this.field = CapacityField.create(Object.assign({
             ownerSource: this.owner,
             name: 'a',
             valuesSource: {
@@ -195,7 +199,7 @@ describe('Integration | Utility | form-component/capacity-field', function () {
             },
           }), bounding);
 
-          const errors = get(field, 'errors');
+          const errors = get(this.field, 'errors');
           expect(errors).to.be.have.length(1);
           expect(errors[0].message).to.equal(error);
         }
@@ -204,7 +208,7 @@ describe('Integration | Utility | form-component/capacity-field', function () {
       it(
         `does not have capacity validation error for value "${value}" and ${boundingDescription}`,
         function () {
-          const field = CapacityField.create(Object.assign({
+          this.field = CapacityField.create(Object.assign({
             ownerSource: this.owner,
             name: 'a',
             valuesSource: {
@@ -212,7 +216,7 @@ describe('Integration | Utility | form-component/capacity-field', function () {
             },
           }), bounding);
 
-          expect(get(field, 'errors')).to.be.have.length(0);
+          expect(get(this.field, 'errors')).to.be.have.length(0);
         }
       );
     }

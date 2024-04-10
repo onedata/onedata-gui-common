@@ -70,7 +70,11 @@ export default Component.extend(I18n, {
     const action = this.editorContext.actionsFactory.createEditChartContentAction({
       chart: this.model,
     });
-    action.execute();
+    try {
+      action.execute();
+    } finally {
+      action.destroyAfterAllExecutions?.();
+    }
   },
 
   actions: {

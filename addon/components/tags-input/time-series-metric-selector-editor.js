@@ -195,6 +195,11 @@ export default Component.extend(I18n, {
   selectedView: 'presets',
 
   /**
+   * @type {ComputedProperty<Set<Tag>>}
+   */
+  tagsToDestroyLater: computed(() => new Set()),
+
+  /**
    * @type {ComputedProperty<Array<FieldOption>>}
    */
   aggregatorOptions: computed(function aggregatorOptions() {
@@ -254,12 +259,16 @@ export default Component.extend(I18n, {
         .filter((tagValue) =>
           !selectedTagHashes.has(getTagValueHash(tagValue))
         )
-        .map((tagValue) => Tag.create({
-          ownerSource: this,
-          value: tagValue,
-          disabledReason: selectedTagCompatHashes.has(getTagValueHash(tagValue, true)) ?
-            'equivalentExists' : (usedNames.has(get(tagValue, 'name')) ? 'nameExists' : null),
-        }));
+        .map((tagValue) => {
+          const tag = Tag.create({
+            ownerSource: this,
+            value: tagValue,
+            disabledReason: selectedTagCompatHashes.has(getTagValueHash(tagValue, true)) ?
+              'equivalentExists' : (usedNames.has(get(tagValue, 'name')) ? 'nameExists' : null),
+          });
+          this.tagsToDestroyLater.add(tag);
+          return tag;
+        });
     }
   ),
 
@@ -391,6 +400,19 @@ export default Component.extend(I18n, {
     const parentTagsInput = this.get('element').closest('.tags-input');
     if (parentTagsInput) {
       this.set('parentTagsInputSelector', `#${parentTagsInput.id}`);
+    }
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.customMetricFields.destroy?.();
+      this.tagsToDestroyLater.forEach((tag) => tag.destroy?.());
+      this.tagsToDestroyLater.clear();
+    } finally {
+      this._super(...arguments);
     }
   },
 

@@ -16,6 +16,11 @@ export default FieldComponentBase.extend({
   classNames: ['tags-field'],
 
   /**
+   * @type {ComputedProperty<Set<Tag>>}
+   */
+  createdTags: computed(() => new Set()),
+
+  /**
    * @type {ComputedProperty<Array<Tag>>}
    */
   tags: computed('value.[]', function tags() {
@@ -26,6 +31,7 @@ export default FieldComponentBase.extend({
     } = this.getProperties('value', 'field', 'sort');
 
     const convertedTags = field.valueToTags(value);
+    convertedTags.forEach((tag) => this.createdTags.add(tag));
     return sort ? field.sortTags(convertedTags) : convertedTags;
   }),
 
@@ -54,8 +60,22 @@ export default FieldComponentBase.extend({
    */
   sort: reads('field.sort'),
 
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.createdTags.forEach((tag) => tag.destroy?.());
+      this.createdTags.clear();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   actions: {
     valueChanged(tags) {
+      tags.forEach((tag) => this.createdTags.add(tag));
+
       const {
         sort,
         field,

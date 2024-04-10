@@ -14,15 +14,21 @@ import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 import { drag } from '../../../../../helpers/drag-drop';
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-editor/series-list', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
+
+  afterEach(function () {
+    this.model?.destroy();
+    this.editorContext?.destroy();
+  });
 
   it('has working "add series" button', async function () {
     const executeSpy = sinon.spy();
     this.setProperties({
-      chart: createChart(),
+      model: createModel(),
       editorContext: EditorContext.create({
         actionsFactory: {
           createAddElementAction: sinon.spy(() => ({ execute: executeSpy })),
+          destroy: () => {},
         },
       }),
     });
@@ -36,13 +42,13 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
 
     expect(this.editorContext.actionsFactory.createAddElementAction).to.be.calledWith({
       newElementType: ElementType.Series,
-      targetElement: this.chart,
+      targetElement: this.model.rootSection.charts[0],
     });
     expect(executeSpy).to.be.calledOnce;
   });
 
   it('shows series list', async function () {
-    this.set('chart', createChart({
+    this.set('model', createModel({
       yAxes: [{
         id: 'a1',
         name: 'a1',
@@ -102,7 +108,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
     const duplicateExecuteSpy = sinon.spy();
     const removeExecuteSpy = sinon.spy();
     this.setProperties({
-      chart: createChart({
+      model: createModel({
         seriesBuilders: [emptySeriesSpec('1')],
       }),
       editorContext: EditorContext.create({
@@ -110,6 +116,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
           createDuplicateElementAction: sinon
             .spy(() => ({ execute: duplicateExecuteSpy })),
           createRemoveElementAction: sinon.spy(() => ({ execute: removeExecuteSpy })),
+          destroy: () => {},
         },
       }),
     });
@@ -124,22 +131,23 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
     expect(duplicateExecuteSpy).to.be.not.called;
     expect(removeExecuteSpy).to.be.not.called;
 
+    const series = this.model.rootSection.charts[0].series[0];
     await click(actions[0]);
     expect(duplicateExecuteSpy).to.be.calledOnce;
     expect(this.editorContext.actionsFactory.createDuplicateElementAction)
       .to.be.calledWith({
-        elementToDuplicate: this.chart.series[0],
+        elementToDuplicate: series,
       });
 
     await click(actions[1]);
     expect(removeExecuteSpy).to.be.calledOnce;
     expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.calledWith({
-      elementToRemove: this.chart.series[0],
+      elementToRemove: series,
     });
   });
 
   it('shows drop zones when element is dragged', async function () {
-    this.set('chart', createChart({
+    this.set('model', createModel({
       seriesBuilders: [
         emptySeriesSpec('1'),
         emptySeriesSpec('2'),
@@ -167,16 +175,16 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
 async function renderComponent() {
   await render(hbs`{{atm-workflow/chart-dashboard-editor/chart-editor/series-list
     editorContext=editorContext
-    chart=chart
+    chart=model.rootSection.charts.[0]
   }}`);
 }
 
-function createChart(chartSpec = {}) {
+function createModel(chartSpec = {}) {
   return createModelFromSpec({
     rootSection: {
       charts: [chartSpec],
     },
-  }).rootSection.charts[0];
+  });
 }
 
 function emptySeriesSpec(id) {

@@ -8,7 +8,11 @@ import createRenderThrottledProperty from 'onedata-gui-common/utils/create-rende
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 describe('Integration | Utility | create-render-throttled-property', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
+
+  afterEach(function () {
+    this.obj?.destroy();
+  });
 
   it('modifies render throttled property only once for multiple dependent property modifications',
     async function () {

@@ -70,6 +70,10 @@ export default FormFieldsGroup.extend({
    * @override
    */
   onValueChange(value, field) {
+    if (this.isDestroyed) {
+      return;
+    }
+
     if (field === this) {
       this.set('valuesSource', value);
     } else {

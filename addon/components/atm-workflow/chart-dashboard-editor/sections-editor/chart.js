@@ -139,7 +139,11 @@ export default OneDraggableObject.extend(I18n, {
     if (isDirectlyClicked(event)) {
       const action = this.editorContext.actionsFactory
         .createSelectElementAction({ elementToSelect: this.chart });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroy();
+      }
     }
   },
 
@@ -178,7 +182,11 @@ export default OneDraggableObject.extend(I18n, {
       const action = this.editorContext.actionsFactory.createEditChartContentAction({
         chart: this.chart,
       });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroyAfterAllExecutions?.();
+      }
     },
   },
 });

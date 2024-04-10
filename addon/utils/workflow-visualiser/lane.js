@@ -152,6 +152,17 @@ export default VisualiserRecord.extend({
     }
   },
 
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.cacheFor('chartDashboardEditorModelContainer')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   clear() {
     const onClear = this.get('onClear');
     return onClear ? onClear(this) : resolve();

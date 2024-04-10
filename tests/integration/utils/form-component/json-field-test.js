@@ -7,28 +7,32 @@ import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe('Integration | Utility | form-component/json-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/json-field"', function () {
-    const textField = JsonField.create();
-    expect(get(textField, 'fieldComponentName'))
+    this.field = JsonField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/json-field');
   });
 
   it('overrides "withValidationIcon" to false', function () {
-    const field = JsonField.create();
-    expect(get(field, 'withValidationIcon')).to.be.false;
+    this.field = JsonField.create();
+    expect(get(this.field, 'withValidationIcon')).to.be.false;
   });
 
   it(
     'notifies about validation error when json is not valid',
     function () {
-      const formField = JsonField.create({
+      this.field = JsonField.create({
         ownerSource: this.owner,
       });
-      set(formField, 'value', '{}x');
+      set(this.field, 'value', '{}x');
 
-      const errors = get(formField, 'errors');
+      const errors = get(this.field, 'errors');
       expect(errors).to.be.have.length(1);
       expect(errors[0].message).to.equal('JSON is not valid');
     }
@@ -39,13 +43,13 @@ describe('Integration | Utility | form-component/json-field', function () {
       .withArgs('somePrefix.field1.placeholder')
       .returns('field tip');
 
-    const field = JsonField.create({
+    this.field = JsonField.create({
       ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });
 
-    expect(get(field, 'placeholder')).to.equal('field tip');
+    expect(get(this.field, 'placeholder')).to.equal('field tip');
   });
 
   it('has empty placeholder if translation for it cannot be found', function () {
@@ -53,12 +57,12 @@ describe('Integration | Utility | form-component/json-field', function () {
       .withArgs('somePrefix.field1.placeholder')
       .returns('<missing-...');
 
-    const field = JsonField.create({
+    this.field = JsonField.create({
       ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });
 
-    expect(get(field, 'placeholder')).to.be.empty;
+    expect(get(this.field, 'placeholder')).to.be.empty;
   });
 });

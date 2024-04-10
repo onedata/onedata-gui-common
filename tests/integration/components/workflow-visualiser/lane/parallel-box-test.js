@@ -34,12 +34,17 @@ const blockActionsSpec = [{
 }];
 
 describe('Integration | Component | workflow-visualiser/lane/parallel-box', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('block', ParallelBox.create({
       actionsFactory: ActionsFactory.create({ ownerSource: this.owner }),
     }));
+  });
+
+  afterEach(function () {
+    this.block.actionsFactory.destroy();
+    this.block.destroy();
   });
 
   it('has classes "workflow-visualiser-parallel-box" and "workflow-visualiser-element"', async function () {

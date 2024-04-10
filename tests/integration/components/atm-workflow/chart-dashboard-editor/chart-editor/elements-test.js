@@ -6,10 +6,14 @@ import { hbs } from 'ember-cli-htmlbars';
 import { createModelFromSpec } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-editor/elements', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
+
+  afterEach(function () {
+    this.model.destroy();
+  });
 
   it('has three tabs with chart elements inside', async function () {
-    this.set('chart', createChart({
+    this.set('model', createChart({
       yAxes: [{
         id: 'a1',
         name: 'a1',
@@ -61,7 +65,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
 
 async function renderComponent() {
   await render(hbs`{{atm-workflow/chart-dashboard-editor/chart-editor/elements
-    chart=chart
+    chart=model.rootSection.charts.[0]
   }}`);
 }
 
@@ -70,5 +74,5 @@ function createChart(chartSpec = {}) {
     rootSection: {
       charts: [chartSpec],
     },
-  }).rootSection.charts[0];
+  });
 }

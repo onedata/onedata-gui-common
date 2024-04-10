@@ -16,7 +16,7 @@ import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
 describe('Integration | Utility | workflow-visualiser/actions/modify-store-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const store = Store.create({
@@ -35,6 +35,11 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-store-actio
       context: { store },
     });
     this.setProperties({ store, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.store.destroy();
   });
 
   it('shows modal with store data on execute', async function () {

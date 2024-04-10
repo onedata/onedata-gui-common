@@ -93,6 +93,17 @@ export default VisualiserElement.extend({
     'removeParallelBoxAction'
   ),
 
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('parallelBoxActions')?.forEach((action) => action.destroy?.());
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   actions: {
     changeName(newName) {
       return this.get('parallelBox').modify({ name: newName });

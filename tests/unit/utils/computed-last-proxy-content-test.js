@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, afterEach } from 'mocha';
 import computedLastProxyContent from 'onedata-gui-common/utils/computed-last-proxy-content';
 import EmberObject, {
   set,
@@ -25,14 +25,18 @@ const ClsBase = EmberObject.extend({
 });
 
 describe('Unit | Utility | computed-last-proxy-content', function () {
+  afterEach(function () {
+    this.obj?.destroy();
+  });
+
   it('returns undefined if proxy is not yet resolved', function () {
     const Cls = ClsBase.extend({
       proxy: promise.object(raw(new Promise(() => {}))),
     });
 
-    const obj = Cls.create();
+    this.obj = Cls.create();
 
-    expect(get(obj, 'value')).to.equal(undefined);
+    expect(get(this.obj, 'value')).to.equal(undefined);
   });
 
   it('returns resolved value if proxy resolves one time', function () {
@@ -41,10 +45,10 @@ describe('Unit | Utility | computed-last-proxy-content', function () {
       proxy: promise.object(raw(resolve(val))),
     });
 
-    const obj = Cls.create();
+    this.obj = Cls.create();
 
-    return get(obj, 'proxy').then(() => {
-      expect(get(obj, 'value')).to.equal(val);
+    return get(this.obj, 'proxy').then(() => {
+      expect(get(this.obj, 'value')).to.equal(val);
     });
   });
 
@@ -59,13 +63,13 @@ describe('Unit | Utility | computed-last-proxy-content', function () {
       value: computedLastProxyContent('proxy'),
     });
 
-    const obj = Cls.create();
+    this.obj = Cls.create();
 
-    return get(obj, 'proxy').then(() => {
-      get(obj, 'value');
-      set(obj, 'dependency', val2);
-      get(obj, 'proxy.content');
-      expect(get(obj, 'value')).to.equal(val1);
+    return get(this.obj, 'proxy').then(() => {
+      get(this.obj, 'value');
+      set(this.obj, 'dependency', val2);
+      get(this.obj, 'proxy.content');
+      expect(get(this.obj, 'value')).to.equal(val1);
     });
   });
 
@@ -86,15 +90,15 @@ describe('Unit | Utility | computed-last-proxy-content', function () {
       value: computedLastProxyContent('proxy'),
     });
 
-    const obj = Cls.create();
+    this.obj = Cls.create();
 
-    return get(obj, 'proxy').then(() => {
-      get(obj, 'value');
-      set(obj, 'dependency', val2);
-      return get(obj, 'proxy');
+    return get(this.obj, 'proxy').then(() => {
+      get(this.obj, 'value');
+      set(this.obj, 'dependency', val2);
+      return get(this.obj, 'proxy');
     }).catch((error) => {
       if (error === secondValueError) {
-        expect(get(obj, 'value')).to.equal(val1);
+        expect(get(this.obj, 'value')).to.equal(val1);
       } else {
         throw error;
       }
@@ -112,13 +116,13 @@ describe('Unit | Utility | computed-last-proxy-content', function () {
       value: computedLastProxyContent('proxy'),
     });
 
-    const obj = Cls.create();
+    this.obj = Cls.create();
 
-    return get(obj, 'proxy').then(() => {
-      set(obj, 'dependency', val2);
-      return get(obj, 'proxy');
+    return get(this.obj, 'proxy').then(() => {
+      set(this.obj, 'dependency', val2);
+      return get(this.obj, 'proxy');
     }).then(() => {
-      expect(get(obj, 'value')).to.equal(val2);
+      expect(get(this.obj, 'value')).to.equal(val2);
     });
   });
 
@@ -133,13 +137,13 @@ describe('Unit | Utility | computed-last-proxy-content', function () {
       value: computedLastProxyContent('proxy'),
     });
 
-    const obj = Cls.create();
+    this.obj = Cls.create();
 
-    return get(obj, 'proxy').then(() => {
-      set(obj, 'dependency', val2);
-      return get(obj, 'proxy');
+    return get(this.obj, 'proxy').then(() => {
+      set(this.obj, 'dependency', val2);
+      return get(this.obj, 'proxy');
     }).then(() => {
-      expect(get(obj, 'value')).to.equal(val2);
+      expect(get(this.obj, 'value')).to.equal(val2);
     });
   });
 });

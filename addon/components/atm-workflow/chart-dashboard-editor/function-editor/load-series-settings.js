@@ -9,7 +9,7 @@
 import { set, computed, observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
-import { hash, array, raw, eq, bool, not } from 'ember-awesome-macros';
+import { hash, raw, eq, bool, not } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';
 import _ from 'lodash';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
@@ -73,6 +73,18 @@ export default FunctionSettingsBase.extend({
   init() {
     this._super(...arguments);
     this.formValuesUpdater();
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.mainForm.destroy?.();
+      this.replaceEmptyFuncForm.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   /**
@@ -356,7 +368,9 @@ export const TimeSeriesSelector = FormFieldsGroup.extend({
   /**
    * @type {Utils.FormComponent.DropdownField}
    */
-  collectionRefField: array.findBy('fields', raw('name'), raw('collectionRef')),
+  collectionRefField: computed('fields.@each.name', function collectionRefField() {
+    return this.fields.find(({ name }) => name === 'collectionRef');
+  }),
 
   /**
    * @type {ComputedProperty<Array<ChartDashboardEditorDataSource>>}

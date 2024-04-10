@@ -61,7 +61,7 @@ const atmDataSpecTypeHelper = new OneDropdownHelper('.data-type-selector');
 const fileTypeHelper = new OneDropdownHelper('.fileType-field');
 
 describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('rootGroup', FormFieldsRootGroup.create({
@@ -72,6 +72,10 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
         }),
       ],
     }));
+  });
+
+  afterEach(function () {
+    this.rootGroup.destroy?.();
   });
 
   context('in edit mode', function () {

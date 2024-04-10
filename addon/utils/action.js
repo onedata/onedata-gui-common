@@ -27,6 +27,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import ActionResult from 'onedata-gui-common/utils/action-result';
+import { allSettled, resolve } from 'rsvp';
 
 /**
  * @typedef {'possible' | 'impossible' | 'notApplicable'} ActionUndoPossibility
@@ -152,6 +153,12 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   executeHooks: undefined,
 
   /**
+   * Contains promises returned by all action executions.
+   * @type {Array<Promise<unknown>>}
+   */
+  executionPromises: undefined,
+
+  /**
    * Callback ready to use inside hbs action helper
    * @public
    * @readonly
@@ -175,7 +182,10 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    */
   init() {
     this._super(...arguments);
-    this.set('executeHooks', []);
+    this.setProperties({
+      executeHooks: [],
+      executionPromises: [],
+    });
   },
 
   /**
@@ -192,12 +202,33 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   },
 
   /**
+   * Like `destroy` but waits until all ongoing executions will end.
+   * @public
+   * @returns {void}
+   */
+  destroyAfterAllExecutions() {
+    const performDestroy = () => {
+      if (!this.isDestroying && !this.isDestroyed) {
+        this.destroy();
+      }
+    };
+
+    if (!this.executionPromises.length) {
+      performDestroy();
+    } else {
+      allSettled(this.executionPromises).finally(() => performDestroy());
+    }
+  },
+
+  /**
    * Executes action (onExecute and then execute hooks)
    * @public
    * @returns {Promise<Utils.ActionResult>}
    */
   async execute() {
-    return await this.internalExecute();
+    const executionPromise = resolve(this.internalExecute());
+    this.executionPromises.push(executionPromise);
+    return await executionPromise;
   },
 
   /**
@@ -206,7 +237,9 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @returns {Promise<Utils.ActionResult>}
    */
   async executeUndo() {
-    return await this.internalExecute(true);
+    const executionPromise = resolve(this.internalExecute(true));
+    this.executionPromises.push(executionPromise);
+    return await executionPromise;
   },
 
   /**

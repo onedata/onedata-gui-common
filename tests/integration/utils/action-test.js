@@ -9,11 +9,15 @@ import { setupTest } from 'ember-mocha';
 import { resolve, reject } from 'rsvp';
 
 describe('Integration | Utility | action', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.action.destroy();
+  });
 
   it('rejects with "not implemented" error on execute() call', async function () {
-    const action = Action.create({ ownerSource: this.owner });
-    const result = await action.execute();
+    this.action = Action.create({ ownerSource: this.owner });
+    const result = await this.action.execute();
 
     expect(result.status).to.equal('failed');
     expect(result.error.message).to.equal('not implemented');
@@ -21,11 +25,11 @@ describe('Integration | Utility | action', function () {
 
   it('provides callback to execute() through property executeCallback', function () {
     const executeSpy = sinon.spy();
-    const action = Action.create({
+    this.action = Action.create({
       execute: executeSpy,
     });
 
-    get(action, 'executeCallback')();
+    get(this.action, 'executeCallback')();
 
     expect(executeSpy).to.be.calledOnce;
   });
@@ -33,12 +37,12 @@ describe('Integration | Utility | action', function () {
   it('calls onExecute and passes its result when execute is called', async function () {
     const actionResult = ActionResult.create({ status: 'done' });
     const onExecute = sinon.stub().resolves(actionResult);
-    const action = Action.create({
+    this.action = Action.create({
       ownerSource: this.owner,
       onExecute,
     });
 
-    const result = await action.execute();
+    const result = await this.action.execute();
 
     expect(onExecute).to.be.calledOnce;
     expect(result).to.equal(actionResult);
@@ -48,12 +52,12 @@ describe('Integration | Utility | action', function () {
     'calls onExecute and passes its result when execute is called (onExecute returns non-ActionResult object)',
     async function () {
       const onExecute = sinon.stub().resolves(123);
-      const action = Action.create({
+      this.action = Action.create({
         ownerSource: this.owner,
         onExecute,
       });
 
-      const result = await action.execute();
+      const result = await this.action.execute();
 
       expect(onExecute).to.be.calledOnce;
       expect(result).to.have.property('result', 123);
@@ -66,22 +70,22 @@ describe('Integration | Utility | action', function () {
     async function () {
       const actionResult = ActionResult.create({ status: 'done' });
       const onExecute = sinon.stub().resolves(actionResult);
-      const action = Action.create({
+      this.action = Action.create({
         ownerSource: this.owner,
         onExecute,
       });
       const order = [];
       const hook1 = sinon.spy(() => order.push(1));
       const hook2 = sinon.spy(() => order.push(2));
-      action.addExecuteHook(hook1);
-      action.addExecuteHook(hook2);
+      this.action.addExecuteHook(hook1);
+      this.action.addExecuteHook(hook2);
 
-      const result = await action.execute();
+      const result = await this.action.execute();
 
       expect(hook1).to.be.calledOnce;
-      expect(hook1).to.be.calledWith(actionResult, action);
+      expect(hook1).to.be.calledWith(actionResult, this.action);
       expect(hook2).to.be.calledOnce;
-      expect(hook2).to.be.calledWith(actionResult, action);
+      expect(hook2).to.be.calledWith(actionResult, this.action);
       expect(order).to.deep.equal([1, 2]);
       expect(result).to.equal(actionResult);
     }
@@ -92,21 +96,21 @@ describe('Integration | Utility | action', function () {
     async function () {
       const actionResult = ActionResult.create({ status: 'done' });
       const onExecute = sinon.stub().resolves(actionResult);
-      const action = Action.create({
+      this.action = Action.create({
         ownerSource: this.owner,
         onExecute,
       });
       const hook1 = sinon.spy();
       const hook2 = sinon.spy();
-      action.addExecuteHook(hook1);
-      action.addExecuteHook(hook2);
-      action.removeExecuteHook(hook1);
+      this.action.addExecuteHook(hook1);
+      this.action.addExecuteHook(hook2);
+      this.action.removeExecuteHook(hook1);
 
-      const result = await action.execute();
+      const result = await this.action.execute();
 
       expect(hook1).to.be.not.be.called;
       expect(hook2).to.be.calledOnce;
-      expect(hook2).to.be.calledWith(actionResult, action);
+      expect(hook2).to.be.calledWith(actionResult, this.action);
       expect(result).to.equal(actionResult);
     }
   );
@@ -118,12 +122,12 @@ describe('Integration | Utility | action', function () {
       .withArgs('prefix.title')
       .returns(targetTranslation);
 
-    const action = Action.create({
+    this.action = Action.create({
       ownerSource: this.owner,
       i18nPrefix: 'prefix',
     });
 
-    expect(get(action, 'title')).to.equal(targetTranslation);
+    expect(get(this.action, 'title')).to.equal(targetTranslation);
   });
 
   it('fallbacks default translation for title to empty string, when translation does not exist', function () {
@@ -132,12 +136,12 @@ describe('Integration | Utility | action', function () {
       .withArgs('prefix.title')
       .returns('<missing-...');
 
-    const action = Action.create({
+    this.action = Action.create({
       ownerSource: this.owner,
       i18nPrefix: 'prefix',
     });
 
-    expect(get(action, 'title')).to.equal('');
+    expect(get(this.action, 'title')).to.equal('');
   });
 
   it('loads success translation via getSuccessNotificationText()', function () {
@@ -148,12 +152,12 @@ describe('Integration | Utility | action', function () {
       .withArgs('prefix.successNotificationText', actionResult.result)
       .returns(targetTranslation);
 
-    const action = Action.create({
+    this.action = Action.create({
       ownerSource: this.owner,
       i18nPrefix: 'prefix',
     });
 
-    expect(action.getSuccessNotificationText(actionResult))
+    expect(this.action.getSuccessNotificationText(actionResult))
       .to.equal(targetTranslation);
   });
 
@@ -167,12 +171,12 @@ describe('Integration | Utility | action', function () {
         .withArgs('prefix.failureNotificationActionName', actionResult.error)
         .returns(targetTranslation);
 
-      const action = Action.create({
+      this.action = Action.create({
         ownerSource: this.owner,
         i18nPrefix: 'prefix',
       });
 
-      expect(action.getFailureNotificationActionName(actionResult))
+      expect(this.action.getFailureNotificationActionName(actionResult))
         .to.equal(targetTranslation);
     }
   );
@@ -187,11 +191,11 @@ describe('Integration | Utility | action', function () {
       .withArgs('prefix.successNotificationText', actionResult.result)
       .returns(targetTranslation);
 
-    const action = Action.create({
+    this.action = Action.create({
       ownerSource: this.owner,
       i18nPrefix: 'prefix',
     });
-    action.notifySuccess(actionResult);
+    this.action.notifySuccess(actionResult);
 
     expect(successNotifySpy).to.be.calledWith(targetTranslation);
   });
@@ -206,11 +210,11 @@ describe('Integration | Utility | action', function () {
       .withArgs('prefix.failureNotificationActionName', actionResult.error)
       .returns(targetTranslation);
 
-    const action = Action.create({
+    this.action = Action.create({
       ownerSource: this.owner,
       i18nPrefix: 'prefix',
     });
-    action.notifyFailure(actionResult);
+    this.action.notifyFailure(actionResult);
 
     expect(failureNotifySpy)
       .to.be.calledWith(targetTranslation, actionResult.error);
@@ -218,25 +222,25 @@ describe('Integration | Utility | action', function () {
 
   it('notifies about success on notifyResult() with done action result', async function () {
     const actionResult = ActionResult.create({ status: 'done' });
-    const action = Action.create({
+    this.action = Action.create({
       ownerSource: this.owner,
       onExecute: () => resolve(actionResult),
     });
-    const notifySuccessSpy = sinon.spy(action, 'notifySuccess');
+    const notifySuccessSpy = sinon.spy(this.action, 'notifySuccess');
 
-    await action.execute();
+    await this.action.execute();
     expect(notifySuccessSpy).to.be.calledWith(actionResult);
   });
 
   it('notifies about failure on notifyResult() with failed action result', async function () {
     const actionResult = ActionResult.create({ status: 'failed', error: { a: 1 } });
-    const action = Action.create({
+    this.action = Action.create({
       ownerSource: this.owner,
       onExecute: () => resolve(actionResult),
     });
-    const notifyFailureSpy = sinon.spy(action, 'notifyFailure');
+    const notifyFailureSpy = sinon.spy(this.action, 'notifyFailure');
 
-    await action.execute();
+    await this.action.execute();
     expect(notifyFailureSpy).to.be.calledWith(actionResult);
   });
 
@@ -244,12 +248,12 @@ describe('Integration | Utility | action', function () {
     'calls onExecute and passes its result when execute is called (onExecute rejects with non-ActionResult object)',
     async function () {
       const onExecute = sinon.stub().rejects(123);
-      const action = Action.create({
+      this.action = Action.create({
         ownerSource: this.owner,
         onExecute,
       });
 
-      const result = await action.execute();
+      const result = await this.action.execute();
 
       expect(onExecute).to.be.calledOnce;
       expect(result).to.have.property('error', 123);
@@ -262,12 +266,12 @@ describe('Integration | Utility | action', function () {
     async function () {
       const actionResult = ActionResult.create({ status: 'failed', error: { a: 1 } });
       const onExecute = sinon.stub().rejects(actionResult);
-      const action = Action.create({
+      this.action = Action.create({
         ownerSource: this.owner,
         onExecute,
       });
 
-      const result = await action.execute();
+      const result = await this.action.execute();
 
       expect(onExecute).to.be.calledOnce;
       expect(result).to.equal(actionResult);
@@ -280,19 +284,19 @@ describe('Integration | Utility | action', function () {
       const error = { id: 'err' };
       const actionResult = ActionResult.create({ status: 'done' });
       const onExecute = sinon.stub().resolves(actionResult);
-      const action = Action.create({
+      this.action = Action.create({
         ownerSource: this.owner,
         onExecute,
       });
       const hook1 = sinon.stub().returns(reject(error));
       const hook2 = sinon.spy();
-      action.addExecuteHook(hook1);
-      action.addExecuteHook(hook2);
+      this.action.addExecuteHook(hook1);
+      this.action.addExecuteHook(hook2);
 
-      const result = await action.execute();
+      const result = await this.action.execute();
 
       expect(hook1).to.be.calledOnce;
-      expect(hook1).to.be.calledWith(actionResult, action);
+      expect(hook1).to.be.calledWith(actionResult, this.action);
       expect(hook2).to.not.be.called;
       expect(result).to.not.equal(actionResult);
       expect(result).to.have.property('status', 'failed');

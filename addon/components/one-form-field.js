@@ -15,6 +15,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { next } from '@ember/runloop';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 const {
   layoutConfig,
@@ -74,7 +75,9 @@ export default Component.extend(I18n, {
     onFocusOut() {
       // prevents double render issue by scheduling focusout event handler on
       // events' loop end
-      next(() => this.get('onFocusOut')(...arguments));
+      next(() => {
+        safeExec(this, () => this.get('onFocusOut')(...arguments));
+      });
     },
   },
 });

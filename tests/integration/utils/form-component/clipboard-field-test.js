@@ -5,20 +5,24 @@ import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form-component/clipboard-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/clipboard-field"', function () {
-    const field = ClipboardField.create();
-    expect(get(field, 'fieldComponentName')).to.equal('form-component/clipboard-field');
+    this.field = ClipboardField.create();
+    expect(get(this.field, 'fieldComponentName')).to.equal('form-component/clipboard-field');
   });
 
   it('defines default type as "input"', function () {
-    const field = ClipboardField.create();
-    expect(get(field, 'type')).to.equal('input');
+    this.field = ClipboardField.create();
+    expect(get(this.field, 'type')).to.equal('input');
   });
 
   it('defines default textareaRows as 5', function () {
-    const field = ClipboardField.create();
-    expect(get(field, 'textareaRows')).to.equal(5);
+    this.field = ClipboardField.create();
+    expect(get(this.field, 'textareaRows')).to.equal(5);
   });
 });
