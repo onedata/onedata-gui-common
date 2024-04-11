@@ -15,6 +15,7 @@ export const reportFormatter = 'D MMM YYYY H:mm:ss';
 export const detailedReportFormatter = 'D MMM YYYY H:mm:ss.SSS';
 export const dateWithMinutesFormatter = 'D MMM YYYY H:mm';
 export const detailedTimeFormatter = 'H:mm:ss.SSS';
+export const timeFormatter = 'H:mm';
 
 const blanks = {
   cert: 'never',
@@ -28,6 +29,7 @@ const formatters = {
   detailedReport: detailedReportFormatter,
   dateWithMinutes: dateWithMinutesFormatter,
   detailedTime: detailedTimeFormatter,
+  time: timeFormatter,
 };
 
 export function dateFormat([inputDate], { format, timezone, blank } = {}) {
