@@ -15,9 +15,10 @@
 
 import Component from '@ember/component';
 
-import EmberObject, { computed } from '@ember/object';
+import EmberObject, { computed, setProperties } from '@ember/object';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
+import { getOwner } from '@ember/application';
 import layout from 'onedata-gui-common/templates/components/support-size-info/table';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import Bootstrap3Theme from 'ember-models-table/themes/bootstrap3';
@@ -147,13 +148,13 @@ export default Component.extend({
   }),
 
   themeInstance: computed('noDataToShowMessage', function themeInstance() {
-    return Bootstrap3Theme.create({
-      'table': 'table table-striped table-condensed',
-      'sort-asc': 'oneicon oneicon-arrow-up',
-      'sort-desc': 'oneicon oneicon-arrow-down',
-      'messages': {
-        noDataToShow: this.get('noDataToShowMessage'),
-      },
+    const theme = Bootstrap3Theme.create({
+      table: 'table table-striped table-condensed',
+      sortAscIcon: 'oneicon oneicon-arrow-up',
+      sortDescIcon: 'oneicon oneicon-arrow-down',
+      noDataToShowMsg: this.get('noDataToShowMessage'),
     });
+    setProperties(theme, getOwner(this).ownerInjection());
+    return theme;
   }),
 });
