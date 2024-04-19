@@ -12,20 +12,22 @@ import { atmDataSpecTypeDefinition as stringTypeDefinition } from './string';
 import { atmDataSpecTypeDefinition as objectTypeDefinition } from './object';
 import { atmDataSpecTypeDefinition as fileTypeDefinition } from './file';
 import { atmDataSpecTypeDefinition as datasetTypeDefinition } from './dataset';
+import { atmDataSpecTypeDefinition as groupTypeDefinition } from './group';
 import { atmDataSpecTypeDefinition as rangeTypeDefinition } from './range';
 import { atmDataSpecTypeDefinition as arrayTypeDefinition } from './array';
 import { atmDataSpecTypeDefinition as timeSeriesMeasurementTypeDefinition } from './time-series-measurement';
 
 /**
  * @typedef {
+ *   AtmBooleanDataSpec |
  *   AtmDatasetDataSpec |
  *   AtmFileDataSpec |
+ *   AtmGroupDataSpec |
  *   AtmNumberDataSpec |
- *   AtmBooleanDataSpec |
  *   AtmObjectDataSpec |
  *   AtmRangeDataSpec |
  *   AtmStringDataSpec |
- *   AtmTimeSeriesMeasurementDataSpec
+ *   AtmTimeSeriesMeasurementDataSpec |
  * } AtmLeafDataSpec
  */
 
@@ -41,7 +43,7 @@ import { atmDataSpecTypeDefinition as timeSeriesMeasurementTypeDefinition } from
  */
 
 /**
- * @typedef {'number'|'boolean'|'string'|'object'|'file'|'dataset'|'range'|'array'|'timeSeriesMeasurement'} AtmDataSpecType
+ * @typedef {'number'|'boolean'|'string'|'object'|'file'|'dataset'|'group'|'range'|'array'|'timeSeriesMeasurement'} AtmDataSpecType
  */
 
 /**
@@ -54,6 +56,7 @@ export const AtmDataSpecType = Object.freeze({
   Object: 'object',
   File: 'file',
   Dataset: 'dataset',
+  Group: 'group',
   Range: 'range',
   Array: 'array',
   TimeSeriesMeasurement: 'timeSeriesMeasurement',
@@ -69,6 +72,7 @@ export const atmDataSpecTypesArray = Object.freeze([
   AtmDataSpecType.Object,
   AtmDataSpecType.File,
   AtmDataSpecType.Dataset,
+  AtmDataSpecType.Group,
   AtmDataSpecType.Range,
   AtmDataSpecType.Array,
   AtmDataSpecType.TimeSeriesMeasurement,
@@ -131,6 +135,7 @@ export const atmDataSpecTypeDefinitions = Object.freeze({
   object: objectTypeDefinition,
   file: fileTypeDefinition,
   dataset: datasetTypeDefinition,
+  group: groupTypeDefinition,
   range: rangeTypeDefinition,
   array: arrayTypeDefinition,
   timeSeriesMeasurement: timeSeriesMeasurementTypeDefinition,

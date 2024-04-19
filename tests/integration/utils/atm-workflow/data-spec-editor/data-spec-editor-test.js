@@ -39,6 +39,9 @@ const atmDataSpecTypesInfo = [{
   type: AtmDataSpecType.Dataset,
   label: 'Dataset',
 }, {
+  type: AtmDataSpecType.Group,
+  label: 'Group',
+}, {
   type: AtmDataSpecType.Range,
   label: 'Range',
 }, {
@@ -53,6 +56,7 @@ const simpleAtmDataSpecTypesInfo = atmDataSpecTypesInfo.filter(({ type }) =>
   ![
     AtmDataSpecType.Array,
     AtmDataSpecType.File,
+    AtmDataSpecType.Group,
     AtmDataSpecType.Number,
     AtmDataSpecType.TimeSeriesMeasurement,
   ].includes(type)
@@ -121,6 +125,16 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
       expect(getCreatedAtmDataSpec(this)).to.deep.equal({
         type: AtmDataSpecType.File,
         fileType: AtmFileType.Regular,
+        attributes: null,
+      });
+    });
+
+    it('allows to create group type data spec', async function () {
+      await renderForm();
+
+      await atmDataSpecTypeHelper.selectOptionByText('Group');
+      expect(getCreatedAtmDataSpec(this)).to.deep.equal({
+        type: AtmDataSpecType.Group,
         attributes: null,
       });
     });
@@ -211,6 +225,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
           'Object',
           'File',
           'Dataset',
+          'Group',
           'Range',
           'Time series measurement',
         ]);

@@ -1,0 +1,62 @@
+{{#atm-workflow/value-editors/commons/editor-box
+  editorState=editorState
+  onRemove=onRemove
+  class=(concat "mode-" mode)
+  as |editorBox|
+}}
+  {{#if (eq editorBox.section "toolbar")}}
+    {{#if (and (eq mode "selected") (not isDisabled))}}
+      {{#atm-workflow/value-editors/group/selector
+        class="action-link"
+        atmDataSpec=editorState.atmDataSpec
+        editorContext=editorState.editorContext
+        onGroupsSelected=(action "groupsSelected")
+        onIdProvidingStarted=(action "idProvidingStarted")
+      }}
+        {{tt this "changeGroup"}}
+      {{/atm-workflow/value-editors/group/selector}}
+    {{/if}}
+  {{else if (eq editorBox.section "content")}}
+    {{#if (eq mode "empty")}}
+      {{#atm-workflow/value-editors/group/selector
+        atmDataSpec=editorState.atmDataSpec
+        editorContext=editorState.editorContext
+        isDisabled=isDisabled
+        onGroupsSelected=(action "groupsSelected")
+        onIdProvidingStarted=(action "idProvidingStarted")
+      }}
+        {{tt this "selectGroup"}}
+      {{/atm-workflow/value-editors/group/selector}}
+    {{else if (eq mode "idForm")}}
+      <form class="form form-horizontal form-component">
+        {{form-component/field-renderer field=idFormRootGroup}}
+        <div class="id-form-buttons">
+          {{#one-button
+            class="cancel-btn"
+            type="default"
+            size="sm"
+            disabled=isDisabled
+            onClick=(action "cancelIdForm")
+          }}
+            {{tt this "cancelIdForm"}}
+          {{/one-button}}
+          {{#one-button
+            class="accept-btn"
+            type="primary"
+            size="sm"
+            disabled=(or (not isValid) isDisabled)
+            onClick=(action "acceptIdForm")
+          }}
+            {{tt this "acceptIdForm"}}
+          {{/one-button}}
+        </div>
+      </form>
+    {{else}}
+      {{atm-workflow/value-presenters/group/visual-presenter
+        value=value
+        dataSpec=editorState.atmDataSpec
+        context=editorState.editorContext
+      }}
+    {{/if}}
+  {{/if}}
+{{/atm-workflow/value-editors/commons/editor-box}}

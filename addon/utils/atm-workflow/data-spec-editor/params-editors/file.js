@@ -52,7 +52,7 @@ const FormElement = FormFieldsGroup.extend({
     return conditions.allowedFileTypes;
   }),
 
-  classes: 'file-data-spec-params-editor params-editors',
+  classes: 'file-data-spec-params-editor data-spec-params-editor-with-attributes params-editors',
   i18nPrefix: `${i18nPrefix}.fields`,
   // Does not take parent fields group translation path into account
   translationPath: '',

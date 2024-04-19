@@ -22,6 +22,7 @@ const inheritanceLeafTypes = [
   AtmDataSpecType.Array,
   AtmDataSpecType.File,
   AtmDataSpecType.Dataset,
+  AtmDataSpecType.Group,
   AtmDataSpecType.Range,
   AtmDataSpecType.TimeSeriesMeasurement,
 ];
@@ -40,6 +41,9 @@ const fileSupertypes = [
 const datasetSupertypes = [
   AtmDataSpecType.Object,
 ];
+const groupSupertypes = [
+  AtmDataSpecType.Object,
+];
 const rangeSupertypes = [
   AtmDataSpecType.Object,
 ];
@@ -50,6 +54,7 @@ const timeSeriesMeasurementSupertypes = [
 const objectSubtypes = [
   AtmDataSpecType.File,
   AtmDataSpecType.Dataset,
+  AtmDataSpecType.Group,
   AtmDataSpecType.Range,
   AtmDataSpecType.TimeSeriesMeasurement,
 ];
@@ -413,6 +418,26 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
           }, false);
         });
 
+      const groupTypeOrSupertypes = [
+        AtmDataSpecType.Group,
+        ...groupSupertypes,
+      ];
+      groupTypeOrSupertypes.forEach((groupTypeOrSupertype) => {
+        testTypeOrSubtypeFilter({
+          type: AtmDataSpecType.Group,
+        }, {
+          type: groupTypeOrSupertype,
+        }, true);
+      });
+      _.difference(atmDataSpecTypesArray, groupTypeOrSupertypes)
+        .forEach((typeNotInheriting) => {
+          testTypeOrSubtypeFilter({
+            type: AtmDataSpecType.Group,
+          }, {
+            type: typeNotInheriting,
+          }, false);
+        });
+
       const rangeTypeOrSupertypes = [
         AtmDataSpecType.Range,
         ...rangeSupertypes,
@@ -583,6 +608,26 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
           }, true);
         });
 
+      const groupTypeOrSupertypes = [
+        AtmDataSpecType.Group,
+        ...groupSupertypes,
+      ];
+      groupTypeOrSupertypes.forEach((groupTypeOrSupertype) => {
+        testForbiddenTypeFilter({
+          type: AtmDataSpecType.Group,
+        }, {
+          type: groupTypeOrSupertype,
+        }, false);
+      });
+      _.difference(atmDataSpecTypesArray, groupTypeOrSupertypes)
+        .forEach((typeNotInheriting) => {
+          testForbiddenTypeFilter({
+            type: AtmDataSpecType.Group,
+          }, {
+            type: typeNotInheriting,
+          }, true);
+        });
+
       const rangeTypeOrSupertypes = [
         AtmDataSpecType.Range,
         ...rangeSupertypes,
@@ -681,6 +726,7 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
       [AtmDataSpecType.Object, [AtmDataSpecType.Object]],
       [AtmDataSpecType.File, [AtmDataSpecType.Object, AtmDataSpecType.File]],
       [AtmDataSpecType.Dataset, [AtmDataSpecType.Object, AtmDataSpecType.Dataset]],
+      [AtmDataSpecType.Group, [AtmDataSpecType.Object, AtmDataSpecType.Group]],
       [AtmDataSpecType.Range, [AtmDataSpecType.Object, AtmDataSpecType.Range]],
       [AtmDataSpecType.Array, [AtmDataSpecType.Array]],
       [AtmDataSpecType.TimeSeriesMeasurement, [
@@ -715,11 +761,13 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
         AtmDataSpecType.Object,
         AtmDataSpecType.File,
         AtmDataSpecType.Dataset,
+        AtmDataSpecType.Group,
         AtmDataSpecType.Range,
         AtmDataSpecType.TimeSeriesMeasurement,
       ]],
       [AtmDataSpecType.File, [AtmDataSpecType.File]],
       [AtmDataSpecType.Dataset, [AtmDataSpecType.Dataset]],
+      [AtmDataSpecType.Group, [AtmDataSpecType.Group]],
       [AtmDataSpecType.Range, [AtmDataSpecType.Range]],
       [AtmDataSpecType.Array, [AtmDataSpecType.Array]],
       [AtmDataSpecType.TimeSeriesMeasurement, [AtmDataSpecType.TimeSeriesMeasurement]],
@@ -753,6 +801,7 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
         AtmDataSpecType.Object,
         AtmDataSpecType.File,
         AtmDataSpecType.Dataset,
+        AtmDataSpecType.Group,
         AtmDataSpecType.Range,
         AtmDataSpecType.TimeSeriesMeasurement,
       ])],
@@ -761,6 +810,9 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
       ])],
       [AtmDataSpecType.Dataset, _.difference(atmDataSpecTypesArray, [
         AtmDataSpecType.Dataset,
+      ])],
+      [AtmDataSpecType.Group, _.difference(atmDataSpecTypesArray, [
+        AtmDataSpecType.Group,
       ])],
       [AtmDataSpecType.Range, _.difference(atmDataSpecTypesArray, [
         AtmDataSpecType.Range,

@@ -112,7 +112,8 @@
 }
 
 .file-table-body-row-presenter .file-icon,
-.dataset-table-body-row-presenter .dataset-icon {
+.dataset-table-body-row-presenter .dataset-icon,
+.group-table-body-row-presenter .group-icon {
   margin-right: 0.2em;
   margin-left: -0.1em;
 }
@@ -122,7 +123,8 @@
   vertical-align: middle;
 }
 
-.dataset-table-body-row-presenter .dataset-icon {
+.dataset-table-body-row-presenter .dataset-icon,
+.group-table-body-row-presenter .group-icon {
   font-size: 170%;
   vertical-align: middle;
 }
