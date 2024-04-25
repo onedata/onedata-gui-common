@@ -54,6 +54,13 @@ export default Component.extend({
   hasCheckboxes: false,
 
   /**
+   * If set to true then only one item can be selected at once. Any
+   * second item selection will deselected the first one.
+   * @type {boolean}
+   */
+  allowOnlySingleSelection: false,
+
+  /**
    * Selected items change handler
    * @type {Function}
    */
@@ -170,6 +177,9 @@ export default Component.extend({
         _selectedItemValues.removeObject(itemValue);
       } else if ((selectionState === undefined || selectionState === true) &&
         !isOnList && _availableItemValues.includes(itemValue)) {
+        if (this.allowOnlySingleSelection) {
+          _selectedItemValues.clear();
+        }
         _selectedItemValues.pushObject(itemValue);
       }
       if (selectionChanged) {
@@ -205,7 +215,7 @@ export default Component.extend({
         '_selectedItemValues',
         'selectionChanged'
       );
-      if (_areAllItemsSelected) {
+      if (_areAllItemsSelected || this.allowOnlySingleSelection) {
         _selectedItemValues.clear();
       } else {
         _selectedItemValues.addObjects(_availableItemValues);

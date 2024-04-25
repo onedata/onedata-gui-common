@@ -1,7 +1,20 @@
-{{#one-collapsible-list as |list|}}
+{{#one-collapsible-list
+  hasCheckboxes=selectionMode
+  allowOnlySingleSelection=(eq selectionMode "single")
+  selectionChanged=(action "selectionChanged")
+  as |list|
+}}
+  {{#if (or listHeader selectionMode)}}
+    {{list.header title=listHeader isCollapsible=false}}
+  {{/if}}
   {{#each sortedItems as |item|}}
-    {{#list.item class="resource-item" as |listItem|}}
-      {{#listItem.header tagName=(if item.link "a" "div") href=item.link isCollapsible=false}}
+    {{#list.item class="resource-item" selectionValue=item as |listItem|}}
+      {{#listItem.header
+        tagName=(if item.link "a" "div")
+        href=item.link
+        isCollapsible=false
+        toggleSelectionOnClick=selectionMode
+      }}
         {{#if item.icon}}
           <span
             class={{concat-classes

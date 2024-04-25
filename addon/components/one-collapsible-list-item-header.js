@@ -27,6 +27,7 @@ export default Component.extend({
     'truncate',
     'isOpened:opened',
     'isCollapsible:collapsible',
+    'toggleSelectionOnClick:hoverable',
     'toolbarWhenOpened:toolbar-when-opened',
     'disableToggleIcon:disable-toggle-icon',
     '_isItemFixed:header-fixed',
@@ -43,7 +44,13 @@ export default Component.extend({
    * @virtual optional
    * @type {string}
    */
-  href: '',
+  href: null,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  toggleSelectionOnClick: false,
 
   /**
    * If true, text inside will be truncated with `truncate` css class.
@@ -70,22 +77,28 @@ export default Component.extend({
    */
   _clickDisabledElementsSelector: '.btn-toolbar *, .webui-popover *, .item-checkbox, .item-checkbox *, .one-inline-editor *',
 
-  _clickHandlerObserver: observer('_isItemFixed', 'isCollapsible', function () {
-    const {
-      _isItemFixed,
-      isCollapsible,
-      click,
-    } = this.getProperties(
-      '_isItemFixed',
-      'isCollapsible',
-      'click',
-    );
-    if (click === this._clickHandler || !click) {
-      this.set(
-        'click', !_isItemFixed && isCollapsible ? this._clickHandler : undefined
+  _clickHandlerObserver: observer(
+    '_isItemFixed',
+    'isCollapsible',
+    'toggleSelectionOnClick',
+    function () {
+      const {
+        _isItemFixed,
+        isCollapsible,
+        click,
+      } = this.getProperties(
+        '_isItemFixed',
+        'isCollapsible',
+        'click',
       );
+      if (click === this._clickHandler || !click) {
+        this.set(
+          'click', !_isItemFixed && (isCollapsible || this.toggleSelectionOnClick) ?
+          this._clickHandler : undefined
+        );
+      }
     }
-  }),
+  ),
 
   init() {
     this._super(...arguments);
@@ -103,7 +116,11 @@ export default Component.extend({
       !event.target.parentElement) {
       event.stopPropagation();
     } else {
-      this.send('toggle');
+      if (this.toggleSelectionOnClick) {
+        this.toggleSelection?.(!this._isSelected);
+      } else {
+        this.send('toggle');
+      }
     }
   },
 
