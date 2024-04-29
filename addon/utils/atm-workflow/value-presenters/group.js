@@ -14,6 +14,7 @@ import { valuePresentersDefaultLocation } from './commons';
 export default {
   singleLineValuePresenter: `${valuePresentersDefaultLocation}/group/single-line-presenter`,
   rawValuePresenter: `${valuePresentersDefaultLocation}/group/raw-presenter`,
+  visualValuePresenter: `${valuePresentersDefaultLocation}/group/visual-presenter`,
   tableHeaderRowValuePresenter: `${valuePresentersDefaultLocation}/group/table-header-row-presenter`,
   tableBodyRowValuePresenter: `${valuePresentersDefaultLocation}/group/table-body-row-presenter`,
   getTableValuePresenterColumnsCount: () => 2,
