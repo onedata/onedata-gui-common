@@ -7,10 +7,9 @@
  */
 
 import Action from 'onedata-gui-common/utils/action';
-import { computed } from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import ObjectProxy from '@ember/object/proxy';
 import {
   laneEndedStatuses,
   laneSuspendedStatuses,
@@ -57,10 +56,10 @@ export default Action.extend({
   ),
 
   /**
-   * @type {ComputedProperty<ObjectProxy<boolean>>}
+   * @type {ComputedProperty<EmberObject<{ content: boolean }>}
    */
   isLiveProxy: computed('lane.status', function isLiveProxy() {
-    return ObjectProxy.extend({
+    return EmberObject.extend({
       content: computed('action.lane.status', function content() {
         return !laneEndedStatuses.includes(this.action.lane?.status) &&
           !laneSuspendedStatuses.includes(this.action.lane?.status);

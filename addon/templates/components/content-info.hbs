@@ -6,10 +6,10 @@
         {{#if subheader}}
           <h2>{{subheader}}</h2>
         {{/if}}
-        {{#if (or text textTemplate)}}
+        {{#if (or text textComponent)}}
           <p class="lead">
-            {{#if textTemplate}}
-              {{partial textTemplate}}
+            {{#if textComponent}}
+              {{component textComponent data=textComponentData}}
             {{else}}
               {{text}}
             {{/if}}

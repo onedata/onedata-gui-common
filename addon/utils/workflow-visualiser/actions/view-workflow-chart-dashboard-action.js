@@ -7,10 +7,9 @@
  */
 
 import Action from 'onedata-gui-common/utils/action';
-import { computed } from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import ObjectProxy from '@ember/object/proxy';
 import { or } from 'ember-awesome-macros';
 import {
   workflowEndedStatuses,
@@ -53,10 +52,10 @@ export default Action.extend({
   ),
 
   /**
-   * @type {ComputedProperty<ObjectProxy<boolean>>}
+   * @type {ComputedProperty<EmberObject<{ content: boolean }>}
    */
   isLiveProxy: computed('workflow.status', function isLiveProxy() {
-    return ObjectProxy.extend({
+    return EmberObject.extend({
       content: computed('action.workflow.status', function content() {
         return !workflowEndedStatuses.includes(this.action.workflow?.status) &&
           !workflowSuspendedStatuses.includes(this.action.workflow?.status);

@@ -60,6 +60,16 @@ export default OneDraggableObject.extend(I18n, {
   isHovered: false,
 
   /**
+   * @type {(() => void) | null}
+   */
+  mouseMoveHandler: null,
+
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseLeaveHandler: null,
+
+  /**
    * For one-draggable-object
    * @override
    */
@@ -118,22 +128,6 @@ export default OneDraggableObject.extend(I18n, {
   /**
    * @override
    */
-  mouseLeave() {
-    this._super(...arguments);
-    this.changeHoverState(false);
-  },
-
-  /**
-   * @override
-   */
-  mouseMove() {
-    this._super(...arguments);
-    this.changeHoverState(true);
-  },
-
-  /**
-   * @override
-   */
   click(event) {
     this._super(...arguments);
     if (isDirectlyClicked(event)) {
@@ -144,6 +138,44 @@ export default OneDraggableObject.extend(I18n, {
       } finally {
         action.destroy();
       }
+    }
+  },
+
+  /**
+   * @override
+   */
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (!this.element) {
+      return;
+    }
+
+    this.setProperties({
+      mouseMoveHandler: () => {
+        this.changeHoverState(true);
+      },
+      mouseLeaveHandler: () => {
+        this.changeHoverState(false);
+      },
+    });
+    this.element.addEventListener('mousemove', this.mouseMoveHandler);
+    this.element.addEventListener('mouseleave', this.mouseLeaveHandler);
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      if (this.mouseMoveHandler) {
+        this.element?.removeEventListener('mousemove', this.mouseMoveHandler);
+      }
+      if (this.mouseLeaveHandler) {
+        this.element?.removeEventListener('mouseleave', this.mouseLeaveHandler);
+      }
+    } finally {
+      this._super(...arguments);
     }
   },
 
