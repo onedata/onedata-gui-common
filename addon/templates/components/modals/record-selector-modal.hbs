@@ -13,7 +13,7 @@
     <p class="description">{{descriptionText}}</p>
     {{#promise-proxy-container proxy=recordOptionsProxy}}
       <OneDropdown
-        @options={{recordOptionsProxy}}
+        @options={{recordOptionsProxy.content.content}}
         @onChange={{action (mut selectedRecordOption)}}
         @selected={{selectedRecordOption}}
         @placeholder={{selectorPlaceholderText}}
