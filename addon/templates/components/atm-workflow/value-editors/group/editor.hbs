@@ -1,54 +1,54 @@
-{{#atm-workflow/value-editors/commons/editor-box
-  editorState=editorState
-  onRemove=onRemove
-  class=(concat "mode-" mode)
+<AtmWorkflow::ValueEditors::Commons::EditorBox
+  class={{concat "mode-" mode}}
+  @editorState={{editorState}}
+  @onRemove={{onRemove}}
   as |editorBox|
-}}
+>
   {{#if (eq editorBox.section "toolbar")}}
     {{#if (and (eq mode "selected") (not isDisabled))}}
-      {{#atm-workflow/value-editors/group/selector
+      <AtmWorkflow::ValueEditors::Group::Selector
         class="action-link"
-        atmDataSpec=editorState.atmDataSpec
-        editorContext=editorState.editorContext
-        onGroupsSelected=(action "groupsSelected")
-        onIdProvidingStarted=(action "idProvidingStarted")
-      }}
+        @atmDataSpec={{editorState.atmDataSpec}}
+        @editorContext={{editorState.editorContext}}
+        @onGroupsSelected={{action "groupsSelected"}}
+        @onIdProvidingStarted={{action "idProvidingStarted"}}
+      >
         {{tt this "changeGroup"}}
-      {{/atm-workflow/value-editors/group/selector}}
+      </AtmWorkflow::ValueEditors::Group::Selector>
     {{/if}}
   {{else if (eq editorBox.section "content")}}
     {{#if (eq mode "empty")}}
-      {{#atm-workflow/value-editors/group/selector
-        atmDataSpec=editorState.atmDataSpec
-        editorContext=editorState.editorContext
-        isDisabled=isDisabled
-        onGroupsSelected=(action "groupsSelected")
-        onIdProvidingStarted=(action "idProvidingStarted")
-      }}
+      <AtmWorkflow::ValueEditors::Group::Selector
+        @atmDataSpec={{editorState.atmDataSpec}}
+        @editorContext={{editorState.editorContext}}
+        @isDisabled={{isDisabled}}
+        @onGroupsSelected={{action "groupsSelected"}}
+        @onIdProvidingStarted={{action "idProvidingStarted"}}
+      >
         {{tt this "selectGroup"}}
-      {{/atm-workflow/value-editors/group/selector}}
+      </AtmWorkflow::ValueEditors::Group::Selector>
     {{else if (eq mode "idForm")}}
       <form class="form form-horizontal form-component">
-        {{form-component/field-renderer field=idFormRootGroup}}
+        <FormComponent::FieldRenderer @field={{idFormRootGroup}} />
         <div class="id-form-buttons">
-          {{#one-button
+          <OneButton
             class="cancel-btn"
-            type="default"
-            size="sm"
-            disabled=isDisabled
-            onClick=(action "cancelIdForm")
-          }}
+            @type="default"
+            @size="sm"
+            @disabled={{isDisabled}}
+            @onClick={{action "cancelIdForm"}}
+          >
             {{tt this "cancelIdForm"}}
-          {{/one-button}}
-          {{#one-button
+          </OneButton>
+          <OneButton
             class="accept-btn"
-            type="primary"
-            size="sm"
-            disabled=(or (not isValid) isDisabled)
-            onClick=(action "acceptIdForm")
-          }}
+            @type="primary"
+            @size="sm"
+            @disabled={{or (not isValid) isDisabled}}
+            @onClick={{action "acceptIdForm"}}
+          >
             {{tt this "acceptIdForm"}}
-          {{/one-button}}
+          </OneButton>
         </div>
       </form>
     {{else}}
@@ -59,4 +59,4 @@
       }}
     {{/if}}
   {{/if}}
-{{/atm-workflow/value-editors/commons/editor-box}}
+</AtmWorkflow::ValueEditors::Commons::EditorBox>

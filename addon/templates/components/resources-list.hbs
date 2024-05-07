@@ -1,10 +1,10 @@
 {{#one-collapsible-list
-  hasCheckboxes=selectionMode
+  hasCheckboxes=isSelectable
   allowOnlySingleSelection=(eq selectionMode "single")
   selectionChanged=(action "selectionChanged")
   as |list|
 }}
-  {{#if (or listHeader selectionMode)}}
+  {{#if (or listHeader isSelectable)}}
     {{list.header title=listHeader isCollapsible=false}}
   {{/if}}
   {{#each sortedItems as |item|}}
@@ -13,8 +13,8 @@
         tagName=(if item.link "a" "div")
         href=item.link
         isCollapsible=false
-        toggleSelectionOnClick=selectionMode
-        class=(if selectionMode "clickable")
+        toggleSelectionOnClick=isSelectable
+        class=(if isSelectable "clickable")
       }}
         {{#if item.icon}}
           <span

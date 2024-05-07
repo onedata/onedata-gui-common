@@ -5,15 +5,15 @@
     onRemove=(action "idProvidingCancelled")
   }}
 {{else}}
-  {{#atm-workflow/value-editors/group/selector
+  <AtmWorkflow::ValueEditors::Group::Selector
     class="add-item-trigger"
-    atmDataSpec=itemAtmDataSpec
-    editorContext=editorContext
-    allowManyGroups=true
-    isDisabled=isDisabled
-    onGroupsSelected=(action "groupsSelected")
-    onIdProvidingStarted=(action "idProvidingStarted")
-  }}
+    @atmDataSpec={{itemAtmDataSpec}}
+    @editorContext={{editorContext}}
+    @allowManyGroups={{true}}
+    @isDisabled={{isDisabled}}
+    @onGroupsSelected={{action "groupsSelected"}}
+    @onIdProvidingStarted={{action "idProvidingStarted"}}
+  >
     {{tt this "label"}}
-  {{/atm-workflow/value-editors/group/selector}}
+  </AtmWorkflow::ValueEditors::Group::Selector>
 {{/if}}

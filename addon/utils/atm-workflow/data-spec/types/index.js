@@ -65,18 +65,7 @@ export const AtmDataSpecType = Object.freeze({
 /**
  * @type {Array<AtmDataSpecType>}
  */
-export const atmDataSpecTypesArray = Object.freeze([
-  AtmDataSpecType.Number,
-  AtmDataSpecType.Boolean,
-  AtmDataSpecType.String,
-  AtmDataSpecType.Object,
-  AtmDataSpecType.File,
-  AtmDataSpecType.Dataset,
-  AtmDataSpecType.Group,
-  AtmDataSpecType.Range,
-  AtmDataSpecType.Array,
-  AtmDataSpecType.TimeSeriesMeasurement,
-]);
+export const atmDataSpecTypesArray = Object.freeze(Object.values(AtmDataSpecType).sort());
 
 /**
  * @typedef {Object} AtmDataSpecParamsConditions

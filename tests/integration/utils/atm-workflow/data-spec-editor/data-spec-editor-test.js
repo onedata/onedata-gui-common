@@ -21,32 +21,32 @@ import { AtmFileType } from 'onedata-gui-common/utils/atm-workflow/data-spec/typ
 import { set } from '@ember/object';
 
 const atmDataSpecTypesInfo = [{
-  type: AtmDataSpecType.Number,
-  label: 'Number',
+  type: AtmDataSpecType.Array,
+  label: 'Array',
 }, {
   type: AtmDataSpecType.Boolean,
   label: 'Boolean',
 }, {
-  type: AtmDataSpecType.String,
-  label: 'String',
-}, {
-  type: AtmDataSpecType.Object,
-  label: 'Object',
+  type: AtmDataSpecType.Dataset,
+  label: 'Dataset',
 }, {
   type: AtmDataSpecType.File,
   label: 'File',
 }, {
-  type: AtmDataSpecType.Dataset,
-  label: 'Dataset',
-}, {
   type: AtmDataSpecType.Group,
   label: 'Group',
+}, {
+  type: AtmDataSpecType.Number,
+  label: 'Number',
+}, {
+  type: AtmDataSpecType.Object,
+  label: 'Object',
 }, {
   type: AtmDataSpecType.Range,
   label: 'Range',
 }, {
-  type: AtmDataSpecType.Array,
-  label: 'Array',
+  type: AtmDataSpecType.String,
+  label: 'String',
 }, {
   type: AtmDataSpecType.TimeSeriesMeasurement,
   label: 'Time series measurement',
@@ -196,10 +196,10 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Number', 'Array']);
+        .to.deep.equal(['Array', 'Number']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Object', 'Dataset']);
+        .to.deep.equal(['Dataset', 'Object']);
     });
 
     it('allows to select only types matching typeOrSubtype filter', async function () {
@@ -218,14 +218,14 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Number', 'Array']);
+        .to.deep.equal(['Array', 'Number']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
         .to.deep.equal([
-          'Object',
-          'File',
           'Dataset',
+          'File',
           'Group',
+          'Object',
           'Range',
           'Time series measurement',
         ]);
@@ -244,10 +244,10 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Boolean', 'String', 'Array']);
+        .to.deep.equal(['Array', 'Boolean', 'String']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Boolean', 'String', 'Array']);
+        .to.deep.equal(['Array', 'Boolean', 'String']);
     });
 
     it('allows to select only types matching combination of filters', async function () {
@@ -271,7 +271,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/data-spec-editor
       await renderForm();
 
       expect(await atmDataSpecTypeHelper.getOptionsText())
-        .to.deep.equal(['Number', 'Array']);
+        .to.deep.equal(['Array', 'Number']);
       await atmDataSpecTypeHelper.selectOptionByText('Array');
       expect(await atmDataSpecTypeHelper.getOptionsText())
         .to.deep.equal(['Object']);

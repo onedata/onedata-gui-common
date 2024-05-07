@@ -119,7 +119,7 @@ export const GroupDetails = EmberObject.extend({
   groupWithDetailsProxy: computed(
     'group',
     'context',
-    function fileWithDetailsProxy() {
+    function groupWithDetailsProxy() {
       return promiseObject((async () => {
         if (
           this.group?.groupId &&

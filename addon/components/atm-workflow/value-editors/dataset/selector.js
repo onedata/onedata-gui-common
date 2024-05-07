@@ -66,7 +66,7 @@ export default Component.extend({
    * @type {ComputedProperty<Utils.Action>}
    */
   selectDatasetsAction: computed(
-    'allowManyFiles',
+    'allowManyDatasets',
     'editorContext.selectDatasets',
     function selectDatasetsAction() {
       const action = SelectDatasetsAction.create({

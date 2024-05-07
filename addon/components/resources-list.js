@@ -9,6 +9,7 @@
 
 import Component from '@ember/component';
 import EmberObject, { computed } from '@ember/object';
+import { notEmpty } from '@ember/object/computed';
 import { array } from 'ember-awesome-macros';
 import layout from '../templates/components/resources-list';
 import recordIcon from 'onedata-gui-common/utils/record-icon';
@@ -55,6 +56,11 @@ export default Component.extend({
    * @type {ComputedProperty<Array<ResourceListItem>>}
    */
   sortedItems: array.sort('items', ['label']),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isSelectable: notEmpty('selectionMode'),
 
   /**
    * @override

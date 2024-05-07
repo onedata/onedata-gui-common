@@ -12,7 +12,7 @@ import { editorComponentsPrefix } from '../common';
 
 /**
  * @typedef {'empty'|'idForm'|'selected'} GroupValueEditorStateMode
- * - `'empty` means no group selected,
+ * - `'empty'` means no group selected,
  * - `'idForm'` means showing form with ID input which allows user to reference
  *   group,
  * - `'selected'` means that user has selected some group and now it's info is

@@ -16,23 +16,23 @@ import {
 import _ from 'lodash';
 
 const inheritanceLeafTypes = [
-  AtmDataSpecType.Number,
-  AtmDataSpecType.Boolean,
-  AtmDataSpecType.String,
   AtmDataSpecType.Array,
-  AtmDataSpecType.File,
+  AtmDataSpecType.Boolean,
   AtmDataSpecType.Dataset,
+  AtmDataSpecType.File,
   AtmDataSpecType.Group,
+  AtmDataSpecType.Number,
   AtmDataSpecType.Range,
+  AtmDataSpecType.String,
   AtmDataSpecType.TimeSeriesMeasurement,
 ];
 
 const inheritanceRootTypes = [
-  AtmDataSpecType.Number,
-  AtmDataSpecType.Boolean,
-  AtmDataSpecType.String,
   AtmDataSpecType.Array,
+  AtmDataSpecType.Boolean,
+  AtmDataSpecType.Number,
   AtmDataSpecType.Object,
+  AtmDataSpecType.String,
 ];
 
 const fileSupertypes = [
@@ -724,9 +724,9 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
       [AtmDataSpecType.Boolean, [AtmDataSpecType.Boolean]],
       [AtmDataSpecType.String, [AtmDataSpecType.String]],
       [AtmDataSpecType.Object, [AtmDataSpecType.Object]],
-      [AtmDataSpecType.File, [AtmDataSpecType.Object, AtmDataSpecType.File]],
-      [AtmDataSpecType.Dataset, [AtmDataSpecType.Object, AtmDataSpecType.Dataset]],
-      [AtmDataSpecType.Group, [AtmDataSpecType.Object, AtmDataSpecType.Group]],
+      [AtmDataSpecType.File, [AtmDataSpecType.File, AtmDataSpecType.Object]],
+      [AtmDataSpecType.Dataset, [AtmDataSpecType.Dataset, AtmDataSpecType.Object]],
+      [AtmDataSpecType.Group, [AtmDataSpecType.Group, AtmDataSpecType.Object]],
       [AtmDataSpecType.Range, [AtmDataSpecType.Object, AtmDataSpecType.Range]],
       [AtmDataSpecType.Array, [AtmDataSpecType.Array]],
       [AtmDataSpecType.TimeSeriesMeasurement, [
@@ -747,9 +747,9 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
         filterType: 'typeOrSupertype',
         types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.File }],
       }])).to.deep.equal([
-        AtmDataSpecType.Object,
-        AtmDataSpecType.File,
         AtmDataSpecType.Dataset,
+        AtmDataSpecType.File,
+        AtmDataSpecType.Object,
       ]);
     });
 
@@ -758,10 +758,10 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
       [AtmDataSpecType.Boolean, [AtmDataSpecType.Boolean]],
       [AtmDataSpecType.String, [AtmDataSpecType.String]],
       [AtmDataSpecType.Object, [
-        AtmDataSpecType.Object,
-        AtmDataSpecType.File,
         AtmDataSpecType.Dataset,
+        AtmDataSpecType.File,
         AtmDataSpecType.Group,
+        AtmDataSpecType.Object,
         AtmDataSpecType.Range,
         AtmDataSpecType.TimeSeriesMeasurement,
       ]],
@@ -784,7 +784,7 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
       expect(getMatchingAtmDataSpecTypes([{
         filterType: 'typeOrSubtype',
         types: [{ type: AtmDataSpecType.Dataset }, { type: AtmDataSpecType.File }],
-      }])).to.deep.equal([AtmDataSpecType.File, AtmDataSpecType.Dataset]);
+      }])).to.deep.equal([AtmDataSpecType.Dataset, AtmDataSpecType.File]);
     });
 
     [
@@ -798,10 +798,10 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
         AtmDataSpecType.String,
       ])],
       [AtmDataSpecType.Object, _.difference(atmDataSpecTypesArray, [
-        AtmDataSpecType.Object,
-        AtmDataSpecType.File,
         AtmDataSpecType.Dataset,
+        AtmDataSpecType.File,
         AtmDataSpecType.Group,
+        AtmDataSpecType.Object,
         AtmDataSpecType.Range,
         AtmDataSpecType.TimeSeriesMeasurement,
       ])],
@@ -852,7 +852,7 @@ describe('Unit | Utility | atm-workflow/data-spec/filters', function () {
       }]), 'typeOrSubtype and forbiddenType').to.deep.equal(
         [AtmDataSpecType.Object, ..._.difference(objectSubtypes, [
           AtmDataSpecType.File,
-        ])]
+        ])].sort()
       );
       expect(getMatchingAtmDataSpecTypes([{
         filterType: 'typeOrSupertype',

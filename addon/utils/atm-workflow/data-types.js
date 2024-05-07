@@ -60,5 +60,5 @@
  * @typedef {Object} AtmGroup
  * @property {string} groupId
  * @property {string} [name]
- * @property {string} [type]
+ * @property {GroupType} [type]
  */

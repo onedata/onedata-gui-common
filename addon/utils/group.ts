@@ -31,9 +31,28 @@ export function translateGroupAttribute(
 // Group types specification
 
 export enum GroupType {
+  /**
+   * Represents an organization; institution or virtual organization (VO), e.g.
+   * "Elixir Europe".
+   */
   Organization = 'organization',
+
+  /**
+   * Represents a unit in organization, e.g. "R&D department".
+   */
   Unit = 'unit',
+
+  /**
+   * Represents a collaborating team of users that address a specific
+   * issue / topic, e.g. "WP5.1".
+   */
   Team = 'team',
+
+  /**
+   * Groups people that posses a certain role, e.g. "Admins" (in Onedata,
+   * there is no concept of roles - rather than that, users with the same
+   * role/privileges should be organized in groups).
+   */
   RoleHolders = 'role_holders',
 }
 
