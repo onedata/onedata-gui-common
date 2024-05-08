@@ -118,9 +118,8 @@ export default Component.extend({
     } else {
       if (this.toggleSelectionOnClick) {
         this.toggleSelection?.(!this._isSelected);
-      } else {
-        this.send('toggle');
       }
+      this.send('toggle');
     }
   },
 
