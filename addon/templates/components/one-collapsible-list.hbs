@@ -1,7 +1,7 @@
 {{yield (hash
   header=(component "one-collapsible-list-header"
     toggleSelection=(action "toggleAllItemsSelection")
-    _hasCheckbox=hasCheckboxes
+    _hasCheckbox=(and hasCheckboxes (not allowOnlySingleSelection))
     _isCheckboxActive=(and
       (gt _availableItemValues.length 0)
       (not allowOnlySingleSelection)
