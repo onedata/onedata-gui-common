@@ -52,11 +52,11 @@
         </div>
       </form>
     {{else}}
-      {{atm-workflow/value-presenters/group/visual-presenter
-        value=value
-        dataSpec=editorState.atmDataSpec
-        context=editorState.editorContext
-      }}
+      <AtmWorkflow::ValuePresenters::Group::VisualPresenter
+        @value={{value}}
+        @dataSpec={{editorState.atmDataSpec}}
+        @context={{editorState.editorContext}}
+      />
     {{/if}}
   {{/if}}
 </AtmWorkflow::ValueEditors::Commons::EditorBox>

@@ -20,6 +20,6 @@
  *   as a summary.
  * @property {(values: unknown) => boolean} shouldWarnOnRemove It returns
  *   true if there should be additional confirmation before deleting data spec
- *   with provided form values inside. It help avoiding deleting complicated
+ *   with provided form values inside. It helps avoiding deleting complicated
  *   setups by mistake.
  */
