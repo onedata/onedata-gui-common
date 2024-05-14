@@ -102,7 +102,7 @@ export default Component.extend({
 
     this.setProperties({
       mouseEnterHandler: () => {
-        this.set('navigationState.isMainMenuColumnHovered', true)
+        this.set('navigationState.isMainMenuColumnHovered', true);
       },
       mouseLeaveHandler: () => {
         this.set('navigationState.isMainMenuColumnHovered', false);

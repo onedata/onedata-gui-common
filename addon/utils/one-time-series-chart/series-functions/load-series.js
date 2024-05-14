@@ -141,6 +141,7 @@ export default async function loadSeries(context, args) {
  * @param {OTSCSeriesFunctionContext} context
  * @param {OTSCLoadSeriesSeriesFunctionReplaceEmpty} replaceEmptyParameters
  * @param {Utils.OneTimeSeriesChart.Point[]} points
+ * @returns {Utils.OneTimeSeriesChart.Point[]}
  */
 async function fitPointsToContext(context, replaceEmptyParameters, points) {
   if (!isRawPointsArray(points)) {
