@@ -40,11 +40,11 @@
     {{/if}}
   {{/modal.body}}
   {{#modal.footer class="btn-toolbar"}}
-    {{#bs-button
+    {{#one-button
       onClick=(action modal.close)
       class=closeBtnClass
     }}
       {{tt this "close"}}
-    {{/bs-button}}
+    {{/one-button}}
   {{/modal.footer}}
 {{/one-modal}}

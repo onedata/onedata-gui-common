@@ -31,14 +31,14 @@
   {{/modal.body}}
 
   {{#modal.footer class="btn-toolbar"}}
-    {{#bs-button
+    {{#one-button
       type="default"
       class="record-selector-cancel"
       onClick=modal.close
       disabled=isSubmitting
     }}
       {{tt this "cancel"}}
-    {{/bs-button}}
+    {{/one-button}}
     {{#one-button
       type="primary"
       buttonType="submit"

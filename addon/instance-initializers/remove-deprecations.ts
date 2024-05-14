@@ -10,8 +10,8 @@
 import { registerDeprecationHandler, runInDebug } from '@ember/debug';
 import globals from 'onedata-gui-common/utils/globals';
 
-const disabledDeprecations = new Set([
-  'ember-bootstrap.deprecated-argument.button#disabled',
+const disabledDeprecations: Set<string> = new Set([
+  // 'ember-bootstrap.deprecated-argument.button#disabled',
 ]);
 
 const ignoredDeprecations: Array<string> = [];

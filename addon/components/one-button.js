@@ -110,12 +110,12 @@ export default class OneButton extends Component {
       const clickResult = this.onClick?.();
       if (typeof clickResult?.finally === 'function' && !this.isDestroyed) {
         this.set('state', 'pending');
+        clickResult.finally(() => {
+          if (!this.isDestroyed) {
+            this.set('state', 'default');
+          }
+        });
       }
-      clickResult.finally(() => {
-        if (!this.isDestroyed) {
-          this.set('state', 'default');
-        }
-      });
     };
   }
 }

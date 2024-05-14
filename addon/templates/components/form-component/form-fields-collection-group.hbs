@@ -16,7 +16,7 @@
     {{/if}}
   {{/each}}
   {{#if (and isInEditMode isCollectionManipulationAllowed)}}
-    {{#bs-button
+    {{#one-button
       class=(concat-classes "add-field-button" (concat name "-add-field-button"))
       size="sm"
       disabled=(not isEffectivelyEnabled)
@@ -26,7 +26,7 @@
       {{#if addButtonText}}
         <span class="text">{{addButtonText}}</span>
       {{/if}}
-    {{/bs-button}}
+    {{/one-button}}
   {{/if}}
   {{#if (and (not nestedFields.length) isInViewMode emptyCollectionViewModeText)}}
     <em class="empty-collection-text">{{emptyCollectionViewModeText}}</em>

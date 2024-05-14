@@ -1,16 +1,16 @@
 <BsButton
   class={{concat-classes
-    classNames
+    class
     "one-button"
     (if isInPendingState "pending")
     (if (not isEffDisabled) "clickable")
   }}
+  disabled={{isEffDisabled}}
   @size={{size}}
   @type={{type}}
   @bubble={{bubble}}
   @buttonType={{buttonType}}
   @onClick={{clickHandler}}
-  @_disabled={{isEffDisabled}}
   ...attributes
 >
   {{#if isSpinnerVisible}}<span class="spinner-container">{{spin-spinner}}</span> {{/if}}{{yield}}
