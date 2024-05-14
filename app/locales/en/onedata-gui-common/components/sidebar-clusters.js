@@ -5,7 +5,7 @@ export default {
     dns: 'DNS setup',
     certificate: 'Web certificate',
     emergencyPassphrase: 'Emergency passphrase',
-    provider: 'Provider',
+    provider: 'Provider configuration',
     storages: 'Storage backends',
     spaces: 'Spaces',
     guiSettings: 'GUI settings',
