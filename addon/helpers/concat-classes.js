@@ -14,7 +14,11 @@ export function concatClasses(params /*, hash*/ ) {
   let classes = '';
   params.forEach(param => {
     if (param) {
-      assert('Class name must be a string.', typeof param === 'string');
+      let normalizedParam = param;
+      if (Array.isArray(normalizedParam)) {
+        normalizedParam = normalizedParam.filter(Boolean).join(' ');
+      }
+      assert('Class name must be a string.', typeof normalizedParam === 'string');
       classes += param + ' ';
     }
   });
