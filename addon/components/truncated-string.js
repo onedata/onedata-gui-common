@@ -31,6 +31,12 @@ export default Component.extend({
 
   /**
    * @virtual optional
+   * @type {() => void}
+   */
+  tooltipOnShown: undefined,
+
+  /**
+   * @virtual optional
    * @type {string}
    */
   tooltipClass: '',
@@ -59,5 +65,11 @@ export default Component.extend({
 
   updateTooltipText() {
     this.set('tooltipText', this.get('element').textContent.trim());
+  },
+
+  actions: {
+    handleTooltipShown() {
+      this.tooltipOnShown?.();
+    },
   },
 });
