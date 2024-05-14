@@ -55,3 +55,10 @@
  * @property {number} timestamp
  * @property {number} value
  */
+
+/**
+ * @typedef {Object} AtmGroup
+ * @property {string} groupId
+ * @property {string} [name]
+ * @property {GroupType} [type]
+ */

@@ -13,6 +13,7 @@ import stringPresentersSpec from './string';
 import objectPresentersSpec from './object';
 import filePresentersSpec from './file';
 import datasetPresentersSpec from './dataset';
+import groupPresentersSpec from './group';
 import rangePresentersSpec from './range';
 import timeSeriesMeasurementPresentersSpec from './time-series-measurement';
 import arrayPresentersSpec from './array';
@@ -20,7 +21,7 @@ import arrayPresentersSpec from './array';
 /**
  * # WHAT ARE VALUE PRESENTERS
  *
- * Value presenters are components, which are able to visualise data processed
+ * Value presenters are components, which are able to visualize data processed
  * by automation workflows. These are numbers, strings, object, files etc. (see
  * more in utils/atm-workflow/data-types.js). Each of that data type has it's own
  * set of presenter components.
@@ -44,7 +45,7 @@ import arrayPresentersSpec from './array';
  *
  * # FALLBACK PRESENTERS
  *
- * To handle situtation when there is some data type with no corresponding
+ * To handle situation when there is some data type with no corresponding
  * presenter, fallback presenters were introduced. For all types of presenters
  * (except "visual") there is a fallback component which renders value in the most
  * simple and generic way (usually by showing it's JSON representation).
@@ -69,6 +70,8 @@ import arrayPresentersSpec from './array';
  * @property {(fileId: string) => Promise<AtmFile|null>} [getFileDetailsById]
  * @property {(datasetId: string) => Promise<string|null>} [getDatasetUrlById]
  * @property {(datasetId: string) => Promise<AtmDataset|null>} [getDatasetDetailsById]
+ * @property {(groupId: string) => Promise<string|null>} [getGroupUrlById]
+ * @property {(groupId: string) => Promise<AtmGroup|null>} [getGroupDetailsById]
  * @property {string} [linkTarget]
  */
 
@@ -82,6 +85,7 @@ const presenterSpecsPerType = {
   object: objectPresentersSpec,
   file: filePresentersSpec,
   dataset: datasetPresentersSpec,
+  group: groupPresentersSpec,
   range: rangePresentersSpec,
   timeSeriesMeasurement: timeSeriesMeasurementPresentersSpec,
   array: arrayPresentersSpec,

@@ -159,7 +159,7 @@ export const FormElement = FormField.extend({
    * rerenders.
    * @type {ComputedProperty<Map<string, DataSpecEditorElementContext>>}
    */
-  editorElementsContextMap: computed('value', function editorElementsContextMap() {
+  editorElementsContextMap: computed('value', 'showExpandParams', function editorElementsContextMap() {
     const {
       editorElementsContextMapCache: elementsMap,
       value,
@@ -191,6 +191,7 @@ export const FormElement = FormField.extend({
             break;
           default: {
             const dataTypeEditorClass = dataType in paramsEditors &&
+              (paramsEditors[dataType].hasForm?.(this.showExpandParams) ?? true) &&
               paramsEditors[dataType].FormElement;
             if (!mapValue.formRootGroup && dataTypeEditorClass) {
               mapValue.formRootGroup = EditorElementFormRootGroup.create({

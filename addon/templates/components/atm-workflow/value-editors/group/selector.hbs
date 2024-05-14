@@ -1,0 +1,22 @@
+{{yield}}
+<RenderLater @triggerRender={{areActionsOpened}}>
+  <OneWebuiPopover
+    class="group-value-editor-selector-actions"
+    @padding={{false}}
+    @popoverStyle="with-dropdown"
+    @triggerSelector={{local-selector elementId}}
+    @open={{areActionsOpened}}
+    @onToggle={{action "toggleActionsOpen"}}
+    as |popover|
+  >
+    <ClickOutside
+      @onClickOutside={{action "toggleActionsOpen" false}}
+      @exceptSelector={{local-selector elementId}}
+    >
+      <ActionsPopoverContent
+        @actionsArray={{actionsArray}}
+        @actionClicked={{action "toggleActionsOpen" false}}
+      />
+    </ClickOutside>
+  </OneWebuiPopover>
+</RenderLater>

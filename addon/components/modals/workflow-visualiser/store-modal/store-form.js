@@ -80,7 +80,7 @@ const storeSpecificAllowedDataSpecTypes = Object.freeze({
 });
 
 const storeSpecificForbiddenDataSpecTypes = Object.freeze({
-  auditLog: ['file', 'dataset'],
+  auditLog: ['file', 'dataset', 'group'],
 });
 
 const storeTypesExpandingArrays = [

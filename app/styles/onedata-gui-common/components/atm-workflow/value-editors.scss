@@ -117,7 +117,8 @@
   }
 
   &.file-editor,
-  &.dataset-editor {
+  &.dataset-editor,
+  &.group-editor {
     .id-form-buttons {
       display: flex;
       gap: 0.3em;
@@ -144,6 +145,12 @@
   &.dataset-editor {
     &.mode-empty {
       max-width: 10em;
+    }
+  }
+
+  &.group-editor {
+    &.mode-empty {
+      max-width: 9em;
     }
   }
 
@@ -203,6 +210,7 @@
 
   .file-value-editor-selector,
   .dataset-value-editor-selector,
+  .group-value-editor-selector,
   &.array-editor .add-item-trigger,
   &.array-editor .no-items-info {
     padding: 0 0.3em;

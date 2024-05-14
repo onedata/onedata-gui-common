@@ -11,6 +11,7 @@ import { replaceEmberAceWithTextarea } from '../../../../../helpers/ember-ace';
 const customItemCreatorClasses = {
   [AtmDataSpecType.File]: 'file-array-item-creator',
   [AtmDataSpecType.Dataset]: 'dataset-array-item-creator',
+  [AtmDataSpecType.Group]: 'group-array-item-creator',
 };
 
 describe('Integration | Component | atm-workflow/value-editors/array/editor', function () {

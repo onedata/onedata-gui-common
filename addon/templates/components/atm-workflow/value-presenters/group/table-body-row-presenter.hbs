@@ -1,0 +1,23 @@
+{{yield (hash section="start")}}
+<td class="column-name">
+  <TruncatedString>
+    <OneIcon class="group-icon" @icon={{icon}} />
+    {{#if urlProxy.content}}
+      <a
+        class="group-name clickable navy"
+        href={{urlProxy.content}}
+        target={{or context.linkTarget "_top"}}
+      >
+        {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+      </a>
+    {{else}}
+      <span class="group-name">
+        {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+      </span>
+    {{/if}}
+  </TruncatedString>
+</td>
+<td class="column-type">
+  <TruncatedString>{{readableType}}</TruncatedString>
+</td>
+{{yield (hash section="end")}}

@@ -62,6 +62,20 @@
   }}
 </p>
 
+<h3>Group</h3>
+<p>
+  Empty group
+  {{atm-workflow/value-editors/full-value-editor
+    stateManager=emptyGroupEditorStateManager
+  }}
+</p>
+<p>
+  Selected group
+  {{atm-workflow/value-editors/full-value-editor
+    stateManager=selectedGroupEditorStateManager
+  }}
+</p>
+
 <h3>Array of strings</h3>
 <p>
   {{atm-workflow/value-editors/full-value-editor
@@ -87,5 +101,12 @@
 <p>
   {{atm-workflow/value-editors/full-value-editor
     stateManager=arrayDatasetEditorStateManager
+  }}
+</p>
+
+<h3>Array of groups</h3>
+<p>
+  {{atm-workflow/value-editors/full-value-editor
+    stateManager=arrayGroupEditorStateManager
   }}
 </p>
