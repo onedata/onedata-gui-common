@@ -349,7 +349,7 @@ export function dataSpecToFormValues(dataSpec, includeExpandParams = false) {
   } else if (dataType === 'array') {
     return createDataTypeElement(dataType, {
       includeExpandParams,
-      item: dataSpecToFormValues(dataSpec.itemDataSpec),
+      item: dataSpecToFormValues(dataSpec.itemDataSpec, includeExpandParams),
     });
   } else {
     return createDataTypeElement(dataType, { includeExpandParams });
