@@ -9,10 +9,15 @@ import { createNewChart, EditorContext } from 'onedata-gui-common/utils/atm-work
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections-editor/chart-details-editor',
   function () {
-    setupRenderingTest();
+    const { afterEach } = setupRenderingTest();
 
     beforeEach(function () {
       this.set('editorContext', EditorContext.create());
+    });
+
+    afterEach(function () {
+      this.editorContext.destroy();
+      this.chart?.destroy();
     });
 
     it('has class "chart-details-editor"', async function () {
@@ -73,6 +78,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections
         createEditChartContentAction: sinon.spy(() => ({
           execute: executeSpy,
         })),
+        destroy: () => {},
       };
       await renderComponent();
       expect(this.editorContext.actionsFactory.createEditChartContentAction)

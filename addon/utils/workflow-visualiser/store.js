@@ -176,6 +176,17 @@ export default EmberObject.extend({
     }
   },
 
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.cacheFor('chartDashboardEditorModelContainer')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   modify(modifiedProps) {
     const onModify = this.get('onModify');
     return onModify ? onModify(this, modifiedProps) : resolve();

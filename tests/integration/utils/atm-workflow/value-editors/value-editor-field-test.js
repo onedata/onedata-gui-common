@@ -20,7 +20,7 @@ import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec
 import { set } from '@ember/object';
 
 describe('Integration | Utility | atm-workflow/value-editors/value-editor-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const field = ValueEditorField.create({
@@ -36,6 +36,10 @@ describe('Integration | Utility | atm-workflow/value-editors/value-editor-field'
         fields: [field],
       }),
     });
+  });
+
+  afterEach(function () {
+    this.rootGroup.destroy?.();
   });
 
   context('in edit mode', function () {

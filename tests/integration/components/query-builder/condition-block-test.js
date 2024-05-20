@@ -33,9 +33,13 @@ const mathOperators = [{
 }];
 
 describe('Integration | Component | query-builder/condition-block', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
+
+  afterEach(function () {
+    this.queryBlock?.destroy();
+  });
 
   it(
     'has classes "query-builder-block" and "query-builder-condition-block"',

@@ -9,6 +9,7 @@
 
 import Component from '@ember/component';
 import EmberObject, { computed } from '@ember/object';
+import { notEmpty } from '@ember/object/computed';
 import { array } from 'ember-awesome-macros';
 import layout from '../templates/components/resources-list';
 import recordIcon from 'onedata-gui-common/utils/record-icon';
@@ -31,9 +32,35 @@ export default Component.extend({
   isResourceWithAdditionalInfo: false,
 
   /**
+   * @type {SafeString | null}
+   */
+  listHeader: null,
+
+  /**
+   * @virtual optional
+   * @type {'single' | 'multi' | null}
+   */
+  selectionMode: null,
+
+  /**
+   * @type {((selectedItems: Array<ResourceListItem>) => void) | null}
+   */
+  onSelectionChange: null,
+
+  /**
+   * @type {Array<ResourceListItem> | null}
+   */
+  selectedItems: null,
+
+  /**
    * @type {ComputedProperty<Array<ResourceListItem>>}
    */
   sortedItems: array.sort('items', ['label']),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isSelectable: notEmpty('selectionMode'),
 
   /**
    * @override
@@ -48,6 +75,10 @@ export default Component.extend({
   actions: {
     itemInfoHovered(item, hasHover) {
       item.set('hasItemInfoHovered', hasHover);
+    },
+    selectionChanged(newSelectedItems) {
+      this.set('selectedItems', newSelectedItems);
+      this.onSelectionChange?.(newSelectedItems);
     },
   },
 });
@@ -83,10 +114,10 @@ export const ResourceListItem = EmberObject.extend({
    */
   icon: computed('record', {
     get() {
-      return this.injectedIcon ?? recordIcon(this.record);
+      return this.customIcon ?? recordIcon(this.record, true);
     },
     set(key, value) {
-      return this.injectedIcon = value;
+      return this.customIcon = value;
     },
   }),
 
@@ -126,13 +157,24 @@ export const ResourceListItem = EmberObject.extend({
   /**
    * @type {string | null}
    */
-  injectedIcon: null,
+  customIcon: null,
 
   init() {
     this._super(...arguments);
 
     if (!this.get('actions')) {
       this.set('actions', []);
+    }
+  },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.actions?.forEach((action) => action?.destroy());
+    } finally {
+      this._super(...arguments);
     }
   },
 });

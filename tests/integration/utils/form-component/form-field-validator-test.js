@@ -6,17 +6,21 @@ import { validator, buildValidations } from 'ember-cp-validations';
 import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form-component/form-field-validator', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.fieldValidator.destroy();
+  });
 
   it(
     'has empty errors array and truthy isValid when no validators are used',
     function () {
-      const fieldValidator = FormFieldValidator
+      this.fieldValidator = FormFieldValidator
         .extend(buildValidations())
         .create({ ownerSource: this.owner });
 
-      expect(get(fieldValidator, 'errors')).to.have.length(0);
-      expect(get(fieldValidator, 'isValid')).to.be.true;
+      expect(get(this.fieldValidator, 'errors')).to.have.length(0);
+      expect(get(this.fieldValidator, 'isValid')).to.be.true;
     }
   );
 
@@ -26,17 +30,17 @@ describe('Integration | Utility | form-component/form-field-validator', function
         gt: 2,
       }),
     ];
-    const fieldValidator = FormFieldValidator
+    this.fieldValidator = FormFieldValidator
       .extend(buildValidations({ value: validators }))
       .create({
         ownerSource: this.owner,
         value: 1,
       });
 
-    const errors = get(fieldValidator, 'errors');
+    const errors = get(this.fieldValidator, 'errors');
     expect(errors).to.have.length(1);
     expect(errors[0].message).to.equal('This field must be greater than 2');
-    expect(get(fieldValidator, 'isValid')).to.be.false;
+    expect(get(this.fieldValidator, 'isValid')).to.be.false;
   });
 
   it(
@@ -47,22 +51,22 @@ describe('Integration | Utility | form-component/form-field-validator', function
           gt: 2,
         }),
       ];
-      const fieldValidator = FormFieldValidator
+      this.fieldValidator = FormFieldValidator
         .extend(buildValidations({ value: validators }))
         .create({
           ownerSource: this.owner,
           value: 3,
         });
 
-      expect(get(fieldValidator, 'errors')).to.have.length(0);
-      expect(get(fieldValidator, 'isValid')).to.be.true;
+      expect(get(this.fieldValidator, 'errors')).to.have.length(0);
+      expect(get(this.fieldValidator, 'isValid')).to.be.true;
     }
   );
 
   it(
     'sets value and valuesSource fields using passed form field instance',
     function () {
-      const fieldValidator = FormFieldValidator
+      this.fieldValidator = FormFieldValidator
         .extend(buildValidations())
         .create({
           ownerSource: this.owner,
@@ -72,8 +76,8 @@ describe('Integration | Utility | form-component/form-field-validator', function
           },
         });
 
-      expect(get(fieldValidator, 'value')).to.equal('a');
-      expect(get(fieldValidator, 'valuesSource')).to.equal('b');
+      expect(get(this.fieldValidator, 'value')).to.equal('a');
+      expect(get(this.fieldValidator, 'valuesSource')).to.equal('b');
     }
   );
 });

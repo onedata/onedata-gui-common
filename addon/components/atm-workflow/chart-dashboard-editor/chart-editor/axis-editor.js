@@ -10,7 +10,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { guidFor } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/chart-editor/axis-editor';
 import {
   translateValidationErrorsBatch,
@@ -62,7 +62,7 @@ export default Component.extend(I18n, {
     function labelFormattingValidationErrorsMessage() {
       return translateValidationErrorsBatch(
         this.i18n,
-        this.chartElement.labelFormattingValidationErrors,
+        this.chartElement?.labelFormattingValidationErrors ?? [],
       );
     }
   ),

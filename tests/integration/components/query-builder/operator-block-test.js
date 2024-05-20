@@ -32,9 +32,13 @@ const operatorBlockClasses = {
 };
 
 describe('Integration | Component | query-builder/operator-block', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
+
+  afterEach(function () {
+    this.queryBlock?.destroy();
+  });
 
   it(
     'has classes "query-builder-block" and "query-builder-operator-block"',

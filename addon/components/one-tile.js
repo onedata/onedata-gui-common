@@ -14,7 +14,7 @@ import layout from '../templates/components/one-tile';
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import { debounce, next } from '@ember/runloop';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import $ from 'jquery';
 import globals from 'onedata-gui-common/utils/globals';
 import { bool } from 'ember-awesome-macros';
@@ -156,10 +156,10 @@ export default Component.extend(I18n, {
    */
   moreText: computed({
     get() {
-      return this.injectedMoreText ?? this.t('more');
+      return this.customMoreText ?? this.t('more');
     },
     set(key, value) {
-      return this.injectedMoreText = value;
+      return this.customMoreText = value;
     },
   }),
 
@@ -211,7 +211,7 @@ export default Component.extend(I18n, {
   /**
    * @type {string | null}
    */
-  injectedMoreText: null,
+  customMoreText: null,
 
   /**
    * @type {Ember.ComputedProperty<Function>}

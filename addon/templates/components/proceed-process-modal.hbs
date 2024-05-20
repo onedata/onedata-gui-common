@@ -25,9 +25,9 @@
     {{/if}}
   {{/modal.body}}
   {{#modal.footer class="btn-toolbar"}}
-    {{#bs-button disabled=processing onClick=close class="cancel"}}
+    {{#one-button disabled=processing onClick=close class="cancel"}}
       {{cancelButtonText}}
-    {{/bs-button}}
+    {{/one-button}}
     {{#one-button
       buttonType="submit"
       onClick=(action "proceed")

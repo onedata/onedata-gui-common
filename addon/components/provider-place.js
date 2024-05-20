@@ -12,7 +12,7 @@ import { inject as service } from '@ember/service';
 import { A, isArray } from '@ember/array';
 import { next } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import $ from 'jquery';
 
 import layout from 'onedata-gui-common/templates/components/provider-place';

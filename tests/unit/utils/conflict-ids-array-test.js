@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { A } from '@ember/array';
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, afterEach } from 'mocha';
 import { settled } from '@ember/test-helpers';
 import ConflictIdsArray from 'onedata-gui-common/utils/conflict-ids-array';
 
@@ -19,21 +19,25 @@ function createMockArray() {
 }
 
 describe('Unit | Utility | conflict-ids-array', function () {
+  afterEach(function () {
+    this.arrayProxy?.destroy();
+  });
+
   it('computes conflict labels on init', function () {
     const array = createMockArray();
 
-    const arrayProxy = ConflictIdsArray.create({
+    this.arrayProxy = ConflictIdsArray.create({
       content: array,
     });
 
-    expect(arrayProxy.objectAt(0).get('conflictLabel')).to.equal('abcdef1');
-    expect(arrayProxy.objectAt(1).get('conflictLabel')).to.equal('abcdef2');
+    expect(this.arrayProxy.objectAt(0).get('conflictLabel')).to.equal('abcdef1');
+    expect(this.arrayProxy.objectAt(1).get('conflictLabel')).to.equal('abcdef2');
   });
 
   it('computes conflict labels on array change', async function () {
     const array = createMockArray();
 
-    const arrayProxy = ConflictIdsArray.create({
+    this.arrayProxy = ConflictIdsArray.create({
       content: array,
     });
     array.pushObject(EmberObject.create({
@@ -42,6 +46,6 @@ describe('Unit | Utility | conflict-ids-array', function () {
     }));
 
     await settled();
-    expect(arrayProxy.objectAt(2).get('conflictLabel')).to.equal('abcdef3');
+    expect(this.arrayProxy.objectAt(2).get('conflictLabel')).to.equal('abcdef3');
   });
 });

@@ -12,14 +12,14 @@
  * ```
  * {{#one-collapsible-list as |list|}}
  *   {{#list.header title="List title"}}
- *     {{#bs-button class="btn-sm" type="info"}}some button{{/bs-button}}
+ *     {{#one-button class="btn-sm" type="info"}}some button{{/one-button}}
  *   {{/list.header}}
  *   {{#list.item as |listItem|}}
  *     {{#listItem.header}}
  *       Header (will toggle visibility of content on click).
  *     {{/listItem.header}}
  *     {{#listItem.content}}
- *       Hiddent content.
+ *       Hidden content.
  *     {{/listItem.content}}
  *   {{/list.item}}
  *   {{!-- other items... --}}
@@ -52,6 +52,13 @@ export default Component.extend({
    * @type {boolean}
    */
   hasCheckboxes: false,
+
+  /**
+   * If set to true then only one item can be selected at once. Any
+   * second item selection will deselected the first one.
+   * @type {boolean}
+   */
+  allowOnlySingleSelection: false,
 
   /**
    * Selected items change handler
@@ -170,6 +177,9 @@ export default Component.extend({
         _selectedItemValues.removeObject(itemValue);
       } else if ((selectionState === undefined || selectionState === true) &&
         !isOnList && _availableItemValues.includes(itemValue)) {
+        if (this.allowOnlySingleSelection) {
+          _selectedItemValues.clear();
+        }
         _selectedItemValues.pushObject(itemValue);
       }
       if (selectionChanged) {
@@ -205,7 +215,7 @@ export default Component.extend({
         '_selectedItemValues',
         'selectionChanged'
       );
-      if (_areAllItemsSelected) {
+      if (_areAllItemsSelected || this.allowOnlySingleSelection) {
         _selectedItemValues.clear();
       } else {
         _selectedItemValues.addObjects(_availableItemValues);

@@ -50,6 +50,17 @@ export default Action.extend({
   /**
    * @override
    */
+  willDestroy() {
+    try {
+      this.createStoreAction?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
   onExecute() {
     const {
       modalManager,

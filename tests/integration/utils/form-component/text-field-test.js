@@ -7,32 +7,36 @@ import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe('Integration | Utility | form-component/text-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines inputType as "text"', function () {
-    const textField = TextField.create();
-    expect(get(textField, 'inputType')).to.equal('text');
+    this.field = TextField.create();
+    expect(get(this.field, 'inputType')).to.equal('text');
   });
 
   it('defines fieldComponentName as "form-component/text-like-field"', function () {
-    const textField = TextField.create();
-    expect(get(textField, 'fieldComponentName'))
+    this.field = TextField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/text-like-field');
   });
 
   it(
     'has empty "regex" field by default',
     function () {
-      const textField = TextField.create();
+      this.field = TextField.create();
 
-      expect(get(textField, 'regex')).to.be.undefined;
+      expect(get(this.field, 'regex')).to.be.undefined;
     }
   );
 
   it(
     'has format validation error when regex is defined and value does not match',
     function () {
-      const textField = TextField.create({
+      this.field = TextField.create({
         ownerSource: this.owner,
         regex: /^abc$/,
         name: 'a',
@@ -41,7 +45,7 @@ describe('Integration | Utility | form-component/text-field', function () {
         },
       });
 
-      const errors = get(textField, 'errors');
+      const errors = get(this.field, 'errors');
       expect(errors).to.be.have.length(1);
       expect(errors[0].message).to.equal('This field is invalid');
     }
@@ -50,7 +54,7 @@ describe('Integration | Utility | form-component/text-field', function () {
   it(
     'does not have format validation error when regex is defined and value matches',
     function () {
-      const textField = TextField.create({
+      this.field = TextField.create({
         ownerSource: this.owner,
         regex: /^abc$/,
         name: 'a',
@@ -59,20 +63,20 @@ describe('Integration | Utility | form-component/text-field', function () {
         },
       });
 
-      expect(get(textField, 'errors')).to.be.have.length(0);
+      expect(get(this.field, 'errors')).to.be.have.length(0);
     }
   );
 
   it(
     'does not have validation error when regex is defined, isOptional is true and value is empty',
     function () {
-      const textField = TextField.create({
+      this.field = TextField.create({
         ownerSource: this.owner,
         isOptional: true,
         regex: /^abc$/,
       });
 
-      expect(get(textField, 'errors')).to.be.have.length(0);
+      expect(get(this.field, 'errors')).to.be.have.length(0);
     }
   );
 
@@ -81,13 +85,13 @@ describe('Integration | Utility | form-component/text-field', function () {
       .withArgs('somePrefix.field1.placeholder')
       .returns('field tip');
 
-    const field = TextField.create({
+    this.field = TextField.create({
       ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });
 
-    expect(get(field, 'placeholder')).to.equal('field tip');
+    expect(get(this.field, 'placeholder')).to.equal('field tip');
   });
 
   it('has empty placeholder if translation for it cannot be found', function () {
@@ -95,12 +99,12 @@ describe('Integration | Utility | form-component/text-field', function () {
       .withArgs('somePrefix.field1.placeholder')
       .returns('<missing-...');
 
-    const field = TextField.create({
+    this.field = TextField.create({
       ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });
 
-    expect(get(field, 'placeholder')).to.be.empty;
+    expect(get(this.field, 'placeholder')).to.be.empty;
   });
 });

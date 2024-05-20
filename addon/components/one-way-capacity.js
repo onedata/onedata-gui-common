@@ -40,19 +40,19 @@ export default Component.extend({
    * @virtual optional
    * @type {Ember.ComputedProperty<string>}
    */
-  inputId: computed('elementId', {
+  inputId: computed({
     get() {
-      return this.injectedInputId ?? (this.elementId + '-capacity');
+      return this.customInputId ?? (this.elementId + '-capacity');
     },
     set(key, value) {
-      return this.injectedInputId = value;
+      return this.customInputId = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedInputId: null,
+  customInputId: null,
 
   /**
    * Currently used size unit, like in `iecUnits`

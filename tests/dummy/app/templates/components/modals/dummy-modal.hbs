@@ -1,4 +1,4 @@
-{{#global-modal modalId=modalId as |modal|}}
+{{#global-modal modalId=@modalId as |modal|}}
   {{#modal.header}}
     <h1>Modal header</h1>
   {{/modal.header}}
@@ -6,6 +6,6 @@
     Modal body
   {{/modal.body}}
   {{#modal.header}}
-    {{#bs-button onClick=modal.close}}Close{{/bs-button}}
+    {{#one-button onClick=modal.close}}Close{{/one-button}}
   {{/modal.header}}
 {{/global-modal}}

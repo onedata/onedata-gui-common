@@ -7,10 +7,14 @@ import ColorField from 'onedata-gui-common/utils/form-component/color-field';
 import sinon from 'sinon';
 
 describe('Integration | Component | form-component/color-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', ColorField.create());
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it('has class "color-field"', async function () {

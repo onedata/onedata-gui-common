@@ -53,7 +53,7 @@ const viewLaneActionsSpec = [{
 }];
 
 describe('Integration | Component | workflow-visualiser/lane', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const actionsFactory = ActionsFactory.create({ ownerSource: this.owner });
@@ -69,16 +69,23 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
         }),
       ],
     });
-    this.set('lane', Lane.create({
+    this.setProperties({
+      lane: Lane.create({
+        actionsFactory,
+        name: 'lane1',
+        maxRetries: 0,
+        instantFailureExceptionThreshold: 0.1,
+        storeIteratorSpec: {
+          storeSchemaId: 's1',
+          maxBatchSize: 10,
+        },
+      }),
       actionsFactory,
-      name: 'lane1',
-      maxRetries: 0,
-      instantFailureExceptionThreshold: 0.1,
-      storeIteratorSpec: {
-        storeSchemaId: 's1',
-        maxBatchSize: 10,
-      },
-    }));
+    });
+  });
+
+  afterEach(function () {
+    this.actionsFactory.destroy();
   });
 
   it('has class "workflow-visualiser-lane"', async function () {

@@ -10,7 +10,7 @@ import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { settled } from '@ember/test-helpers';
 
 describe('Integration | Utility | workflow-visualiser/actions/modify-task-action', function () {
-  setupTest();
+  const { afterEach } = setupTest();
 
   beforeEach(function () {
     const task = Task.create();
@@ -32,6 +32,11 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-task-action
       }),
     });
     this.setProperties({ action, task });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.task.destroy();
   });
 
   it('has correct className, icon and title', function () {

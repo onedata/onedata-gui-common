@@ -8,7 +8,7 @@
 
 import Component from '@ember/component';
 
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/public-footer';
 
 export default Component.extend(I18n, {

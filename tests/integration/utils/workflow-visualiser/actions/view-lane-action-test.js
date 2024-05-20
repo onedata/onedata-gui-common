@@ -15,7 +15,7 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 
 describe('Integration | Utility | workflow-visualiser/actions/view-lane-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create({
@@ -44,6 +44,11 @@ describe('Integration | Utility | workflow-visualiser/actions/view-lane-action',
       },
     });
     this.setProperties({ lane, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.lane.destroy();
   });
 
   it('has correct className, icon and title', function () {

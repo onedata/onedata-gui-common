@@ -12,7 +12,7 @@ import { computed, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import layout from 'onedata-gui-common/templates/components/query-builder/operator-block';
 import { tag } from 'ember-awesome-macros';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 const mixins = [
   I18n,
@@ -97,22 +97,22 @@ export default Component.extend(...mixins, {
    */
   level: computed('queryBlock.{operator,levelScore}', {
     get() {
-      if (typeof this.injectedLevel === 'number') {
-        return this.injectedLevel;
+      if (typeof this.customLevel === 'number') {
+        return this.customLevel;
       }
       if (this.get('queryBlock.operator') === 'root') {
         return this.get('queryBlock.levelScore');
       }
     },
     set(key, value) {
-      return this.injectedLevel = value;
+      return this.customLevel = value;
     },
   }),
 
   /**
    * @type {number | string}
    */
-  injectedLevel: null,
+  customLevel: null,
 
   /**
    * Class name based on operator type (eg. or-operator-block)
@@ -181,6 +181,7 @@ export default Component.extend(...mixins, {
     removeBlock(queryBlock) {
       this.get('queryBlock.operands').removeObject(queryBlock);
       this.get('onBlockRemoved')(queryBlock);
+      queryBlock.destroy();
     },
   },
 });

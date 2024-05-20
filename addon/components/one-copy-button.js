@@ -23,7 +23,7 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import { capitalize } from '@ember/string';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/one-copy-button';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
@@ -71,14 +71,14 @@ export default Component.extend(I18n, {
     'parentElementId',
     'localTarget', {
       get() {
-        if (this.injectedClipboardTarget) {
-          return this.injectedClipboardTarget;
+        if (this.customClipboardTarget) {
+          return this.customClipboardTarget;
         } else if (this.parentElementId && this.localTarget) {
           return `#${this.parentElementId} ${this.localTarget}`;
         }
       },
       set(key, value) {
-        return this.injectedClipboardTarget = value;
+        return this.customClipboardTarget = value;
       },
     }
   ),
@@ -90,22 +90,22 @@ export default Component.extend(I18n, {
    */
   textType: computed({
     get() {
-      return this.injectedTextType ?? this.t('defaultTextType');
+      return this.customTextType ?? this.t('defaultTextType');
     },
     set(key, value) {
-      return this.injectedTextType = value ?? this.t('defaultTextType');
+      return this.customTextType = value ?? this.t('defaultTextType');
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedClipboardTarget: null,
+  customClipboardTarget: null,
 
   /**
    * @type {string | null}
    */
-  injectedTextType: null,
+  customTextType: null,
 
   /**
    * @type {Ember.ComputedProperty<function>}

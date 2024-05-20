@@ -14,7 +14,7 @@ import {
 import { set } from '@ember/object';
 
 describe('Integration | Component | form-component/dropdown-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const i18nStub = sinon.stub(lookupService(this, 'i18n'), 't')
@@ -45,6 +45,10 @@ describe('Integration | Component | form-component/dropdown-field', function () 
       i18nStub,
       field,
     });
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it(

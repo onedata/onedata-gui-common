@@ -66,7 +66,7 @@ export default Component.extend({
    * @type {ComputedProperty<Utils.Action>}
    */
   selectDatasetsAction: computed(
-    'allowManyFiles',
+    'allowManyDatasets',
     'editorContext.selectDatasets',
     function selectDatasetsAction() {
       const action = SelectDatasetsAction.create({
@@ -118,6 +118,18 @@ export default Component.extend({
       return;
     }
     this.toggleProperty('areActionsOpened');
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('selectDatasetsAction')?.destroy();
+      this.cacheFor('provideDatasetIdAction')?.destroy();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   actions: {

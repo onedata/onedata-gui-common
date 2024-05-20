@@ -13,7 +13,7 @@ const newParallelBoxMatcher = sinon.match({
 });
 
 describe('Integration | Utility | workflow-visualiser/actions/create-parallel-box-action', function () {
-  setupTest();
+  const { afterEach } = setupTest();
 
   beforeEach(function () {
     const createStub = sinon.stub();
@@ -22,6 +22,10 @@ describe('Integration | Utility | workflow-visualiser/actions/create-parallel-bo
       createParallelBoxCallback: createStub,
     });
     this.setProperties({ action, createStub });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
   });
 
   it('has correct className and icon', function () {

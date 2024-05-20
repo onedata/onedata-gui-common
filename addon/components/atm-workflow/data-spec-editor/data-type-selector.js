@@ -18,7 +18,7 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { getMatchingAtmDataSpecTypes } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import { createDataTypeElement } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/editor-element-creators';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/data-type-selector';
 
 export default Component.extend(I18n, {

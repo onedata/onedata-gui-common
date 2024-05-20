@@ -12,7 +12,7 @@ import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/sections-editor/floating-toolbar';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 export default Component.extend(I18n, {
   layout,
@@ -70,7 +70,11 @@ export default Component.extend(I18n, {
     const action = this.editorContext.actionsFactory.createEditChartContentAction({
       chart: this.model,
     });
-    action.execute();
+    try {
+      action.execute();
+    } finally {
+      action.destroyAfterAllExecutions?.();
+    }
   },
 
   actions: {

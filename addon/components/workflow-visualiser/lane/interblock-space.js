@@ -124,4 +124,15 @@ export default VisualiserSpace.extend({
         });
     }
   ),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('createElementAction')?.destroyAfterAllExecutions?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });

@@ -30,10 +30,15 @@ const removeActionSpec = {
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections-editor/floating-toolbar',
   function () {
-    setupRenderingTest();
+    const { afterEach } = setupRenderingTest();
 
     beforeEach(function () {
       this.set('editorContext', EditorContext.create());
+    });
+
+    afterEach(function () {
+      this.editorContext.destroy();
+      this.model?.destroy();
     });
 
     it('has class "floating-toolbar"', async function () {
@@ -98,6 +103,7 @@ function itTriggersEditContentAction() {
       createEditChartContentAction: sinon.spy(() => ({
         execute: executeSpy,
       })),
+      destroy: () => {},
     };
     await renderComponent();
     expect(this.editorContext.actionsFactory.createEditChartContentAction)
@@ -119,6 +125,7 @@ function itTriggersDuplicateAction() {
       createDuplicateElementAction: sinon.spy(() => ({
         execute: executeSpy,
       })),
+      destroy: () => {},
     };
     await renderComponent();
     expect(this.editorContext.actionsFactory.createDuplicateElementAction)
@@ -140,6 +147,7 @@ function itTriggersRemoveAction() {
       createRemoveElementAction: sinon.spy(() => ({
         execute: executeSpy,
       })),
+      destroy: () => {},
     };
     await renderComponent();
     expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.not.called;

@@ -138,6 +138,7 @@ export default Service.extend({
     }
     get(modalInstance, 'resolveHiddenPromise')();
     this.get('modalInstances').removeObject(modalInstance);
+    modalInstance.destroy();
   },
 
   hideAfterSubmit(modalId) {

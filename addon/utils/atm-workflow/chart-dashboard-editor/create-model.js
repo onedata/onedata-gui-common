@@ -68,12 +68,16 @@ export function useNewSpecInModel(newDashboardSpec, dashboardModel) {
  * Returns new, empty section.
  * @param {Ember.Service} i18n
  * @param {unknown} [elementOwner]
+ * @param {Array<ChartDashboardEditorDataSource>} [dataSources] only to have
+ *   consistent api with other creators
  * @param {boolean} [isRoot]
  * @returns {Utils.AtmWorkflow.ChartDashboardEditor.Section}
  */
 export function createNewSection(
   i18n,
   elementOwner = null,
+  // eslint-disable-next-line no-unused-vars
+  dataSources = [],
   isRoot = false,
 ) {
   return createSectionModelFromSpec({

@@ -8,8 +8,9 @@
  */
 
 import Component from '@ember/component';
+import { computed, observer, defineProperty } from '@ember/object';
+import { dasherize } from '@ember/string';
 import layout from '../../templates/components/one-carousel/slide';
-import { getBy, or, raw, string } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -31,8 +32,26 @@ export default Component.extend({
   slidesState: undefined,
 
   /**
+   * Set by `stateSetter`
    * @type {ComputedProperty<String>}
    */
-  // eslint-disable-next-line ember/no-string-prototype-extensions
-  state: string.dasherize(or(getBy('slidesState', 'slideId'), raw('hidden'))),
+  state: undefined,
+
+  stateSetter: observer('slideId', function stateSetter() {
+    const slideStatePath = `slidesState.${this.slideId}`;
+    defineProperty(this, 'state', computed(slideStatePath, function state() {
+      const currentState = this.get(slideStatePath);
+      return dasherize(currentState ?? 'hidden');
+    }));
+    // Get computed to recalculate its value
+    this.state;
+  }),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    this.stateSetter();
+  },
 });

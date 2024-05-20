@@ -117,14 +117,9 @@ const Section = ElementBase.extend({
     try {
       if (this.charts.length) {
         this.charts.forEach((chart) => chart.destroy());
-        this.set('charts', []);
       }
       if (this.sections.length) {
         this.sections.forEach((section) => section.destroy());
-        this.set('sections', []);
-      }
-      if (this.parent) {
-        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);

@@ -169,6 +169,17 @@ export default VisualiserRecord.extend({
   itemsFailed: or('visibleRun.itemsFailed', raw(0)),
 
   /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.cacheFor('chartDashboardEditorModelContainer')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
    * @returns {Array<string>}
    */
   getUsedStoreSchemaIds() {

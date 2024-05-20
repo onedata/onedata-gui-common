@@ -8,14 +8,14 @@
     }}
   {{/each}}
   {{#if (eq mode "edit")}}
-    {{#bs-button
+    {{#one-button
       class=(concat-classes createAction.className "input-element")
       onClick=createAction.executeCallback
       size="sm"
     }}
       {{one-icon icon=createAction.icon}}
       <span class="text">{{createAction.title}}</span>
-    {{/bs-button}}
+    {{/one-button}}
   {{/if}}
 </div>
 {{yield}}

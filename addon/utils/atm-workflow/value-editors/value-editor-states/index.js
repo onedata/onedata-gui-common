@@ -1,6 +1,6 @@
 /**
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -9,6 +9,7 @@ import ArrayValueEditorState from './array';
 import BooleanValueEditorState from './boolean';
 import DatasetValueEditorState from './dataset';
 import FileValueEditorState from './file';
+import GroupValueEditorState from './group';
 import NumberValueEditorState from './number';
 import ObjectValueEditorState from './object';
 import RangeValueEditorState from './range';
@@ -20,6 +21,7 @@ export default {
   [AtmDataSpecType.Boolean]: BooleanValueEditorState,
   [AtmDataSpecType.Dataset]: DatasetValueEditorState,
   [AtmDataSpecType.File]: FileValueEditorState,
+  [AtmDataSpecType.Group]: GroupValueEditorState,
   [AtmDataSpecType.Number]: NumberValueEditorState,
   [AtmDataSpecType.Object]: ObjectValueEditorState,
   [AtmDataSpecType.Range]: RangeValueEditorState,

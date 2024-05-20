@@ -91,7 +91,7 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
 import generateId from 'onedata-gui-common/utils/generate-id';
 import { resolve, Promise } from 'rsvp';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
 import {
@@ -508,6 +508,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
   ),
 
+  /**
+   * @type {ComputedProperty<WorkflowDataProvider>}
+   */
+  workflowDataProvider: computed(function workflowDataProvider() {
+    return WorkflowDataProvider.create({ visualiserComponent: this });
+  }),
+
   actionsFactoryObserver: observer(
     'actionsFactory',
     function actionsFactoryObserver() {
@@ -557,6 +564,19 @@ export default Component.extend(I18n, WindowResizeHandler, {
   willDestroyElement() {
     try {
       this.stopExecutionStateUpdater();
+      _.flatten(Object.values(this.elementsCache))
+        .forEach((element) => element.destroy?.());
+      [
+        'copyInstanceIdAction',
+        'viewAuditLogAction',
+        'openWorkflowChartDashboardAction',
+      ].forEach((actionName) => {
+        this.cacheFor(actionName)?.destroy?.();
+      });
+      if (this.actionsFactory.ownerSource === this) {
+        this.actionsFactory.destroy?.();
+      }
+      this.cacheFor('workflowDataProvider')?.destroy?.();
     } finally {
       this._super(...arguments);
     }
@@ -590,9 +610,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   adaptActionsFactory(actionsFactory) {
-    actionsFactory.setWorkflowDataProvider(
-      WorkflowDataProvider.create({ visualiserComponent: this })
-    );
+    actionsFactory.setWorkflowDataProvider(this.workflowDataProvider);
     actionsFactory.setCreateStoreCallback(
       newStoreProps => this.addStore(newStoreProps)
     );

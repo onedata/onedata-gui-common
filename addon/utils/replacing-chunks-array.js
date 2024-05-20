@@ -609,6 +609,7 @@ export default ArraySlice.extend(Evented, {
    * Returns a promise that resolves when currently scheduled fetchPrev and fetchNext
    * tasks settle. When there are no prev or next operations pending, returns empty
    * resolving promise.
+   * @returns {Promise}
    */
   async getCurrentExpandPromise() {
     const taskQueue = this.get('taskQueue');

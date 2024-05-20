@@ -19,7 +19,6 @@ import { getModalBody, getModalFooter } from '../../helpers/modal';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import { resolve, Promise } from 'rsvp';
-import { schedule } from '@ember/runloop';
 import dom from 'onedata-gui-common/utils/dom';
 import globals from 'onedata-gui-common/utils/globals';
 import { lookupService } from '../../helpers/stub-service';
@@ -39,8 +38,8 @@ const twoLanesWithEmptyBlocksExample = generateExample(2, 2, 0);
 const twoNonEmptyLanesExample = generateExample(2, 2, 2);
 const threeNonEmptyLanesExample = generateExample(3, 3, 2);
 
-describe('Integration | Component | workflow-visualiser', function () {
-  setupRenderingTest();
+describe('Integration | Component | workflow-visualiser (main)', function () {
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     set(
@@ -58,6 +57,10 @@ describe('Integration | Component | workflow-visualiser', function () {
     this.set('actionsFactory', actionsFactory);
   });
 
+  afterEach(function () {
+    this.actionsFactory.destroy();
+  });
+
   it('has class "workflow-visualiser"', async function () {
     const rawData = noLanesExample;
 
@@ -71,10 +74,8 @@ describe('Integration | Component | workflow-visualiser', function () {
       this.setProperties({
         mode: 'edit',
         changeStub: sinon.stub().callsFake(newData => new Promise(resolve => {
-          schedule('afterRender', this, async () => {
-            this.set('rawData', newData);
-            resolve();
-          });
+          this.set('rawData', newData);
+          resolve();
         })),
       });
     });

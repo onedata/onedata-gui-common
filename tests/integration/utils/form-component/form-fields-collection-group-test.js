@@ -12,12 +12,16 @@ import { lookupService } from '../../../helpers/stub-service';
 describe(
   'Integration | Utility | form-component/form-fields-collection-group',
   function () {
-    setupTest();
+    const { afterEach } = setupTest();
+
+    afterEach(function () {
+      this.collectionGroup.destroy();
+    });
 
     it('has "isCollectionManipulationAllowed" set to true by default', function () {
-      const collectionGroup = FormFieldsCollectionGroup.create();
+      this.collectionGroup = FormFieldsCollectionGroup.create();
 
-      expect(get(collectionGroup, 'isCollectionManipulationAllowed')).to.be.true;
+      expect(get(this.collectionGroup, 'isCollectionManipulationAllowed')).to.be.true;
     });
 
     it(
@@ -27,7 +31,7 @@ describe(
           collection: createValuesContainer(),
         });
         const changeSpy = sinon.spy(value => set(valuesSource, 'collection', value));
-        const collectionGroup = FormFieldsCollectionGroup.extend({
+        this.collectionGroup = FormFieldsCollectionGroup.extend({
           fieldFactoryMethod(newFieldValueName) {
             return FormField.create({
               name: 'f',
@@ -43,12 +47,12 @@ describe(
           valuesSource,
         });
 
-        collectionGroup.addNewField();
-        collectionGroup.addNewField();
-        expect(get(collectionGroup, 'fields')).to.have.length(2);
-        expect(get(collectionGroup, 'fields.firstObject.valueName'))
+        this.collectionGroup.addNewField();
+        this.collectionGroup.addNewField();
+        expect(get(this.collectionGroup, 'fields')).to.have.length(2);
+        expect(get(this.collectionGroup, 'fields.firstObject.valueName'))
           .to.equal('collectionEntry0');
-        expect(get(collectionGroup, 'fields.lastObject.valueName'))
+        expect(get(this.collectionGroup, 'fields.lastObject.valueName'))
           .to.equal('collectionEntry1');
         expect(changeSpy.lastCall).to.be.calledWith(
           sinon.match({
@@ -70,7 +74,7 @@ describe(
             __fieldsValueNames: ['collectionEntry0'],
           }),
         });
-        const collectionGroup = FormFieldsCollectionGroup.extend({
+        this.collectionGroup = FormFieldsCollectionGroup.extend({
           fieldFactoryMethod(newFieldValueName) {
             return FormField.create({
               name: 'f',
@@ -86,11 +90,11 @@ describe(
           valuesSource,
         });
 
-        expect(get(collectionGroup, 'fields.length')).to.equal(1);
+        expect(get(this.collectionGroup, 'fields.length')).to.equal(1);
 
-        collectionGroup.removeField(get(collectionGroup, 'fields.firstObject'));
+        this.collectionGroup.removeField(get(this.collectionGroup, 'fields.firstObject'));
         expect(changeSpy.lastCall.args[0]).to.not.have.nested.property('collectionEntry0');
-        expect(get(collectionGroup, 'fields')).to.have.length(0);
+        expect(get(this.collectionGroup, 'fields')).to.have.length(0);
         expect(get(changeSpy.lastCall.args[0], '__fieldsValueNames')).to.have.length(0);
       }
     );
@@ -106,7 +110,7 @@ describe(
           }),
         });
         const changeSpy = sinon.spy(value => set(valuesSource, 'collection', value));
-        const collectionGroup = FormFieldsCollectionGroup.extend({
+        this.collectionGroup = FormFieldsCollectionGroup.extend({
           fieldFactoryMethod(newFieldValueName) {
             return FormField.create({
               name: 'f',
@@ -122,9 +126,9 @@ describe(
           valuesSource,
         });
 
-        expect(get(collectionGroup, 'fields')).to.have.length(2);
-        const firstField = get(collectionGroup, 'fields.firstObject');
-        const secondField = get(collectionGroup, 'fields.lastObject');
+        expect(get(this.collectionGroup, 'fields')).to.have.length(2);
+        const firstField = get(this.collectionGroup, 'fields.firstObject');
+        const secondField = get(this.collectionGroup, 'fields.lastObject');
         expect(get(firstField, 'valueName')).to.equal('collectionEntry0');
         expect(get(secondField, 'valueName')).to.equal('collectionEntry1');
         expect(get(firstField, 'value')).to.equal('val0');
@@ -143,7 +147,7 @@ describe(
           }),
         });
         const changeSpy = sinon.spy((value => set(valuesSource, 'collection', value)));
-        const collectionGroup = FormFieldsCollectionGroup.extend({
+        this.collectionGroup = FormFieldsCollectionGroup.extend({
           fieldFactoryMethod(newFieldValueName) {
             return FormField.create({
               name: 'f',
@@ -169,8 +173,8 @@ describe(
           valuesSource,
         });
 
-        expect(get(collectionGroup, 'fields')).to.have.length(1);
-        const field = get(collectionGroup, 'fields.firstObject');
+        expect(get(this.collectionGroup, 'fields')).to.have.length(1);
+        const field = get(this.collectionGroup, 'fields.firstObject');
         expect(get(field, 'valueName')).to.equal('collectionEntry0');
         expect(get(field, 'value')).to.equal('val0');
         expect(changeSpy).to.not.be.called;
@@ -180,12 +184,12 @@ describe(
     it(
       'provides default translation for "addButtonText"',
       function () {
-        const collectionGroup = FormFieldsCollectionGroup.create({
+        this.collectionGroup = FormFieldsCollectionGroup.create({
           ownerSource: this.owner,
           name: 'abc',
         });
 
-        expect(String(get(collectionGroup, 'addButtonText'))).to.equal('Add');
+        expect(String(get(this.collectionGroup, 'addButtonText'))).to.equal('Add');
       }
     );
 
@@ -196,23 +200,23 @@ describe(
           .withArgs('abc.addButtonText')
           .returns('specificText');
 
-        const collectionGroup = FormFieldsCollectionGroup.create({
+        this.collectionGroup = FormFieldsCollectionGroup.create({
           ownerSource: this.owner,
           name: 'abc',
         });
 
-        expect(get(collectionGroup, 'addButtonText')).to.equal('specificText');
+        expect(get(this.collectionGroup, 'addButtonText')).to.equal('specificText');
       }
     );
 
     it('provides default empty translation for "emptyCollectionViewModeText"',
       function () {
-        const collectionGroup = FormFieldsCollectionGroup.create({
+        this.collectionGroup = FormFieldsCollectionGroup.create({
           ownerSource: this.owner,
           name: 'abc',
         });
 
-        expect(String(get(collectionGroup, 'emptyCollectionViewModeText')))
+        expect(String(get(this.collectionGroup, 'emptyCollectionViewModeText')))
           .to.equal('');
       }
     );
@@ -223,12 +227,12 @@ describe(
           .withArgs('abc.emptyCollectionViewModeText')
           .returns('specificText');
 
-        const collectionGroup = FormFieldsCollectionGroup.create({
+        this.collectionGroup = FormFieldsCollectionGroup.create({
           ownerSource: this.owner,
           name: 'abc',
         });
 
-        expect(get(collectionGroup, 'emptyCollectionViewModeText'))
+        expect(get(this.collectionGroup, 'emptyCollectionViewModeText'))
           .to.equal('specificText');
       }
     );

@@ -82,6 +82,14 @@ export default EmberObject.extend({
     this.dashboardModelUpdater();
   },
 
+  willDestroy() {
+    try {
+      this.dashboardModel?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   async propagateChange() {
     await this.onPropagateChange?.(this.dashboardModel.toJson());
   },

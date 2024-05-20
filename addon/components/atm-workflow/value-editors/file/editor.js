@@ -10,7 +10,7 @@ import { computed, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 import { tag, not } from 'ember-awesome-macros';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/file/editor';
@@ -45,6 +45,17 @@ export default EditorBase.extend(I18n, {
   idFormRootGroup: computed(function idFormRootGroup() {
     return IdFormRootGroup.create({ component: this });
   }),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.idFormRootGroup.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   /**
    * @override

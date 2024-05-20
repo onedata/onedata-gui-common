@@ -8,10 +8,14 @@ import sinon from 'sinon';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
 
 describe('Integration | Component | form-component/toggle-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', ToggleField.create());
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it(

@@ -21,7 +21,7 @@ import {
   notEmpty,
   conditional,
 } from 'ember-awesome-macros';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
@@ -80,7 +80,7 @@ const storeSpecificAllowedDataSpecTypes = Object.freeze({
 });
 
 const storeSpecificForbiddenDataSpecTypes = Object.freeze({
-  auditLog: ['file', 'dataset'],
+  auditLog: ['file', 'dataset', 'group'],
 });
 
 const storeTypesExpandingArrays = [
@@ -504,6 +504,18 @@ export default Component.extend(I18n, {
 
     this.resetFormValues();
     this.formModeUpdater();
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.fields.destroy?.();
+      this.cacheFor('storeBasedOnFormValues')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   resetFormValues() {

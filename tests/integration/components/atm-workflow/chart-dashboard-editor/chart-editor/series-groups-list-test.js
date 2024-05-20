@@ -13,15 +13,21 @@ import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 import { drag } from '../../../../../helpers/drag-drop';
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-editor/series-groups-list', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
+
+  afterEach(function () {
+    this.model?.destroy();
+    this.editorContext?.destroy();
+  });
 
   it('has working "add series group" button', async function () {
     const executeSpy = sinon.spy();
     this.setProperties({
-      chart: createChart(),
+      model: createModel(),
       editorContext: EditorContext.create({
         actionsFactory: {
           createAddElementAction: sinon.spy(() => ({ execute: executeSpy })),
+          destroy: () => {},
         },
       }),
     });
@@ -35,13 +41,13 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
 
     expect(this.editorContext.actionsFactory.createAddElementAction).to.be.calledWith({
       newElementType: ElementType.SeriesGroup,
-      targetElement: this.chart,
+      targetElement: this.model.rootSection.charts[0],
     });
     expect(executeSpy).to.be.calledOnce;
   });
 
   it('shows series groups list', async function () {
-    this.set('chart', createChart({
+    this.set('model', createModel({
       yAxes: [{
         id: 'a1',
         name: 'a1',
@@ -104,7 +110,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
     const duplicateExecuteSpy = sinon.spy();
     const removeExecuteSpy = sinon.spy();
     this.setProperties({
-      chart: createChart({
+      model: createModel({
         seriesGroupBuilders: [emptySeriesGroupSpec('1')],
       }),
       editorContext: EditorContext.create({
@@ -113,6 +119,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
           createDuplicateElementAction: sinon
             .spy(() => ({ execute: duplicateExecuteSpy })),
           createRemoveElementAction: sinon.spy(() => ({ execute: removeExecuteSpy })),
+          destroy: () => {},
         },
       }),
     });
@@ -130,29 +137,30 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
     expect(duplicateExecuteSpy).to.be.not.called;
     expect(removeExecuteSpy).to.be.not.called;
 
+    const seriesGroup = this.model.rootSection.charts[0].seriesGroups[0];
     await click(actions[0]);
     expect(addExecuteSpy).to.be.calledOnce;
     expect(this.editorContext.actionsFactory.createAddElementAction).to.be.calledWith({
-      newElementType: this.chart.seriesGroups[0].elementType,
-      targetElement: this.chart.seriesGroups[0],
+      newElementType: seriesGroup.elementType,
+      targetElement: seriesGroup,
     });
 
     await click(actions[1]);
     expect(duplicateExecuteSpy).to.be.calledOnce;
     expect(this.editorContext.actionsFactory.createDuplicateElementAction)
       .to.be.calledWith({
-        elementToDuplicate: this.chart.seriesGroups[0],
+        elementToDuplicate: seriesGroup,
       });
 
     await click(actions[2]);
     expect(removeExecuteSpy).to.be.calledOnce;
     expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.calledWith({
-      elementToRemove: this.chart.seriesGroups[0],
+      elementToRemove: seriesGroup,
     });
   });
 
   it('shows drop zones when root-level element is dragged', async function () {
-    this.set('chart', createChart({
+    this.set('model', createModel({
       seriesGroupBuilders: [
         emptySeriesGroupSpec('1'),
         emptySeriesGroupSpec('2'),
@@ -191,16 +199,16 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
 async function renderComponent() {
   await render(hbs`{{atm-workflow/chart-dashboard-editor/chart-editor/series-groups-list
     editorContext=editorContext
-    chart=chart
+    chart=model.rootSection.charts.[0]
   }}`);
 }
 
-function createChart(chartSpec = {}) {
+function createModel(chartSpec = {}) {
   return createModelFromSpec({
     rootSection: {
       charts: [chartSpec],
     },
-  }).rootSection.charts[0];
+  });
 }
 
 function emptySeriesGroupSpec(id, subgroups = []) {

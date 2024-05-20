@@ -36,14 +36,14 @@
   {{#if (not-eq mode "view")}}
     {{#modal.footer class="btn-toolbar"}}
       {{#if isModelChanged}}
-        {{#bs-button
+        {{#one-button
           type="warning"
           class="btn-cancel"
           onClick=(action "cancel" modal.close)
           disabled=isSubmitting
         }}
           {{tt this (concat "buttons.cancel")}}
-        {{/bs-button}}
+        {{/one-button}}
 
         {{#one-button
           type="primary"

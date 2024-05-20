@@ -7,17 +7,21 @@ import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 
 describe('Integration | Utility | form-component/static-text-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/static-text-field"', function () {
-    const field = StaticTextField.create();
-    expect(get(field, 'fieldComponentName'))
+    this.field = StaticTextField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/static-text-field');
   });
 
   it('has "isValid" equal to true', function () {
-    const field = StaticTextField.create();
-    expect(get(field, 'isValid')).to.be.true;
+    this.field = StaticTextField.create();
+    expect(get(this.field, 'isValid')).to.be.true;
   });
 
   it('has text property set to "text" translation by default', function () {
@@ -25,7 +29,7 @@ describe('Integration | Utility | form-component/static-text-field', function ()
       .withArgs('some.parent.name.text')
       .returns('someText');
 
-    const field = StaticTextField.create({
+    this.field = StaticTextField.create({
       ownerSource: this.owner,
       i18nPrefix: 'some',
       parent: {
@@ -34,6 +38,6 @@ describe('Integration | Utility | form-component/static-text-field', function ()
       name: 'name',
     });
 
-    expect(get(field, 'text')).to.equal('someText');
+    expect(get(this.field, 'text')).to.equal('someText');
   });
 });

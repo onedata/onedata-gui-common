@@ -159,7 +159,7 @@ export const FormElement = FormField.extend({
    * rerenders.
    * @type {ComputedProperty<Map<string, DataSpecEditorElementContext>>}
    */
-  editorElementsContextMap: computed('value', function editorElementsContextMap() {
+  editorElementsContextMap: computed('value', 'showExpandParams', function editorElementsContextMap() {
     const {
       editorElementsContextMapCache: elementsMap,
       value,
@@ -191,6 +191,7 @@ export const FormElement = FormField.extend({
             break;
           default: {
             const dataTypeEditorClass = dataType in paramsEditors &&
+              (paramsEditors[dataType].hasForm?.(this.showExpandParams) ?? true) &&
               paramsEditors[dataType].FormElement;
             if (!mapValue.formRootGroup && dataTypeEditorClass) {
               mapValue.formRootGroup = EditorElementFormRootGroup.create({
@@ -284,6 +285,17 @@ export const FormElement = FormField.extend({
   /**
    * @override
    */
+  willDestroy() {
+    try {
+      this.nestedForms.forEach((form) => form.destroy?.());
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
   updateOwner() {
     this._super(...arguments);
 
@@ -348,7 +360,7 @@ export function dataSpecToFormValues(dataSpec, includeExpandParams = false) {
   } else if (dataType === 'array') {
     return createDataTypeElement(dataType, {
       includeExpandParams,
-      item: dataSpecToFormValues(dataSpec.itemDataSpec),
+      item: dataSpecToFormValues(dataSpec.itemDataSpec, includeExpandParams),
     });
   } else {
     return createDataTypeElement(dataType, { includeExpandParams });

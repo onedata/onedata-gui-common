@@ -14,7 +14,7 @@ import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import OneCheckboxBase from 'onedata-gui-common/components/one-checkbox-base';
 import { inject as service } from '@ember/service';
 import computedT from 'onedata-gui-common/utils/computed-t';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import dom from 'onedata-gui-common/utils/dom';
 import globals from 'onedata-gui-common/utils/globals';
 

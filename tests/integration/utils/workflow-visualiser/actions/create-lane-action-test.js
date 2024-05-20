@@ -18,7 +18,7 @@ import { selectChoose } from 'ember-power-select/test-support/helpers';
 import { lookupService } from '../../../../helpers/stub-service';
 
 describe('Integration | Utility | workflow-visualiser/actions/create-lane-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     set(
@@ -42,6 +42,10 @@ describe('Integration | Utility | workflow-visualiser/actions/create-lane-action
       createLaneCallback: createStub,
     });
     this.setProperties({ action, createStub });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
   });
 
   it('has correct className and icon', function () {

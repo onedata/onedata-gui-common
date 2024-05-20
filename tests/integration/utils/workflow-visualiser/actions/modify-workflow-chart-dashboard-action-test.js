@@ -16,7 +16,7 @@ import { Promise } from 'rsvp';
 import sinon from 'sinon';
 
 describe('Integration | Utility | workflow-visualiser/actions/modify-workflow-chart-dashboard-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const workflow = Workflow.create();
@@ -27,6 +27,11 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-workflow-ch
       },
     });
     this.setProperties({ workflow, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.workflow.destroy();
   });
 
   it('has correct className, icon and title', function () {

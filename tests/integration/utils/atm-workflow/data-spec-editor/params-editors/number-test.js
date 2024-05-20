@@ -9,7 +9,7 @@ import { lookupService } from '../../../../../helpers/stub-service';
 import { AtmDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 
 describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/number', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('rootGroup', FormFieldsRootGroup.create({
@@ -20,6 +20,10 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/n
         }),
       ],
     }));
+  });
+
+  afterEach(function () {
+    this.rootGroup.destroy?.();
   });
 
   it('shows unchecked toggle for "integers only" option', async function () {

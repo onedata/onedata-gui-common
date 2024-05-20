@@ -12,7 +12,7 @@ import { inject as service } from '@ember/service';
 import { not, and, or, eq, raw } from 'ember-awesome-macros';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/sections-editor/section';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 import { ChartNavigation } from 'onedata-gui-common/utils/time-series-dashboard';
@@ -55,6 +55,16 @@ export default OneDraggableObject.extend(I18n, {
    * @type {boolean}
    */
   isHovered: false,
+
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseMoveHandler: null,
+
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseLeaveHandler: null,
 
   /**
    * For one-draggable-object
@@ -154,30 +164,56 @@ export default OneDraggableObject.extend(I18n, {
   /**
    * @override
    */
-  mouseLeave() {
-    this._super(...arguments);
-    this.changeHoverState(false);
-  },
-
-  /**
-   * @override
-   */
-  mouseMove(event) {
-    this._super(...arguments);
-    const containsHoveredElement =
-      event.target.closest('.has-floating-toolbar') !== this.element;
-    this.changeHoverState(!containsHoveredElement);
-  },
-
-  /**
-   * @override
-   */
   click(event) {
     this._super(...arguments);
     if (isDirectlyClicked(event)) {
       const action = this.editorContext.actionsFactory
         .createSelectElementAction({ elementToSelect: this.section });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroy();
+      }
+    }
+  },
+
+  /**
+   * @override
+   */
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (!this.element) {
+      return;
+    }
+
+    this.setProperties({
+      mouseMoveHandler: (event) => {
+        const containsHoveredElement =
+          event.target.closest('.has-floating-toolbar') !== this.element;
+        this.changeHoverState(!containsHoveredElement);
+      },
+      mouseLeaveHandler: () => {
+        this.changeHoverState(false);
+      },
+    });
+    this.element.addEventListener('mousemove', this.mouseMoveHandler);
+    this.element.addEventListener('mouseleave', this.mouseLeaveHandler);
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      if (this.mouseMoveHandler) {
+        this.element?.removeEventListener('mousemove', this.mouseMoveHandler);
+      }
+      if (this.mouseLeaveHandler) {
+        this.element?.removeEventListener('mouseleave', this.mouseLeaveHandler);
+      }
+    } finally {
+      this._super(...arguments);
     }
   },
 

@@ -29,7 +29,7 @@ export default Component.extend({
    * @virtual
    * @type {Function}
    */
-  onBlockAdd: notImplementedIgnore,
+  onBlockAdd: undefined,
 
   /**
    * @virtual
@@ -91,7 +91,11 @@ export default Component.extend({
      */
     addBlock(closeSelectorCallback, selectedBlock) {
       closeSelectorCallback();
-      this.get('onBlockAdd')(selectedBlock);
+      if (this.onBlockAdd) {
+        this.onBlockAdd(selectedBlock);
+      } else {
+        selectedBlock.destroy();
+      }
     },
     togglePopover(open) {
       let effOpen = open;

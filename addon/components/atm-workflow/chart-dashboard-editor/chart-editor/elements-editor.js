@@ -12,7 +12,7 @@ import EmberObject, { observer, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { guidFor } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import {
   chartElementIcons,
   ElementType,
@@ -106,6 +106,17 @@ export default Component.extend(I18n, {
   },
 
   /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.tabs.forEach((tab) => tab.destroy());
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
    * @returns {void}
    */
   consumeNewSelectedElement() {
@@ -158,7 +169,11 @@ export default Component.extend(I18n, {
     const selectAction = this.editorContext.actionsFactory.createSelectElementAction({
       elementToSelect: tab.element,
     });
-    selectAction.execute();
+    try {
+      selectAction.execute();
+    } finally {
+      selectAction.destroy?.();
+    }
   },
 
   actions: {
@@ -184,7 +199,11 @@ export default Component.extend(I18n, {
           elementToSelect: nextSelectedTabCandidate?.element,
           elementsToDeselect: [tab.element],
         });
-        selectAction.execute();
+        try {
+          selectAction.execute();
+        } finally {
+          selectAction.destroy?.();
+        }
       }
       tab.destroy();
       this.set('tabs', this.tabs.filter((t) => t !== tab));

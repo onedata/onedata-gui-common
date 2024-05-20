@@ -13,7 +13,7 @@
     <p class="description">{{descriptionText}}</p>
     {{#promise-proxy-container proxy=recordOptionsProxy}}
       <OneDropdown
-        @options={{recordOptionsProxy}}
+        @options={{recordOptionsProxy.content.content}}
         @onChange={{action (mut selectedRecordOption)}}
         @selected={{selectedRecordOption}}
         @placeholder={{selectorPlaceholderText}}
@@ -31,14 +31,14 @@
   {{/modal.body}}
 
   {{#modal.footer class="btn-toolbar"}}
-    {{#bs-button
+    {{#one-button
       type="default"
       class="record-selector-cancel"
       onClick=modal.close
       disabled=isSubmitting
     }}
       {{tt this "cancel"}}
-    {{/bs-button}}
+    {{/one-button}}
     {{#one-button
       type="primary"
       buttonType="submit"

@@ -12,7 +12,7 @@ import { getModalBody, getModalFooter } from '../../../helpers/modal';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
 describe('Integration | Component | workflow-visualiser/interlane-space', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const actionsFactory = ActionsFactory.create({ ownerSource: this.owner });
@@ -28,7 +28,14 @@ describe('Integration | Component | workflow-visualiser/interlane-space', functi
         }),
       ],
     });
-    this.set('interlaneSpace', InterlaneSpace.create({ actionsFactory }));
+    this.setProperties({
+      interlaneSpace: InterlaneSpace.create({ actionsFactory }),
+      actionsFactory,
+    });
+  });
+
+  afterEach(function () {
+    this.actionsFactory.destroy();
   });
 
   it(

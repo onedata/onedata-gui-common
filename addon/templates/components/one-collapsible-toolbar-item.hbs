@@ -5,7 +5,7 @@
 </a>
 {{else}}
   {{#if (eq buttonType "bs")}}
-    {{#bs-button
+    {{#one-button
       class=(concat-classes
         triggerClasses
         (concat " btn " buttonSizeClass)
@@ -16,6 +16,6 @@
       bubble=true
     }}
       {{yield}}
-    {{/bs-button}}
+    {{/one-button}}
   {{/if}}
 {{/if}}

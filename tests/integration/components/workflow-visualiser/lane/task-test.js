@@ -5,7 +5,6 @@ import {
   context,
   before,
   beforeEach,
-  afterEach,
 } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import {
@@ -36,12 +35,17 @@ const taskActionsSpec = [{
 }];
 
 describe('Integration | Component | workflow-visualiser/lane/task', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('task', Task.create({
       actionsFactory: ActionsFactory.create({ ownerSource: this.owner }),
     }));
+  });
+
+  afterEach(function () {
+    this.task.actionsFactory.destroy();
+    this.task.destroy();
   });
 
   it('has classes "workflow-visualiser-task" and "workflow-visualiser-element"', async function () {
@@ -56,7 +60,8 @@ describe('Integration | Component | workflow-visualiser/lane/task', function () 
     before(function () {
       // Instatiate Action class to make its `prototype.execute` available for
       // mocking.
-      CopyRecordIdAction.create();
+      const action = CopyRecordIdAction.create();
+      action.destroy();
     });
 
     beforeEach(function () {
@@ -65,7 +70,7 @@ describe('Integration | Component | workflow-visualiser/lane/task', function () 
 
     afterEach(function () {
       // Reset stubbed actions
-      if (CopyRecordIdAction.prototype.execute.restore) {
+      if (CopyRecordIdAction.prototype?.execute?.restore) {
         CopyRecordIdAction.prototype.execute.restore();
       }
     });

@@ -44,7 +44,7 @@ export default QueryBlock.extend({
     'comparator',
     'comparatorValue',
     function updateObserver() {
-      this.get('notifyUpdate')(this);
+      this.get('notifyUpdate')?.(this);
     }
   ),
 });

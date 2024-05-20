@@ -5,15 +5,19 @@ import CopyRecordIdAction from 'onedata-gui-common/utils/clipboard-actions/copy-
 import { get } from '@ember/object';
 
 describe('Unit | Service | clipboard-actions', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.action?.destroy();
+  });
 
   it('creates action "CopyRecordIdAction"', function () {
     const service = this.owner.lookup('service:clipboard-actions');
     const record = {};
 
-    const action = service.createCopyRecordIdAction({ record });
+    this.action = service.createCopyRecordIdAction({ record });
 
-    expect(action).to.be.instanceOf(CopyRecordIdAction);
-    expect(get(action, 'record')).to.equal(record);
+    expect(this.action).to.be.instanceOf(CopyRecordIdAction);
+    expect(get(this.action, 'record')).to.equal(record);
   });
 });

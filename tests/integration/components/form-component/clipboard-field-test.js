@@ -7,10 +7,14 @@ import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-fi
 import { setProperties } from '@ember/object';
 
 describe('Integration | Component | form-component/clipboard-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', ClipboardField.create({ ownerSource: this.owner }));
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it(

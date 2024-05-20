@@ -12,7 +12,7 @@ import Component from '@ember/component';
 import { computed, get, set } from '@ember/object';
 import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-operator-query-block';
 import layout from 'onedata-gui-common/templates/components/query-builder';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import QueryValueComponentsBuilder from 'onedata-gui-common/utils/query-value-components-builder';
 
@@ -98,6 +98,11 @@ export default Component.extend(I18n, {
   editedConditions: undefined,
 
   /**
+   * @type {Utils.QueryBuilder.RootOperatorQueryBlock | null}
+   */
+  locallyCreatedRootQueryBlock: null,
+
+  /**
    * @type {ComputedProperty<Boolean>}
    */
   hasInvalidCondition: computed('editedConditions', function hasInvalidCondition() {
@@ -109,10 +114,22 @@ export default Component.extend(I18n, {
     this._super(...arguments);
     this.set('editedConditions', new Map());
     if (!this.get('rootQueryBlock')) {
-      this.set('rootQueryBlock', RootOperatorQueryBlock.create());
+      const rootQueryBlock = RootOperatorQueryBlock.create();
+      this.setProperties({
+        rootQueryBlock,
+        locallyCreatedRootQueryBlock: rootQueryBlock,
+      });
     }
     if (!this.get('valuesBuilder')) {
       this.set('valuesBuilder', QueryValueComponentsBuilder.create());
+    }
+  },
+
+  willDestroyElement() {
+    try {
+      this.locallyCreatedRootQueryBlock?.destroy();
+    } finally {
+      this._super(...arguments);
     }
   },
 

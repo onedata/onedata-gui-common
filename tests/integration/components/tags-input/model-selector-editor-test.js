@@ -16,6 +16,7 @@ import _ from 'lodash';
 import { resolve } from 'rsvp';
 import { findInElementsByText } from '../../../helpers/find';
 import globals from 'onedata-gui-common/utils/globals';
+import { set } from '@ember/object';
 
 const models = [{
   name: 'user',
@@ -54,10 +55,14 @@ availableModels['serviceOnepanel'][0].serviceType = 'onezone';
 availableModels['serviceOnepanel'][0].name += 'onezone';
 
 describe('Integration | Component | tags-input/model-selector-editor', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('settings', defaultSettings);
+  });
+
+  afterEach(function () {
+    this.tags?.forEach((tag) => tag.destroy?.());
   });
 
   it('has class "tags-input-model-selector-editor"', async function () {
@@ -106,8 +111,11 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
   });
 
   it('sorts list of records before rendering', async function () {
-    this.get('settings.models')[0].getRecords =
-      () => resolve(availableModels['user'].slice().reverse());
+    set(
+      this.get('settings.models')[0],
+      'getRecords',
+      () => resolve(availableModels['user'].slice().reverse())
+    );
 
     await render(hbs `{{tags-input
       tagEditorComponentName="tags-input/model-selector-editor"
@@ -236,6 +244,7 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
       expect(
         findInElementsByText(options, availableModels[typeName][0].name)
       ).to.not.exist;
+      console.log(changeSpy.lastCall.args[0]);
       expect(changeSpy.lastCall.args[0].mapBy('value.record'))
         .to.deep.equal([availableModels[typeName][0]]);
     });

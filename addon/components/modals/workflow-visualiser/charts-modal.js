@@ -7,14 +7,14 @@
  */
 
 import Component from '@ember/component';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/modals/workflow-visualiser/charts-modal';
 import { reads } from '@ember/object/computed';
 /**
  * @typedef {Object} WorkflowVisualiserChartsModalOptions
  * @property {DashboardModelOwner} dashboardOwner
- * @property {ObjectProxy<boolean>} isLiveProxy Needed only in `view` mode
+ * @property {EmberObject<{ content: boolean }>} isLiveProxy Needed only in `view` mode
  * @property {(store: Utils.WorkflowVisualiser.Store, browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>} [getStoreContentCallback]
  *   Useful only in `view` mode. If not provided, only chart definition will be visible.
  * @property {() => AtmTimeSeriesCollectionReferencesMap} [getTimeSeriesCollectionRefsMapCallback]
@@ -50,7 +50,7 @@ export default Component.extend(I18n, {
   dashboardOwner: reads('modalOptions.dashboardOwner'),
 
   /**
-   * @type {ComputedProperty<ObjectProxy<boolean>>}
+   * @type {ComputedProperty<EmberObject<{ content: boolean }>}
    */
   isLiveProxy: reads('modalOptions.isLiveProxy'),
 

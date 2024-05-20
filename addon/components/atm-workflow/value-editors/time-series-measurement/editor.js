@@ -15,7 +15,7 @@ import EditorBase from '../commons/editor-base';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-editors/time-series-measurement/editor';
 
 const formFieldNames = Object.freeze(['timestamp', 'tsName', 'value']);
@@ -34,6 +34,17 @@ export default EditorBase.extend(I18n, {
   formRootGroup: computed(function formRootGroup() {
     return FormRootGroup.create({ component: this });
   }),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.formRootGroup.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   /**
    * @override

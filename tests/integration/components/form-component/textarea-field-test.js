@@ -8,12 +8,16 @@ import sinon from 'sinon';
 import { set, setProperties } from '@ember/object';
 
 describe('Integration | Component | form-component/textarea-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', TextareaField.create({
       ownerSource: this.owner,
     }));
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it(

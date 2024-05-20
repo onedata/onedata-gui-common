@@ -72,10 +72,15 @@ const units = [{
 }];
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-editor/axis-editor-form', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('editorContext', EditorContext.create());
+  });
+
+  afterEach(function () {
+    this.editorContext.destroy();
+    this.axis?.destroy();
   });
 
   it('has class "axis-editor-form"', async function () {

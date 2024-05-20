@@ -15,7 +15,7 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
 describe('Integration | Utility | workflow-visualiser/actions/remove-store-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const store = Store.create({ name: 'store1' });
@@ -24,6 +24,11 @@ describe('Integration | Utility | workflow-visualiser/actions/remove-store-actio
       context: { store },
     });
     this.setProperties({ store, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.store.destroy();
   });
 
   it('has correct className, icon and title', function () {

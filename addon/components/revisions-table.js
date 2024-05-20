@@ -10,7 +10,7 @@ import Component from '@ember/component';
 import layout from '../templates/components/revisions-table';
 import { computed } from '@ember/object';
 import sortRevisionNumbers from 'onedata-gui-common/utils/revisions/sort-revision-numbers';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import { raw, or, sum, conditional } from 'ember-awesome-macros';
 

@@ -15,7 +15,7 @@ import {
   get,
   getProperties,
 } from '@ember/object';
-import { array, raw, isEmpty } from 'ember-awesome-macros';
+import { empty } from '@ember/object/computed';
 import _ from 'lodash';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
@@ -69,7 +69,9 @@ export default FormElement.extend({
   /**
    * @override
    */
-  isModified: array.isAny('fields', raw('isModified')),
+  isModified: computed('fields.@each.isModified', function isModified() {
+    return this.fields?.some(({ isModified }) => isModified) ?? false;
+  }),
 
   /**
    * @override
@@ -98,7 +100,7 @@ export default FormElement.extend({
   /**
    * @override
    */
-  isValid: isEmpty('invalidFields'),
+  isValid: empty('invalidFields'),
 
   /**
    * @override

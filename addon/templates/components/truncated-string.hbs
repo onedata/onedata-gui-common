@@ -5,4 +5,5 @@
     title=(or customTooltipText tooltipText)
     triggerEvents=""
     visible=showTooltip
-    onHidden=renderLater.resetRenderTrigger}}{{/render-later}}
+    onHidden=renderLater.resetRenderTrigger
+    onShown=(action "handleTooltipShown")}}{{/render-later}}

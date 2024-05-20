@@ -13,7 +13,7 @@ const newTaskMatcher = sinon.match({
 });
 
 describe('Integration | Utility | workflow-visualiser/actions/create-task-action', function () {
-  setupTest();
+  const { afterEach } = setupTest();
 
   beforeEach(function () {
     const createStub = sinon.stub();
@@ -35,6 +35,10 @@ describe('Integration | Utility | workflow-visualiser/actions/create-task-action
       createTaskCallback: createStub,
     });
     this.setProperties({ action, createStub });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
   });
 
   it('has correct className and icon', function () {

@@ -1,0 +1,19 @@
+{{#if idProvidingEditorState}}
+  {{component idProvidingEditorState.editorComponentName
+    stateManager=stateManager
+    editorId=idProvidingEditorState.id
+    onRemove=(action "idProvidingCancelled")
+  }}
+{{else}}
+  <AtmWorkflow::ValueEditors::Group::Selector
+    class="add-item-trigger"
+    @atmDataSpec={{itemAtmDataSpec}}
+    @editorContext={{editorContext}}
+    @allowManyGroups={{true}}
+    @isDisabled={{isDisabled}}
+    @onGroupsSelected={{action "groupsSelected"}}
+    @onIdProvidingStarted={{action "idProvidingStarted"}}
+  >
+    {{tt this "label"}}
+  </AtmWorkflow::ValueEditors::Group::Selector>
+{{/if}}

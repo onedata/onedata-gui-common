@@ -9,15 +9,7 @@
 
 import Component from '@ember/component';
 import layout from '../../../../templates/components/modals/workflow-visualiser/lane-modal/lane-form';
-import {
-  tag,
-  getBy,
-  raw,
-  conditional,
-  eq,
-  not,
-} from 'ember-awesome-macros';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
@@ -31,7 +23,7 @@ import {
   getProperties,
   get,
 } from '@ember/object';
-import { reads } from '@ember/object/computed';
+import { reads, not } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 
 const createStoreDropdownOptionValue = '__createStore';
@@ -101,7 +93,9 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  modeClass: tag `mode-${'mode'}`,
+  modeClass: computed(function modeClass() {
+    return `mode-${this.mode}`;
+  }),
 
   /**
    * @type {ComputedProperty<string>}
@@ -146,7 +140,7 @@ export default Component.extend(I18n, {
     );
 
     return FormFieldsRootGroup.extend({
-      i18nPrefix: tag `${'component.i18nPrefix'}.fields`,
+      i18nPrefix: `${this.i18nPrefix}.fields`,
       ownerSource: reads('component'),
       isEnabled: not('component.isDisabled'),
       onValueChange() {
@@ -169,7 +163,7 @@ export default Component.extend(I18n, {
    */
   nameField: computed(function nameField() {
     return TextField
-      .extend(defaultValueGenerator(this, raw('')))
+      .extend(defaultValueGenerator(this, 'name', ''))
       .create({
         name: 'name',
       });
@@ -180,7 +174,7 @@ export default Component.extend(I18n, {
    */
   maxRetriesField: computed(function maxRetriesField() {
     return NumberField
-      .extend(defaultValueGenerator(this, raw('0')))
+      .extend(defaultValueGenerator(this, 'maxRetries', '0'))
       .create({
         name: 'maxRetries',
         gte: 0,
@@ -196,7 +190,8 @@ export default Component.extend(I18n, {
       return NumberField
         .extend(defaultValueGenerator(
           this,
-          'defaultValueSource.defaultInstantFailureExceptionThreshold'
+          'instantFailureExceptionThreshold',
+          reads('defaultValueSource.defaultInstantFailureExceptionThreshold')
         ))
         .create({
           name: 'instantFailureExceptionThreshold',
@@ -234,8 +229,12 @@ export default Component.extend(I18n, {
   sourceStoreField: computed(function sourceStoreField() {
     const component = this;
     return DropdownField
-      // using options.1 because options.firstObject is the "createStore" item
-      .extend(defaultValueGenerator(this, 'options.1.value'), {
+      .extend(defaultValueGenerator(
+        this,
+        'iteratorOptions.sourceStore',
+        // using options.1 because options.firstObject is the "createStore" item
+        reads('options.1.value')
+      ), {
         options: computed('component.definedStores.@each.name', function options() {
           const storeOptions = (this.get('component.definedStores') || []).map(store => ({
             value: store.id,
@@ -266,7 +265,7 @@ export default Component.extend(I18n, {
    */
   maxBatchSizeField: computed(function maxBatchSizeField() {
     return NumberField
-      .extend(defaultValueGenerator(this, raw('10')))
+      .extend(defaultValueGenerator(this, 'iteratorOptions.maxBatchSize', '10'))
       .create({
         name: 'maxBatchSize',
         integer: true,
@@ -302,6 +301,14 @@ export default Component.extend(I18n, {
 
     this.formModeUpdater();
     this.get('fields').reset();
+  },
+
+  willDestroyElement() {
+    try {
+      this.fields.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   notifyAboutChange() {
@@ -348,16 +355,24 @@ export default Component.extend(I18n, {
  * and "edit" mode is taken from component, in "create" mode is equal to passed
  * `createDefaultValue`. It's result should be passed to *Field.extend.
  * @param {Components.Modals.WorkflowVisualiser.LaneModal.LaneForm} component
+ * @param {string} path Path to the default value in `passedFormValues` property
  * @param {any} createDefaultValue
  * @returns {Object}
  */
-function defaultValueGenerator(component, createDefaultValue) {
+function defaultValueGenerator(component, path, createDefaultValue) {
   return {
     defaultValueSource: component,
-    defaultValue: conditional(
-      eq('defaultValueSource.mode', raw('create')),
-      createDefaultValue,
-      getBy('defaultValueSource', tag `passedFormValues.${'path'}`),
+    defaultValueForCreateMode: createDefaultValue,
+    defaultValue: computed(
+      `defaultValueSource.{mode,passedFormValues.${path}}`,
+      'defaultValueForCreateMode',
+      function defaultValue() {
+        if (this.defaultValueSource?.mode === 'create') {
+          return this.defaultValueForCreateMode;
+        }
+
+        return this.get(`defaultValueSource.passedFormValues.${path}`);
+      }
     ),
   };
 }

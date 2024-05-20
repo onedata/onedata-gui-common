@@ -9,7 +9,7 @@
 import { inject as service } from '@ember/service';
 import PerfectScrollbarElement from 'onedata-gui-common/components/perfect-scrollbar-element';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/sections-editor/sidebar';
 
 export default PerfectScrollbarElement.extend(I18n, {

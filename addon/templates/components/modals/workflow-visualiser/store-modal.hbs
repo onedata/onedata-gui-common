@@ -118,14 +118,14 @@
 
   {{#if (not-eq mode "view")}}
     {{#modal.footer class="btn-toolbar"}}
-      {{#bs-button
+      {{#one-button
         type="default"
         class="btn-cancel"
         onClick=modal.close
         disabled=isSubmitting
       }}
         {{cancelBtnText}}
-      {{/bs-button}}
+      {{/one-button}}
 
       {{#one-button
         type="primary"

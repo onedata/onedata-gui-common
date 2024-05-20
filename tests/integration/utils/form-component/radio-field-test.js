@@ -8,17 +8,21 @@ import sinon from 'sinon';
 import { settled } from '@ember/test-helpers';
 
 describe('Integration | Utility | form-component/radio-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/radio-field"', function () {
-    const field = RadioField.create();
-    expect(get(field, 'fieldComponentName'))
+    this.field = RadioField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/radio-field');
   });
 
   it('overrides "withValidationIcon" to false', function () {
-    const field = RadioField.create();
-    expect(get(field, 'withValidationIcon')).to.be.false;
+    this.field = RadioField.create();
+    expect(get(this.field, 'withValidationIcon')).to.be.false;
   });
 
   it('translates options', async function () {
@@ -26,7 +30,7 @@ describe('Integration | Utility | form-component/radio-field', function () {
       .withArgs('somePrefix.field1.options.one.label')
       .returns('One');
 
-    const field = RadioField.create({
+    this.field = RadioField.create({
       ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
@@ -35,9 +39,9 @@ describe('Integration | Utility | form-component/radio-field', function () {
         name: 'one',
       }],
     });
-    get(field, 'preparedOptions');
+    get(this.field, 'preparedOptions');
 
     await settled();
-    expect(get(field, 'preparedOptions.firstObject.label')).to.equal('One');
+    expect(get(this.field, 'preparedOptions.firstObject.label')).to.equal('One');
   });
 });

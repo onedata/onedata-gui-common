@@ -10,7 +10,7 @@
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
 import { translateValidationErrorsBatch } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
@@ -80,7 +80,11 @@ export default OneDraggableObject.extend(I18n, {
       const action = this.editorContext.actionsFactory.createSelectElementAction({
         elementToSelect: this.itemModel.item,
       });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroy?.();
+      }
     },
     add() {
       if (!this.allowNesting) {

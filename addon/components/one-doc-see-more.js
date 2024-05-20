@@ -8,7 +8,7 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/one-doc-see-more';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import { oneDocUrl } from 'onedata-gui-common/helpers/one-doc-url';
 import { computed } from '@ember/object';
@@ -54,15 +54,15 @@ export default Component.extend(I18n, {
    */
   href: computed('docPath', {
     get() {
-      return this.injectedHref ?? oneDocUrl(this, this.docPath);
+      return this.customHref ?? oneDocUrl(this, this.docPath);
     },
     set(key, value) {
-      return this.injectedHref = value;
+      return this.customHref = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedHref: null,
+  customHref: null,
 });

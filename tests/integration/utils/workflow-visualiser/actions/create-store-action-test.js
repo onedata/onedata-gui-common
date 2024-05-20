@@ -16,7 +16,7 @@ import {
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 describe('Integration | Utility | workflow-visualiser/actions/create-store-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const createStub = sinon.stub();
@@ -25,6 +25,10 @@ describe('Integration | Utility | workflow-visualiser/actions/create-store-actio
       createStoreCallback: createStub,
     });
     this.setProperties({ action, createStub });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
   });
 
   it('has correct title, className and icon', function () {

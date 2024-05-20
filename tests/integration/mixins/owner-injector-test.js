@@ -7,19 +7,23 @@ import Service, { inject as service } from '@ember/service';
 import { setupTest } from 'ember-mocha';
 
 describe('Integration | Mixin | owner-injector', function () {
-  setupTest();
+  const { afterEach } = setupTest();
 
   beforeEach(function () {
     registerService(this, 'test-service', Service);
     this.set('testService', lookupService(this, 'test-service'));
   });
 
+  afterEach(function () {
+    this.subject?.destroy();
+  });
+
   it('does not inject service, when ownerSource is not specified', function () {
-    const subject = OwnerInjectorObject.create();
+    this.subject = OwnerInjectorObject.create();
 
     let error;
     try {
-      get(subject, 'testService');
+      get(this.subject, 'testService');
     } catch (e) {
       error = e;
     }
@@ -27,18 +31,18 @@ describe('Integration | Mixin | owner-injector', function () {
   });
 
   it('injects service, when ownerSource is specified', function () {
-    const subject = OwnerInjectorObject.create({
+    this.subject = OwnerInjectorObject.create({
       ownerSource: this.owner,
     });
 
-    expect(get(subject, 'testService')).to.equal(this.get('testService'));
+    expect(get(this.subject, 'testService')).to.equal(this.get('testService'));
   });
 
   it('injects service, when ownerSource is specified after init', function () {
-    const subject = OwnerInjectorObject.create();
-    set(subject, 'ownerSource', this.owner);
+    this.subject = OwnerInjectorObject.create();
+    set(this.subject, 'ownerSource', this.owner);
 
-    expect(get(subject, 'testService')).to.equal(this.get('testService'));
+    expect(get(this.subject, 'testService')).to.equal(this.get('testService'));
   });
 });
 

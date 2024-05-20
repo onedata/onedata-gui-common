@@ -15,7 +15,7 @@ import { dasherize } from '@ember/string';
 import { getOwner } from '@ember/application';
 import { tag, not } from 'ember-awesome-macros';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/function-editor/function-settings-base';
 
 export default Component.extend(I18n, {
@@ -54,6 +54,17 @@ export default Component.extend(I18n, {
   functionBasedClassName: computed('chartFunction.name', function functionBasedClassName() {
     return `${dasherize(this.chartFunction.name)}-settings`;
   }),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.form?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   /**
    * @virtual

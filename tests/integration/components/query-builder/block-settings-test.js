@@ -10,7 +10,12 @@ import { get } from '@ember/object';
 import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | query-builder/block-settings', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
+
+  afterEach(function () {
+    this.queryBlock?.destroy();
+    this.replacingBlock?.destroy();
+  });
 
   it('does not show block selector when "open" is false', async function () {
     this.set('queryBlock', NotOperatorQueryBlock.create());
@@ -83,7 +88,7 @@ describe('Integration | Component | query-builder/block-settings', function () {
         closeSpy,
       } = this.setProperties({
         queryBlock: NotOperatorQueryBlock.create(),
-        replaceSpy: sinon.spy(),
+        replaceSpy: sinon.spy(([block]) => this.set('replacingBlock', block)),
         closeSpy: sinon.stub().callsFake(() => this.set('open', false)),
         open: true,
       });
@@ -120,7 +125,7 @@ describe('Integration | Component | query-builder/block-settings', function () {
         closeSpy,
       } = this.setProperties({
         queryBlock: NotOperatorQueryBlock.create(),
-        replaceSpy: sinon.spy(),
+        replaceSpy: sinon.spy(([block]) => this.set('replacingBlock', block)),
         closeSpy: sinon.stub().callsFake(() => this.set('open', false)),
         isShown: true,
       });

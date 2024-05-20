@@ -12,10 +12,14 @@ import { set } from '@ember/object';
 const datetimeFormat = 'YYYY/MM/DD H:mm';
 
 describe('Integration | Component | form-component/datetime-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', DatetimeField.create());
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it(

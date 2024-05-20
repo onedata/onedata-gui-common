@@ -9,7 +9,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from '../templates/components/providers-map-tile';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import ProvidersColors from 'onedata-gui-common/mixins/components/providers-colors';
 
 export default Component.extend(I18n, ProvidersColors, {
@@ -45,10 +45,10 @@ export default Component.extend(I18n, ProvidersColors, {
    */
   title: computed({
     get() {
-      return this.injectedTitle ?? this.t('title');
+      return this.customTitle ?? this.t('title');
     },
     set(key, value) {
-      this.injectedTitle = value;
+      this.customTitle = value;
     },
   }),
 
@@ -58,20 +58,20 @@ export default Component.extend(I18n, ProvidersColors, {
    */
   moreText: computed({
     get() {
-      return this.injectedMoreText ?? this.t('moreText');
+      return this.customMoreText ?? this.t('moreText');
     },
     set(key, value) {
-      return this.injectedMoreText = value;
+      return this.customMoreText = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedTitle: null,
+  customTitle: null,
 
   /**
    * @type {string | null}
    */
-  injectedMoreText: null,
+  customMoreText: null,
 });

@@ -11,7 +11,7 @@ import { computed, get, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { or } from 'ember-awesome-macros';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from 'onedata-gui-common/templates/components/modals/workflow-visualiser/store-modal/audit-log-presenter/references-cell';
 
 export default Component.extend(I18n, {
@@ -135,4 +135,16 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.Action | null>}
    */
   actionToUse: or('openTaskAuditLogAction', 'openExceptionStoreAction'),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('openTaskAuditLogAction')?.destroy?.();
+      this.cacheFor('openExceptionStoreAction')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });

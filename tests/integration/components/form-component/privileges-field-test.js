@@ -33,7 +33,7 @@ const translations = {
 };
 
 describe('Integration | Component | form-component/privileges-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const i18nStub = sinon.stub(lookupService(this, 'i18n'), 't');
@@ -47,6 +47,10 @@ describe('Integration | Component | form-component/privileges-field', function (
       privilegeGroupsTranslationsPath: 'grpT',
       privilegesTranslationsPath: 'prvT',
     }));
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it('has class "privileges-field"', async function () {

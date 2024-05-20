@@ -11,7 +11,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from '../templates/components/proceed-process-modal';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -132,10 +132,10 @@ export default Component.extend(I18n, {
    */
   headerText: computed({
     get() {
-      return this.injectedHeaderText ?? this.t('headerText');
+      return this.customHeaderText ?? this.t('headerText');
     },
     set(key, value) {
-      return this.injectedHeaderText = value;
+      return this.customHeaderText = value;
     },
   }),
 
@@ -146,10 +146,10 @@ export default Component.extend(I18n, {
    */
   messageText: computed({
     get() {
-      return this.injectedMessageText ?? this.t('messageText');
+      return this.customMessageText ?? this.t('messageText');
     },
     set(key, value) {
-      return this.injectedMessageText = value;
+      return this.customMessageText = value;
     },
   }),
 
@@ -160,10 +160,10 @@ export default Component.extend(I18n, {
    */
   cancelButtonText: computed({
     get() {
-      return this.injectedCancelButtonText ?? this.t('cancel');
+      return this.customCancelButtonText ?? this.t('cancel');
     },
     set(key, value) {
-      return this.injectedCancelButtonText = value;
+      return this.customCancelButtonText = value;
     },
   }),
 
@@ -174,32 +174,32 @@ export default Component.extend(I18n, {
    */
   proceedButtonText: computed({
     get() {
-      return this.injectedProceedButtonText ?? this.t('proceed');
+      return this.customProceedButtonText ?? this.t('proceed');
     },
     set(key, value) {
-      return this.injectedProceedButtonText = value;
+      return this.customProceedButtonText = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedHeaderText: null,
+  customHeaderText: null,
 
   /**
    * @type {string | null}
    */
-  injectedMessageText: null,
+  customMessageText: null,
 
   /**
    * @type {string | null}
    */
-  injectedCancelButtonText: null,
+  customCancelButtonText: null,
 
   /**
    * @type {string | null}
    */
-  injectedProceedButtonText: null,
+  customProceedButtonText: null,
 
   actions: {
     proceed() {

@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { FileType } from 'onedata-gui-common/utils/file';
+import { GroupType } from 'onedata-gui-common/utils/group';
 
 export default Component.extend({
   obj1: Object.freeze({
@@ -19,6 +20,12 @@ export default Component.extend({
     rootFileId: 'file1Id',
     rootFilePath: '/space1/a/b/c/data',
     rootFileType: FileType.Directory,
+  }),
+
+  group1: Object.freeze({
+    groupId: 'group id',
+    name: 'My group',
+    type: GroupType.Organization,
   }),
 
   range1: Object.freeze({
@@ -78,6 +85,9 @@ export default Component.extend({
       return '#';
     },
     async getDatasetUrlById() {
+      return '#';
+    },
+    async getGroupUrlById() {
       return '#';
     },
   }),

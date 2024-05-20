@@ -12,7 +12,7 @@ import setDefaultQueryValuesBuilder from '../../helpers/set-default-query-values
 import { findInElementsByText } from '../../helpers/find';
 
 describe('Integration | Component | query-builder-main-component', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
 
@@ -26,6 +26,10 @@ describe('Integration | Component | query-builder-main-component', function () {
         type: 'number',
       },
     ]);
+  });
+
+  afterEach(function () {
+    this.rootQueryBlock?.destroy();
   });
 
   it('has class "query-builder', async function () {

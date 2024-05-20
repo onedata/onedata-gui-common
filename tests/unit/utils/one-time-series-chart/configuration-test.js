@@ -13,57 +13,66 @@ import { run } from '@ember/runloop';
 import moment from 'moment';
 import { settled } from '@ember/test-helpers';
 
+function destroyConfigAfterEach() {
+  afterEach(function () {
+    this.config?.destroy();
+  });
+}
+
 describe('Unit | Utility | one-time-series-chart/configuration', function () {
   beforeEach(function () {
     this.fakeClock = sinon.useFakeTimers({
       now: Date.now(),
       shouldAdvanceTime: false,
     });
+    this.config = null;
   });
 
   afterEach(function () {
     this.fakeClock.restore();
   });
 
+  destroyConfigAfterEach();
+
   it('calls state change handlers after "setViewParameters" call', function () {
-    const config = new Configuration({});
+    this.config = new Configuration({});
     const handler1 = sinon.spy();
     const handler2 = sinon.spy();
-    config.registerStateChangeHandler(handler1);
-    config.registerStateChangeHandler(handler2);
+    this.config.registerStateChangeHandler(handler1);
+    this.config.registerStateChangeHandler(handler2);
     expect(handler1).to.be.not.called;
     expect(handler2).to.be.not.called;
 
-    config.setViewParameters({});
+    this.config.setViewParameters({});
 
-    expect(handler1).to.be.calledOnce.and.to.be.calledWith(config);
-    expect(handler2).to.be.calledOnce.and.to.be.calledWith(config);
+    expect(handler1).to.be.calledOnce.and.to.be.calledWith(this.config);
+    expect(handler2).to.be.calledOnce.and.to.be.calledWith(this.config);
   });
 
   it('allows to deregister state change handlers', function () {
-    const config = new Configuration({});
+    this.config = new Configuration({});
     const handler1 = sinon.spy();
     const handler2 = sinon.spy();
-    config.registerStateChangeHandler(handler1);
-    config.registerStateChangeHandler(handler2);
-    config.deregisterStateChangeHandler(handler1);
+    this.config.registerStateChangeHandler(handler1);
+    this.config.registerStateChangeHandler(handler2);
+    this.config.deregisterStateChangeHandler(handler1);
 
-    config.setViewParameters({});
+    this.config.setViewParameters({});
 
     expect(handler1).to.be.not.called;
     expect(handler2).to.be.calledOnce;
   });
 
   it('calls state change handlers repeatedly due to chart updates in live mode', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       timeResolutionSpecs: [{
         timeResolution: 1,
         updateInterval: 0.5,
       }],
     });
-    config.setViewParameters({ live: true, timeResolution: 1 });
+    this.config.setViewParameters({ live: true, timeResolution: 1 });
     const handler = sinon.spy();
-    config.registerStateChangeHandler(handler);
+    this.config.registerStateChangeHandler(handler);
 
     expect(handler).to.be.not.called;
     for (let i = 1; i <= 5; i++) {
@@ -75,7 +84,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
 
   it('changes frequency of calling state change handlers in live mode after chaging time resolution',
     async function () {
-      const config = new Configuration({
+      this.config = new Configuration({
         timeResolutionSpecs: [{
           timeResolution: 1,
           updateInterval: 0.5,
@@ -84,14 +93,14 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
           updateInterval: 1,
         }],
       });
-      config.setViewParameters({ live: true, timeResolution: 1 });
+      this.config.setViewParameters({ live: true, timeResolution: 1 });
       const handler = sinon.spy();
-      config.registerStateChangeHandler(handler);
+      this.config.registerStateChangeHandler(handler);
 
       this.fakeClock.tick(520);
       await settled();
       expect(handler).to.be.calledOnce;
-      config.setViewParameters({ timeResolution: 2 });
+      this.config.setViewParameters({ timeResolution: 2 });
       expect(handler).to.be.calledTwice;
       this.fakeClock.tick(520);
       await settled();
@@ -108,20 +117,20 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
     });
 
   it('does not call state change handlers repeatedly when live mode is off', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       timeResolutionSpecs: [{
         timeResolution: 1,
         updateInterval: 0.5,
       }],
     });
-    config.setViewParameters({ live: true, timeResolution: 1 });
+    this.config.setViewParameters({ live: true, timeResolution: 1 });
     const handler = sinon.spy();
-    config.registerStateChangeHandler(handler);
+    this.config.registerStateChangeHandler(handler);
 
     this.fakeClock.tick(520);
     await settled();
     expect(handler).to.be.calledOnce;
-    config.setViewParameters({ live: false });
+    this.config.setViewParameters({ live: false });
     expect(handler).to.be.calledTwice;
     this.fakeClock.tick(2000);
     await settled();
@@ -129,22 +138,22 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('does not call state change handlers in live mode after destroy', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       timeResolutionSpecs: [{
         timeResolution: 1,
         updateInterval: 0.5,
       }],
     });
-    config.setViewParameters({ live: true, timeResolution: 1 });
+    this.config.setViewParameters({ live: true, timeResolution: 1 });
     const handler = sinon.spy();
-    config.registerStateChangeHandler(handler);
+    this.config.registerStateChangeHandler(handler);
 
     this.fakeClock.tick(520);
     await settled();
     expect(handler).to.be.calledOnce;
     // We need to use `run`, because Looper uses Ember runloop functions - in
     // this case it is `cancel`, which throws an error.
-    run(() => config.destroy());
+    run(() => this.config.destroy());
     expect(handler).to.be.calledOnce;
     this.fakeClock.tick(2000);
     await settled();
@@ -152,17 +161,17 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates state with no title', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {},
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.title).to.deep.equal({ content: '', tip: '' });
   });
 
   it('calculates state with title', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         title: {
           content: 'abc',
@@ -170,13 +179,13 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.title).to.deep.equal({ content: 'abc', tip: '' });
   });
 
   it('calculates state with title and title tip', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         title: {
           content: 'abc',
@@ -185,13 +194,13 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.title).to.deep.equal({ content: 'abc', tip: 'someTip' });
   });
 
   it('calculates state with a default time resolution spec (first one)', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       timeResolutionSpecs: [{
         timeResolution: 1,
         pointsCount: 10,
@@ -203,14 +212,14 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       }],
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.timeResolution).to.equal(1);
     expect(state.pointsCount).to.equal(10);
   });
 
   it('calculates state with changed time resolution spec', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       timeResolutionSpecs: [{
         timeResolution: 1,
         pointsCount: 10,
@@ -222,8 +231,8 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       }],
     });
 
-    config.setViewParameters({ timeResolution: 2 });
-    const state = await config.getState();
+    this.config.setViewParameters({ timeResolution: 2 });
+    const state = await this.config.getState();
 
     expect(state.timeResolution).to.equal(2);
     expect(state.pointsCount).to.equal(5);
@@ -231,7 +240,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
 
   it('calculates state with previous time resolution spec (first one) when changed spec was incorrect',
     async function () {
-      const config = new Configuration({
+      this.config = new Configuration({
         timeResolutionSpecs: [{
           timeResolution: 1,
           pointsCount: 10,
@@ -243,16 +252,16 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
         }],
       });
 
-      config.setViewParameters({ timeResolution: 2 });
-      config.setViewParameters({ timeResolution: 20 });
-      const state = await config.getState();
+      this.config.setViewParameters({ timeResolution: 2 });
+      this.config.setViewParameters({ timeResolution: 20 });
+      const state = await this.config.getState();
 
       expect(state.timeResolution).to.equal(2);
       expect(state.pointsCount).to.equal(5);
     });
 
   it('calculates y axes state without custom value formatters', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         yAxes: [{
           id: 'a1',
@@ -265,7 +274,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(asPlainJson(state.yAxes)).to.deep.equal([{
       id: 'a1',
@@ -281,7 +290,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates y axis state with custom value provider', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         yAxes: [{
           id: 'a1',
@@ -315,7 +324,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(asPlainJson(state.yAxes)).to.deep.equal([{
       id: 'a1',
@@ -331,7 +340,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates y axis state with custom unit', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         yAxes: [{
           id: 'a1',
@@ -344,7 +353,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(asPlainJson(state.yAxes)).to.deep.equal([{
       id: 'a1',
@@ -355,7 +364,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates y axis state with both custom unit and value provider', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         yAxes: [{
           id: 'a1',
@@ -376,7 +385,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(asPlainJson(state.yAxes)).to.deep.equal([{
       id: 'a1',
@@ -387,7 +396,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates x axis state', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
       },
@@ -402,7 +411,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(asPlainJson(state.xAxis)).to.deep.equal({
       timestamps: [12, 14, 16, 18, 20],
@@ -427,45 +436,45 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       })),
     ];
 
-    const config = new Configuration({
+    this.config = new Configuration({
       timeResolutionSpecs: resolutionsToCheck.map(({ timeResolution }) => ({
         timeResolution,
       })),
     });
 
     for (const { timeResolution, formattedTimestamp } of resolutionsToCheck) {
-      config.setViewParameters({ timeResolution });
-      const state = await config.getState();
+      this.config.setViewParameters({ timeResolution });
+      const state = await this.config.getState();
       expect(state.xAxis.timestampFormatter(timestamp)).to.equal(formattedTimestamp);
     }
   });
 
   it('calculates empty series groups state when there are no series groups defined', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesGroups: [],
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.seriesGroups).to.deep.equal([]);
   });
 
   it('calculates series groups state using static factory', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [dummyStaticSeriesGroupFactory(1)],
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.seriesGroups).to.deep.equal([dummyStaticSeriesGroupFactoryState(1)]);
   });
 
   it('calculates series groups state using dynamic factory (multiple scenario)', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
           builderType: 'dynamic',
@@ -500,7 +509,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.seriesGroups).to.deep.equal(['g1', 'g2'].map((id) => ({
       id,
@@ -512,7 +521,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates series groups state using dynamic factory (empty scenario)', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
           builderType: 'dynamic',
@@ -547,13 +556,13 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.seriesGroups).to.deep.equal([]);
   });
 
   it('calculates series groups state when all group fields are defined', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
           builderType: 'static',
@@ -576,7 +585,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.seriesGroups).to.deep.equal([{
       id: 'g1',
@@ -594,7 +603,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates series groups state when optional group fields are not defined', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
           builderType: 'static',
@@ -607,7 +616,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.seriesGroups).to.deep.equal([{
       id: 'g1',
@@ -619,7 +628,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates series groups state when subgroup optional fields are not defined', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
           builderType: 'static',
@@ -638,7 +647,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.seriesGroups).to.deep.equal([{
       id: 'g1',
@@ -656,7 +665,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates series group state when all possible series fields are functions', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesGroupBuilders: [{
           builderType: 'dynamic',
@@ -723,7 +732,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.seriesGroups).to.deep.equal([{
       id: 'g1',
@@ -741,7 +750,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates empty series state when there are no series defined', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesBuilders: [],
       },
@@ -751,13 +760,13 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       }],
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.series).to.deep.equal([]);
   });
 
   it('calculates series state using static factory', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
       },
@@ -772,7 +781,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.series).to.deep.equal([{
       id: 's1',
@@ -789,7 +798,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates series state using dynamic factory (multiple scenario)', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
           builderType: 'dynamic',
@@ -857,7 +866,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.series).to.deep.equal(['s1', 's2'].map((id) => ({
       id,
@@ -874,7 +883,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates series state using dynamic factory (empty scenario)', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
           builderType: 'dynamic',
@@ -942,13 +951,13 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.series).to.deep.equal([]);
   });
 
   it('calculates series state when all series fields are defined', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
           builderType: 'static',
@@ -989,7 +998,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.series).to.deep.equal([{
       id: 's1',
@@ -1006,7 +1015,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates series state when optional series fields are not defined', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
           builderType: 'static',
@@ -1045,7 +1054,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.series).to.deep.equal([{
       id: 's1',
@@ -1062,7 +1071,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates series state when all possible series fields are functions', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
           builderType: 'dynamic',
@@ -1151,7 +1160,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.series).to.deep.equal([{
       id: 's1',
@@ -1168,7 +1177,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates series state with nested series functions', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesBuilders: [{
           builderType: 'static',
@@ -1223,7 +1232,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.series).to.deep.equal([{
       id: 's1',
@@ -1240,7 +1249,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   it('calculates synchronized series state based on badly-timed series', async function () {
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesBuilders: [
           dummyStaticSeriesFactory(1, 'dummy1'),
@@ -1261,7 +1270,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       },
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(state.series).to.deep.equal([
       dummyStaticSeriesFactoryState(1, [
@@ -1281,7 +1290,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
       [18, 1],
       [20, 2],
     ]);
-    const config = new Configuration({
+    this.config = new Configuration({
       chartDefinition: {
         seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
       },
@@ -1296,12 +1305,12 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
         dummy: dummySrc,
       },
     });
-    config.setViewParameters({
+    this.config.setViewParameters({
       lastPointTimestamp: 20,
       timeResolution: 2,
     });
 
-    const state = await config.getState();
+    const state = await this.config.getState();
 
     expect(dummySrc.fetchSeries).to.be.calledWith({
       lastPointTimestamp: 20,
@@ -1323,6 +1332,8 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   context('in live mode', function () {
+    destroyConfigAfterEach();
+
     it('calculates series and newestPointTimestamp state for null lastPointTimestamp',
       async function () {
         const nowTimestamp = Math.floor(Date.now() / 1000);
@@ -1332,7 +1343,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
           [nowTimestamp - 12, 1],
           [nowTimestamp - 11, 2],
         ]);
-        const config = new Configuration({
+        this.config = new Configuration({
           chartDefinition: {
             seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
           },
@@ -1344,12 +1355,12 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
             dummy: dummySrc,
           },
         });
-        config.setViewParameters({
+        this.config.setViewParameters({
           live: true,
           lastPointTimestamp: null,
         });
 
-        const state = await config.getState();
+        const state = await this.config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledWith({
           lastPointTimestamp: nowTimestamp - 10,
@@ -1373,6 +1384,8 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
   });
 
   context('in non-live mode', function () {
+    destroyConfigAfterEach();
+
     it('calculates series and newestPointTimestamp state for null lastPointTimestamp',
       async function () {
         const dummy1Src = dummyDataSource([
@@ -1383,7 +1396,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
           [18, 3],
           [19, 4],
         ]);
-        const config = new Configuration({
+        this.config = new Configuration({
           chartDefinition: {
             seriesBuilders: [
               dummyStaticSeriesFactory(1, 'dummy1'),
@@ -1399,12 +1412,12 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
             dummy2: dummy2Src,
           },
         });
-        config.setViewParameters({
+        this.config.setViewParameters({
           live: false,
           lastPointTimestamp: null,
         });
 
-        const state = await config.getState();
+        const state = await this.config.getState();
 
         expect(dummy1Src.fetchSeries).to.be.calledTwice
           .and.to.be.calledWith({
@@ -1456,7 +1469,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
             return [];
           }),
         };
-        const config = new Configuration({
+        this.config = new Configuration({
           chartDefinition: {
             seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
           },
@@ -1468,12 +1481,12 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
             dummy: dummySrc,
           },
         });
-        config.setViewParameters({
+        this.config.setViewParameters({
           live: false,
           lastPointTimestamp: 19,
         });
 
-        const state = await config.getState();
+        const state = await this.config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledTwice
           .and.to.be.calledWith({
@@ -1509,7 +1522,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
             return [];
           }),
         };
-        const config = new Configuration({
+        this.config = new Configuration({
           chartDefinition: {
             seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
           },
@@ -1524,13 +1537,13 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
             dummy: dummySrc,
           },
         });
-        config.setViewParameters({
+        this.config.setViewParameters({
           live: false,
           timeResolution: 2,
           lastPointTimestamp: null,
         });
 
-        const state = await config.getState();
+        const state = await this.config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledTwice
           .and.to.be.calledWith({
@@ -1564,7 +1577,7 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
             return [];
           }),
         };
-        const config = new Configuration({
+        this.config = new Configuration({
           chartDefinition: {
             seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
           },
@@ -1579,11 +1592,11 @@ describe('Unit | Utility | one-time-series-chart/configuration', function () {
             dummy: dummySrc,
           },
         });
-        config.setViewParameters({
+        this.config.setViewParameters({
           live: false,
         });
 
-        const state = await config.getState();
+        const state = await this.config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledTwice
           .and.to.be.calledWith({

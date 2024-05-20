@@ -198,6 +198,26 @@ export default VisualiserElement.extend({
     }
   ),
 
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      [
+        'copyInstanceIdAction',
+        'modifyTaskAction',
+        'removeTaskAction',
+        'viewTaskAuditLogAction',
+        'viewTaskTimeSeriesAction',
+        'viewTaskPodsActivityAction',
+      ].forEach((actionName) => {
+        this.cacheFor(actionName)?.destroy?.();
+      });
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   actions: {
     changeName(newName) {
       return this.get('task').modify({ name: newName });

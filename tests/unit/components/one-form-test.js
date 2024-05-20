@@ -7,7 +7,7 @@ import _object from 'lodash/object';
 const ERROR_MSG = 'error!';
 
 describe('Unit | Component | one-form', function () {
-  setupTest();
+  const { afterEach } = setupTest();
 
   beforeEach(function () {
     const FIELDS = {
@@ -43,6 +43,10 @@ describe('Unit | Component | one-form', function () {
       validations: VALIDATIONS,
     });
     subject.prepareFields();
+  });
+
+  afterEach(function () {
+    this.subject?.destroy();
   });
 
   it('detects errors while validation', function () {

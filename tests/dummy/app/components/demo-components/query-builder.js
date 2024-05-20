@@ -94,6 +94,14 @@ export default Component.extend({
     });
   }),
 
+  willDestroyElement() {
+    try {
+      this.rootQueryBlock.destroy();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   notifyUpdate(block) {
     console.log('block updated');
     console.dir(block);

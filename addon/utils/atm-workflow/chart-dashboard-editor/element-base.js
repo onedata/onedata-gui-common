@@ -123,19 +123,6 @@ const ElementBase = EmberObject.extend({
   },
 
   /**
-   * @override
-   */
-  willDestroy() {
-    try {
-      if (this.elementOwner) {
-        this.set('elementOwner', null);
-      }
-    } finally {
-      this._super(...arguments);
-    }
-  },
-
-  /**
    * @public
    * @virtual
    * @param {boolean} [preserveReferences=false] if true, then all non-children and

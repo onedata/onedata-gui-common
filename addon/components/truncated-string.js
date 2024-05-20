@@ -8,6 +8,7 @@
  */
 
 import Component from '@ember/component';
+import { trySet } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/truncated-string';
 
 export default Component.extend({
@@ -31,6 +32,12 @@ export default Component.extend({
 
   /**
    * @virtual optional
+   * @type {() => void}
+   */
+  tooltipOnShown: undefined,
+
+  /**
+   * @virtual optional
    * @type {string}
    */
   tooltipClass: '',
@@ -46,18 +53,71 @@ export default Component.extend({
    */
   showTooltip: false,
 
-  mouseEnter() {
-    this.updateTooltipText();
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseEnterHandler: null,
 
-    const overflowElement = this.get('element');
-    this.set('showTooltip', overflowElement.offsetWidth < overflowElement.scrollWidth);
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseLeaveHandler: null,
+
+  /**
+   * @override
+   */
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (!this.element) {
+      return;
+    }
+
+    this.setProperties({
+      mouseEnterHandler: () => {
+        const { element: overflowElement } = this;
+        this.updateTooltipText();
+        trySet(
+          this,
+          'showTooltip',
+          overflowElement.offsetWidth < overflowElement.scrollWidth
+        );
+      },
+      mouseLeaveHandler: () => {
+        trySet(this, 'showTooltip', false);
+      },
+    });
+    this.element.addEventListener('mouseenter', this.mouseEnterHandler);
+    this.element.addEventListener('mouseleave', this.mouseLeaveHandler);
   },
 
-  mouseLeave() {
-    this.set('showTooltip', false);
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      if (this.mouseEnterHandler) {
+        this.element?.removeEventListener('mouseenter', this.mouseEnterHandler);
+      }
+      if (this.mouseLeaveHandler) {
+        this.element?.removeEventListener('mouseleave', this.mouseLeaveHandler);
+      }
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   updateTooltipText() {
-    this.set('tooltipText', this.get('element').textContent.trim());
+    trySet(
+      this,
+      'tooltipText',
+      this.element?.textContent.trim()
+    );
+  },
+
+  actions: {
+    handleTooltipShown() {
+      this.tooltipOnShown?.();
+    },
   },
 });

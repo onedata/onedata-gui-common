@@ -10,7 +10,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from '../templates/components/json-editor';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 
 export default Component.extend(I18n, {
@@ -85,19 +85,19 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {Ember.ComputedProperty<string>}
    */
-  inputId: computed('elementId', {
+  inputId: computed({
     get() {
-      return this.injectedInputId ?? (this.elementId + '-textarea');
+      return this.customInputId ?? (this.elementId + '-textarea');
     },
     set(key, value) {
-      return this.injectedInputId = value;
+      return this.customInputId = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedInputId: null,
+  customInputId: null,
 
   /**
    * @type {Ember.ComputedProperty<string>}

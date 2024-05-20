@@ -47,4 +47,15 @@ export default VisualiserSpace.extend({
       });
     }
   ),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('createLaneAction')?.destroyAfterAllExecutions?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });

@@ -12,7 +12,7 @@
  */
 
 import Component from '@ember/component';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import EmberObject, {
   computed,
@@ -195,6 +195,11 @@ export default Component.extend(I18n, {
   selectedView: 'presets',
 
   /**
+   * @type {ComputedProperty<Set<Tag>>}
+   */
+  tagsToDestroyLater: computed(() => new Set()),
+
+  /**
    * @type {ComputedProperty<Array<FieldOption>>}
    */
   aggregatorOptions: computed(function aggregatorOptions() {
@@ -235,6 +240,8 @@ export default Component.extend(I18n, {
     'selectedTags.[]',
     'usedNames',
     function tagsToRender() {
+      this.destroyDanglingTags();
+
       const {
         allAvailableTagValues,
         selectedTags,
@@ -254,12 +261,16 @@ export default Component.extend(I18n, {
         .filter((tagValue) =>
           !selectedTagHashes.has(getTagValueHash(tagValue))
         )
-        .map((tagValue) => Tag.create({
-          ownerSource: this,
-          value: tagValue,
-          disabledReason: selectedTagCompatHashes.has(getTagValueHash(tagValue, true)) ?
-            'equivalentExists' : (usedNames.has(get(tagValue, 'name')) ? 'nameExists' : null),
-        }));
+        .map((tagValue) => {
+          const tag = Tag.create({
+            ownerSource: this,
+            value: tagValue,
+            disabledReason: selectedTagCompatHashes.has(getTagValueHash(tagValue, true)) ?
+              'equivalentExists' : (usedNames.has(get(tagValue, 'name')) ? 'nameExists' : null),
+          });
+          this.tagsToDestroyLater.add(tag);
+          return tag;
+        });
     }
   ),
 
@@ -394,6 +405,23 @@ export default Component.extend(I18n, {
     }
   },
 
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.customMetricFields.destroy?.();
+      this.destroyDanglingTags();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  destroyDanglingTags() {
+    this.tagsToDestroyLater.forEach((tag) => tag.destroy?.());
+    this.tagsToDestroyLater.clear();
+  },
+
   repositionPopover() {
     this.get('popoverApi').reposition();
   },
@@ -403,6 +431,7 @@ export default Component.extend(I18n, {
       if (get(tag, 'disabledReason')) {
         return;
       }
+      this.tagsToDestroyLater.delete(tag);
       this.get('onTagsAdded')([tag]);
     },
     submitCustomMetric() {

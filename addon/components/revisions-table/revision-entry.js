@@ -10,7 +10,7 @@ import Component from '@ember/component';
 import layout from '../../templates/components/revisions-table/revision-entry';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import { tag } from 'ember-awesome-macros';
 import { scheduleOnce } from '@ember/runloop';
@@ -69,6 +69,11 @@ export default Component.extend(I18n, {
   areActionsOpened: false,
 
   /**
+   * @type {Array<Utils.Action> | null}
+   */
+  revisionActionsCache: null,
+
+  /**
    * @type {ComputedProperty<RevisionNumber|'?'>}
    */
   normalizedRevisionNumber: computed(
@@ -96,12 +101,16 @@ export default Component.extend(I18n, {
     'revisionNumber',
     'revisionActionsFactory',
     function revisionActions() {
+      this.revisionActionsCache?.forEach((action) => action.destroy());
       const {
         revisionNumber,
         revisionActionsFactory,
       } = this.getProperties('revisionNumber', 'revisionActionsFactory');
-      return revisionActionsFactory ?
+
+      const newRevisionActions = revisionActionsFactory ?
         revisionActionsFactory.createActionsForRevisionNumber(revisionNumber) : [];
+      this.set('revisionActionsCache', newRevisionActions);
+      return newRevisionActions;
     }
   ),
 
@@ -116,6 +125,17 @@ export default Component.extend(I18n, {
       return;
     }
     onClick(revisionNumber);
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.revisionActionsCache?.forEach((action) => action.destroy());
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   actions: {

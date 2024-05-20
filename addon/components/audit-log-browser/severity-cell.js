@@ -9,7 +9,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { getBy } from 'ember-awesome-macros';
 import {
   EntrySeverity,
   translateEntrySeverity,
@@ -62,5 +61,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String|undefined>}
    */
-  severityIcon: getBy('severityIcons', 'logEntry.severity'),
+  severityIcon: computed('severityIcons', 'logEntry.severity', function severityIcon() {
+    return this.severityIcon?.[this.logEntry?.severity];
+  }),
 });

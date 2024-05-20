@@ -1,7 +1,7 @@
 /**
  * The mixin adds a `t` method to facilitate use of translation function
  * using i18n service.
- * You should override `i18nPrefix` property to path of component locale.
+ * You should override `i18nPrefix` property to path of a class locale.
  * A prefix can be used with or without trailing dot.
  *
  * @author Jakub Liput, Michał Borzęcki
@@ -10,6 +10,7 @@
  */
 
 import Mixin from '@ember/object/mixin';
+import { getOwner } from '@ember/application';
 import { computed } from '@ember/object';
 import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
 
@@ -22,7 +23,7 @@ export default Mixin.create({
 
   /**
    * @virtual
-   * A i18n service should be injected into component that uses this mixin
+   * A i18n service should be injected into a class that uses this mixin
    * @type {Ember.Service}
    */
   i18n: undefined,
@@ -57,6 +58,10 @@ export default Mixin.create({
       defaultValue: undefined,
     }
   ) {
+    if (getOwner(this)?.isDestroyed) {
+      return undefined;
+    }
+
     const {
       i18n,
       tPrefix,

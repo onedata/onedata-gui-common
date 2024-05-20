@@ -31,11 +31,11 @@ export default FormField.extend({
    */
   loadingText: computed('i18nPrefix', 'translationPath', {
     get() {
-      return this.injectedLoadingText ??
+      return this.customLoadingText ??
         this.getTranslation('loadingText', {}, { defaultValue: '' });
     },
     set(key, value) {
-      return this.injectedLoadingText = value;
+      return this.customLoadingText = value;
     },
   }),
 
@@ -43,7 +43,7 @@ export default FormField.extend({
    * Custom loadingText injected during field creation.
    * @type {string | null}
    */
-  injectedLoadingText: null,
+  customLoadingText: null,
 
   /**
    * @type {ComputedProperty<boolean>}

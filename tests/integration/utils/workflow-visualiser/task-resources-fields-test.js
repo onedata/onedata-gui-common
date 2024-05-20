@@ -11,7 +11,7 @@ import { render, fillIn, find } from '@ember/test-helpers';
 import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Utility | workflow-visualiser/task-resources-fields', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   describe('createTaskResourcesFields', function () {
     beforeEach(function () {
@@ -40,6 +40,10 @@ describe('Integration | Utility | workflow-visualiser/task-resources-fields', fu
           }),
         ],
       }));
+    });
+
+    afterEach(function () {
+      this.rootGroup?.destroy?.();
     });
 
     it('has cpu, memory and storage fields groups', async function () {

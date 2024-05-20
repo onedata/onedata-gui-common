@@ -8,12 +8,12 @@
  */
 
 import Action from 'onedata-gui-common/utils/action';
+import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import {
   isEmpty,
   conditional,
-  getBy,
   raw,
   or,
 } from 'ember-awesome-macros';
@@ -85,11 +85,10 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Object>}
    */
-  run: conditional(
-    'runNumber',
-    getBy('lane.runsRegistry', 'runNumber'),
-    'lane.visibleRun'
-  ),
+  run: computed('lane.{runsRegistry,visibleRun}', 'runNumber', function run() {
+    return this.runNumber ?
+      this.lane?.runsRegistry?.[this.runNumber] : this.lane?.visibleRun;
+  }),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store|undefined>}

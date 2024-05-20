@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe('Integration | Utility | clipboard-actions/copy-record-id-action', function () {
-  setupTest();
+  const { afterEach } = setupTest();
 
   beforeEach(function () {
     const record = {
@@ -29,6 +29,10 @@ describe('Integration | Utility | clipboard-actions/copy-record-id-action', func
       record,
       globalClipboardCopyStub,
     });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
   });
 
   it('has correct className, icon and title', function () {

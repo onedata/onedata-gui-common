@@ -308,6 +308,14 @@ export default Component.extend({
     // this.testDynamicValuesInjection();
   },
 
+  willDestroyElement() {
+    try {
+      this.rootFieldsGroup.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   testDynamicValuesInjection() {
     setTimeout(() => {
       this.set('valuesSource', {

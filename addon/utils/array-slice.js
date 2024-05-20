@@ -95,15 +95,15 @@ export default ArrayProxy.extend({
   init() {
     this._super(...arguments);
     // TODO: VFS-9267 Implement missing array method in ArraySlice
-    [
-      'insertAt',
-      'removeAt',
-      'setObjects',
-      'unshiftObject',
-      'unshiftObjects',
-    ].forEach(methodName => {
-      this.overrideAsNotImplemented(methodName);
-    });
+    // [
+    //   'insertAt',
+    //   'removeAt',
+    //   'setObjects',
+    //   'unshiftObject',
+    //   'unshiftObjects',
+    // ].forEach(methodName => {
+    //   this.overrideAsNotImplemented(methodName);
+    // });
     // activate observers
     this.getProperties('_start', '_end');
     this._startChanged();

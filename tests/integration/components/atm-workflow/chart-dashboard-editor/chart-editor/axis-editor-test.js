@@ -8,10 +8,15 @@ import { createNewAxis, createNewSeries } from 'onedata-gui-common/utils/atm-wor
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-editor/axis-editor',
   function () {
-    setupRenderingTest();
+    const { afterEach } = setupRenderingTest();
 
     beforeEach(function () {
       this.set('i18n', this.owner.lookup('service:i18n'));
+    });
+
+    afterEach(function () {
+      this.axis?.series.forEach((s) => s.destroy());
+      this.axis?.destroy();
     });
 
     it('has class "axis-editor"', async function () {

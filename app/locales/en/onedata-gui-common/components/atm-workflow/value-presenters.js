@@ -4,6 +4,7 @@ import string from './value-presenters/string';
 import object from './value-presenters/object';
 import file from './value-presenters/file';
 import dataset from './value-presenters/dataset';
+import group from './value-presenters/group';
 import range from './value-presenters/range';
 import array from './value-presenters/array';
 import timeSeriesMeasurement from './value-presenters/time-series-measurement';
@@ -17,6 +18,7 @@ export default {
   object,
   file,
   dataset,
+  group,
   range,
   array,
   timeSeriesMeasurement,

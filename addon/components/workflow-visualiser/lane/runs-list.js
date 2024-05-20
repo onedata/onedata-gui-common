@@ -111,7 +111,7 @@ import layout from '../../../templates/components/workflow-visualiser/lane/runs-
 import { observer, getProperties, computed } from '@ember/object';
 import { next, later, cancel, scheduleOnce } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import { or, neq, array, raw } from 'ember-awesome-macros';
+import { or, neq, raw } from 'ember-awesome-macros';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 import config from 'ember-get-config';
 import globals from 'onedata-gui-common/utils/globals';
@@ -238,12 +238,16 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<Array<AtmLaneRunNumber>>}
    */
-  runsNumbers: array.mapBy('runsArray', raw('runNumber')),
+  runsNumbers: computed('runsArray.@each.runNumber', function runsNumbers() {
+    return this.runsArray?.map(({ runNumber }) => runNumber);
+  }),
 
   /**
    * @type {ComputedProperty<Array<AtmLaneRunNumber>>}
    */
-  visibleRunsNos: array.mapBy('visibleRunsArray', raw('runNumber')),
+  visibleRunsNos: computed('visibleRunsArray.@each.runNumber', function visibleRunsNos() {
+    return this.visibleRunsArray?.map(({ runNumber }) => runNumber);
+  }),
 
   /**
    * @type {ComputedProperty<Number>}

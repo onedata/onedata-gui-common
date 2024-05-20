@@ -100,6 +100,17 @@ export default EmberObject.extend({
   ),
 
   /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.cacheFor('chartDashboardEditorModelContainer')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
    * @virtual optional
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Workflow} workflow

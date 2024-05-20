@@ -15,7 +15,7 @@ import {
   ElementType,
   EdgeScroller,
 } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 export default Component.extend(I18n, {
   layout,
@@ -114,7 +114,11 @@ export default Component.extend(I18n, {
       if (event.target === this.getWorkspaceElement()) {
         const action = this.editorContext.actionsFactory
           .createSelectElementAction({ elementToSelect: null });
-        action.execute();
+        try {
+          action.execute();
+        } finally {
+          action.destroy();
+        }
       }
     },
   },

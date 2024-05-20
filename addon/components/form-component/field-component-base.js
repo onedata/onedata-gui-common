@@ -24,19 +24,19 @@ export default Component.extend({
    * @virtual optional
    * @type {ComputedProperty<String>}
    */
-  fieldId: computed('elementId', {
+  fieldId: computed({
     get() {
-      return this.injectedFieldId ?? `${this.elementId}-field`;
+      return this.customFieldId ?? `${this.elementId}-field`;
     },
     set(key, value) {
-      return this.injectedFieldId = value;
+      return this.customFieldId = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedFieldId: null,
+  customFieldId: null,
 
   /**
    * @type {ComputedProperty<String>}

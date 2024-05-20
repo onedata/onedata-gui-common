@@ -14,9 +14,9 @@ import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-oper
 import ExceptOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/except-operator-query-block';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-selector';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { tag, array, raw, or, equal } from 'ember-awesome-macros';
-import { set, get, computed } from '@ember/object';
+import { set, setProperties, get, computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import { reads } from '@ember/object/computed';
@@ -31,7 +31,9 @@ const operatorClasses = {
 
 const operatorsMaxOperandsNumber = Object.keys(operatorClasses)
   .reduce((obj, operatorName) => {
-    obj[operatorName] = get(operatorClasses[operatorName].create(), 'maxOperandsNumber');
+    const block = operatorClasses[operatorName].create();
+    obj[operatorName] = get(block, 'maxOperandsNumber');
+    block.destroy();
     return obj;
   }, {});
 
@@ -230,6 +232,11 @@ export default Component.extend(...mixins, {
         } else {
           onBlockReplace([this.createOperatorBlock(operatorName, operands)]);
         }
+        setProperties(editBlock, {
+          notifyUpdate: null,
+          operands: [],
+        });
+        editBlock.destroy();
       }
     },
   },

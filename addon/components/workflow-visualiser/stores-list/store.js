@@ -65,7 +65,7 @@ export default Component.extend({
     return actionsFactory.createRemoveStoreAction({ store });
   }),
 
-  click(event) {
+  async click(event) {
     const {
       mode,
       store,
@@ -83,13 +83,31 @@ export default Component.extend({
       return;
     }
 
+    let action;
     switch (mode) {
       case 'edit':
-        actionsFactory.createModifyStoreAction({ store }).execute();
+        action = actionsFactory.createModifyStoreAction({ store });
         break;
       case 'view':
-        actionsFactory.createViewStoreAction({ store }).execute();
+        action = actionsFactory.createViewStoreAction({ store });
         break;
+    }
+
+    try {
+      await action?.execute();
+    } finally {
+      action?.destroy?.();
+    }
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('removeAction')?.destroyAfterAllExecutions?.();
+    } finally {
+      this._super(...arguments);
     }
   },
 });

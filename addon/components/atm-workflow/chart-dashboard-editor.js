@@ -7,7 +7,7 @@
  */
 
 import Component from '@ember/component';
-import { computed, observer, set } from '@ember/object';
+import { computed, observer, set, trySet } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor';
 import {
@@ -70,6 +70,11 @@ export default Component.extend({
   editorContextCache: null,
 
   /**
+   * @type {Utils.AtmWorkflow.ChartDashboardEditor.Model | null}
+   */
+  dashboardModelFromSpec: null,
+
+  /**
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartDashboardEditor.EditorContext>}
    */
   editorContext: computed('isReadOnly', function editorContext() {
@@ -89,7 +94,15 @@ export default Component.extend({
    * @type {ComputedProperty<Utils.AtmWorkflow.ChartDashboardEditor.Model>}
    */
   model: computed('dashboardModel', 'dashboardSpec', function model() {
-    return this.dashboardModel ?? createModelFromSpec(this.dashboardSpec, this);
+    if (this.dashboardModel) {
+      return this.dashboardModel;
+    } else {
+      this.dashboardModelFromSpec?.destroy();
+      return this.set(
+        'dashboardModelFromSpec',
+        createModelFromSpec(this.dashboardSpec, this)
+      );
+    }
   }),
 
   dataSourcesObserver: observer('dataSources', function dataSourcesObserver() {
@@ -114,12 +127,12 @@ export default Component.extend({
   willDestroyElement() {
     try {
       this.removeSelectionFromModel();
-      if (this.cacheFor('model') !== this.dashboardModel) {
-        this.cacheFor('model')?.destroy();
+      this.dashboardModelFromSpec?.destroy();
+      if (this.cacheFor('editorContext')) {
+        this.editorContext.destroy?.();
+        this.editorContext.actionsFactory.destroy?.();
       }
-      this.cacheFor('editorContext')?.destroy();
       this.undoManager.destroy();
-      this.set('undoManager', undefined);
     } finally {
       this._super(...arguments);
     }
@@ -135,7 +148,7 @@ export default Component.extend({
     }
     [rootSection, ...rootSection.nestedElements()].forEach((element) => {
       if (element.isSelected) {
-        set(element, 'isSelected', false);
+        trySet(element, 'isSelected', false);
       }
     });
   },
@@ -260,7 +273,7 @@ export default Component.extend({
         return;
       }
 
-      set(this.model, 'rootSection', createNewSection(this.i18n, this, true));
+      set(this.model, 'rootSection', createNewSection(this.i18n, this, [], true));
       this.resetViewState();
     },
 

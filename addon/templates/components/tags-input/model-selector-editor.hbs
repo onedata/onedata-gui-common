@@ -104,7 +104,7 @@
             oninput={{action (mut idToAdd) value="target.value"}}
           >
         </div>
-        {{#bs-button
+        {{#one-button
           size="sm"
           type="primary"
           class="add-id pull-right"
@@ -112,7 +112,7 @@
           onClick=(action "addId")
         }}
           {{tt this "addId"}}
-        {{/bs-button}}
+        {{/one-button}}
       {{/if}}
     {{/if}}
   {{/click-outside}}

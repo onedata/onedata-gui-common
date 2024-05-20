@@ -15,7 +15,7 @@ describe('Integration | Component | truncated-string', function () {
       </div>
     `);
 
-    return triggerEvent('.truncated-string', 'mouseover')
+    return triggerEvent('.truncated-string', 'mouseenter')
       .then(() => expect(globals.document.querySelector('.tooltip.in')).to.not.exist);
   });
 
@@ -30,7 +30,7 @@ describe('Integration | Component | truncated-string', function () {
       </div>
     `);
 
-    return triggerEvent('.truncated-string', 'mouseover')
+    return triggerEvent('.truncated-string', 'mouseenter')
       .then(() =>
         expect(globals.document.querySelector('.tooltip.in').textContent.trim())
         .to.equal(longText)

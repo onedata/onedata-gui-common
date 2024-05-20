@@ -6,11 +6,15 @@ import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe('Integration | Utility | form-component/textarea-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/textarea-field"', function () {
-    const field = TextareaField.create();
-    expect(field.fieldComponentName).to.equal('form-component/textarea-field');
+    this.field = TextareaField.create();
+    expect(this.field.fieldComponentName).to.equal('form-component/textarea-field');
   });
 
   it('translates placeholder', function () {
@@ -18,13 +22,13 @@ describe('Integration | Utility | form-component/textarea-field', function () {
       .withArgs('somePrefix.field1.placeholder')
       .returns('field tip');
 
-    const field = TextareaField.create({
+    this.field = TextareaField.create({
       ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });
 
-    expect(field.placeholder).to.equal('field tip');
+    expect(this.field.placeholder).to.equal('field tip');
   });
 
   it('has empty placeholder if translation for it cannot be found', function () {
@@ -32,24 +36,24 @@ describe('Integration | Utility | form-component/textarea-field', function () {
       .withArgs('somePrefix.field1.placeholder')
       .returns('<missing-...');
 
-    const field = TextareaField.create({
+    this.field = TextareaField.create({
       ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });
 
-    expect(field.placeholder).to.be.empty;
+    expect(this.field.placeholder).to.be.empty;
   });
 
   it('has "showsStaticTextInViewMode" equal to false', function () {
-    const field = TextareaField.create();
-    expect(field.showsStaticTextInViewMode).to.be.false;
+    this.field = TextareaField.create();
+    expect(this.field.showsStaticTextInViewMode).to.be.false;
   });
 
   ['rows', 'cols'].forEach((propName) => {
     it(`has "${propName}" equal to null`, function () {
-      const field = TextareaField.create();
-      expect(field[propName]).to.be.null;
+      this.field = TextareaField.create();
+      expect(this.field[propName]).to.be.null;
     });
   });
 });

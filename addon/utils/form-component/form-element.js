@@ -231,20 +231,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed, observer } from '@ember/object';
-import { reads } from '@ember/object/computed';
+import EmberObject, { computed, defineProperty, observer, trySet } from '@ember/object';
+import { reads, equal } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
-import {
-  conditional,
-  and,
-  equal,
-  raw,
-  getBy,
-  notEmpty,
-  writable,
-} from 'ember-awesome-macros';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { A } from '@ember/array';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
 
@@ -286,10 +277,10 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    */
   label: computed('i18nPrefix', 'translationPath', {
     get() {
-      return this.injectedLabel ?? this.getTranslation('label', {}, { defaultValue: '' });
+      return this.customLabel ?? this.getTranslation('label', {}, { defaultValue: '' });
     },
     set(key, value) {
-      return this.injectedLabel = value;
+      return this.customLabel = value;
     },
   }),
 
@@ -299,10 +290,10 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    */
   tip: computed('i18nPrefix', 'translationPath', {
     get() {
-      return this.injectedTip ?? this.getTranslation('tip', {}, { defaultValue: '' });
+      return this.customTip ?? this.getTranslation('tip', {}, { defaultValue: '' });
     },
     set(key, value) {
-      return this.injectedTip = value;
+      return this.customTip = value;
     },
   }),
 
@@ -341,10 +332,10 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    */
   size: computed('parent.sizeForChildren', {
     get() {
-      return this.injectedSize ?? this.parent?.sizeForChildren ?? 'md';
+      return this.customSize ?? this.parent?.sizeForChildren ?? 'md';
     },
     set(key, value) {
-      return this.injectedSize = value;
+      return this.customSize = value;
     },
   }),
 
@@ -354,10 +345,10 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    */
   sizeForChildren: computed('size', {
     get() {
-      return this.injectedSizeForChildren ?? this.size;
+      return this.customSizeForChildren ?? this.size;
     },
     set(key, value) {
-      return this.injectedSizeForChildren = value;
+      return this.customSizeForChildren = value;
     },
   }),
 
@@ -442,25 +433,25 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * Custom size injected during element creation.
    * @type {string | null}
    */
-  injectedSize: null,
+  customSize: null,
 
   /**
    * Custom sizeForChildren injected during element creation.
    * @type {string | null}
    */
-  injectedSizeForChildren: null,
+  customSizeForChildren: null,
 
   /**
    * Custom label injected during field creation.
    * @type {string | null}
    */
-  injectedLabel: null,
+  customLabel: null,
 
   /**
    * Custom tip injected during field creation.
    * @type {string | null}
    */
-  injectedTip: null,
+  customTip: null,
 
   /**
    * CSS classes for field component, which are calculated internally by field
@@ -473,7 +464,12 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * Used only for testing purposes
    * @type {{ wasSet: boolean, value: unknown}}
    */
-  injectedValue: Object.freeze({ wasSet: false, value: null }),
+  customValue: Object.freeze({ wasSet: false, value: null }),
+
+  /**
+   * @type {string | null}
+   */
+  customValuePath: null,
 
   /**
    * @virtual optional
@@ -503,15 +499,23 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   valueName: reads('name'),
 
   /**
+   * @virtual optional
+   * @type {unknown}
+   */
+  value: undefined,
+
+  /**
    * This value is checked in component hbs to determine if field should be disabled.
    * "Effectively enabled" means "this field is enabled and all parents of ths field
    * are enabled".
    * @type {ComputedProperty<boolean>}
    */
-  isEffectivelyEnabled: conditional(
-    'parent',
-    and('parent.isEffectivelyEnabled', 'isEnabled'),
+  isEffectivelyEnabled: computed(
+    'parent.isEffectivelyEnabled',
     'isEnabled',
+    function isEffectivelyEnabled() {
+      return (this.parent?.isEffectivelyEnabled ?? true) && this.isEnabled;
+    }
   ),
 
   /**
@@ -527,33 +531,22 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  valuePath: writable(computed('parent.valuePath', 'valueName', function valuePath() {
-    return this.buildPath(
-      this.get('parent.valuePath'),
-      this.get('valueName')
-    );
-  }), (value) => value),
+  valuePath: computed('parent.valuePath', 'valueName', {
+    get() {
+      return this.customValuePath ?? this.buildPath(
+        this.get('parent.valuePath'),
+        this.get('valueName')
+      );
+    },
+    set(key, value) {
+      return this.customValuePath = value;
+    },
+  }),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.ValuesContainer>}
    */
   valuesSource: reads('parent.valuesSource'),
-
-  /**
-   * Value in production code should be never overwritten. It is writable only
-   * for testing purposes.
-   * @type {ComputedProperty<any>}
-   */
-  value: writable(conditional('injectedValue.wasSet', 'injectedValue.value', conditional(
-    notEmpty('valuePath'),
-    getBy('valuesSource', 'valuePath'),
-    'valuesSource'
-  )), {
-    set(value) {
-      this.injectedValue = { wasSet: true, value };
-      return value;
-    },
-  }),
 
   /**
    * @override
@@ -569,17 +562,17 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isInEditMode: equal('mode', raw('edit')),
+  isInEditMode: equal('mode', 'edit'),
 
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isInViewMode: equal('mode', raw('view')),
+  isInViewMode: equal('mode', 'view'),
 
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isInMixedMode: equal('mode', raw('mixed')),
+  isInMixedMode: equal('mode', 'mixed'),
 
   fieldsParentSetter: observer('fields.@each.parent', function fieldsParentSetter() {
     const fields = this.get('fields');
@@ -594,6 +587,35 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   }),
 
   valuesSourceObserver: observer('valuesSource', function valuesSourceObserver() {
+    if (!this.valuesSource) {
+      return;
+    }
+
+    // First `getOwnPropertyDescriptor` searches for `value` defined by this
+    // observer. Second `getOwnPropertyDescriptor` searches for custom `value`
+    // defined in the field class.
+    const propertyDescriptor = Object.getOwnPropertyDescriptor(this, 'value') ?? Object
+      .getOwnPropertyDescriptor(Object.getPrototypeOf(this), 'value');
+    if (!propertyDescriptor) {
+      const absoluteValuePath = this.valuePath ?
+        `valuesSource.${this.valuePath}` : 'valuesSource';
+      defineProperty(this, 'value', computed(absoluteValuePath, {
+        get() {
+          if (this.customValue.wasSet) {
+            return this.customValue.value;
+          }
+          return this.get(absoluteValuePath);
+        },
+        set(key, value) {
+          this.customValue = { wasSet: true, value };
+          return value;
+        },
+      }));
+    }
+
+    // We need to manually trigger recalculation of those properties as
+    // in more complicated form setups it doesn't fire automatically (probably
+    // an Ember bug).
     this.notifyPropertyChange('valuePath');
     this.notifyPropertyChange('value');
     this.get('fields').invoke('valuesSourceObserver');
@@ -606,11 +628,15 @@ export default EmberObject.extend(OwnerInjector, I18n, {
       this.set('fields', A());
     }
     this.fieldsParentSetter();
+    this.valuesSourceObserver();
   },
 
   willDestroy() {
-    this._super(...arguments);
-    this.get('fields').invoke('destroy');
+    try {
+      this.get('fields').invoke('destroy');
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   /**
@@ -619,21 +645,21 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @returns {undefined}
    */
   changeMode(mode) {
-    this.set('mode', mode);
+    trySet(this, 'mode', mode);
   },
 
   /**
    * @public
    */
   markAsModified() {
-    this.set('isModified', true);
+    trySet(this, 'isModified', true);
   },
 
   /**
    * @public
    */
   markAsNotModified() {
-    this.set('isModified', false);
+    trySet(this, 'isModified', false);
   },
 
   /**
@@ -672,7 +698,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @public
    */
   useCurrentValueAsDefault() {
-    this.set('defaultValue', this.dumpValue());
+    trySet(this, 'defaultValue', this.dumpValue());
   },
 
   /**

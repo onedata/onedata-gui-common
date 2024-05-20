@@ -1,0 +1,62 @@
+<AtmWorkflow::ValueEditors::Commons::EditorBox
+  class={{concat "mode-" mode}}
+  @editorState={{editorState}}
+  @onRemove={{onRemove}}
+  as |editorBox|
+>
+  {{#if (eq editorBox.section "toolbar")}}
+    {{#if (and (eq mode "selected") (not isDisabled))}}
+      <AtmWorkflow::ValueEditors::Group::Selector
+        class="action-link"
+        @atmDataSpec={{editorState.atmDataSpec}}
+        @editorContext={{editorState.editorContext}}
+        @onGroupsSelected={{action "groupsSelected"}}
+        @onIdProvidingStarted={{action "idProvidingStarted"}}
+      >
+        {{tt this "changeGroup"}}
+      </AtmWorkflow::ValueEditors::Group::Selector>
+    {{/if}}
+  {{else if (eq editorBox.section "content")}}
+    {{#if (eq mode "empty")}}
+      <AtmWorkflow::ValueEditors::Group::Selector
+        @atmDataSpec={{editorState.atmDataSpec}}
+        @editorContext={{editorState.editorContext}}
+        @isDisabled={{isDisabled}}
+        @onGroupsSelected={{action "groupsSelected"}}
+        @onIdProvidingStarted={{action "idProvidingStarted"}}
+      >
+        {{tt this "selectGroup"}}
+      </AtmWorkflow::ValueEditors::Group::Selector>
+    {{else if (eq mode "idForm")}}
+      <form class="form form-horizontal form-component">
+        <FormComponent::FieldRenderer @field={{idFormRootGroup}} />
+        <div class="id-form-buttons">
+          <OneButton
+            class="cancel-btn"
+            @type="default"
+            @size="sm"
+            @disabled={{isDisabled}}
+            @onClick={{action "cancelIdForm"}}
+          >
+            {{tt this "cancelIdForm"}}
+          </OneButton>
+          <OneButton
+            class="accept-btn"
+            @type="primary"
+            @size="sm"
+            @disabled={{or (not isValid) isDisabled}}
+            @onClick={{action "acceptIdForm"}}
+          >
+            {{tt this "acceptIdForm"}}
+          </OneButton>
+        </div>
+      </form>
+    {{else}}
+      <AtmWorkflow::ValuePresenters::Group::VisualPresenter
+        @value={{value}}
+        @dataSpec={{editorState.atmDataSpec}}
+        @context={{editorState.editorContext}}
+      />
+    {{/if}}
+  {{/if}}
+</AtmWorkflow::ValueEditors::Commons::EditorBox>

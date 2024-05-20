@@ -9,7 +9,7 @@ import { Promise } from 'rsvp';
 import { settled } from '@ember/test-helpers';
 
 describe('Integration | Utility | workflow-visualiser/actions/move-up-parallel-box-action', function () {
-  setupTest();
+  const { afterEach } = setupTest();
 
   beforeEach(function () {
     const parallelBox = ParallelBox.create({ isLast: false });
@@ -18,6 +18,11 @@ describe('Integration | Utility | workflow-visualiser/actions/move-up-parallel-b
       context: { parallelBox },
     });
     this.setProperties({ parallelBox, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.parallelBox.destroy();
   });
 
   it('has correct className, icon and title', function () {

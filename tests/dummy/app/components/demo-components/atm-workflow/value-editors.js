@@ -5,6 +5,7 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { ValueEditorStateManager } from 'onedata-gui-common/utils/atm-workflow/value-editors';
 import { FileType } from 'onedata-gui-common/utils/file';
+import { GroupType } from 'onedata-gui-common/utils/group';
 
 export default Component.extend({
   context: Object.freeze({
@@ -33,11 +34,24 @@ export default Component.extend({
         rootFileType: FileType.Regular,
       };
     },
+    async getGroupUrlById() {
+      return '#';
+    },
+    async getGroupDetailsById(groupId) {
+      return {
+        groupId,
+        name: 'group1',
+        type: GroupType.Organization,
+      };
+    },
     selectFiles(params) {
       console.log('selecting files with params', params);
     },
     selectDatasets(params) {
       console.log('selecting datasets with params', params);
+    },
+    selectGroups(params) {
+      console.log('selecting groups with params', params);
     },
   }),
 
@@ -128,6 +142,22 @@ export default Component.extend({
     }
   ),
 
+  emptyGroupEditorStateManager: computed(function emptyGroupEditorStateManager() {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.Group,
+    }, this.context);
+  }),
+
+  selectedGroupEditorStateManager: computed(
+    function selectedGroupEditorStateManager() {
+      return new ValueEditorStateManager({
+        type: AtmDataSpecType.Group,
+      }, this.context, {
+        groupId: '1234567890',
+      });
+    }
+  ),
+
   arrayStringEditorStateManager: computed(() => {
     return new ValueEditorStateManager({
       type: AtmDataSpecType.Array,
@@ -163,6 +193,15 @@ export default Component.extend({
       type: AtmDataSpecType.Array,
       itemDataSpec: {
         type: AtmDataSpecType.Dataset,
+      },
+    }, this.context);
+  }),
+
+  arrayGroupEditorStateManager: computed(function arrayGroupEditorStateManager() {
+    return new ValueEditorStateManager({
+      type: AtmDataSpecType.Array,
+      itemDataSpec: {
+        type: AtmDataSpecType.Group,
       },
     }, this.context);
   }),

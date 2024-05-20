@@ -53,8 +53,8 @@ export default Component.extend({
 
   internalDisabled: or('disabled', 'isBusy'),
 
-  inputId: computed('elementId', function inputId() {
-    return this.get('elementId') + '-input-tokenizer';
+  inputId: computed(function inputId() {
+    return this.elementId + '-input-tokenizer';
   }),
 
   internalDisabledChanged: observer('internalDisabled', function internalDisabledChanged() {

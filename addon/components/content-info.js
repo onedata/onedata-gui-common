@@ -51,11 +51,19 @@ export default Component.extend({
   text: '',
 
   /**
-   * Name of template to use instead of text as a description (will be rendered
+   * Name of a component to use instead of text as a description (will be rendered
    * in p.lead)
+   * @virtual optional
    * @type {string}
    */
-  textTemplate: '',
+  textComponent: '',
+
+  /**
+   * Data passed to the component pointed by `textComponent`.
+   * @virtual optional
+   * @type {unknown}
+   */
+  textComponentData: null,
 
   /**
    * Path to an image file (placed between the description and the primary button)
