@@ -11,7 +11,7 @@ import { inject as service } from '@ember/service';
 import { reads } from '@ember/object/computed';
 import { equal, not, raw } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/sections-editor/chart';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import OneDraggableObject from 'onedata-gui-common/components/one-draggable-object';
 import {
   ElementType,

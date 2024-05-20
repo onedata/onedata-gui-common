@@ -20,7 +20,7 @@ import OTSCModel from 'onedata-gui-common/utils/one-time-series-chart/model';
 import QueryBatcher from 'onedata-gui-common/utils/one-time-series-chart/query-batcher';
 import escapeHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-html';
 import { timeSeriesMetricResolutionsMap } from 'onedata-gui-common/utils/time-series';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 /**
  * @typedef {Object} OneTimeSeriesChartsSectionSpec

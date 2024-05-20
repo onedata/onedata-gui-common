@@ -2,6 +2,9 @@
 'use strict';
 
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+const suppressNodeBuildErrors = require(
+  './addon/utils/suppress-node-build-errors'
+);
 const defineSassColors = require('./addon/utils/define-sass-colors');
 const defineSassBreakpoints = require('./addon/utils/define-sass-breakpoints');
 const colors = require('./config/colors');
@@ -11,6 +14,8 @@ const dynamicLibraries = require('./config/dynamic-libraries');
 const sass = require('sass-embedded');
 
 module.exports = function (defaults) {
+  suppressNodeBuildErrors();
+
   const app = new EmberAddon(defaults, {
     'fingerprint': {
       extensions: [

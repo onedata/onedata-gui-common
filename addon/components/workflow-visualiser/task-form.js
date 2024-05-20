@@ -39,7 +39,7 @@ import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-fi
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import cloneAsEmberObject from 'onedata-gui-common/utils/clone-as-ember-object';
 import _ from 'lodash';
 import {

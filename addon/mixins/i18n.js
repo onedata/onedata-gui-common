@@ -1,7 +1,7 @@
 /**
  * The mixin adds a `t` method to facilitate use of translation function
  * using i18n service.
- * You should override `i18nPrefix` property to path of component locale.
+ * You should override `i18nPrefix` property to path of a class locale.
  * A prefix can be used with or without trailing dot.
  *
  * @author Jakub Liput, Michał Borzęcki
@@ -23,7 +23,7 @@ export default Mixin.create({
 
   /**
    * @virtual
-   * A i18n service should be injected into component that uses this mixin
+   * A i18n service should be injected into a class that uses this mixin
    * @type {Ember.Service}
    */
   i18n: undefined,

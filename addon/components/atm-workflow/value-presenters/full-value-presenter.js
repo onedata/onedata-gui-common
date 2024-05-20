@@ -15,7 +15,7 @@ import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { bool, conditional, eq, raw } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/value-presenters/full-value-presenter';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import {
   getRawValuePresenter,
   getVisualValuePresenter,

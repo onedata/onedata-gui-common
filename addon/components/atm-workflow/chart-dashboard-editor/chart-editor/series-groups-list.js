@@ -13,7 +13,7 @@
 import Component from '@ember/component';
 import { observer } from '@ember/object';
 import { inject as service } from '@ember/service';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { ElementType } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
 import { ElementsListItemModel } from './elements-list';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/chart-editor/series-groups-list';

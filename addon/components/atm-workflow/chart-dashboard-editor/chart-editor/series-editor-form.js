@@ -19,7 +19,7 @@ import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import ColorField from 'onedata-gui-common/utils/form-component/color-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { translateSeriesType } from 'onedata-gui-common/utils/time-series-dashboard';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/chart-editor/series-editor-form';
 import {

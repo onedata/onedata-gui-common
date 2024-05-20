@@ -20,7 +20,7 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import $ from 'jquery';
 import { Promise, resolve } from 'rsvp';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import dom from 'onedata-gui-common/utils/dom';
 import { isEmpty } from 'ember-awesome-macros';
 import globals from 'onedata-gui-common/utils/globals';

@@ -106,6 +106,10 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 @import 'onedata-gui-common/utils/atm-workflow/store-config-editors/time-series';
 @import 'onedata-gui-common/utils/atm-workflow/store-content-update-options-editor/time-series';
 
+// Non-Ember-components styled elements
+
+@import 'onedata-gui-common/three-dots';
+
 // Components
 
 @import 'onedata-gui-common/components/bs-modal';
@@ -217,3 +221,4 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 @import 'onedata-gui-common/components/warning-icon';
 @import 'onedata-gui-common/components/pages-control';
 @import 'onedata-gui-common/components/websocket-reconnection-modal';
+@import 'onedata-gui-common/components/resources-list';

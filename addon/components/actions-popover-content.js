@@ -16,7 +16,7 @@ import Component from '@ember/component';
 import layout from '../templates/components/actions-popover-content';
 import { get, computed } from '@ember/object';
 import { scheduleOnce } from '@ember/runloop';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import config from 'ember-get-config';
 
 export default Component.extend(I18n, {

@@ -24,6 +24,7 @@ const defaultArrayItemCreatorComponentName = `${editorComponentsPrefix}/array/de
 const customArrayItemCreatorComponentNames = Object.freeze({
   [AtmDataSpecType.File]: `${editorComponentsPrefix}/file/array-item-creator`,
   [AtmDataSpecType.Dataset]: `${editorComponentsPrefix}/dataset/array-item-creator`,
+  [AtmDataSpecType.Group]: `${editorComponentsPrefix}/group/array-item-creator`,
 });
 
 /**
@@ -39,6 +40,7 @@ export function getArrayItemCreatorComponentName(itemAtmDataSpec) {
  * @typedef {AtmValuePresenterContext} AtmValueEditorContext
  * @property {(selectorConfig: FilesSelectorConfig) => void} [selectFiles]
  * @property {(selectorConfig: DatasetsSelectorConfig) => void} [selectDatasets]
+ * @property {(selectorConfig: GroupsSelectorConfig) => void} [selectGroups]
  */
 
 /**
@@ -53,5 +55,12 @@ export function getArrayItemCreatorComponentName(itemAtmDataSpec) {
  * @typedef {Object} DatasetsSelectorConfig
  * @property {boolean} allowMany
  * @property {() => Array<AtmDataset>} onSelected
+ * @property {() => void} onCancelled
+ */
+
+/**
+ * @typedef {Object} GroupsSelectorConfig
+ * @property {boolean} allowMany
+ * @property {() => Array<AtmGroup>} onSelected
  * @property {() => void} onCancelled
  */

@@ -1,0 +1,24 @@
+<OneIcon class="group-icon details-icon" @icon={{icon}} />
+
+<div class="details-content">
+  {{#if urlProxy.content}}
+    <a
+      class="group-name details-title clickable navy"
+      href={{urlProxy.content}}
+      target={{or context.linkTarget "_top"}}
+    >
+      {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+    </a>
+  {{else}}
+    <span class="group-name details-title">
+      {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
+    </span>
+  {{/if}}
+
+  <ul class="details-property-list">
+    <li class="property-row type-property">
+      <span class="property-label">{{tt this "type"}}:</span>
+      <span class="property-value">{{readableType}}</span>
+    </li>
+  </ul>
+</div>

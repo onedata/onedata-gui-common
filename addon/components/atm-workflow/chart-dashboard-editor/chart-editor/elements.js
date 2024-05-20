@@ -17,7 +17,7 @@ import { reads } from '@ember/object/computed';
 import { guidFor } from '@ember/object/internals';
 import { dasherize } from '@ember/string';
 import _ from 'lodash';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import {
   ElementType,

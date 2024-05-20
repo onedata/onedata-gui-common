@@ -9,6 +9,7 @@ export default {
     object: 'Object',
     file: 'File',
     dataset: 'Dataset',
+    group: 'Group',
     range: 'Range',
     array: 'Array',
     timeSeriesMeasurement: 'Time series measurement',

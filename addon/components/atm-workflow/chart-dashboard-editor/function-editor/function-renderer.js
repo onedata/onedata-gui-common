@@ -19,7 +19,7 @@ import {
   ElementType,
   translateValidationErrorsBatch,
 } from 'onedata-gui-common/utils/atm-workflow/chart-dashboard-editor';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import dom from 'onedata-gui-common/utils/dom';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import layout from 'onedata-gui-common/templates/components/atm-workflow/chart-dashboard-editor/function-editor/function-renderer';

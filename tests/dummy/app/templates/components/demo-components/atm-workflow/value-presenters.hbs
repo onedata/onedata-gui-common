@@ -159,6 +159,39 @@
   </table>
 </p>
 
+<h3>Group</h3>
+<p>
+  Single line:
+  {{atm-workflow/value-presenters/group/single-line-presenter value=group1}}
+</p>
+<p>
+  Raw:
+  <div class="raw-presenter-container">
+    {{atm-workflow/value-presenters/group/raw-presenter value=group1}}
+  </div>
+</p>
+<p>
+  Visual:
+  {{atm-workflow/value-presenters/group/visual-presenter
+    value=group1
+    context=context
+  }}
+</p>
+<p>
+  Table:
+  <table>
+    <thead>
+      {{atm-workflow/value-presenters/group/table-header-row-presenter}}
+    </thead>
+    <tbody>
+      {{atm-workflow/value-presenters/group/table-body-row-presenter
+        value=group1
+        context=context
+      }}
+    </tbody>
+  </table>
+</p>
+
 <h3>Range</h3>
 <p>
   Single line:

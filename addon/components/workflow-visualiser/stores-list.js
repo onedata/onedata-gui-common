@@ -11,7 +11,7 @@ import layout from '../../templates/components/workflow-visualiser/stores-list';
 import { sort } from '@ember/object/computed';
 import { tag } from 'ember-awesome-macros';
 import { computed } from '@ember/object';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 export default Component.extend(I18n, {
   layout,

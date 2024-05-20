@@ -14,7 +14,7 @@ import layout from '../templates/components/one-tile';
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import { debounce, next } from '@ember/runloop';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import $ from 'jquery';
 import globals from 'onedata-gui-common/utils/globals';
 import { bool } from 'ember-awesome-macros';

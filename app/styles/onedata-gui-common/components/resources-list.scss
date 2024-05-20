@@ -1,0 +1,31 @@
+.resources-list {
+  .header-content-container {
+    display: flex;
+
+    .item-icon-container {
+      margin-right: 0;
+      transform: translateY(0.05em);
+    }
+
+    .popover-info-trigger {
+      font-size: 2em;
+    }
+
+    .one-label {
+      padding-left: 1em;
+    }
+  }
+
+  .one-collapsible-list-item-header:not(.one-collapsible-list-header) {
+    display: flex;
+    align-items: center;
+
+    .item-checkbox {
+      flex-shrink: 0;
+    }
+
+    .header-content-container {
+      min-width: 0;
+    }
+  }
+}

@@ -3,7 +3,7 @@
  * data spec.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -12,6 +12,7 @@ import validateArray from './array';
 import validateBoolean from './boolean';
 import validateDataset from './dataset';
 import validateFile from './file';
+import validateGroup from './group';
 import validateNumber from './number';
 import validateObject from './object';
 import validateRange from './range';
@@ -26,6 +27,7 @@ const validators = Object.freeze({
   [AtmDataSpecType.Boolean]: validateBoolean,
   [AtmDataSpecType.Dataset]: validateDataset,
   [AtmDataSpecType.File]: validateFile,
+  [AtmDataSpecType.Group]: validateGroup,
   [AtmDataSpecType.Number]: validateNumber,
   [AtmDataSpecType.Object]: validateObject,
   [AtmDataSpecType.Range]: validateRange,

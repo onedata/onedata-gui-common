@@ -14,7 +14,7 @@ import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-oper
 import ExceptOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/except-operator-query-block';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-selector';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 import { tag, array, raw, or, equal } from 'ember-awesome-macros';
 import { set, setProperties, get, computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';

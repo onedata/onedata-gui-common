@@ -8,7 +8,7 @@
 
 import BaseValidator from 'ember-cp-validations/validators/base';
 import { inject as service } from '@ember/service';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 const Json = BaseValidator.extend(I18n, {
   i18n: service(),

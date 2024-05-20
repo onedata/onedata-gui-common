@@ -11,7 +11,7 @@ import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-sidebar/second-level-items';
 import { computed, defineProperty } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 export default SecondLevelItems.extend(I18n, {
   layout,
@@ -74,7 +74,7 @@ export default SecondLevelItems.extend(I18n, {
     return {
       id: 'provider',
       label: this.t('provider'),
-      icon: 'provider',
+      icon: 'settings',
     };
   }),
 
@@ -116,11 +116,11 @@ export default SecondLevelItems.extend(I18n, {
     'certificateItem',
     'nodesItem',
     'overviewItem',
-    'providerItem',
     'storagesItem',
     'spacesItem',
     'guiSettingsItem',
     'membersItem',
+    'providerItem',
     function clusterSecondLevelItems() {
       const {
         clusterType,
@@ -128,11 +128,11 @@ export default SecondLevelItems.extend(I18n, {
         certificateItem,
         nodesItem,
         overviewItem,
-        providerItem,
         storagesItem,
         spacesItem,
         guiSettingsItem,
         membersItem,
+        providerItem,
       } = this.getProperties(
         'clusterType',
         'cluster',
@@ -140,11 +140,11 @@ export default SecondLevelItems.extend(I18n, {
         'certificateItem',
         'nodesItem',
         'overviewItem',
-        'providerItem',
         'storagesItem',
         'spacesItem',
         'guiSettingsItem',
-        'membersItem'
+        'membersItem',
+        'providerItem',
       );
       if (!clusterType) {
         return [];
@@ -161,9 +161,9 @@ export default SecondLevelItems.extend(I18n, {
           guiSettingsItem,
         ] : [
           ...commonItems,
-          providerItem,
           storagesItem,
           spacesItem,
+          providerItem,
         ];
         return items;
       }
