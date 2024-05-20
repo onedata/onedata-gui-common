@@ -220,18 +220,15 @@ const Series = ElementBase.extend({
       }
       if (this.dataProvider) {
         this.dataProvider.destroy();
-        // this.set('dataProvider', null);
       }
       if (this.detachedFunctions.length) {
         this.detachedFunctions.forEach((chartFunction) => chartFunction.destroy());
-        // this.set('detachedFunctions', []);
       }
       if (this.parent) {
         this.set('parent', null);
       }
       if (this.timeSeriesRefChangesHandler) {
         this.timeSeriesRefChangesHandler.destroy();
-        // this.set('timeSeriesRefChangesHandler', null);
       }
     } finally {
       this._super(...arguments);

@@ -58,11 +58,11 @@ export default Component.extend({
    */
   supporterNameHeader: computed({
     get() {
-      return this.injectedSupporterNameHeader ?? this.get('i18n')
+      return this.customSupporterNameHeader ?? this.get('i18n')
         .t('components.supportSizeInfo.table.supporterNameHeader');
     },
     set(key, value) {
-      return this.injectedSupporterNameHeader = value;
+      return this.customSupporterNameHeader = value;
     },
   }),
 
@@ -73,23 +73,23 @@ export default Component.extend({
    */
   supporterSizeHeader: computed({
     get() {
-      return this.injectedSupporterSizeHeader ??
+      return this.customSupporterSizeHeader ??
         this.get('i18n').t('components.supportSizeInfo.table.supportSizeHeader');
     },
     set(key, value) {
-      return this.injectedSupporterSizeHeader = value;
+      return this.customSupporterSizeHeader = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedSupporterNameHeader: null,
+  customSupporterNameHeader: null,
 
   /**
    * @type {string | null}
    */
-  injectedSupporterSizeHeader: null,
+  customSupporterSizeHeader: null,
 
   /**
    * @type {computed.string}

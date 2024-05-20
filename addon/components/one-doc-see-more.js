@@ -54,15 +54,15 @@ export default Component.extend(I18n, {
    */
   href: computed('docPath', {
     get() {
-      return this.injectedHref ?? oneDocUrl(this, this.docPath);
+      return this.customHref ?? oneDocUrl(this, this.docPath);
     },
     set(key, value) {
-      return this.injectedHref = value;
+      return this.customHref = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedHref: null,
+  customHref: null,
 });

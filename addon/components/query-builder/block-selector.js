@@ -16,7 +16,7 @@ import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-op
 import layout from 'onedata-gui-common/templates/components/query-builder/block-selector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { tag, array, raw, or, equal } from 'ember-awesome-macros';
-import { set, get, computed } from '@ember/object';
+import { set, setProperties, get, computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import { reads } from '@ember/object/computed';
@@ -232,8 +232,10 @@ export default Component.extend(...mixins, {
         } else {
           onBlockReplace([this.createOperatorBlock(operatorName, operands)]);
         }
-        set(editBlock, 'notifyUpdate', null);
-        set(editBlock, 'operands', []);
+        setProperties(editBlock, {
+          notifyUpdate: null,
+          operands: [],
+        });
         editBlock.destroy();
       }
     },

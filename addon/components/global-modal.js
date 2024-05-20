@@ -109,7 +109,11 @@ export default Component.extend({
 
   willDestroyElement() {
     try {
-      if (!this.modalInstance?.isDestroyed && this.modalId) {
+      if (
+        !this.modalInstance?.isDestroyed &&
+        !this.modalInstance?.isDestroying &&
+        this.modalId
+      ) {
         this.modalManager.onModalHidden(this.modalId);
       }
     } finally {

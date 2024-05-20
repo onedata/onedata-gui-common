@@ -37,17 +37,17 @@ export default Component.extend({
    */
   icon: computed('recordType', {
     get() {
-      return this.injectedIcon ?? recordIcon(this.recordType);
+      return this.customIcon ?? recordIcon(this.recordType);
     },
     set(key, value) {
-      return this.injectedIcon = value;
+      return this.customIcon = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedIcon: null,
+  customIcon: null,
 
   /**
    * @type {Boolean}

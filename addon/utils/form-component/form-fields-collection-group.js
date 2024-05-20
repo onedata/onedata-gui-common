@@ -36,7 +36,7 @@ export default FormFieldsGroup.extend({
    */
   addButtonText: computed('translationPath', 'i18nPrefix', {
     get() {
-      return this.injectedAddButtonText ?? this.getTranslation('addButtonText', {}, {
+      return this.customAddButtonText ?? this.getTranslation('addButtonText', {}, {
         defaultValue: this.t(
           `${defaultI18nPrefix}.addButtonText`, {}, {
             defaultValue: '',
@@ -46,7 +46,7 @@ export default FormFieldsGroup.extend({
       });
     },
     set(key, value) {
-      return this.injectedAddButtonText = value;
+      return this.customAddButtonText = value;
     },
   }),
 
@@ -58,7 +58,7 @@ export default FormFieldsGroup.extend({
     'translationPath',
     'i18nPrefix', {
       get() {
-        return this.injectedEmptyCollectionViewModeText ??
+        return this.customEmptyCollectionViewModeText ??
           this.getTranslation('emptyCollectionViewModeText', {}, {
             defaultValue: this.t(
               `${defaultI18nPrefix}.emptyCollectionViewModeText`, {}, {
@@ -69,7 +69,7 @@ export default FormFieldsGroup.extend({
           });
       },
       set(key, value) {
-        this.injectedEmptyCollectionViewModeText = value;
+        this.customEmptyCollectionViewModeText = value;
       },
     }
   ),
@@ -83,13 +83,13 @@ export default FormFieldsGroup.extend({
    * Custom addButtonText injected during field creation.
    * @type {string | null}
    */
-  injectedAddButtonText: null,
+  customAddButtonText: null,
 
   /**
    * Custom emptyCollectionViewModeText injected during field creation.
    * @type {string | null}
    */
-  injectedEmptyCollectionViewModeText: null,
+  customEmptyCollectionViewModeText: null,
 
   /**
    * @type {Array<Utils.FormComponent.FormElement>}

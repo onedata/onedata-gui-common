@@ -266,6 +266,8 @@ export default Component.extend(I18n, {
   allAvailableTags: computed(
     'recordsProxy.@each.name',
     function allAvailableTags() {
+      this.destroyDanglingTags();
+
       const {
         recordsProxy,
         selectedModelName,
@@ -417,11 +419,15 @@ export default Component.extend(I18n, {
    */
   willDestroyElement() {
     try {
-      this.tagsToDestroyLater.forEach((tag) => tag.destroy?.());
-      this.tagsToDestroyLater.clear();
+      this.destroyDanglingTags();
     } finally {
       this._super(...arguments);
     }
+  },
+
+  destroyDanglingTags() {
+    this.tagsToDestroyLater.forEach((tag) => tag.destroy?.());
+    this.tagsToDestroyLater.clear();
   },
 
   repositionPopover() {
@@ -430,6 +436,7 @@ export default Component.extend(I18n, {
 
   actions: {
     tagSelected(tag) {
+      this.tagsToDestroyLater.delete(tag);
       this.get('onTagsAdded')([tag]);
     },
     addId() {

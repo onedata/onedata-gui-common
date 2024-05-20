@@ -119,7 +119,7 @@ describe('Integration | Component | tags-input/time-series-metric-selector-edito
   });
 
   afterEach(function () {
-    this.changeSpy.lastCall?.args?.[0]?.[0]?.destroy();
+    this.tags?.forEach((tag) => tag.destroy?.());
   });
 
   it('has class "tags-input-time-series-metric-selector-editor"', async function () {
@@ -173,10 +173,10 @@ describe('Integration | Component | tags-input/time-series-metric-selector-edito
 
     it('allows to select presets for "${aggregator}" aggregator', async function () {
       await render(hbs `{{tags-input
-          tags=tags
-          tagEditorComponentName="tags-input/time-series-metric-selector-editor"
-          onChange=changeSpy
-        }}`);
+        tags=tags
+        tagEditorComponentName="tags-input/time-series-metric-selector-editor"
+        onChange=changeSpy
+      }}`);
 
       await click('.tag-creator-trigger');
       await selectChoose('.aggregator-dropdown', aggregatorName);
@@ -199,10 +199,10 @@ describe('Integration | Component | tags-input/time-series-metric-selector-edito
 
     it(`allows to create custom tag for ${aggregator} aggregator`, async function () {
       await render(hbs `{{tags-input
-          tags=tags
-          tagEditorComponentName="tags-input/time-series-metric-selector-editor"
-          onChange=changeSpy
-        }}`);
+        tags=tags
+        tagEditorComponentName="tags-input/time-series-metric-selector-editor"
+        onChange=changeSpy
+      }}`);
 
       await click('.tag-creator-trigger');
       await selectChoose('.aggregator-dropdown', aggregatorName);

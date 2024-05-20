@@ -27,17 +27,17 @@ export default OptionsField.extend({
    */
   placeholder: computed('i18nPrefix', 'translationPath', {
     get() {
-      return this.injectedPlaceholder ??
+      return this.customPlaceholder ??
         // Null value, because powerselect converts `undefined` to string 'undefined'
         this.getTranslation('placeholder', {}, { defaultValue: null });
     },
     set(key, value) {
-      return this.injectedPlaceholder = value;
+      return this.customPlaceholder = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedPlaceholder: null,
+  customPlaceholder: null,
 });

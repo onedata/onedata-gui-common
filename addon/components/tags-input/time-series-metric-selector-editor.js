@@ -240,6 +240,8 @@ export default Component.extend(I18n, {
     'selectedTags.[]',
     'usedNames',
     function tagsToRender() {
+      this.destroyDanglingTags();
+
       const {
         allAvailableTagValues,
         selectedTags,
@@ -409,11 +411,15 @@ export default Component.extend(I18n, {
   willDestroyElement() {
     try {
       this.customMetricFields.destroy?.();
-      this.tagsToDestroyLater.forEach((tag) => tag.destroy?.());
-      this.tagsToDestroyLater.clear();
+      this.destroyDanglingTags();
     } finally {
       this._super(...arguments);
     }
+  },
+
+  destroyDanglingTags() {
+    this.tagsToDestroyLater.forEach((tag) => tag.destroy?.());
+    this.tagsToDestroyLater.clear();
   },
 
   repositionPopover() {
@@ -425,6 +431,7 @@ export default Component.extend(I18n, {
       if (get(tag, 'disabledReason')) {
         return;
       }
+      this.tagsToDestroyLater.delete(tag);
       this.get('onTagsAdded')([tag]);
     },
     submitCustomMetric() {

@@ -59,7 +59,7 @@ export default Mixin.create({
     }
   ) {
     if (getOwner(this)?.isDestroyed) {
-      return defaultValue;
+      return undefined;
     }
 
     const {

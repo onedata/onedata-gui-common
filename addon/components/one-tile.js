@@ -156,10 +156,10 @@ export default Component.extend(I18n, {
    */
   moreText: computed({
     get() {
-      return this.injectedMoreText ?? this.t('more');
+      return this.customMoreText ?? this.t('more');
     },
     set(key, value) {
-      return this.injectedMoreText = value;
+      return this.customMoreText = value;
     },
   }),
 
@@ -211,7 +211,7 @@ export default Component.extend(I18n, {
   /**
    * @type {string | null}
    */
-  injectedMoreText: null,
+  customMoreText: null,
 
   /**
    * @type {Ember.ComputedProperty<Function>}

@@ -82,7 +82,7 @@ export default Component.extend(I18n, {
   recordsPromise: reads('modalOptions.recordsPromise'),
 
   /**
-   * @type {ComputedProperty<PromiseArray<FieldOption>>}
+   * @type {ComputedProperty<PromiseArray<RecordOptionsArrayProxy<FieldOption>>>}
    */
   recordOptionsProxy: promise.array(computed(
     'recordsPromise',

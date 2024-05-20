@@ -108,7 +108,6 @@ export default Component.extend({
 
   willDestroyElement() {
     try {
-
       this.stopMouseDownInterval();
       if (this.mouseLeaveHandler) {
         this.element?.removeEventListener('mouseleave', this.mouseLeaveHandler);

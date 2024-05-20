@@ -15,25 +15,25 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections
   const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
-    this.setProperties({
-      editorContext: EditorContext.create(),
-      rootSection: createNewSection(this.owner.lookup('service:i18n'), null, [], true),
-    });
+    this.set('editorContext', EditorContext.create());
   });
 
   afterEach(function () {
     this.editorContext.destroy();
-    this.rootSection.destroy();
+    this.rootSection?.destroy();
     this.model?.destroy();
   });
 
   it('has class "sections-editor"', async function () {
+    createEmptyRootSection(this);
+
     await renderComponent();
 
     expect(find('.sections-editor')).to.exist;
   });
 
   it('shows root section', async function () {
+    createEmptyRootSection(this);
     set(this.rootSection, 'title', 'title1');
 
     await renderComponent();
@@ -42,7 +42,6 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections
   });
 
   it('does not render any drop places when nothing is dragged', async function () {
-    this.rootSection.destroy();
     this.set('model', createModelFromSpec({
       rootSection: {
         title: { content: 'root' },
@@ -59,7 +58,6 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections
   });
 
   it('renders all possible drop places when section is dragged', async function () {
-    this.rootSection.destroy();
     this.set('model', createModelFromSpec({
       rootSection: {
         title: { content: 'root' },
@@ -101,7 +99,6 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections
   });
 
   it('renders all possible drop places when chart is dragged', async function () {
-    this.rootSection.destroy();
     this.set('model', createModelFromSpec({
       rootSection: {
         title: { content: 'root' },
@@ -197,4 +194,12 @@ export function getElementsStructure(sectionElement) {
       ...sectionElement.querySelectorAll(':scope > .section-charts > .chart'),
     ].map((chartElement) => getElementsStructure(chartElement)),
   };
+}
+
+function createEmptyRootSection(testCase) {
+  set(
+    testCase,
+    'rootSection',
+    createNewSection(testCase.owner.lookup('service:i18n'), null, [], true)
+  );
 }

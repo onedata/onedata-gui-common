@@ -355,6 +355,7 @@ export default Component.extend(I18n, {
  * and "edit" mode is taken from component, in "create" mode is equal to passed
  * `createDefaultValue`. It's result should be passed to *Field.extend.
  * @param {Components.Modals.WorkflowVisualiser.LaneModal.LaneForm} component
+ * @param {string} path Path to the default value in `passedFormValues` property
  * @param {any} createDefaultValue
  * @returns {Object}
  */

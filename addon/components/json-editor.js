@@ -87,17 +87,17 @@ export default Component.extend(I18n, {
    */
   inputId: computed({
     get() {
-      return this.injectedInputId ?? (this.elementId + '-textarea');
+      return this.customInputId ?? (this.elementId + '-textarea');
     },
     set(key, value) {
-      return this.injectedInputId = value;
+      return this.customInputId = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedInputId: null,
+  customInputId: null,
 
   /**
    * @type {Ember.ComputedProperty<string>}

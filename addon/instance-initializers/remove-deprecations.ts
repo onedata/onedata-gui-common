@@ -11,6 +11,7 @@ import { registerDeprecationHandler, runInDebug } from '@ember/debug';
 import globals from 'onedata-gui-common/utils/globals';
 
 const disabledDeprecations: Set<string> = new Set([
+  // Example of usage - deprecation originating from ember-bootstrap
   // 'ember-bootstrap.deprecated-argument.button#disabled',
 ]);
 

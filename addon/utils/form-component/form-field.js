@@ -49,7 +49,7 @@ export default FormElement.extend({
    * @private
    * @type {boolean | null}
    */
-  injectedIsValid: null,
+  customIsValid: null,
 
   /**
    * Array of property names, which contain internal field validators (validators
@@ -71,9 +71,10 @@ export default FormElement.extend({
   validators: union('customValidators', 'internalValidators'),
 
   /**
+   * Contains latest value of `fieldValidationChecker`
    * @type {Utils.FormComponent.FormFieldValidator | null}
    */
-  lastFieldValidationChecker: null,
+  fieldValidationCheckerCache: null,
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldValidator>}
@@ -84,14 +85,14 @@ export default FormElement.extend({
     function fieldValidationChecker() {
       let ValidationCheckerClass = FormFieldValidator;
       if (this.ownerSource) {
-        const validators = this.get('validators') || [];
+        const validators = this.validators || [];
         ValidationCheckerClass = ValidationCheckerClass
           .extend(buildValidations({ value: validators }));
       }
       const validationChecker = ValidationCheckerClass.create({ field: this });
 
-      this.lastFieldValidationChecker?.destroy();
-      this.set('lastFieldValidationChecker', validationChecker);
+      this.fieldValidationCheckerCache?.destroy();
+      this.set('fieldValidationCheckerCache', validationChecker);
       return validationChecker;
     }
   ),
@@ -102,8 +103,8 @@ export default FormElement.extend({
    */
   isValid: computed('isValueless', 'isInViewMode', 'fieldValidationChecker.isValid', {
     get() {
-      if (this.injectedIsValid !== null) {
-        return this.injectedIsValid;
+      if (this.customIsValid !== null) {
+        return this.customIsValid;
       }
 
       return this.isValueless ||
@@ -111,7 +112,7 @@ export default FormElement.extend({
         (this.fieldValidationChecker?.isValid ?? true);
     },
     set(key, value) {
-      return this.set('injectedIsValid', value);
+      return this.set('customIsValid', value);
     },
   }),
 
@@ -151,7 +152,7 @@ export default FormElement.extend({
 
   willDestroy() {
     try {
-      this.lastFieldValidationChecker?.destroy?.();
+      this.fieldValidationCheckerCache?.destroy?.();
     } finally {
       this._super(...arguments);
     }

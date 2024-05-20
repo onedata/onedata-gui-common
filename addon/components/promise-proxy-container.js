@@ -38,10 +38,10 @@ export default LoadingContainer.extend({
    */
   isLoaded: computed('proxy.isFulfilled', {
     get() {
-      return this.injectedIsLoaded ?? this.proxy?.isFulfilled;
+      return this.customIsLoaded ?? this.proxy?.isFulfilled;
     },
     set(key, value) {
-      return this.injectedIsLoaded = value;
+      return this.customIsLoaded = value;
     },
   }),
 
@@ -50,10 +50,10 @@ export default LoadingContainer.extend({
    */
   isLoading: computed('proxy.isPending', {
     get() {
-      return this.injectedIsLoading ?? this.proxy?.isPending;
+      return this.customIsLoading ?? this.proxy?.isPending;
     },
     set(key, value) {
-      return this.injectedIsLoading = value;
+      return this.customIsLoading = value;
     },
   }),
 
@@ -62,10 +62,10 @@ export default LoadingContainer.extend({
    */
   isError: computed('proxy.isRejected', {
     get() {
-      return this.injectedIsError ?? this.proxy?.isRejected;
+      return this.customIsError ?? this.proxy?.isRejected;
     },
     set(key, value) {
-      return this.injectedIsError = value;
+      return this.customIsError = value;
     },
   }),
 
@@ -74,30 +74,30 @@ export default LoadingContainer.extend({
    */
   errorReason: computed('proxy.reason', {
     get() {
-      return this.injectedErrorReason ?? this.proxy?.reason;
+      return this.customErrorReason ?? this.proxy?.reason;
     },
     set(key, value) {
-      return this.injectedErrorReason = value;
+      return this.customErrorReason = value;
     },
   }),
 
   /**
    * @type {boolean | null}
    */
-  injectedIsLoaded: null,
+  customIsLoaded: null,
 
   /**
    * @type {boolean | null}
    */
-  injectedIsLoading: null,
+  customIsLoading: null,
 
   /**
    * @type {boolean | null}
    */
-  injectedIsError: null,
+  customIsError: null,
 
   /**
    * @type {boolean | null}
    */
-  injectedErrorReason: null,
+  customErrorReason: null,
 });

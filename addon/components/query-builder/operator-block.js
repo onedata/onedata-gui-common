@@ -97,22 +97,22 @@ export default Component.extend(...mixins, {
    */
   level: computed('queryBlock.{operator,levelScore}', {
     get() {
-      if (typeof this.injectedLevel === 'number') {
-        return this.injectedLevel;
+      if (typeof this.customLevel === 'number') {
+        return this.customLevel;
       }
       if (this.get('queryBlock.operator') === 'root') {
         return this.get('queryBlock.levelScore');
       }
     },
     set(key, value) {
-      return this.injectedLevel = value;
+      return this.customLevel = value;
     },
   }),
 
   /**
    * @type {number | string}
    */
-  injectedLevel: null,
+  customLevel: null,
 
   /**
    * Class name based on operator type (eg. or-operator-block)

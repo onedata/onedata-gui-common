@@ -67,7 +67,7 @@ export const ValueEditorField = FormField.extend({
     'i18nPrefix',
     'translationPath', {
       get() {
-        return this.injectedValueCreatorButtonLabel ??
+        return this.customValueCreatorButtonLabel ??
           this.getTranslation('valueCreatorButtonLabel', {}, {
             defaultValue: this.t(
               `${defaultI18nPrefix}.valueCreatorButtonLabel`, {}, {
@@ -78,7 +78,7 @@ export const ValueEditorField = FormField.extend({
           });
       },
       set(key, value) {
-        return this.injectedValueCreatorButtonLabel = value;
+        return this.customValueCreatorButtonLabel = value;
       },
     }
   ),
@@ -91,7 +91,7 @@ export const ValueEditorField = FormField.extend({
     'i18nPrefix',
     'translationPath', {
       get() {
-        return this.injectedInvalidAtmDataSpecMessage ??
+        return this.customInvalidAtmDataSpecMessage ??
           this.getTranslation('invalidAtmDataSpecMessage', {}, {
             defaultValue: this.t(
               `${defaultI18nPrefix}.invalidAtmDataSpecMessage`, {}, {
@@ -102,7 +102,7 @@ export const ValueEditorField = FormField.extend({
           });
       },
       set(key, value) {
-        return this.injectedInvalidAtmDataSpecMessage = value;
+        return this.customInvalidAtmDataSpecMessage = value;
       },
     }
   ),
@@ -114,8 +114,8 @@ export const ValueEditorField = FormField.extend({
     'editorStateManager',
     'isOptional', {
       get() {
-        if (this.injectedDefaultValue) {
-          return this.injectedDefaultValue;
+        if (this.customDefaultValue) {
+          return this.customDefaultValue;
         }
         if (this.isOptional) {
           return {
@@ -130,7 +130,7 @@ export const ValueEditorField = FormField.extend({
         }
       },
       set(key, value) {
-        return this.injectedDefaultValue = value;
+        return this.customDefaultValue = value;
       },
     }
   ),
@@ -173,17 +173,17 @@ export const ValueEditorField = FormField.extend({
   /**
    * @type {ValueEditorFieldValue | null}
    */
-  injectedDefaultValue: null,
+  customDefaultValue: null,
 
   /**
    * @type {SafeString | null}
    */
-  injectedValueCreatorButtonLabel: null,
+  customValueCreatorButtonLabel: null,
 
   /**
    * @type {SafeString | null}
    */
-  injectedInvalidAtmDataSpecMessage: null,
+  customInvalidAtmDataSpecMessage: null,
 
   /**
    * @type {ComputedProperty<ValueEditorStateManagerChangeListener>}

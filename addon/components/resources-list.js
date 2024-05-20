@@ -83,10 +83,10 @@ export const ResourceListItem = EmberObject.extend({
    */
   icon: computed('record', {
     get() {
-      return this.injectedIcon ?? recordIcon(this.record);
+      return this.customIcon ?? recordIcon(this.record);
     },
     set(key, value) {
-      return this.injectedIcon = value;
+      return this.customIcon = value;
     },
   }),
 
@@ -126,7 +126,7 @@ export const ResourceListItem = EmberObject.extend({
   /**
    * @type {string | null}
    */
-  injectedIcon: null,
+  customIcon: null,
 
   init() {
     this._super(...arguments);

@@ -244,6 +244,7 @@ describe('Integration | Component | tags-input/model-selector-editor', function 
       expect(
         findInElementsByText(options, availableModels[typeName][0].name)
       ).to.not.exist;
+      console.log(changeSpy.lastCall.args[0]);
       expect(changeSpy.lastCall.args[0].mapBy('value.record'))
         .to.deep.equal([availableModels[typeName][0]]);
     });

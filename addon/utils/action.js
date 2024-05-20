@@ -123,17 +123,17 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    */
   title: computed('i18nPrefix', {
     get() {
-      return this.injectedTitle ?? this.t('title', {}, { defaultValue: '' });
+      return this.customTitle ?? this.t('title', {}, { defaultValue: '' });
     },
     set(key, value) {
-      return this.injectedTitle = value;
+      return this.customTitle = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedTitle: null,
+  customTitle: null,
 
   /**
    * `true` when action has been executed, `false` otherwise.
