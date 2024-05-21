@@ -19,6 +19,7 @@ export default Component.extend(I18n, {
   classNames: ['one-doc-see-more'],
 
   i18n: service(),
+  homepageUrl: service(),
 
   /**
    * @override
@@ -36,33 +37,54 @@ export default Component.extend(I18n, {
   /**
    * @virtual optional
    * @type {String}
-   * An argument for one-doc-url helper, see `one-doc-url` for details.
-   * No used when using block - omit then.
-   */
-  docPath: '',
-
-  /**
-   * @virtual optional
-   * @type {String}
    * Text of link displayed for user. Can be empty to display generic link name.
    */
   linkName: '',
 
   /**
+   * If provided, the URL will be generated using documentation topic, eg.
+   * https://onedata.org/#/home/documentation/topic/21.02/qos
+   * @virtual optional
+   * @type {string}
+   */
+  topic: '',
+
+  /**
+   * Note: you should not use custom href in typical cases - use topic instead.*If there is not topic
+   * for your URL, it should be added to homepage URL handler.
+   * @virtual optional
+   * @type {String}
+   */
+  docPath: '',
+
+  /**
    * @virtual optional
    * @type {ComputedProperty<string>}
    */
-  href: computed('docPath', {
+  href: computed('effDocPath', {
     get() {
-      return this.injectedHref ?? oneDocUrl(this, this.docPath);
+      if (this.customHref) {
+        return this.customHref;
+      }
+      if (this.docPath) {
+        return oneDocUrl(this, this.docPath);
+      }
+      if (this.topic) {
+        return this.homepageUrl.generateDocumentationUrl({ topic: this.topic });
+      }
     },
     set(key, value) {
-      return this.injectedHref = value;
+      return this.customHref = value;
     },
   }),
 
   /**
+   * Stores custom href injected to component.
    * @type {string | null}
    */
-  injectedHref: null,
+  customHref: null,
+
+  generateTopicUrl() {
+
+  },
 });

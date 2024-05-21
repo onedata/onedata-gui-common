@@ -61,4 +61,29 @@ describe('Integration | Component | one-doc-see-more', function () {
     );
   });
 
+  it('renders link with topic href if topic is provided', async function () {
+    lookupService(this, 'guiUtils').set('softwareVersionDetails', {
+      serviceVersion: '21.02.3',
+      serviceBuildVersion: 'aabbcc',
+    });
+
+    await render(hbs `
+      {{one-doc-see-more linkName="hello" topic="tokens"}}
+    `);
+
+    expect(find('.documentation-link'))
+      .to.have.attr('href', 'https://onedata.org/#/home/documentation/topic/21.02/tokens');
+  });
+
+  it('renders link with "stable" version string if guiUtils softwareVersionDetails are unavailable',
+    async function () {
+      lookupService(this, 'guiUtils').set('softwareVersionDetails', undefined);
+
+      await render(hbs `
+      {{one-doc-see-more linkName="hello" topic="tokens"}}
+    `);
+
+      expect(find('.documentation-link'))
+        .to.have.attr('href', 'https://onedata.org/#/home/documentation/topic/stable/tokens');
+    });
 });
