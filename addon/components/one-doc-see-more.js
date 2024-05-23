@@ -74,7 +74,7 @@ export default Component.extend(I18n, {
       }
     },
     set(key, value) {
-      return this.customHref = value;
+      return this.set('customHref', value);
     },
   }),
 
@@ -83,8 +83,4 @@ export default Component.extend(I18n, {
    * @type {string | null}
    */
   customHref: null,
-
-  generateTopicUrl() {
-
-  },
 });
