@@ -50,8 +50,8 @@ export default Component.extend(I18n, {
   topic: '',
 
   /**
-   * Note: you should not use custom href in typical cases - use topic instead.*If there is not topic
-   * for your URL, it should be added to homepage URL handler.
+   * Note: you should not use custom href in typical cases - use topic instead. If there
+   * is not topic for your URL, it should be added to homepage URL handler.
    * @virtual optional
    * @type {String}
    */
@@ -61,7 +61,7 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {ComputedProperty<string>}
    */
-  href: computed('effDocPath', {
+  href: computed('customHref', 'docPath', 'topic', {
     get() {
       if (this.customHref) {
         return this.customHref;
