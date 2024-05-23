@@ -439,9 +439,8 @@ describe('Unit | Utility | replacing-chunks-array', function () {
   it('injects self reference into fetch method',
     async function () {
       let compareArrayInstancesResult = undefined;
-      let array;
       this.fetch = (a, b, c, arrayInstance) => {
-        compareArrayInstancesResult = array === arrayInstance;
+        compareArrayInstancesResult = this.array === arrayInstance;
         return resolve([]);
       };
       this.array = ReplacingChunksArray.create({

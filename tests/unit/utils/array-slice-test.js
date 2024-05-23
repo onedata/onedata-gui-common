@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { describe, it, afterEach } from 'mocha';
 import ArraySlice from 'onedata-gui-common/utils/array-slice';
 import _ from 'lodash';
-import { settled } from '@ember/test-helpers';
 import sinon from 'sinon';
 import { A } from '@ember/array';
 import EmberObject, { computed } from '@ember/object';
@@ -10,7 +9,7 @@ import EmberObject, { computed } from '@ember/object';
 const ArraySum = EmberObject.extend({
   spy: undefined,
   as: undefined,
-  sum: computed('as.[]', function () {
+  sum: computed('as.[]', function sum() {
     this.get('spy')();
     return _.sum(this.get('as').toArray());
   }),
@@ -175,7 +174,7 @@ describe('Unit | Utility | array-slice', function () {
     ).to.deep.equal(_.range(40, 80));
   });
 
-  it('changes array contents when requested indices change', async function () {
+  it('changes array contents when requested indices change', function () {
     const sourceArray = A(_.range(0, 100));
     const startIndex = 50;
     const endIndex = 70;
@@ -193,7 +192,6 @@ describe('Unit | Utility | array-slice', function () {
     });
 
     const native = this.as.toArray();
-    await settled();
     expect(
       native,
       `${JSON.stringify(native)} should be array from 20 to 45`
@@ -217,7 +215,7 @@ describe('Unit | Utility | array-slice', function () {
     expect(j).to.equal(40);
   });
 
-  it('delegates pushObject to sourceArray', async function () {
+  it('delegates pushObject to sourceArray', function () {
     const sourceArray = A(_.range(0, 100));
     const startIndex = 50;
     const endIndex = 70;
@@ -242,7 +240,6 @@ describe('Unit | Utility | array-slice', function () {
       endIndex: 101,
     });
 
-    await settled();
     const native = this.as.toArray();
 
     expect(
@@ -268,9 +265,9 @@ describe('Unit | Utility | array-slice', function () {
 
       const obj = EmberObject.extend({
         as: this.as,
-        sum: computed('as.[]', function () {
+        sum: computed('as.[]', function sum() {
           spy();
-          return _.sum(this.get('as').toArray());
+          return _.sum(this.as.toArray());
         }),
       }).create();
 
@@ -278,12 +275,12 @@ describe('Unit | Utility | array-slice', function () {
 
       this.as.pushObject(10000);
 
-      await settled();
       expect(obj.get('sum')).to.equal(15);
       expect(spy).to.be.calledOnce;
-    });
+    }
+  );
 
-  it('notifies about changes in sourceArray if index is in range', async function () {
+  it('notifies about changes in sourceArray if index is in range', function () {
     const sourceArray = A(_.concat([99, 99, 99], _.range(0, 6)));
     const startIndex = 3;
     const endIndex = 10;
@@ -309,13 +306,12 @@ describe('Unit | Utility | array-slice', function () {
 
     this.as.pushObject(10000);
 
-    await settled();
     expect(obj.get('sum')).to.equal(10015);
     expect(spy).to.be.calledTwice;
   });
 
-  it('notifies about changes in array if increasing the endIndex', async function () {
-    const sourceArray = A(_.concat(_.range(0, 10)));
+  it('notifies about changes in array if increasing the endIndex', function () {
+    const sourceArray = A(_.range(0, 10));
     const startIndex = 0;
     const endIndex = 3;
     const indexMargin = 0;
@@ -337,14 +333,13 @@ describe('Unit | Utility | array-slice', function () {
 
     this.as.set('endIndex', 5);
 
-    await settled();
     const newSum = obj.get('sum');
     expect(spy).to.be.calledTwice;
     expect(newSum).to.equal(_.sum(_.range(0, 5)));
   });
 
-  it('notifies about changes in array if decreasing the endIndex', async function () {
-    const sourceArray = A(_.concat(_.range(0, 10)));
+  it('notifies about changes in array if decreasing the endIndex', function () {
+    const sourceArray = A(_.range(0, 10));
     const startIndex = 0;
     const endIndex = 5;
     const indexMargin = 0;
@@ -366,14 +361,13 @@ describe('Unit | Utility | array-slice', function () {
 
     this.as.set('endIndex', 3);
 
-    await settled();
     const newSum = obj.get('sum');
     expect(spy).to.be.calledTwice;
     expect(newSum).to.equal(_.sum(_.range(0, 3)));
   });
 
-  it('notifies about changes in array if decreasing the startIndex', async function () {
-    const sourceArray = A(_.concat(_.range(0, 10)));
+  it('notifies about changes in array if decreasing the startIndex', function () {
+    const sourceArray = A(_.range(0, 10));
     const startIndex = 7;
     const endIndex = 9;
     const indexMargin = 0;
@@ -395,14 +389,13 @@ describe('Unit | Utility | array-slice', function () {
 
     this.as.set('startIndex', 5);
 
-    await settled();
     const newSum = obj.get('sum');
     expect(spy).to.be.calledTwice;
     expect(newSum).to.equal(_.sum(_.range(5, 9)));
   });
 
-  it('notifies about changes in array if increasing the startIndex', async function () {
-    const sourceArray = A(_.concat(_.range(0, 10)));
+  it('notifies about changes in array if increasing the startIndex', function () {
+    const sourceArray = A(_.range(0, 10));
     const startIndex = 7;
     const endIndex = 10;
     const indexMargin = 0;
@@ -424,14 +417,13 @@ describe('Unit | Utility | array-slice', function () {
 
     this.as.set('startIndex', 8);
 
-    await settled();
     const newSum = obj.get('sum');
     expect(spy).to.be.calledTwice;
     expect(newSum).to.equal(_.sum(_.range(8, 10)));
   });
 
-  it('notifies about changes in array if changing the indexMargin', async function () {
-    const sourceArray = A(_.concat(_.range(0, 100)));
+  it('notifies about changes in array if changing the indexMargin', function () {
+    const sourceArray = A(_.range(0, 100));
     const startIndex = 20;
     const endIndex = 25;
     const indexMargin = 10;
@@ -453,9 +445,7 @@ describe('Unit | Utility | array-slice', function () {
 
     this.as.set('indexMargin', 5);
 
-    await settled();
     const newSum = obj.get('sum');
-    await settled();
     expect(spy).to.be.calledTwice;
     expect(newSum, '15..30').to.equal(_.sum(_.range(15, 30)));
   });
@@ -477,5 +467,41 @@ describe('Unit | Utility | array-slice', function () {
 
       expect(this.as.get('firstObject')).to.deep.equal({ i: 8 });
       expect(this.as.get('lastObject')).to.deep.equal({ i: 10 });
+    }
+  );
+
+  it('does not notify sourceArray [] change if only start/end is changed', function () {
+    // given
+    const sourceArray = A(_.range(0, 100));
+    const startIndex = 0;
+    const endIndex = 10;
+    const indexMargin = 0;
+    this.as = ArraySlice.create({
+      sourceArray,
+      startIndex,
+      endIndex,
+      indexMargin,
     });
+    const spy = sinon.spy();
+    const obj = EmberObject.extend({
+      testProperty: computed('as.sourceArray.[]', function testProperty() {
+        this.spy();
+        return null;
+      }),
+    }).create({
+      as: this.as,
+      spy,
+    });
+
+    // when
+    obj.testProperty;
+    this.as.setProperties({
+      startIndex: 5,
+      endIndex: 15,
+    });
+    obj.testProperty;
+
+    // then
+    expect(spy).to.be.calledOnce;
+  });
 });
