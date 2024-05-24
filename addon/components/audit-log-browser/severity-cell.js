@@ -62,6 +62,6 @@ export default Component.extend({
    * @type {ComputedProperty<String|undefined>}
    */
   severityIcon: computed('severityIcons', 'logEntry.severity', function severityIcon() {
-    return this.severityIcon?.[this.logEntry?.severity];
+    return this.severityIcons?.[this.logEntry?.severity];
   }),
 });
