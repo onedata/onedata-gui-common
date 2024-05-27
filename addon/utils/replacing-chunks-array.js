@@ -280,6 +280,10 @@ export default ArraySlice.extend(Evented, {
         -currentChunkSize,
       )
       .then(({ arrayUpdate }) => {
+        if (this.isDestroyed) {
+          return;
+        }
+
         // TODO: use of pullAllBy is working, but it is probably unsafe
         // it can remove items from update, while they should stay there
         // because some entries "fallen down" from further part of array

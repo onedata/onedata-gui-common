@@ -4,14 +4,13 @@
  * See tests for usage examples.
  *
  * @author Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import { alias } from '@ember/object/computed';
-
 import ArrayProxy from '@ember/array/proxy';
-import { computed, observer } from '@ember/object';
+import { computed, observer, defineProperty } from '@ember/object';
 
 export default ArrayProxy.extend({
   startIndex: 0,
@@ -24,14 +23,7 @@ export default ArrayProxy.extend({
   sourceArray: alias('content'),
 
   _start: computed('startIndex', 'indexMargin', function _start() {
-    const {
-      startIndex,
-      indexMargin,
-    } = this.getProperties(
-      'startIndex',
-      'indexMargin'
-    );
-    return Math.max(0, startIndex - indexMargin);
+    return Math.max(0, this.startIndex - this.indexMargin);
   }),
 
   _end: computed('endIndex', 'indexMargin', 'sourceArray.length', function _end() {
@@ -95,15 +87,16 @@ export default ArrayProxy.extend({
   init() {
     this._super(...arguments);
     // TODO: VFS-9267 Implement missing array method in ArraySlice
-    // [
-    //   'insertAt',
-    //   'removeAt',
-    //   'setObjects',
-    //   'unshiftObject',
-    //   'unshiftObjects',
-    // ].forEach(methodName => {
-    //   this.overrideAsNotImplemented(methodName);
-    // });
+    [
+      'insertAt',
+      'removeAt',
+      'setObjects',
+      'unshiftObject',
+      'unshiftObjects',
+    ].forEach(methodName => {
+      this.overrideAsNotImplemented(methodName);
+    });
+    this.defineLengthProperty();
     // activate observers
     this.getProperties('_start', '_end');
     this._startChanged();
@@ -174,36 +167,29 @@ export default ArrayProxy.extend({
     }
   },
 
-  /**
-   * @override
-   */
-  length: computed('_start', '_end', function () {
-    const {
-      _start,
-      _end,
-    } = this.getProperties(
-      '_start',
-      '_end'
-    );
-    return _end - _start;
-  }),
+  defineLengthProperty() {
+    defineProperty(this, 'length', computed('_start', '_end', function length() {
+      return this._end - this._start;
+    }));
+  },
 
   _arrayContentChange(startIdx, removeAmt, addAmt, fun) {
-    const {
-      _start,
-      _end,
-    } = this.getProperties(
-      '_start',
-      '_end'
-    );
-    if (_start <= startIdx && startIdx <= _end) {
-      const sliceStartIdx = startIdx - _start;
-      const sliceRemoveAmt = Math.min(_end, sliceStartIdx + removeAmt) - sliceStartIdx;
-      const sliceAddAmt = Math.min(_end, sliceStartIdx + addAmt) - sliceStartIdx;
-      return fun.bind(this)(sliceStartIdx, sliceRemoveAmt, sliceAddAmt);
+    let result;
+    if (this._start <= startIdx && startIdx <= this._end) {
+      const sliceStartIdx = startIdx - this._start;
+      const sliceRemoveAmt =
+        Math.min(this._end, sliceStartIdx + removeAmt) - sliceStartIdx;
+      const sliceAddAmt = Math.min(this._end, sliceStartIdx + addAmt) - sliceStartIdx;
+      result = fun.bind(this)(sliceStartIdx, sliceRemoveAmt, sliceAddAmt);
+      // A hack to notify observers of "[]" array property.
+      // Needed since Ember 3.16.6 version, because of the following change:
+      // https://github.com/emberjs/ember.js/pull/18835
+      this.notifyPropertyChange('arrangedContent');
     } else {
-      return this;
+      // ignore the chanage result, because it is out of slice range
+      result = this;
     }
+    return result;
   },
 
   /**
