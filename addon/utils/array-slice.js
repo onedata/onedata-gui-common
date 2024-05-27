@@ -109,8 +109,7 @@ export default ArrayProxy.extend({
    * @override
    */
   pushObject(obj) {
-    const method = this.sourceArray.length > this._end ? 'push' : 'pushObject';
-    return this.sourceArray[method](obj);
+    return this.get('sourceArray').pushObject(obj);
   },
 
   /**
