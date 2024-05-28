@@ -1,0 +1,8 @@
+.blocking-addon-detector {
+  $size: 1px;
+  position: fixed;
+  left: -$size;
+  top: -$size;
+  width: $size;
+  height: $size;
+}

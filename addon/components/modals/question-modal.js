@@ -13,6 +13,8 @@
  * - yesButtonText - accepting button text
  * - yesButtonType - (optional) accepting button type
  * - noButtonText - (optional) declining button text
+ * - isNoButtonHidden - (optional) if true, do not display "no" button
+ * - isYesButtonHidden - (optional) if true, do not display "yes" button
  *
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -109,6 +111,16 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<boolean>}
    */
   isCheckboxInitiallyChecked: reads('modalOptions.isCheckboxInitiallyChecked'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isNoButtonHidden: reads('modalOptions.isNoButtonHidden'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isYesButtonHidden: reads('modalOptions.isYesButtonHidden'),
 
   /**
    * @type {ComputedProperty<boolean>}

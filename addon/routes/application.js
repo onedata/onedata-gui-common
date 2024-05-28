@@ -12,6 +12,7 @@ import { get } from '@ember/object';
 import smoothscroll from 'smoothscroll-polyfill';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import globals from 'onedata-gui-common/utils/globals';
+import BlockingAddonDetector from 'onedata-gui-common/utils/blocking-addon-detector';
 
 export default Route.extend(ApplicationRouteMixin, {
   guiUtils: service(),
@@ -43,6 +44,9 @@ export default Route.extend(ApplicationRouteMixin, {
     const queryParams = transition.to.queryParams;
     this.set('navigationState.queryParams', queryParams);
     this.smoothScrollPolyfill();
+    transition.finally(() => {
+      BlockingAddonDetector.create({ ownerSource: this }).runCheck();
+    });
   },
 
   getNavTokens() {
