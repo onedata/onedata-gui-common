@@ -657,7 +657,7 @@ export default Component.extend(I18n, {
     'atmLambda',
     'atmLambdaRevisionNumber',
     function atmLambdaRevisionObserver() {
-      this.resetFormValues();
+      scheduleOnce('afterRender', this, 'resetFormValues');
     }
   ),
 
@@ -666,7 +666,7 @@ export default Component.extend(I18n, {
     'passedFormValues',
     function formValuesUpdater() {
       if (this.get('mode') === 'view') {
-        this.resetFormValues();
+        scheduleOnce('afterRender', this, 'resetFormValues');
       }
     }
   ),
@@ -683,14 +683,14 @@ export default Component.extend(I18n, {
   isShownObserver: observer('isShown', function isShownObserver() {
     const isShown = this.get('isShown');
     if (isShown) {
-      this.resetFormValues();
+      scheduleOnce('afterRender', this, 'resetFormValues');
     }
   }),
 
   init() {
     this._super(...arguments);
 
-    this.resetFormValues();
+    scheduleOnce('afterRender', this, 'resetFormValues');
     this.formModeUpdater();
   },
 
