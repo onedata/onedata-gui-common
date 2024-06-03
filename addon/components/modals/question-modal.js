@@ -17,9 +17,10 @@
  * - isYesButtonHidden - (optional) if true, do not display "yes" button
  * - shouldCloseOnTransition - (optional) overrides shouldCloseOnTransition of
  *   global-modal; true by default
+ * - modalClassName - (optional) adds classname to global-modal
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -134,6 +135,11 @@ export default Component.extend(I18n, {
       return this.modalOptions?.shouldCloseOnTransition ?? true;
     }
   ),
+
+  /**
+   * @type {ComputedProperty<string|undefined>}
+   */
+  modalClassName: reads('modalOptions.modalClassName'),
 
   /**
    * @type {ComputedProperty<boolean>}

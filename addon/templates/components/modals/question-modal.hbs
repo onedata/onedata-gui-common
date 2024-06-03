@@ -1,5 +1,5 @@
 {{#global-modal
-  classNames="question-modal"
+  classNames=(concat-classes "question-modal" modalClassName)
   allowClose=(not isSubmitting)
   modalId=modalId
   shouldCloseOnTransition=shouldCloseOnTransition

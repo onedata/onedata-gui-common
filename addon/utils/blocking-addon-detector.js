@@ -15,6 +15,7 @@ import isVisible from 'onedata-gui-common/utils/dom/is-visible';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import sleep from 'onedata-gui-common/utils/sleep';
 
 const testedClasses = [
   'item-shares',
@@ -50,12 +51,14 @@ export default class BlockingAddonDetector extends EmberObject.extend(...mixins)
    * displays the warning modal.
    * @returns {void}
    */
-  runCheck() {
+  async runCheck() {
     if (this.getPersistedSuppressDetectionFlag()) {
       return;
     }
     try {
       this.insertTestElement();
+      // some extensions, like uBlock Origin, need some time to do their work
+      await sleep(500);
       if (!this.isTesterVisible()) {
         this.showWarningModal();
       }
@@ -96,14 +99,17 @@ export default class BlockingAddonDetector extends EmberObject.extend(...mixins)
       descriptionParagraphs: [{
         text: this.t('detectedText'),
       }, {
+        text: this.t('issues'),
+      }, {
         text: this.t('noAdvertisementsText'),
       }],
-      yesButtonText: this.t('ok'),
+      yesButtonText: this.t('dismiss'),
       yesButtonType: 'default',
       checkboxMessage: this.t('doNotDisplay'),
       isNoButtonHidden: true,
       isCheckboxBlocking: false,
       shouldCloseOnTransition: false,
+      modalClassName: 'blocking-addon-warning-modal',
       onSubmit: async ({ isCheckboxChecked }) => {
         if (isCheckboxChecked) {
           this.setPersistedSuppressDetectionFlag();
