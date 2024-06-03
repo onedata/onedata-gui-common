@@ -44,9 +44,6 @@ export default Route.extend(ApplicationRouteMixin, {
     const queryParams = transition.to.queryParams;
     this.set('navigationState.queryParams', queryParams);
     this.smoothScrollPolyfill();
-    transition.finally(() => {
-      BlockingAddonDetector.create({ ownerSource: this }).runCheck();
-    });
   },
 
   getNavTokens() {

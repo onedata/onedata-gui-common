@@ -103,6 +103,7 @@ export default class BlockingAddonDetector extends EmberObject.extend(...mixins)
       checkboxMessage: this.t('doNotDisplay'),
       isNoButtonHidden: true,
       isCheckboxBlocking: false,
+      shouldCloseOnTransition: false,
       onSubmit: async ({ isCheckboxChecked }) => {
         if (isCheckboxChecked) {
           this.setPersistedSuppressDetectionFlag();

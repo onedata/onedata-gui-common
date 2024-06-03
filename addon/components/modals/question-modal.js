@@ -15,6 +15,8 @@
  * - noButtonText - (optional) declining button text
  * - isNoButtonHidden - (optional) if true, do not display "no" button
  * - isYesButtonHidden - (optional) if true, do not display "yes" button
+ * - shouldCloseOnTransition - (optional) overrides shouldCloseOnTransition of
+ *   global-modal; true by default
  *
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -26,6 +28,7 @@ import I18n from 'onedata-gui-common/mixins/i18n';
 import computedT from 'onedata-gui-common/utils/computed-t';
 import { inject as service } from '@ember/service';
 import { and, or, not, raw, bool, notEqual } from 'ember-awesome-macros';
+import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { resolve } from 'rsvp';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -121,6 +124,16 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<boolean>}
    */
   isYesButtonHidden: reads('modalOptions.isYesButtonHidden'),
+
+  /**
+   * @type {ComputedProperty<boolean | (transitionInfo: TransitionInfo) => boolean>}
+   */
+  shouldCloseOnTransition: computed(
+    'modalOptions.shouldCloseOnTransition',
+    function shouldCloseOnTransition() {
+      return this.modalOptions?.shouldCloseOnTransition ?? true;
+    }
+  ),
 
   /**
    * @type {ComputedProperty<boolean>}
