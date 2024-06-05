@@ -20,6 +20,9 @@ import { computed } from '@ember/object';
  * the parent object destroy (use `destroyDestroyableComputedValues(this)` in the
  * `willDestroy` hook).
  *
+ * This macro supports also array of destroyable objects as values from computed - if
+ * the value is an array, it tries to destroy each object in it rescursively.
+ *
  * When using this macro, remember to:
  * - use `initDestroyableCache` in the `init`,
  * - use `destroyDestroyableComputedValues(this)` in the `willDestroy` hook.
@@ -35,7 +38,7 @@ export function destroyableComputed(...computedArgs) {
   return computed(...computedArgs.slice(0, computedArgs.length - 1), function () {
     const fun = computedArgs[computedArgs.length - 1];
     if (cache) {
-      cache.destroy();
+      destroyCached(cache);
       this.destroyableValuesSet.delete(cache);
     }
     const value = fun.bind(this)(...arguments);
@@ -74,5 +77,14 @@ export function destroyDestroyableComputedValues(self) {
     );
     return;
   }
-  self.destroyableValuesSet.values().forEach(obj => obj.destroy());
+  self.destroyableValuesSet.values().forEach(obj => destroyCached(obj));
+}
+
+function destroyCached(obj) {
+  if (typeof obj.destroy === 'function') {
+    obj.destroy();
+  }
+  if (Array.isArray(obj)) {
+    obj.forEach(item => destroyCached(item));
+  }
 }
