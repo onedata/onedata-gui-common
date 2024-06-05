@@ -13,9 +13,14 @@
  * - yesButtonText - accepting button text
  * - yesButtonType - (optional) accepting button type
  * - noButtonText - (optional) declining button text
+ * - isNoButtonHidden - (optional) if true, do not display "no" button
+ * - isYesButtonHidden - (optional) if true, do not display "yes" button
+ * - shouldCloseOnTransition - (optional) overrides shouldCloseOnTransition of
+ *   global-modal; true by default
+ * - modalClassName - (optional) adds classname to global-modal
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -24,6 +29,7 @@ import I18n from 'onedata-gui-common/mixins/i18n';
 import computedT from 'onedata-gui-common/utils/computed-t';
 import { inject as service } from '@ember/service';
 import { and, or, not, raw, bool, notEqual } from 'ember-awesome-macros';
+import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { resolve } from 'rsvp';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -109,6 +115,31 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<boolean>}
    */
   isCheckboxInitiallyChecked: reads('modalOptions.isCheckboxInitiallyChecked'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isNoButtonHidden: reads('modalOptions.isNoButtonHidden'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isYesButtonHidden: reads('modalOptions.isYesButtonHidden'),
+
+  /**
+   * @type {ComputedProperty<boolean | (transitionInfo: TransitionInfo) => boolean>}
+   */
+  shouldCloseOnTransition: computed(
+    'modalOptions.shouldCloseOnTransition',
+    function shouldCloseOnTransition() {
+      return this.modalOptions?.shouldCloseOnTransition ?? true;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<string|undefined>}
+   */
+  modalClassName: reads('modalOptions.modalClassName'),
 
   /**
    * @type {ComputedProperty<boolean>}

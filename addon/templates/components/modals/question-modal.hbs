@@ -1,7 +1,8 @@
 {{#global-modal
-  classNames="question-modal"
+  classNames=(concat-classes "question-modal" modalClassName)
   allowClose=(not isSubmitting)
   modalId=modalId
+  shouldCloseOnTransition=shouldCloseOnTransition
   as |modal|
 }}
 
@@ -36,23 +37,27 @@
   {{/modal.body}}
 
   {{#modal.footer class="btn-toolbar"}}
-    {{#bs-button
-      type="default"
-      class="question-no"
-      onClick=modal.close
-      disabled=isSubmitting
-    }}
-      {{noButtonText}}
-    {{/bs-button}}
-    {{#one-button
-      type=yesButtonType
-      buttonType="submit"
-      class="question-yes"
-      onClick=(action "submit" modal.submit)
-      disabled=isYesButtonDisabled
-    }}
-      {{yesButtonText}}
-    {{/one-button}}
+    {{#unless isNoButtonHidden}}
+      {{#bs-button
+        type="default"
+        class="question-no"
+        onClick=modal.close
+        disabled=isSubmitting
+      }}
+        {{noButtonText}}
+      {{/bs-button}}
+    {{/unless}}
+    {{#unless isYesButtonHidden}}
+      {{#one-button
+        type=yesButtonType
+        buttonType="submit"
+        class="question-yes"
+        onClick=(action "submit" modal.submit)
+        disabled=isYesButtonDisabled
+      }}
+        {{yesButtonText}}
+      {{/one-button}}
+    {{/unless}}
   {{/modal.footer}}
 
 {{/global-modal}}
