@@ -181,7 +181,9 @@ export default Component.extend(I18n, {
     'model.collection.list.@each.id',
     'primaryItemId',
     function primaryItem() {
-      return this.model?.collection?.list?.find(({ id }) => id === this.primaryItemId);
+      return this.model?.collection?.list?.content?.find(({ id }) =>
+        id === this.primaryItemId
+      );
     }
   ),
 
@@ -204,7 +206,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<Array<any>>}
    */
-  sortedCollection: sort('model.collection.list', 'sorting'),
+  sortedCollection: sort('model.collection.list.content', 'sorting'),
 
   /**
    * @type {Ember.ComputedProperty<Array<any>>}

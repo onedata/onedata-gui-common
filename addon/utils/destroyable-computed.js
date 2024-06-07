@@ -77,7 +77,7 @@ export function destroyDestroyableComputedValues(self) {
     );
     return;
   }
-  self.destroyableValuesSet.values().forEach(obj => destroyCached(obj));
+  self.destroyableValuesSet.forEach(obj => destroyCached(obj));
 }
 
 function destroyCached(obj) {

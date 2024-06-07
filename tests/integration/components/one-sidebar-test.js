@@ -182,9 +182,9 @@ describe('Integration | Component | one-sidebar', function () {
     const passedContext = getButtonsForSpy.lastCall.args[1];
     expect(passedContext).to.exist;
     expect(get(passedContext, 'collection').toArray())
-      .to.deep.equal(collection.list.toArray());
+      .to.deep.equal(collection.list.content.toArray());
     expect(get(passedContext, 'visibleCollection'))
-      .to.deep.equal(collection.list.slice(0, 1));
+      .to.deep.equal(collection.list.content.slice(0, 1));
   });
 
   it(

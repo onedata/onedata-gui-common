@@ -240,7 +240,7 @@ export default Service.extend(I18n, {
    */
   resourceTypeActions: computed(
     'activeResourceType',
-    'activeResourceCollection.list.[]',
+    'activeResourceCollection.list.content.[]',
     function () {
       const {
         sidebarResources,
@@ -252,7 +252,7 @@ export default Service.extend(I18n, {
         'activeResourceCollection'
       );
 
-      const collection = get(activeResourceCollection || {}, 'list');
+      const collection = get(activeResourceCollection || {}, 'list.content');
       return sidebarResources.getButtonsFor(activeResourceType, {
         collection,
         // In global view we assume, that all items are visible - we cannot guess any
@@ -429,7 +429,7 @@ export default Service.extend(I18n, {
   ),
 
   activeResourceCollectionObserver: observer(
-    'activeResourceCollection.list.[]',
+    'activeResourceCollection.list.content.[]',
     function () {
       const {
         activeResourceId,
