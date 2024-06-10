@@ -81,6 +81,9 @@ export function destroyDestroyableComputedValues(self) {
 }
 
 function destroyCached(obj) {
+  if (!obj) {
+    return;
+  }
   if (typeof obj.destroy === 'function') {
     obj.destroy();
   }
