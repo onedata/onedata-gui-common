@@ -7,7 +7,7 @@
  * should be changed (and changes should be later reverted!).
  *
  * @author Michał Borzęcki
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -24,6 +24,11 @@ import _ from 'lodash';
 import { resolve, Promise } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import { next } from '@ember/runloop';
+import {
+  destroyDestroyableComputedValues,
+  destroyableComputed,
+  initDestroyableCache,
+} from 'onedata-gui-common/utils/destroyable-computed';
 
 /**
  * @typedef {object} Action
@@ -238,7 +243,7 @@ export default Service.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<Array<Action>>}
    */
-  resourceTypeActions: computed(
+  resourceTypeActions: destroyableComputed(
     'activeResourceType',
     'activeResourceCollection.list.content.[]',
     function () {
@@ -451,6 +456,22 @@ export default Service.extend(I18n, {
       }
     }
   ),
+
+  init() {
+    initDestroyableCache(this);
+    this._super(...arguments);
+  },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      destroyDestroyableComputedValues(this);
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   mergedAspectOptions(options) {
     const newAspectOptions = Object.assign({}, this.get('aspectOptions'), options);
