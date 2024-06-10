@@ -43,7 +43,9 @@ export function destroyableComputed(...computedArgs) {
     }
     const value = fun.bind(this)(...arguments);
     cache = value;
-    this.destroyableValuesSet.add(cache);
+    if (cache) {
+      this.destroyableValuesSet.add(cache);
+    }
     return cache;
   });
 }
