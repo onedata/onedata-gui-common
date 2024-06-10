@@ -52,12 +52,12 @@ export default Component.extend({
     timeUpdater.on('tick', () => this.updateTime());
   },
 
-  destroy() {
+  /**
+   * @override
+   */
+  willDestroyElement() {
     try {
-      const timeUpdater = this.get('timeUpdater');
-      if (timeUpdater) {
-        timeUpdater.destroy();
-      }
+      this.timeUpdater?.destroy();
     } finally {
       this._super(...arguments);
     }

@@ -59,8 +59,11 @@ export default EmberObject.extend({
   /**
    * @override
    */
-  destroy() {
-    this._super(...arguments);
-    this.stop();
+  willDestroy() {
+    try {
+      this.stop();
+    } finally {
+      this._super(...arguments);
+    }
   },
 });

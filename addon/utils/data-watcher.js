@@ -91,6 +91,15 @@ export default EmberObject.extend({
     }
   ),
 
+  _reconfigureWatcher: observer(
+    '_interval',
+    function _reconfigureWatcher() {
+      // debouncing does not let _setCleanWatchersIntervals to be executed multiple
+      // times, which can occur for observer
+      run.debounce(this, '_setWatcherInterval', 1);
+    }
+  ),
+
   init() {
     this._super(...arguments);
 
@@ -103,22 +112,16 @@ export default EmberObject.extend({
     this.get('_interval');
   },
 
-  destroy() {
+  /**
+   * @override
+   */
+  willDestroy() {
     try {
-      this.get('_watcher').destroy();
+      this._watcher?.destroy();
     } finally {
       this._super(...arguments);
     }
   },
-
-  _reconfigureWatcher: observer(
-    '_interval',
-    function _reconfigureWatcher() {
-      // debouncing does not let _setCleanWatchersIntervals to be executed multiple
-      // times, which can occur for observer
-      run.debounce(this, '_setWatcherInterval', 1);
-    }
-  ),
 
   /**
    * Create watchers for fetching data

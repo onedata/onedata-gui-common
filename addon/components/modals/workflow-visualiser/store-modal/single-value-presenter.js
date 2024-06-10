@@ -82,8 +82,11 @@ export default Component.extend(I18n, createDataProxyMixin('valueContainer'), {
    * @override
    */
   willDestroyElement() {
-    this._super(...arguments);
-    this.valueContainerUpdater?.destroy();
+    try {
+      this.valueContainerUpdater?.destroy();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   /**
