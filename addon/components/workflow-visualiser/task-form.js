@@ -689,9 +689,8 @@ export default Component.extend(I18n, {
 
   init() {
     this._super(...arguments);
-
     scheduleOnce('afterRender', this, 'resetFormValues');
-    this.formModeUpdater();
+    scheduleOnce('afterRender', this, 'formModeUpdater');
   },
 
   /**
