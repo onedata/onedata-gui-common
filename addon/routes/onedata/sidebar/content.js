@@ -68,7 +68,7 @@ export default Route.extend({
     return superResult;
   },
 
-  model({ resource_id: resourceId }, transition) {
+  async model({ resource_id: resourceId }, transition) {
     // TODO: validate and use resourceType
     const {
       collection,
@@ -94,17 +94,14 @@ export default Route.extend({
       const existingResourceId = this.availableResourceId(resourceId, collection);
       this.set('navigationState.activeResourceId', existingResourceId);
       if (existingResourceId) {
-        return new Promise((resolve, reject) => {
-          const gettingResource = this.get('contentResources')
-            .getModelFor(resourceType, existingResourceId);
-          gettingResource.then(resource => resolve({
-            resourceId: existingResourceId,
-            resource,
-            collection,
-            queryParams,
-          }));
-          gettingResource.catch(reject);
-        });
+        const resource = await this.contentResources
+          .getModelFor(resourceType, existingResourceId);
+        return {
+          resourceId: existingResourceId,
+          resource,
+          collection,
+          queryParams,
+        };
       } else {
         // if the resource to load is not present on the list,
         // try to guess it's ID and try to fetch it to detect why it isn't
