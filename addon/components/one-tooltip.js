@@ -45,6 +45,26 @@ export default class OneTooltip extends BsTooltip {
     this.scrollState.addScrollListener(this.scrollListener);
   }
 
+  /**
+   * @override
+   */
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+
+    // show the tooltip on element insert if the trigger is currently hovered
+    let events = this.get('triggerEvents');
+    if (!Array.isArray(events)) {
+      events = events.split(' ');
+    }
+    if (
+      !this.inDom &&
+      events.includes('hover') &&
+      this.triggerTargetElement?.matches(':hover')
+    ) {
+      this.triggerTargetElement.dispatchEvent(new Event('mouseenter'));
+    }
+  }
+
   willDestroy() {
     super.willDestroy(...arguments);
     this.scrollState.removeScrollListener(this.scrollListener);
