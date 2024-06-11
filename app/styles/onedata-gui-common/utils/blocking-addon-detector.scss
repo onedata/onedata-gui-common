@@ -1,0 +1,20 @@
+.blocking-addon-detector {
+  $size: 1px;
+  position: fixed;
+  left: -$size;
+  top: -$size;
+  width: $size;
+  height: $size;
+}
+
+.blocking-addon-warning-modal {
+  .text-understand {
+    color: $main-text-color;
+  }
+  .one-checkbox-understand.one-checkbox.danger.checked {
+    border-color: $main-text-color;
+    &::after {
+      color: $main-text-color;
+    }
+  }
+}
