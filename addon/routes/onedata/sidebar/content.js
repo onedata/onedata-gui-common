@@ -15,14 +15,14 @@
  * - new - when a creation of new resouce should take whole content view
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Route from '@ember/routing/route';
 
 import { inject as service } from '@ember/service';
-import { Promise, resolve } from 'rsvp';
+import { resolve } from 'rsvp';
 import { get, setProperties } from '@ember/object';
 import isRecord from 'onedata-gui-common/utils/is-record';
 import { scheduleOnce } from '@ember/runloop';
