@@ -61,6 +61,7 @@ import atmInventoryInfoContent from './onedata-gui-common/components/atm-invento
 import clusterInfoContent from './onedata-gui-common/components/cluster-info-content';
 import pagesControl from './onedata-gui-common/components/pages-control';
 import websocketReconnectionModal from './onedata-gui-common/components/websocket-reconnection-modal';
+import blockingAddonDetector from './onedata-gui-common/utils/blocking-addon-detector';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -216,6 +217,7 @@ const translations = {
     file,
     group,
     oneTimeSeriesChart: utilOneTimeSeriesChart,
+    blockingAddonDetector,
   },
   errors: {
     backendErrors,

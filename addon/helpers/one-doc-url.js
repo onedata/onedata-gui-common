@@ -16,21 +16,9 @@ import Helper from '@ember/component/helper';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 
-const fallbackDocsVersion = 'stable';
-
-/**
- * Simplifies version numer to the one that is used in onedata.org homepage for
- * documentation.
- * @param {string} version For example: '21.02.3'
- * @returns {string|undefined} For example: '21.02'. Returns undefined if version is in
- *   unknown format (also applies for special 'stable' version).
- */
-function simplifyVersion(version) {
-  return version.match(/(\d+\.\d+)\.\d+/)?.[1];
-}
-
 const OneDocUrlHelper = Helper.extend({
   guiUtils: service(),
+  homepageUrl: service(),
 
   versionObserver: observer(
     'guiUtils.softwareVersionDetails',
@@ -40,17 +28,7 @@ const OneDocUrlHelper = Helper.extend({
   ),
 
   compute([path], { version } = {}) {
-    let effVersion = version;
-    if (!effVersion) {
-      effVersion = this.guiUtils.softwareVersionDetails?.serviceVersion;
-    }
-    if (effVersion) {
-      effVersion = simplifyVersion(effVersion);
-    }
-    if (!effVersion) {
-      effVersion = fallbackDocsVersion;
-    }
-    return `https://onedata.org/#/home/documentation/${effVersion}/doc/${path}`;
+    return this.homepageUrl.generateDocumentationUrl({ path, version });
   },
 });
 

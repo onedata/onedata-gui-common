@@ -105,6 +105,7 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 @import 'onedata-gui-common/utils/atm-workflow/data-spec-editor/params-editors';
 @import 'onedata-gui-common/utils/atm-workflow/store-config-editors/time-series';
 @import 'onedata-gui-common/utils/atm-workflow/store-content-update-options-editor/time-series';
+@import 'onedata-gui-common/utils/blocking-addon-detector';
 
 // Non-Ember-components styled elements
 
