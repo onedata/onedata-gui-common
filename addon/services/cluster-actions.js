@@ -2,13 +2,11 @@
  * A service which provides cluster manipulation functions ready to use for GUI
  *
  * @author Jakub Liput
- * @copyright (C) 2018-2019 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Service, { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
-import { collect } from '@ember/object/computed';
 import I18n from 'onedata-gui-common/mixins/i18n';
 
 export default Service.extend(I18n, {
@@ -18,22 +16,20 @@ export default Service.extend(I18n, {
   i18nPrefix: 'services.clusterActions',
 
   /**
-   * @type {Ember.Computed<Array<SidebarButtonDefinition>>}
+   * @returns {Ember.Computed<Array<SidebarButtonDefinition>>}
    */
-  buttons: collect('btnAdd'),
+  createGlobalActions() {
+    return [this.createAddButton()];
+  },
 
-  addAction: computed(function addAction() {
-    const router = this.get('router');
-    return () => router.transitionTo('onedata.sidebar.content', 'clusters', 'add');
-  }),
-
-  btnAdd: computed('addAction', function btnAdd() {
+  createAddButton() {
     return {
       icon: 'add-filled',
       title: this.t('btnAdd.title'),
       tip: this.t('btnAdd.hint'),
       class: 'add-cluster-btn',
-      action: this.get('addAction'),
+      action: () =>
+        this.router.transitionTo('onedata.sidebar.content', 'clusters', 'add'),
     };
-  }),
+  },
 });

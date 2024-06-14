@@ -99,6 +99,11 @@ export default VisualiserSpace.extend({
   }),
 
   /**
+   * @type {Utils.Action | null}
+   */
+  createElementActionCache: null,
+
+  /**
    * @type {ComputedProperty<Utils.Action>}
    */
   createElementAction: computed(
@@ -106,6 +111,7 @@ export default VisualiserSpace.extend({
     'interblockSpace',
     'siblingsType',
     function createElementAction() {
+      this.createElementActionCache?.destroyAfterAllExecutions?.();
       const {
         actionsFactory,
         interblockSpace,
@@ -115,7 +121,7 @@ export default VisualiserSpace.extend({
       const createCallback =
         newElementProps => interblockSpace.addElement(newElementProps);
 
-      return siblingsType === 'parallelBox' ?
+      return this.createElementActionCache = siblingsType === 'parallelBox' ?
         actionsFactory.createCreateParallelBoxAction({
           createParallelBoxCallback: createCallback,
         }) :

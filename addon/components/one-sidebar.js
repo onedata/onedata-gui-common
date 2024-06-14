@@ -21,6 +21,11 @@ import layout from 'onedata-gui-common/templates/components/one-sidebar';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import { camelize } from '@ember/string';
 import globals from 'onedata-gui-common/utils/globals';
+import {
+  destroyDestroyableComputedValues,
+  destroyableComputed,
+  initDestroyableCache,
+} from 'onedata-gui-common/utils/destroyable-computed';
 
 export default Component.extend(I18n, {
   layout,
@@ -64,7 +69,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<Array<object>>}
    */
-  buttons: computed('resourceType', 'context', function buttons() {
+  buttons: destroyableComputed('resourceType', 'context', function buttons() {
     const {
       sidebarResources,
       context,
@@ -181,7 +186,9 @@ export default Component.extend(I18n, {
     'model.collection.list.@each.id',
     'primaryItemId',
     function primaryItem() {
-      return this.model?.collection?.list?.find(({ id }) => id === this.primaryItemId);
+      return this.model?.collection?.list?.content?.find(({ id }) =>
+        id === this.primaryItemId
+      );
     }
   ),
 
@@ -204,7 +211,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<Array<any>>}
    */
-  sortedCollection: sort('model.collection.list', 'sorting'),
+  sortedCollection: sort('model.collection.list.content', 'sorting'),
 
   /**
    * @type {Ember.ComputedProperty<Array<any>>}
@@ -249,6 +256,7 @@ export default Component.extend(I18n, {
   ),
 
   init() {
+    initDestroyableCache(this);
     this._super(...arguments);
 
     const {
@@ -273,6 +281,17 @@ export default Component.extend(I18n, {
     }
 
     this.contextUpdater();
+  },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      destroyDestroyableComputedValues(this);
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   actions: {

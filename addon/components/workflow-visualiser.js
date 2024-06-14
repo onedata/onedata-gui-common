@@ -271,6 +271,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
   executionState: undefined,
 
   /**
+   * @type {Utils.WorkflowVisualiser.ActionsFactory | null}
+   */
+  actionsFactoryCache: null,
+
+  /**
    * @type {ComputedProperty<Array<AtmWorkflowSchemaValidationError>>}
    */
   validationErrors: computed('rawData', function validationErrors() {
@@ -542,7 +547,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
     });
 
     if (!this.get('actionsFactory')) {
-      this.set('actionsFactory', ActionsFactory.create({ ownerSource: this }));
+      const actionsFactory = ActionsFactory.create({ ownerSource: this });
+      this.setProperties({
+        actionsFactory,
+        actionsFactoryCache: actionsFactory,
+      });
     }
     this.actionsFactoryObserver();
     if (this.get('mode') === 'view') {
@@ -573,9 +582,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       ].forEach((actionName) => {
         this.cacheFor(actionName)?.destroy?.();
       });
-      if (this.actionsFactory.ownerSource === this) {
-        this.actionsFactory.destroy?.();
-      }
+      this.actionsFactoryCache?.destroy?.();
       this.cacheFor('workflowDataProvider')?.destroy?.();
     } finally {
       this._super(...arguments);

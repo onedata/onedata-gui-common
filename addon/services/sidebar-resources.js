@@ -58,8 +58,8 @@ export default Service.extend({
       .then(collection => {
         if (isRecord(collection)) {
           return collection;
-        } else if (get(collection, 'list')) {
-          return Promise.all(get(collection, 'list')).then(() =>
+        } else if (get(collection, 'list.content')) {
+          return Promise.all(get(collection, 'list.content')).then(() =>
             collection
           );
         } else {

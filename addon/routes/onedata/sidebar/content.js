@@ -15,14 +15,14 @@
  * - new - when a creation of new resouce should take whole content view
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Route from '@ember/routing/route';
 
 import { inject as service } from '@ember/service';
-import { Promise, resolve } from 'rsvp';
+import { resolve } from 'rsvp';
 import { get, setProperties } from '@ember/object';
 import isRecord from 'onedata-gui-common/utils/is-record';
 import { scheduleOnce } from '@ember/runloop';
@@ -68,7 +68,7 @@ export default Route.extend({
     return superResult;
   },
 
-  model({ resource_id: resourceId }, transition) {
+  async model({ resource_id: resourceId }, transition) {
     // TODO: validate and use resourceType
     const {
       collection,
@@ -94,17 +94,14 @@ export default Route.extend({
       const existingResourceId = this.availableResourceId(resourceId, collection);
       this.set('navigationState.activeResourceId', existingResourceId);
       if (existingResourceId) {
-        return new Promise((resolve, reject) => {
-          const gettingResource = this.get('contentResources')
-            .getModelFor(resourceType, existingResourceId);
-          gettingResource.then(resource => resolve({
-            resourceId: existingResourceId,
-            resource,
-            collection,
-            queryParams,
-          }));
-          gettingResource.catch(reject);
-        });
+        const resource = await this.contentResources
+          .getModelFor(resourceType, existingResourceId);
+        return {
+          resourceId: existingResourceId,
+          resource,
+          collection,
+          queryParams,
+        };
       } else {
         // if the resource to load is not present on the list,
         // try to guess it's ID and try to fetch it to detect why it isn't

@@ -23,3 +23,21 @@ export default PromiseArray;
 export function promiseArray(promise) {
   return PromiseArray.create({ promise });
 }
+
+export const DestroyablePromiseArray = PromiseArray.extend({
+  willDestroy() {
+    try {
+      if (typeof this.content?.destroy === 'function') {
+        this.content.destroy();
+      }
+    } finally {
+      this._super(...arguments);
+    }
+  },
+});
+
+export function destroyablePromiseArray(promise) {
+  return DestroyablePromiseArray.create({
+    promise,
+  });
+}

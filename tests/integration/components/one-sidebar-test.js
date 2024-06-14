@@ -19,6 +19,7 @@ import sinon from 'sinon';
 import { lookupService } from '../../helpers/stub-service';
 import OneSidebar from 'onedata-gui-common/components/one-sidebar';
 import globals from 'onedata-gui-common/utils/globals';
+import ArrayProxy from '@ember/array/proxy';
 
 const TestableOneSidebar = OneSidebar.extend({
   didInsertElement() {
@@ -36,13 +37,15 @@ describe('Integration | Component | one-sidebar', function () {
     this.set('model', {
       resourceType: 'testResource',
       collection: {
-        list: [{
-          id: 'id1',
-          name: 'res1',
-        }, {
-          id: 'id2',
-          name: 'res2',
-        }],
+        list: ArrayProxy.create({
+          content: [{
+            id: 'id1',
+            name: 'res1',
+          }, {
+            id: 'id2',
+            name: 'res2',
+          }],
+        }),
       },
     });
   });
@@ -182,9 +185,9 @@ describe('Integration | Component | one-sidebar', function () {
     const passedContext = getButtonsForSpy.lastCall.args[1];
     expect(passedContext).to.exist;
     expect(get(passedContext, 'collection').toArray())
-      .to.deep.equal(collection.list.toArray());
+      .to.deep.equal(collection.list.content.toArray());
     expect(get(passedContext, 'visibleCollection'))
-      .to.deep.equal(collection.list.slice(0, 1));
+      .to.deep.equal(collection.list.content.slice(0, 1));
   });
 
   it(

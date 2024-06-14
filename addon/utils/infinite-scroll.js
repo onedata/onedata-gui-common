@@ -77,6 +77,15 @@ export default EmberObject.extend({
   },
 
   /**
+   * @override
+   */
+  willDestroy() {
+    this.scrollHandler?.destroy();
+    this.listUpdater?.destroy();
+    this.fetchingStatus?.destroy();
+  },
+
+  /**
    * @public
    * @param {HTMLElement} listContainerElement
    * @param {HTMLElement} [scrollableContainerElement]
@@ -105,23 +114,6 @@ export default EmberObject.extend({
    */
   stopAutoUpdate() {
     this.get('listUpdater').stop();
-  },
-
-  destroy() {
-    const {
-      scrollHandler,
-      listUpdater,
-      fetchingStatus,
-    } = this.getProperties('scrollHandler', 'listUpdater', 'fetchingStatus');
-    if (scrollHandler) {
-      scrollHandler.destroy();
-    }
-    if (listUpdater) {
-      listUpdater.destroy();
-    }
-    if (fetchingStatus) {
-      fetchingStatus.destroy();
-    }
   },
 
   initFetchingStatus() {
