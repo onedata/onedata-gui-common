@@ -11,11 +11,11 @@
  */
 
 import EmberObject, { observer, defineProperty } from '@ember/object';
-import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import { DynamicOwnerInjector } from 'onedata-gui-common/mixins/owner-injector';
 import { reads } from '@ember/object/computed';
 import { isEmpty } from 'ember-awesome-macros';
 
-export default EmberObject.extend(OwnerInjector, {
+export default EmberObject.extend(DynamicOwnerInjector, {
   /**
    * @type {Utils.FormComponent.FormField}
    */

@@ -25,7 +25,7 @@ import { reads } from '@ember/object/computed';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
-import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import { DynamicOwnerInjector } from 'onedata-gui-common/mixins/owner-injector';
 import ActionResult from 'onedata-gui-common/utils/action-result';
 import { allSettled, resolve } from 'rsvp';
 
@@ -53,7 +53,7 @@ export const ActionUndoPossibility = Object.freeze({
  * @typedef {(result: Utils.ActionResult, action: Utils.Action) => Promise<void>} ActionExecuteHook
  */
 
-export default EmberObject.extend(I18n, OwnerInjector, {
+export default EmberObject.extend(I18n, DynamicOwnerInjector, {
   i18n: service(),
   globalNotify: service(),
 

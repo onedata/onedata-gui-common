@@ -234,7 +234,7 @@
 import EmberObject, { computed, defineProperty, observer, trySet } from '@ember/object';
 import { reads, equal } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import { DynamicOwnerInjector } from 'onedata-gui-common/mixins/owner-injector';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import { A } from '@ember/array';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
@@ -247,7 +247,7 @@ import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
  * @typedef {'view'|'edit'} FormElementMode
  */
 
-export default EmberObject.extend(OwnerInjector, I18n, {
+export default EmberObject.extend(DynamicOwnerInjector, I18n, {
   i18n: service(),
 
   /**
