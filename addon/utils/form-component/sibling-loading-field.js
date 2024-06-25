@@ -53,7 +53,7 @@ export default LoadingField.extend({
           configurable: true,
         });
       } else {
-        defineProperty(this, 'tip', reads('parent.fields.${siblingIndex}.tip'));
+        defineProperty(this, 'tip', reads(`parent.fields.${siblingIndex}.tip`));
       }
     }
   ),
@@ -72,7 +72,7 @@ export default LoadingField.extend({
           configurable: true,
         });
       } else {
-        defineProperty(this, 'label', reads('parent.fields.${siblingIndex}.label'));
+        defineProperty(this, 'label', reads(`parent.fields.${siblingIndex}.label`));
       }
     }
   ),
