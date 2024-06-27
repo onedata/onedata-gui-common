@@ -31,7 +31,6 @@ export function applyOwnerSource(obj, ownerSource) {
     return;
   }
   if (getOwner(obj)) {
-    // console.warn('OwnerInjector: the object already has an owner, ignoring ownerSource change.');
     return;
   }
   const ownerInjection = typeof ownerSource.ownerInjection === 'function' ?
