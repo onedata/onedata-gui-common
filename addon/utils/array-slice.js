@@ -48,18 +48,20 @@ export default ArrayProxy.extend({
       '_start'
     );
 
-    if (_startCache !== undefined && _start !== _startCache) {
-      let removeAmt = 0;
-      let addAmt = 0;
-      if (_start > _startCache) {
-        removeAmt = _start - _startCache;
-      } else {
-        addAmt = _startCache - _start;
+    try {
+      if (_startCache !== undefined && _start !== _startCache) {
+        let removeAmt = 0;
+        let addAmt = 0;
+        if (_start > _startCache) {
+          removeAmt = _start - _startCache;
+        } else {
+          addAmt = _startCache - _start;
+        }
+        this.arrayContentDidChange(_start, removeAmt, addAmt);
       }
-      this.arrayContentDidChange(_start, removeAmt, addAmt);
+    } finally {
+      this.set('_startCache', _start);
     }
-
-    this.set('_startCache', _start);
   }),
 
   _endChanged: observer('_end', function _endChanged() {
@@ -70,18 +72,20 @@ export default ArrayProxy.extend({
       '_endCache',
       '_end'
     );
-    if (_endCache !== undefined && _end !== _endCache) {
-      let removeAmt = 0;
-      let addAmt = 0;
-      if (_end > _endCache) {
-        addAmt = _end - _endCache;
-      } else {
-        removeAmt = _endCache - _end;
+    try {
+      if (_endCache !== undefined && _end !== _endCache) {
+        let removeAmt = 0;
+        let addAmt = 0;
+        if (_end > _endCache) {
+          addAmt = _end - _endCache;
+        } else {
+          removeAmt = _endCache - _end;
+        }
+        this.arrayContentDidChange(_endCache - removeAmt, removeAmt, addAmt);
       }
-      this.arrayContentDidChange(_endCache - removeAmt, removeAmt, addAmt);
+    } finally {
+      this.set('_endCache', _end);
     }
-
-    this.set('_endCache', _end);
   }),
 
   init() {
@@ -167,9 +171,13 @@ export default ArrayProxy.extend({
     }
   },
 
+  getLength() {
+    return this._end - this._start;
+  },
+
   defineLengthProperty() {
     defineProperty(this, 'length', computed('_start', '_end', function length() {
-      return this._end - this._start;
+      return this.getLength();
     }));
   },
 

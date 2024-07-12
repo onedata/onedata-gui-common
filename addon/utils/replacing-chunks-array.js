@@ -10,7 +10,7 @@
 import ArraySlice from 'onedata-gui-common/utils/array-slice';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
-import { get, set, computed, observer } from '@ember/object';
+import { get, set, computed } from '@ember/object';
 import { reads, not } from '@ember/object/computed';
 import { A, isArray } from '@ember/array';
 import _ from 'lodash';
@@ -22,8 +22,12 @@ import {
 import Evented from '@ember/object/evented';
 import OneSingletonTaskQueue from 'onedata-gui-common/utils/one-singleton-task-queue';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
+import { syncObserver } from 'onedata-gui-common/utils/observer';
 
 export const emptyItem = {};
+
+// FIXME: debug code
+let objCount = 0;
 
 export default ArraySlice.extend(Evented, {
   /**
@@ -113,7 +117,10 @@ export default ArraySlice.extend(Evented, {
       !this._startReached && this._start - this.loadMoreThreshold <= this.emptyIndex;
   },
 
-  startChanged: observer(
+  /**
+   * FIXME: dlaczego sync jest tutaj potrzebny? (testy infinite-scroll-table)
+   */
+  startChanged: syncObserver(
     '_start',
     '_startReached',
     'loadMoreThreshold',
@@ -126,7 +133,10 @@ export default ArraySlice.extend(Evented, {
     }
   ),
 
-  endChanged: observer(
+  /**
+   * FIXME: dlaczego sync jest tutaj potrzebny? (testy infinite-scroll-table)
+   */
+  endChanged: syncObserver(
     '_end',
     '_endReached',
     'loadMoreThreshold',
@@ -452,7 +462,8 @@ export default ArraySlice.extend(Evented, {
       fetchStartIndex = null;
     }
 
-    const lengthBeforeFetch = this.length || (this.endIndex - this.startIndex);
+    // FIXME: czy użycie getLegnth będzie potrzebne zamiast length?
+    const lengthBeforeFetch = this.getLength() || (this.endIndex - this.startIndex);
 
     try {
       const { arrayUpdate, endReached } = await this.fetchWrapper(
@@ -625,6 +636,9 @@ export default ArraySlice.extend(Evented, {
   },
 
   init() {
+    // FIXME: debug code
+    objCount += 1;
+    console.debug('--- init RCA ->', objCount);
     if (!this.get('sourceArray')) {
       this.set('sourceArray', A());
     }
@@ -647,6 +661,19 @@ export default ArraySlice.extend(Evented, {
       );
       safeExec(this, 'set', 'error', error);
     });
+  },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      // FIXME: debug code
+      objCount -= 1;
+      console.debug('--- willDestroy RCA ->', objCount);
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   removeDuplicateRecords(arrayUpdateData, sourceArray) {

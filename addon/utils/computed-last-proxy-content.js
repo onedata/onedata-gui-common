@@ -25,7 +25,7 @@ export default function computedLastProxyContent(proxyPropertyName, options = {}
   if (!proxyPropertyName) {
     throw new Error('util:computedLastProxyContent: proxyPropertyName cannot be empty');
   }
-  const cacheName = `_${proxyPropertyName}Cache`;
+  const cacheName = `__${proxyPropertyName.replace(/'./g, '_')}Cache`;
   const contentPath = `${proxyPropertyName}.content`;
   const isFulfilledPath = `${proxyPropertyName}.isFulfilled`;
   const isRejectedPath = `${proxyPropertyName}.isRejected`;
@@ -37,9 +37,9 @@ export default function computedLastProxyContent(proxyPropertyName, options = {}
     if (options.nullOnReject && this.get(isRejectedPath)) {
       return null;
     } else if (this.get(isFulfilledPath)) {
-      return this.set(cacheName, this.get(contentPath));
+      return this[cacheName] = this.get(contentPath);
     } else {
-      return this.get(cacheName);
+      return this[cacheName];
     }
   });
 }
