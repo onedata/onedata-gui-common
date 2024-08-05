@@ -65,4 +65,13 @@ export default {
     atm_inventory_add_group: 'add group',
     atm_inventory_remove_group: 'remove group',
   },
+  group: {
+    group_set_privileges: 'set privileges',
+  },
+  harvester: {
+    harvester_set_privileges: 'set privileges',
+  },
+  cluster: {
+    cluster_set_privileges: 'set privileges',
+  },
 };
