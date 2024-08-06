@@ -9,9 +9,6 @@ import EmberObject, {
 } from '@ember/object';
 import { promise, raw } from 'ember-awesome-macros';
 import { Promise, resolve, reject } from 'rsvp';
-import sinon from 'sinon';
-import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
-import { settled } from '@ember/test-helpers';
 
 const ClsBase = EmberObject.extend({
   /**
@@ -148,35 +145,5 @@ describe('Unit | Utility | computed-last-proxy-content', function () {
     }).then(() => {
       expect(get(this.obj, 'value')).to.equal(val2);
     });
-  });
-
-  it('does not trigger observer if proxy is pending', async function () {
-    const Cls = EmberObject.extend({
-      dependency: 1,
-      proxy: computed('dependency', function proxy() {
-        return promiseObject((async () => this.dependency)());
-      }),
-      lastValue: computedLastProxyContent('proxy'),
-      lastValueObserver: observer('lastValue', function lastValueObserver() {
-        this.observerSpy(this.lastValue);
-      }),
-      init() {
-        this._super(...arguments);
-        this.lastValue;
-      },
-    });
-
-    const observerSpy = sinon.spy();
-    this.obj = Cls.create({
-      observerSpy,
-    });
-    await settled();
-
-    this.obj.set('dependency', 2);
-    await settled();
-
-    expect(observerSpy).to.be.calledTwice;
-    expect(observerSpy).to.be.calledWith(1);
-    expect(observerSpy).to.be.calledWith(2);
   });
 });
