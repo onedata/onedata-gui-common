@@ -26,9 +26,6 @@ import { syncObserver } from 'onedata-gui-common/utils/observer';
 
 export const emptyItem = {};
 
-// FIXME: debug code
-let objCount = 0;
-
 export default ArraySlice.extend(Evented, {
   /**
    * Should not be used directly internally. Instead use `fetchWrapper`.
@@ -636,9 +633,6 @@ export default ArraySlice.extend(Evented, {
   },
 
   init() {
-    // FIXME: debug code
-    objCount += 1;
-    console.debug('--- init RCA ->', objCount);
     if (!this.get('sourceArray')) {
       this.set('sourceArray', A());
     }
@@ -646,34 +640,23 @@ export default ArraySlice.extend(Evented, {
       this.set('taskQueue', new OneSingletonTaskQueue());
     }
     this._super(...arguments);
-    const initialJumpIndex = this.get('initialJumpIndex');
-    const initialLoad = promiseObject(
-      initialJumpIndex ?
-      this.scheduleJump(initialJumpIndex) :
-      this.scheduleReload({ head: true }).then(() => {
-        return this.startEndChanged();
-      })
-    );
-    this.set('initialLoad', initialLoad).catch(error => {
-      console.debug(
-        'util:replacing-chunks-array#init: initial load failed: ' +
-        JSON.stringify(error)
-      );
-      safeExec(this, 'set', 'error', error);
-    });
-  },
+    const initialJumpIndex = this.initialJumpIndex;
 
-  /**
-   * @override
-   */
-  willDestroy() {
-    try {
-      // FIXME: debug code
-      objCount -= 1;
-      console.debug('--- willDestroy RCA ->', objCount);
-    } finally {
-      this._super(...arguments);
-    }
+    const initialLoad = promiseObject((async () => {
+      const loadPromise = initialJumpIndex ?
+        this.scheduleJump(initialJumpIndex) :
+        this.scheduleReload({ head: true }).then(() => this.startEndChanged());
+      try {
+        return await loadPromise;
+      } catch (error) {
+        console.debug(
+          'util:replacing-chunks-array#init: initial load failed: ' +
+          JSON.stringify(error)
+        );
+        safeExec(this, 'set', 'error', error);
+      }
+    })());
+    this.set('initialLoad', initialLoad);
   },
 
   removeDuplicateRecords(arrayUpdateData, sourceArray) {
