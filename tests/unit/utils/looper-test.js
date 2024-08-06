@@ -161,16 +161,12 @@ describe('Unit | Utility | looper', function () {
         interval: 10,
       });
       const tickSpy = sinon.spy();
-      this.looper.on('tick', () => {
-        console.log('tickSpy');
-      });
+      this.looper.on('tick', tickSpy);
       this.fakeClock.tick(1);
       tickSpy.resetHistory();
 
-      this.fakeClock.tick(7);
+      this.fakeClock.tick(8);
       this.looper.set('interval', 20);
-      this.fakeClock.tick(1);
-      await settled();
       this.fakeClock.tick(21);
 
       expect(tickSpy).to.have.been.calledTwice;

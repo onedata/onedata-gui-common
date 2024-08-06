@@ -16,8 +16,7 @@ import EmberObject, { computed } from '@ember/object';
 import Evented from '@ember/object/evented';
 import { cancel, later } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import { syncObserver, asyncObserver } from 'onedata-gui-common/utils/observer';
-import sleep from 'onedata-gui-common/utils/sleep';
+import { syncObserver } from 'onedata-gui-common/utils/observer';
 
 export default EmberObject.extend(Evented, {
   /**
@@ -73,7 +72,7 @@ export default EmberObject.extend(Evented, {
    * change, so for now we don't change it to async observer (but it is still possible
    * in the future if the change will be well-tested).
    */
-  intervalObserver: asyncObserver('_interval', function intervalObserver() {
+  intervalObserver: syncObserver('_interval', function intervalObserver() {
     if (this._interval === this.lastInterval) {
       return;
     }
