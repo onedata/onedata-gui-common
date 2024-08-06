@@ -200,6 +200,11 @@ export default Component.extend(I18n, {
   updateStrategy: 'onTop',
 
   /**
+   * Custom value of `logEntryDetailsConfiguration` used when if custom log entry details component is used.
+   */
+  customLogEntryDetailsConfiguration: undefined,
+
+  /**
    * Extra data provided to configure default log-entry-details view.
    * May be overriden if custom log entry details component is used.
    * @virtual optional
@@ -207,8 +212,16 @@ export default Component.extend(I18n, {
    */
   logEntryDetailsConfiguration: computed(
     'isTimestampRoundedToSeconds',
-    function logEntryDetailsConfiguration() {
-      return { isTimestampRoundedToSeconds: this.isTimestampRoundedToSeconds };
+    'customLogEntryDetailsConfiguration', {
+      get() {
+        if (this.customLogEntryDetailsConfiguration) {
+          return this.customLogEntryDetailsConfiguration;
+        }
+        return { isTimestampRoundedToSeconds: this.isTimestampRoundedToSeconds };
+      },
+      set(key, value) {
+        return this.set('customLogEntryDetailsConfiguration', value);
+      },
     }
   ),
 
