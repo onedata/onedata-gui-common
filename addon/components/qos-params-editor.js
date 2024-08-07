@@ -3,7 +3,7 @@
  * universal an may by used in the future for another similiar problems)
  *
  * @author Michał Borzęcki
- * @copyright (C) 2019-2020 ACK CYFRONET AGH
+ * @copyright (C) 2019-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 

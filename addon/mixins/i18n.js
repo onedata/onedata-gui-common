@@ -5,7 +5,7 @@
  * A prefix can be used with or without trailing dot.
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
