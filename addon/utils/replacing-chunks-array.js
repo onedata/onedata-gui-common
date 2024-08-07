@@ -115,7 +115,7 @@ export default ArraySlice.extend(Evented, {
   },
 
   /**
-   * FIXME: dlaczego sync jest tutaj potrzebny? (testy infinite-scroll-table)
+   * Sync observer: schedule task adds the fetch opearation to the queue.
    */
   startChanged: syncObserver(
     '_start',
@@ -131,7 +131,7 @@ export default ArraySlice.extend(Evented, {
   ),
 
   /**
-   * FIXME: dlaczego sync jest tutaj potrzebny? (testy infinite-scroll-table)
+   * Sync observer: schedule task adds the fetch opearation to the queue.
    */
   endChanged: syncObserver(
     '_end',
@@ -459,7 +459,6 @@ export default ArraySlice.extend(Evented, {
       fetchStartIndex = null;
     }
 
-    // FIXME: czy użycie getLegnth będzie potrzebne zamiast length?
     const lengthBeforeFetch = this.getLength() || (this.endIndex - this.startIndex);
 
     try {

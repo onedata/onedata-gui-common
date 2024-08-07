@@ -5,7 +5,7 @@ import _ from 'lodash';
 import sinon from 'sinon';
 import { settled } from '@ember/test-helpers';
 import { Promise, resolve } from 'rsvp';
-import EmberObject, { get, computed, observer } from '@ember/object';
+import { get } from '@ember/object';
 import {
   defaultMockArraySize,
   MockArray,
