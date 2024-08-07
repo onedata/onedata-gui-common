@@ -653,6 +653,7 @@ export default ArraySlice.extend(Evented, {
           JSON.stringify(error)
         );
         safeExec(this, 'set', 'error', error);
+        throw error;
       }
     })());
     this.set('initialLoad', initialLoad);
