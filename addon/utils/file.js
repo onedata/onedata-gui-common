@@ -168,6 +168,7 @@ export const FileAttribute = Object.freeze({
   AggregateQosStatus: 'aggregateQosStatus',
   ArchiveRecallRootFileId: 'archiveRecallRootFileId',
   Atime: 'atime',
+  CreationTime: 'creationTime',
   ConflictingName: 'conflictingName',
   Ctime: 'ctime',
   DirectShareIds: 'directShareIds',
