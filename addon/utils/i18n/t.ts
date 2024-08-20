@@ -10,11 +10,19 @@ import { lookupInEmberApp } from 'onedata-gui-common/utils/ember-app';
 import { isMissingMessage } from './missing-message';
 import { I18nService, SafeString } from 'onedata-gui-common/utils/missing-types';
 
+function getI18nService(): I18nService | null {
+  return lookupInEmberApp<I18nService>('service:i18n');
+}
+
 export function t(
   translationPath: string,
   placeholders: Record<string, string | SafeString> = {}
 ): SafeString | null {
-  const i18n = lookupInEmberApp<I18nService>('service:i18n');
+  const i18n = getI18nService();
   const translation = i18n?.t(translationPath, placeholders);
   return (!translation || isMissingMessage(translation)) ? null : translation;
+}
+
+export function isI18nAvailable(): boolean {
+  return Boolean(getI18nService());
 }
