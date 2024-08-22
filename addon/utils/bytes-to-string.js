@@ -46,6 +46,17 @@ function bytesToStringSI(bytes) {
   return [suffixedNumber, suffixMultiplicator, `${prefixForUnit}B`];
 }
 
+function bytesToStringWindows(bytes) {
+  const {
+    suffixedNumber,
+    prefixForUnit,
+    suffixMultiplicator,
+  } = getNumberMetricSuffix(bytes, { metric: 'binary' });
+  const windowsUnitPrefix = prefixForUnit.slice(0, 1);
+
+  return [suffixedNumber, suffixMultiplicator, `${windowsUnitPrefix}B`];
+}
+
 function byteBitUnit(unit) {
   return `${unit.slice(0, -1)}b`;
 }
@@ -65,20 +76,21 @@ const converters = {
   iec: bytesToStringIEC,
   bitSi: bytesToStringBitSi,
   bitIec: bytesToStringBitIec,
+  windows: bytesToStringWindows,
 };
 
 /**
- * Convert number of bytes to human readable size string. Eg. 2.34 MB.
- * IEC format (KiB, MiB, etc.) can also be used (see options).
+ * Convert number of bytes to human readable size string. Eg. 2.34 MB. IEC format (KiB,
+ * MiB, etc.) can also be used (see options).
  *
  * @param {Number} bytes
  * @param {Object} [options]
  * @param {Boolean} [options.iecFormat=true] If true, use IEC format: KiB, MiB, GiB
- *    DEPRECATED, use `options.format` instead. If `options.format` is specified it will be ignored.
- * @param {Boolean} [options.format=si] One of: si, iec, bitSi, bitIec
- * @param {Boolean} [options.separated=false] If true, instead of string,
- * object with fields: number {number}, multiplicator {number}, unit {string}
- * will be returned.
+ *   DEPRECATED, use `options.format` instead. If `options.iecFormat` is specified it
+ *   will be ignored.
+ * @param {Boolean} [options.format=si] One of: si, iec, bitSi, bitIec, windows
+ * @param {Boolean} [options.separated=false] If true, instead of string, object with
+ *   fields: number {number}, multiplicator {number}, unit {string} will be returned.
  * @returns {string|object}
  */
 export default function bytesToString(bytes, options = {}) {
