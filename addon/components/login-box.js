@@ -102,6 +102,7 @@ export default Component.extend(AuthenticationErrorMessage, {
       safeMethodExecution(this, 'set', 'isBusy', false);
     },
 
+    // FIXME: move to viewModel
     authenticationFailure({ error }) {
       const fatalBasicAuthErrors = this.get('fatalBasicAuthErrors');
       safeMethodExecution(this, 'set', 'isBusy', false);

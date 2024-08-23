@@ -48,10 +48,16 @@ export default Mixin.create(I18n, {
   i18nPrefix: 'mixins.authenticationErrorMessage',
 
   /**
-   * One of AUTHENTICATION_ERRORS
-   * @type {string}
+   * @virtual
+   * @type {AuthenticationErrorReaon}
    */
   authenticationErrorReason: undefined,
+
+  /**
+   * @virtual
+   * @type {AuthenticationErrorState}
+   */
+  authenticationErrorState: undefined,
 
   authenticationErrorText: computed('authenticationErrorReason',
     function authenticationErrorText() {
