@@ -2,7 +2,7 @@
   .form-group {
     &.has-error {
       .qos-field {
-        border-color: $input-border; 
+        border-color: $input-border;
       }
     }
     .control-label {
@@ -15,6 +15,7 @@
     .remove-param {
       font-weight: bold;
       color: $color-one-danger;
+      cursor: pointer;
     }
     .disabled-param-icon {
       font-weight: bold;
@@ -23,7 +24,7 @@
     }
     .one-inline-editor:hover {
       .one-label {
-        padding-left: $padding-large-horizontal; 
+        padding-left: $padding-large-horizontal;
       }
     }
     @media (min-width: $screen-sm-min) {
