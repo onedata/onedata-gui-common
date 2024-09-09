@@ -1,30 +1,44 @@
 /**
- * A component when available login options should be presented
+ * Shows available login options.
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { alias } from '@ember/object/computed';
-
-import EmberObject, { get } from '@ember/object';
+import EmberObject, { set } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/login-box';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
-import AuthenticationErrorMessage from 'onedata-gui-common/mixins/authentication-error-message';
-import { underscore } from '@ember/string';
-import globals from 'onedata-gui-common/utils/globals';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
 export const sessionExpiredKey = 'sessionExpired';
 
-export default Component.extend(AuthenticationErrorMessage, {
+const mixins = [
+  I18n,
+];
+
+export default Component.extend(...mixins, {
   layout,
   classNames: ['login-box'],
 
   globalNotify: service(),
   session: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.loginBox',
+
+  /**
+   * @virtual
+   * @type {Utils.LoginViewModel}
+   */
+  loginViewModel: undefined,
+
+  //#region state
 
   /**
    * Current status of showing authentication error message, as the message
@@ -34,90 +48,67 @@ export default Component.extend(AuthenticationErrorMessage, {
   showAuthenticationError: false,
 
   /**
-   * @virtual
-   * See: `mixin:authentication-error-handler#authenticationErrorReason`
-   * @type {string}
-   */
-  authenticationErrorReason: undefined,
-
-  /**
-   * @virtual
-   * See: `mixin:authentication-error-hander#authenticationErrorState`
-   * @type {string}
-   */
-  authenticationErrorState: undefined,
-
-  /**
    * If true, data necessary to render login-box is still loading
    * @type {boolean}
    */
   isLoading: false,
 
+  isBusy: false,
+
+  // FIXME: to raczej jest abstract - do zaimplementowania w klasach potomnych
   /**
    * Data object passed to the login-box header component
    * @type {EmberObject}
    */
   headerModel: undefined,
 
-  /**
-   * When one of these error occurs after username and password sign-in, that means
-   * user should not try other password, because invalid form data is not the problem.
-   */
-  fatalBasicAuthErrors: Object.freeze([
-    'basicAuthNotSupported',
-    'basicAuthDisabled',
-    'userBlocked',
-  ]),
-
-  isBusy: false,
+  //#endregion state
 
   /**
-   * True, if previous session has expired
+   * @type {ComputedProperty<AuthenticationErrorReason>}
    */
-  sessionHasExpired: alias('session.data.hasExpired'),
+  authenticationErrorReason: reads('loginViewModel.authenticationErrorReason'),
+
+  /**
+   * @type {ComputedProperty<AuthenticationErrorState>}
+   */
+  authenticationErrorState: reads('loginViewModel.authenticationErrorState'),
+
+  authenticationErrorText: reads('loginViewModel.authenticationErrorText'),
+
+  showErrorContactInfo: reads('loginViewModel.showErrorContactInfo'),
+
+  // FIXME: wcześniej był alias na sessions - sprawdzić do czego to służyło, być może tylko onepanel
+  sessionHasExpired: reads('loginViewModel.sessionHasExpired'),
 
   init() {
     this._super(...arguments);
     this.set('headerModel', EmberObject.create({}));
-    if (this.get('authenticationErrorReason')) {
+    if (this.authenticationErrorReason) {
       this.set('showAuthenticationError', true);
-    }
-    this.consumeSessionExpiredFlag();
-  },
-
-  consumeSessionExpiredFlag() {
-    if (globals.sessionStorage.getItem(sessionExpiredKey)) {
-      this.set('sessionHasExpired', true);
-      globals.sessionStorage.removeItem(sessionExpiredKey);
     }
   },
 
   actions: {
+    // FIXME: być może te 3 akcje należy przenieść do modelu
+
     authenticationStarted() {
       this.set('isBusy', true);
     },
 
+    // FIXME: czy to jest w ogóle wykorzystywane?
     authenticationSuccess() {
-      this.get('globalNotify').info('Authentication succeeded!');
+      this.globalNotify.info(this.t('authenticationSucceeded'));
       safeMethodExecution(this, 'set', 'isBusy', false);
     },
 
     // FIXME: move to viewModel
     authenticationFailure({ error }) {
-      const fatalBasicAuthErrors = this.get('fatalBasicAuthErrors');
       safeMethodExecution(this, 'set', 'isBusy', false);
-      let reason;
-      const errorId = error && get(error, 'details.authError.id');
-      if (fatalBasicAuthErrors.includes(errorId)) {
-        reason = underscore(errorId);
-      } else if (errorId !== 'badBasicCredentials') {
-        reason = 'unknown';
-      }
-      if (reason) {
-        this.setProperties({
-          authenticationErrorReason: reason,
-          showAuthenticationError: true,
-        });
+      const { isFatal, reason } = this.loginViewModel.parseFormError(error);
+      if (isFatal) {
+        set(this.loginViewModel, 'authenticationErrorReason', reason);
+        this.set('showAuthenticationError', true);
       }
     },
 
