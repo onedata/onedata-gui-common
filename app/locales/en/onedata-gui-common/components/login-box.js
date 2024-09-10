@@ -6,5 +6,5 @@ export default {
   loginFormContainer,
   signIn: 'Sign in',
   errorBackToSignIn: 'Back to sign-in',
-  errorTitle: 'Authentication error!',
+  errorTitle: 'Authentication error',
 };
