@@ -38,6 +38,13 @@ export default Component.extend(...mixins, {
    */
   loginViewModel: undefined,
 
+  /**
+   * Data object passed to the login-box header component
+   * @virtual
+   * @type {EmberObject}
+   */
+  headerModel: undefined,
+
   //#region state
 
   /**
@@ -55,13 +62,6 @@ export default Component.extend(...mixins, {
 
   isBusy: false,
 
-  // FIXME: to raczej jest abstract - do zaimplementowania w klasach potomnych
-  /**
-   * Data object passed to the login-box header component
-   * @type {EmberObject}
-   */
-  headerModel: undefined,
-
   //#endregion state
 
   /**
@@ -78,7 +78,6 @@ export default Component.extend(...mixins, {
 
   showErrorContactInfo: reads('loginViewModel.showErrorContactInfo'),
 
-  // FIXME: wcześniej był alias na sessions - sprawdzić do czego to służyło, być może tylko onepanel
   sessionHasExpired: reads('loginViewModel.sessionHasExpired'),
 
   init() {
@@ -90,19 +89,15 @@ export default Component.extend(...mixins, {
   },
 
   actions: {
-    // FIXME: być może te 3 akcje należy przenieść do modelu
-
     authenticationStarted() {
       this.set('isBusy', true);
     },
 
-    // FIXME: czy to jest w ogóle wykorzystywane?
     authenticationSuccess() {
       this.globalNotify.info(this.t('authenticationSucceeded'));
       safeMethodExecution(this, 'set', 'isBusy', false);
     },
 
-    // FIXME: move to viewModel
     authenticationFailure({ error }) {
       safeMethodExecution(this, 'set', 'isBusy', false);
       const { isFatal, reason } = this.loginViewModel.parseFormError(error);

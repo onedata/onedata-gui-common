@@ -46,9 +46,6 @@ export default Mixin.create({
     const cookies = this.get('cookies');
     const authenticationErrorReason = cookies.read(authenticationErrorReasonKey);
     const authenticationErrorState = cookies.read(authenticationErrorStateKey);
-    // FIXME: debug code
-    // const authenticationErrorReason = 'invalid_state:4';
-    // const authenticationErrorState = 'a98aab8bdcdaad98da9f9dd8';
     const errors = {
       authenticationErrorReason,
       authenticationErrorState,

@@ -1,4 +1,10 @@
-// FIXME: jsdoc
+/**
+ * Base View Model to use in components displaying login screen elements.
+ *
+ * @author Jakub Liput
+ * @copyright (C) 2024 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
 
 import EmberObject from '@ember/object';
 import AuthenticationErrorMessage from 'onedata-gui-common/mixins/authentication-error-message';
@@ -22,12 +28,24 @@ const mixins = [
 ];
 
 export default EmberObject.extend(...mixins, {
-  authenticationErrorReason: undefined,
-  authenticationErrorState: undefined,
-  // FIXME: session.data.hasExpired?
+  /**
+   * @virtual
+   * @type {boolean}
+   */
   sessionHasExpired: undefined,
 
-  // FIXME: przenieść do commona
+  /**
+   * @virtual
+   * @type {AuthenticationErrorReason}
+   */
+  authenticationErrorReason: undefined,
+
+  /**
+   * @virtual
+   * @type {AuthenticationErrorState}
+   */
+  authenticationErrorState: undefined,
+
   /**
    * @param {Object} error
    * @returns {BasicAuthErrorInfo}
