@@ -11,6 +11,7 @@ import AuthenticationErrorMessage from 'onedata-gui-common/mixins/authentication
 import { underscore } from '@ember/string';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import { get } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 /**
  * When one of these error occurs after username and password sign-in, that means
@@ -28,6 +29,8 @@ const mixins = [
 ];
 
 export default EmberObject.extend(...mixins, {
+  i18n: service(),
+
   /**
    * @virtual
    * @type {boolean}
@@ -68,5 +71,12 @@ export default EmberObject.extend(...mixins, {
       message: this.errorReasonToText(reason),
       reason,
     };
+  },
+
+  async usernameAuthenticate(username, password) {
+    await this.session.authenticate('authenticator:application', {
+      username,
+      password,
+    });
   },
 });
