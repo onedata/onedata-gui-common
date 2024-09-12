@@ -39,18 +39,6 @@ export default EmberObject.extend(...mixins, {
   sessionHasExpired: undefined,
 
   /**
-   * @virtual
-   * @type {AuthenticationErrorReason}
-   */
-  authenticationErrorReason: undefined,
-
-  /**
-   * @virtual
-   * @type {AuthenticationErrorState}
-   */
-  authenticationErrorState: undefined,
-
-  /**
    * @param {Object} error
    * @returns {BasicAuthErrorInfo}
    */
