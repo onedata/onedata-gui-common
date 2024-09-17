@@ -6,11 +6,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import AuthenticationErrorMessage from 'onedata-gui-common/mixins/authentication-error-message';
 import { underscore } from '@ember/string';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
-import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 /**
