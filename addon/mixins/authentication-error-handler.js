@@ -13,10 +13,9 @@ const authenticationErrorReasonKey = 'authentication_error_reason';
 const authenticationErrorStateKey = 'authentication_error_state';
 
 /**
- * The error code with optional parameter part.*Possible error codes can be found in
- * `locales/en/mixins/authentication-error-messages` or in
- * `authentication-error-message` mixin, which can get additional parameter to displayed
- * reason (see its implementation).
+ * The error code with optional parameter part. Possible error codes can be found in
+ * `locales/en/mixins/authentication-error-messages` or in `authentication-error-message`
+ * mixin, which can get additional parameter to displayed reason (see its implementation).
  * @typedef {string} AuthenticationErrorReason
  */
 

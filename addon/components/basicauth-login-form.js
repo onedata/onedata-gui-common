@@ -27,6 +27,7 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.basicauthLoginForm',
 
   /**
+   * @virtual
    * @type {Utils.LoginViewModel}
    */
   loginViewModel: undefined,
@@ -69,10 +70,28 @@ export default Component.extend(I18n, {
 
   //#region state
 
+  /**
+   * Value of username input.
+   * @type {string}
+   */
   username: '',
+
+  /**
+   * Value of password input.
+   * @type {string}
+   */
   password: '',
 
+  /**
+   * Disabled state of inputs.
+   * @type {boolean}
+   */
   isDisabled: false,
+
+  /**
+   * True if last submit attempt failed because of invalid credentials.
+   * @type {boolean}
+   */
   areCredentialsInvalid: false,
 
   //#endregion
