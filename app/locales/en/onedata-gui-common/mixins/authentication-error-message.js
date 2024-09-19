@@ -15,6 +15,8 @@ export default {
     user_blocked: 'This user account has been blocked by the administrator and cannot be used unless it is unblocked again.',
     basic_auth_not_supported: 'Username & password sign-in is not supported by this Onezone.',
     basic_auth_disabled: 'Username & password sign-in is disabled for this user.',
+    // additional for GUI purposes
     unknown: 'Unknown reason.',
+    bad_basic_credentials: 'Invalid username and/or password.',
   },
 };

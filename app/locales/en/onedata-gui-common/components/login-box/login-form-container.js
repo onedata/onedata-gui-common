@@ -1,3 +1,3 @@
 export default {
-  sessionExpired: 'Your session has expired',
+  sessionExpired: 'Your session has expired.',
 };

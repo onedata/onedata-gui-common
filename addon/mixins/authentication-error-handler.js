@@ -12,6 +12,19 @@ import { inject as service } from '@ember/service';
 const authenticationErrorReasonKey = 'authentication_error_reason';
 const authenticationErrorStateKey = 'authentication_error_state';
 
+/**
+ * The error code with optional parameter part. Possible error codes can be found in
+ * `locales/en/mixins/authentication-error-messages` or in `authentication-error-message`
+ * mixin, which can get additional parameter to displayed reason (see its implementation).
+ * @typedef {string} AuthenticationErrorReason
+ */
+
+/**
+ * The token that identifies the occured error in backend. It can be send to server
+ * administrator to check what happened in server logs.
+ * @typedef {string} AuthenticationErrorState
+ */
+
 export default Mixin.create({
   cookies: service(),
 
@@ -26,7 +39,7 @@ export default Mixin.create({
    *   in backend. It can be send to server administrator to check what happened
    *   in server logs.
    *
-   * @returns {Object} `{ authenticationErrorReason, authenticationErrorState }`
+   * @returns {{ authenticationErrorReason: AuthenticationErrorReason, authenticationErrorState: AuthenticationErrorState }}
    */
   consumeAuthenticationError() {
     const cookies = this.get('cookies');
