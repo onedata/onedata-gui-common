@@ -13,7 +13,7 @@ describe('Unit | Utility | is-uri', function () {
     expect(result).to.be.ok;
   });
 
-  it('returns false from "hello" string', function () {
+  it('returns false for "hello" string', function () {
     const result = isUri('hello');
     expect(result).to.be.not.ok;
   });
