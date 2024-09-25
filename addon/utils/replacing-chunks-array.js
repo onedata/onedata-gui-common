@@ -395,6 +395,9 @@ export default ArraySlice.extend(Evented, {
         (lastItem ? 1 : 0),
       )
       .then(({ arrayUpdate, endReached }) => {
+        if (this.isDestroyed) {
+          return;
+        }
         if (endReached ?? get(arrayUpdate, 'length') < chunkSize) {
           safeExec(this, 'set', '_endReached', true);
         }
@@ -467,6 +470,9 @@ export default ArraySlice.extend(Evented, {
         size,
         offset,
       );
+      if (this.isDestroyed) {
+        return;
+      }
       const fetchedCount = get(arrayUpdate, 'length');
       const updatedEnd = _start + fetchedCount;
       safeExec(this, 'setProperties', {
@@ -533,6 +539,9 @@ export default ArraySlice.extend(Evented, {
         -indexMargin,
       )
       .then(({ arrayUpdate, endReached }) => {
+        if (this.isDestroyed) {
+          return;
+        }
         // clear array without notify
         sourceArray.splice(0, get(sourceArray, 'length'));
         sourceArray.push(...arrayUpdate);
@@ -574,6 +583,9 @@ export default ArraySlice.extend(Evented, {
   },
 
   setEmptyIndex(index) {
+    if (this.isDestroyed) {
+      return;
+    }
     const sourceArray = this.get('sourceArray');
     for (let i = 0; i <= index; ++i) {
       sourceArray[i] = emptyItem;
