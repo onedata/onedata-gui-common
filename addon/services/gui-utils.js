@@ -3,7 +3,7 @@
  * that uses onedata-gui-common.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -13,6 +13,12 @@ import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import modelRoutableId from 'onedata-gui-common/utils/model-routable-id';
 import globals from 'onedata-gui-common/utils/globals';
+
+/**
+ * @typedef {Object} SoftwareVersionDetails
+ * @property {string} serviceVersion
+ * @property {string} serviceBuildVersion
+ */
 
 export default Service.extend(I18n, {
   i18n: service(),
@@ -43,7 +49,7 @@ export default Service.extend(I18n, {
   /**
    * Version of software. Currently only backend.
    * @virtual
-   * @type {object} string properties: serviceVersion, serviceBuildVersion
+   * @type {SoftwareVersionDetails}
    */
   softwareVersionDetails: Object.freeze({}),
 

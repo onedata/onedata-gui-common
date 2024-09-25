@@ -106,17 +106,23 @@
 
     .authentication-error-message-text {
       padding-top: 40px;
-      padding-bottom: 40px;
+      margin-bottom: 40px;
       text-align: center;
       font-size: 1.2em;
     }
 
+    .authentication-error-message-text + .authentication-error-state-input-copy {
+      margin-top: -20px;
+    }
+
     .authentication-error-state-input-copy {
-      position: relative;
-      padding-bottom: 20px;
+      margin-bottom: 20px;
       margin-left: auto;
       margin-right: auto;
       max-width: 500px;
+      .copy-btn {
+        color: $main-text-color;
+      }
     }
 
     .authentication-error-buttons {

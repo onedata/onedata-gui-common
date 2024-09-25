@@ -55,6 +55,11 @@ export default Component.extend({
   hasRecordInfoHovered: false,
 
   /**
+   * @type {Boolean}
+   */
+  recordInfoOpened: false,
+
+  /**
    * @type {Ember.ComputedProperty<string>}
    */
   recordType: reads('record.constructor.modelName'),
@@ -62,6 +67,10 @@ export default Component.extend({
   actions: {
     recordInfoHovered(hasHover) {
       this.set('hasRecordInfoHovered', hasHover);
+    },
+    recordInfoClick(event) {
+      this.set('recordInfoOpened', !this.recordInfoOpened);
+      event.stopPropagation();
     },
   },
 });

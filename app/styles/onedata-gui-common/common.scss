@@ -477,6 +477,11 @@ a,
       color: hsl(220deg 40% 30%);
     }
   }
+
+  // Note: use only one underline class at once: underlined or text-underlined
+
+  // Underline that works for the whole line, no matter if it is text or icon
+  // it has a major drawback: only a single line is underlined.
   &.underlined {
     position: relative;
     &::after {
@@ -488,6 +493,10 @@ a,
       border-bottom: 1px solid;
       opacity: 0.8;
     }
+  }
+  // Regular underline that works only for regular text, but it underlines multiple lines.
+  &.text-underlined {
+    text-decoration: underline;
   }
 }
 

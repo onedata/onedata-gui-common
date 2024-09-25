@@ -1,9 +1,9 @@
 <div class="container">
-  {{login-box/header model=headerModel}}
+  <LoginBox::Header @model={{headerModel}} />
   {{#if showAuthenticationError}}
     <h1>
-      {{one-icon icon="sign-warning-rounded" class="login-warning-icon"}}
-      {{t "components.loginBox.errorTitle"}}
+      <OneIcon @icon="sign-warning-rounded" @class="login-warning-icon" />
+      {{tt this "errorTitle"}}
     </h1>
     <div class="container-fluid authentication-error-message">
       <div class="row login-forms-row">
@@ -11,40 +11,41 @@
           {{authenticationErrorText}} {{if showErrorContactInfo (t "mixins.authenticationErrorMessage.contactInfo")}}
         </div>
         {{#if showErrorContactInfo}}
-          {{one-clipboard-line
-            value=authenticationErrorState
+          <OneClipboardLine
+            @value={{authenticationErrorState}}
+            @btnType="primary"
             class="authentication-error-state-input-copy light"
-            btnType="primary"
-          }}
+          />
         {{/if}}
         <div class="col-xs-12 text-center authentication-error-message-buttons">
-          <button type="button" class="btn btn-default back-button" {{action "backFromError"}}>
-            {{one-icon icon="arrow-right"}}
-            {{t "components.loginBox.errorBackToSignIn"}}
+          <button
+            type="button"
+            class="btn btn-default back-button"
+            onclick={{action "backFromError"}}
+          >
+            <OneIcon @icon="arrow-right" />
+            {{tt this "errorBackToSignIn"}}
           </button>
         </div>
       </div>
     </div>
   {{else if isLoading}}
-    {{spin-spinner-block
-      sizeClass="lg"
-      class="absolute-middle-centered"
-    }}
+    <SpinSpinnerBlock @sizeClass="lg" @class="absolute-middle-centered" />
   {{else}}
     <div class="row row-login-header text-center">
       <div class="col-xs-12">
-        <h4>{{t "components.loginBox.signIn"}}</h4>
+        <h4>{{tt this "signIn"}}</h4>
       </div>
     </div>
     {{!-- TODO remove .additional-bottom-margin after icons resize --}}
     <div class="row additional-bottom-margin">
       <div class="col-xs-10 col-centered">
-        {{login-box/login-form-container
-          sessionHasExpired=sessionHasExpired
-          authenticationSuccess=(action "authenticationSuccess")
-          authenticationFailure=(action "authenticationFailure")
-          authenticationStarted=(action "authenticationStarted")
-        }}
+        <LoginBox::LoginFormContainer
+          @loginViewModel={{loginViewModel}}
+          @authenticationSuccess={{action "authenticationSuccess"}}
+          @authenticationFailure={{action "authenticationFailure"}}
+          @authenticationStarted={{action "authenticationStarted"}}
+        />
       </div>
     </div>
   {{/if}}

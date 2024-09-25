@@ -93,6 +93,11 @@ describe('Unit | Utility | bytes-to-string', function () {
     expect(result).to.be.equal('1 GiB');
   });
 
+  it('supports format option with windows (binary multiplicator and SI units)', function () {
+    const result = bytesToString(1073741824, { format: 'windows' });
+    expect(result).to.be.equal('1 GB');
+  });
+
   it('can convert to bit', function () {
     const result = bytesToString(1, { format: 'bitSi' });
     expect(result).to.be.equal('8 b');
