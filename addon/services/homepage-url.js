@@ -40,7 +40,7 @@ export default Service.extend({
   generateDocumentationUrl({ topic, version, path }) {
     const effVersion = this.effVersion(version);
     if (path) {
-      return `${documentationUrlPrefix}/${effVersion}/doc/${path}`;
+      return `${documentationUrlPrefix}/${effVersion}/${path}`;
     }
     if (topic) {
       return `${documentationUrlPrefix}/topic/${effVersion}/${topic}`;
