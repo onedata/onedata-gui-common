@@ -42,6 +42,10 @@
   }
 }
 
+.token-toolbar-popover {
+  z-index: 10000;
+}
+
 .with-menu {
   position: relative;
   .collapsible-toolbar-toggle {

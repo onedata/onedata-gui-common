@@ -19,6 +19,12 @@ export default Component.extend({
   tagName: '',
 
   /**
+   * @virtual optional
+   * @type {string}
+   */
+  popoverClass: '',
+
+  /**
    * @type {Array<AspectAction>}
    */
   actionsArray: Object.freeze([]),
