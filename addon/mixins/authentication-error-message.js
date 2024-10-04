@@ -62,8 +62,7 @@ export default Mixin.create(I18n, {
   authenticationErrorText: computed(
     'authenticationErrorReason',
     function authenticationErrorText() {
-      return this.authenticationErrorReason &&
-        this.errorReasonToText(this.authenticationErrorReason);
+      return this.errorReasonToText(this.authenticationErrorReason);
     }
   ),
 
