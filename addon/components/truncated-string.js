@@ -16,6 +16,13 @@ export default Component.extend({
   classNames: ['truncated-string', 'truncate'],
 
   /**
+   * If true, do not show tooltip when text is truncated.
+   * @virtual optional
+   * @type {boolean}
+   */
+  isTooltipDisabled: false,
+
+  /**
    * If provided, tooltip will render this text content instead of block text content.
    * @virtual optional
    * @type {string|SafeString}

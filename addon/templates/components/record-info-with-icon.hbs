@@ -5,11 +5,7 @@
 >
   <div
     class="record-info-trigger popover-info-trigger"
-    {{action
-      (mut recordInfoOpened)
-      (not recordInfoOpened)
-      bubbles=false
-    }}
+    onclick={{action "recordInfoClick"}}
   >
     {{flippable-icons
       iconName=icon

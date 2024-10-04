@@ -168,6 +168,8 @@ export const FileAttribute = Object.freeze({
   AggregateQosStatus: 'aggregateQosStatus',
   ArchiveRecallRootFileId: 'archiveRecallRootFileId',
   Atime: 'atime',
+  // TODO: VFS-12343 restore creationTime in GUI
+  // CreationTime: 'creationTime',
   ConflictingName: 'conflictingName',
   Ctime: 'ctime',
   DirectShareIds: 'directShareIds',
