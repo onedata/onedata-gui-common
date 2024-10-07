@@ -28,7 +28,6 @@ const mixins = [
 ];
 
 export default EmberObject.extend(...mixins, {
-  i18n: service(),
   session: service(),
 
   /**
