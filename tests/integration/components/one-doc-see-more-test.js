@@ -27,7 +27,7 @@ describe('Integration | Component | one-doc-see-more', function () {
     await render(hbs `{{one-doc-see-more docPath="hello/world.html"}}`);
 
     expect(find('.documentation-link').href).to.equal(
-      'https://onedata.org/#/home/documentation/21.02/doc/hello/world.html'
+      'https://onedata.org/#/home/documentation/21.02/hello/world.html'
     );
   });
 
