@@ -15,6 +15,12 @@ import ClickOutside from 'ember-click-outside/mixin';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
+export const menuItemClassesDesktop =
+  'one-list-item enabled clickable main-menu-item user-account-button-main';
+
+export const menuItemClassesMobile =
+  'one-list-item main-menu-item clickable truncate';
+
 export default Component.extend(ClickOutside, I18n, {
   layout,
   classNames: ['user-account-button-base', 'user-account-button'],
@@ -28,6 +34,12 @@ export default Component.extend(ClickOutside, I18n, {
    * @override
    */
   i18nPrefix: 'components.userAccountButtonBase',
+
+  /**
+   * @virtual
+   * @type {boolean}
+   */
+  isActive: undefined,
 
   /**
    * @virtual
@@ -64,11 +76,7 @@ export default Component.extend(ClickOutside, I18n, {
   }),
 
   menuItemClasses: computed('mobileMode', function menuItemClasses() {
-    if (this.mobileMode) {
-      return 'one-list-item main-menu-item clickable truncate';
-    } else {
-      return 'one-list-item enabled clickable main-menu-item user-account-button-main';
-    }
+    return this.mobileModel ? menuItemClassesMobile : menuItemClassesDesktop;
   }),
 
   menuOpenObserver: observer('menuOpen', function menuOpenObserver() {
