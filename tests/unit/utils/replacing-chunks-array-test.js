@@ -84,7 +84,9 @@ describe('Unit | Utility | replacing-chunks-array', function () {
     expect(get(this.array, 'sourceArray.length'), 'source length after init')
       .to.equal(initialEndIndex + chunkSize);
     expect(get(this.array, 'length'), 'length after init').to.equal(initialEndIndex);
-    expect(this.array.toArray(), 'content after init: ' + this.array.mapBy('index'))
+    const contentAfterInit =
+      `content after init: ${this.array.map(i => i && get(i, 'index'))}`;
+    expect(this.array.toArray(), contentAfterInit)
       .to.deep.equal(recordRange(0, initialEndIndex));
     await settled();
     this.array.setProperties({
