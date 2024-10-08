@@ -2,24 +2,22 @@
  * A button that allows to invoke various actions for current user account
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2019 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
-
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import { next } from '@ember/runloop';
-import layout from 'onedata-gui-common/templates/components/user-account-button';
+import layout from 'onedata-gui-common/templates/components/user-account-button-base';
 import ClickOutside from 'ember-click-outside/mixin';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend(ClickOutside, I18n, {
   layout,
-  classNames: ['user-account-button'],
+  classNames: ['user-account-button-base', 'user-account-button'],
   classNameBindings: ['mobileMode:user-account-button-mobile'],
 
   guiMessageManager: service(),
@@ -29,47 +27,52 @@ export default Component.extend(ClickOutside, I18n, {
   /**
    * @override
    */
-  i18nPrefix: 'components.userAccountButton',
-
-  /**
-   * @type {function}
-   * @param {boolean} opened
-   * @returns {undefined}
-   */
-  onMenuOpened: () => {},
+  i18nPrefix: 'components.userAccountButtonBase',
 
   /**
    * @virtual
-   * @type {function}
-   * @param {string} [targetResourceType]
-   * @returns {undefined}
-   */
-  onItemClick: notImplementedIgnore,
-
-  menuOpen: false,
-
-  mobileMode: false,
-
-  /**
    * To implement for specific server-side implementation
-   * @abstract
    */
   username: undefined,
 
-  menuTriggerSelector: computed(function () {
-    return `#${this.get('elementId')} .user-toggle-icon`;
+  /**
+   * @virtual optional
+   * @type {(opened: boolean) => void}
+   */
+  onMenuOpened: undefined,
+
+  /**
+   * @virtual optional
+   * @type {(targetResourceType: string) => void}
+   */
+  onItemClick: undefined,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  mobileMode: false,
+
+  //#region state
+
+  menuOpen: false,
+
+  //#endregion
+
+  menuTriggerSelector: computed(function menuTriggerSelector() {
+    return `#${this.elementId} .user-toggle-icon`;
   }),
 
-  menuItemClasses: computed('mobileMode', function () {
-    if (this.get('mobileMode')) {
+  menuItemClasses: computed('mobileMode', function menuItemClasses() {
+    if (this.mobileMode) {
       return 'one-list-item main-menu-item clickable truncate';
     } else {
       return 'one-list-item enabled clickable main-menu-item user-account-button-main';
     }
   }),
 
-  menuOpenObserver: observer('menuOpen', function () {
-    this.get('onMenuOpened')(this.get('menuOpen'));
+  menuOpenObserver: observer('menuOpen', function menuOpenObserver() {
+    this.onMenuOpened?.(this.menuOpen);
   }),
 
   didInsertElement() {
@@ -96,18 +99,18 @@ export default Component.extend(ClickOutside, I18n, {
     // TODO handle error if manage account cannot be displayed
     manageAccount() {
       this.set('menuOpen', false);
-      this.get('onItemClick')('users');
+      this.onItemClick?.('users');
     },
     privacyPolicy() {
       this.set('menuOpen', false);
-      this.get('onItemClick')();
+      this.onItemClick?.();
     },
     termsOfUse() {
       this.set('menuOpen', false);
-      this.get('onItemClick')();
+      this.onItemClick?.();
     },
     logout() {
-      return this.get('guiUtils').logout().finally(() =>
+      return this.guiUtils.logout().finally(() =>
         safeExec(this, 'set', 'menuOpen', false)
       );
     },
