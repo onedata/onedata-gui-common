@@ -76,7 +76,7 @@ export default Component.extend(ClickOutside, I18n, {
   }),
 
   menuItemClasses: computed('mobileMode', function menuItemClasses() {
-    return this.mobileModel ? menuItemClassesMobile : menuItemClassesDesktop;
+    return this.mobileMode ? menuItemClassesMobile : menuItemClassesDesktop;
   }),
 
   menuOpenObserver: observer('menuOpen', function menuOpenObserver() {
