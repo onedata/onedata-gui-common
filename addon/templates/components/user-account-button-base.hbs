@@ -1,107 +1,136 @@
 {{#if mobileMode}}
-  {{#one-collapsible-list as |list|}}
-    {{#list.item class="user-account-button" closeEventName='side-menu:close' as |listItem|}}
-      {{#listItem.header class=(concat-classes menuItemClasses (if isActive "active" ""))}}
-        {{one-icon
+  <OneCollapsibleList as |list|>
+    <list.item
+      class="user-account-button"
+      closeEventName="side-menu:close" as |listItem|
+    >
+      <listItem.header
+        class={{concat-classes menuItemClasses (if isActive "active" "")}}
+      >
+        <OneIcon
           class="user-profile-icon item-icon"
-          icon="user-profile"
-        }}<span class="one-label user-account-button-username">{{username}}</span>
-      {{/listItem.header}}
-      {{#listItem.content}}
-        {{#one-collapsible-list as |list|}}
+          @icon="user-profile"
+        /><span class="one-label user-account-button-username">{{username}}</span>
+      </listItem.header>
+      <listItem.content>
+        <OneCollapsibleList as |list|>
           {{#if guiUtils.manageAccountText}}
-            {{#list.item isCollapsible=false as |listItem|}}
-              {{#listItem.header click=(action "manageAccount") class=(concat-classes menuItemClasses "manage-account-action")}}
+            <list.item @isCollapsible={{false}} as |listItem|>
+              <listItem.header
+                onclick={{action "manageAccount"}}
+                class={{concat-classes menuItemClasses "manage-account-action"}}
+              >
                 {{#if guiUtils.manageAccountExternalLink}}
                   <a href={{guiUtils.manageAccountExternalLink}}>
                     {{guiUtils.manageAccountText}}
                   </a>
                 {{else}}
-                  {{#link-to "onedata.sidebar" "users"}}
+                  <LinkTo @route="onedata.sidebar" @model="users">
                     {{guiUtils.manageAccountText}}
-                  {{/link-to}}
+                  </LinkTo>
                 {{/if}}
-              {{/listItem.header}}
-            {{/list.item}}
+              </listItem.header>
+            </list.item>
           {{/if}}
           {{#if guiMessageManager.privacyPolicyUrl}}
-            {{#list.item isCollapsible=false as |listItem|}}
-              {{#listItem.header click=(action "privacyPolicy") class=(concat-classes menuItemClasses "privacy-policy-action")}}
+            <list.item @isCollapsible={{false}} as |listItem|>
+              <listItem.header
+                onclick={{action "privacyPolicy"}}
+                class={{concat-classes menuItemClasses "privacy-policy-action"}}
+              >
                 <a href={{guiMessageManager.privacyPolicyUrl}}>
                   {{tt this "privacyPolicy"}}
                 </a>
-              {{/listItem.header}}
-            {{/list.item}}
+              </listItem.header>
+            </list.item>
           {{/if}}
           {{#if guiMessageManager.termsOfUseUrl}}
-            {{#list.item isCollapsible=false as |listItem|}}
-              {{#listItem.header click=(action "termsOfUse") class=(concat-classes menuItemClasses "terms-of-use-action")}}
+            <list.item @isCollapsible={{false}} as |listItem|>
+              <listItem.header
+                onclick={{action "termsOfUse"}}
+                class={{concat-classes menuItemClasses "terms-of-use-action"}}
+              >
                 <a href={{guiMessageManager.termsOfUseUrl}}>
                   {{tt this "termsOfUse"}}
                 </a>
-              {{/listItem.header}}
-            {{/list.item}}
+              </listItem.header>
+            </list.item>
           {{/if}}
-          {{#list.item isCollapsible=false as |listItem|}}
-            {{#listItem.header click=(action "logout") class=(concat-classes menuItemClasses "logout-action")}}
+          <list.item @isCollapsible={{false}} as |listItem|>
+            <listItem.header
+              onclick={{action "logout"}}
+              class={{concat-classes menuItemClasses "logout-action"}}
+            >
               {{tt this "logout"}}
-            {{/listItem.header}}
-          {{/list.item}}
-        {{/one-collapsible-list}}
-      {{/listItem.content}}
-    {{/list.item}}
-  {{/one-collapsible-list}}
+            </listItem.header>
+          </list.item>
+        </OneCollapsibleList>
+      </listItem.content>
+    </list.item>
+  </OneCollapsibleList>
 {{else}}
-  <div class={{concat-classes menuItemClasses (if isActive "active" "")}} {{action "toggleMenu" bubbles=false}}>
+  <div
+    class={{concat-classes menuItemClasses (if isActive "active" "")}} {{action "toggleMenu" bubbles=false}}
+  >
     <div class="item-header truncate">
-      {{one-icon
-        class="user-profile-icon item-icon"
-        icon="user-profile"
-      }}
+      <OneIcon @class="user-profile-icon item-icon" @icon="user-profile" />
       <span class="one-label user-account-button-username">
         {{username}}
       </span>
-      {{one-icon
-        class="user-toggle-icon"
-        icon=(if menuOpen "arrow-down" "arrow-up")
-      }}
+      <OneIcon class="user-toggle-icon" @icon={{if menuOpen "arrow-down" "arrow-up"}} />
     </div>
   </div>
 
-  {{#one-webui-popover
+  <OneWebuiPopover
     class="user-account-menu"
-    placement="top-left"
-    open=menuOpen
-    padding=false
-    triggerSelector=menuTriggerSelector
-    popoverStyle="user-account"
-    multi=true
-    as |popover|
-  }}
+    @placement="top-left"
+    @open={{menuOpen}}
+    @padding={{false}}
+    @triggerSelector={{menuTriggerSelector}}
+    @popoverStyle="user-account"
+    @multi={{true}} as |popover|
+  >
     <ul class="dropdown-menu">
       {{#if guiUtils.manageAccountText}}
         <li>
           {{#if guiUtils.manageAccountExternalLink}}
-            <a href={{guiUtils.manageAccountExternalLink}} class="manage-account-action clickable" click={{action "manageAccount"}}>
+            <a
+              href={{guiUtils.manageAccountExternalLink}}
+              class="manage-account-action clickable"
+              onclick={{action "manageAccount"}}
+            >
               {{guiUtils.manageAccountText}}
             </a>
           {{else}}
-            {{#link-to "onedata.sidebar" "users" class="manage-account-action clickable" click=(action "manageAccount")}}
+            <LinkTo
+              @route="onedata.sidebar"
+              @model="users"
+              class="manage-account-action clickable"
+              onclick={{action "manageAccount"}}
+            >
               {{guiUtils.manageAccountText}}
-            {{/link-to}}
+            </LinkTo>
           {{/if}}
         </li>
       {{/if}}
       {{#if guiMessageManager.privacyPolicyUrl}}
         <li>
-          <a href={{guiMessageManager.privacyPolicyUrl}} class="clickable" click={{action "privacyPolicy"}}>
+          <a
+            href={{guiMessageManager.privacyPolicyUrl}}
+            class="clickable"
+            onclick={{action "privacyPolicy"}}
+          >
             {{tt this "privacyPolicy"}}
           </a>
         </li>
       {{/if}}
       {{#if guiMessageManager.termsOfUseUrl}}
         <li>
-          <a href={{guiMessageManager.termsOfUseUrl}} class="clickable" click={{action "termsOfUse"}}>
+          <a
+            href={{guiMessageManager.termsOfUseUrl}}
+            class="clickable"
+            click={{action "termsOfUse"}}
+          >
             {{tt this "termsOfUse"}}
           </a>
         </li>
@@ -112,5 +141,5 @@
         </a>
       </li>
     </ul>
-  {{/one-webui-popover}}
+  </OneWebuiPopover>
 {{/if}}
