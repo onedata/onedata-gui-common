@@ -35,9 +35,9 @@ export default EmberObject.extend(Evented, {
 
   //#region state
 
-  // /**
-  //  * @type {any}
-  //  */
+  /**
+   * @type {any}
+   */
   nextNotifyTimer: undefined,
 
   /**
