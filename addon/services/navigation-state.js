@@ -246,7 +246,7 @@ export default Service.extend(I18n, {
   resourceTypeActions: destroyableComputed(
     'activeResourceType',
     'activeResourceCollection.list.content.[]',
-    function () {
+    function resourceTypeActions() {
       const {
         sidebarResources,
         activeResourceType,

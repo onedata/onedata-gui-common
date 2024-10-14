@@ -66,7 +66,7 @@
  * component for VisualiserRecord.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -118,6 +118,11 @@ import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-vis
 import { typeOf } from '@ember/utils';
 import dom from 'onedata-gui-common/utils/dom';
 import validateAtmWorkflowSchemaRevision from 'onedata-gui-common/utils/atm-workflow/validate-atm-workflow-schema-revision';
+import {
+  destroyDestroyableComputedValues,
+  destroyableComputed,
+  initDestroyableCache,
+} from 'onedata-gui-common/utils/destroyable-computed';
 
 const nonActiveTaskStatuses = [
   ...taskEndedStatuses,
@@ -407,7 +412,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  copyInstanceIdAction: computed(
+  copyInstanceIdAction: destroyableComputed(
     'workflow.instanceId',
     function copyInstanceIdAction() {
       const {
@@ -423,14 +428,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  viewAuditLogAction: computed('actionsFactory', function viewAuditLogAction() {
-    return this.get('actionsFactory').createViewWorkflowAuditLogAction();
-  }),
+  viewAuditLogAction: destroyableComputed(
+    'actionsFactory',
+    function viewAuditLogAction() {
+      return this.get('actionsFactory').createViewWorkflowAuditLogAction();
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  openWorkflowChartDashboardAction: computed(
+  openWorkflowChartDashboardAction: destroyableComputed(
     'mode',
     function openWorkflowChartDashboardAction() {
       if (this.mode === 'view') {
@@ -534,6 +542,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @override
    */
   init() {
+    initDestroyableCache(this);
     this._super(...arguments);
 
     this.set('elementsCache', {
@@ -575,15 +584,19 @@ export default Component.extend(I18n, WindowResizeHandler, {
       this.stopExecutionStateUpdater();
       _.flatten(Object.values(this.elementsCache))
         .forEach((element) => element.destroy?.());
-      [
-        'copyInstanceIdAction',
-        'viewAuditLogAction',
-        'openWorkflowChartDashboardAction',
-      ].forEach((actionName) => {
-        this.cacheFor(actionName)?.destroy?.();
-      });
       this.actionsFactoryCache?.destroy?.();
       this.cacheFor('workflowDataProvider')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      destroyDestroyableComputedValues(this);
     } finally {
       this._super(...arguments);
     }

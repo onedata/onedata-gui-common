@@ -12,6 +12,8 @@
  */
 
 import { computed } from '@ember/object';
+import config from 'ember-get-config';
+import { v4 as uuid } from 'ember-uuid';
 
 /**
  * Wraps Ember `computed` with code destroying the previosly computed object value if
@@ -34,19 +36,30 @@ import { computed } from '@ember/object';
  * @returns {ComputedProperty}
  */
 export function destroyableComputed(...computedArgs) {
-  let cache;
+  const fun = computedArgs[computedArgs.length - 1];
+  if (typeof fun !== 'function') {
+    throw new Error('DestroyableComputed: the last argument must be a function');
+  }
+  let propertyName = fun.name;
+  if (!propertyName) {
+    if (config.environment !== 'production') {
+      throw new Error('DestroyableComputed: the provided function must have a name');
+    }
+    propertyName = uuid();
+  }
+  const cacheName = `__${propertyName.replace(/'./g, '_')}Cache`;
   return computed(...computedArgs.slice(0, computedArgs.length - 1), function () {
-    const fun = computedArgs[computedArgs.length - 1];
-    if (cache) {
-      destroyCached(cache);
-      this.destroyableValuesSet.delete(cache);
+    const oldCache = this[cacheName];
+    if (oldCache) {
+      destroyCached(oldCache);
+      this.destroyableValuesSet.delete(oldCache);
     }
     const value = fun.bind(this)(...arguments);
-    cache = value;
-    if (cache) {
-      this.destroyableValuesSet.add(cache);
+    this[cacheName] = value;
+    if (value) {
+      this.destroyableValuesSet.add(value);
     }
-    return cache;
+    return value;
   });
 }
 

@@ -6,16 +6,16 @@
  * be modified neither accessed from the outside of the internal forms framework code.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import EmberObject, { observer, defineProperty } from '@ember/object';
-import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import { DynamicOwnerInjector } from 'onedata-gui-common/mixins/owner-injector';
 import { reads } from '@ember/object/computed';
 import { isEmpty } from 'ember-awesome-macros';
 
-export default EmberObject.extend(OwnerInjector, {
+export default EmberObject.extend(DynamicOwnerInjector, {
   /**
    * @type {Utils.FormComponent.FormField}
    */

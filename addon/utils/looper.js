@@ -8,14 +8,15 @@
  * - `interval` can be always changed - it will start new interval timer and clear old
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2023 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { observer } from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import Evented from '@ember/object/evented';
 import { cancel, later } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import { syncObserver } from 'onedata-gui-common/utils/observer';
 
 export default EmberObject.extend(Evented, {
   /**
@@ -39,6 +40,10 @@ export default EmberObject.extend(Evented, {
    */
   nextNotifyTimer: undefined,
 
+  /**
+   * ID of the current interval timer.
+   * @type {any}
+   */
   _intervalId: null,
 
   /**
@@ -47,15 +52,34 @@ export default EmberObject.extend(Evented, {
    */
   lastInterval: undefined,
 
+  /**
+   * If true, the timer will be always off, no matter of `interval` value.
+   */
+  isStopped: false,
+
   //#endregion
 
-  intervalObserver: observer('interval', function intervalObserver() {
-    if (this.interval === this.lastInterval) {
+  /**
+   * Interval time in ms used in the current timer.
+   * @type {ComputedProperty<number>}
+   */
+  _interval: computed('interval', 'isStopped', function _interval() {
+    return this.isStopped ? 0 : this.interval;
+  }),
+
+  /**
+   * Sync: a lot of code uses loopers which immediately changed the timer after interval
+   * change, so for now we don't change it to async observer (but it is still possible
+   * in the future if the change will be well-tested).
+   */
+  intervalObserver: syncObserver('_interval', function intervalObserver() {
+    if (this._interval === this.lastInterval) {
       return;
     }
-    this.set('lastInterval', this.interval);
+    // do not use set to not unnecessarily trigger observing code
+    this.lastInterval = this._interval;
     this.restartInterval();
-    if (this.interval > 0 && this.immediate) {
+    if (this._interval > 0 && this.immediate) {
       this.notify();
     }
   }),
@@ -65,10 +89,12 @@ export default EmberObject.extend(Evented, {
     this.intervalObserver();
   },
 
-  destroy() {
+  /**
+   * @override
+   */
+  willDestroy() {
     try {
       this.stop();
-      cancel(this.get('nextNotifyTimer'));
     } catch (error) {
       console.warn('util:looper: stopping on destroy failed');
     }
@@ -76,25 +102,33 @@ export default EmberObject.extend(Evented, {
   },
 
   stop() {
-    safeExec(this, () => this.set('interval', null));
+    cancel(this.nextNotifyTimer);
+    safeExec(this, 'set', 'isStopped', true);
+    this.clearInterval();
   },
 
   notify() {
     this.set(
       'nextNotifyTimer',
-      later(() => safeExec(this, () => this.trigger('tick')))
+      later(() => safeExec(this, () => {
+        this.trigger('tick');
+      }))
     );
   },
 
   restartInterval() {
-    if (this._intervalId != null) {
-      clearInterval(this._intervalId);
-    }
-    if (this.interval > 0) {
+    this.clearInterval();
+    if (this._interval > 0) {
       this.set(
         '_intervalId',
-        setInterval(this.notify.bind(this), this.interval)
+        setInterval(this.notify.bind(this), this._interval)
       );
     }
+  },
+
+  clearInterval() {
+    cancel(this.nextNotifyTimer);
+    clearInterval(this._intervalId);
+    safeExec(this, 'set', '_intervalId', null);
   },
 });

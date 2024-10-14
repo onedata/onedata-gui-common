@@ -3,7 +3,7 @@
  * with full text will be shown on hover.
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2022 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 

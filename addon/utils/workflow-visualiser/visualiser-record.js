@@ -2,7 +2,7 @@
  * Base class for visualiser records (concrete data entries like tasks, lanes etc.).
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
