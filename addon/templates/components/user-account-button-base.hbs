@@ -5,7 +5,7 @@
       closeEventName="side-menu:close" as |listItem|
     >
       <listItem.header
-        class={{concat-classes menuItemClasses (if isActive "active" "")}}
+        class={{concat-classes menuItemClasses (if isActive "active")}}
       >
         <OneIcon
           class="user-profile-icon item-icon"
@@ -70,7 +70,8 @@
   </OneCollapsibleList>
 {{else}}
   <div
-    class={{concat-classes menuItemClasses (if isActive "active" "")}} {{action "toggleMenu" bubbles=false}}
+    class={{concat-classes menuItemClasses (if isActive "active")}}
+    onclick={{action "toggleMenu" bubbles=false}}
   >
     <div class="item-header truncate">
       <OneIcon @class="user-profile-icon item-icon" @icon="user-profile" />
@@ -129,7 +130,7 @@
           <a
             href={{guiMessageManager.termsOfUseUrl}}
             class="clickable"
-            click={{action "termsOfUse"}}
+            onclick={{action "termsOfUse"}}
           >
             {{tt this "termsOfUse"}}
           </a>
