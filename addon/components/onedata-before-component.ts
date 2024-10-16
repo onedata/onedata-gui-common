@@ -16,5 +16,9 @@ export type OnedataBeforeComponentArgs = {
   controller: Controller;
 };
 
-export default class OnedataBeforeComponent
-  extends Component<OnedataBeforeComponentArgs> {}
+export default
+  class OnedataBeforeComponent<
+    ArgsT extends OnedataBeforeComponentArgs = OnedataBeforeComponentArgs,
+  >
+  extends Component<ArgsT> {
+}

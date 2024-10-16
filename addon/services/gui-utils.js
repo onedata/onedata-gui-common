@@ -79,7 +79,7 @@ export default Service.extend(I18n, {
    * @type {Ember.ComputedProperty<string>}
    */
   manageAccountText: computed(function manageAccountText() {
-    return this.get('i18n').t('components.userAccountButton.manageAccount');
+    return this.i18n.t('components.userAccountButtonBase.manageAccount');
   }),
 
   /**

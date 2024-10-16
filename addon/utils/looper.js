@@ -12,7 +12,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed } from '@ember/object';
+import EmberObject, { computed, trySet } from '@ember/object';
 import Evented from '@ember/object/evented';
 import { cancel, later } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -103,7 +103,7 @@ export default EmberObject.extend(Evented, {
 
   stop() {
     cancel(this.nextNotifyTimer);
-    safeExec(this, 'set', 'isStopped', true);
+    trySet(this, 'isStopped', true);
     this.clearInterval();
   },
 
@@ -129,6 +129,6 @@ export default EmberObject.extend(Evented, {
   clearInterval() {
     cancel(this.nextNotifyTimer);
     clearInterval(this._intervalId);
-    safeExec(this, 'set', '_intervalId', null);
+    trySet(this, '_intervalId', null);
   },
 });
