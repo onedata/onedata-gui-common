@@ -11,14 +11,9 @@ import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import { observer } from '@ember/object';
 import _ from 'lodash';
-import config from 'ember-get-config';
 import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
 import { camelize } from '@ember/string';
 import findRouteInfo from 'onedata-gui-common/utils/find-route-info';
-
-const {
-  onedataTabs,
-} = config;
 
 export default Route.extend({
   router: service(),
@@ -26,6 +21,7 @@ export default Route.extend({
   media: service(),
   guiUtils: service(),
   sidebarResources: service(),
+  navigationTabsConfiguration: service(),
 
   model() {
     return this.modelFor('onedata.sidebar');
@@ -33,6 +29,7 @@ export default Route.extend({
 
   afterModel(model, transition) {
     const tabId = camelize(findRouteInfo(transition, 'onedata.sidebar').params['type']);
+    const onedataTabs = this.navigationTabsConfiguration.getTabModels();
     const tab = _.find(onedataTabs, t => t.id === tabId);
     if (!this.get('media.isMobile')) {
       if (tab && tab.allowIndex) {

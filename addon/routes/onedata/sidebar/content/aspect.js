@@ -2,27 +2,22 @@
  * A route to view or modify a specific aspect of a resource
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Route from '@ember/routing/route';
 import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
-import config from 'ember-get-config';
-import _ from 'lodash';
 import { getOwner } from '@ember/application';
 import { camelize } from '@ember/string';
 import findRouteInfo from 'onedata-gui-common/utils/find-route-info';
 
 const notFoundAspect = 'not-found';
 
-const {
-  onedataTabs,
-} = config;
-
 export default Route.extend({
   navigationState: service(),
+  navigationTabsConfiguration: service(),
 
   beforeModel(transition) {
     this.get('navigationState').updateQueryParams(transition);
@@ -61,30 +56,37 @@ export default Route.extend({
   },
 
   // TODO validate aspect of resource with afterModel
-  afterModel({ aspectId }) {
+  async afterModel(model) {
+    const sidebarModel = this.modelFor('onedata.sidebar');
+    const { resourceType } = sidebarModel;
+    const { aspectId } = model;
     this.set('navigationState.activeAspect', aspectId);
+    const templateName = this.getTemplateName(resourceType, aspectId);
+    if (!getOwner(this).lookup(`template:${templateName}`)) {
+      const tabId = camelize(resourceType);
+      const defaultAspect = await this.navigationTabsConfiguration.getDefaultAspect(
+        tabId,
+        sidebarModel,
+        model
+      );
+      this.transitionTo('onedata.sidebar.content.aspect', defaultAspect);
+    }
   },
 
   renderTemplate(controller, model) {
     const { resourceType } = this.modelFor('onedata.sidebar');
     const { aspectId } = model;
-    const templateName = model.aspectId === notFoundAspect ?
+    const templateName = this.getTemplateName(resourceType, aspectId);
+    this.render(templateName, {
+      into: 'onedata.sidebar.content',
+      outlet: 'main-content',
+    });
+  },
+
+  getTemplateName(resourceType, aspectId) {
+    return aspectId === notFoundAspect ?
       '-resource-not-found' :
       `tabs.${resourceType}.${aspectId}`;
-    if (getOwner(this).lookup(`template:${templateName}`)) {
-      this.render(templateName, {
-        into: 'onedata.sidebar.content',
-        outlet: 'main-content',
-      });
-    } else {
-      const tabId = camelize(resourceType);
-      const tabSettings = _.find(
-        onedataTabs,
-        t => get(t, 'id') === tabId
-      );
-      const defaultAspect = tabSettings.defaultAspect || 'index';
-      this.transitionTo('onedata.sidebar.content.aspect', defaultAspect);
-    }
   },
 });
 

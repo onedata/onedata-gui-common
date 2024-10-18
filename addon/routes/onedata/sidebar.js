@@ -9,28 +9,25 @@
 import { get } from '@ember/object';
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import config from 'ember-get-config';
 import { scheduleOnce } from '@ember/runloop';
 import { camelize } from '@ember/string';
 import findRouteInfo from 'onedata-gui-common/utils/find-route-info';
 import globals from 'onedata-gui-common/utils/globals';
 
-const {
-  onedataTabs,
-} = config;
-
-function isValidTab(tabName) {
-  return Boolean(onedataTabs.findBy('id', camelize(tabName))) ||
-    tabName === 'users';
-}
-
 export default Route.extend({
   sidebarResources: service(),
   navigationState: service(),
+  navigationTabsConfiguration: service(),
+
+  isValidTab(tabName) {
+    const onedataTabs = this.navigationTabsConfiguration.getTabModels();
+    return Boolean(onedataTabs.findBy('id', camelize(tabName))) ||
+      tabName === 'users';
+  },
 
   beforeModel(transition) {
     const resourceType = findRouteInfo(transition, 'onedata.sidebar').params['type'];
-    if (!isValidTab(resourceType)) {
+    if (!this.isValidTab(resourceType)) {
       console.warn(
         `Failed to render ${resourceType} resource type. ` +
         'Redirecting to default resource type...'
@@ -84,7 +81,8 @@ export default Route.extend({
    * @returns {string}
    */
   getDefaultTab() {
-    return (onedataTabs[0] || {}).id;
+    const onedataTabs = this.navigationTabsConfiguration.getTabModels();
+    return onedataTabs[0]?.id;
   },
 
   actions: {

@@ -2,15 +2,13 @@
  * Open default content for loaded resource
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Route from '@ember/routing/route';
-import _ from 'lodash';
-import config from 'ember-get-config';
-import { get } from '@ember/object';
 import { camelize } from '@ember/string';
+import { inject as service } from '@ember/service';
 
 // TODO: copied from content route
 // TODO: refactor to create route-, or application-specific special ids
@@ -22,31 +20,26 @@ const SPECIAL_IDS = [
   'not-selected',
 ];
 
-const {
-  onedataTabs,
-} = config;
-
 function isSpecialResourceId(id) {
   return SPECIAL_IDS.indexOf(id) !== -1;
 }
 
 export default Route.extend({
+  navigationTabsConfiguration: service(),
+
   model() {
     return this.modelFor('onedata.sidebar.content');
   },
 
-  redirect({ resourceId }) {
+  async afterModel(model) {
+    const { resourceId } = model;
     const sidebarModel = this.modelFor('onedata.sidebar');
     const tabId = camelize(sidebarModel.resourceType);
-    /** @type {object} */
-    const tabModel = _.find(
-      onedataTabs,
-      t => get(t, 'id') === tabId
+    const defaultAspect = await this.navigationTabsConfiguration.getDefaultAspect(
+      tabId,
+      sidebarModel,
+      model
     );
-
-    /** @type {string} */
-    const defaultAspect = tabModel && tabModel.defaultAspect || 'index';
-
     if (!isSpecialResourceId(resourceId)) {
       this.transitionTo(
         'onedata.sidebar.content.aspect',
