@@ -367,10 +367,14 @@ describe('Unit | Utility | replacing-chunks-array', function () {
     });
     await settled();
     const actualArray = this.array.toArray();
-    const expectedArray = recordRange(0, 70);
+    // slice gets moved 2 indexes to the end because of 2 new items
+    expect(get(this.array, 'startIndex')).to.equal(2);
+    expect(get(this.array, 'endIndex')).to.equal(52);
+    // startIndex is 2, and adding the margin _start can expand to 0
+    expect(get(this.array, '_start')).to.equal(0);
+    expect(get(this.array, '_end')).to.equal(62);
+    const expectedArray = recordRange(-2, 60);
     expect(actualArray).to.deep.equal(expectedArray);
-    expect(get(this.array, '_start')).to.equal(2);
-    expect(get(this.array, '_end')).to.equal(72);
     expect(get(this.array, 'sourceArray.0.index')).to.equal(-2);
     expect(get(this.array, 'sourceArray.1.index')).to.equal(-1);
   });

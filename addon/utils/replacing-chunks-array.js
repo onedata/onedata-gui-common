@@ -325,10 +325,9 @@ export default ArraySlice.extend(Evented, {
             for (let i = insertIndex; i < fetchedArraySize; ++i) {
               sourceArray[i] = arrayUpdate[i];
             }
-            const indexOffset = fetchedArraySize;
             this.setProperties({
-              startIndex: this.get('startIndex') + indexOffset,
-              endIndex: this.get('endIndex') + indexOffset,
+              startIndex: this.get('startIndex') + additionalFrontSpace,
+              endIndex: this.get('endIndex') + additionalFrontSpace,
               emptyIndex: -1,
             });
           }
