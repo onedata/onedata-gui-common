@@ -61,9 +61,7 @@ import { camelize } from '@ember/string';
  *     menu item.
  */
 
-// FIXME: dodać wspólne części, żeby usunąć redundancję z onepanel-gui
-
-class AbstractNavigationTabsConfiguration extends Service {
+class CommonNavigationTabsConfiguration extends Service {
   @service sidebarResources;
   @service currentUser;
 
@@ -78,8 +76,21 @@ class AbstractNavigationTabsConfiguration extends Service {
    */
   @computed
   get tabModels() {
-    console.error('NavigationTabsConfiguration service: get tabModels not implemented');
-    return [];
+    return [
+      { id: 'spaces', icon: 'browser-directory' },
+      { id: 'shares', icon: 'browser-share' },
+      { id: 'providers', icon: 'provider', allowIndex: true },
+      { id: 'groups', icon: 'groups', defaultAspect: 'members' },
+      { id: 'tokens', icon: 'tokens' },
+      { id: 'harvesters', icon: 'light-bulb', defaultAspect: 'plugin' },
+      { id: 'atmInventories', icon: 'atm-inventory', defaultAspect: 'workflows' },
+      {
+        id: 'clusters',
+        icon: 'cluster',
+        isDefault: true,
+        defaultAspect: 'overview',
+      },
+    ];
   }
 
   /**
@@ -169,4 +180,4 @@ class AbstractNavigationTabsConfiguration extends Service {
   }
 }
 
-export default AbstractNavigationTabsConfiguration;
+export default CommonNavigationTabsConfiguration;
