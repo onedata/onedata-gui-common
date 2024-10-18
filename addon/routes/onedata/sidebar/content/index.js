@@ -33,14 +33,14 @@ export default Route.extend({
 
   async afterModel(model) {
     const { resourceId } = model;
-    const sidebarModel = this.modelFor('onedata.sidebar');
-    const tabId = camelize(sidebarModel.resourceType);
-    const defaultAspect = await this.navigationTabsConfiguration.getDefaultAspect(
-      tabId,
-      sidebarModel,
-      model
-    );
     if (!isSpecialResourceId(resourceId)) {
+      const sidebarModel = this.modelFor('onedata.sidebar');
+      const tabId = camelize(sidebarModel.resourceType);
+      const defaultAspect = await this.navigationTabsConfiguration.getDefaultAspect(
+        tabId,
+        sidebarModel,
+        model
+      );
       this.transitionTo(
         'onedata.sidebar.content.aspect',
         defaultAspect
