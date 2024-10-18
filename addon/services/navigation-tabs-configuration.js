@@ -9,7 +9,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Service from '@ember/service';
+import Service, { inject as service } from '@ember/service';
+import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
+import globals from 'onedata-gui-common/utils/globals';
+import { get, computed } from '@ember/object';
+import { camelize } from '@ember/string';
 
 /**
  * @typedef {OnedataSidebarRouteModel<ResourceT>} Object
@@ -30,6 +34,10 @@ import Service from '@ember/service';
  */
 
 /**
+ * @typedef {(sidebarModel?: OnedataSidebarRouteModel) => string|Promise<string>} DefaultResourceGetter
+ */
+
+/**
  * @typedef OnedataTabModel
  * @property {string} id
  * @property {string} icon
@@ -37,7 +45,9 @@ import Service from '@ember/service';
  *     default choice when URL does not specify selected menu item. Only one menu item can
  *     be default.
  * @property {string|DefaultAspectGetter} [defaultAspect] Aspect name, that should be
- *     rendered, when URL does not specify any
+ *     rendered, when URL does not specify any.
+ * @property { string | DefaultResourceGetter } [defaultResource] Resource ID (entityId),
+ *     that should be rendered, when URL does not specify any.
  * @property {boolean} [allowIndex] If true and URL does not specify any resource, then
  *     router will allow showing page not related to any resource - index page for
  *     resource type of that menu item.
@@ -51,17 +61,36 @@ import Service from '@ember/service';
  *     menu item.
  */
 
+// FIXME: dodać wspólne części, żeby usunąć redundancję z onepanel-gui
+
 class AbstractNavigationTabsConfiguration extends Service {
+  @service sidebarResources;
+  @service currentUser;
+
   defaultAspect = 'index';
+
+  /** @type {Storage} */
+  storage = globals.localStorage;
+
+  /**
+   * @virtual
+   * @returns {Array<OnedataTabModel>}
+   */
+  @computed
+  get tabModels() {
+    console.error('NavigationTabsConfiguration service: get tabModels not implemented');
+    return [];
+  }
 
   /**
    * @param {string} tabId
    * @param {OnedataSidebarRouteModel} sidebarRouteModel
    * @param {OnedataContentRouteModel} contentRouteModel
-   * @returns {string}
+   * @returns {Promise<string>}
    */
-  async getDefaultAspect(tabId, sidebarRouteModel, contentRouteModel) {
-    const tabModel = this.getTabModels().find(tab => tab.id === tabId);
+  async getDefaultAspect(sidebarRouteModel, contentRouteModel) {
+    const tabId = camelize(sidebarRouteModel.resourceType);
+    const tabModel = this.tabModels.find(tab => tab.id === tabId);
     if (!tabModel.defaultAspect) {
       return this.defaultAspect;
     }
@@ -74,12 +103,69 @@ class AbstractNavigationTabsConfiguration extends Service {
   }
 
   /**
-   * @virtual
-   * @returns {Array<OnedataTabModel>}
+   * @param {OnedataSidebarRouteModel} sidebarRouteModel
+   * @returns {Promise<object>}
    */
-  getTabModels() {
-    console.error('NavigationTabsConfiguration service: getTabModels not implemented');
-    return [];
+  async getDefaultResource(sidebarRouteModel) {
+    const { resourceType, collection } = sidebarRouteModel;
+    const tabModel = this.tabModels.find(tab => tab.id === resourceType);
+    let defaultResource;
+    if (typeof tabModel.defaultAspect === 'string') {
+      defaultResource = tabModel.defaultResource;
+    }
+    if (typeof tabModel.defaultAspect === 'function') {
+      defaultResource = await tabModel?.defaultResource?.(sidebarRouteModel);
+    }
+    if (defaultResource) {
+      return defaultResource;
+    } else {
+      return sortByProperties(
+        collection.list,
+        this.sidebarResources.getItemsSortingFor(resourceType)
+      )[0];
+    }
+  }
+
+  /**
+   * @param {OnedataSidebarRouteModel} sidebarModel
+   * @returns {object}
+   */
+  getLastUsedResource(sidebarModel) {
+    const { resourceType, collection } = sidebarModel;
+    const lastUsedId = this.storage.getItem(
+      this.lastUsedIdStorageKey(resourceType)
+    );
+    if (lastUsedId) {
+      const lastUsedResource = get(collection, 'list')
+        .find(resource => get(resource, 'entityId') === lastUsedId);
+      return lastUsedResource;
+    }
+  }
+
+  setLastUsedResource(sidebarModel, contentModel) {
+    const { resourceType } = sidebarModel;
+    const { resource } = contentModel;
+    this.storage.setItem(
+      this.lastUsedIdStorageKey(resourceType),
+      this.getResourceId(resource)
+    );
+  }
+
+  /**
+   * @param {object} resource
+   * @returns {string}
+   */
+  getResourceId(resource) {
+    return resource && get(resource, 'entityId');
+  }
+
+  /**
+   * @param {string} resourceType
+   * @returns {string}
+   */
+  lastUsedIdStorageKey(resourceType) {
+    const userId = this.currentUser.userId;
+    return `navigationTabsConfiguration.user:${userId}.sidebar.${resourceType}.lastUsedId`;
   }
 }
 

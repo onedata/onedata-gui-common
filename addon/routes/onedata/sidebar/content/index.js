@@ -35,9 +35,7 @@ export default Route.extend({
     const { resourceId } = model;
     if (!isSpecialResourceId(resourceId)) {
       const sidebarModel = this.modelFor('onedata.sidebar');
-      const tabId = camelize(sidebarModel.resourceType);
       const defaultAspect = await this.navigationTabsConfiguration.getDefaultAspect(
-        tabId,
         sidebarModel,
         model
       );

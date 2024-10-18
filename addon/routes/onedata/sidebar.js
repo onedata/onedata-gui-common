@@ -20,7 +20,7 @@ export default Route.extend({
   navigationTabsConfiguration: service(),
 
   isValidTab(tabName) {
-    const onedataTabs = this.navigationTabsConfiguration.getTabModels();
+    const onedataTabs = this.navigationTabsConfiguration.tabModels;
     return Boolean(onedataTabs.findBy('id', camelize(tabName))) ||
       tabName === 'users';
   },
@@ -81,7 +81,7 @@ export default Route.extend({
    * @returns {string}
    */
   getDefaultTab() {
-    const onedataTabs = this.navigationTabsConfiguration.getTabModels();
+    const onedataTabs = this.navigationTabsConfiguration.tabModels;
     return onedataTabs[0]?.id;
   },
 

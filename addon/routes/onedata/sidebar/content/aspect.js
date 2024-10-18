@@ -63,9 +63,7 @@ export default Route.extend({
     this.set('navigationState.activeAspect', aspectId);
     const templateName = this.getTemplateName(resourceType, aspectId);
     if (!getOwner(this).lookup(`template:${templateName}`)) {
-      const tabId = camelize(resourceType);
       const defaultAspect = await this.navigationTabsConfiguration.getDefaultAspect(
-        tabId,
         sidebarModel,
         model
       );

@@ -20,7 +20,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
   navigationTabsConfiguration: service(),
 
   model() {
-    const onedataTabs = this.navigationTabsConfiguration.getTabModels();
+    const onedataTabs = this.navigationTabsConfiguration.tabModels;
     const mainMenuItems = A(onedataTabs).map(item =>
       _object.assign({}, item, { disabled: false })
     );
