@@ -18,7 +18,7 @@ import { Promise } from 'rsvp';
 const taskName = 'task1';
 
 describe('Integration | Utility | workflow-visualiser/actions/remove-task-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const task = Task.create({ name: taskName });
@@ -27,6 +27,11 @@ describe('Integration | Utility | workflow-visualiser/actions/remove-task-action
       context: { task },
     });
     this.setProperties({ task, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.task.destroy();
   });
 
   it('has correct className, icon and title', function () {

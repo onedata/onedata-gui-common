@@ -2,7 +2,7 @@
  * Model of a single chart for the dashboard editor.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -117,18 +117,12 @@ const Chart = ElementBase.extend({
     try {
       if (this.axes.length) {
         this.axes.forEach((axis) => axis.destroy());
-        this.set('axes', []);
       }
       if (this.seriesGroups.length) {
         this.seriesGroups.forEach((group) => group.destroy());
-        this.set('seriesGroups', []);
       }
       if (this.series.length) {
         this.series.forEach((series) => series.destroy());
-        this.set('series', []);
-      }
-      if (this.parent) {
-        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);

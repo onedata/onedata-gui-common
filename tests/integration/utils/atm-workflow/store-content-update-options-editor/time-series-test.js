@@ -39,7 +39,7 @@ const prefixCombinerOptions = [{
 }];
 
 describe('Integration | Utility | atm-workflow/store-content-update-options-editor/time-series', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const storeConfig = {
@@ -74,6 +74,10 @@ describe('Integration | Utility | atm-workflow/store-content-update-options-edit
         ],
       }),
     });
+  });
+
+  afterEach(function () {
+    this.rootGroup.destroy?.();
   });
 
   it('shows no dispatch rules at the beginning', async function () {

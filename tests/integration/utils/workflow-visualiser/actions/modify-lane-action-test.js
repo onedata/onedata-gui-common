@@ -18,7 +18,7 @@ import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 describe('Integration | Utility | workflow-visualiser/actions/modify-lane-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create({
@@ -47,6 +47,11 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-lane-action
       },
     });
     this.setProperties({ lane, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.lane.destroy();
   });
 
   it('has correct className, icon and title', function () {

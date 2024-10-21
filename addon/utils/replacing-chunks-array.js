@@ -3,14 +3,14 @@
  * that are not currently loaded
  *
  * @author Jakub Liput
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import ArraySlice from 'onedata-gui-common/utils/array-slice';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
-import { get, set, computed, observer } from '@ember/object';
+import { get, set, computed } from '@ember/object';
 import { reads, not } from '@ember/object/computed';
 import { A, isArray } from '@ember/array';
 import _ from 'lodash';
@@ -22,6 +22,7 @@ import {
 import Evented from '@ember/object/evented';
 import OneSingletonTaskQueue from 'onedata-gui-common/utils/one-singleton-task-queue';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
+import { syncObserver } from 'onedata-gui-common/utils/observer';
 
 export const emptyItem = {};
 
@@ -113,7 +114,10 @@ export default ArraySlice.extend(Evented, {
       !this._startReached && this._start - this.loadMoreThreshold <= this.emptyIndex;
   },
 
-  startChanged: observer(
+  /**
+   * Sync observer: schedule task adds the fetch opearation to the queue.
+   */
+  startChanged: syncObserver(
     '_start',
     '_startReached',
     'loadMoreThreshold',
@@ -126,7 +130,10 @@ export default ArraySlice.extend(Evented, {
     }
   ),
 
-  endChanged: observer(
+  /**
+   * Sync observer: schedule task adds the fetch opearation to the queue.
+   */
+  endChanged: syncObserver(
     '_end',
     '_endReached',
     'loadMoreThreshold',
@@ -280,6 +287,10 @@ export default ArraySlice.extend(Evented, {
         -currentChunkSize,
       )
       .then(({ arrayUpdate }) => {
+        if (this.isDestroyed) {
+          return;
+        }
+
         // TODO: use of pullAllBy is working, but it is probably unsafe
         // it can remove items from update, while they should stay there
         // because some entries "fallen down" from further part of array
@@ -314,10 +325,9 @@ export default ArraySlice.extend(Evented, {
             for (let i = insertIndex; i < fetchedArraySize; ++i) {
               sourceArray[i] = arrayUpdate[i];
             }
-            const indexOffset = fetchedArraySize;
             this.setProperties({
-              startIndex: this.get('startIndex') + indexOffset,
-              endIndex: this.get('endIndex') + indexOffset,
+              startIndex: this.get('startIndex') + additionalFrontSpace,
+              endIndex: this.get('endIndex') + additionalFrontSpace,
               emptyIndex: -1,
             });
           }
@@ -384,6 +394,9 @@ export default ArraySlice.extend(Evented, {
         (lastItem ? 1 : 0),
       )
       .then(({ arrayUpdate, endReached }) => {
+        if (this.isDestroyed) {
+          return;
+        }
         if (endReached ?? get(arrayUpdate, 'length') < chunkSize) {
           safeExec(this, 'set', '_endReached', true);
         }
@@ -448,7 +461,7 @@ export default ArraySlice.extend(Evented, {
       fetchStartIndex = null;
     }
 
-    const lengthBeforeFetch = this.length || (this.endIndex - this.startIndex);
+    const lengthBeforeFetch = this.getLength() || (this.endIndex - this.startIndex);
 
     try {
       const { arrayUpdate, endReached } = await this.fetchWrapper(
@@ -456,6 +469,9 @@ export default ArraySlice.extend(Evented, {
         size,
         offset,
       );
+      if (this.isDestroyed) {
+        return;
+      }
       const fetchedCount = get(arrayUpdate, 'length');
       const updatedEnd = _start + fetchedCount;
       safeExec(this, 'setProperties', {
@@ -522,6 +538,9 @@ export default ArraySlice.extend(Evented, {
         -indexMargin,
       )
       .then(({ arrayUpdate, endReached }) => {
+        if (this.isDestroyed) {
+          return;
+        }
         // clear array without notify
         sourceArray.splice(0, get(sourceArray, 'length'));
         sourceArray.push(...arrayUpdate);
@@ -563,6 +582,9 @@ export default ArraySlice.extend(Evented, {
   },
 
   setEmptyIndex(index) {
+    if (this.isDestroyed) {
+      return;
+    }
     const sourceArray = this.get('sourceArray');
     for (let i = 0; i <= index; ++i) {
       sourceArray[i] = emptyItem;
@@ -609,6 +631,7 @@ export default ArraySlice.extend(Evented, {
    * Returns a promise that resolves when currently scheduled fetchPrev and fetchNext
    * tasks settle. When there are no prev or next operations pending, returns empty
    * resolving promise.
+   * @returns {Promise}
    */
   async getCurrentExpandPromise() {
     const taskQueue = this.get('taskQueue');
@@ -627,21 +650,24 @@ export default ArraySlice.extend(Evented, {
       this.set('taskQueue', new OneSingletonTaskQueue());
     }
     this._super(...arguments);
-    const initialJumpIndex = this.get('initialJumpIndex');
-    const initialLoad = promiseObject(
-      initialJumpIndex ?
-      this.scheduleJump(initialJumpIndex) :
-      this.scheduleReload({ head: true }).then(() => {
-        return this.startEndChanged();
-      })
-    );
-    this.set('initialLoad', initialLoad).catch(error => {
-      console.debug(
-        'util:replacing-chunks-array#init: initial load failed: ' +
-        JSON.stringify(error)
-      );
-      safeExec(this, 'set', 'error', error);
-    });
+    const initialJumpIndex = this.initialJumpIndex;
+
+    const initialLoad = promiseObject((async () => {
+      const loadPromise = initialJumpIndex ?
+        this.scheduleJump(initialJumpIndex) :
+        this.scheduleReload({ head: true }).then(() => this.startEndChanged());
+      try {
+        return await loadPromise;
+      } catch (error) {
+        console.debug(
+          'util:replacing-chunks-array#init: initial load failed: ' +
+          JSON.stringify(error)
+        );
+        safeExec(this, 'set', 'error', error);
+        throw error;
+      }
+    })());
+    this.set('initialLoad', initialLoad);
   },
 
   removeDuplicateRecords(arrayUpdateData, sourceArray) {

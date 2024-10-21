@@ -32,44 +32,49 @@ import { get } from '@ember/object';
 import sinon from 'sinon';
 
 describe('Integration | Utility | workflow-visualiser/actions-factory', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.factory.destroy();
+    this.action.destroy();
+  });
 
   it('creates action "CreateLaneAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const store = Store.create({
       id: 's1',
       name: 'store1',
     });
-    factory.setWorkflowDataProvider({
+    this.factory.setWorkflowDataProvider({
       definedStores: [store],
     });
     const createLaneCallback = () => {};
 
-    const action = factory.createCreateLaneAction({ createLaneCallback });
+    this.action = this.factory.createCreateLaneAction({ createLaneCallback });
 
-    expect(action).to.be.instanceOf(CreateLaneAction);
-    expect(get(action, 'definedStores').objectAt(0)).to.equal(store);
-    expect(get(action, 'createStoreAction')).to.be.instanceOf(CreateStoreAction);
-    expect(get(action, 'createLaneCallback')).to.equal(createLaneCallback);
+    expect(this.action).to.be.instanceOf(CreateLaneAction);
+    expect(get(this.action, 'definedStores').objectAt(0)).to.equal(store);
+    expect(get(this.action, 'createStoreAction')).to.be.instanceOf(CreateStoreAction);
+    expect(get(this.action, 'createLaneCallback')).to.equal(createLaneCallback);
   });
 
   it('creates action "ModifyLaneAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const store = Store.create({
       id: 's1',
       name: 'store1',
     });
-    factory.setWorkflowDataProvider({
+    this.factory.setWorkflowDataProvider({
       definedStores: [store],
     });
     const lane = Lane.create();
 
-    const action = factory.createModifyLaneAction({ lane });
+    this.action = this.factory.createModifyLaneAction({ lane });
 
-    expect(action).to.be.instanceOf(ModifyLaneAction);
-    expect(get(action, 'lane')).to.equal(lane);
-    expect(get(action, 'definedStores').objectAt(0)).to.equal(store);
-    expect(get(action, 'createStoreAction')).to.be.instanceOf(CreateStoreAction);
+    expect(this.action).to.be.instanceOf(ModifyLaneAction);
+    expect(get(this.action, 'lane')).to.equal(lane);
+    expect(get(this.action, 'definedStores').objectAt(0)).to.equal(store);
+    expect(get(this.action, 'createStoreAction')).to.be.instanceOf(CreateStoreAction);
   });
 
   itCreatesLaneAction('ViewLaneAction', ViewLaneAction, true);
@@ -79,15 +84,15 @@ describe('Integration | Utility | workflow-visualiser/actions-factory', function
   itCreatesLaneAction('RemoveLaneAction', RemoveLaneAction);
 
   it('creates action "CreateParallelBoxAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const createParallelBoxCallback = () => {};
 
-    const action = factory.createCreateParallelBoxAction({
+    this.action = this.factory.createCreateParallelBoxAction({
       createParallelBoxCallback,
     });
 
-    expect(action).to.be.instanceOf(CreateParallelBoxAction);
-    expect(get(action, 'createParallelBoxCallback'))
+    expect(this.action).to.be.instanceOf(CreateParallelBoxAction);
+    expect(get(this.action, 'createParallelBoxCallback'))
       .to.equal(createParallelBoxCallback);
   });
 
@@ -96,214 +101,217 @@ describe('Integration | Utility | workflow-visualiser/actions-factory', function
   itCreatesParallelBoxAction('RemoveParallelBoxAction', RemoveParallelBoxAction);
 
   it('creates action "CreateTaskAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const store = Store.create({
       id: 's1',
       name: 'store1',
     });
-    factory.setWorkflowDataProvider({
+    this.factory.setWorkflowDataProvider({
       definedStores: [store],
     });
     const taskDetailsProviderCallback = () => {};
-    factory.setGetTaskCreationDataCallback(taskDetailsProviderCallback);
+    this.factory.setGetTaskCreationDataCallback(taskDetailsProviderCallback);
     const createTaskCallback = () => {};
 
-    const action = factory.createCreateTaskAction({ createTaskCallback });
+    this.action = this.factory.createCreateTaskAction({ createTaskCallback });
 
-    expect(action).to.be.instanceOf(CreateTaskAction);
-    expect(get(action, 'definedStores').objectAt(0)).to.equal(store);
-    expect(get(action, 'taskDetailsProviderCallback'))
+    expect(this.action).to.be.instanceOf(CreateTaskAction);
+    expect(get(this.action, 'definedStores').objectAt(0)).to.equal(store);
+    expect(get(this.action, 'taskDetailsProviderCallback'))
       .to.equal(taskDetailsProviderCallback);
-    expect(get(action, 'createTaskCallback')).to.equal(createTaskCallback);
+    expect(get(this.action, 'createTaskCallback')).to.equal(createTaskCallback);
   });
 
   it('creates action "ModifyTaskAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const store = Store.create({
       id: 's1',
       name: 'store1',
     });
-    factory.setWorkflowDataProvider({
+    this.factory.setWorkflowDataProvider({
       definedStores: [store],
     });
     const taskDetailsProviderCallback = () => {};
-    factory.setGetTaskModificationDataCallback(taskDetailsProviderCallback);
+    this.factory.setGetTaskModificationDataCallback(taskDetailsProviderCallback);
     const task = Task.create();
 
-    const action = factory.createModifyTaskAction({ task });
+    this.action = this.factory.createModifyTaskAction({ task });
 
-    expect(action).to.be.instanceOf(ModifyTaskAction);
-    expect(get(action, 'definedStores').objectAt(0)).to.equal(store);
-    expect(get(action, 'taskDetailsProviderCallback'))
+    expect(this.action).to.be.instanceOf(ModifyTaskAction);
+    expect(get(this.action, 'definedStores').objectAt(0)).to.equal(store);
+    expect(get(this.action, 'taskDetailsProviderCallback'))
       .to.equal(taskDetailsProviderCallback);
-    expect(get(action, 'task')).to.equal(task);
+    expect(get(this.action, 'task')).to.equal(task);
   });
 
   itCreatesTaskAction('RemoveTaskAction', RemoveTaskAction);
 
   it('creates action "CreateStoreAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const createStoreCallback = () => {};
-    factory.setCreateStoreCallback(createStoreCallback);
+    this.factory.setCreateStoreCallback(createStoreCallback);
 
-    const action = factory.createCreateStoreAction();
+    this.action = this.factory.createCreateStoreAction();
 
-    expect(action).to.be.instanceOf(CreateStoreAction);
-    expect(get(action, 'createStoreCallback')).to.equal(createStoreCallback);
+    expect(this.action).to.be.instanceOf(CreateStoreAction);
+    expect(get(this.action, 'createStoreCallback')).to.equal(createStoreCallback);
   });
 
   it('creates action "ViewStoreAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const workflowDataProvider = {
       getStoreContent: sinon.stub().resolves(),
       getStoreContentPresenterContext: sinon.stub().returns('abc'),
     };
-    factory.setWorkflowDataProvider(workflowDataProvider);
+    this.factory.setWorkflowDataProvider(workflowDataProvider);
     const store = Store.create();
 
-    const action = factory.createViewStoreAction({ store });
+    this.action = this.factory.createViewStoreAction({ store });
 
-    expect(action).to.be.instanceOf(ViewStoreAction);
-    expect(get(action, 'store')).to.equal(store);
+    expect(this.action).to.be.instanceOf(ViewStoreAction);
+    expect(get(this.action, 'store')).to.equal(store);
     expect(workflowDataProvider.getStoreContent).to.be.not.called;
 
-    get(action, 'getStoreContentCallback')();
+    get(this.action, 'getStoreContentCallback')();
     expect(workflowDataProvider.getStoreContent).to.be.calledOnce;
-    expect(action.storeContentPresenterContext).to.equal('abc');
+    expect(this.action.storeContentPresenterContext).to.equal('abc');
   });
 
   itCreatesStoreAction('ModifyStoreAction', ModifyStoreAction);
   itCreatesStoreAction('RemoveStoreAction', RemoveStoreAction);
 
   it('creates action "ModifyWorkflowChartDashboardAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const workflowDataProvider = {
       workflow: {},
     };
-    factory.setWorkflowDataProvider(workflowDataProvider);
+    this.factory.setWorkflowDataProvider(workflowDataProvider);
 
-    const action = factory.createModifyWorkflowChartDashboardAction();
+    this.action = this.factory.createModifyWorkflowChartDashboardAction();
 
-    expect(action).to.be.instanceOf(ModifyWorkflowChartDashboardAction);
-    expect(get(action, 'workflow')).to.equal(workflowDataProvider.workflow);
+    expect(this.action).to.be.instanceOf(ModifyWorkflowChartDashboardAction);
+    expect(get(this.action, 'workflow')).to.equal(workflowDataProvider.workflow);
   });
 
   it('creates action "ViewWorkflowChartDashboardAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const workflow = {};
     const workflowDataProvider = {
       workflow,
       getStoreContent: sinon.stub().resolves(),
       getTimeSeriesCollectionReferencesMap: sinon.spy(),
     };
-    factory.setWorkflowDataProvider(workflowDataProvider);
+    this.factory.setWorkflowDataProvider(workflowDataProvider);
 
-    const action = factory.createViewWorkflowChartDashboardAction();
+    this.action = this.factory.createViewWorkflowChartDashboardAction();
 
-    expect(action).to.be.instanceOf(ViewWorkflowChartDashboardAction);
-    expect(get(action, 'workflow')).to.equal(workflow);
+    expect(this.action).to.be.instanceOf(ViewWorkflowChartDashboardAction);
+    expect(get(this.action, 'workflow')).to.equal(workflow);
     expect(workflowDataProvider.getStoreContent).to.be.not.called;
     expect(workflowDataProvider.getTimeSeriesCollectionReferencesMap).to.be.not.called;
 
-    get(action, 'getStoreContentCallback')();
+    get(this.action, 'getStoreContentCallback')();
     expect(workflowDataProvider.getStoreContent).to.be.calledOnce;
 
-    get(action, 'getTimeSeriesCollectionRefsMapCallback')();
+    get(this.action, 'getTimeSeriesCollectionRefsMapCallback')();
     expect(workflowDataProvider.getTimeSeriesCollectionReferencesMap).to.be.calledOnce;
   });
 
   it('creates action "ModifyLaneChartDashboardAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const lane = Lane.create();
 
-    const action = factory.createModifyLaneChartDashboardAction({ lane });
+    this.action = this.factory.createModifyLaneChartDashboardAction({ lane });
 
-    expect(action).to.be.instanceOf(ModifyLaneChartDashboardAction);
-    expect(action.lane).to.equal(lane);
+    expect(this.action).to.be.instanceOf(ModifyLaneChartDashboardAction);
+    expect(this.action.lane).to.equal(lane);
   });
 
   it('creates action "ViewLaneChartDashboardAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const lane = Lane.create();
     const workflowDataProvider = {
       getStoreContent: sinon.stub().resolves(),
       getTimeSeriesCollectionReferencesMap: sinon.spy(),
     };
-    factory.setWorkflowDataProvider(workflowDataProvider);
+    this.factory.setWorkflowDataProvider(workflowDataProvider);
 
-    const action = factory.createViewLaneChartDashboardAction({ lane, runNumber: 2 });
+    this.action = this.factory.createViewLaneChartDashboardAction({
+      lane,
+      runNumber: 2,
+    });
 
-    expect(action).to.be.instanceOf(ViewLaneChartDashboardAction);
-    expect(action.lane).to.equal(lane);
-    expect(action.runNumber).to.equal(2);
+    expect(this.action).to.be.instanceOf(ViewLaneChartDashboardAction);
+    expect(this.action.lane).to.equal(lane);
+    expect(this.action.runNumber).to.equal(2);
     expect(workflowDataProvider.getStoreContent).to.be.not.called;
     expect(workflowDataProvider.getTimeSeriesCollectionReferencesMap).to.be.not.called;
 
-    get(action, 'getStoreContentCallback')();
+    get(this.action, 'getStoreContentCallback')();
     expect(workflowDataProvider.getStoreContent).to.be.calledOnce;
 
-    get(action, 'getTimeSeriesCollectionRefsMapCallback')();
+    get(this.action, 'getTimeSeriesCollectionRefsMapCallback')();
     expect(workflowDataProvider.getTimeSeriesCollectionReferencesMap).to.be.calledOnce;
   });
 });
 
 function itCreatesLaneAction(actionName, actionClass, includeStores = false) {
   it(`creates action "${actionName}"`, function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     let store;
     if (includeStores) {
       store = Store.create({
         id: 's1',
         name: 'store1',
       });
-      factory.setWorkflowDataProvider({
+      this.factory.setWorkflowDataProvider({
         definedStores: [store],
       });
     }
     const lane = Lane.create();
 
-    const action = factory[`create${actionName}`]({ lane });
+    this.action = this.factory[`create${actionName}`]({ lane });
 
-    expect(action).to.be.instanceOf(actionClass);
-    expect(get(action, 'lane')).to.equal(lane);
+    expect(this.action).to.be.instanceOf(actionClass);
+    expect(get(this.action, 'lane')).to.equal(lane);
     if (includeStores) {
-      expect(get(action, 'definedStores').objectAt(0)).to.equal(store);
+      expect(get(this.action, 'definedStores').objectAt(0)).to.equal(store);
     }
   });
 }
 
 function itCreatesParallelBoxAction(actionName, actionClass) {
   it(`creates action "${actionName}"`, function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const parallelBox = ParallelBox.create();
 
-    const action = factory[`create${actionName}`]({ parallelBox });
+    this.action = this.factory[`create${actionName}`]({ parallelBox });
 
-    expect(action).to.be.instanceOf(actionClass);
-    expect(get(action, 'parallelBox')).to.equal(parallelBox);
+    expect(this.action).to.be.instanceOf(actionClass);
+    expect(get(this.action, 'parallelBox')).to.equal(parallelBox);
   });
 }
 
 function itCreatesTaskAction(actionName, actionClass) {
   it(`creates action "${actionName}"`, function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const task = Task.create();
 
-    const action = factory[`create${actionName}`]({ task });
+    this.action = this.factory[`create${actionName}`]({ task });
 
-    expect(action).to.be.instanceOf(actionClass);
-    expect(get(action, 'task')).to.equal(task);
+    expect(this.action).to.be.instanceOf(actionClass);
+    expect(get(this.action, 'task')).to.equal(task);
   });
 }
 
 function itCreatesStoreAction(actionName, actionClass) {
   it(`creates action "${actionName}"`, function () {
-    const factory = ActionsFactory.create({ ownerSource: this.owner });
+    this.factory = ActionsFactory.create({ ownerSource: this.owner });
     const store = Store.create();
 
-    const action = factory[`create${actionName}`]({ store });
+    this.action = this.factory[`create${actionName}`]({ store });
 
-    expect(action).to.be.instanceOf(actionClass);
-    expect(get(action, 'store')).to.equal(store);
+    expect(this.action).to.be.instanceOf(actionClass);
+    expect(get(this.action, 'store')).to.equal(store);
   });
 }

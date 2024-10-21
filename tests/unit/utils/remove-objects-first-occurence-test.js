@@ -1,11 +1,15 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, afterEach } from 'mocha';
 import removeObjectsFirstOccurence from 'onedata-gui-common/utils/remove-objects-first-occurence';
 import { A } from '@ember/array';
 import EmberObject, { observer } from '@ember/object';
 import sinon from 'sinon';
 
 describe('Unit | Utility | remove-objects-first-occurence', function () {
+  afterEach(function () {
+    this.observerTester?.destroy();
+  });
+
   it('removes only first occurence of each object specified to remove from target array', function () {
     const array = A([
       'one',
@@ -54,7 +58,7 @@ describe('Unit | Utility | remove-objects-first-occurence', function () {
       'two',
       'three',
     ]);
-    EmberObject.extend({
+    this.observerTester = EmberObject.extend({
       array,
       arrayObserver: observer('array.[]', function arrayObserver() {
         observerSpy();

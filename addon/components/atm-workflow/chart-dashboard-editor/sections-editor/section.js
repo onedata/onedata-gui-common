@@ -2,7 +2,7 @@
  * Shows single dashboard section.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -55,6 +55,16 @@ export default OneDraggableObject.extend(I18n, {
    * @type {boolean}
    */
   isHovered: false,
+
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseMoveHandler: null,
+
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseLeaveHandler: null,
 
   /**
    * For one-draggable-object
@@ -154,30 +164,56 @@ export default OneDraggableObject.extend(I18n, {
   /**
    * @override
    */
-  mouseLeave() {
-    this._super(...arguments);
-    this.changeHoverState(false);
-  },
-
-  /**
-   * @override
-   */
-  mouseMove(event) {
-    this._super(...arguments);
-    const containsHoveredElement =
-      event.target.closest('.has-floating-toolbar') !== this.element;
-    this.changeHoverState(!containsHoveredElement);
-  },
-
-  /**
-   * @override
-   */
   click(event) {
     this._super(...arguments);
     if (isDirectlyClicked(event)) {
       const action = this.editorContext.actionsFactory
         .createSelectElementAction({ elementToSelect: this.section });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroy();
+      }
+    }
+  },
+
+  /**
+   * @override
+   */
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (!this.element) {
+      return;
+    }
+
+    this.setProperties({
+      mouseMoveHandler: (event) => {
+        const containsHoveredElement =
+          event.target.closest('.has-floating-toolbar') !== this.element;
+        this.changeHoverState(!containsHoveredElement);
+      },
+      mouseLeaveHandler: () => {
+        this.changeHoverState(false);
+      },
+    });
+    this.element.addEventListener('mousemove', this.mouseMoveHandler);
+    this.element.addEventListener('mouseleave', this.mouseLeaveHandler);
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      if (this.mouseMoveHandler) {
+        this.element?.removeEventListener('mousemove', this.mouseMoveHandler);
+      }
+      if (this.mouseLeaveHandler) {
+        this.element?.removeEventListener('mouseleave', this.mouseLeaveHandler);
+      }
+    } finally {
+      this._super(...arguments);
     }
   },
 

@@ -38,14 +38,14 @@
 
   {{#modal.footer class="btn-toolbar"}}
     {{#unless isNoButtonHidden}}
-      {{#bs-button
+      {{#one-button
         type="default"
         class="question-no"
         onClick=modal.close
         disabled=isSubmitting
       }}
         {{noButtonText}}
-      {{/bs-button}}
+      {{/one-button}}
     {{/unless}}
     {{#unless isYesButtonHidden}}
       {{#one-button

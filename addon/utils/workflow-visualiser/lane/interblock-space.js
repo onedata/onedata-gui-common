@@ -2,12 +2,12 @@
  * Space between parallel boxes or tasks. Allows creating new elements.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { computed } from '@ember/object';
 import VisualiserSpace from 'onedata-gui-common/utils/workflow-visualiser/visualiser-space';
-import { getBy } from 'ember-awesome-macros';
 
 export default VisualiserSpace.extend({
   /**
@@ -31,5 +31,11 @@ export default VisualiserSpace.extend({
   /**
    * @override
    */
-  siblingsType: getBy('siblingsTypePerParentType', 'parent.__modelType'),
+  siblingsType: computed(
+    'siblingsTypePerParentType',
+    'parent.__modelType',
+    function siblingsType() {
+      return this.siblingsTypePerParentType[this.parent?.__modelType];
+    }
+  ),
 });

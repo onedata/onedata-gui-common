@@ -2,12 +2,11 @@
  * Base class for visualiser records (concrete data entries like tasks, lanes etc.).
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
-import { getBy, conditional, raw } from 'ember-awesome-macros';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { resolve } from 'rsvp';
@@ -79,10 +78,13 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<AtmLaneRunNumber>}
    */
-  visibleRunNumber: conditional(
-    getBy('runsRegistry', 'parent.visibleRunNumber'),
+  visibleRunNumber: computed(
+    'runsRegistry',
     'parent.visibleRunNumber',
-    raw(1)
+    function visibleRunNumber() {
+      return this.runsRegistry?.[this.parent?.visibleRunNumber] ?
+        this.parent.visibleRunNumber : 1;
+    }
   ),
 
   /**

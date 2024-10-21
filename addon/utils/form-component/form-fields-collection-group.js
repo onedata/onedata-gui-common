@@ -4,7 +4,7 @@
  * Before usage you have to override `fieldFactoryMethod` so it returns form element.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -36,7 +36,7 @@ export default FormFieldsGroup.extend({
    */
   addButtonText: computed('translationPath', 'i18nPrefix', {
     get() {
-      return this.injectedAddButtonText ?? this.getTranslation('addButtonText', {}, {
+      return this.customAddButtonText ?? this.getTranslation('addButtonText', {}, {
         defaultValue: this.t(
           `${defaultI18nPrefix}.addButtonText`, {}, {
             defaultValue: '',
@@ -46,7 +46,7 @@ export default FormFieldsGroup.extend({
       });
     },
     set(key, value) {
-      return this.injectedAddButtonText = value;
+      return this.customAddButtonText = value;
     },
   }),
 
@@ -58,7 +58,7 @@ export default FormFieldsGroup.extend({
     'translationPath',
     'i18nPrefix', {
       get() {
-        return this.injectedEmptyCollectionViewModeText ??
+        return this.customEmptyCollectionViewModeText ??
           this.getTranslation('emptyCollectionViewModeText', {}, {
             defaultValue: this.t(
               `${defaultI18nPrefix}.emptyCollectionViewModeText`, {}, {
@@ -69,7 +69,7 @@ export default FormFieldsGroup.extend({
           });
       },
       set(key, value) {
-        this.injectedEmptyCollectionViewModeText = value;
+        this.customEmptyCollectionViewModeText = value;
       },
     }
   ),
@@ -83,13 +83,13 @@ export default FormFieldsGroup.extend({
    * Custom addButtonText injected during field creation.
    * @type {string | null}
    */
-  injectedAddButtonText: null,
+  customAddButtonText: null,
 
   /**
    * Custom emptyCollectionViewModeText injected during field creation.
    * @type {string | null}
    */
-  injectedEmptyCollectionViewModeText: null,
+  customEmptyCollectionViewModeText: null,
 
   /**
    * @type {Array<Utils.FormComponent.FormElement>}
@@ -127,6 +127,9 @@ export default FormFieldsGroup.extend({
       if (!areFieldsTheSame) {
         this.set('fields', newFields);
         this.fieldsParentSetter();
+        const newFieldsSet = new Set(newFields);
+        fields.filter((field) => !newFieldsSet.has(field))
+          .forEach((field) => field.destroy?.());
       }
       this.set('fieldsToAdd', newFieldsToAdd);
     }
@@ -138,6 +141,14 @@ export default FormFieldsGroup.extend({
     this.incomingFieldsValueNamesObserver();
   },
 
+  willDestroy() {
+    try {
+      this.fieldsToAdd.forEach((field) => field.destroy?.());
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
   /**
    * @public
    */
@@ -146,6 +157,7 @@ export default FormFieldsGroup.extend({
     const newFieldValueName = this.generateUniqueFieldValueName();
     const newField = this.fieldFactoryMethod(newFieldValueName);
     set(newField, 'parent', this);
+    newField.updateOwner();
 
     set(newValue, newFieldValueName, newField.dumpDefaultValue());
     get(newValue, '__fieldsValueNames').push(newFieldValueName);

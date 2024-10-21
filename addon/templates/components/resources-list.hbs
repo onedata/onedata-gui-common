@@ -59,21 +59,17 @@
           </span>
         {{/if}}
         {{#truncated-string}}
-          {{#if item.conflictingLabelSource}}
-            {{name-conflict
-              item=item.conflictingLabelSource
-              tagName="span"
-              class="one-label"
-              mouseEnter=(action "itemInfoHovered" item true)
-              mouseLeave=(action "itemInfoHovered" item false)
-            }}
-          {{else}}
-            <span
-              class="one-label"
-              onmouseover={{action "itemInfoHovered" item true}}
-              onmouseleave={{action "itemInfoHovered" item false}}
-            >{{item.label}}</span>
-          {{/if}}
+          <span
+            class="one-label"
+            onmouseover={{action "itemInfoHovered" item true}}
+            onmouseleave={{action "itemInfoHovered" item false}}
+          >
+            {{#if item.conflictingLabelSource}}
+              {{name-conflict item=item.conflictingLabelSource}}
+            {{else}}
+              {{item.label}}
+            {{/if}}
+          </span>
         {{/truncated-string}}
         {{#if item.actions.length}}
           {{actions-toolbar

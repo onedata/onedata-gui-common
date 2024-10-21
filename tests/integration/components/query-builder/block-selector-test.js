@@ -30,9 +30,19 @@ const operatorBlockClasses = {
 };
 
 describe('Integration | Component | query-builder/block-selector', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
+
+  beforeEach(function () {
+    this.set('blocksToDestroy', []);
+  });
+
+  afterEach(function () {
+    this.block?.destroy();
+    this.editBlock?.destroy();
+    this.blocksToDestroy.forEach((block) => block?.destroy());
+  });
 
   context('in "create" mode', function () {
     beforeEach(function () {
@@ -65,7 +75,7 @@ describe('Integration | Component | query-builder/block-selector', function () {
       it(
         `calls "onBlockAdd" callback, when ${operatorName.toUpperCase()} operator has been clicked`,
         async function () {
-          const addSpy = this.set('addSpy', sinon.spy());
+          const addSpy = this.set('addSpy', sinon.spy((block) => this.set('block', block)));
 
           await render(hbs `{{query-builder/block-selector
             mode="create"
@@ -161,7 +171,10 @@ describe('Integration | Component | query-builder/block-selector', function () {
         `calls "onBlockReplace" callback, when ${operatorName.toUpperCase()} operator in "surround" section has been clicked`,
         async function () {
           const editBlock = this.get('editBlock');
-          const replaceSpy = this.set('replaceSpy', sinon.spy());
+          const replaceSpy = this.set(
+            'replaceSpy',
+            sinon.spy((blocks) => this.set('block', blocks[0]))
+          );
 
           await render(hbs `{{query-builder/block-selector
             mode="edit"
@@ -204,6 +217,7 @@ describe('Integration | Component | query-builder/block-selector', function () {
     it(
       'does not render operators in "change operator to" section when block is not an operator',
       async function () {
+        this.editBlock.destroy();
         this.set('editBlock', ConditionQueryBlock.create());
 
         await render(hbs `{{query-builder/block-selector
@@ -232,6 +246,7 @@ describe('Integration | Component | query-builder/block-selector', function () {
         it(
           `blocks "change operator to" ${operatorUpper} when editing ${operatorUpper} operator ${descriptionSuffix}`,
           async function () {
+            this.editBlock.destroy();
             this.set('editBlock', operatorBlockClasses[operatorName].create({
               operator: operatorName,
             }));
@@ -259,6 +274,7 @@ describe('Integration | Component | query-builder/block-selector', function () {
       it(
         `blocks "change operator to" ${operatorUpper} and NOT when editing ${operatorUpper} operator with two conditions`,
         async function () {
+          this.editBlock.destroy();
           const editBlock = this.set(
             'editBlock',
             operatorBlockClasses[operatorName].create({
@@ -295,6 +311,7 @@ describe('Integration | Component | query-builder/block-selector', function () {
         it(
           `changes ${sourceOperatorName.toUpperCase()} operator with single condition to ${destinationOperatorName.toUpperCase()} operator`,
           async function () {
+            this.editBlock.destroy();
             const editBlock = this.set(
               'editBlock',
               operatorBlockClasses[sourceOperatorName].create({

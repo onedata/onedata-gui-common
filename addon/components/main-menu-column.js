@@ -2,7 +2,7 @@
  * Container for application main menu used as a one of the layout columns.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -55,6 +55,16 @@ export default Component.extend({
   lastIsExpandedValue: false,
 
   /**
+   * @type {(() => void) | null}
+   */
+  mouseEnterHandler: null,
+
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseLeaveHandler: null,
+
+  /**
    * @type {Ember.ComputedProperty<boolean>}
    */
   isExpandedObserver: observer('isExpanded', function isExpandedObserver() {
@@ -80,12 +90,42 @@ export default Component.extend({
     this.send('closeSidenav');
   },
 
-  mouseEnter() {
-    this.set('navigationState.isMainMenuColumnHovered', true);
+  /**
+   * @override
+   */
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (!this.element) {
+      return;
+    }
+
+    this.setProperties({
+      mouseEnterHandler: () => {
+        this.set('navigationState.isMainMenuColumnHovered', true);
+      },
+      mouseLeaveHandler: () => {
+        this.set('navigationState.isMainMenuColumnHovered', false);
+      },
+    });
+    this.element.addEventListener('mouseenter', this.mouseEnterHandler);
+    this.element.addEventListener('mouseleave', this.mouseLeaveHandler);
   },
 
-  mouseLeave() {
-    this.set('navigationState.isMainMenuColumnHovered', false);
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      if (this.mouseEnterHandler) {
+        this.element?.removeEventListener('mouseenter', this.mouseEnterHandler);
+      }
+      if (this.mouseLeaveHandler) {
+        this.element?.removeEventListener('mouseleave', this.mouseLeaveHandler);
+      }
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   actions: {

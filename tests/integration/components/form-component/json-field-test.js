@@ -8,12 +8,16 @@ import sinon from 'sinon';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form-component/json-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', JsonField.create({
       ownerSource: this.owner,
     }));
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it(

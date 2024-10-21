@@ -17,19 +17,24 @@ import { resolve } from 'rsvp';
 import { lookupService } from '../../../../helpers/stub-service';
 
 describe('Integration | Component | modals/workflow-visualiser/chart-dashboard-editor-modal', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const onModifySpy = sinon.spy(() => resolve());
+    const owningModel = Workflow.create({
+      onModify: onModifySpy,
+    });
     this.setProperties({
       modalManager: lookupService(this, 'modal-manager'),
       modalOptions: {
-        dashboardOwner: Workflow.create({
-          onModify: onModifySpy,
-        }),
+        dashboardOwner: owningModel,
       },
       onModifySpy,
     });
+  });
+
+  afterEach(function () {
+    this.modalOptions?.dashboardOwner?.destroy();
   });
 
   it('renders modal with class "chart-dashboard-editor-modal"', async function () {
@@ -39,6 +44,7 @@ describe('Integration | Component | modals/workflow-visualiser/chart-dashboard-e
   });
 
   it('has header correct for lane dashboard', async function () {
+    this.modalOptions?.dashboardOwner?.destroy();
     this.set('modalOptions.dashboardOwner', Lane.create());
     await showModal(this);
 
@@ -47,7 +53,6 @@ describe('Integration | Component | modals/workflow-visualiser/chart-dashboard-e
   });
 
   it('has header correct for workflow dashboard', async function () {
-    this.set('modalOptions.dashboardOwner', Workflow.create());
     await showModal(this);
 
     expect(getModalHeader().querySelector('h1'))
@@ -88,6 +93,7 @@ describe('Integration | Component | modals/workflow-visualiser/chart-dashboard-e
       });
 
     it('shows dashboard definition content', async function () {
+      this.modalOptions?.dashboardOwner?.destroy();
       this.set('modalOptions.dashboardOwner', Workflow.create({
         dashboardSpec: {
           rootSection: {
@@ -130,6 +136,7 @@ describe('Integration | Component | modals/workflow-visualiser/chart-dashboard-e
     });
 
     it('shows dashboard definition content in readonly editor', async function () {
+      this.modalOptions?.dashboardOwner?.destroy();
       this.set('modalOptions.dashboardOwner', Workflow.create({
         dashboardSpec: {
           rootSection: {

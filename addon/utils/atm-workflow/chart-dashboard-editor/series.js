@@ -2,7 +2,7 @@
  * Model of a single chart series for the dashboard editor.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -210,7 +210,7 @@ const Series = ElementBase.extend({
     try {
       if (this.prefixedTimeSeriesRef) {
         this.prefixedTimeSeriesRef.destroy();
-        this.set('prefixedTimeSeriesRef', null);
+        // this.set('prefixedTimeSeriesRef', null);
       }
       if (this.axis) {
         this.set('axis', null);
@@ -220,18 +220,15 @@ const Series = ElementBase.extend({
       }
       if (this.dataProvider) {
         this.dataProvider.destroy();
-        this.set('dataProvider', null);
       }
       if (this.detachedFunctions.length) {
         this.detachedFunctions.forEach((chartFunction) => chartFunction.destroy());
-        this.set('detachedFunctions', []);
       }
       if (this.parent) {
         this.set('parent', null);
       }
       if (this.timeSeriesRefChangesHandler) {
         this.timeSeriesRefChangesHandler.destroy();
-        this.set('timeSeriesRefChangesHandler', null);
       }
     } finally {
       this._super(...arguments);

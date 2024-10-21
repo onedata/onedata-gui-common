@@ -2,7 +2,7 @@
  * Model of a single chart axis for the dashboard editor.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -215,22 +215,16 @@ const Axis = ElementBase.extend({
   willDestroy() {
     try {
       if (this.unitOptions) {
-        this.unitOptions.destroy();
-        this.set('unitOptions', null);
+        this.unitOptions.destroy?.();
       }
       if (this.series.length) {
         this.set('series', []);
       }
       if (this.valueProvider) {
         this.valueProvider.destroy();
-        this.set('valueProvider', null);
       }
       if (this.detachedFunctions.length) {
         this.detachedFunctions.forEach((chartFunction) => chartFunction.destroy());
-        this.set('detachedFunctions', []);
-      }
-      if (this.parent) {
-        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);

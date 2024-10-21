@@ -2,7 +2,7 @@
  * Periodically reloads visible part of array when enabled.
  *
  * @author Jakub Liput
- * @copyright (C) 2022 ACK CYFRONET AGH
+ * @copyright (C) 2022-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -59,8 +59,11 @@ export default EmberObject.extend({
   /**
    * @override
    */
-  destroy() {
-    this._super(...arguments);
-    this.stop();
+  willDestroy() {
+    try {
+      this.stop();
+    } finally {
+      this._super(...arguments);
+    }
   },
 });

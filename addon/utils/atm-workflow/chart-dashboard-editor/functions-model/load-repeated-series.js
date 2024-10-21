@@ -3,7 +3,7 @@
  * dynamic series config (so it is a "repeated" series).
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -56,7 +56,6 @@ const LoadRepeatedSeriesFunction = FunctionBase.extend({
     try {
       if (this.replaceEmptyParameters) {
         this.replaceEmptyParameters.destroy();
-        this.set('replaceEmptyParameters', null);
       }
     } finally {
       this._super(...arguments);

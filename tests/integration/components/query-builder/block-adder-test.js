@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import {
   render,
@@ -17,9 +17,17 @@ import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-val
 import globals from 'onedata-gui-common/utils/globals';
 
 describe('Integration | Component | query-builder/block-adder', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
+
+  beforeEach(function () {
+    this.set('blocksToDestroy', []);
+  });
+
+  afterEach(function () {
+    this.blocksToDestroy.forEach((block) => block?.destroy());
+  });
 
   it('has class "query-builder-block-adder"', async function () {
     await render(hbs `{{query-builder/block-adder valuesBuilder=valuesBuilder}}`);
@@ -45,6 +53,7 @@ describe('Integration | Component | query-builder/block-adder', function () {
     await click('.query-builder-block-adder');
     await click('.operator-and');
 
+    this.blocksToDestroy.push(addSpy.lastCall.args[0]);
     expect(addSpy).to.be.calledOnce.and.to.be.calledWith(
       sinon.match(obj => get(obj, 'operator') === 'and')
     );
@@ -68,6 +77,7 @@ describe('Integration | Component | query-builder/block-adder', function () {
     await fillIn('.comparator-value', 'hello');
     await click('.accept-condition');
 
+    this.blocksToDestroy.push(addSpy.lastCall.args[0]);
     expect(addSpy).to.be.calledOnce
       .and.to.be.calledWith(
         sinon.match(obj => get(obj, 'isCondition'))

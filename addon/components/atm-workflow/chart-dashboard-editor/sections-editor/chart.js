@@ -2,7 +2,7 @@
  * Shows single dashboard chart.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -58,6 +58,16 @@ export default OneDraggableObject.extend(I18n, {
    * @type {boolean}
    */
   isHovered: false,
+
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseMoveHandler: null,
+
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseLeaveHandler: null,
 
   /**
    * For one-draggable-object
@@ -118,28 +128,54 @@ export default OneDraggableObject.extend(I18n, {
   /**
    * @override
    */
-  mouseLeave() {
-    this._super(...arguments);
-    this.changeHoverState(false);
-  },
-
-  /**
-   * @override
-   */
-  mouseMove() {
-    this._super(...arguments);
-    this.changeHoverState(true);
-  },
-
-  /**
-   * @override
-   */
   click(event) {
     this._super(...arguments);
     if (isDirectlyClicked(event)) {
       const action = this.editorContext.actionsFactory
         .createSelectElementAction({ elementToSelect: this.chart });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroy();
+      }
+    }
+  },
+
+  /**
+   * @override
+   */
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (!this.element) {
+      return;
+    }
+
+    this.setProperties({
+      mouseMoveHandler: () => {
+        this.changeHoverState(true);
+      },
+      mouseLeaveHandler: () => {
+        this.changeHoverState(false);
+      },
+    });
+    this.element.addEventListener('mousemove', this.mouseMoveHandler);
+    this.element.addEventListener('mouseleave', this.mouseLeaveHandler);
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      if (this.mouseMoveHandler) {
+        this.element?.removeEventListener('mousemove', this.mouseMoveHandler);
+      }
+      if (this.mouseLeaveHandler) {
+        this.element?.removeEventListener('mouseleave', this.mouseLeaveHandler);
+      }
+    } finally {
+      this._super(...arguments);
     }
   },
 
@@ -178,7 +214,11 @@ export default OneDraggableObject.extend(I18n, {
       const action = this.editorContext.actionsFactory.createEditChartContentAction({
         chart: this.chart,
       });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroyAfterAllExecutions?.();
+      }
     },
   },
 });

@@ -2,7 +2,7 @@
  * A base component for all form elements.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -24,19 +24,19 @@ export default Component.extend({
    * @virtual optional
    * @type {ComputedProperty<String>}
    */
-  fieldId: computed('elementId', {
+  fieldId: computed({
     get() {
-      return this.injectedFieldId ?? `${this.elementId}-field`;
+      return this.customFieldId ?? `${this.elementId}-field`;
     },
     set(key, value) {
-      return this.injectedFieldId = value;
+      return this.customFieldId = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedFieldId: null,
+  customFieldId: null,
 
   /**
    * @type {ComputedProperty<String>}

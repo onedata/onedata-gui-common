@@ -2,7 +2,7 @@
  * A file value editor component.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -45,6 +45,17 @@ export default EditorBase.extend(I18n, {
   idFormRootGroup: computed(function idFormRootGroup() {
     return IdFormRootGroup.create({ component: this });
   }),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.idFormRootGroup.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   /**
    * @override

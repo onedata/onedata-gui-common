@@ -4,7 +4,7 @@
  * in both directions.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2022 ACK CYFRONET AGH
+ * @copyright (C) 2022-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -280,6 +280,17 @@ export const FormElement = FormField.extend({
     this.set('editorElementsContextMapCache', new Map());
     this.registerInternalValidator('nestedFormsValidator');
     this.registerInternalValidator('leftDataTypeSelectorsValidator');
+  },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.nestedForms.forEach((form) => form.destroy?.());
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   /**

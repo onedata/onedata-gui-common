@@ -5,27 +5,31 @@ import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form-component/privileges-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/privileges-field"', function () {
-    const field = PrivilegesField.create();
-    expect(get(field, 'fieldComponentName'))
+    this.field = PrivilegesField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/privileges-field');
   });
 
   it('overrides withValidationIcon to false', function () {
-    const field = PrivilegesField.create();
-    expect(get(field, 'withValidationIcon')).to.be.false;
+    this.field = PrivilegesField.create();
+    expect(get(this.field, 'withValidationIcon')).to.be.false;
   });
 
   it('has empty privilegesGroups by default', function () {
-    const field = PrivilegesField.create();
-    expect(get(field, 'privilegesGroups')).to.an('array').that.is.empty;
+    this.field = PrivilegesField.create();
+    expect(get(this.field, 'privilegesGroups')).to.an('array').that.is.empty;
   });
 
   it('overrides defaultValue to the empty privileges representation', function () {
-    const field = PrivilegesField.create();
-    expect(get(field, 'defaultValue')).to.deep.equal({
+    this.field = PrivilegesField.create();
+    expect(get(this.field, 'defaultValue')).to.deep.equal({
       privilegesTarget: undefined,
       privileges: [],
     });

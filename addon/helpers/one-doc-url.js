@@ -43,7 +43,10 @@ export const OneDocUrlHelperStandalone = OneDocUrlHelper.extend(OwnerInjector);
  *   https://onedata.org/#/home/documentation/doc/21.02/using_onedata/account_management[setting-user-alias].html`
  */
 export function oneDocUrl(owner, path) {
-  return OneDocUrlHelperStandalone.create({ ownerSource: owner }).compute([path]);
+  const helperInstance = OneDocUrlHelperStandalone.create({ ownerSource: owner });
+  const result = helperInstance.compute([path]);
+  helperInstance.destroy();
+  return result;
 }
 
 export default OneDocUrlHelper;

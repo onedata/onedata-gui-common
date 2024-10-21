@@ -16,7 +16,7 @@ import { Promise } from 'rsvp';
 import sinon from 'sinon';
 
 describe('Integration | Utility | workflow-visualiser/actions/modify-lane-chart-dashboard-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create();
@@ -27,6 +27,11 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-lane-chart-
       },
     });
     this.setProperties({ lane, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.lane.destroy();
   });
 
   it('has correct className, icon and title', function () {

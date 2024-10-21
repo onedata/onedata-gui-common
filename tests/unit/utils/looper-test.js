@@ -7,6 +7,7 @@ import {
 } from 'mocha';
 import Looper from 'onedata-gui-common/utils/looper';
 import sinon from 'sinon';
+import { settled } from '@ember/test-helpers';
 
 describe('Unit | Utility | looper', function () {
   beforeEach(function () {
@@ -43,7 +44,7 @@ describe('Unit | Utility | looper', function () {
     this.looper.on('tick', tickSpy);
 
     this.fakeClock.tick(9);
-
+    await settled();
     expect(tickSpy).to.be.calledOnce;
   });
 
@@ -147,6 +148,7 @@ describe('Unit | Utility | looper', function () {
 
     this.fakeClock.tick(9);
     this.looper.set('interval', 20);
+    await settled();
     this.fakeClock.tick(21);
 
     expect(tickSpy).to.have.been.calledOnce;

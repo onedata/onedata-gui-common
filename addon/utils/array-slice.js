@@ -4,14 +4,13 @@
  * See tests for usage examples.
  *
  * @author Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import { alias } from '@ember/object/computed';
-
 import ArrayProxy from '@ember/array/proxy';
-import { computed, observer } from '@ember/object';
+import { computed, observer, defineProperty } from '@ember/object';
 
 export default ArrayProxy.extend({
   startIndex: 0,
@@ -24,14 +23,7 @@ export default ArrayProxy.extend({
   sourceArray: alias('content'),
 
   _start: computed('startIndex', 'indexMargin', function _start() {
-    const {
-      startIndex,
-      indexMargin,
-    } = this.getProperties(
-      'startIndex',
-      'indexMargin'
-    );
-    return Math.max(0, startIndex - indexMargin);
+    return Math.max(0, this.startIndex - this.indexMargin);
   }),
 
   _end: computed('endIndex', 'indexMargin', 'sourceArray.length', function _end() {
@@ -56,18 +48,20 @@ export default ArrayProxy.extend({
       '_start'
     );
 
-    if (_startCache !== undefined && _start !== _startCache) {
-      let removeAmt = 0;
-      let addAmt = 0;
-      if (_start > _startCache) {
-        removeAmt = _start - _startCache;
-      } else {
-        addAmt = _startCache - _start;
+    try {
+      if (_startCache !== undefined && _start !== _startCache) {
+        let removeAmt = 0;
+        let addAmt = 0;
+        if (_start > _startCache) {
+          removeAmt = _start - _startCache;
+        } else {
+          addAmt = _startCache - _start;
+        }
+        this.arrayContentDidChange(_start, removeAmt, addAmt);
       }
-      this.arrayContentDidChange(_start, removeAmt, addAmt);
+    } finally {
+      this.set('_startCache', _start);
     }
-
-    this.set('_startCache', _start);
   }),
 
   _endChanged: observer('_end', function _endChanged() {
@@ -78,18 +72,20 @@ export default ArrayProxy.extend({
       '_endCache',
       '_end'
     );
-    if (_endCache !== undefined && _end !== _endCache) {
-      let removeAmt = 0;
-      let addAmt = 0;
-      if (_end > _endCache) {
-        addAmt = _end - _endCache;
-      } else {
-        removeAmt = _endCache - _end;
+    try {
+      if (_endCache !== undefined && _end !== _endCache) {
+        let removeAmt = 0;
+        let addAmt = 0;
+        if (_end > _endCache) {
+          addAmt = _end - _endCache;
+        } else {
+          removeAmt = _endCache - _end;
+        }
+        this.arrayContentDidChange(_endCache - removeAmt, removeAmt, addAmt);
       }
-      this.arrayContentDidChange(_endCache - removeAmt, removeAmt, addAmt);
+    } finally {
+      this.set('_endCache', _end);
     }
-
-    this.set('_endCache', _end);
   }),
 
   init() {
@@ -104,6 +100,7 @@ export default ArrayProxy.extend({
     ].forEach(methodName => {
       this.overrideAsNotImplemented(methodName);
     });
+    this.defineLengthProperty();
     // activate observers
     this.getProperties('_start', '_end');
     this._startChanged();
@@ -174,36 +171,33 @@ export default ArrayProxy.extend({
     }
   },
 
-  /**
-   * @override
-   */
-  length: computed('_start', '_end', function () {
-    const {
-      _start,
-      _end,
-    } = this.getProperties(
-      '_start',
-      '_end'
-    );
-    return _end - _start;
-  }),
+  getLength() {
+    return this._end - this._start;
+  },
+
+  defineLengthProperty() {
+    defineProperty(this, 'length', computed('_start', '_end', function length() {
+      return this.getLength();
+    }));
+  },
 
   _arrayContentChange(startIdx, removeAmt, addAmt, fun) {
-    const {
-      _start,
-      _end,
-    } = this.getProperties(
-      '_start',
-      '_end'
-    );
-    if (_start <= startIdx && startIdx <= _end) {
-      const sliceStartIdx = startIdx - _start;
-      const sliceRemoveAmt = Math.min(_end, sliceStartIdx + removeAmt) - sliceStartIdx;
-      const sliceAddAmt = Math.min(_end, sliceStartIdx + addAmt) - sliceStartIdx;
-      return fun.bind(this)(sliceStartIdx, sliceRemoveAmt, sliceAddAmt);
+    let result;
+    if (this._start <= startIdx && startIdx <= this._end) {
+      const sliceStartIdx = startIdx - this._start;
+      const sliceRemoveAmt =
+        Math.min(this._end, sliceStartIdx + removeAmt) - sliceStartIdx;
+      const sliceAddAmt = Math.min(this._end, sliceStartIdx + addAmt) - sliceStartIdx;
+      result = fun.bind(this)(sliceStartIdx, sliceRemoveAmt, sliceAddAmt);
+      // A hack to notify observers of "[]" array property.
+      // Needed since Ember 3.16.6 version, because of the following change:
+      // https://github.com/emberjs/ember.js/pull/18835
+      this.notifyPropertyChange('arrangedContent');
     } else {
-      return this;
+      // ignore the chanage result, because it is out of slice range
+      result = this;
     }
+    return result;
   },
 
   /**

@@ -15,7 +15,7 @@
  * of `.clipboard-input` input/textarea found in current component.
  *
  * @author Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -71,14 +71,14 @@ export default Component.extend(I18n, {
     'parentElementId',
     'localTarget', {
       get() {
-        if (this.injectedClipboardTarget) {
-          return this.injectedClipboardTarget;
+        if (this.customClipboardTarget) {
+          return this.customClipboardTarget;
         } else if (this.parentElementId && this.localTarget) {
           return `#${this.parentElementId} ${this.localTarget}`;
         }
       },
       set(key, value) {
-        return this.injectedClipboardTarget = value;
+        return this.customClipboardTarget = value;
       },
     }
   ),
@@ -90,22 +90,22 @@ export default Component.extend(I18n, {
    */
   textType: computed({
     get() {
-      return this.injectedTextType ?? this.t('defaultTextType');
+      return this.customTextType ?? this.t('defaultTextType');
     },
     set(key, value) {
-      return this.injectedTextType = value ?? this.t('defaultTextType');
+      return this.customTextType = value ?? this.t('defaultTextType');
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedClipboardTarget: null,
+  customClipboardTarget: null,
 
   /**
    * @type {string | null}
    */
-  injectedTextType: null,
+  customTextType: null,
 
   /**
    * @type {Ember.ComputedProperty<function>}

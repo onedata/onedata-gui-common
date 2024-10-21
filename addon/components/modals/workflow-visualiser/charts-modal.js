@@ -2,7 +2,7 @@
  * A modal that allows to view and modify chart dashboard.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2022-2023 ACK CYFRONET AGH
+ * @copyright (C) 2022-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -14,7 +14,7 @@ import { reads } from '@ember/object/computed';
 /**
  * @typedef {Object} WorkflowVisualiserChartsModalOptions
  * @property {DashboardModelOwner} dashboardOwner
- * @property {ObjectProxy<boolean>} isLiveProxy Needed only in `view` mode
+ * @property {EmberObject<{ content: boolean }>} isLiveProxy Needed only in `view` mode
  * @property {(store: Utils.WorkflowVisualiser.Store, browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>} [getStoreContentCallback]
  *   Useful only in `view` mode. If not provided, only chart definition will be visible.
  * @property {() => AtmTimeSeriesCollectionReferencesMap} [getTimeSeriesCollectionRefsMapCallback]
@@ -50,7 +50,7 @@ export default Component.extend(I18n, {
   dashboardOwner: reads('modalOptions.dashboardOwner'),
 
   /**
-   * @type {ComputedProperty<ObjectProxy<boolean>>}
+   * @type {ComputedProperty<EmberObject<{ content: boolean }>}
    */
   isLiveProxy: reads('modalOptions.isLiveProxy'),
 

@@ -2,7 +2,7 @@
  * Allows to scroll the tab bar by clicking on the arrow button.
  *
  * @author Jakub Liput
- * @copyright (C) 2019-2020 ACK CYFRONET AGH
+ * @copyright (C) 2019-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -55,6 +55,11 @@ export default Component.extend({
    */
   mouseDownInterval: undefined,
 
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseLeaveHandler: null,
+
   directionClass: computed('direction', function directionClass() {
     return `tab-bar-ul-arrow-${this.get('direction')}`;
   }),
@@ -83,9 +88,33 @@ export default Component.extend({
     clearInterval(this.get('mouseDownInterval'));
   },
 
-  willDestroyElement() {
+  /**
+   * @override
+   */
+  didInsertElement() {
     this._super(...arguments);
-    this.stopMouseDownInterval();
+
+    if (!this.element) {
+      return;
+    }
+
+    this.set('mouseLeaveHandler', () => {
+      safeExec(this, () => {
+        this.stopMouseDownInterval();
+      });
+    });
+    this.element.addEventListener('mouseleave', this.mouseLeaveHandler);
+  },
+
+  willDestroyElement() {
+    try {
+      this.stopMouseDownInterval();
+      if (this.mouseLeaveHandler) {
+        this.element?.removeEventListener('mouseleave', this.mouseLeaveHandler);
+      }
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   mouseDown( /* mouseEvent */ ) {
@@ -95,12 +124,6 @@ export default Component.extend({
   },
 
   mouseUp( /* mouseEvent */ ) {
-    safeExec(this, () => {
-      this.stopMouseDownInterval();
-    });
-  },
-
-  mouseLeave() {
     safeExec(this, () => {
       this.stopMouseDownInterval();
     });

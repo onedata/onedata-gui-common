@@ -41,7 +41,7 @@
  * resolve to an array of points.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2022 ACK CYFRONET AGH
+ * @copyright (C) 2022-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -141,6 +141,7 @@ export default async function loadSeries(context, args) {
  * @param {OTSCSeriesFunctionContext} context
  * @param {OTSCLoadSeriesSeriesFunctionReplaceEmpty} replaceEmptyParameters
  * @param {Utils.OneTimeSeriesChart.Point[]} points
+ * @returns {Utils.OneTimeSeriesChart.Point[]}
  */
 async function fitPointsToContext(context, replaceEmptyParameters, points) {
   if (!isRawPointsArray(points)) {

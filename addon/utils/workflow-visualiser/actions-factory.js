@@ -7,11 +7,11 @@
  * visualiser at a time.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { get } from '@ember/object';
+import EmberObject, { get, computed } from '@ember/object';
 import ArrayProxy from '@ember/array/proxy';
 import ObjectProxy from '@ember/object/proxy';
 import { reads } from '@ember/object/computed';
@@ -100,6 +100,38 @@ export default EmberObject.extend(OwnerInjector, {
   showTaskPodsActivityCallback: undefined,
 
   /**
+   * @private
+   * @type {ComputedProperty<ArrayProxy<Utils.WorkflowVisualiser.Store>>}
+   */
+  definedStoresArrayProxy: computed(function definedStoresArrayProxy() {
+    return ArrayProxy
+      .extend({ content: reads('factory.workflowDataProvider.definedStores') })
+      .create({ factory: this });
+  }),
+
+  /**
+   * @private
+   * @type {ComputedProperty<ObjectProxy<Utils.WorkflowVisualiser.Workflow>>}
+   */
+  workflowProxy: computed(function workflowProxy() {
+    return ObjectProxy
+      .extend({ content: reads('factory.workflowDataProvider.workflow') })
+      .create({ factory: this });
+  }),
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.cacheFor('definedStoresArrayProxy')?.destroy?.();
+      this.cacheFor('workflowProxy')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
    * @param {WorkflowDataProvider} workflowDataProvider
    * @returns {undefined}
    */
@@ -186,7 +218,7 @@ export default EmberObject.extend(OwnerInjector, {
     return CreateLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        definedStores: this.getDefinedStoresArrayProxy(),
+        definedStores: this.definedStoresArrayProxy,
         createStoreAction: this.createCreateStoreAction(),
       }, context),
     });
@@ -200,7 +232,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ModifyLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        definedStores: this.getDefinedStoresArrayProxy(),
+        definedStores: this.definedStoresArrayProxy,
         createStoreAction: this.createCreateStoreAction(),
       }, context),
     });
@@ -214,7 +246,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ViewLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        definedStores: this.getDefinedStoresArrayProxy(),
+        definedStores: this.definedStoresArrayProxy,
       }, context),
     });
   },
@@ -291,7 +323,7 @@ export default EmberObject.extend(OwnerInjector, {
     return CreateTaskAction.create({
       ownerSource: this,
       context: Object.assign({
-        definedStores: this.getDefinedStoresArrayProxy(),
+        definedStores: this.definedStoresArrayProxy,
         taskDetailsProviderCallback: this.get('getTaskCreationDataCallback') || notImplementedIgnore,
       }, context),
     });
@@ -305,7 +337,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ModifyTaskAction.create({
       ownerSource: this,
       context: Object.assign({
-        definedStores: this.getDefinedStoresArrayProxy(),
+        definedStores: this.definedStoresArrayProxy,
         taskDetailsProviderCallback: this.get('getTaskModificationDataCallback') || notImplementedIgnore,
       }, context),
     });
@@ -456,7 +488,7 @@ export default EmberObject.extend(OwnerInjector, {
     return RetryLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        workflow: this.getWorkflowProxy(),
+        workflow: this.workflowProxy,
         retryLaneCallback: (...args) => this.get('retryLaneCallback')(...args),
       }, context),
     });
@@ -471,7 +503,7 @@ export default EmberObject.extend(OwnerInjector, {
     return RerunLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        workflow: this.getWorkflowProxy(),
+        workflow: this.workflowProxy,
         rerunLaneCallback: (...args) => this.get('rerunLaneCallback')(...args),
       }, context),
     });
@@ -497,7 +529,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ModifyWorkflowChartDashboardAction.create({
       ownerSource: this,
       context: {
-        workflow: this.getWorkflowProxy(),
+        workflow: this.workflowProxy,
       },
     });
   },
@@ -509,7 +541,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ViewWorkflowChartDashboardAction.create({
       ownerSource: this,
       context: {
-        workflow: this.getWorkflowProxy(),
+        workflow: this.workflowProxy,
         getStoreContentCallback: (...args) =>
           this.workflowDataProvider.getStoreContent(...args),
         getTimeSeriesCollectionRefsMapCallback: (...args) =>
@@ -559,25 +591,5 @@ export default EmberObject.extend(OwnerInjector, {
         ...context,
       },
     });
-  },
-
-  /**
-   * @private
-   * @returns {ArrayProxy<Utils.WorkflowVisualiser.Store>}
-   */
-  getDefinedStoresArrayProxy() {
-    return ArrayProxy
-      .extend({ content: reads('factory.workflowDataProvider.definedStores') })
-      .create({ factory: this });
-  },
-
-  /**
-   * @private
-   * @returns {ObjectProxy<Utils.WorkflowVisualiser.Workflow>}
-   */
-  getWorkflowProxy() {
-    return ObjectProxy
-      .extend({ content: reads('factory.workflowDataProvider.workflow') })
-      .create({ factory: this });
   },
 });

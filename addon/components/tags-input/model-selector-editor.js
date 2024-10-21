@@ -4,7 +4,7 @@
  * serviceOnepanel (opp and ozp).
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -208,6 +208,11 @@ export default Component.extend(I18n, {
   idToAdd: '',
 
   /**
+   * @type {ComputedProperty<Set<Tag>>}
+   */
+  tagsToDestroyLater: computed(() => new Set()),
+
+  /**
    * @type {ComputedProperty<String>}
    */
   trimmedIdToAdd: computed('idToAdd', function trimmedIdToAdd() {
@@ -261,6 +266,8 @@ export default Component.extend(I18n, {
   allAvailableTags: computed(
     'recordsProxy.@each.name',
     function allAvailableTags() {
+      this.destroyDanglingTags();
+
       const {
         recordsProxy,
         selectedModelName,
@@ -273,13 +280,17 @@ export default Component.extend(I18n, {
         const onezoneRecord = records.findBy('serviceType', 'onezone');
         return [onezoneRecord, allRecord].compact()
           .concat(records.without(onezoneRecord).sortBy('name'))
-          .map(record => Tag.create({
-            ownerSource: this,
-            value: {
-              model: selectedModelName,
-              record,
-            },
-          }));
+          .map(record => {
+            const tag = Tag.create({
+              ownerSource: this,
+              value: {
+                model: selectedModelName,
+                record,
+              },
+            });
+            this.tagsToDestroyLater.add(tag);
+            return tag;
+          });
       } else {
         return [];
       }
@@ -403,12 +414,29 @@ export default Component.extend(I18n, {
     }
   },
 
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.destroyDanglingTags();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  destroyDanglingTags() {
+    this.tagsToDestroyLater.forEach((tag) => tag.destroy?.());
+    this.tagsToDestroyLater.clear();
+  },
+
   repositionPopover() {
     this.get('popoverApi').reposition();
   },
 
   actions: {
     tagSelected(tag) {
+      this.tagsToDestroyLater.delete(tag);
       this.get('onTagsAdded')([tag]);
     },
     addId() {

@@ -2,7 +2,7 @@
  * Represents single workflow store.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -173,6 +173,17 @@ export default EmberObject.extend({
     this._super(...arguments);
     if (!this.referencingRecords) {
       this.set('referencingRecords', []);
+    }
+  },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.cacheFor('chartDashboardEditorModelContainer')?.destroy?.();
+    } finally {
+      this._super(...arguments);
     }
   },
 

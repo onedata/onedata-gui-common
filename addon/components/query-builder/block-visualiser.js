@@ -3,7 +3,7 @@
  * a component specific for a passed block.
  *
  * @author Michał Borzęcki, Jakub Liput
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -124,6 +124,16 @@ export default Component.extend({
   hoveredClassName: 'is-directly-hovered',
 
   /**
+   * @type {(() => void) | null}
+   */
+  mouseMoveHandler: null,
+
+  /**
+   * @type {(() => void) | null}
+   */
+  mouseLeaveHandler: null,
+
+  /**
    * Decide if directly hovered class should be applied.
    * @type {ComputedProperty<Boolean>}
    */
@@ -138,16 +148,6 @@ export default Component.extend({
     raw('is-directly-hovered-remove'),
     raw(undefined)
   ),
-
-  mouseLeave() {
-    this.changeHoverState(false);
-  },
-
-  mouseMove() {
-    const containsHoveredElement =
-      Boolean(this.get('element').querySelector(`.${this.get('hoveredClassName')}`));
-    this.changeHoverState(!containsHoveredElement);
-  },
 
   /**
    * @override
@@ -172,6 +172,46 @@ export default Component.extend({
       'areSettingsVisible',
       closestVisualiserElement === this.get('element') && !this.get('areSettingsVisible')
     );
+  },
+
+  /**
+   * @override
+   */
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (!this.element) {
+      return;
+    }
+
+    this.setProperties({
+      mouseMoveHandler: () => {
+        const containsHoveredElement =
+          Boolean(this.get('element').querySelector(`.${this.get('hoveredClassName')}`));
+        this.changeHoverState(!containsHoveredElement);
+      },
+      mouseLeaveHandler: () => {
+        this.changeHoverState(false);
+      },
+    });
+    this.element.addEventListener('mousemove', this.mouseMoveHandler);
+    this.element.addEventListener('mouseleave', this.mouseLeaveHandler);
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      if (this.mouseMoveHandler) {
+        this.element?.removeEventListener('mousemove', this.mouseMoveHandler);
+      }
+      if (this.mouseLeaveHandler) {
+        this.element?.removeEventListener('mouseleave', this.mouseLeaveHandler);
+      }
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   /**

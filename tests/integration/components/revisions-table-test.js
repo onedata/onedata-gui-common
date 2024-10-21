@@ -61,6 +61,7 @@ describe('Integration | Component | revisions-table', function () {
       (revisionNumber) => {
         return [{
           title: `testAction ${revisionNumber}`,
+          destroy: () => {},
         }];
       }
     );

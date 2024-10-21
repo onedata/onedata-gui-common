@@ -3,7 +3,7 @@
  * rendered under function name).
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -54,6 +54,17 @@ export default Component.extend(I18n, {
   functionBasedClassName: computed('chartFunction.name', function functionBasedClassName() {
     return `${dasherize(this.chartFunction.name)}-settings`;
   }),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.form?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   /**
    * @virtual

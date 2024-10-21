@@ -26,7 +26,7 @@
  * ```
  *
  * @author Michał Borzęcki
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -250,8 +250,8 @@ export default Component.extend(ClickOutside, {
    * Unique class for popover component
    * @type {computed.string}
    */
-  _popoverIdClass: computed('elementId', function () {
-    return 'popover-' + this.get('elementId');
+  _popoverIdClass: computed(function () {
+    return 'popover-' + this.elementId;
   }),
 
   /**
@@ -278,8 +278,8 @@ export default Component.extend(ClickOutside, {
    * Unique class for modal component
    * @type {computed.string}
    */
-  _modalIdClass: computed('elementId', function () {
-    return 'modal-' + this.get('elementId');
+  _modalIdClass: computed(function () {
+    return 'modal-' + this.elementId;
   }),
 
   /**

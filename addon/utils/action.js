@@ -16,7 +16,7 @@
  * calling `onExecuteUndo()` in the first step.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2019-2023 ACK CYFRONET AGH
+ * @copyright (C) 2019-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -25,8 +25,9 @@ import { reads } from '@ember/object/computed';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
-import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import { DynamicOwnerInjector } from 'onedata-gui-common/mixins/owner-injector';
 import ActionResult from 'onedata-gui-common/utils/action-result';
+import { allSettled, resolve } from 'rsvp';
 
 /**
  * @typedef {'possible' | 'impossible' | 'notApplicable'} ActionUndoPossibility
@@ -52,7 +53,7 @@ export const ActionUndoPossibility = Object.freeze({
  * @typedef {(result: Utils.ActionResult, action: Utils.Action) => Promise<void>} ActionExecuteHook
  */
 
-export default EmberObject.extend(I18n, OwnerInjector, {
+export default EmberObject.extend(I18n, DynamicOwnerInjector, {
   i18n: service(),
   globalNotify: service(),
 
@@ -122,17 +123,17 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    */
   title: computed('i18nPrefix', {
     get() {
-      return this.injectedTitle ?? this.t('title', {}, { defaultValue: '' });
+      return this.customTitle ?? this.t('title', {}, { defaultValue: '' });
     },
     set(key, value) {
-      return this.injectedTitle = value;
+      return this.customTitle = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedTitle: null,
+  customTitle: null,
 
   /**
    * `true` when action has been executed, `false` otherwise.
@@ -150,6 +151,12 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @type {ComputedProperty<Array<ActionExecuteHook>>}
    */
   executeHooks: undefined,
+
+  /**
+   * Contains promises returned by all action executions.
+   * @type {Array<Promise<unknown>>}
+   */
+  executionPromises: undefined,
 
   /**
    * Callback ready to use inside hbs action helper
@@ -175,7 +182,10 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    */
   init() {
     this._super(...arguments);
-    this.set('executeHooks', []);
+    this.setProperties({
+      executeHooks: [],
+      executionPromises: [],
+    });
   },
 
   /**
@@ -192,12 +202,33 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   },
 
   /**
+   * Like `destroy` but waits until all ongoing executions will end.
+   * @public
+   * @returns {void}
+   */
+  destroyAfterAllExecutions() {
+    const performDestroy = () => {
+      if (!this.isDestroying && !this.isDestroyed) {
+        this.destroy();
+      }
+    };
+
+    if (!this.executionPromises.length) {
+      performDestroy();
+    } else {
+      allSettled(this.executionPromises).finally(() => performDestroy());
+    }
+  },
+
+  /**
    * Executes action (onExecute and then execute hooks)
    * @public
    * @returns {Promise<Utils.ActionResult>}
    */
   async execute() {
-    return await this.internalExecute();
+    const executionPromise = resolve(this.internalExecute());
+    this.executionPromises.push(executionPromise);
+    return await executionPromise;
   },
 
   /**
@@ -206,7 +237,9 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @returns {Promise<Utils.ActionResult>}
    */
   async executeUndo() {
-    return await this.internalExecute(true);
+    const executionPromise = resolve(this.internalExecute(true));
+    this.executionPromises.push(executionPromise);
+    return await executionPromise;
   },
 
   /**

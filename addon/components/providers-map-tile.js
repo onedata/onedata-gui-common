@@ -2,7 +2,7 @@
  * Renders a tile with map of providers.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -45,10 +45,10 @@ export default Component.extend(I18n, ProvidersColors, {
    */
   title: computed({
     get() {
-      return this.injectedTitle ?? this.t('title');
+      return this.customTitle ?? this.t('title');
     },
     set(key, value) {
-      this.injectedTitle = value;
+      this.customTitle = value;
     },
   }),
 
@@ -58,20 +58,20 @@ export default Component.extend(I18n, ProvidersColors, {
    */
   moreText: computed({
     get() {
-      return this.injectedMoreText ?? this.t('moreText');
+      return this.customMoreText ?? this.t('moreText');
     },
     set(key, value) {
-      return this.injectedMoreText = value;
+      return this.customMoreText = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedTitle: null,
+  customTitle: null,
 
   /**
    * @type {string | null}
    */
-  injectedMoreText: null,
+  customMoreText: null,
 });

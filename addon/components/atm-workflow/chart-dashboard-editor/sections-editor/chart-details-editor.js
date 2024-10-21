@@ -3,7 +3,7 @@
  * to enter the chart editor.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -68,6 +68,17 @@ export default Component.extend(I18n, {
   },
 
   /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.detailsForm.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
    * @param {string} fieldName
    * @param {string} value
    * @returns {void}
@@ -112,7 +123,11 @@ export default Component.extend(I18n, {
       const action = this.editorContext.actionsFactory.createEditChartContentAction({
         chart: this.chart,
       });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroyAfterAllExecutions?.();
+      }
     },
   },
 });

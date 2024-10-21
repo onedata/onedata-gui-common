@@ -6,7 +6,7 @@
  * - auto-updating of list (must be enabled manually using `listUpdater`)
  *
  * @author Jakub Liput
- * @copyright (C) 2022 ACK CYFRONET AGH
+ * @copyright (C) 2022-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -77,6 +77,15 @@ export default EmberObject.extend({
   },
 
   /**
+   * @override
+   */
+  willDestroy() {
+    this.scrollHandler?.destroy();
+    this.listUpdater?.destroy();
+    this.fetchingStatus?.destroy();
+  },
+
+  /**
    * @public
    * @param {HTMLElement} listContainerElement
    * @param {HTMLElement} [scrollableContainerElement]
@@ -105,23 +114,6 @@ export default EmberObject.extend({
    */
   stopAutoUpdate() {
     this.get('listUpdater').stop();
-  },
-
-  destroy() {
-    const {
-      scrollHandler,
-      listUpdater,
-      fetchingStatus,
-    } = this.getProperties('scrollHandler', 'listUpdater', 'fetchingStatus');
-    if (scrollHandler) {
-      scrollHandler.destroy();
-    }
-    if (listUpdater) {
-      listUpdater.destroy();
-    }
-    if (fetchingStatus) {
-      fetchingStatus.destroy();
-    }
   },
 
   initFetchingStatus() {

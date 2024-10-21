@@ -4,7 +4,7 @@
  * and see methods for reading edited query data.
  *
  * @author Michał Borzęcki, Jakub Liput
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -98,6 +98,11 @@ export default Component.extend(I18n, {
   editedConditions: undefined,
 
   /**
+   * @type {Utils.QueryBuilder.RootOperatorQueryBlock | null}
+   */
+  locallyCreatedRootQueryBlock: null,
+
+  /**
    * @type {ComputedProperty<Boolean>}
    */
   hasInvalidCondition: computed('editedConditions', function hasInvalidCondition() {
@@ -109,10 +114,22 @@ export default Component.extend(I18n, {
     this._super(...arguments);
     this.set('editedConditions', new Map());
     if (!this.get('rootQueryBlock')) {
-      this.set('rootQueryBlock', RootOperatorQueryBlock.create());
+      const rootQueryBlock = RootOperatorQueryBlock.create();
+      this.setProperties({
+        rootQueryBlock,
+        locallyCreatedRootQueryBlock: rootQueryBlock,
+      });
     }
     if (!this.get('valuesBuilder')) {
       this.set('valuesBuilder', QueryValueComponentsBuilder.create());
+    }
+  },
+
+  willDestroyElement() {
+    try {
+      this.locallyCreatedRootQueryBlock?.destroy();
+    } finally {
+      this._super(...arguments);
     }
   },
 

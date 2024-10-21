@@ -3,7 +3,7 @@
  * arrows, lines etc.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -99,6 +99,11 @@ export default VisualiserSpace.extend({
   }),
 
   /**
+   * @type {Utils.Action | null}
+   */
+  createElementActionCache: null,
+
+  /**
    * @type {ComputedProperty<Utils.Action>}
    */
   createElementAction: computed(
@@ -106,6 +111,7 @@ export default VisualiserSpace.extend({
     'interblockSpace',
     'siblingsType',
     function createElementAction() {
+      this.createElementActionCache?.destroyAfterAllExecutions?.();
       const {
         actionsFactory,
         interblockSpace,
@@ -115,7 +121,7 @@ export default VisualiserSpace.extend({
       const createCallback =
         newElementProps => interblockSpace.addElement(newElementProps);
 
-      return siblingsType === 'parallelBox' ?
+      return this.createElementActionCache = siblingsType === 'parallelBox' ?
         actionsFactory.createCreateParallelBoxAction({
           createParallelBoxCallback: createCallback,
         }) :
@@ -124,4 +130,15 @@ export default VisualiserSpace.extend({
         });
     }
   ),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('createElementAction')?.destroyAfterAllExecutions?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });

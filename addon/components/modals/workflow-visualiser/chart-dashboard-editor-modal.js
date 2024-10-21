@@ -2,7 +2,7 @@
  * A modal that allows to view and modify chart dashboard.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -112,6 +112,9 @@ export default Component.extend(I18n, {
   willDestroyElement() {
     this._super(...arguments);
     this.dashboardModel?.removeChangeListener(this.modelChangeListener);
+    if (this.dashboardModel?.rootSection !== this.rootSectionBackup) {
+      this.rootSectionBackup?.destroy();
+    }
   },
 
   actions: {

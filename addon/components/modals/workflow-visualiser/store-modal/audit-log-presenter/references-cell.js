@@ -2,7 +2,7 @@
  * Shows link to a related automation element (task, exception store items, etc).
  *
  * @author Michał Borzęcki
- * @copyright (C) 2022-2023 ACK CYFRONET AGH
+ * @copyright (C) 2022-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -135,4 +135,16 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.Action | null>}
    */
   actionToUse: or('openTaskAuditLogAction', 'openExceptionStoreAction'),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('openTaskAuditLogAction')?.destroy?.();
+      this.cacheFor('openExceptionStoreAction')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 });

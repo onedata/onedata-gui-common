@@ -2,7 +2,7 @@
  * A form with all basic properties of a chart series.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -132,6 +132,17 @@ export default Component.extend(I18n, {
   init() {
     this._super(...arguments);
     this.formValuesUpdater();
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.form.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   /**

@@ -8,11 +8,15 @@ import sinon from 'sinon';
 import { replaceEmberAceWithTextarea } from '../../../helpers/ember-ace';
 
 describe('Integration | Component | form-component/ace-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     replaceEmberAceWithTextarea(this);
     this.set('field', AceField.create());
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it('has class "ace-field"', async function () {

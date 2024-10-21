@@ -2,7 +2,7 @@
  * Model of a single section for the dashboard editor.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -117,14 +117,9 @@ const Section = ElementBase.extend({
     try {
       if (this.charts.length) {
         this.charts.forEach((chart) => chart.destroy());
-        this.set('charts', []);
       }
       if (this.sections.length) {
         this.sections.forEach((section) => section.destroy());
-        this.set('sections', []);
-      }
-      if (this.parent) {
-        this.set('parent', null);
       }
     } finally {
       this._super(...arguments);

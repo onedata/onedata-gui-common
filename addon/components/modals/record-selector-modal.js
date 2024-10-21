@@ -8,7 +8,7 @@
  * - submitText - submit button text
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -82,7 +82,7 @@ export default Component.extend(I18n, {
   recordsPromise: reads('modalOptions.recordsPromise'),
 
   /**
-   * @type {ComputedProperty<PromiseArray<FieldOption>>}
+   * @type {ComputedProperty<PromiseArray<RecordOptionsArrayProxy<FieldOption>>>}
    */
   recordOptionsProxy: promise.array(computed(
     'recordsPromise',

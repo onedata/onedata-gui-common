@@ -3,7 +3,7 @@
  * removal, duplication etc.).
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -73,6 +73,17 @@ export default Component.extend(I18n, {
   init() {
     this._super(...arguments);
     this.calculateItemModels();
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.itemModels?.forEach((item) => item.destroy());
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   calculateItemModels() {

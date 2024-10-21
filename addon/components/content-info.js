@@ -16,7 +16,7 @@
  * ```
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -51,11 +51,19 @@ export default Component.extend({
   text: '',
 
   /**
-   * Name of template to use instead of text as a description (will be rendered
+   * Name of a component to use instead of text as a description (will be rendered
    * in p.lead)
+   * @virtual optional
    * @type {string}
    */
-  textTemplate: '',
+  textComponent: '',
+
+  /**
+   * Data passed to the component pointed by `textComponent`.
+   * @virtual optional
+   * @type {unknown}
+   */
+  textComponentData: null,
 
   /**
    * Path to an image file (placed between the description and the primary button)

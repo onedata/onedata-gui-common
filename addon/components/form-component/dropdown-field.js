@@ -2,15 +2,14 @@
  * A component responsible for rendering dropdown field.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import FieldComponentBase from 'onedata-gui-common/components/form-component/field-component-base';
 import layout from '../../templates/components/form-component/dropdown-field';
-import { get } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { array, raw } from 'ember-awesome-macros';
 
 export default FieldComponentBase.extend({
   layout,
@@ -34,7 +33,13 @@ export default FieldComponentBase.extend({
   /**
    * @type {ComputedProperty<FieldOption>}
    */
-  selectedOption: array.findBy('preparedOptions', raw('value'), 'value'),
+  selectedOption: computed(
+    'preparedOptions.@each.value',
+    'value',
+    function selectedOption() {
+      return this.preparedOptions?.find(({ value }) => value === this.value);
+    }
+  ),
 
   /**
    * One-dropdown item matcher used by its search engine. Allows to search

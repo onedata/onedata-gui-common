@@ -2,7 +2,7 @@
  * JSON editor component with validation
  *
  * @author Michał Borzęcki
- * @copyright (C) 2019-2020 ACK CYFRONET AGH
+ * @copyright (C) 2019-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -85,19 +85,19 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {Ember.ComputedProperty<string>}
    */
-  inputId: computed('elementId', {
+  inputId: computed({
     get() {
-      return this.injectedInputId ?? (this.elementId + '-textarea');
+      return this.customInputId ?? (this.elementId + '-textarea');
     },
     set(key, value) {
-      return this.injectedInputId = value;
+      return this.customInputId = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedInputId: null,
+  customInputId: null,
 
   /**
    * @type {Ember.ComputedProperty<string>}

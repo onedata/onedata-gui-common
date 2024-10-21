@@ -2,7 +2,7 @@
  * Ember wrapper component for `input-tokenizer` jQuery plugin
  *
  * @author Jakub Liput
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -53,8 +53,8 @@ export default Component.extend({
 
   internalDisabled: or('disabled', 'isBusy'),
 
-  inputId: computed('elementId', function inputId() {
-    return this.get('elementId') + '-input-tokenizer';
+  inputId: computed(function inputId() {
+    return this.elementId + '-input-tokenizer';
   }),
 
   internalDisabledChanged: observer('internalDisabled', function internalDisabledChanged() {

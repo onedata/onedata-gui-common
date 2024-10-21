@@ -8,10 +8,15 @@ import { createNewSeriesGroup, createNewSeries } from 'onedata-gui-common/utils/
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-editor/series-group-editor',
   function () {
-    setupRenderingTest();
+    const { afterEach } = setupRenderingTest();
 
     beforeEach(function () {
       this.set('i18n', this.owner.lookup('service:i18n'));
+    });
+
+    afterEach(function () {
+      this.seriesGroup?.series.forEach((s) => s.destroy());
+      this.seriesGroup?.destroy();
     });
 
     it('has class "series-group-editor"', async function () {

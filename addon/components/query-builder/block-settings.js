@@ -2,13 +2,12 @@
  * Shows query block settings
  *
  * @author Michał Borzęcki, Jakub Liput
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-settings';
 import { tag } from 'ember-awesome-macros';
 
@@ -50,16 +49,6 @@ export default Component.extend({
    * @type {String}
    */
   popoverPlacement: 'vertical',
-
-  /**
-   * @type {ComputedProperty<String>}
-   */
-  parentSelector: computed('parentView.elementId', function parentSelector() {
-    const parentId = this.get('parentView.elementId');
-    if (parentId) {
-      return `#${parentId}`;
-    }
-  }),
 
   /**
    * @type {ComputedProperty<String>}

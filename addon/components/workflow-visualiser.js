@@ -66,7 +66,7 @@
  * component for VisualiserRecord.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -118,6 +118,11 @@ import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-vis
 import { typeOf } from '@ember/utils';
 import dom from 'onedata-gui-common/utils/dom';
 import validateAtmWorkflowSchemaRevision from 'onedata-gui-common/utils/atm-workflow/validate-atm-workflow-schema-revision';
+import {
+  destroyDestroyableComputedValues,
+  destroyableComputed,
+  initDestroyableCache,
+} from 'onedata-gui-common/utils/destroyable-computed';
 
 const nonActiveTaskStatuses = [
   ...taskEndedStatuses,
@@ -271,6 +276,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
   executionState: undefined,
 
   /**
+   * @type {Utils.WorkflowVisualiser.ActionsFactory | null}
+   */
+  actionsFactoryCache: null,
+
+  /**
    * @type {ComputedProperty<Array<AtmWorkflowSchemaValidationError>>}
    */
   validationErrors: computed('rawData', function validationErrors() {
@@ -402,7 +412,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  copyInstanceIdAction: computed(
+  copyInstanceIdAction: destroyableComputed(
     'workflow.instanceId',
     function copyInstanceIdAction() {
       const {
@@ -418,14 +428,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  viewAuditLogAction: computed('actionsFactory', function viewAuditLogAction() {
-    return this.get('actionsFactory').createViewWorkflowAuditLogAction();
-  }),
+  viewAuditLogAction: destroyableComputed(
+    'actionsFactory',
+    function viewAuditLogAction() {
+      return this.get('actionsFactory').createViewWorkflowAuditLogAction();
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  openWorkflowChartDashboardAction: computed(
+  openWorkflowChartDashboardAction: destroyableComputed(
     'mode',
     function openWorkflowChartDashboardAction() {
       if (this.mode === 'view') {
@@ -508,6 +521,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
   ),
 
+  /**
+   * @type {ComputedProperty<WorkflowDataProvider>}
+   */
+  workflowDataProvider: computed(function workflowDataProvider() {
+    return WorkflowDataProvider.create({ visualiserComponent: this });
+  }),
+
   actionsFactoryObserver: observer(
     'actionsFactory',
     function actionsFactoryObserver() {
@@ -522,6 +542,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @override
    */
   init() {
+    initDestroyableCache(this);
     this._super(...arguments);
 
     this.set('elementsCache', {
@@ -535,7 +556,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
     });
 
     if (!this.get('actionsFactory')) {
-      this.set('actionsFactory', ActionsFactory.create({ ownerSource: this }));
+      const actionsFactory = ActionsFactory.create({ ownerSource: this });
+      this.setProperties({
+        actionsFactory,
+        actionsFactoryCache: actionsFactory,
+      });
     }
     this.actionsFactoryObserver();
     if (this.get('mode') === 'view') {
@@ -557,6 +582,21 @@ export default Component.extend(I18n, WindowResizeHandler, {
   willDestroyElement() {
     try {
       this.stopExecutionStateUpdater();
+      _.flatten(Object.values(this.elementsCache))
+        .forEach((element) => element.destroy?.());
+      this.actionsFactoryCache?.destroy?.();
+      this.cacheFor('workflowDataProvider')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      destroyDestroyableComputedValues(this);
     } finally {
       this._super(...arguments);
     }
@@ -590,9 +630,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   adaptActionsFactory(actionsFactory) {
-    actionsFactory.setWorkflowDataProvider(
-      WorkflowDataProvider.create({ visualiserComponent: this })
-    );
+    actionsFactory.setWorkflowDataProvider(this.workflowDataProvider);
     actionsFactory.setCreateStoreCallback(
       newStoreProps => this.addStore(newStoreProps)
     );

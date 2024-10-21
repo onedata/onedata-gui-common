@@ -3,7 +3,7 @@
  * data. Any changes are yielded using `onChange` callback.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -657,7 +657,7 @@ export default Component.extend(I18n, {
     'atmLambda',
     'atmLambdaRevisionNumber',
     function atmLambdaRevisionObserver() {
-      this.resetFormValues();
+      scheduleOnce('afterRender', this, 'resetFormValues');
     }
   ),
 
@@ -666,7 +666,7 @@ export default Component.extend(I18n, {
     'passedFormValues',
     function formValuesUpdater() {
       if (this.get('mode') === 'view') {
-        this.resetFormValues();
+        scheduleOnce('afterRender', this, 'resetFormValues');
       }
     }
   ),
@@ -683,15 +683,27 @@ export default Component.extend(I18n, {
   isShownObserver: observer('isShown', function isShownObserver() {
     const isShown = this.get('isShown');
     if (isShown) {
-      this.resetFormValues();
+      scheduleOnce('afterRender', this, 'resetFormValues');
     }
   }),
 
   init() {
     this._super(...arguments);
+    scheduleOnce('afterRender', this, 'resetFormValues');
+    scheduleOnce('afterRender', this, 'formModeUpdater');
+  },
 
-    this.resetFormValues();
-    this.formModeUpdater();
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.fields.destroy?.();
+      this.cacheFor('timeSeriesStore')?.destroy();
+      this.taskBasedOnFormValuesCache?.destroy();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   resetFormValues() {
@@ -787,23 +799,28 @@ export default Component.extend(I18n, {
     allowedStoreReadDataSpec,
     allowedStoreWriteDataSpec,
   }) {
-    const actionResult = await this.get('actionsFactory').createCreateStoreAction({
+    const action = this.actionsFactory.createCreateStoreAction({
       allowedStoreTypes,
       allowedStoreReadDataSpec,
       allowedStoreWriteDataSpec,
-    }).execute();
-    const {
-      status,
-      result: newStore,
-    } = getProperties(actionResult, 'status', 'result');
+    });
+    try {
+      const actionResult = await action.execute();
+      const {
+        status,
+        result: newStore,
+      } = getProperties(actionResult, 'status', 'result');
 
-    if (status !== 'done' || !newStore) {
-      return;
-    }
+      if (status !== 'done' || !newStore) {
+        return;
+      }
 
-    const newStoreId = get(newStore, 'id');
-    if (get(dropdownField, 'options').mapBy('value').includes(newStoreId)) {
-      dropdownField.valueChanged(newStoreId);
+      const newStoreId = get(newStore, 'id');
+      if (get(dropdownField, 'options').mapBy('value').includes(newStoreId)) {
+        dropdownField.valueChanged(newStoreId);
+      }
+    } finally {
+      action.destroy?.();
     }
   },
 

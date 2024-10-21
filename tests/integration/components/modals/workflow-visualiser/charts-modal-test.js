@@ -12,13 +12,17 @@ import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 
 describe('Integration | Component | modals/workflow-visualiser/charts-modal', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
       modalManager: lookupService(this, 'modal-manager'),
       modalOptions: {},
     });
+  });
+
+  afterEach(function () {
+    this.modalOptions.dashboardOwner?.destroy();
   });
 
   it('renders modal with class "charts-modal"', async function () {

@@ -9,7 +9,7 @@ import { Promise } from 'rsvp';
 import { settled } from '@ember/test-helpers';
 
 describe('Integration | Utility | workflow-visualiser/actions/move-left-lane-action', function () {
-  setupTest();
+  const { afterEach } = setupTest();
 
   beforeEach(function () {
     const lane = Lane.create({ isFirst: false });
@@ -18,6 +18,11 @@ describe('Integration | Utility | workflow-visualiser/actions/move-left-lane-act
       context: { lane },
     });
     this.setProperties({ lane, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.lane.destroy();
   });
 
   it('has correct className, icon and title', function () {

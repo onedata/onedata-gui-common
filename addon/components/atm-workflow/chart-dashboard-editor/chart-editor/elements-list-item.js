@@ -3,7 +3,7 @@
  * with possible actions (like adding nested element, duplication, removal).
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -80,7 +80,11 @@ export default OneDraggableObject.extend(I18n, {
       const action = this.editorContext.actionsFactory.createSelectElementAction({
         elementToSelect: this.itemModel.item,
       });
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroy?.();
+      }
     },
     add() {
       if (!this.allowNesting) {

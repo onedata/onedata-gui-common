@@ -12,14 +12,14 @@
  * ```
  * {{#one-collapsible-list as |list|}}
  *   {{#list.header title="List title"}}
- *     {{#bs-button class="btn-sm" type="info"}}some button{{/bs-button}}
+ *     {{#one-button class="btn-sm" type="info"}}some button{{/one-button}}
  *   {{/list.header}}
  *   {{#list.item as |listItem|}}
  *     {{#listItem.header}}
  *       Header (will toggle visibility of content on click).
  *     {{/listItem.header}}
  *     {{#listItem.content}}
- *       Hiddent content.
+ *       Hidden content.
  *     {{/listItem.content}}
  *   {{/list.item}}
  *   {{!-- other items... --}}
@@ -27,7 +27,7 @@
  * ```
  *
  * @author Michał Borzęcki
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 

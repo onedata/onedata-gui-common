@@ -2,7 +2,7 @@
  * Allows edition of section details - title, title tip, description and more.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -66,6 +66,17 @@ export default Component.extend(I18n, {
   init() {
     this._super(...arguments);
     this.formValuesUpdater();
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.detailsForm.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   /**

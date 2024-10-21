@@ -5,7 +5,7 @@
  * Set `aspect` property for use as a link.
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -156,10 +156,10 @@ export default Component.extend(I18n, {
    */
   moreText: computed({
     get() {
-      return this.injectedMoreText ?? this.t('more');
+      return this.customMoreText ?? this.t('more');
     },
     set(key, value) {
-      return this.injectedMoreText = value;
+      return this.customMoreText = value;
     },
   }),
 
@@ -211,7 +211,7 @@ export default Component.extend(I18n, {
   /**
    * @type {string | null}
    */
-  injectedMoreText: null,
+  customMoreText: null,
 
   /**
    * @type {Ember.ComputedProperty<Function>}

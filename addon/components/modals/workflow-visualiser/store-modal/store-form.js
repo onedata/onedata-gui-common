@@ -3,7 +3,7 @@
  * data. Any changes are yielded using `onChange` callback.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -504,6 +504,18 @@ export default Component.extend(I18n, {
 
     this.resetFormValues();
     this.formModeUpdater();
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.fields.destroy?.();
+      this.cacheFor('storeBasedOnFormValues')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   resetFormValues() {

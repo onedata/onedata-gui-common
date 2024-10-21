@@ -16,9 +16,13 @@ const operatorBlockClasses = {
 };
 
 describe('Integration | Component | query-builder/block-visualiser', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
+
+  afterEach(function () {
+    this.queryBlock?.destroy();
+  });
 
   Object.keys(operatorBlockClasses).forEach(operatorName => {
     const upperOperator = operatorName.toUpperCase();

@@ -3,7 +3,7 @@
  * another operators.
  *
  * @author Michał Borzęcki, Jakub Liput
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -61,7 +61,7 @@ export default QueryBlock.extend({
 
   updateObserver: observer('operands.[]', function updateObserver() {
     this.bindOperands();
-    this.get('notifyUpdate')(this);
+    this.get('notifyUpdate')?.(this);
   }),
 
   init() {
@@ -70,6 +70,14 @@ export default QueryBlock.extend({
       this.set('operands', A());
     }
     this.bindOperands();
+  },
+
+  willDestroy() {
+    try {
+      this.operands.forEach((operand) => operand.destroy());
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   bindOperands() {

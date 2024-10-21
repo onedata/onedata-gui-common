@@ -2,7 +2,7 @@
  * A string value editor component.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -37,6 +37,17 @@ export default EditorBase.extend({
     );
     if (textarea) {
       autosize(textarea);
+    }
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.formRootGroup.destroy?.();
+    } finally {
+      this._super(...arguments);
     }
   },
 

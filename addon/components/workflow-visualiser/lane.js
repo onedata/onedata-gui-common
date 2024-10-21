@@ -2,7 +2,7 @@
  * Lane - aggregates parallel boxes and spaces between them.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -202,7 +202,6 @@ export default VisualiserElement.extend({
     'moveRightLaneAction',
     'clearLaneAction',
     'removeLaneAction',
-    'viewFailedItemsAction',
     function laneActions() {
       if (this.mode === 'edit') {
         return [
@@ -235,6 +234,26 @@ export default VisualiserElement.extend({
       return laneRunActionsFactory.createActionsForRunNumber(get(lane, 'visibleRunNumber'));
     }
   ),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      [
+        'modifyLaneAction',
+        'viewLaneAction',
+        'modifyLaneChartDashboardAction',
+        'moveLeftLaneAction',
+        'moveRightLaneAction',
+        'clearLaneAction',
+        'removeLaneAction',
+      ].forEach((actionName) => this.cacheFor(actionName)?.destroy?.());
+      this.cacheFor('laneRunActions')?.forEach((action) => action.destroy?.());
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   actions: {
     changeName(newName) {

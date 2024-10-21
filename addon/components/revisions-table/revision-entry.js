@@ -2,7 +2,7 @@
  * Renders single revision.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -69,6 +69,11 @@ export default Component.extend(I18n, {
   areActionsOpened: false,
 
   /**
+   * @type {Array<Utils.Action> | null}
+   */
+  revisionActionsCache: null,
+
+  /**
    * @type {ComputedProperty<RevisionNumber|'?'>}
    */
   normalizedRevisionNumber: computed(
@@ -96,12 +101,16 @@ export default Component.extend(I18n, {
     'revisionNumber',
     'revisionActionsFactory',
     function revisionActions() {
+      this.revisionActionsCache?.forEach((action) => action.destroy());
       const {
         revisionNumber,
         revisionActionsFactory,
       } = this.getProperties('revisionNumber', 'revisionActionsFactory');
-      return revisionActionsFactory ?
+
+      const newRevisionActions = revisionActionsFactory ?
         revisionActionsFactory.createActionsForRevisionNumber(revisionNumber) : [];
+      this.set('revisionActionsCache', newRevisionActions);
+      return newRevisionActions;
     }
   ),
 
@@ -116,6 +125,17 @@ export default Component.extend(I18n, {
       return;
     }
     onClick(revisionNumber);
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.revisionActionsCache?.forEach((action) => action.destroy());
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   actions: {

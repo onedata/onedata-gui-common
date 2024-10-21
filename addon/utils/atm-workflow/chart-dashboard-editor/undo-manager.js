@@ -17,7 +17,7 @@
  *
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -71,7 +71,6 @@ export default EmberObject.extend({
   willDestroy() {
     try {
       this.history.forEach((action) => action.destroy());
-      this.set('history', []);
     } finally {
       this._super(...arguments);
     }

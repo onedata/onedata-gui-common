@@ -5,21 +5,25 @@ import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form-component/toggle-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/toggle-field"', function () {
-    const field = ToggleField.create();
-    expect(get(field, 'fieldComponentName'))
+    this.field = ToggleField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/toggle-field');
   });
 
   it('overrides "withValidationIcon" to false', function () {
-    const field = ToggleField.create();
-    expect(get(field, 'withValidationIcon')).to.be.false;
+    this.field = ToggleField.create();
+    expect(get(this.field, 'withValidationIcon')).to.be.false;
   });
 
   it('has undefined "disabledControlTip" by default', function () {
-    const field = ToggleField.create();
-    expect(get(field, 'disabledControlTip')).to.be.undefined;
+    this.field = ToggleField.create();
+    expect(get(this.field, 'disabledControlTip')).to.be.undefined;
   });
 });

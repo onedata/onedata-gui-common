@@ -3,7 +3,7 @@
  * flippable icon with info popover with more contextual content.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -114,10 +114,10 @@ export const ResourceListItem = EmberObject.extend({
    */
   icon: computed('record', {
     get() {
-      return this.injectedIcon ?? recordIcon(this.record, true);
+      return this.customIcon ?? recordIcon(this.record, true);
     },
     set(key, value) {
-      return this.injectedIcon = value;
+      return this.customIcon = value;
     },
   }),
 
@@ -157,13 +157,24 @@ export const ResourceListItem = EmberObject.extend({
   /**
    * @type {string | null}
    */
-  injectedIcon: null,
+  customIcon: null,
 
   init() {
     this._super(...arguments);
 
     if (!this.get('actions')) {
       this.set('actions', []);
+    }
+  },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.actions?.forEach((action) => action?.destroy());
+    } finally {
+      this._super(...arguments);
     }
   },
 });

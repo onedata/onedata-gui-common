@@ -5,16 +5,20 @@ import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form-component/number-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines inputType as "number"', function () {
-    const field = NumberField.create();
-    expect(get(field, 'inputType')).to.equal('number');
+    this.field = NumberField.create();
+    expect(get(this.field, 'inputType')).to.equal('number');
   });
 
   it('defines fieldComponentName as "form-component/text-like-field"', function () {
-    const field = NumberField.create();
-    expect(get(field, 'fieldComponentName'))
+    this.field = NumberField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/text-like-field');
   });
 
@@ -27,9 +31,9 @@ describe('Integration | Utility | form-component/number-field', function () {
     it(
       `has empty "${boundingName}" field by default`,
       function () {
-        const field = NumberField.create();
+        this.field = NumberField.create();
 
-        expect(get(field, boundingName)).to.be.undefined;
+        expect(get(this.field, boundingName)).to.be.undefined;
       }
     );
   });
@@ -37,9 +41,9 @@ describe('Integration | Utility | form-component/number-field', function () {
   it(
     'has falsy "integer" field by default',
     function () {
-      const field = NumberField.create();
+      this.field = NumberField.create();
 
-      expect(get(field, 'integer')).to.be.false;
+      expect(get(this.field, 'integer')).to.be.false;
     }
   );
 
@@ -158,7 +162,7 @@ describe('Integration | Utility | form-component/number-field', function () {
       it(
         `has number validation error for value "${value}" and ${boundingDescription}`,
         function () {
-          const field = NumberField.create(Object.assign({
+          this.field = NumberField.create(Object.assign({
             ownerSource: this.owner,
             name: 'a',
             valuesSource: {
@@ -166,7 +170,7 @@ describe('Integration | Utility | form-component/number-field', function () {
             },
           }), bounding);
 
-          const errors = get(field, 'errors');
+          const errors = get(this.field, 'errors');
           expect(errors).to.be.have.length(1);
           expect(errors[0].message).to.equal(error);
         }
@@ -175,7 +179,7 @@ describe('Integration | Utility | form-component/number-field', function () {
       it(
         `does not have number validation error for value "${value}" and ${boundingDescription}`,
         function () {
-          const field = NumberField.create(Object.assign({
+          this.field = NumberField.create(Object.assign({
             ownerSource: this.owner,
             name: 'a',
             valuesSource: {
@@ -183,7 +187,7 @@ describe('Integration | Utility | form-component/number-field', function () {
             },
           }), bounding);
 
-          expect(get(field, 'errors')).to.be.have.length(0);
+          expect(get(this.field, 'errors')).to.be.have.length(0);
         }
       );
     }
@@ -192,7 +196,7 @@ describe('Integration | Utility | form-component/number-field', function () {
   it(
     'does not have number validation error for value "123.123" and integer == false',
     function () {
-      const field = NumberField.create({
+      this.field = NumberField.create({
         ownerSource: this.owner,
         integer: false,
         name: 'a',
@@ -201,14 +205,14 @@ describe('Integration | Utility | form-component/number-field', function () {
         },
       });
 
-      expect(get(field, 'errors')).to.be.have.length(0);
+      expect(get(this.field, 'errors')).to.be.have.length(0);
     }
   );
 
   it(
     'has number validation error for value "123.123" and integer == true',
     function () {
-      const field = NumberField.create({
+      this.field = NumberField.create({
         ownerSource: this.owner,
         integer: true,
         name: 'a',
@@ -217,7 +221,7 @@ describe('Integration | Utility | form-component/number-field', function () {
         },
       });
 
-      const errors = get(field, 'errors');
+      const errors = get(this.field, 'errors');
       expect(errors).to.be.have.length(1);
       expect(errors[0].message).to.equal('This field must be an integer');
     }
@@ -226,7 +230,7 @@ describe('Integration | Utility | form-component/number-field', function () {
   it(
     'does not have number validation error for value "123" and integer == true',
     function () {
-      const field = NumberField.create({
+      this.field = NumberField.create({
         ownerSource: this.owner,
         integer: true,
         name: 'a',
@@ -235,7 +239,7 @@ describe('Integration | Utility | form-component/number-field', function () {
         },
       });
 
-      expect(get(field, 'errors')).to.be.have.length(0);
+      expect(get(this.field, 'errors')).to.be.have.length(0);
     }
   );
 });

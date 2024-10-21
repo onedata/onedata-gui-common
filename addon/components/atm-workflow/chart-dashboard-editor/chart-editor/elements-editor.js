@@ -3,7 +3,7 @@
  * Changing `selectedElement` will show editor dedicated for that element.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -106,6 +106,17 @@ export default Component.extend(I18n, {
   },
 
   /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.tabs.forEach((tab) => tab.destroy());
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
    * @returns {void}
    */
   consumeNewSelectedElement() {
@@ -158,7 +169,11 @@ export default Component.extend(I18n, {
     const selectAction = this.editorContext.actionsFactory.createSelectElementAction({
       elementToSelect: tab.element,
     });
-    selectAction.execute();
+    try {
+      selectAction.execute();
+    } finally {
+      selectAction.destroy?.();
+    }
   },
 
   actions: {
@@ -184,7 +199,11 @@ export default Component.extend(I18n, {
           elementToSelect: nextSelectedTabCandidate?.element,
           elementsToDeselect: [tab.element],
         });
-        selectAction.execute();
+        try {
+          selectAction.execute();
+        } finally {
+          selectAction.destroy?.();
+        }
       }
       tab.destroy();
       this.set('tabs', this.tabs.filter((t) => t !== tab));

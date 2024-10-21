@@ -4,7 +4,7 @@
  * for other types of records - just name.
  *
  * @author Agnieszka Warchoł
- * @copyright (C) 2022 ACK CYFRONET AGH
+ * @copyright (C) 2022-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -37,17 +37,17 @@ export default Component.extend({
    */
   icon: computed('recordType', {
     get() {
-      return this.injectedIcon ?? recordIcon(this.recordType);
+      return this.customIcon ?? recordIcon(this.recordType);
     },
     set(key, value) {
-      return this.injectedIcon = value;
+      return this.customIcon = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedIcon: null,
+  customIcon: null,
 
   /**
    * @type {Boolean}

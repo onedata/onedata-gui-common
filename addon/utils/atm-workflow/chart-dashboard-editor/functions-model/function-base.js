@@ -2,7 +2,7 @@
  * Base model for all chart functions.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -256,7 +256,6 @@ export default ElementBase.extend({
           } else {
             this[name].destroy?.();
           }
-          this.set(name, null);
         }
       });
     } finally {

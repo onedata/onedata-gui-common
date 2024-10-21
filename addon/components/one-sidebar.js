@@ -2,7 +2,7 @@
  * A base component for building a sidebar view with two-level list
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -18,10 +18,14 @@ import EmberObject, {
   setProperties,
 } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-sidebar';
-import { array, raw } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import { camelize } from '@ember/string';
 import globals from 'onedata-gui-common/utils/globals';
+import {
+  destroyDestroyableComputedValues,
+  destroyableComputed,
+  initDestroyableCache,
+} from 'onedata-gui-common/utils/destroyable-computed';
 
 export default Component.extend(I18n, {
   layout,
@@ -65,7 +69,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<Array<object>>}
    */
-  buttons: computed('resourceType', 'context', function buttons() {
+  buttons: destroyableComputed('resourceType', 'context', function buttons() {
     const {
       sidebarResources,
       context,
@@ -178,7 +182,15 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Object>}
    */
-  primaryItem: array.findBy('model.collection.list', raw('id'), 'primaryItemId'),
+  primaryItem: computed(
+    'model.collection.list.@each.id',
+    'primaryItemId',
+    function primaryItem() {
+      return this.model?.collection?.list?.content?.find(({ id }) =>
+        id === this.primaryItemId
+      );
+    }
+  ),
 
   /**
    * @type {ComputedProperty<String>}
@@ -188,12 +200,18 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Object>}
    */
-  secondaryItem: array.findBy('secondLevelItems', raw('id'), 'secondaryItemId'),
+  secondaryItem: computed(
+    'secondLevelItems.@each.id',
+    'secondaryItemId',
+    function secondaryItem() {
+      return this.secondLevelItems?.find(({ id }) => id === this.secondaryItemId);
+    }
+  ),
 
   /**
    * @type {Ember.ComputedProperty<Array<any>>}
    */
-  sortedCollection: sort('model.collection.list', 'sorting'),
+  sortedCollection: sort('model.collection.list.content', 'sorting'),
 
   /**
    * @type {Ember.ComputedProperty<Array<any>>}
@@ -238,6 +256,7 @@ export default Component.extend(I18n, {
   ),
 
   init() {
+    initDestroyableCache(this);
     this._super(...arguments);
 
     const {
@@ -262,6 +281,17 @@ export default Component.extend(I18n, {
     }
 
     this.contextUpdater();
+  },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      destroyDestroyableComputedValues(this);
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   actions: {

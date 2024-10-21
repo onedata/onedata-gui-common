@@ -11,7 +11,7 @@ import {
 import { set } from '@ember/object';
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/toolbar', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -23,6 +23,11 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/toolbar'
       },
       onRemoveDashboard: sinon.spy(),
     });
+  });
+
+  afterEach(function () {
+    this.editedChart?.destroy();
+    this.editorContext?.destroy();
   });
 
   it('has class "toolbar"', async function () {
@@ -173,7 +178,11 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/toolbar'
       editedChart: createNewChart(this.owner.lookup('service:i18n')),
       editorContext: EditorContext.create({
         actionsFactory: {
-          createEndChartContentEditionAction: () => ({ execute: executeSpy }),
+          createEndChartContentEditionAction: () => ({
+            execute: executeSpy,
+            destroy: () => {},
+          }),
+          destroy: () => {},
         },
       }),
     });

@@ -2,14 +2,13 @@
  * Renders a cell with a formatted audit log entry severity.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2022 ACK CYFRONET AGH
+ * @copyright (C) 2022-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { getBy } from 'ember-awesome-macros';
 import {
   EntrySeverity,
   translateEntrySeverity,
@@ -62,5 +61,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String|undefined>}
    */
-  severityIcon: getBy('severityIcons', 'logEntry.severity'),
+  severityIcon: computed('severityIcons', 'logEntry.severity', function severityIcon() {
+    return this.severityIcons?.[this.logEntry?.severity];
+  }),
 });

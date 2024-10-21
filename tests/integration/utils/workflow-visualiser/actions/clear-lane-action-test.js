@@ -20,7 +20,7 @@ import { Promise } from 'rsvp';
 const laneName = 'lane1';
 
 describe('Integration | Utility | workflow-visualiser/actions/clear-lane-action', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create({
@@ -32,6 +32,11 @@ describe('Integration | Utility | workflow-visualiser/actions/clear-lane-action'
       context: { lane },
     });
     this.setProperties({ lane, action });
+  });
+
+  afterEach(function () {
+    this.action.destroy();
+    this.lane.destroy();
   });
 
   it('has correct className, icon and title', function () {

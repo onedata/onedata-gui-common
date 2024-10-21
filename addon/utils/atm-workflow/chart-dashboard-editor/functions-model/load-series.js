@@ -2,7 +2,7 @@
  * Model of `loadSeries` chart function.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -182,15 +182,12 @@ const LoadSeriesFunction = FunctionBase.extend({
     try {
       if (this.timeSeriesRef) {
         this.timeSeriesRef.destroy();
-        this.set('timeSeriesRef', undefined);
       }
       if (this.replaceEmptyParameters) {
         this.replaceEmptyParameters.destroy();
-        this.set('replaceEmptyParameters', null);
       }
       if (this.timeSeriesRefChangesHandler) {
         this.timeSeriesRefChangesHandler.destroy();
-        this.set('replaceEmptyParameters', undefined);
       }
     } finally {
       this._super(...arguments);

@@ -2,7 +2,7 @@
  * A condition query block. Contains information about query conditions.
  *
  * @author Michał Borzęcki, Jakub Liput
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -44,7 +44,7 @@ export default QueryBlock.extend({
     'comparator',
     'comparatorValue',
     function updateObserver() {
-      this.get('notifyUpdate')(this);
+      this.get('notifyUpdate')?.(this);
     }
   ),
 });

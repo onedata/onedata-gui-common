@@ -2,7 +2,7 @@
  * Task - single job with progress.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -197,6 +197,26 @@ export default VisualiserElement.extend({
       ].map((actionPropName) => this.get(actionPropName)).rejectBy('disabled');
     }
   ),
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      [
+        'copyInstanceIdAction',
+        'modifyTaskAction',
+        'removeTaskAction',
+        'viewTaskAuditLogAction',
+        'viewTaskTimeSeriesAction',
+        'viewTaskPodsActivityAction',
+      ].forEach((actionName) => {
+        this.cacheFor(actionName)?.destroy?.();
+      });
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   actions: {
     changeName(newName) {

@@ -2,7 +2,7 @@
  * Shows single value store content.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2022 ACK CYFRONET AGH
+ * @copyright (C) 2022-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -82,8 +82,11 @@ export default Component.extend(I18n, createDataProxyMixin('valueContainer'), {
    * @override
    */
   willDestroyElement() {
-    this._super(...arguments);
-    this.valueContainerUpdater?.destroy();
+    try {
+      this.valueContainerUpdater?.destroy();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   /**

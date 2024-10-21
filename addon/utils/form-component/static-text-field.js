@@ -2,7 +2,7 @@
  * A static text form field.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -27,10 +27,10 @@ export default FormField.extend({
    */
   text: computed('i18nPrefix', 'translationPath', {
     get() {
-      return this.injectedText ?? this.getTranslation('text', {}, { defaultValue: '' });
+      return this.customText ?? this.getTranslation('text', {}, { defaultValue: '' });
     },
     set(key, value) {
-      return this.injectedText = value;
+      return this.customText = value;
     },
   }),
 
@@ -38,5 +38,5 @@ export default FormField.extend({
    * Custom text injected during field creation.
    * @type {string | null}
    */
-  injectedText: null,
+  customText: null,
 });

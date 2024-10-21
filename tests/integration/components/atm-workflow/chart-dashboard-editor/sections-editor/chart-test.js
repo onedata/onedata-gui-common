@@ -9,13 +9,18 @@ import OneTooltipHelper from '../../../../../helpers/one-tooltip';
 import sinon from 'sinon';
 
 describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections-editor/chart', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
       chart: createChart(this),
       editorContext: EditorContext.create(),
     });
+  });
+
+  afterEach(function () {
+    this.editorContext.destroy();
+    this.chart.destroy();
   });
 
   it('has class "chart"', async function () {
@@ -61,6 +66,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections
       createRemoveElementAction: sinon.spy(() => ({
         execute: executeSpy,
       })),
+      destroy: () => {},
     };
     await renderComponent();
     expect(this.editorContext.actionsFactory.createRemoveElementAction).to.be.not.called;
@@ -78,6 +84,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections
       createEditChartContentAction: sinon.spy(() => ({
         execute: executeSpy,
       })),
+      destroy: () => {},
     };
     await renderComponent();
     expect(this.editorContext.actionsFactory.createEditChartContentAction)

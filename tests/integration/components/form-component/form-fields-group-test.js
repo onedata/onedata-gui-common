@@ -7,7 +7,11 @@ import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 
 describe('Integration | Component | form-component/form-fields-group', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
+
+  afterEach(function () {
+    this.fields.destroy();
+  });
 
   it('renders list of fields', async function () {
     this.set('fields', FormFieldsGroup.create({

@@ -2,7 +2,7 @@
  * Shows query block adder with adder trigger.
  *
  * @author Michał Borzęcki, Jakub Liput
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -29,7 +29,7 @@ export default Component.extend({
    * @virtual
    * @type {Function}
    */
-  onBlockAdd: notImplementedIgnore,
+  onBlockAdd: undefined,
 
   /**
    * @virtual
@@ -91,7 +91,11 @@ export default Component.extend({
      */
     addBlock(closeSelectorCallback, selectedBlock) {
       closeSelectorCallback();
-      this.get('onBlockAdd')(selectedBlock);
+      if (this.onBlockAdd) {
+        this.onBlockAdd(selectedBlock);
+      } else {
+        selectedBlock.destroy();
+      }
     },
     togglePopover(open) {
       let effOpen = open;

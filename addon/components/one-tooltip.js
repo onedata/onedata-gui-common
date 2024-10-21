@@ -7,7 +7,7 @@
  * ```
  *
  * @author Michał Borzęcki
- * @copyright (C) 2017-2023 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -43,6 +43,26 @@ export default class OneTooltip extends BsTooltip {
 
     this.set('scrollListener', () => this.handlePageScroll());
     this.scrollState.addScrollListener(this.scrollListener);
+  }
+
+  /**
+   * @override
+   */
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+
+    // show the tooltip on element insert if the trigger is currently hovered
+    let events = this.get('triggerEvents');
+    if (!Array.isArray(events)) {
+      events = events.split(' ');
+    }
+    if (
+      !this.inDom &&
+      events.includes('hover') &&
+      this.triggerTargetElement?.matches(':hover')
+    ) {
+      this.triggerTargetElement.dispatchEvent(new Event('mouseenter'));
+    }
   }
 
   willDestroy() {

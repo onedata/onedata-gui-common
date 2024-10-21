@@ -9,7 +9,7 @@ import stringEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor
 import { lookupService } from '../../../../../helpers/stub-service';
 
 describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/string', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('rootGroup', FormFieldsRootGroup.create({
@@ -20,6 +20,10 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/s
         }),
       ],
     }));
+  });
+
+  afterEach(function () {
+    this.rootGroup.destroy?.();
   });
 
   it('shows empty "allowed values" param', async function () {

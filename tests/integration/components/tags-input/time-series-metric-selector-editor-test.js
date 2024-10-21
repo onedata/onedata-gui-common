@@ -109,13 +109,17 @@ const aggregators = [{
 }];
 
 describe('Integration | Component | tags-input/time-series-metric-selector-editor', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
       tags: [],
       changeSpy: sinon.spy((tags) => this.set('tags', tags)),
     });
+  });
+
+  afterEach(function () {
+    this.tags?.forEach((tag) => tag.destroy?.());
   });
 
   it('has class "tags-input-time-series-metric-selector-editor"', async function () {

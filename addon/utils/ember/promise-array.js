@@ -8,7 +8,7 @@
  * with the PromiseArray that will be updated when the promise resolves.
  *
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -22,4 +22,22 @@ export default PromiseArray;
 
 export function promiseArray(promise) {
   return PromiseArray.create({ promise });
+}
+
+export const DestroyablePromiseArray = PromiseArray.extend({
+  willDestroy() {
+    try {
+      if (typeof this.content?.destroy === 'function') {
+        this.content.destroy();
+      }
+    } finally {
+      this._super(...arguments);
+    }
+  },
+});
+
+export function destroyablePromiseArray(promise) {
+  return DestroyablePromiseArray.create({
+    promise,
+  });
 }

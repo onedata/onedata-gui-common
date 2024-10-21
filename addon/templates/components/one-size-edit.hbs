@@ -19,14 +19,14 @@
     }}
       {{one-icon icon="checked"}}
     {{/one-button}}
-    {{#bs-button
+    {{#one-button
       type="default"
       onClick=(action "cancelEdition")
       class="btn-confirm-choose btn-cancel"
       disabled=_whileSaving
     }}
       {{one-icon icon="ban-left"}}
-    {{/bs-button}}
+    {{/one-button}}
   </span>
 {{else}}
   <input
@@ -36,13 +36,13 @@
     readonly=true
   >
   <span class="input-group-btn">
-    {{#bs-button
+    {{#one-button
       type="default"
       class="btn-modify"
       onClick=(action "startEdition")
     }}
       {{one-icon icon="browser-rename"}}
       <span class="btn-label">{{tt this "modify"}}</span>
-    {{/bs-button}}
+    {{/one-button}}
   </span>
 {{/if}}

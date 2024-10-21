@@ -122,7 +122,8 @@ export default Component.extend({
 
   willDestroyElement() {
     try {
-      this.cacheFor('actionsArray')?.forEach((action) => action.destroy());
+      this.cacheFor('selectGroupsAction')?.destroy();
+      this.cacheFor('provideGroupIdAction')?.destroy();
     } finally {
       this._super(...arguments);
     }

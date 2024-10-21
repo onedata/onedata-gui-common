@@ -19,7 +19,11 @@ import { set } from '@ember/object';
 describe(
   'Integration | Component | form-component/form-fields-collection-group',
   function () {
-    setupRenderingTest();
+    const { afterEach } = setupRenderingTest();
+
+    afterEach(function () {
+      this.collectionGroup.destroy();
+    });
 
     it('renders "add field" button', async function () {
       sinon.stub(lookupService(this, 'i18n'), 't')

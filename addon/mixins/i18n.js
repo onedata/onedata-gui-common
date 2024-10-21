@@ -5,11 +5,12 @@
  * A prefix can be used with or without trailing dot.
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @copyright (C) 2018-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Mixin from '@ember/object/mixin';
+import { getOwner } from '@ember/application';
 import { computed } from '@ember/object';
 import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
 
@@ -57,6 +58,10 @@ export default Mixin.create({
       defaultValue: undefined,
     }
   ) {
+    if (getOwner(this)?.isDestroyed) {
+      return undefined;
+    }
+
     const {
       i18n,
       tPrefix,

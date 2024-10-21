@@ -4,12 +4,13 @@
  * Used e.g. in spaces list to distinguish spaces with the same name
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2023 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
-import { getBy } from 'ember-awesome-macros';
+import { observer, defineProperty } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import layout from 'onedata-gui-common/templates/components/name-conflict';
 
 export const defaultSeparator = '@';
@@ -33,7 +34,22 @@ export default Component.extend({
   conflictLabelProperty: 'conflictLabel',
 
   /**
+   * Set by `conflictLabelSetter`
    * @type {ComputedProperty<string | undefined>}
    */
-  conflictLabel: getBy('item', 'conflictLabelProperty'),
+  conflictLabel: undefined,
+
+  conflictLabelSetter: observer('conflictLabelProperty', function conflictLabelSetter() {
+    defineProperty(this, 'conflictLabel', reads(`item.${this.conflictLabelProperty}`));
+    // Get value to recalculate it
+    this.conflictLabel;
+  }),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    this.conflictLabelSetter();
+  },
 });

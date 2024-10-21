@@ -73,8 +73,8 @@ const specsForMigrationTests = [...allOptionalAndDefaultSpecCombinations, {
   defaultValue: 1000,
 }];
 
-describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-editor', function () {
-  setupRenderingTest();
+describe('Integration | Utility | atm-workflow/atm-task/atm-lambda-config-editor', function () {
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -88,6 +88,10 @@ describe('Integration | Utility | atm-workflow/atm-lambda/atm-lambda-config-edit
       }),
       helper: new Helper(this),
     });
+  });
+
+  afterEach(function () {
+    this.rootGroup.destroy?.();
   });
 
   it('has no parameters defined on init', async function () {

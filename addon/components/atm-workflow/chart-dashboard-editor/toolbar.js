@@ -2,7 +2,7 @@
  * Toolbar for dashboard editor. Contains actions global for the whole editor.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -72,7 +72,11 @@ export default Component.extend(I18n, {
     back() {
       const action = this.editorContext.actionsFactory
         .createEndChartContentEditionAction();
-      action.execute();
+      try {
+        action.execute();
+      } finally {
+        action.destroy();
+      }
     },
 
     /**

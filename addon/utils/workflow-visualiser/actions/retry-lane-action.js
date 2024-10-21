@@ -3,7 +3,7 @@
  * passed via context.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -14,7 +14,6 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import {
   equal,
-  getBy,
   notEmpty,
   raw,
   not,
@@ -127,7 +126,9 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Object>}
    */
-  laneRun: getBy('lane.runsRegistry', 'runNumber'),
+  laneRun: computed('lane.runsRegistry', 'runNumber', function laneRun() {
+    return this.lane?.runsRegistry?.[this.runNumber];
+  }),
 
   /**
    * @type {ComputedProperty<Boolean>}

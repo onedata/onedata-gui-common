@@ -2,7 +2,7 @@
  * Represents the whole workflow.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -98,6 +98,17 @@ export default EmberObject.extend({
       });
     }
   ),
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.cacheFor('chartDashboardEditorModelContainer')?.destroy?.();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   /**
    * @virtual optional

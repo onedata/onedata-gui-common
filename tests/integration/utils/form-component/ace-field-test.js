@@ -5,21 +5,25 @@ import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form-component/ace-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/ace-field"', function () {
-    const field = AceField.create();
-    expect(get(field, 'fieldComponentName'))
+    this.field = AceField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/ace-field');
   });
 
   it('overrides "withValidationIcon" to false', function () {
-    const field = AceField.create();
-    expect(get(field, 'withValidationIcon')).to.be.false;
+    this.field = AceField.create();
+    expect(get(this.field, 'withValidationIcon')).to.be.false;
   });
 
   it('has undefined "lang" by default', function () {
-    const field = AceField.create();
-    expect(get(field, 'lang')).to.be.undefined;
+    this.field = AceField.create();
+    expect(get(this.field, 'lang')).to.be.undefined;
   });
 });

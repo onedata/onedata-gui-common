@@ -17,10 +17,14 @@ const defaultMockUser = Object.freeze({
 });
 
 describe('Integration | Component | form-component/static-user-field', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', StaticUserField.create({ ownerSource: this.owner }));
+  });
+
+  afterEach(function () {
+    this.field.destroy();
   });
 
   it('has class "static-user-field"', async function () {

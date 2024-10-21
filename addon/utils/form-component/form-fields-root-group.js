@@ -3,7 +3,7 @@
  * specified 'ownerSource' and 'i18nPrefix'.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -70,6 +70,10 @@ export default FormFieldsGroup.extend({
    * @override
    */
   onValueChange(value, field) {
+    if (this.isDestroyed) {
+      return;
+    }
+
     if (field === this) {
       this.set('valuesSource', value);
     } else {

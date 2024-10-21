@@ -1,33 +1,33 @@
 <div class="header-container">
-  {{#bs-button-group
+  <BsButtonGroup
     class="presenter-type-selector"
-    value=presenterType
-    type="radio"
-    onChange=(action "presenterTypeChange")
+    @value={{presenterType}}
+    @type="radio"
+    @onChange={{action "presenterTypeChange"}}
     as |bg|
-  }}
+  >
     {{#each (array "visual" "raw") as |type|}}
-      {{#bg.button
-        type="default"
-        size="sm"
-        class=(concat "presenter-type-" type)
-        value=type
-        disabled=(not isPresenterTypeToggleEnabled)
-      }}
+      <bg.button
+        class={{concat "presenter-type-" type}}
+        disabled={{not isPresenterTypeToggleEnabled}}
+        @type="default"
+        @size="sm"
+        @value={{type}}
+      >
         {{tt this (concat "presenterTypes." type)}}
-      {{/bg.button}}
+      </bg.button>
     {{/each}}
-  {{/bs-button-group}}
+  </BsButtonGroup>
   <a class="copy-link clickable" onclick={{action "copyJson"}}>
-    {{one-icon icon="browser-copy"}}
+    <OneIcon @icon="browser-copy" />
     {{tt this "copyJson"}}
   </a>
 </div>
 
-{{#perfect-scrollbar-element class="content-container"}}
+<PerfectScrollbarElement class="content-container">
   {{component currentPresenterComponent
     value=value
     dataSpec=dataSpec
     context=context
   }}
-{{/perfect-scrollbar-element}}
+</PerfectScrollbarElement>

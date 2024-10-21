@@ -8,22 +8,26 @@ import sinon from 'sinon';
 import { settled } from '@ember/test-helpers';
 
 describe('Integration | Utility | form-component/dropdown-field', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.field.destroy();
+  });
 
   it('defines fieldComponentName as "form-component/dropdown-field"', function () {
-    const field = DropdownField.create();
-    expect(get(field, 'fieldComponentName'))
+    this.field = DropdownField.create();
+    expect(get(this.field, 'fieldComponentName'))
       .to.equal('form-component/dropdown-field');
   });
 
   it('overrides "withValidationIcon" to false', function () {
-    const field = DropdownField.create();
-    expect(get(field, 'withValidationIcon')).to.be.false;
+    this.field = DropdownField.create();
+    expect(get(this.field, 'withValidationIcon')).to.be.false;
   });
 
   it('has "showSearch" set to true by default', function () {
-    const field = DropdownField.create();
-    expect(get(field, 'showSearch')).to.be.true;
+    this.field = DropdownField.create();
+    expect(get(this.field, 'showSearch')).to.be.true;
   });
 
   it('translates options', async function () {
@@ -31,7 +35,7 @@ describe('Integration | Utility | form-component/dropdown-field', function () {
       .withArgs('somePrefix.field1.options.one.label')
       .returns('One');
 
-    const field = DropdownField.create({
+    this.field = DropdownField.create({
       ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
@@ -40,9 +44,9 @@ describe('Integration | Utility | form-component/dropdown-field', function () {
         name: 'one',
       }],
     });
-    get(field, 'preparedOptions');
+    get(this.field, 'preparedOptions');
 
     await settled();
-    expect(get(field, 'preparedOptions.firstObject.label')).to.equal('One');
+    expect(get(this.field, 'preparedOptions.firstObject.label')).to.equal('One');
   });
 });

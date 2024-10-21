@@ -2,7 +2,7 @@
  * A capacity form field.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -55,18 +55,18 @@ export default FormField.extend({
    */
   placeholder: computed('i18nPrefix', 'translationPath', {
     get() {
-      return this.injectedPlaceholder ??
+      return this.customPlaceholder ??
         this.getTranslation('placeholder', {}, { defaultValue: '' });
     },
     set(key, value) {
-      return this.injectedPlaceholder = value;
+      return this.customPlaceholder = value;
     },
   }),
 
   /**
    * @type {string | null}
    */
-  injectedPlaceholder: null,
+  customPlaceholder: null,
 
   /**
    * @type {ComputedProperty<Object>}

@@ -16,7 +16,7 @@ import { getModalBody, getModalFooter } from '../../../helpers/modal';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 describe('Integration | Component | workflow-visualiser/stores-list', function () {
-  setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
   beforeEach(function () {
     const createStoreStub = sinon.stub().resolves();
@@ -34,6 +34,10 @@ describe('Integration | Component | workflow-visualiser/stores-list', function (
       ],
       createStoreStub,
     });
+  });
+
+  afterEach(function () {
+    this.actionsFactory.destroy();
   });
 
   it('has class "workflow-visualiser-stores-list"', async function () {

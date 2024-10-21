@@ -4,7 +4,11 @@ import { setupTest } from 'ember-mocha';
 import EmberObject, { observer } from '@ember/object';
 
 describe('Unit | Service | app-storage', function () {
-  setupTest();
+  const { afterEach } = setupTest();
+
+  afterEach(function () {
+    this.testObservator?.destroy();
+  });
 
   it('sets data', function () {
     const service = this.owner.lookup('service:app-storage');
@@ -21,7 +25,7 @@ describe('Unit | Service | app-storage', function () {
 
   it('allows to observe data', function () {
     const service = this.owner.lookup('service:app-storage');
-    const testObservator = EmberObject.extend({
+    this.testObservator = EmberObject.extend({
       value: undefined,
 
       appStorageObserver: observer('appStorage.data.testData', function () {
@@ -38,6 +42,6 @@ describe('Unit | Service | app-storage', function () {
     const testValue = 'test';
 
     service.setData('testData', testValue);
-    expect(testObservator.get('value')).to.equal(testValue);
+    expect(this.testObservator.get('value')).to.equal(testValue);
   });
 });

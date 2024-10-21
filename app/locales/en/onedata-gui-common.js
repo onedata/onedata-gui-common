@@ -19,7 +19,7 @@ import clipboardLine from './onedata-gui-common/components/clipboard-line';
 import authenticationErrorModal from './onedata-gui-common/components/authentication-error-modal';
 import sidebarClusters from './onedata-gui-common/components/sidebar-clusters';
 import providersMapTile from './onedata-gui-common/components/providers-map-tile';
-import userAccountButton from './onedata-gui-common/components/user-account-button';
+import userAccountButtonBase from './onedata-gui-common/components/user-account-button-base';
 import jsonEditor from './onedata-gui-common/components/json-editor';
 import endpointError from './onedata-gui-common/components/alerts/endpoint-error';
 import brandInfo from './onedata-gui-common/components/brand-info';
@@ -128,7 +128,7 @@ const translations = {
     sidebarClusters,
     clipboardLine,
     providersMapTile,
-    userAccountButton,
+    userAccountButtonBase,
     brandInfo,
     jsonEditor,
     userCredentialsForm,

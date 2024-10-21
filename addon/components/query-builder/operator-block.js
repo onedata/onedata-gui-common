@@ -2,7 +2,7 @@
  * Visualizes a single operator block.
  *
  * @author Michał Borzęcki, Jakub Liput
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -97,22 +97,22 @@ export default Component.extend(...mixins, {
    */
   level: computed('queryBlock.{operator,levelScore}', {
     get() {
-      if (typeof this.injectedLevel === 'number') {
-        return this.injectedLevel;
+      if (typeof this.customLevel === 'number') {
+        return this.customLevel;
       }
       if (this.get('queryBlock.operator') === 'root') {
         return this.get('queryBlock.levelScore');
       }
     },
     set(key, value) {
-      return this.injectedLevel = value;
+      return this.customLevel = value;
     },
   }),
 
   /**
    * @type {number | string}
    */
-  injectedLevel: null,
+  customLevel: null,
 
   /**
    * Class name based on operator type (eg. or-operator-block)
@@ -181,6 +181,7 @@ export default Component.extend(...mixins, {
     removeBlock(queryBlock) {
       this.get('queryBlock.operands').removeObject(queryBlock);
       this.get('onBlockRemoved')(queryBlock);
+      queryBlock.destroy();
     },
   },
 });

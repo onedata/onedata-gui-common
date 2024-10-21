@@ -3,7 +3,7 @@
  * passed via context.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -12,7 +12,7 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { raw, eq, and, not, getBy } from 'ember-awesome-macros';
+import { raw, eq, and, not } from 'ember-awesome-macros';
 import { workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { inAdvanceRunNumber } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 
@@ -114,7 +114,9 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Object>}
    */
-  laneRun: getBy('lane.runsRegistry', 'runNumber'),
+  laneRun: computed('lane.runsRegistry', 'runNumber', function laneRun() {
+    return this.lane?.runsRegistry?.[this.runNumber];
+  }),
 
   /**
    * @type {ComputedProperty<Boolean>}

@@ -3,7 +3,7 @@
  * external source (taken from `editorContext`) or providing dataset ID.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -118,6 +118,18 @@ export default Component.extend({
       return;
     }
     this.toggleProperty('areActionsOpened');
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    try {
+      this.cacheFor('selectDatasetsAction')?.destroy();
+      this.cacheFor('provideDatasetIdAction')?.destroy();
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   actions: {

@@ -2,11 +2,11 @@
  * An ACE editor form field.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import { computed, trySet } from '@ember/object';
 import { validator } from 'ember-cp-validations';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 
@@ -66,7 +66,7 @@ export default FormField.extend({
    * @returns {void}
    */
   changeEditorValidationState(editorId, hasError) {
-    this.set('hasErrorPerEditor', {
+    trySet(this, 'hasErrorPerEditor', {
       ...this.hasErrorPerEditor,
       [editorId]: hasError,
     });

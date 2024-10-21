@@ -1,6 +1,6 @@
 /**
  * @author Jakub Liput
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -93,6 +93,14 @@ export default Component.extend({
       notifyUpdate: this.notifyUpdate.bind(this),
     });
   }),
+
+  willDestroyElement() {
+    try {
+      this.rootQueryBlock.destroy();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   notifyUpdate(block) {
     console.log('block updated');

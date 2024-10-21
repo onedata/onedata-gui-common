@@ -2,16 +2,15 @@
  * Clear lane. Needs lane instance passed via context.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Action from 'onedata-gui-common/utils/action';
 import ActionResult from 'onedata-gui-common/utils/action-result';
-import { get } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { array, raw, not } from 'ember-awesome-macros';
 
 export default Action.extend({
   modalManager: service(),
@@ -34,7 +33,9 @@ export default Action.extend({
   /**
    * @override
    */
-  disabled: not(array.isAny('lane.elements', raw('__modelType'), raw('parallelBox'))),
+  disabled: computed('lane.elements.@each.__modelType', function disabled() {
+    return !this.lane?.elements?.some(({ __modelType }) => __modelType === 'parallelBox');
+  }),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}

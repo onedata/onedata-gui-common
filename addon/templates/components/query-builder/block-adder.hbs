@@ -1,12 +1,12 @@
-{{#bs-button
-  id=btnId
-  class=(concat-classes "query-builder-block-adder clickable" btnClass)
-  type="default"
-  disabled=disabled
-  onClick=(action "togglePopover")
-}}
+<OneButton
+  id={{btnId}}
+  class={{concat-classes "query-builder-block-adder clickable" btnClass}}
+  @type="default"
+  @disabled={{disabled}}
+  @onClick={{action "togglePopover"}}
+>
   {{one-icon icon="plus" class="adder-icon"}}
-{{/bs-button}}
+</OneButton>
 
 {{#render-later triggerRender=popoverOpen}}
   {{#click-outside

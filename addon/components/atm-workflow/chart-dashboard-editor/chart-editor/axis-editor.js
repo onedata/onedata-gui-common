@@ -2,7 +2,7 @@
  * Editor dedicated to modify chart axis element.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -62,7 +62,7 @@ export default Component.extend(I18n, {
     function labelFormattingValidationErrorsMessage() {
       return translateValidationErrorsBatch(
         this.i18n,
-        this.chartElement.labelFormattingValidationErrors,
+        this.chartElement?.labelFormattingValidationErrors ?? [],
       );
     }
   ),

@@ -4,12 +4,12 @@
  * metricNames when user changes collection or generator.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { observer, set, setProperties } from '@ember/object';
-import { getBy } from 'ember-awesome-macros';
+import EmberObject, { observer, set, setProperties, defineProperty } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import _ from 'lodash';
 
 const fieldsToMonitor = Object.freeze([
@@ -27,12 +27,14 @@ export default EmberObject.extend({
   timeSeriesRefContainer: undefined,
 
   /**
+   * Should be set only once, during object creation.
    * @virtual optional
    * @type {string}
    */
   timeSeriesRefFieldName: 'timeSeriesRef',
 
   /**
+   * Should be set only once, during object creation.
    * @virtual optional
    * @type {string}
    */
@@ -58,14 +60,16 @@ export default EmberObject.extend({
   previousTimeSeriesRef: null,
 
   /**
+   * Set by `init()`
    * @type {ComputedProperty<EmberObject<TimeSeriesRef>>}
    */
-  timeSeriesRef: getBy('timeSeriesRefContainer', 'timeSeriesRefFieldName'),
+  timeSeriesRef: undefined,
 
   /**
+   * Set by `init()`
    * @type {ComputedProperty<Array<ChartDashboardEditorDataSource>}
    */
-  dataSources: getBy('timeSeriesRefContainer', 'dataSourcesFieldName'),
+  dataSources: undefined,
 
   timeSeriesRefObserver: observer('timeSeriesRef', function timeSeriesRefObserver() {
     if (this.previousTimeSeriesRef === this.timeSeriesRef) {
@@ -113,6 +117,16 @@ export default EmberObject.extend({
   init() {
     this._super(...arguments);
     this.set('historicalTimeSeriesRefs', {});
+    defineProperty(
+      this,
+      'timeSeriesRef',
+      reads(`timeSeriesRefContainer.${this.timeSeriesRefFieldName}`)
+    );
+    defineProperty(
+      this,
+      'dataSources',
+      reads(`timeSeriesRefContainer.${this.dataSourcesFieldName}`)
+    );
     this.timeSeriesRefObserver();
   },
 
