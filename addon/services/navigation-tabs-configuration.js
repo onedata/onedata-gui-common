@@ -63,12 +63,18 @@ import { camelize } from '@ember/string';
 
 class CommonNavigationTabsConfiguration extends Service {
   @service sidebarResources;
-  @service currentUser;
 
   defaultAspect = 'index';
 
   /** @type {Storage} */
   storage = globals.localStorage;
+
+  /**
+   * ID of current user.
+   * @virtual
+   * @type {string}
+   */
+  userId = undefined;
 
   /**
    * @virtual
@@ -175,8 +181,7 @@ class CommonNavigationTabsConfiguration extends Service {
    * @returns {string}
    */
   lastUsedIdStorageKey(resourceType) {
-    const userId = this.currentUser.userId;
-    return `navigationTabsConfiguration.user:${userId}.sidebar.${resourceType}.lastUsedId`;
+    return `navigationTabsConfiguration.user:${this.userId}.sidebar.${resourceType}.lastUsedId`;
   }
 }
 
