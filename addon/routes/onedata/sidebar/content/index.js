@@ -7,7 +7,6 @@
  */
 
 import Route from '@ember/routing/route';
-import { camelize } from '@ember/string';
 import { inject as service } from '@ember/service';
 
 // TODO: copied from content route
@@ -31,17 +30,26 @@ export default Route.extend({
     return this.modelFor('onedata.sidebar.content');
   },
 
-  async afterModel(model) {
+  async afterModel(model, transition) {
     const { resourceId } = model;
     if (!isSpecialResourceId(resourceId)) {
       const sidebarModel = this.modelFor('onedata.sidebar');
-      const defaultAspect = await this.navigationTabsConfiguration.getDefaultAspect(
-        sidebarModel,
-        model
-      );
+      const isBetweenAspects =
+        transition.from.name === 'onedata.sidebar.content.aspect' &&
+        transition.from?.parent?.parent?.params.type ===
+        transition.to?.parent?.parent?.params.type;
+      let targetAspect;
+      if (isBetweenAspects) {
+        targetAspect = transition.from.params.aspect_id;
+      } else {
+        targetAspect = await this.navigationTabsConfiguration.getDefaultAspect(
+          sidebarModel,
+          model
+        );
+      }
       this.transitionTo(
         'onedata.sidebar.content.aspect',
-        defaultAspect
+        targetAspect
       );
     }
   },
