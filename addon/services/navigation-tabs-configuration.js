@@ -84,6 +84,7 @@ class CommonNavigationTabsConfiguration extends Service {
    */
   @computed
   get tabModels() {
+    const defaultResource = this.defaultResource.bind(this);
     return [
       { id: 'spaces', icon: 'browser-directory' },
       { id: 'shares', icon: 'browser-share' },
@@ -98,7 +99,19 @@ class CommonNavigationTabsConfiguration extends Service {
         isDefault: true,
         defaultAspect: 'overview',
       },
-    ];
+    ].map(tabModel => {
+      tabModel.defaultResource = defaultResource;
+      return tabModel;
+    });
+  }
+
+  /**
+   * Default implementation for `defaultResource` callback in `OnedataTabModel`.
+   * @param {OnedataSidebarRouteModel} sidebarModel
+   * @returns {object}
+   */
+  async defaultResource(sidebarModel) {
+    return this.getLastUsedResource(sidebarModel);
   }
 
   /**
@@ -129,10 +142,10 @@ class CommonNavigationTabsConfiguration extends Service {
     const { resourceType, collection } = sidebarRouteModel;
     const tabModel = this.tabModels.find(tab => tab.id === resourceType);
     let defaultResource;
-    if (typeof tabModel.defaultAspect === 'string') {
+    if (typeof tabModel.defaultResource === 'string') {
       defaultResource = tabModel.defaultResource;
     }
-    if (typeof tabModel.defaultAspect === 'function') {
+    if (typeof tabModel.defaultResource === 'function') {
       defaultResource = await tabModel?.defaultResource?.(sidebarRouteModel);
     }
     if (defaultResource) {
