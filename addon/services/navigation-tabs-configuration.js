@@ -74,7 +74,9 @@ class CommonNavigationTabsConfiguration extends Service {
    * @virtual
    * @type {string}
    */
-  userId = undefined;
+  get userId() {
+    return undefined;
+  }
 
   /**
    * @virtual
