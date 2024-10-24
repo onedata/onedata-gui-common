@@ -35,8 +35,8 @@ export default Route.extend({
     if (!isSpecialResourceId(resourceId)) {
       const sidebarModel = this.modelFor('onedata.sidebar');
       const isBetweenAspects =
-        transition.from.name === 'onedata.sidebar.content.aspect' &&
-        transition.from?.parent?.parent?.params.type ===
+        transition.from?.name === 'onedata.sidebar.content.aspect' &&
+        transition.from.parent?.parent?.params.type ===
         transition.to?.parent?.parent?.params.type;
       let targetAspect;
       if (isBetweenAspects) {
