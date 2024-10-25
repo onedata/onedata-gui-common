@@ -123,7 +123,7 @@ class CommonNavigationTabsConfiguration extends Service {
   async getDefaultAspect(sidebarRouteModel, contentRouteModel) {
     const tabId = camelize(sidebarRouteModel.resourceType);
     const tabModel = this.tabModels.find(tab => tab.id === tabId);
-    if (!tabModel.defaultAspect) {
+    if (!tabModel?.defaultAspect) {
       return this.defaultAspect;
     }
     if (typeof tabModel.defaultAspect === 'string') {
@@ -142,11 +142,13 @@ class CommonNavigationTabsConfiguration extends Service {
     const { resourceType, collection } = sidebarRouteModel;
     const tabModel = this.tabModels.find(tab => tab.id === resourceType);
     let defaultResource;
-    if (typeof tabModel.defaultResource === 'string') {
-      defaultResource = tabModel.defaultResource;
-    }
-    if (typeof tabModel.defaultResource === 'function') {
-      defaultResource = await tabModel?.defaultResource?.(sidebarRouteModel);
+    if (tabModel) {
+      if (typeof tabModel.defaultResource === 'string') {
+        defaultResource = tabModel.defaultResource;
+      }
+      if (typeof tabModel.defaultResource === 'function') {
+        defaultResource = await tabModel?.defaultResource?.(sidebarRouteModel);
+      }
     }
     if (defaultResource) {
       return defaultResource;

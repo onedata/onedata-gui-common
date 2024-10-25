@@ -10,7 +10,6 @@ import Route from '@ember/routing/route';
 import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { getOwner } from '@ember/application';
-import { camelize } from '@ember/string';
 import findRouteInfo from 'onedata-gui-common/utils/find-route-info';
 
 const notFoundAspect = 'not-found';
