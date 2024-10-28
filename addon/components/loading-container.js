@@ -21,20 +21,12 @@
 
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-
+import { syncObserver } from 'onedata-gui-common/utils/observer';
 import layout from '../templates/components/loading-container';
 
 export default Component.extend({
   layout,
   tagName: '',
-
-  /**
-   * @virtual optional
-   * If provided and tag name is not empty, set the class of additional spinner
-   * container when loading.
-   * @type {string}
-   */
-  loadingClass: '',
 
   /**
    * @virtual optional
@@ -100,4 +92,11 @@ export default Component.extend({
       }
     }
   ),
+
+  // FIXME: debug
+  isLoadingObserver: syncObserver('isLoading', function () {
+    if (!this.isLoading) {
+      // debugger;
+    }
+  }),
 });
