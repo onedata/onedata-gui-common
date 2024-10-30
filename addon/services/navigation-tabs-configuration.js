@@ -46,7 +46,7 @@ import { camelize } from '@ember/string';
  *     be default.
  * @property {string|DefaultAspectGetter} [defaultAspect] Aspect name, that should be
  *     rendered, when URL does not specify any.
- * @property { string | DefaultResourceGetter } [defaultResource] Resource ID (entityId),
+ * @property {string|DefaultResourceGetter} [defaultResource] Resource ID (entityId),
  *     that should be rendered, when URL does not specify any.
  * @property {boolean} [allowIndex] If true and URL does not specify any resource, then
  *     router will allow showing page not related to any resource - index page for
@@ -67,7 +67,32 @@ class CommonNavigationTabsConfiguration extends Service {
   defaultAspect = 'index';
 
   /** @type {Storage} */
-  storage = globals.localStorage;
+  localStorage = globals.localStorage;
+
+  /** @type {Storage} */
+  sessionStorage = globals.sessionStorage;
+
+  /** @type {OnedataSidebarRouteModel} */
+  lastSidebarModel = undefined;
+
+  /** @type {OnedataContentRouteModel} */
+  lastContentModel = undefined;
+
+  constructor() {
+    super(...arguments);
+    // When leaving the app, but staying in the same web browser tab, remember which
+    // resource was used to restore it when openinig sidebar route next time in the same
+    // web browser tab. This is needed beside storing the last resource in the
+    // LocalStorage to support remembering space when using multiple web browser tabs at
+    // once. For example, user has two web browser windows opened: in 1st window they open
+    // Space1, and in second window open Space2 (in this order in time). When user changes
+    // the URL to the Onezone domain in the first web browser tab, they should see Space1.
+    // Without the following code, the user would see Space2, because the default resource
+    // is read from LocalStorage, which is set by second web browser tab.
+    globals.window.addEventListener('beforeunload', () =>
+      this.setLocalLastUsedResource(this.lastSidebarModel, this.lastContentModel)
+    );
+  }
 
   /**
    * ID of current user.
@@ -166,9 +191,15 @@ class CommonNavigationTabsConfiguration extends Service {
    */
   getLastUsedResource(sidebarModel) {
     const { resourceType, collection } = sidebarModel;
-    const lastUsedId = this.storage.getItem(
+    let lastUsedId;
+    lastUsedId = this.sessionStorage.getItem(
       this.lastUsedIdStorageKey(resourceType)
     );
+    if (!lastUsedId) {
+      lastUsedId = this.localStorage.getItem(
+        this.lastUsedIdStorageKey(resourceType)
+      );
+    }
     if (lastUsedId) {
       const lastUsedResource = get(collection, 'list')
         .find(resource => get(resource, 'entityId') === lastUsedId);
@@ -176,10 +207,21 @@ class CommonNavigationTabsConfiguration extends Service {
     }
   }
 
+  setLocalLastUsedResource(sidebarModel, contentModel) {
+    const { resourceType } = sidebarModel;
+    const { resource } = contentModel;
+    this.sessionStorage.setItem(
+      this.lastUsedIdStorageKey(resourceType),
+      this.getResourceId(resource)
+    );
+  }
+
   setLastUsedResource(sidebarModel, contentModel) {
     const { resourceType } = sidebarModel;
     const { resource } = contentModel;
-    this.storage.setItem(
+    this.lastSidebarModel = sidebarModel;
+    this.lastContentModel = contentModel;
+    this.localStorage.setItem(
       this.lastUsedIdStorageKey(resourceType),
       this.getResourceId(resource)
     );
