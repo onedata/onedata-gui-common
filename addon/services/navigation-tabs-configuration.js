@@ -14,6 +14,8 @@ import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties'
 import globals from 'onedata-gui-common/utils/globals';
 import { get, computed } from '@ember/object';
 import { camelize } from '@ember/string';
+import { tracked } from '@glimmer/tracking';
+import _ from 'lodash';
 
 /**
  * @typedef {OnedataSidebarRouteModel<ResourceT>} Object
@@ -61,6 +63,12 @@ import { camelize } from '@ember/string';
  *     menu item.
  */
 
+/**
+ * Maps resource ID (as in `OnedataContentRouteModel.resourceId`) to milliseconds
+ * timestamp of last open in GUI.
+ * @typedef {Object<string, number>} RecentlyUsedMap
+ */
+
 class CommonNavigationTabsConfiguration extends Service {
   @service sidebarResources;
 
@@ -77,6 +85,13 @@ class CommonNavigationTabsConfiguration extends Service {
 
   /** @type {OnedataContentRouteModel} */
   lastContentModel = undefined;
+
+  /**
+   * Timestamp in ms which is updated everytime, when the recently used resources
+   * data is updated - for observing purposes.
+   * @type {number}
+   */
+  @tracked recentlyUsedWriteTimestamp = 0;
 
   constructor() {
     super(...arguments);
@@ -216,15 +231,95 @@ class CommonNavigationTabsConfiguration extends Service {
     );
   }
 
+  /**
+   * @param {OnedataSidebarRouteModel} sidebarModel
+   * @param {OnedataContentRouteModel} contentModel
+   */
   setLastUsedResource(sidebarModel, contentModel) {
     const { resourceType } = sidebarModel;
     const { resource } = contentModel;
     this.lastSidebarModel = sidebarModel;
     this.lastContentModel = contentModel;
+    const resourceId = this.getResourceId(resource);
     this.localStorage.setItem(
       this.lastUsedIdStorageKey(resourceType),
-      this.getResourceId(resource)
+      resourceId
     );
+    // MRU support is currently enabled only for spaces (experimental UX)
+    if (resourceType === 'spaces') {
+      this.registerResourceUsage(resourceType, resourceId);
+    }
+  }
+
+  registerResourceUsage(resourceType, resourceId) {
+    /** @type {RecentlyUsedMap} */
+    const recentlyUsedMap = this.readRecentlyUsed(resourceType);
+    recentlyUsedMap[resourceId] = new Date().getTime();
+    this.writeRecentlyUsed(resourceType, recentlyUsedMap);
+  }
+
+  /**
+   * @param {string} resourceType
+   * @param {number} count
+   * @returns {Array<string>}
+   */
+  getRecentlyUsedResourceIds(resourceType, count) {
+    const recentlyUsed = this.readRecentlyUsed(resourceType);
+    return this.filterMaxValues(recentlyUsed, count);
+  }
+
+  /**
+   * @private
+   * @param {RecentlyUsedMap} recentlyUsed
+   * @param {number} count
+   * @returns {Array<string>}
+   */
+  filterMaxValues(recentlyUsed, count) {
+    const maxEntries = [];
+    const entries = [...Object.entries(recentlyUsed)];
+    for (let i = 0; i < count && entries.length; ++i) {
+      const maxEntry = _.maxBy(entries, ([, timestamp]) => timestamp);
+      maxEntries.push(maxEntry);
+      _.pull(entries, maxEntry);
+    }
+    return maxEntries.map(([resourceId]) => resourceId);
+  }
+
+  /**
+   * @private
+   * @param {string} resourceType
+   * @returns {RecentlyUsedMap}
+   */
+  readRecentlyUsed(resourceType) {
+    const storageKey = this.recentlyUsedIdStorageKey(resourceType);
+    /** @type {RecentlyUsedMap} */
+    let recentlyUsedMap;
+    try {
+      const rawData = this.localStorage.getItem(storageKey);
+      if (rawData) {
+        recentlyUsedMap = JSON.parse(rawData);
+      } else {
+        recentlyUsedMap = {};
+      }
+    } catch (error) {
+      console.error(
+        'NavigationTabsConfiguration: could not read resource recently used data',
+        error
+      );
+      recentlyUsedMap = {};
+    }
+    return recentlyUsedMap;
+  }
+
+  /**
+   * @private
+   * @param {string} resourceType
+   * @param {RecentlyUsedMap} recentlyUsedMap
+   */
+  writeRecentlyUsed(resourceType, recentlyUsedMap) {
+    const storageKey = this.recentlyUsedIdStorageKey(resourceType);
+    this.localStorage.setItem(storageKey, JSON.stringify(recentlyUsedMap));
+    this.set('recentlyUsedWriteTimestamp', new Date().getTime());
   }
 
   /**
@@ -240,7 +335,20 @@ class CommonNavigationTabsConfiguration extends Service {
    * @returns {string}
    */
   lastUsedIdStorageKey(resourceType) {
-    return `navigationTabsConfiguration.user:${this.userId}.sidebar.${resourceType}.lastUsedId`;
+    return `${this.commonStorageIdPrefix(resourceType)}.lastUsedId`;
+  }
+
+  recentlyUsedIdStorageKey(resourceType) {
+    return `${this.commonStorageIdPrefix(resourceType)}.recentlyUsedIds`;
+  }
+
+  /**
+   * @private
+   * @param {string} resourceType Eg. 'spaces', 'groups' - as in OnedataSidebarRouteModel.
+   * @returns {string}
+   */
+  commonStorageIdPrefix(resourceType) {
+    return `navigationTabsConfiguration.user:${this.userId}.sidebar.${resourceType}`;
   }
 }
 
