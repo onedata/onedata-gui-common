@@ -21,7 +21,6 @@
 
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { syncObserver } from 'onedata-gui-common/utils/observer';
 import layout from '../templates/components/loading-container';
 
 export default Component.extend({
@@ -92,11 +91,4 @@ export default Component.extend({
       }
     }
   ),
-
-  // FIXME: debug
-  isLoadingObserver: syncObserver('isLoading', function () {
-    if (!this.isLoading) {
-      // debugger;
-    }
-  }),
 });

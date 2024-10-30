@@ -32,9 +32,4 @@ export default Component.extend({
   spinnerScale: computed('sizeClass', function () {
     return PREDEF_SIZES[this.get('sizeClass')];
   }),
-
-  // FIXME:
-  willDestroyElement() {
-    // debugger;
-  },
 });
