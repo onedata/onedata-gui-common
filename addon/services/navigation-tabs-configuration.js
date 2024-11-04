@@ -155,7 +155,6 @@ class CommonNavigationTabsConfiguration extends Service {
   }
 
   /**
-   * @param {string} tabId
    * @param {OnedataSidebarRouteModel} sidebarRouteModel
    * @param {OnedataContentRouteModel} contentRouteModel
    * @returns {Promise<string>}
