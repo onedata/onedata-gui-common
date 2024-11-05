@@ -4,9 +4,9 @@
     padding-top: $padding-base-vertical + 1;
     padding-bottom: $padding-base-vertical + 1;
     .one-label-tip {
-      padding-top: $padding-base-vertical + 1; 
+      padding-top: $padding-base-vertical + 1;
     }
-  }  
+  }
 }
 
 .one-form-field-static {
@@ -14,4 +14,10 @@
     padding-top: $padding-small-vertical + 2px;
     padding-bottom: $padding-small-vertical + 2px;
   }
+}
+
+.form-horizontal .label-subname {
+  opacity: 0.6;
+  font-size: 80%;
+  font-weight: normal;
 }
