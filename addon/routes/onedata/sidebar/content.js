@@ -52,6 +52,7 @@ function isSpecialResourceId(id) {
 export default Route.extend({
   contentResources: service(),
   navigationState: service(),
+  navigationTabsConfiguration: service(),
 
   beforeModel(transition) {
     const superResult = this._super(...arguments);
@@ -133,7 +134,11 @@ export default Route.extend({
   },
 
   afterModel(model) {
-    this.get('navigationState').setProperties({
+    const sidebarModel = this.modelFor('onedata.sidebar');
+    if (!isSpecialResourceId(model.resourceId)) {
+      this.navigationTabsConfiguration.setLastUsedResource(sidebarModel, model);
+    }
+    this.navigationState.setProperties({
       activeResource: model.resource,
       isActiveResourceLoading: false,
     });

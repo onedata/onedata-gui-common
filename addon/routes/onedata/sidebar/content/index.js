@@ -2,15 +2,12 @@
  * Open default content for loaded resource
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Route from '@ember/routing/route';
-import _ from 'lodash';
-import config from 'ember-get-config';
-import { get } from '@ember/object';
-import { camelize } from '@ember/string';
+import { inject as service } from '@ember/service';
 
 // TODO: copied from content route
 // TODO: refactor to create route-, or application-specific special ids
@@ -22,35 +19,37 @@ const SPECIAL_IDS = [
   'not-selected',
 ];
 
-const {
-  onedataTabs,
-} = config;
-
 function isSpecialResourceId(id) {
   return SPECIAL_IDS.indexOf(id) !== -1;
 }
 
 export default Route.extend({
+  navigationTabsConfiguration: service(),
+
   model() {
     return this.modelFor('onedata.sidebar.content');
   },
 
-  redirect({ resourceId }) {
-    const sidebarModel = this.modelFor('onedata.sidebar');
-    const tabId = camelize(sidebarModel.resourceType);
-    /** @type {object} */
-    const tabModel = _.find(
-      onedataTabs,
-      t => get(t, 'id') === tabId
-    );
-
-    /** @type {string} */
-    const defaultAspect = tabModel && tabModel.defaultAspect || 'index';
-
+  async afterModel(model, transition) {
+    const { resourceId } = model;
     if (!isSpecialResourceId(resourceId)) {
+      const sidebarModel = this.modelFor('onedata.sidebar');
+      const isBetweenAspects =
+        transition.from?.name === 'onedata.sidebar.content.aspect' &&
+        transition.from.parent?.parent?.params.type ===
+        transition.to?.parent?.parent?.params.type;
+      let targetAspect;
+      if (isBetweenAspects) {
+        targetAspect = transition.from.params.aspect_id;
+      } else {
+        targetAspect = await this.navigationTabsConfiguration.getDefaultAspect(
+          sidebarModel,
+          model
+        );
+      }
       this.transitionTo(
         'onedata.sidebar.content.aspect',
-        defaultAspect
+        targetAspect
       );
     }
   },
