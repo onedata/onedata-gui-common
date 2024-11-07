@@ -16,6 +16,9 @@ export default class OneDropdown extends PowerSelect {
   @service scrollState;
   @service media;
 
+  // FIXME: przełącznik boolean
+  groupComponent = 'one-dropdown/one-dropdown-group';
+
   /**
    * @type {ScrollListener}
    */
