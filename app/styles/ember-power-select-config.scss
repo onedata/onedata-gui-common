@@ -68,6 +68,10 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
   }
 }
 
+.ember-power-select-group-name {
+  display: block;
+}
+
 .ember-power-select-trigger {
   .ember-power-select-selected-item {
     display: block;
@@ -231,13 +235,75 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
   }
 }
 
+.one-dropdown-group-collapsible {
+  &.all-groups-opened {
+    .ember-power-select-group-name {
+      // When all groups are forced to be opened, the collapse-on-click
+      // is disabled, so the icons should not be presented.
+      .dropdown-group-collapse-icon {
+        display: none;
+      }
+    }
+  }
+  .ember-power-select-group-name {
+    display: flex;
+    align-items: center;
+    background-color: $ember-power-select-background-color;
+    cursor: pointer;
+    &:hover {
+      background-color: $ember-power-select-highlighted-background;
+    }
+    .dropdown-group-collapse-icon {
+      margin-left: 0.5em;
+      font-weight: bold;
+      font-size: 1.1em;
+      transition-property: transform;
+      transition-duration: 0.1s;
+      transition-timing-function: ease-in;
+    }
+  }
+  .ember-power-select-options {
+    display: none;
+  }
+}
+
+.one-dropdown-group-collapsible.group-opened {
+  .dropdown-group-collapse-icon {
+    transform: rotate(-180deg);
+  }
+  .ember-power-select-options {
+    display: block;
+  }
+  .ember-power-select-group-name {
+    background-color: $color-one-semiwhite;
+    &:hover {
+      background-color: $color-one-semiwhite;
+    }
+  }
+}
+
+.ember-power-select-group-name {
+  background-color: $color-one-semiwhite;
+}
+
 .ember-power-select-dropdown {
   box-shadow: none;
 
   &.small, .form-group-sm & {
+    .ember-power-select-option,
+    .ember-power-select-group .ember-power-select-group-name {
+      min-height: 31px;
+    }
     .ember-power-select-option {
       padding: $ember-power-select-option-small-padding;
-      min-height: 31px;
+    }
+    .ember-power-select-group {
+      .ember-power-select-option {
+        padding-left: 2 * $ember-power-select-option-small-padding-horizontal;
+      }
+      .ember-power-select-group-name {
+        padding: $ember-power-select-option-small-padding;
+      }
     }
   }
 
@@ -249,7 +315,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
     max-height: 250px;
   }
 
-  .ember-power-select-option {
+  .ember-power-select-option, .ember-power-select-group .ember-power-select-group-name {
     border-bottom: $ember-power-select-border-width solid $input-border;
     padding: $padding-base-vertical;
     min-height: $line-height-computed + 2 * $padding-base-vertical;
@@ -264,6 +330,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
       border-bottom: 0;
     }
   }
+
   .ember-power-select-search-input {
     padding: 6px;
   }
@@ -279,6 +346,10 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
 
 .dropdown-input .form-control-feedback {
   display: none;
+}
+
+.ember-power-select-options[role="listbox"] {
+  max-height: 300px;
 }
 
 .form-group {
