@@ -1,0 +1,11 @@
+.one-dropdown-demo-component {
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    .one-way-toggle {
+      margin-right: 1em;
+    }
+  }
+}

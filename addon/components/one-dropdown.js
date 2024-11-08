@@ -9,18 +9,22 @@
 import PowerSelect from 'ember-power-select/components/power-select';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { inject as service } from '@ember/service';
+import { computed } from '@ember/object';
 
 export default class OneDropdown extends PowerSelect {
   @service scrollState;
   @service media;
 
-  // FIXME: przełącznik boolean
-  groupComponent = 'one-dropdown/one-dropdown-group';
-
   /**
    * @type {ScrollListener}
    */
   scrollListener = undefined;
+
+  @computed('areGroupsCollapsible')
+  get groupComponent() {
+    return this.areGroupsCollapsible ?
+      'one-dropdown/one-dropdown-collapsible-group' : 'power-select/power-select-group';
+  }
 
   init() {
     super.init(...arguments);

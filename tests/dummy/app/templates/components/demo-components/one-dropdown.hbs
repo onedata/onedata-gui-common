@@ -1,4 +1,18 @@
-<div class="container">
+<div class="one-dropdown-demo-component container">
+    <div class="row row-content">
+    <h3>OneDropdown</h3>
+    <div class="row">
+      <OneDropdown
+        @options={{array "one" "two" "three"}}
+        @selected={{value}}
+        @searchEnabled={{true}}
+        @onChange={{action (mut value)}}
+        as |value|
+      >
+        {{value}}
+      </OneDropdown>
+    </div>
+  </div>
   <div class="row row-content">
     <h3>OneDropdown small</h3>
     <div class="row">
@@ -9,6 +23,47 @@
         @selected={{valueSmall}}
         @searchEnabled={{true}}
         @onChange={{action (mut valueSmall)}}
+        as |value|
+      >
+        {{value}}
+      </OneDropdown>
+    </div>
+  </div>
+  <div class="row row-content">
+    <h3>OneDropdown with groups</h3>
+    <div class="row toggle-row">
+      <OneWayToggle
+        @checked={{areGroupsCollapsible}}
+        @update={{fn (mut areGroupsCollapsible)}}
+        id="collapsible-groups-toggle"
+      />
+      <label for="collapsible-groups-toggle">Collapsible groups</label>
+    </div>
+    <div class="row">
+      <h4>Normal size</h4>
+      <OneDropdown
+        @triggerClass="some-trigger-class"
+        @dropdownClass="some-dropdown-class"
+        @areGroupsCollapsible={{areGroupsCollapsible}}
+        @options={{optionsWithGroups}}
+        @selected={{valueWithGroups}}
+        @searchEnabled={{true}}
+        @onChange={{action (mut valueWithGroups)}}
+        as |value|
+      >
+        {{value}}
+      </OneDropdown>
+    </div>
+    <div class="row">
+      <h4>Small</h4>
+      <OneDropdown
+        @triggerClass="small"
+        @dropdownClass="small"
+        @areGroupsCollapsible={{areGroupsCollapsible}}
+        @options={{optionsWithGroups}}
+        @selected={{valueWithGroupsSmall}}
+        @searchEnabled={{true}}
+        @onChange={{action (mut valueWithGroupsSmall)}}
         as |value|
       >
         {{value}}
