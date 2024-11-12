@@ -52,6 +52,23 @@ export const throttleTimeout = 50;
  * @typedef {(event: AppProxyPropertyChangeEvent) => void} AppProxyPropertyChangeListener
  */
 
+export const commonIframeInjectedProperties = Object.freeze([
+  'oneproviderId',
+  'oneproviderName',
+]);
+
+/**
+ * Collection of action names (strings), which will be injected to iframe from this
+ * component.
+ * @type {Array<string>}
+ */
+export const commonCallParentActionNames = Object.freeze([
+  'showOneproviderConnectionError',
+  'hideOneproviderConnectionError',
+  'getManageClusterUrl',
+  'callGlobalNotify',
+]);
+
 export default Service.extend({
   /**
    * Accumulates shared properties that should be read from `appProxy`

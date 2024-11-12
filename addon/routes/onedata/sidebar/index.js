@@ -11,14 +11,8 @@ import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import { observer } from '@ember/object';
 import _ from 'lodash';
-import config from 'ember-get-config';
-import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
 import { camelize } from '@ember/string';
 import findRouteInfo from 'onedata-gui-common/utils/find-route-info';
-
-const {
-  onedataTabs,
-} = config;
 
 export default Route.extend({
   router: service(),
@@ -26,19 +20,21 @@ export default Route.extend({
   media: service(),
   guiUtils: service(),
   sidebarResources: service(),
+  navigationTabsConfiguration: service(),
 
   model() {
     return this.modelFor('onedata.sidebar');
   },
 
-  afterModel(model, transition) {
+  async afterModel(model, transition) {
     const tabId = camelize(findRouteInfo(transition, 'onedata.sidebar').params['type']);
+    const onedataTabs = this.navigationTabsConfiguration.tabModels;
     const tab = _.find(onedataTabs, t => t.id === tabId);
     if (!this.get('media.isMobile')) {
       if (tab && tab.allowIndex) {
         this.transitionTo('onedata.sidebar.content', 'not-selected');
       } else {
-        this.redirectToDefault(model);
+        await this.redirectToDefaultResource(model);
       }
     }
   },
@@ -55,18 +51,18 @@ export default Route.extend({
     }
   ),
 
-  getDefaultResource(list, resourceType) {
-    return sortByProperties(
-      list,
-      this.get('sidebarResources').getItemsSortingFor(resourceType)
-    )[0];
-  },
-
-  redirectToDefault({ resourceType, collection }) {
+  async redirectToDefaultResource(model) {
+    const { resourceType, collection } = model;
     const guiUtils = this.get('guiUtils');
     const list = get(collection, 'list');
-    const resourceIdToRedirect = get(list, 'length') > 0 ?
-      guiUtils.getRoutableIdFor(this.getDefaultResource(list, resourceType)) : 'empty';
+    let resourceIdToRedirect;
+    if (!list.length) {
+      resourceIdToRedirect = 'empty';
+    } else {
+      const defaultResource =
+        await this.navigationTabsConfiguration.getDefaultResource(model);
+      resourceIdToRedirect = guiUtils.getRoutableIdFor(defaultResource);
+    }
     if (resourceIdToRedirect != null) {
       this.transitionTo('onedata.sidebar.content', resourceType, resourceIdToRedirect);
     } else {
