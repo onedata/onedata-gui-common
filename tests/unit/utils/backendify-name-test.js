@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import backendifyName, { maxLength } from 'onedata-gui-common/utils/backendify-name';
+import _ from 'lodash';
 
 describe('Unit | Utility | backendify-name', function () {
   it('trims spaces from the string', function () {
@@ -18,8 +19,9 @@ describe('Unit | Utility | backendify-name', function () {
   });
 
   it('cuts too long strings', function () {
+    const longString = _.range(0, 50).reduce((str) => str + '123456789_', '');
     const result = backendifyName(
-      '123456789_123456789_123456789_123456789_123456789_123456789_123456789'
+      longString
     );
     expect(result).to.have.lengthOf(maxLength);
   });
