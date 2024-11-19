@@ -2,7 +2,7 @@
  * Converts any string to name allowed by backend
  *
  * @author Jakub Liput
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @copyright (C) 2020-2024 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -12,7 +12,7 @@ import {
 } from 'onedata-gui-common/utils/backend-name-regexp';
 
 export const minLength = 2;
-export const maxLength = 50;
+export const maxLength = 128;
 const allowedMiddleCharRe = new RegExp(allowedMiddleChar);
 
 export default function backendifyName(name) {
