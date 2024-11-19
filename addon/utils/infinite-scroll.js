@@ -119,14 +119,14 @@ export default EmberObject.extend({
    * @param {boolean} immediate if true, do first update right after method invocation
    */
   startAutoUpdate(immediate = false) {
-    this.get('listUpdater').start(immediate);
+    this.listUpdater.start(immediate);
   },
 
   /**
    * @public
    */
   stopAutoUpdate() {
-    this.get('listUpdater').stop();
+    this.listUpdater.stop();
   },
 
   initFetchingStatus() {
@@ -143,27 +143,21 @@ export default EmberObject.extend({
       entries,
       firstRowModel,
       singleRowHeight,
-    } = this.getProperties(
-      'scrollableContainerElement',
-      'listContainerElement',
-      'entries',
-      'firstRowModel',
-      'singleRowHeight',
-    );
+      onScroll,
+    } = this;
     this.set('scrollHandler', ScrollHandler.create({
       scrollableContainerElement,
       listContainerElement,
       entries,
       firstRowModel,
       singleRowHeight,
-      onScroll: this.get('onScroll'),
+      onScroll,
     }));
   },
 
   initListUpdater() {
-    const entries = this.get('entries');
     this.set('listUpdater', ListUpdater.create({
-      entries,
+      entries: this.entries,
     }));
   },
 
@@ -171,10 +165,7 @@ export default EmberObject.extend({
     const {
       singleRowHeight,
       entries,
-    } = this.getProperties(
-      'singleRowHeight',
-      'entries',
-    );
+    } = this;
     this.set('firstRowModel', FirstRowModel.create({
       singleRowHeight,
       entries,
