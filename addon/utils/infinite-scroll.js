@@ -17,6 +17,19 @@ import FirstRowModel from './infinite-scroll/first-row-model';
 import ListUpdater from './infinite-scroll/list-updater';
 import { reads } from '@ember/object/computed';
 
+/**
+ * @typedef {Object} InfiniteListQuery
+ * @property {string|null} [index] an anchor where the listing should start. Every item
+ *   received from the backend has that field so it is ease to start from the specific log
+ *   entry.
+ * @property {number} [limit] how many items should be fetched
+ * @property {number} [offset] says where the listing should start relative to the
+ *   provided `index`|`timestamp`. Default is 0 which means that the specified item
+ *   will be the first one in the results. When negative integer is provided, the listing
+ *   will start before specified item. When it is a positive integer, it will omit
+ *   that number of entries during the listing.
+ */
+
 export default EmberObject.extend({
   /**
    * @virtual
