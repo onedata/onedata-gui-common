@@ -13,6 +13,7 @@ import isRecord from 'onedata-gui-common/utils/is-record';
 import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
 import { Promise, resolve } from 'rsvp';
 import { camelize, dasherize } from '@ember/string';
+import ReplacingChunksArray from 'onedata-gui-common/utils/replacing-chunks-array';
 
 export default Service.extend({
   /**
@@ -50,37 +51,15 @@ export default Service.extend({
   /**
    * Returns Promise ready to be consumed by sidebar
    * @param {string} resourceType
-   * @returns {Promise<{ resourceType: string, collection: Array<Object> }>}
+   * @returns {Promise<{ resourceType: string, collection: any }>}
    */
-  getSidebarModelFor(resourceType) {
-    const collectionProxy = this.getCollectionFor(resourceType);
-    return collectionProxy
-      .then(collection => {
-        if (isRecord(collection)) {
-          return collection;
-        } else if (get(collection, 'list.content')) {
-          return Promise.all(get(collection, 'list.content')).then(() =>
-            collection
-          );
-        } else {
-          let collectionList;
-          if (collectionProxy instanceof PromiseArray) {
-            collectionList = collectionProxy;
-          } else {
-            collectionList = PromiseArray.create({
-              promise: resolve(collectionProxy),
-            });
-          }
-          return Promise.all(collection).then(() =>
-            EmberObject.create({ list: collectionList })
-          );
-        }
-      }).then(collection => {
-        return {
-          resourceType,
-          collection,
-        };
-      });
+  async getSidebarModelFor(resourceType) {
+    const collection = await this.getCollectionFor(resourceType);
+    await Promise.all(collection.array);
+    return {
+      resourceType,
+      collection,
+    };
   },
 
   /**

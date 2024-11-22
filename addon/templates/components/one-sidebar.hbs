@@ -8,37 +8,43 @@
       {{#if isCollectionEmpty}}
         {{empty-collection-sidebar resourceType=resourceType showGetStarted=showGetStartedWhenEmpty}}
       {{else}}
-        <div class="sidebar-filters-container">
-          <div class="form-group form-group-sm form-group-light search-bar-form-group">
-            <div class="input-group with-icon-addon">
-              {{search-bar search=(action (mut filter)) class="form-control"}}
-              <div class="input-group-addon">
-                {{one-icon icon="search"}}
+        {{#if isFilteringEnabled}}
+          <div class="sidebar-filters-container">
+            <div class="form-group form-group-sm form-group-light search-bar-form-group">
+              <div class="input-group with-icon-addon">
+                {{search-bar search=(action (mut filter)) class="form-control"}}
+                <div class="input-group-addon">
+                  {{one-icon icon="search"}}
+                </div>
               </div>
             </div>
+            {{#if advancedFiltersComponent}}
+              <a class="toggle-more-filters clickable" {{action "toggleAdvancedFilters"}}>
+                {{#if areAdvancedFiltersVisible}}
+                  {{tt this "hideAdvancedFilters"}}
+                  {{one-icon class="arrow-icon" icon="arrow-up"}}
+                {{else}}
+                  {{tt this "showAdvancedFilters"}}
+                  {{one-icon class="arrow-icon" icon="arrow-down"}}
+                {{/if}}
+              </a>
+              {{#one-collapse
+                class="advanced-filters-collapse"
+                collapsed=(not areAdvancedFiltersVisible)
+              }}
+                {{component advancedFiltersComponent
+                  collection=sortedCollection
+                  onChange=(action (mut advancedFilters))}}
+              {{/one-collapse}}
+            {{/if}}
           </div>
-          {{#if advancedFiltersComponent}}
-            <a class="toggle-more-filters clickable" {{action "toggleAdvancedFilters"}}>
-              {{#if areAdvancedFiltersVisible}}
-                {{tt this "hideAdvancedFilters"}}
-                {{one-icon class="arrow-icon" icon="arrow-up"}}
-              {{else}}
-                {{tt this "showAdvancedFilters"}}
-                {{one-icon class="arrow-icon" icon="arrow-down"}}
-              {{/if}}
-            </a>
-            {{#one-collapse
-              class="advanced-filters-collapse"
-              collapsed=(not areAdvancedFiltersVisible)
-            }}
-              {{component advancedFiltersComponent
-                collection=sortedCollection
-                onChange=(action (mut advancedFilters))}}
-            {{/one-collapse}}
-          {{/if}}
-        </div>
+        {{/if}}
         {{#if filteredCollection}}
-          <ul class="one-list">
+          <ul class="one-list one-sidebar-primary-item-list">
+            {{#if isInfiniteScroll}}
+              <li class="table-start-row"></li>
+              <li class="first-row" style={{infiniteScroll.firstRowModel.style}}></li>
+            {{/if}}
             {{#each filteredCollection as |item|}}
               <li class="one-list-item clickable resource-item {{if (eq primaryItem item) "active"}}">
                 {{#one-sidebar/link-to

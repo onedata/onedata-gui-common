@@ -24,7 +24,6 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
 import { get, setProperties } from '@ember/object';
-import isRecord from 'onedata-gui-common/utils/is-record';
 import { scheduleOnce } from '@ember/runloop';
 import globals from 'onedata-gui-common/utils/globals';
 
@@ -104,6 +103,7 @@ export default Route.extend({
           queryParams,
         };
       } else {
+        // FIXME: wyłączyć weryfikację dla infinite scroll list
         // if the resource to load is not present on the list,
         // try to guess it's ID and try to fetch it to detect why it isn't
         // available - eg. because of forbidden error that should be passed
@@ -160,18 +160,7 @@ export default Route.extend({
    * @returns {string} id of found model
    */
   availableResourceId(resourceId, collection) {
-    let modelId;
-    if (isRecord(collection)) {
-      modelId = collection.hasMany('list').ids().indexOf(resourceId) > -1 ?
-        resourceId : null;
-    } else {
-      const model = get(collection, 'list')
-        .filter(model => get(model, 'id') === resourceId)[0];
-      if (model) {
-        modelId = get(model, 'id');
-      }
-    }
-    return modelId;
+    return collection.ids.includes(resourceId) ? resourceId : null;
   },
 
   findOutResourceId(resourceId /* , resourceType */ ) {

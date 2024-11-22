@@ -22,6 +22,9 @@ export class ShareListItem {
   index = undefined;
 
   /** @type {string} */
+  spaceId = undefined;
+
+  /** @type {string} */
   shareId = undefined;
 
   /** @type {string} */
@@ -31,10 +34,10 @@ export class ShareListItem {
   rootFileType = undefined;
 
   /** @type {string} */
-  rootFileId = undefined;
+  rootFilePublicId = undefined;
 
   /** @type {string} */
-  privateFileId = undefined;
+  rootFilePrivateId = undefined;
 
   /** @type {string} */
   handleId = undefined;
