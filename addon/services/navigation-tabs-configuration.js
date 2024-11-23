@@ -215,8 +215,9 @@ class CommonNavigationTabsConfiguration extends Service {
       );
     }
     if (lastUsedId) {
-      const lastUsedResource = get(collection, 'list')
-        .find(resource => get(resource, 'entityId') === lastUsedId);
+      const lastUsedResource = collection.array.find(resource =>
+        get(resource, 'entityId') === lastUsedId
+      );
       return lastUsedResource;
     }
   }

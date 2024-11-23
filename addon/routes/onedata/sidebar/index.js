@@ -54,9 +54,8 @@ export default Route.extend({
   async redirectToDefaultResource(model) {
     const { resourceType, collection } = model;
     const guiUtils = this.get('guiUtils');
-    const list = get(collection, 'list');
     let resourceIdToRedirect;
-    if (!list.length) {
+    if (!collection.array.length) {
       resourceIdToRedirect = 'empty';
     } else {
       const defaultResource =

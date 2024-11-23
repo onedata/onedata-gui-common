@@ -15,7 +15,7 @@ import { camelize, dasherize } from '@ember/string';
 // FIXME: sprawdzić, czy isRecord jest nadal używane
 
 /**
- * @typedef {Object} SidebarCollection<ResourceT>
+ * @typedef {Object} SidebarCollection
  * @property {Array<ResorceT>} array
  * @property {Array<string>} ids
  */
@@ -45,9 +45,9 @@ export default Service.extend({
   ),
 
   /**
-   * @abstract
+   * @virtual
    * @param {string} type
-   * @returns {Promise.Array.Record|PromiseArray.Record|PromiseObject.Array.Record}
+   * @returns {Promise<SidebarCollection>}
    */
   getCollectionFor( /* type */ ) {
     throw new Error('service:sidebar-resources: not implemented');
