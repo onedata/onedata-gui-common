@@ -49,7 +49,7 @@ export default Service.extend({
    * @param {string} type
    * @returns {Promise<SidebarCollection>}
    */
-  getCollectionFor( /* type */ ) {
+  async getCollectionFor( /* type */ ) {
     throw new Error('service:sidebar-resources: not implemented');
   },
 
