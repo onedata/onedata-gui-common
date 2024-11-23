@@ -26,11 +26,21 @@ import { syncObserver } from 'onedata-gui-common/utils/observer';
 
 export const emptyItem = {};
 
+/**
+ * @typedef {Object} ChunksFetchResult
+ * @property {Array} array
+ * @property {boolean} isLast
+ */
+
+/**
+ * @typedef {(index, size, offset) => ChunksFetchResult} ChunksFetchFunction
+ */
+
 export default ArraySlice.extend(Evented, {
   /**
    * Should not be used directly internally. Instead use `fetchWrapper`.
    * @virtual
-   * @type {function} `(fromIndex, size, offset, replacingChunksArray) => Array<any>`
+   * @type {ChunksFetchFunction}
    */
   fetch: undefined,
 

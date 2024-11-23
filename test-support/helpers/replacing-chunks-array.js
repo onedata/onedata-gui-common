@@ -17,6 +17,9 @@ export class Record {
     this.index = index;
     this.id = index;
   }
+  toString() {
+    return String(this.id);
+  }
 }
 
 export function recordRange(start, end) {
@@ -24,8 +27,8 @@ export function recordRange(start, end) {
 }
 
 export class SimpleMockArray {
-  constructor() {
-    this.array = recordRange(0, defaultMockArraySize);
+  constructor(array) {
+    this.array = array ? array : recordRange(0, defaultMockArraySize);
   }
   async fetch(
     fromIndex,
