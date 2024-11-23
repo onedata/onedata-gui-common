@@ -7,13 +7,18 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import Service from '@ember/service';
-import isRecord from 'onedata-gui-common/utils/is-record';
-import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
-import { Promise, resolve } from 'rsvp';
+import { Promise } from 'rsvp';
 import { camelize, dasherize } from '@ember/string';
-import ReplacingChunksArray from 'onedata-gui-common/utils/replacing-chunks-array';
+
+// FIXME: sprawdzić, czy isRecord jest nadal używane
+
+/**
+ * @typedef {Object} SidebarCollection<ResourceT>
+ * @property {Array<ResorceT>} array
+ * @property {Array<string>} ids
+ */
 
 export default Service.extend({
   /**
@@ -51,7 +56,7 @@ export default Service.extend({
   /**
    * Returns Promise ready to be consumed by sidebar
    * @param {string} resourceType
-   * @returns {Promise<{ resourceType: string, collection: any }>}
+   * @returns {Promise<OnedataSidebarRouteModel>}
    */
   async getSidebarModelFor(resourceType) {
     const collection = await this.getCollectionFor(resourceType);

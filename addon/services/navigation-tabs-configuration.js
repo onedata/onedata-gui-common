@@ -20,14 +20,14 @@ import _ from 'lodash';
 /**
  * @typedef {OnedataSidebarRouteModel<ResourceT>} Object
  * @property {string} resourceType
- * @property {Array<ResourceT>} collection
+ * @property {SidebarCollection<ResourceT>} collection
  */
 
 /**
  * @typedef {OnedataContentRouteModel<ResourceT>} Object
  * @property {string} resourceId
  * @property {ResourceT} resource
- * @property {Array<ResourceT>} collection
+ * @property {SidebarCollection<ResourceT>} collection
  * @property {Object} queryParams
  */
 
