@@ -251,18 +251,15 @@ export default Service.extend(I18n, {
         sidebarResources,
         activeResourceType,
         activeResourceCollection,
-      } = this.getProperties(
-        'sidebarResources',
-        'activeResourceType',
-        'activeResourceCollection'
-      );
+      } = this;
 
-      const collection = get(activeResourceCollection || {}, 'list.content');
+      // FIXME: przetestować dokładnie
+      const array = activeResourceCollection?.array;
       return sidebarResources.getButtonsFor(activeResourceType, {
-        collection,
+        collection: array,
         // In global view we assume, that all items are visible - we cannot guess any
         // filtering from this point.
-        visibleCollection: collection,
+        visibleCollection: array,
       });
     }
   ),

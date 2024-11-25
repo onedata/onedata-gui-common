@@ -5,12 +5,13 @@ import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 
 export default class MergedChunksArray extends ReplacingChunksArray {
-  buffer = undefined;
-
   /**
+   * @virtual
    * @type {Array<ChunksFetchFunction>}
    */
-  fetchers = [];
+  get fetchers() {
+    return undefined;
+  }
 
   /**
    * @override
