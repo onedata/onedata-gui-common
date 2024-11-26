@@ -193,7 +193,7 @@ class CommonNavigationTabsConfiguration extends Service {
       return defaultResource;
     } else {
       return sortByProperties(
-        collection.list,
+        collection.array,
         this.sidebarResources.getItemsSortingFor(resourceType)
       )[0];
     }

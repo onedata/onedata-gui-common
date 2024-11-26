@@ -184,6 +184,7 @@ describe('Integration | Component | one-sidebar', function () {
     expect(getButtonsForSpy.lastCall.args[0]).to.equal('testResource');
     const passedContext = getButtonsForSpy.lastCall.args[1];
     expect(passedContext).to.exist;
+    // FIXME: zmiana API collection
     expect(get(passedContext, 'collection').toArray())
       .to.deep.equal(collection.list.content.toArray());
     expect(get(passedContext, 'visibleCollection'))
