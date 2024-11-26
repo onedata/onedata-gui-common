@@ -8,6 +8,9 @@
       }
     }
   }
+  .dropdown-group-collapse-icon {
+    transform: rotate(-90deg);
+  }
   &.group-opened {
     .dropdown-group-collapse-icon {
       transform: rotate(-180deg);
