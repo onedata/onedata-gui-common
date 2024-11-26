@@ -1,7 +1,10 @@
 <div class="row">
   <label for={{inputId}} class={{concat "control-label label-column " layoutConfig.formLabelColumns}}>
     {{#unless field.nolabel}}
-      {{concat field.label (if field.optional (concat " " (t "components.oneFormFields.optional") ""))}}:
+      <div class="label-name">{{field.label}}:</div>
+      {{#if field.optional}}
+        <div class="label-subname">{{t "components.oneFormFields.optional"}}</div>
+      {{/if}}
     {{/unless}}
     {{#if field.tip}}
       {{one-label-tip title=field.tip class="form-field-right-addon"}}
@@ -88,7 +91,10 @@
               field.placeholder
               (if field.example
                 (concat (tt this "example") ": " field.example)
-                ""
+                (if field.isDefault
+                  (concat (tt this "default") ": " field.defaultPlaceholder)
+                  ""
+                )
               )
             }}
           >
