@@ -205,3 +205,16 @@ export const FileAttribute = Object.freeze({
  * @type {ReadonlyArray<FileAttribute>}
  */
 export const fileAttributesArray = Object.freeze(Object.values(FileAttribute).sort());
+
+/**
+ * @param {string} filename
+ * @returns {boolean} True if filename is a valid file name.
+ */
+export function isValidFilename(filename) {
+  return filename &&
+    filename.length < 256 &&
+    filename !== '.' &&
+    filename !== '..' &&
+    // eslint-disable-next-line no-control-regex
+    /[^/\x00]+/.test(filename);
+}
