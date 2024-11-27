@@ -46,7 +46,6 @@
               <li class="first-row" style={{infiniteScroll.firstRowModel.style}}></li>
             {{/if}}
             {{#each filteredCollection as |item|}}
-              {{!-- FIXME: experimental ignoring items without valid ids --}}
               {{#let (model-routable-id item) as |routableId|}}
                 <li
                   class={{concat-classes

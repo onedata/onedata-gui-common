@@ -1,4 +1,10 @@
-// FIXME: jsdoc
+/**
+ * FIXME: jsdoc
+ *
+ * @author Jakub Liput
+ * @copyright (C) 2024 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
 
 import ReplacingChunksArray from './replacing-chunks-array';
 import { all as allFulfilled } from 'rsvp';
@@ -22,7 +28,6 @@ export default class MergedChunksArray extends ReplacingChunksArray {
    * @param {number} offset
    */
   async fetch(index, size, offset) {
-    // FIXME: testy z ujemnym offset (fetch prev)
     const effSize = offset > 0 ? (size + offset) : size;
     const effOffset = offset > 0 ? 0 : offset;
     const results = await allFulfilled(
@@ -43,7 +48,6 @@ export default class MergedChunksArray extends ReplacingChunksArray {
       }
       return merged;
     }, { array: [], isLast: true });
-    // FIXME: jeśli jest ujemny offset, to: posortować, uciąć tablicę na index (jeśli jest), i brać slice z końcówki
     let sortedArray = _.sortBy(mergedResult.array, 'index');
     if (offset < 0) {
       const itemWithIndexPosition = _.findLastIndex(sortedArray, item =>

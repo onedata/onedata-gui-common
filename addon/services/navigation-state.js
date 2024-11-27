@@ -253,7 +253,6 @@ export default Service.extend(I18n, {
         activeResourceCollection,
       } = this;
 
-      // FIXME: przetestować dokładnie
       const array = activeResourceCollection?.array;
       return sidebarResources.getButtonsFor(activeResourceType, {
         collection: array,

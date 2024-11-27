@@ -1,6 +1,10 @@
-// FIXME: jsdoc
-
-// FIXME: common typedef for list page (sprawdzić jak jest w typedefach logów)
+/**
+ * Contains type definitions and classes for shares data models across Onedata.
+ *
+ * @author Jakub Liput
+ * @copyright (C) 2024 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
 
 /**
  * @typedef {Object} ShareDataListPage
