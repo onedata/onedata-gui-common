@@ -19,7 +19,6 @@ import sinon from 'sinon';
 import { lookupService } from '../../helpers/stub-service';
 import OneSidebar from 'onedata-gui-common/components/one-sidebar';
 import globals from 'onedata-gui-common/utils/globals';
-import ArrayProxy from '@ember/array/proxy';
 
 const TestableOneSidebar = OneSidebar.extend({
   didInsertElement() {
