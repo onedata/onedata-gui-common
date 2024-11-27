@@ -38,7 +38,7 @@ export default class MergedChunksArray extends ReplacingChunksArray {
       if (offset > 0) {
         if (effArray[0]?.index === index) {
           effArray = _.tail(effArray, offset);
-        } else {
+        } else if (!result.isLast) {
           effArray = _.dropRight(effArray, offset);
         }
       }
