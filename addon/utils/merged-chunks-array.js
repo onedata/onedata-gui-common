@@ -1,5 +1,9 @@
 /**
- * FIXME: jsdoc
+ * Replacing chunks array that fetches data from multiple sources having the same format
+ * of index. Items from multiple sources are merged into single array with index sorting.
+ *
+ * In this chunks array, you must implement the `fetchers` property, which is array of
+ * fetch functions, instead of `fetch` directly.
  *
  * @author Jakub Liput
  * @copyright (C) 2024 ACK CYFRONET AGH
