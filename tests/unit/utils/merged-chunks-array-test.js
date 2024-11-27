@@ -7,13 +7,9 @@ import {
   MockArray,
   Record,
 } from '../../helpers/replacing-chunks-array';
+import { settled } from '@ember/test-helpers';
 
 describe('Unit | Utility | merged-chunks-array', function () {
-  // beforeEach(function () {
-  //   this.mockArray = new MockArray();
-  //   this.fetch = MockArray.prototype.fetch.bind(mockArray);
-  // });
-
   afterEach(function () {
     this.array?.destroy();
   });
@@ -99,25 +95,36 @@ describe('Unit | Utility | merged-chunks-array', function () {
     );
   });
 
-  it('loads array beginning when using initialJumpIndex with index in the middle', async function () {
+  it('loads array beginning when moving slice to the beginning', async function () {
     const mockData = generateMockArrays();
     this.array = MergedChunksArray.create({
       fetchers: mockData.fetchers,
-      initialJumpIndex: 15,
-      chunkSize: 200,
+      chunkSize: 20,
     });
 
-    await get(this.array, 'initialLoad');
-    this.array.scheduleTask('fetchPrev');
+    // move right
+    await this.array.initialLoad;
+    this.array.setProperties({
+      startIndex: 10,
+      endIndex: 20,
+    });
 
-    expect(this.array.sourceArray.toArray()).to.deep.equal(
-      _.range(0, 65).map(i => new Record(i))
+    // forget about first 10 entries
+    this.array.scheduleReload();
+    await settled();
+
+    // load first 10 entries again
+    await this.array.taskQueue.executionPromiseObject;
+    this.array.setProperties({
+      startIndex: 0,
+      endIndex: 10,
+    });
+    await settled();
+    await this.array.taskQueue.executionPromiseObject;
+
+    expect(this.array.toArray()).to.deep.equal(
+      _.range(0, 10).map(i => new Record(i))
     );
-
-    // expect(this.array.toArray(), this.array.toArray()).to.deep.equal(
-    //   // array is loading 50 items by default with initialJumpIndex
-    //   _.range(15, 65).map(i => new Record(i))
-    // );
   });
 });
 

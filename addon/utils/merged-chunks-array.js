@@ -5,12 +5,14 @@ import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 
 export default class MergedChunksArray extends ReplacingChunksArray {
-  /**
-   * @virtual
-   * @type {Array<ChunksFetchFunction>}
-   */
-  get fetchers() {
-    return undefined;
+  constructor() {
+    super(...arguments);
+
+    /**
+     * @virtual
+     * @type {Array<ChunksFetchFunction>}
+     */
+    this.fetchers;
   }
 
   /**
@@ -41,6 +43,23 @@ export default class MergedChunksArray extends ReplacingChunksArray {
       }
       return merged;
     }, { array: [], isLast: true });
-    return _.sortBy(mergedResult.array, 'index').slice(0, size);
+    // FIXME: jeśli jest ujemny offset, to: posortować, uciąć tablicę na index (jeśli jest), i brać slice z końcówki
+    let sortedArray = _.sortBy(mergedResult.array, 'index');
+    if (offset < 0) {
+      const itemWithIndexPosition = _.findLastIndex(sortedArray, item =>
+        item.index === index
+      );
+      if (itemWithIndexPosition !== -1) {
+        sortedArray = sortedArray.slice(0, itemWithIndexPosition);
+      }
+    }
+    let sliceRange;
+    if (offset >= 0) {
+      sliceRange = [0, size];
+    } else {
+      sliceRange = [sortedArray.length - size, sortedArray.length];
+    }
+    const result = _.sortBy(sortedArray, 'index').slice(...sliceRange);
+    return result;
   }
 }

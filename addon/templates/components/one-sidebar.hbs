@@ -46,36 +46,48 @@
               <li class="first-row" style={{infiniteScroll.firstRowModel.style}}></li>
             {{/if}}
             {{#each filteredCollection as |item|}}
-              <li class="one-list-item clickable resource-item {{if (eq primaryItem item) "active"}}">
-                {{#one-sidebar/link-to
-                  "onedata.sidebar.content.index"
-                  sidebarType
-                  (model-routable-id item)
-                  class="item-header"
-                }}
-                  {{#if firstLevelItemComponent}}
-                    {{component firstLevelItemComponent item=item inSidenav=inSidenav sidebar=this}}
-                  {{else}}
-                    {{#if firstLevelItemIcon}}
-                      {{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}}
-                    {{/if}}
-                    {{#truncated-string}}
-                      {{name-conflict item=item tagName="span" class="one-label"}}
-                    {{/truncated-string}}
-                  {{/if}}
-                {{/one-sidebar/link-to}}
-                {{#if (eq primaryItem item)}}
-                  <ul class="one-list one-list-level-2">
-                    {{component secondLevelItemsComponent
-                      item=item
-                      secondaryItemId=secondaryItemId
-                      sidebar=this
-                      secondLevelItems=secondLevelItems
-                      sidebarType=sidebarType
+              {{!-- FIXME: experimental ignoring items without valid ids --}}
+              {{#let (model-routable-id item) as |routableId|}}
+                <li class={{concat-classes
+                  "one-list-item clickable resource-item"
+                  (if (eq primaryItem item) "active")
+                }}>
+                  <OneSidebar::LinkTo
+                    @route={{if routableId "onedata.sidebar.content.index" "onedata.sidebar"}}
+                    @models={{if routableId
+                      (array sidebarType (model-routable-id item))
+                      (array sidebarType)
                     }}
-                  </ul>
-                {{/if}}
-              </li>
+                    class="item-header"
+                  >
+                    {{#if firstLevelItemComponent}}
+                      {{component firstLevelItemComponent
+                        item=item
+                        inSidenav=inSidenav
+                        sidebar=this
+                      }}
+                    {{else}}
+                      {{#if firstLevelItemIcon}}
+                        {{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}}
+                      {{/if}}
+                      {{#truncated-string}}
+                        {{name-conflict item=item tagName="span" class="one-label"}}
+                      {{/truncated-string}}
+                    {{/if}}
+                  </OneSidebar::LinkTo>
+                  {{#if (eq primaryItem item)}}
+                    <ul class="one-list one-list-level-2">
+                      {{component secondLevelItemsComponent
+                        item=item
+                        secondaryItemId=secondaryItemId
+                        sidebar=this
+                        secondLevelItems=secondLevelItems
+                        sidebarType=sidebarType
+                      }}
+                    </ul>
+                  {{/if}}
+                </li>
+              {{/let}}
             {{/each}}
           </ul>
         {{/if}}
