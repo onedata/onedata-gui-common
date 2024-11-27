@@ -103,6 +103,19 @@ export default Route.extend({
       if (existingResourceId) {
         const resource = await this.contentResources
           .getModelFor(resourceType, existingResourceId);
+        // TODO: VFS-12506 draft of code to jump to share opened with URL (not working);
+        // re-implement or remove it
+        // if (resource.index && collection.chunksArray) {
+        //   (async () => {
+        //     await collection.chunksArray.scheduleJump(resource.index, 50);
+        //     await waitForRender();
+        //     const item = document.querySelector(
+        //       `.one-sidebar .resource-item[data-row-id="${resource.entityId}"]`);
+        //     if (item) {
+        //       item.scrollIntoView({ block: 'center' });
+        //     }
+        //   })();
+        // }
         return {
           resourceId: existingResourceId,
           resource,
@@ -110,7 +123,6 @@ export default Route.extend({
           queryParams,
         };
       } else {
-        // FIXME: wyłączyć weryfikację dla infinite scroll list
         // if the resource to load is not present on the list,
         // try to guess it's ID and try to fetch it to detect why it isn't
         // available - eg. because of forbidden error that should be passed

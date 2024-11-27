@@ -12,7 +12,7 @@ import Service from '@ember/service';
 import { Promise } from 'rsvp';
 import { camelize, dasherize } from '@ember/string';
 
-// FIXME: sprawdzić, czy isRecord jest nadal używane
+// TODO: VFS-12506 Refactor - check if isRecord is still in use
 
 /**
  * @typedef {Object} SidebarCollection
