@@ -91,7 +91,14 @@ export default Route.extend({
         return { resourceId, collection, queryParams };
       }
     } else {
-      const existingResourceId = this.availableResourceId(resourceId, collection);
+      // TODO: VFS-12506 Special case for shares, which currently is only model with
+      // infinite scroll - refactor to do it in generic way
+      let existingResourceId;
+      if (resourceType === 'shares') {
+        existingResourceId = `share.${resourceId}.instance:private`;
+      } else {
+        existingResourceId = this.availableResourceId(resourceId, collection);
+      }
       this.set('navigationState.activeResourceId', existingResourceId);
       if (existingResourceId) {
         const resource = await this.contentResources
