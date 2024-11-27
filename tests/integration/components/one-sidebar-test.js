@@ -37,15 +37,13 @@ describe('Integration | Component | one-sidebar', function () {
     this.set('model', {
       resourceType: 'testResource',
       collection: {
-        list: ArrayProxy.create({
-          content: [{
-            id: 'id1',
-            name: 'res1',
-          }, {
-            id: 'id2',
-            name: 'res2',
-          }],
-        }),
+        array: [{
+          id: 'id1',
+          name: 'res1',
+        }, {
+          id: 'id2',
+          name: 'res2',
+        }],
       },
     });
   });
@@ -184,11 +182,10 @@ describe('Integration | Component | one-sidebar', function () {
     expect(getButtonsForSpy.lastCall.args[0]).to.equal('testResource');
     const passedContext = getButtonsForSpy.lastCall.args[1];
     expect(passedContext).to.exist;
-    // FIXME: zmiana API collection
-    expect(get(passedContext, 'collection').toArray())
-      .to.deep.equal(collection.list.content.toArray());
+    expect(get(passedContext, 'sortedCollection'))
+      .to.deep.equal(collection.array);
     expect(get(passedContext, 'visibleCollection'))
-      .to.deep.equal(collection.list.content.slice(0, 1));
+      .to.deep.equal(collection.array.slice(0, 1));
   });
 
   it(

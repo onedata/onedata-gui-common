@@ -66,7 +66,7 @@ export default Component.extend(I18n, {
    * @type {EmberObject}
    */
   context: computed(() => EmberObject.create({
-    collection: [],
+    sortedCollection: [],
     visibleCollection: [],
   })),
 
@@ -245,7 +245,7 @@ export default Component.extend(I18n, {
       } = this;
 
       setProperties(context, {
-        collection: sortedCollection,
+        sortedCollection,
         visibleCollection: filteredCollection,
       });
     }
@@ -259,11 +259,7 @@ export default Component.extend(I18n, {
       sortedCollection,
       secondLevelItems,
       sidebarType,
-    } = this.getProperties(
-      'sortedCollection',
-      'secondLevelItems',
-      'sidebarType',
-    );
+    } = this;
 
     // if we want to show second level items, we should have a sidebarType
     if (!isEmpty(sortedCollection) && !isEmpty(secondLevelItems) && !sidebarType) {
