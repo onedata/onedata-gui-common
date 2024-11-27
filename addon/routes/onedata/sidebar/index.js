@@ -8,7 +8,6 @@
 
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import { get } from '@ember/object';
 import { observer } from '@ember/object';
 import _ from 'lodash';
 import { camelize } from '@ember/string';
