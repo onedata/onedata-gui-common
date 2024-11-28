@@ -208,7 +208,7 @@ export default Component.extend(I18n, {
         this.set('processing', true);
       }
       try {
-        const proceedResult = this.get('proceed')();
+        const proceedResult = this.proceed();
         if (proceedResult && proceedResult.finally) {
           proceedResult.finally(() => {
             if (autoDetectProcessing) {

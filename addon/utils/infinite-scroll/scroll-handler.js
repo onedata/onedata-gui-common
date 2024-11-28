@@ -12,7 +12,6 @@ import EmberObject, {
   get,
   getProperties,
   setProperties,
-  observer,
 } from '@ember/object';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { next } from '@ember/runloop';
@@ -20,6 +19,7 @@ import ListWatcher from 'onedata-gui-common/utils/list-watcher';
 import $ from 'jquery';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import globals from 'onedata-gui-common/utils/globals';
+import { asyncObserver } from 'onedata-gui-common/utils/observer';
 
 export default EmberObject.extend({
   /**
@@ -142,7 +142,7 @@ export default EmberObject.extend({
     onScroll?.({ headerVisible });
   },
 
-  entriesLoadedObserver: observer(
+  entriesLoadedObserver: asyncObserver(
     'entries.isLoaded',
     function entriesLoadedObserver() {
       if (!this.get('entries.isLoaded')) {

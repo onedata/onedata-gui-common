@@ -46,7 +46,7 @@ export default Component.extend(I18n, {
 
   /**
    * @type {Object}
-   * @property {Ember.Array} collection
+   * @property {SidebarCollection} collection
    * @property {string} resourceType
    */
   model: null,
@@ -58,11 +58,15 @@ export default Component.extend(I18n, {
    */
   firstLevelItemIcon: 'unknown',
 
+  isFilteringEnabled: true,
+
+  isInfiniteScroll: false,
+
   /**
    * @type {EmberObject}
    */
   context: computed(() => EmberObject.create({
-    collection: [],
+    sortedCollection: [],
     visibleCollection: [],
   })),
 
@@ -74,11 +78,7 @@ export default Component.extend(I18n, {
       sidebarResources,
       context,
       resourceType,
-    } = this.getProperties(
-      'sidebarResources',
-      'context',
-      'resourceType'
-    );
+    } = this;
 
     return sidebarResources.getButtonsFor(resourceType, context);
   }),
@@ -93,9 +93,9 @@ export default Component.extend(I18n, {
    * @type {Ember.ComputedProperty<string>}
    */
   title: computed('model.resourceType', function title() {
-    const resourcesType = this.get('model.resourceType');
+    const resourcesType = this.model?.resourceType;
     return resourcesType ?
-      this.get('i18n').t(`tabs.${camelize(resourcesType)}.menuItem`) : '';
+      this.i18n.t(`tabs.${camelize(resourcesType)}.menuItem`) : '';
   }),
 
   /**
@@ -156,7 +156,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Array<string>>}
    */
   sorting: computed('sidebarType', function sorting() {
-    return this.get('sidebarResources').getItemsSortingFor(this.get('sidebarType'));
+    return this.sidebarResources.getItemsSortingFor(this.sidebarType);
   }),
 
   /**
@@ -183,10 +183,10 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Object>}
    */
   primaryItem: computed(
-    'model.collection.list.@each.id',
+    'model.collection.array.@each.id',
     'primaryItemId',
     function primaryItem() {
-      return this.model?.collection?.list?.content?.find(({ id }) =>
+      return this.model?.collection?.array?.find(({ id }) =>
         id === this.primaryItemId
       );
     }
@@ -211,7 +211,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<Array<any>>}
    */
-  sortedCollection: sort('model.collection.list.content', 'sorting'),
+  sortedCollection: sort('model.collection.array', 'sorting'),
 
   /**
    * @type {Ember.ComputedProperty<Array<any>>}
@@ -223,7 +223,7 @@ export default Component.extend(I18n, {
       const {
         sortedCollection,
         filter,
-      } = this.getProperties('sortedCollection', 'filter');
+      } = this;
 
       if (filter) {
         const queryRegExp = new RegExp(filter, 'i');
@@ -242,14 +242,10 @@ export default Component.extend(I18n, {
         sortedCollection,
         filteredCollection,
         context,
-      } = this.getProperties(
-        'sortedCollection',
-        'filteredCollection',
-        'context'
-      );
+      } = this;
 
       setProperties(context, {
-        collection: sortedCollection,
+        sortedCollection,
         visibleCollection: filteredCollection,
       });
     }
@@ -263,11 +259,7 @@ export default Component.extend(I18n, {
       sortedCollection,
       secondLevelItems,
       sidebarType,
-    } = this.getProperties(
-      'sortedCollection',
-      'secondLevelItems',
-      'sidebarType',
-    );
+    } = this;
 
     // if we want to show second level items, we should have a sidebarType
     if (!isEmpty(sortedCollection) && !isEmpty(secondLevelItems) && !sidebarType) {

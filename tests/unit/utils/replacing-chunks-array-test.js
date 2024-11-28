@@ -32,8 +32,8 @@ class MockFullArray {
 }
 
 class MockBrokenFetchArray extends MockArray {
-  constructor(size, maxFetchCount = 1) {
-    super(size);
+  constructor(maxFetchCount = 1) {
+    super();
     this.maxFetchCount = maxFetchCount;
   }
   /** @override */
@@ -580,7 +580,7 @@ describe('Unit | Utility | replacing-chunks-array', function () {
 
   it('performs multiple fetches if single fetch resolves less items than requested', async function () {
     const brokenChunkSize = 10;
-    this.mockArray = new MockBrokenFetchArray(100, brokenChunkSize);
+    this.mockArray = new MockBrokenFetchArray(brokenChunkSize);
     this.fetch = this.mockArray.fetch.bind(this.mockArray);
 
     const fetchSpy = sinon.spy(this.fetch);

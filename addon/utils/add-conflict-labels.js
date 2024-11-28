@@ -81,13 +81,14 @@ function assignConflictLabels(
   defaultId,
   conflictLabelProperty
 ) {
-  if (conflictingRecords.length > 1) {
+  const effConflictingRecords = conflictingRecords.filter(r => get(r, diffProperty));
+  if (effConflictingRecords.length > 1) {
     const conflictLabels = conflictIds(
-      _.map(conflictingRecords, r => get(r, diffProperty))
+      _.map(effConflictingRecords, r => get(r, diffProperty))
     );
     // removing conflict labels for defaultId
-    for (let i = 0; i < conflictingRecords.length; i += 1) {
-      const record = conflictingRecords[i];
+    for (let i = 0; i < effConflictingRecords.length; i += 1) {
+      const record = effConflictingRecords[i];
       const currentConflictLabel = get(record, conflictLabelProperty);
       if (currentConflictLabel) {
         if (
@@ -104,7 +105,7 @@ function assignConflictLabels(
         );
       }
     }
-  } else if (conflictingRecords.length === 1) {
-    set(conflictingRecords[0], conflictLabelProperty, undefined);
+  } else if (effConflictingRecords.length === 1) {
+    set(effConflictingRecords[0], conflictLabelProperty, undefined);
   }
 }

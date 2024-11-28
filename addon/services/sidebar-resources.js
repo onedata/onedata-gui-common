@@ -7,12 +7,18 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import Service from '@ember/service';
-import isRecord from 'onedata-gui-common/utils/is-record';
-import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
-import { Promise, resolve } from 'rsvp';
+import { Promise } from 'rsvp';
 import { camelize, dasherize } from '@ember/string';
+
+// TODO: VFS-12506 Refactor - check if isRecord is still in use
+
+/**
+ * @typedef {Object} SidebarCollection
+ * @property {Array<ResorceT>} array
+ * @property {Array<string>} ids
+ */
 
 export default Service.extend({
   /**
@@ -39,48 +45,26 @@ export default Service.extend({
   ),
 
   /**
-   * @abstract
+   * @virtual
    * @param {string} type
-   * @returns {Promise.Array.Record|PromiseArray.Record|PromiseObject.Array.Record}
+   * @returns {Promise<SidebarCollection>}
    */
-  getCollectionFor( /* type */ ) {
+  async getCollectionFor( /* type */ ) {
     throw new Error('service:sidebar-resources: not implemented');
   },
 
   /**
    * Returns Promise ready to be consumed by sidebar
    * @param {string} resourceType
-   * @returns {Promise<{ resourceType: string, collection: Array<Object> }>}
+   * @returns {Promise<OnedataSidebarRouteModel>}
    */
-  getSidebarModelFor(resourceType) {
-    const collectionProxy = this.getCollectionFor(resourceType);
-    return collectionProxy
-      .then(collection => {
-        if (isRecord(collection)) {
-          return collection;
-        } else if (get(collection, 'list.content')) {
-          return Promise.all(get(collection, 'list.content')).then(() =>
-            collection
-          );
-        } else {
-          let collectionList;
-          if (collectionProxy instanceof PromiseArray) {
-            collectionList = collectionProxy;
-          } else {
-            collectionList = PromiseArray.create({
-              promise: resolve(collectionProxy),
-            });
-          }
-          return Promise.all(collection).then(() =>
-            EmberObject.create({ list: collectionList })
-          );
-        }
-      }).then(collection => {
-        return {
-          resourceType,
-          collection,
-        };
-      });
+  async getSidebarModelFor(resourceType) {
+    const collection = await this.getCollectionFor(resourceType);
+    await Promise.all(collection.array);
+    return {
+      resourceType,
+      collection,
+    };
   },
 
   /**

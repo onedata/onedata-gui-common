@@ -24,7 +24,6 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
 import { get, setProperties } from '@ember/object';
-import isRecord from 'onedata-gui-common/utils/is-record';
 import { scheduleOnce } from '@ember/runloop';
 import globals from 'onedata-gui-common/utils/globals';
 
@@ -92,11 +91,31 @@ export default Route.extend({
         return { resourceId, collection, queryParams };
       }
     } else {
-      const existingResourceId = this.availableResourceId(resourceId, collection);
+      // TODO: VFS-12506 Special case for shares, which currently is only model with
+      // infinite scroll - refactor to do it in generic way
+      let existingResourceId;
+      if (resourceType === 'shares') {
+        existingResourceId = `share.${resourceId}.instance:private`;
+      } else {
+        existingResourceId = this.availableResourceId(resourceId, collection);
+      }
       this.set('navigationState.activeResourceId', existingResourceId);
       if (existingResourceId) {
         const resource = await this.contentResources
           .getModelFor(resourceType, existingResourceId);
+        // TODO: VFS-12506 draft of code to jump to share opened with URL (not working);
+        // re-implement or remove it
+        // if (resource.index && collection.chunksArray) {
+        //   (async () => {
+        //     await collection.chunksArray.scheduleJump(resource.index, 50);
+        //     await waitForRender();
+        //     const item = document.querySelector(
+        //       `.one-sidebar .resource-item[data-row-id="${resource.entityId}"]`);
+        //     if (item) {
+        //       item.scrollIntoView({ block: 'center' });
+        //     }
+        //   })();
+        // }
         return {
           resourceId: existingResourceId,
           resource,
@@ -160,18 +179,7 @@ export default Route.extend({
    * @returns {string} id of found model
    */
   availableResourceId(resourceId, collection) {
-    let modelId;
-    if (isRecord(collection)) {
-      modelId = collection.hasMany('list').ids().indexOf(resourceId) > -1 ?
-        resourceId : null;
-    } else {
-      const model = get(collection, 'list')
-        .filter(model => get(model, 'id') === resourceId)[0];
-      if (model) {
-        modelId = get(model, 'id');
-      }
-    }
-    return modelId;
+    return collection.ids.includes(resourceId) ? resourceId : null;
   },
 
   findOutResourceId(resourceId /* , resourceType */ ) {

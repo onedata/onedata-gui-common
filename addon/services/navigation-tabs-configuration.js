@@ -20,14 +20,14 @@ import _ from 'lodash';
 /**
  * @typedef {OnedataSidebarRouteModel<ResourceT>} Object
  * @property {string} resourceType
- * @property {Array<ResourceT>} collection
+ * @property {SidebarCollection<ResourceT>} collection
  */
 
 /**
  * @typedef {OnedataContentRouteModel<ResourceT>} Object
  * @property {string} resourceId
  * @property {ResourceT} resource
- * @property {Array<ResourceT>} collection
+ * @property {SidebarCollection<ResourceT>} collection
  * @property {Object} queryParams
  */
 
@@ -193,7 +193,7 @@ class CommonNavigationTabsConfiguration extends Service {
       return defaultResource;
     } else {
       return sortByProperties(
-        collection.list,
+        collection.array,
         this.sidebarResources.getItemsSortingFor(resourceType)
       )[0];
     }
@@ -215,8 +215,9 @@ class CommonNavigationTabsConfiguration extends Service {
       );
     }
     if (lastUsedId) {
-      const lastUsedResource = get(collection, 'list')
-        .find(resource => get(resource, 'entityId') === lastUsedId);
+      const lastUsedResource = collection.array.find(resource =>
+        get(resource, 'entityId') === lastUsedId
+      );
       return lastUsedResource;
     }
   }
