@@ -15,7 +15,6 @@ import Service, { inject as service } from '@ember/service';
 import EmberObject, {
   computed,
   observer,
-  get,
 } from '@ember/object';
 import { gt, or } from '@ember/object/computed';
 import { later, cancel } from '@ember/runloop';
@@ -444,11 +443,10 @@ export default Service.extend(I18n, {
       const isEmptyOrNotSpecial = !isActiveResourceIdSpecial ||
         (isActiveResourceIdSpecial && activeResourceId === 'empty');
       if (activeResourceId && activeResourceCollection && isEmptyOrNotSpecial) {
-        this.resourceCollectionContainsId(activeResourceId).then(contains => {
-          if (!contains) {
-            this.get('router').transitionTo('onedata.sidebar');
-          }
-        });
+        const contains = this.resourceCollectionContainsId(activeResourceId);
+        if (!contains) {
+          this.get('router').transitionTo('onedata.sidebar');
+        }
       }
     }
   ),
@@ -519,8 +517,7 @@ export default Service.extend(I18n, {
    * @returns {Promise<Boolean>}
    */
   resourceCollectionContainsId(id) {
-    return get(this.get('activeResourceCollection'), 'list')
-      .then(list => !!list.findBy('id', id));
+    return this.activeResourceCollection.ids.includes(id);
   },
 
   /**
@@ -532,22 +529,20 @@ export default Service.extend(I18n, {
     const {
       router,
       activeResourceType,
-    } = this.getProperties('router', 'activeResourceType');
+    } = this;
     const activeResourceId = this.get('activeResource.id');
     if (!activeResourceId) {
       return resolve();
     }
 
-    return this.resourceCollectionContainsId(activeResourceId)
-      .then(contains => {
-        if (!contains) {
-          return new Promise(resolve => {
-            next(() =>
-              router.transitionTo('onedata.sidebar', activeResourceType).finally(resolve)
-            );
-          });
-        }
+    const contains = this.resourceCollectionContainsId(activeResourceId);
+    if (!contains) {
+      return new Promise(resolve => {
+        next(() =>
+          router.transitionTo('onedata.sidebar', activeResourceType).finally(resolve)
+        );
       });
+    }
   },
 
   /**
