@@ -1,0 +1,10 @@
+<ul class="static-list-field-ul">
+  {{#each items as |item|}}
+    {{#if item.componentPath}}
+      {{component item.componentPath field=field}}
+    {{else}}
+      <li class="static-list-field-item">{{item}}</li>
+    {{/if}}
+  {{/each}}
+</ul>
+{{yield}}
