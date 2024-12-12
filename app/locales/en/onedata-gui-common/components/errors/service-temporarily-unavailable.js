@@ -1,6 +1,6 @@
 import { tryToReload } from './-common';
 
 export default {
-  header: 'Cannot initialize WebSocket connection',
+  header: 'Service temporarily unavailable',
   text: tryToReload,
 };

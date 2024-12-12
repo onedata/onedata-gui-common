@@ -66,6 +66,7 @@ import blockingAddonDetector from './onedata-gui-common/utils/blocking-addon-det
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
 import cannotInitWebsocket from './onedata-gui-common/components/errors/cannot-init-websocket';
+import serviceTemporarilyUnavailable from './onedata-gui-common/components/errors/service-temporarily-unavailable';
 
 import recordSelectorModal from './onedata-gui-common/components/modals/record-selector-modal';
 import questionModal from './onedata-gui-common/components/modals/question-modal';
@@ -176,6 +177,7 @@ const translations = {
       noPermissions,
       noClusterPermissions,
       cannotInitWebsocket,
+      serviceTemporarilyUnavailable,
     },
     modals: {
       recordSelectorModal,
