@@ -11,7 +11,7 @@ export default {
   internalServerError: 'The server has encountered an error while processing this request.{{reference}}',
   notImplemented: 'This operation is not implemented.',
   notSupported: 'This operation is not supported.',
-  serviceUnavailable: 'Service required for this operation is offline.',
+  serviceUnavailable: 'The service required for this operation is currently unavailable (offline, unreachable, or disrupted).',
   timeout: 'Operation timed out – please try again later.',
   temporaryFailure: 'The server reported a temporary failure – please try again later.',
   externalServiceOperationFailed: 'Your request could not be fulfilled due to problems with the external service "{{serviceName}}". This might be a temporary problem or a misconfiguration. Please try again later or contact the site administrators if the problem persists.',
