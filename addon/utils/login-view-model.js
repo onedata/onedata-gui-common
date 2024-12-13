@@ -6,21 +6,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { get } from '@ember/object';
+import EmberObject from '@ember/object';
 import AuthenticationErrorMessage from 'onedata-gui-common/mixins/authentication-error-message';
 import { underscore } from '@ember/string';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import { inject as service } from '@ember/service';
-
-/**
- * When one of these error occurs after username and password sign-in, that means
- * user should not try other password, because invalid form data is not the problem.
- */
-const fatalBasicAuthErrors = Object.freeze([
-  'basicAuthNotSupported',
-  'basicAuthDisabled',
-  'userBlocked',
-]);
 
 const mixins = [
   OwnerInjector,
@@ -41,21 +31,13 @@ export default EmberObject.extend(...mixins, {
    * @returns {BasicAuthErrorInfo}
    */
   parseFormError(error) {
-    let reason;
-    let isFatal = false;
-    const errorId = error && get(error, 'details.authError.id');
-    if (fatalBasicAuthErrors.includes(errorId)) {
-      reason = underscore(errorId);
-      isFatal = true;
-    } else if (errorId === 'badBasicCredentials') {
-      reason = underscore(errorId);
-    } else {
-      reason = 'unknown';
-      isFatal = true;
-    }
+    const errorId = error && (error.details?.authError?.id || error.id);
+    const reason = errorId && underscore(errorId);
+    const isFatal = (errorId !== 'badBasicCredentials');
+    const message = reason && this.errorReasonToText(reason);
     return {
       isFatal,
-      message: this.errorReasonToText(reason),
+      message,
       reason,
     };
   },

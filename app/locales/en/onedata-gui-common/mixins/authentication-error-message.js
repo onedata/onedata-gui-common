@@ -18,5 +18,6 @@ export default {
     // additional for GUI purposes
     unknown: 'Unknown reason.',
     bad_basic_credentials: 'Invalid username and/or password.',
+    service_unavailable: 'Service temporarily unavailable.<br>Please try again later or contact the system administrators if the problem persists.',
   },
 };

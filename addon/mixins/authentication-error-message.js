@@ -28,6 +28,8 @@ const authenticationErrors = [
   'user_blocked',
   'basic_auth_not_supported',
   'basic_auth_disabled',
+  // might occur when service becomes disabled between page load and auth submit
+  'service_unavailable',
 ];
 
 function stripError(authenticationError) {
