@@ -58,6 +58,14 @@ export default EmberObject.extend({
    */
   onScroll: undefined,
 
+  /**
+   * Property of record that contains ID of record. Should be the same as `data-row-id` of
+   * items in template.
+   * @virtual
+   * @type {string}
+   */
+  itemIdProperty: 'id',
+
   fallbackEndIndex: 50,
 
   //#region state
@@ -92,20 +100,15 @@ export default EmberObject.extend({
       fallbackEndIndex,
       entries,
       firstRowModel,
+      itemIdProperty,
       onScroll,
-    } = this.getProperties(
-      'listContainerElement',
-      'fallbackEndIndex',
-      'entries',
-      'firstRowModel',
-      'onScroll',
-    );
+    } = this;
     if (!firstRowModel) {
       return;
     }
 
     const sourceArray = this.get('entries.sourceArray');
-    const entriesIds = sourceArray.mapBy('id');
+    const entriesIds = sourceArray.mapBy(itemIdProperty);
     const firstNonEmptyRow = items.find(elem => elem.getAttribute('data-row-id'));
     const firstId =
       firstNonEmptyRow && firstNonEmptyRow.getAttribute('data-row-id') || null;

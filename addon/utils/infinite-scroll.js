@@ -44,6 +44,14 @@ export default EmberObject.extend({
   singleRowHeight: 0,
 
   /**
+   * Property of record that contains ID of record. Should be the same as `data-row-id` of
+   * items in template.
+   * @virtual
+   * @type {string} optional
+   */
+  itemIdProperty: 'id',
+
+  /**
    * @virtual
    * @type {({ headerVisible: boolean }) => void}
    */
@@ -143,6 +151,7 @@ export default EmberObject.extend({
       entries,
       firstRowModel,
       singleRowHeight,
+      itemIdProperty,
       onScroll,
     } = this;
     this.set('scrollHandler', ScrollHandler.create({
@@ -151,6 +160,7 @@ export default EmberObject.extend({
       entries,
       firstRowModel,
       singleRowHeight,
+      itemIdProperty,
       onScroll,
     }));
   },

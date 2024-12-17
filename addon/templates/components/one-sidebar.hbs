@@ -1,20 +1,23 @@
 <div class="container-fluid">
   <div class="row-heading row">
     <div class="col-title">{{title}}</div>
-    {{one-sidebar-toolbar buttons=buttons}}
+    <OneSidebarToolbar @buttons={{buttons}} />
   </div>
   <div class="row-body row">
     <div class="two-level-sidebar">
       {{#if isCollectionEmpty}}
-        {{empty-collection-sidebar resourceType=resourceType showGetStarted=showGetStartedWhenEmpty}}
+        <EmptyCollectionSidebar
+          @resourceType={{resourceType}}
+          @showGetStarted={{showGetStartedWhenEmpty}}
+        />
       {{else}}
         {{#if isFilteringEnabled}}
           <div class="sidebar-filters-container">
             <div class="form-group form-group-sm form-group-light search-bar-form-group">
               <div class="input-group with-icon-addon">
-                {{search-bar search=(action (mut filter)) class="form-control"}}
+                <SearchBar @search={{action (mut filter)}} class="form-control" />
                 <div class="input-group-addon">
-                  {{one-icon icon="search"}}
+                  <OneIcon @icon="search" />
                 </div>
               </div>
             </div>
@@ -22,20 +25,20 @@
               <a class="toggle-more-filters clickable" {{action "toggleAdvancedFilters"}}>
                 {{#if areAdvancedFiltersVisible}}
                   {{tt this "hideAdvancedFilters"}}
-                  {{one-icon class="arrow-icon" icon="arrow-up"}}
+                  <OneIcon class="arrow-icon" @icon="arrow-up" />
                 {{else}}
                   {{tt this "showAdvancedFilters"}}
-                  {{one-icon class="arrow-icon" icon="arrow-down"}}
+                  <OneIcon class="arrow-icon" @icon="arrow-down" />
                 {{/if}}
               </a>
-              {{#one-collapse
+              <OneCollapse
                 class="advanced-filters-collapse"
-                collapsed=(not areAdvancedFiltersVisible)
-              }}
+                @collapsed={{not areAdvancedFiltersVisible}}>
                 {{component advancedFiltersComponent
                   collection=sortedCollection
-                  onChange=(action (mut advancedFilters))}}
-              {{/one-collapse}}
+                  onChange=(action (mut advancedFilters))
+                }}
+              </OneCollapse>
             {{/if}}
           </div>
         {{/if}}
@@ -49,7 +52,7 @@
               {{#let (model-routable-id item) as |routableId|}}
                 <li
                   class={{concat-classes
-                    "one-list-item clickable resource-item"
+                    "one-list-item clickable resource-item data-row"
                     (if (eq primaryItem item) "active")
                   }}
                   data-row-id={{item.entityId}}
@@ -70,11 +73,11 @@
                       }}
                     {{else}}
                       {{#if firstLevelItemIcon}}
-                        {{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}}
+                        <OneIcon class="sidebar-item-icon" @icon={{firstLevelItemIcon}} />
                       {{/if}}
-                      {{#truncated-string}}
-                        {{name-conflict item=item tagName="span" class="one-label"}}
-                      {{/truncated-string}}
+                      <TruncatedString>
+                        <NameConflict @item={{item}} @tagName="span" class="one-label" />
+                      </TruncatedString>
                     {{/if}}
                   </OneSidebar::LinkTo>
                   {{#if (eq primaryItem item)}}
