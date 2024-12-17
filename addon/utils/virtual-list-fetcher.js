@@ -7,27 +7,57 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
+
+// FIXME: spróbować użyć dekoratora @observers
+// FIXME: być może zrobić specjalną klasę EmberObject, która będzie zajomować się obserwowaniem jednej rzeczy i powiadamianiem za pomocą metody onChanged
+// const ListModelChangesNotifier = EmberObject.extend({
+//   listModel: undefined,
+
+//   init() {
+//     this._super(...arguments);
+//     console.log('FIXME: ListModelChangesNotifier');
+//     this.addObserver('listModel.list.[]', 'notifyChange');
+//   },
+
+//   notifyChange() {
+//     this.onChange(this.listModel.list);
+//   },
+// });
 
 /**
  * @typedef {Object} VirtualListFetcherItem
  * @property {string} index
  */
 
-export default class VirtualListFetcher {
+export default class VirtualListFetcher extends EmberObject {
   listSortKey = 'index';
 
-  constructor(listModel) {
-    /** @type {GraphListModel} */
-    this.listModel = listModel;
+  /**
+   * @virtual
+   * @type {GraphListModel}
+   */
+  listModel = undefined;
+
+  /**
+   * @virtual
+   * @type {() => void}
+   */
+  onReloadNeeded = undefined;
+
+  /** @override */
+  init() {
+    super.init(...arguments);
+    this.addObserver('listModel.list.@each.name', this, 'onListProxyChanged', false);
   }
 
-  @computed('listModel.list.[]')
-  get listProxy() {
-    return promiseObject(this.getPreparedList());
+  /** @override */
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.removeObserver('listModel.list.@each.name', this, 'onListProxyChanged', false);
   }
 
   // FIXME: returns type infinite scroll page
@@ -38,7 +68,7 @@ export default class VirtualListFetcher {
    * @returns {{ array, isLast }}
    */
   async fetch(index, limit, offset) {
-    const list = await this.listProxy;
+    const list = await this.getPreparedList();
     let recordPos = 0;
     if (index !== null) {
       recordPos = list.findIndex(record => record.index === index);
@@ -54,6 +84,10 @@ export default class VirtualListFetcher {
       array,
       isLast: array.length < limit,
     };
+  }
+
+  onListProxyChanged() {
+    this.onReloadNeeded?.();
   }
 
   /**
