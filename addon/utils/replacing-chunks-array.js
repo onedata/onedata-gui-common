@@ -467,7 +467,11 @@ export default ArraySlice.extend(Evented, {
     this.set('_isReloading', true);
     const firstObject = this.objectAt(0);
     let fetchStartIndex = firstObject && this.getIndex(firstObject);
-    if (fetchStartIndex === undefined || head || _start === 0) {
+    if (
+      fetchStartIndex === undefined ||
+      head ||
+      (_start === 0 && !this.isFetchPrevNeeded())
+    ) {
       fetchStartIndex = null;
     }
 
