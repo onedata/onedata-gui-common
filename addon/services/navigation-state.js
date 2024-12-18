@@ -511,6 +511,8 @@ export default Service.extend(I18n, {
     );
   },
 
+  // FIXME: z tym będzie problem, bo zakładamy statyczność i ids ogranizcza się obecnie
+  // do widocznej części
   /**
    * Resolves to true if activeResourceCollections contains model with passed id
    * @param {string} id

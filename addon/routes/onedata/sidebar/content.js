@@ -20,12 +20,11 @@
  */
 
 import Route from '@ember/routing/route';
-
 import { inject as service } from '@ember/service';
-import { resolve } from 'rsvp';
 import { get, setProperties } from '@ember/object';
 import { scheduleOnce } from '@ember/runloop';
 import globals from 'onedata-gui-common/utils/globals';
+import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 /**
  * @typedef {'empty'|'add'|'new'|'join'|'not-selected'|'null'} SpecialResourceId
@@ -91,18 +90,6 @@ export default Route.extend({
         return { resourceId, collection, queryParams };
       }
     } else {
-      // TODO: VFS-12506 draft of code to jump to share opened with URL (not working);
-      // re-implement or remove it
-      // if (resource.index && collection.chunksArray) {
-      //   (async () => {
-      //     await collection.chunksArray.scheduleJump(resource.index, 50);
-      //     await waitForRender();
-      //     const item = document.querySelector(
-      //       `.one-sidebar .resource-item[data-row-id="${resource.entityId}"]`);
-      //     if (item) {
-      //       item.scrollIntoView({ block: 'center' });
-      //     }
-      //   })();
       //       const presumableGri = this.findOutResourceId(resourceId, resourceType);
 
       // FIXME: przywrócić walidację, czy użytkownik ma to na liście?
@@ -149,13 +136,13 @@ export default Route.extend({
     });
   },
 
-  renderTemplate() {
+  renderTemplate(controller, model) {
     // render generic content template
     this.render('onedata.sidebar.content', {
       into: 'onedata',
       outlet: 'content',
     });
-    scheduleOnce('afterRender', this, 'scrollSidebarToActiveSidebarItem');
+    scheduleOnce('afterRender', this, 'scrollSidebarToActiveSidebarItem', model);
   },
 
   /**
@@ -170,10 +157,22 @@ export default Route.extend({
     return resourceId;
   },
 
-  scrollSidebarToActiveSidebarItem() {
+  async scrollSidebarToActiveSidebarItem(contentModel) {
+    const { resource, collection } = contentModel;
     const sidebar = globals.document.querySelector('.col-sidebar');
-    const sidebarActiveItemNode =
-      globals.document.querySelector('.col-sidebar .resource-item.active .item-header');
+    let sidebarActiveItemNode = this.getActiveSidebarItemNode();
+
+    if (
+      resource.index &&
+      collection.chunksArray &&
+      !sidebarActiveItemNode &&
+      !collection.chunksArray.map(item => item.index).includes(resource.index)
+    ) {
+      await collection.chunksArray.scheduleJump(resource.index, 50);
+      await waitForRender();
+    }
+
+    sidebarActiveItemNode = this.getActiveSidebarItemNode();
     if (!sidebarActiveItemNode) {
       return;
     }
@@ -192,6 +191,12 @@ export default Route.extend({
     ) {
       sidebarActiveItemNode.scrollIntoView();
     }
+  },
+
+  getActiveSidebarItemNode() {
+    return globals.document.querySelector(
+      '.col-sidebar .resource-item.active .item-header'
+    );
   },
 
   actions: {
