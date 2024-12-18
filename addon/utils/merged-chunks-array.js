@@ -58,7 +58,7 @@ export default class MergedChunksArray extends ReplacingChunksArray {
         item.index === index
       );
       if (itemWithIndexPosition !== -1) {
-        sortedArray = sortedArray.slice(0, itemWithIndexPosition);
+        sortedArray = sortedArray.slice(0, itemWithIndexPosition + size + offset);
       }
     }
     let sliceRange;
