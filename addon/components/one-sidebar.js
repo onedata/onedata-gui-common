@@ -286,7 +286,14 @@ export default Component.extend(I18n, {
     }
   },
 
+  setFilter(expression) {
+    this.set('filter', expression);
+  },
+
   actions: {
+    setFilter(expression) {
+      this.setFilter(expression);
+    },
     toggleAdvancedFilters() {
       this.toggleProperty('areAdvancedFiltersVisible');
 

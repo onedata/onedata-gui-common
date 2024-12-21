@@ -7,34 +7,21 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed } from '@ember/object';
-import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
-
-// FIXME: spróbować użyć dekoratora @observers
-// FIXME: być może zrobić specjalną klasę EmberObject, która będzie zajomować się obserwowaniem jednej rzeczy i powiadamianiem za pomocą metody onChanged
-// const ListModelChangesNotifier = EmberObject.extend({
-//   listModel: undefined,
-
-//   init() {
-//     this._super(...arguments);
-//     console.log('FIXME: ListModelChangesNotifier');
-//     this.addObserver('listModel.list.[]', 'notifyChange');
-//   },
-
-//   notifyChange() {
-//     this.onChange(this.listModel.list);
-//   },
-// });
 
 /**
  * @typedef {Object} VirtualListFetcherItem
  * @property {string} index
  */
 
-export default class VirtualListFetcher extends EmberObject {
+export default class VirtualListFetcher {
   listSortKey = 'index';
+
+  /**
+   * @type {string}
+   */
+  filterExpression = '';
 
   /**
    * @virtual
@@ -42,22 +29,8 @@ export default class VirtualListFetcher extends EmberObject {
    */
   listModel = undefined;
 
-  /**
-   * @virtual
-   * @type {() => void}
-   */
-  onReloadNeeded = undefined;
-
-  /** @override */
-  init() {
-    super.init(...arguments);
-    this.addObserver('listModel.list.@each.name', this, 'onListProxyChanged', false);
-  }
-
-  /** @override */
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.removeObserver('listModel.list.@each.name', this, 'onListProxyChanged', false);
+  constructor(listModel) {
+    this.listModel = listModel;
   }
 
   // FIXME: returns type infinite scroll page
@@ -68,7 +41,7 @@ export default class VirtualListFetcher extends EmberObject {
    * @returns {{ array, isLast }}
    */
   async fetch(index, limit, offset) {
-    const list = await this.getPreparedList();
+    const list = this.filterItems(await this.getPreparedList());
     let recordPos = 0;
     if (index !== null) {
       recordPos = list.findIndex(record => record.index === index);
@@ -86,10 +59,6 @@ export default class VirtualListFetcher extends EmberObject {
     };
   }
 
-  onListProxyChanged() {
-    this.onReloadNeeded?.();
-  }
-
   /**
    * Returns native sorted array with all records loaded.
    * @returns {Promise<Array<VirtualListFetcherItem>>}
@@ -99,5 +68,17 @@ export default class VirtualListFetcher extends EmberObject {
     let staticList = await allFulfilled(list.toArray());
     staticList = _.sortBy(staticList, this.listSortKey);
     return staticList;
+  }
+
+  setFilter(expression) {
+    this.filterExpression = expression;
+  }
+
+  filterItems(items) {
+    if (!this.filterExpression) {
+      return items;
+    }
+    const queryRegExp = new RegExp(this.filterExpression, 'i');
+    return items.filter(item => queryRegExp.test(item.name));
   }
 }
