@@ -43,10 +43,11 @@ export default class VirtualListChunksArray {
 
   destroy() {
     this.virtualListReloader?.destroy();
+    this.chunksArray?.destroy();
   }
 
   setFilter(expression) {
     this.virtualListFetcher.setFilter(expression);
-    this.virtualListReloader.onListChanged();
+    this.virtualListReloader.handleListChange();
   }
 }

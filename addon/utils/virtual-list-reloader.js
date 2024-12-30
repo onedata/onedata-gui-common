@@ -23,6 +23,12 @@ export default class VirtualListReloader extends EmberObject {
    */
   listModel = undefined;
 
+  /**
+   * @virtual optional
+   * @type {() => void}
+   */
+  onListChanged = undefined;
+
   @computed
   get observedProperty() {
     return `listModel.list.@each.${this.listSortKey}`;
@@ -31,16 +37,22 @@ export default class VirtualListReloader extends EmberObject {
   /** @override */
   init() {
     super.init(...arguments);
-    this.addObserver(this.observedProperty, this, 'onListChanged', false);
+    this.addObserver(this.observedProperty, this, 'handleListChange', false);
   }
 
   /** @override */
   willDestroy() {
     super.willDestroy(...arguments);
-    this.removeObserver(this.observedProperty, this, 'onListChanged', false);
+    this.removeObserver(this.observedProperty, this, 'handleListChange', false);
   }
 
-  async onListChanged() {
-    await this.chunksArray?.scheduleReload();
+  async handleListChange() {
+    if (this.chunksArray) {
+      await this.chunksArray.scheduleReload();
+      if (this.chunksArray.isFetchPrevNeeded()) {
+        this.chunksArray.scheduleTask('fetchPrev');
+      }
+    }
+    await this.onListChanged?.();
   }
 }
