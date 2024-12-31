@@ -1,0 +1,10 @@
+<input
+  {{did-insert this.handleDidInsert}}
+  {{will-destroy this.handleWillDestroy}}
+  {{on "input" this.handleInput}}
+  {{!-- TODO: VFS-12585 i18n in Ember Octane TypeScript components --}}
+  placeholder="Search..."
+  type="search"
+  class="search-bar"
+  ...attributes
+/>
