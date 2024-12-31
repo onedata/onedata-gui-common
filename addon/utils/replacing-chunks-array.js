@@ -124,6 +124,11 @@ export default ArraySlice.extend(Evented, {
       !this._startReached && this._start - this.loadMoreThreshold <= this.emptyIndex;
   },
 
+  isFetchNextNeeded() {
+    return !this.isReloading && !this._endReached &&
+      this._end + this.loadMoreThreshold >= this.sourceArray.length;
+  },
+
   /**
    * Sync observer: schedule task adds the fetch opearation to the queue.
    */
@@ -149,11 +154,7 @@ export default ArraySlice.extend(Evented, {
     'loadMoreThreshold',
     'sourceArray.[]',
     function endChanged() {
-      if (
-        !this.isReloading &&
-        !this._endReached &&
-        this._end + this.loadMoreThreshold >= this.sourceArray.length
-      ) {
+      if (this.isFetchNextNeeded()) {
         return this.scheduleTask('fetchNext');
       }
     }
@@ -441,14 +442,7 @@ export default ArraySlice.extend(Evented, {
       endIndex,
       sourceArray,
       indexMargin,
-    } = this.getProperties(
-      '_start',
-      '_end',
-      'startIndex',
-      'endIndex',
-      'sourceArray',
-      'indexMargin',
-    );
+    } = this;
 
     // currently, if data is not loaded between start and startIndex
     const lastSourceIndex = get(sourceArray, 'length') - 1;
@@ -511,6 +505,12 @@ export default ArraySlice.extend(Evented, {
         const updateBoundary = Math.min(updatedEnd, fetchedCount);
         for (let i = 0; i < updateBoundary; ++i) {
           sourceArray[i + _start] = arrayUpdate[i];
+        }
+        if (this.startIndex === this.endIndex) {
+          this.setProperties({
+            startIndex: 0,
+            endIndex: sourceArray.length,
+          });
         }
       }
       sourceArray.arrayContentDidChange(this._start);

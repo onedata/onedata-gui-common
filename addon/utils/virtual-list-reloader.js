@@ -49,9 +49,7 @@ export default class VirtualListReloader extends EmberObject {
   async handleListChange() {
     if (this.chunksArray) {
       await this.chunksArray.scheduleReload();
-      if (this.chunksArray.isFetchPrevNeeded()) {
-        this.chunksArray.scheduleTask('fetchPrev');
-      }
+      await this.chunksArray.startChanged();
     }
     await this.onListChanged?.();
   }
