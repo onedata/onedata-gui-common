@@ -463,8 +463,9 @@ export default ArraySlice.extend(Evented, {
     let fetchStartIndex = firstObject && this.getIndex(firstObject);
     if (
       fetchStartIndex === undefined ||
-      head ||
-      (_start === 0 && !this.isFetchPrevNeeded())
+      head
+      // FIXME: przyczyna problemów, kiedy robimy reload na pierwszym elemencie; zamiast tego raczej powinno się brać margin head
+      // (_start === 0 && !this.isFetchPrevNeeded())
     ) {
       fetchStartIndex = null;
     }

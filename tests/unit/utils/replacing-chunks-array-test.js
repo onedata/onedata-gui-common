@@ -100,6 +100,7 @@ describe('Unit | Utility | replacing-chunks-array', function () {
       .to.deep.equal(recordRange(15, 25));
   });
 
+  // FIXME: udowodnić, że tak ma być
   it('reloads currently viewed fragment of array at beginning', async function () {
     const fetchSpy = sinon.spy(this.fetch);
     const chunkSize = 24;
