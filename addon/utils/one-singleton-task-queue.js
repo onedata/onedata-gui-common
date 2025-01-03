@@ -102,6 +102,13 @@ export default class OneSingletonTaskQueue {
     return task && task.deferred.promise;
   }
 
+  // FIXME: testy
+  async waitForAllTasks() {
+    while (this.queue.length) {
+      await this.executionPromiseObject;
+    }
+  }
+
   async _executeQueue() {
     this.currentTask = this.queue[0];
     while (this.currentTask) {

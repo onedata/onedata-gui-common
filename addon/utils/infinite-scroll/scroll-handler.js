@@ -171,6 +171,7 @@ export default EmberObject.extend({
    */
   destroy() {
     try {
+      this.entries?.off('willChangeArrayBeginning', this, 'handleScrollAdjust');
       this.tryDestroyListWatcher();
     } finally {
       this._super(...arguments);
@@ -197,15 +198,17 @@ export default EmberObject.extend({
   },
 
   bindScrollAdjustHandler() {
-    this.entries.on(
-      'willChangeArrayBeginning',
-      async ({ updatePromise, newItemsCount }) => {
-        await updatePromise;
-        safeExec(this, () => {
-          this.adjustScrollAfterBeginningChange(newItemsCount);
-        });
-      }
-    );
+    this.entries.on('willChangeArrayBeginning', this, 'handleScrollAdjust');
+  },
+
+  /**
+   * Handler for willChangeArrayBeginning of entries ReplacingChunksArray.
+   */
+  async handleScrollAdjust({ updatePromise, newItemsCount }) {
+    await updatePromise;
+    safeExec(this, () => {
+      this.adjustScrollAfterBeginningChange(newItemsCount);
+    });
   },
 
   /**

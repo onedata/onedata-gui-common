@@ -10,6 +10,7 @@ import VirtualListFetcher from './virtual-list-fetcher';
 import ReplacingChunksArray from './replacing-chunks-array';
 import VirtualListReloader from './virtual-list-reloader';
 
+// FIXME: nazwa może sugerować, że to jest implementacja ChunksArraya
 export default class VirtualListChunksArray {
   /** @type {GraphListModel} */
   listModel = undefined;
@@ -22,6 +23,10 @@ export default class VirtualListChunksArray {
 
   /** @type {VirtualListReloader} */
   virtualListReloader = undefined;
+
+  get filterExpression() {
+    return this.virtualListFetcher.filterExpression;
+  }
 
   constructor(listModel, chunksArrayOptions) {
     this.listModel = listModel;
@@ -47,6 +52,9 @@ export default class VirtualListChunksArray {
   }
 
   setFilter(expression) {
+    if (this.filterExpression === expression) {
+      return;
+    }
     this.virtualListFetcher.setFilter(expression);
     this.virtualListReloader.handleListChange();
   }

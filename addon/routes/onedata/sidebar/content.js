@@ -136,13 +136,12 @@ export default Route.extend({
     });
   },
 
-  renderTemplate(controller, model) {
+  renderTemplate() {
     // render generic content template
     this.render('onedata.sidebar.content', {
       into: 'onedata',
       outlet: 'content',
     });
-    scheduleOnce('afterRender', this, 'scrollSidebarToActiveSidebarItem', model);
   },
 
   /**
@@ -155,48 +154,6 @@ export default Route.extend({
 
   findOutResourceId(resourceId /* , resourceType */ ) {
     return resourceId;
-  },
-
-  async scrollSidebarToActiveSidebarItem(contentModel) {
-    const { resource, collection } = contentModel;
-    const sidebar = globals.document.querySelector('.col-sidebar');
-    let sidebarActiveItemNode = this.getActiveSidebarItemNode();
-
-    if (
-      resource.index &&
-      collection.chunksArray &&
-      !sidebarActiveItemNode &&
-      !collection.chunksArray.map(item => item.index).includes(resource.index)
-    ) {
-      await collection.chunksArray.scheduleJump(resource.index, 50);
-      await waitForRender();
-    }
-
-    sidebarActiveItemNode = this.getActiveSidebarItemNode();
-    if (!sidebarActiveItemNode) {
-      return;
-    }
-
-    const sidebarBoundingRect = sidebar.getBoundingClientRect();
-    const activeItemBoundingRect = sidebarActiveItemNode.getBoundingClientRect();
-    const activeItemYInSidebar = activeItemBoundingRect.top - sidebarBoundingRect.top;
-
-    const minAllowedActiveItemY = 0;
-    // At least 3/4 of the active item must be visible
-    const maxAllowedActiveItemY = sidebarBoundingRect.height -
-      activeItemBoundingRect.height * 0.75;
-    if (
-      activeItemYInSidebar < minAllowedActiveItemY ||
-      activeItemYInSidebar > maxAllowedActiveItemY
-    ) {
-      sidebarActiveItemNode.scrollIntoView();
-    }
-  },
-
-  getActiveSidebarItemNode() {
-    return globals.document.querySelector(
-      '.col-sidebar .resource-item.active .item-header'
-    );
   },
 
   actions: {

@@ -2,12 +2,11 @@
  * A base component for building a sidebar view with two-level list
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2024 ACK CYFRONET AGH
+ * @copyright (C) 2017-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
-
 import { inject as service } from '@ember/service';
 import { reads, equal, sort } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
@@ -26,6 +25,7 @@ import {
   destroyableComputed,
   initDestroyableCache,
 } from 'onedata-gui-common/utils/destroyable-computed';
+import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 export default Component.extend(I18n, {
   layout,
@@ -183,10 +183,10 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Object>}
    */
   primaryItem: computed(
-    'model.collection.array.@each.id',
+    'sortedCollection.@each.id',
     'primaryItemId',
     function primaryItem() {
-      return this.model?.collection?.array?.find(({ id }) =>
+      return this.sortedCollection?.find(({ id }) =>
         id === this.primaryItemId
       );
     }
@@ -286,8 +286,34 @@ export default Component.extend(I18n, {
     }
   },
 
+  /**
+   * @override
+   */
+  didInsertElement() {
+    this._super(...arguments);
+    this.addObserver('primaryItem', this, 'handlePrimaryItemChange', false);
+    this.handlePrimaryItemChange();
+  },
+
+  async handlePrimaryItemChange() {
+    await waitForRender();
+    await this.scrollSidebarToActiveItem();
+  },
+
   setFilter(expression) {
     this.set('filter', expression);
+  },
+
+  async scrollSidebarToActiveItem() {
+    const colSidebar = globals.document.querySelector('.col-sidebar');
+    if (!colSidebar || !this.primaryItem) {
+      return;
+    }
+    await scrollSidebarToActiveItem(
+      colSidebar,
+      this.model.collection,
+      this.primaryItem
+    );
   },
 
   actions: {
@@ -304,3 +330,54 @@ export default Component.extend(I18n, {
     },
   },
 });
+
+/**
+ * @param {HTMLElement} sidebarElement
+ * @param {SidebarCollection} collection
+ * @param {any} resource
+ * @returns
+ */
+async function scrollSidebarToActiveItem(sidebarElement, collection, resource) {
+  if (!resource) {
+    return;
+  }
+  let sidebarActiveItemNode = getActiveSidebarItemElement(sidebarElement);
+
+  if (
+    resource.index &&
+    collection.chunksArray &&
+    !sidebarActiveItemNode &&
+    !collection.chunksArray.map(item => item.index).includes(resource.index)
+  ) {
+    await collection.chunksArray.scheduleJump(resource.index, 50);
+    await waitForRender();
+    sidebarActiveItemNode = getActiveSidebarItemElement(sidebarElement);
+  }
+  if (!sidebarActiveItemNode) {
+    return;
+  }
+
+  const sidebarBoundingRect = sidebarElement.getBoundingClientRect();
+  const activeItemBoundingRect = sidebarActiveItemNode.getBoundingClientRect();
+  const activeItemYInSidebar = activeItemBoundingRect.top - sidebarBoundingRect.top;
+
+  const minAllowedActiveItemY = 0;
+  // At least 3/4 of the active item must be visible
+  const maxAllowedActiveItemY = sidebarBoundingRect.height -
+    activeItemBoundingRect.height * 0.75;
+  if (
+    activeItemYInSidebar < minAllowedActiveItemY ||
+    activeItemYInSidebar > maxAllowedActiveItemY
+  ) {
+    await waitForRender();
+    sidebarActiveItemNode.scrollIntoView();
+  }
+}
+
+/**
+ * @param {HTMLElement} sidebarElement
+ * @returns {HTMLElement|null}
+ */
+function getActiveSidebarItemElement(sidebarElement) {
+  return sidebarElement.querySelector('.resource-item.active .item-header');
+}
