@@ -7,7 +7,7 @@ import VirtualListChunksArray from './virtual-list-chunks-array';
 /**
  * @param {GraphListModel} listModel
  * @param {Object} chunksArrayOptions Properties passed to ReplacinChunksArray create.
- * @returns {ReplacingChunksArray}
+ * @returns {VirtualListChunksArray}
  */
 export default function createVirtualListChunksArray(listModel, chunksArrayOptions) {
   return new VirtualListChunksArray(listModel, chunksArrayOptions);

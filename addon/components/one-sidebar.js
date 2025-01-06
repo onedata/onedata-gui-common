@@ -8,7 +8,7 @@
 
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
-import { reads, equal, sort } from '@ember/object/computed';
+import { reads, equal, sort, bool } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
 import EmberObject, {
   computed,
@@ -45,11 +45,18 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.oneSidebar',
 
   /**
-   * @type {Object}
-   * @property {SidebarCollection} collection
-   * @property {string} resourceType
+   * @virtual
+   * @type {OnedataSidebarRouteModel}
    */
   model: null,
+
+  /**
+   * Implementing infinite scroll in sidebar enables infinite scroll elements in the
+   * common template.
+   * @virtual optional
+   * @type {Utils.InfiniteScroll}
+   */
+  infiniteScroll: undefined,
 
   /**
    * Name of oneicon that should be displayed for each first-level element
@@ -60,7 +67,10 @@ export default Component.extend(I18n, {
 
   isFilteringEnabled: true,
 
-  isInfiniteScroll: false,
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isInfiniteScroll: bool('infiniteScroll'),
 
   /**
    * @type {EmberObject}
@@ -304,7 +314,13 @@ export default Component.extend(I18n, {
     this.set('filter', expression);
   },
 
+  /**
+   * Note that this method works only if the sidebar is rendered in the static column (not
+   * in temporary sidenav).
+   * @returns
+   */
   async scrollSidebarToActiveItem() {
+    // FIXME: wyszukać col-sidebar w parentach?
     const colSidebar = globals.document.querySelector('.col-sidebar');
     if (!colSidebar || !this.primaryItem) {
       return;
