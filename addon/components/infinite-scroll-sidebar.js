@@ -54,13 +54,13 @@ export default class InfiniteScrollSidebar extends OneSidebar {
    * @override
    */
   async handlePrimaryItemChange() {
-    if (!this.primaryItem) {
-      return;
+    const shouldContinue = await super.handlePrimaryItemChange();
+    if (shouldContinue === false) {
+      return false;
     }
-    await super.handlePrimaryItemChange();
     await waitForRender();
     if (this.isDestroyed || this.isDestroying) {
-      return;
+      return false;
     }
     // After jump, the list has no front loaded, executing scroll handler causes
     // the InfiniteScroll toolkit to trigger fetch prev.

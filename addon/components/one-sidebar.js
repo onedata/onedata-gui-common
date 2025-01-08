@@ -26,7 +26,6 @@ import {
   initDestroyableCache,
 } from 'onedata-gui-common/utils/destroyable-computed';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
-import sleep from 'onedata-gui-common/utils/sleep';
 
 export default Component.extend(I18n, {
   layout,
@@ -327,15 +326,16 @@ export default Component.extend(I18n, {
     this.handlePrimaryItemChange();
   },
 
+  /**
+   * @returns {Promise<false|undefined>} Returns false if the procedure is aborted.
+   */
   async handlePrimaryItemChange() {
     if (!this.primaryItem || this.primaryItemPrev === this.primaryItem) {
-      return;
+      return false;
     }
-    // FIXME: debug code
-    await sleep(0);
     await waitForRender();
     if (this.isDestroyed || this.isDestroying) {
-      return;
+      return false;
     }
     await this.scrollSidebarToActiveItem();
   },
@@ -415,7 +415,6 @@ async function scrollSidebarToActiveItem(sidebarElement, collection, resource) {
     activeItemYInSidebar < minAllowedActiveItemY ||
     activeItemYInSidebar > maxAllowedActiveItemY
   ) {
-    await waitForRender();
     sidebarActiveItemNode.scrollIntoView();
   }
 }
