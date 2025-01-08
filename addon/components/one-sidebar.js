@@ -322,7 +322,7 @@ export default Component.extend(I18n, {
    */
   didInsertElement() {
     this._super(...arguments);
-    this.addObserver('primaryItemId', this, 'handlePrimaryItemChange', false);
+    this.addObserver('primaryItem', this, 'handlePrimaryItemChange', false);
     this.handlePrimaryItemChange();
   },
 

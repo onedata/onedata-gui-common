@@ -39,4 +39,25 @@ export default class ChunksSidebar extends InfiniteScrollSidebar {
    * @override
    */
   @reads('sortedCollection') filteredCollection;
+
+  init() {
+    super.init(...arguments);
+    this.addObserver(
+      'navigationState.activeResource',
+      this,
+      'handleActiveResourceChange',
+      false
+    );
+  }
+
+  async handleActiveResourceChange() {
+    const activeResource = this.navigationState.activeResource;
+    if (!activeResource) {
+      return false;
+    }
+    const includes = this.chunksArray.map(({ id }) => id).includes(activeResource.id);
+    if (!includes) {
+      await this.chunksArray.scheduleJump(activeResource.index, 50);
+    }
+  }
 }

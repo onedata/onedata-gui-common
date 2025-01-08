@@ -9,12 +9,16 @@
  */
 
 import OneSidebar from 'onedata-gui-common/components/one-sidebar';
-import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 export default class InfiniteScrollSidebar extends OneSidebar {
+  /**
+   * @type {Utils.InfiniteScroll}
+   */
+  infiniteScroll = undefined;
+
   /**
    * Height of single sidebar primary item in px.
    * @type {number}
@@ -25,21 +29,28 @@ export default class InfiniteScrollSidebar extends OneSidebar {
 
   @reads('model.collection.chunksArray') chunksArray;
 
-  @computed('chunksArray')
-  get infiniteScroll() {
-    return InfiniteScroll.create({
+  /**
+   * @override
+   */
+  init() {
+    super.init(...arguments);
+    if (!this.chunksArray) {
+      throw new Error('InfiniteScrollSidebar: no this.chunksArray');
+    }
+    const infiniteScroll = InfiniteScroll.create({
       entries: this.chunksArray,
       singleRowHeight: this.rowHeight,
       itemIdProperty: 'entityId',
     });
+    this.set('infiniteScroll', infiniteScroll);
   }
 
   /**
    * @override
    */
-  didInsertElement() {
+  async didInsertElement() {
+    await this.mountInfiniteScroll(this.element);
     super.didInsertElement(...arguments);
-    this.mountInfiniteScroll(this.element);
   }
 
   /**
