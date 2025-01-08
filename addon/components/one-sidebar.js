@@ -26,6 +26,7 @@ import {
   initDestroyableCache,
 } from 'onedata-gui-common/utils/destroyable-computed';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
+import sleep from 'onedata-gui-common/utils/sleep';
 
 export default Component.extend(I18n, {
   layout,
@@ -190,15 +191,36 @@ export default Component.extend(I18n, {
   activeResourceType: reads('navigationState.activeResourceType'),
 
   /**
+   * Stores last found primary item to avoid frequent find.
+   * @type {Object}
+   */
+  primaryItemCache: undefined,
+
+  /**
+   * Stores previous primary item to avoid running jumps in observer when the item does
+   * not change (but the observer is triggered).
+   * @type {Object}
+   */
+  primaryItemPrev: undefined,
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   primaryItem: computed(
     'sortedCollection.@each.id',
     'primaryItemId',
     function primaryItem() {
-      return this.sortedCollection?.find(({ id }) =>
-        id === this.primaryItemId
-      );
+      if (this.primaryItemPrev !== this.primaryItemCache) {
+        this.set('primaryItemPrev', this.primaryItemCache);
+      }
+      // FIXME: debug
+      if (this.primaryItemCache?.id !== this.primaryItemId) {
+        const item = this.sortedCollection?.find(({ id }) =>
+          id === this.primaryItemId
+        );
+        this.set('primaryItemCache', item);
+      }
+      return this.primaryItemCache;
     }
   ),
 
@@ -301,12 +323,20 @@ export default Component.extend(I18n, {
    */
   didInsertElement() {
     this._super(...arguments);
-    this.addObserver('primaryItem', this, 'handlePrimaryItemChange', false);
+    this.addObserver('primaryItemId', this, 'handlePrimaryItemChange', false);
     this.handlePrimaryItemChange();
   },
 
   async handlePrimaryItemChange() {
+    if (!this.primaryItem || this.primaryItemPrev === this.primaryItem) {
+      return;
+    }
+    // FIXME: debug code
+    await sleep(0);
     await waitForRender();
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
     await this.scrollSidebarToActiveItem();
   },
 

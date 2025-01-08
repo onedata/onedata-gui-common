@@ -1,5 +1,7 @@
 /**
- * FIXME: doc
+ * A base for implementing specific types of infinite scroll sidebars in Onedata main
+ * layout. This is an abstract implementation - to create a specific sidebar component,
+ * use `VirtualChunksListSidebar` or `ChunksSidebar`.
  *
  * @author Jakub Liput
  * @copyright (C) 2025 ACK CYFRONET AGH
@@ -11,21 +13,8 @@ import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
-import { debounce } from '@ember/runloop';
 
-export default class extends OneSidebar {
-  /**
-   * @override
-   */
-  @reads('model.collection.fullArray') sortedCollection;
-
-  /**
-   * Disable OneSidebar filtering features - the filtering will be set on the collection
-   * object.
-   * @override
-   */
-  @reads('model.collection.array') filteredCollection;
-
+export default class InfiniteScrollSidebar extends OneSidebar {
   /**
    * Height of single sidebar primary item in px.
    * @type {number}
@@ -68,24 +57,14 @@ export default class extends OneSidebar {
     if (!this.primaryItem) {
       return;
     }
-    // scrollSidebarToActiveItem does the array jump internally
-    await this.scrollSidebarToActiveItem();
+    await super.handlePrimaryItemChange();
     await waitForRender();
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
     // After jump, the list has no front loaded, executing scroll handler causes
     // the InfiniteScroll toolkit to trigger fetch prev.
-    this.infiniteScroll.scrollHandler.listWatcher.scrollHandler();
-  }
-
-  /**
-   * @override
-   * @param {string} expression
-   */
-  setFilter(expression) {
-    super.setFilter(expression);
-    debounce(this, 'setVirtualListFilter', 500);
+    this.infiniteScroll.scrollHandler?.listWatcher?.scrollHandler();
   }
 
   /**
@@ -99,17 +78,5 @@ export default class extends OneSidebar {
     /** @type {HTMLElement} */
     const itemsTable = element.querySelector('.one-sidebar-primary-item-list');
     this.infiniteScroll.mount(itemsTable);
-    const virtualListReloader =
-      this.model.collection.virtualListChunksArray.virtualListReloader;
-    virtualListReloader.onListChanged = async () => {
-      // FIXME: próba optymalizacji: jeśli po renderze aktywny item nie jest na widocznej liście
-      if (this.primaryItem) {
-        this.handlePrimaryItemChange();
-      }
-    };
-  }
-
-  setVirtualListFilter() {
-    this.model.collection.setFilter(this.filter);
   }
 }
