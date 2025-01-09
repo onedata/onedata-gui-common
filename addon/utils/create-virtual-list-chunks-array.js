@@ -3,6 +3,7 @@
 import VirtualListChunksArray from './virtual-list-chunks-array';
 
 // FIXME: warto napisać testy dla tego kosntruktu
+// FIXME: nieużywane, do usunięcia (?)
 
 /**
  * @param {GraphListModel} listModel

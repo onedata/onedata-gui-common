@@ -344,6 +344,10 @@ export default Component.extend(I18n, {
     this.set('filter', expression);
   },
 
+  setAdvancedFilter(advancedFilter) {
+    this.set('advancedFilters', advancedFilter);
+  },
+
   /**
    * Note that this method works only if the sidebar is rendered in the static column (not
    * in temporary sidenav).
@@ -365,6 +369,9 @@ export default Component.extend(I18n, {
   actions: {
     setFilter(expression) {
       this.setFilter(expression);
+    },
+    setAdvancedFilter(advancedFilter) {
+      this.setAdvancedFilter(advancedFilter);
     },
     toggleAdvancedFilters() {
       this.toggleProperty('areAdvancedFiltersVisible');

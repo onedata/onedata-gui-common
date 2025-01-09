@@ -9,28 +9,32 @@
 import VirtualListFetcher from './virtual-list-fetcher';
 import ReplacingChunksArray from './replacing-chunks-array';
 import VirtualListReloader from './virtual-list-reloader';
+import _ from 'lodash';
 
 // FIXME: nazwa może sugerować, że to jest implementacja ChunksArraya
 export default class VirtualListChunksArray {
-  /** @type {GraphListModel} */
-  listModel = undefined;
-
-  /** @type {ReplacingChunksArray} */
-  chunksArray = undefined;
-
-  /** @type {VirtualListFetcher} */
-  virtualListFetcher = undefined;
-
-  /** @type {VirtualListReloader} */
-  virtualListReloader = undefined;
+  /** @type {typeof VirtualListFetcher} */
+  get VirtualListFetcherClass() {
+    return VirtualListFetcher;
+  }
 
   get filterExpression() {
     return this.virtualListFetcher.filterExpression;
   }
 
+  get filterAdvanced() {
+    return this.virtualListFetcher.filterAdvanced;
+  }
+
   constructor(listModel, chunksArrayOptions) {
+
+    /** @type {GraphListModel} */
     this.listModel = listModel;
-    this.virtualListFetcher = new VirtualListFetcher(listModel);
+
+    /** @type {VirtualListFetcher} */
+    this.virtualListFetcher = new this.VirtualListFetcherClass(listModel);
+
+    /** @type {ReplacingChunksArray} */
     this.chunksArray = ReplacingChunksArray.create({
       fetch: (index, limit, offset) => {
         return this.virtualListFetcher.fetch(index, limit, offset);
@@ -40,6 +44,8 @@ export default class VirtualListChunksArray {
       indexMargin: 10,
       ...chunksArrayOptions,
     });
+
+    /** @type {VirtualListReloader} */
     this.virtualListReloader = VirtualListReloader.create({
       listModel,
       chunksArray: this.chunksArray,
@@ -51,11 +57,14 @@ export default class VirtualListChunksArray {
     this.chunksArray?.destroy();
   }
 
-  setFilter(expression) {
-    if (this.filterExpression === expression) {
+  setFilter({ expression, advanced }) {
+    if (
+      this.filterExpression === expression &&
+      _.isEqual(this.filterAdvanced, advanced)
+    ) {
       return;
     }
-    this.virtualListFetcher.setFilter(expression);
+    this.virtualListFetcher.setFilter({ expression, advanced });
     this.virtualListReloader.handleListChange();
   }
 }

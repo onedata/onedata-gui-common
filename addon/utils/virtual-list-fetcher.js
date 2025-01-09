@@ -24,6 +24,11 @@ export default class VirtualListFetcher {
   filterExpression = '';
 
   /**
+   * @type {any}
+   */
+  filterAdvanced;
+
+  /**
    * @virtual
    * @type {GraphListModel}
    */
@@ -70,8 +75,9 @@ export default class VirtualListFetcher {
     return staticList;
   }
 
-  setFilter(expression) {
+  setFilter({ expression, advanced }) {
     this.filterExpression = expression;
+    this.filterAdvanced = advanced;
   }
 
   filterItems(items) {

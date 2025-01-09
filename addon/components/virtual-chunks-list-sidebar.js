@@ -33,7 +33,18 @@ export default class VirtualChunksListSidebar extends InfiniteScrollSidebar {
    */
   setFilter(expression) {
     super.setFilter(expression);
-    debounce(this, 'setVirtualListFilter', 500);
+    // Editing simple expression filter should be debounced to no invoke list reload
+    // when user changes the input.
+    debounce(this, 'updateVirtualListFilter', 500);
+  }
+
+  /**
+   * @override
+   * @param {TokensSidebarAdvancedFilter} advancedFilter
+   */
+  setAdvancedFilter(advancedFilter) {
+    super.setAdvancedFilter(advancedFilter);
+    this.updateVirtualListFilter();
   }
 
   /**
@@ -53,7 +64,14 @@ export default class VirtualChunksListSidebar extends InfiniteScrollSidebar {
     };
   }
 
-  setVirtualListFilter() {
-    this.model.collection.setFilter(this.filter);
+  /**
+   * Sets filters from sidebar instance to the SidebarCollection instance.
+   * @returns {void}
+   */
+  updateVirtualListFilter() {
+    this.model.collection.setFilter({
+      expression: this.filter,
+      advanced: this.advancedFilters,
+    });
   }
 }

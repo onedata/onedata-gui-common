@@ -36,7 +36,7 @@
                 @collapsed={{not areAdvancedFiltersVisible}}>
                 {{component advancedFiltersComponent
                   collection=sortedCollection
-                  onChange=(action (mut advancedFilters))
+                  onChange=(action "setAdvancedFilter")
                 }}
               </OneCollapse>
             {{/if}}
