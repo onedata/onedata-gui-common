@@ -22,9 +22,6 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { get, setProperties } from '@ember/object';
-import { scheduleOnce } from '@ember/runloop';
-import globals from 'onedata-gui-common/utils/globals';
-import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 /**
  * @typedef {'empty'|'add'|'new'|'join'|'not-selected'|'null'} SpecialResourceId

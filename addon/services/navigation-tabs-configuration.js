@@ -5,7 +5,7 @@
  * GUI with tabs.
  *
  * @author Jakub Liput
- * @copyright (C) 2024 ACK CYFRONET AGH
+ * @copyright (C) 2024-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -38,6 +38,8 @@ import _ from 'lodash';
 /**
  * @typedef {(sidebarModel?: OnedataSidebarRouteModel) => string|Promise<string>} DefaultResourceGetter
  */
+
+// FIXME: być może nazwa wymaga refaktoru: defaultResource -> defaultResourceId
 
 /**
  * @typedef OnedataTabModel
@@ -124,7 +126,7 @@ class CommonNavigationTabsConfiguration extends Service {
    */
   @computed
   get tabModels() {
-    const defaultResource = this.defaultResource.bind(this);
+    const defaultResourceIdResolver = this.defaultResource.bind(this);
     return [
       { id: 'spaces', icon: 'browser-directory' },
       { id: 'shares', icon: 'browser-share' },
@@ -140,7 +142,7 @@ class CommonNavigationTabsConfiguration extends Service {
         defaultAspect: 'overview',
       },
     ].map(tabModel => {
-      tabModel.defaultResource = defaultResource;
+      tabModel.defaultResource = defaultResourceIdResolver;
       return tabModel;
     });
   }
@@ -151,7 +153,7 @@ class CommonNavigationTabsConfiguration extends Service {
    * @returns {object}
    */
   async defaultResource(sidebarModel) {
-    return this.getLastUsedResource(sidebarModel);
+    return this.getLastUsedResourceId(sidebarModel);
   }
 
   /**
@@ -175,25 +177,28 @@ class CommonNavigationTabsConfiguration extends Service {
 
   /**
    * @param {OnedataSidebarRouteModel} sidebarRouteModel
-   * @returns {Promise<object>}
+   * @returns {Promise<string>}
    */
-  async getDefaultResource(sidebarRouteModel) {
+  async getDefaultResourceId(sidebarRouteModel) {
     const { resourceType, collection } = sidebarRouteModel;
-    const tabModel = this.tabModels.find(tab => tab.id === resourceType);
-    let defaultResource;
+    const tabId = camelize(resourceType);
+    const tabModel = this.tabModels.find(tab => tab.id === tabId);
+    let defaultResourceId;
     if (tabModel) {
       if (typeof tabModel.defaultResource === 'string') {
-        defaultResource = tabModel.defaultResource;
+        defaultResourceId = tabModel.defaultResource;
       }
       if (typeof tabModel.defaultResource === 'function') {
-        defaultResource = await tabModel?.defaultResource?.(sidebarRouteModel);
+        defaultResourceId = await tabModel?.defaultResource?.(sidebarRouteModel);
       }
     }
-    if (defaultResource) {
-      return defaultResource;
+    if (defaultResourceId) {
+      return defaultResourceId;
     } else {
+      // FIXME: może być problem, jeśli chunksArray jest na pozycji nie-0
+      const array = collection.fullArray || collection.array;
       return sortByProperties(
-        collection.array,
+        array,
         this.sidebarResources.getItemsSortingFor(resourceType)
       )[0];
     }
@@ -201,10 +206,10 @@ class CommonNavigationTabsConfiguration extends Service {
 
   /**
    * @param {OnedataSidebarRouteModel} sidebarModel
-   * @returns {object}
+   * @returns {string}
    */
-  getLastUsedResource(sidebarModel) {
-    const { resourceType, collection } = sidebarModel;
+  getLastUsedResourceId(sidebarModel) {
+    const { resourceType } = sidebarModel;
     let lastUsedId;
     lastUsedId = this.sessionStorage.getItem(
       this.lastUsedIdStorageKey(resourceType)
@@ -214,12 +219,7 @@ class CommonNavigationTabsConfiguration extends Service {
         this.lastUsedIdStorageKey(resourceType)
       );
     }
-    if (lastUsedId) {
-      const lastUsedResource = collection.array.find(resource =>
-        get(resource, 'entityId') === lastUsedId
-      );
-      return lastUsedResource;
-    }
+    return lastUsedId;
   }
 
   setLocalLastUsedResource(sidebarModel, contentModel) {
