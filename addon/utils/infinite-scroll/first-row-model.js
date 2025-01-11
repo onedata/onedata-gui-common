@@ -3,7 +3,7 @@
  * placeholder replacing a number of not visible entries on list head.
  *
  * @author Jakub Liput
- * @copyright (C) 2022 ACK CYFRONET AGH
+ * @copyright (C) 2022-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -30,8 +30,8 @@ export default EmberObject.extend({
     'singleRowHeight',
     'entries._start',
     function height() {
-      const _start = this.get('entries._start');
-      return _start ? _start * this.get('singleRowHeight') : 0;
+      // FIXME: prototyp - api nie musi wyglądać wcale tak
+      return this.computeHeight(this.entries, this.computeItemsHeight.bind(this));
     }
   ),
 
@@ -41,4 +41,13 @@ export default EmberObject.extend({
   style: computed('height', function style() {
     return htmlSafe(`height: ${this.get('height')}px;`);
   }),
+
+  computeHeight() {
+    return this.computeItemsHeight();
+  },
+
+  computeItemsHeight() {
+    const _start = this.entries?._start ?? 0;
+    return _start * this.singleRowHeight;
+  },
 });
