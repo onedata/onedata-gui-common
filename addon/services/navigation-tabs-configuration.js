@@ -197,10 +197,16 @@ class CommonNavigationTabsConfiguration extends Service {
     } else {
       // FIXME: może być problem, jeśli chunksArray jest na pozycji nie-0
       const array = collection.fullArray || collection.array;
-      return sortByProperties(
+      const firstRecord = sortByProperties(
         array,
         this.sidebarResources.getItemsSortingFor(resourceType)
       )[0];
+      if (firstRecord) {
+        // FIXME: działanie w onepanel-gui?
+        return firstRecord.entityId ?? firstRecord.id;
+      } else {
+        return undefined;
+      }
     }
   }
 
