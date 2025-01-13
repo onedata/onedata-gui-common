@@ -12,6 +12,7 @@ import OneSidebar from 'onedata-gui-common/components/one-sidebar';
 import { reads } from '@ember/object/computed';
 import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
+import { computed } from '@ember/object';
 
 export default class InfiniteScrollSidebar extends OneSidebar {
   /**
@@ -27,7 +28,32 @@ export default class InfiniteScrollSidebar extends OneSidebar {
     return 50;
   }
 
+  /**
+   * In sidebar, primary items are typically expanded to have secondary items, so they
+   * have greater height than regular items. Define epirical height of these items for
+   * specific sidebar implementation to make infinite scroll work with non-regular items
+   * on the list.
+   * @type {number}
+   */
+  get primaryItemHeight() {
+    return this.rowHeight;
+  }
+
   @reads('model.collection.chunksArray') chunksArray;
+
+  @computed(
+    'primaryItemId',
+    // Due to some issues with ReplacingChuksArray.sourceArray notifications, we observer
+    // `[]` of RCA, which causes recomputation practically on every scroll, which is bad
+    // for performance. Maybe it will be fixed in the future.
+    'chunksArray.[]'
+  )
+  get primaryItemSourceArrayIndex() {
+    const primaryItemId = this.primaryItemId;
+    return this.chunksArray.sourceArray.toArray().findIndex(item =>
+      item?.id === primaryItemId
+    );
+  }
 
   /**
    * @override
@@ -43,6 +69,25 @@ export default class InfiniteScrollSidebar extends OneSidebar {
       itemIdProperty: 'entityId',
     });
     this.set('infiniteScroll', infiniteScroll);
+
+    if (this.rowHeight !== this.primaryItemHeight) {
+      // Set custom height computation for first row, because we have custom-height
+      // primary item row.
+      const sidebar = this;
+      this.infiniteScroll.firstRowModel.computeHeight =
+        function spacesSidebarComputeHeight(chunksArray, computeItemsHeight) {
+          let additionalHeight = 0;
+          const primaryItemSourceArrayIndex = sidebar.primaryItemSourceArrayIndex;
+          if (
+            primaryItemSourceArrayIndex !== -1 &&
+            chunksArray._start > sidebar.primaryItemSourceArrayIndex
+          ) {
+            additionalHeight = sidebar.primaryItemHeight - sidebar.rowHeight;
+          }
+          const value = computeItemsHeight() + additionalHeight;
+          return value;
+        };
+    }
   }
 
   /**
