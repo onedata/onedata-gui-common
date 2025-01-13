@@ -219,15 +219,24 @@ class CommonNavigationTabsConfiguration extends Service {
         this.lastUsedIdStorageKey(resourceType)
       );
     }
+    // FIXME: opisać zabezpieczenie
+    if (lastUsedId === 'null') {
+      console.log('FIXME: NavigationTabsConfiguration: lastUsedId is null');
+      lastUsedId = null;
+    }
     return lastUsedId;
   }
 
   setLocalLastUsedResource(sidebarModel, contentModel) {
     const { resourceType } = sidebarModel;
     const { resource } = contentModel;
+    const resourceId = this.getResourceId(resource);
+    if (resourceId === null || resourceId === 'null') {
+      console.log('FIXME: NavigationTabsConfiguration.setLocalLastUsedResource: setting lastUsedId to null');
+    }
     this.sessionStorage.setItem(
       this.lastUsedIdStorageKey(resourceType),
-      this.getResourceId(resource)
+      resourceId
     );
   }
 
@@ -241,6 +250,9 @@ class CommonNavigationTabsConfiguration extends Service {
     this.lastSidebarModel = sidebarModel;
     this.lastContentModel = contentModel;
     const resourceId = this.getResourceId(resource);
+    if (resourceId === null || resourceId === 'null') {
+      console.log('FIXME: NavigationTabsConfiguration.setLastUsedResource: setting lastUsedId to null');
+    }
     this.localStorage.setItem(
       this.lastUsedIdStorageKey(resourceType),
       resourceId

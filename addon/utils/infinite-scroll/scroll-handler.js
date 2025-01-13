@@ -226,7 +226,14 @@ export default EmberObject.extend({
     if (topDiff <= 0 || !this.scrollableContainerElement) {
       return;
     }
+    await this.adjustScroll(topDiff);
+  },
 
+  /**
+   * Changes scroll position, but prevents infinite scroll handlers from run.
+   * @param {number} topDiff Change in scroll position in px.
+   */
+  async adjustScroll(topDiff) {
     this.set('ignoreNextScroll', true);
     await waitForRender();
     safeExec(this, () => {
