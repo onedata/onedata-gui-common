@@ -85,6 +85,7 @@ export default function createFieldValidator(field) {
     validations.push(validator('presence', {
       presence: true,
       ignoreBlank: true,
+      message: field.message,
     }));
   }
   if (['text', 'password'].includes(fieldType) && textLength) {

@@ -104,15 +104,6 @@
         {{/if}}
       </div>
     {{/if}}
-    <div class="form-message
-      {{unless field.message "hidden"}}
-      {{if field.messageText "warning-text"}}
-    ">
-      {{#if field.messageText}}
-        {{field.messageText}}
-      {{else}}
-        {{field.message}}
-      {{/if}}
-    </div>
+    <div class="form-message {{unless field.message "hidden"}}">{{field.message}}</div>
   </div>
 </div>
