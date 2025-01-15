@@ -2,16 +2,13 @@
  * An ArrayProxy that watches changes in source array and adds distinguishable
  * label to each object in that array using `addConflictLabels` function.
  *
- * NOTE: ported from ember-cli-onedata-common
- *
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import ArrayProxy from '@ember/array/proxy';
-
-import { observer } from '@ember/object';
+import { asyncObserver } from 'onedata-gui-common/utils/observer';
 import { isArray } from '@ember/array';
 
 import addConflictLabels from 'onedata-gui-common/utils/add-conflict-labels';
@@ -58,15 +55,13 @@ export default ArrayProxy.extend({
       diffProperty,
       conflictProperty,
       conflictLabelProperty,
-    } = this.getProperties('conflictProperty', 'diffProperty', 'conflictLabelProperty');
+    } = this;
 
     if (!diffProperty) {
-      this.set('diffProperty', 'id');
-      diffProperty = 'id';
+      diffProperty = this.set('diffProperty', 'id');
     }
     if (!conflictProperty) {
-      this.set('conflictProperty', 'name');
-      conflictProperty = 'name';
+      conflictProperty = this.set('conflictProperty', 'name');
     }
     if (!conflictLabelProperty) {
       conflictLabelProperty = this.set('conflictLabelProperty', 'conflictLabel');
@@ -77,24 +72,19 @@ export default ArrayProxy.extend({
      * It distinguish a record within other records if there are multiple
      * records with the same name.
      */
-    const computeConflictIds = observer('content.[]',
+    const computeConflictIds = asyncObserver(
+      'content.[]',
       `content.@each.{${diffProperty},${conflictProperty}}`,
       'defaultId',
       'conflictLabelProperty',
-      function () {
+      function computeConflictIds() {
         const {
           content: records,
           diffProperty,
           conflictProperty,
           defaultId,
           conflictLabelProperty,
-        } = this.getProperties(
-          'content',
-          'conflictProperty',
-          'diffProperty',
-          'defaultId',
-          'conflictLabelProperty'
-        );
+        } = this;
 
         if (isArray(records)) {
           addConflictLabels(

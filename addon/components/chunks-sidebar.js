@@ -25,10 +25,11 @@ export default class ChunksSidebar extends InfiniteScrollSidebar {
    * conflict labels here.
    * @override
    */
-  @computed('model.collection.array')
+  // FIXME: z jakiegoś powodu, ten conflictidsarray jest tworzony bardzo często, przy zmianach i powiadomieniach o fetchNext
+  @computed('model')
   get sortedCollection() {
     return ConflictIdsArray.create({
-      content: this.model.collection.array,
+      content: this.model.collection.chunksArray,
       diffProperty: 'entityId',
       conflictProperty: 'name',
     });
@@ -58,6 +59,9 @@ export default class ChunksSidebar extends InfiniteScrollSidebar {
     const includes = this.chunksArray.map(({ id }) => id).includes(activeResource.id);
     if (!includes) {
       await this.chunksArray.scheduleJump(activeResource.index, 50);
+      console.log('test');
+      // FIXME: eksperymenty
+      // this.notifyPropertyChange('primaryItem');
     }
   }
 }

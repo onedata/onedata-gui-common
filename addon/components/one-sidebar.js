@@ -12,7 +12,6 @@ import { reads, equal, sort, bool } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
 import EmberObject, {
   computed,
-  observer,
   get,
   setProperties,
 } from '@ember/object';
@@ -26,6 +25,7 @@ import {
   initDestroyableCache,
 } from 'onedata-gui-common/utils/destroyable-computed';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
+import { asyncObserver } from 'onedata-gui-common/utils/observer';
 
 export default Component.extend(I18n, {
   layout,
@@ -265,7 +265,8 @@ export default Component.extend(I18n, {
     }
   ),
 
-  contextUpdater: observer(
+  // FIXME: przetestować po zmianie na asyncObserver - uruchamia się na pewno zbyt często, przy każdym scrollu
+  contextUpdater: asyncObserver(
     'sortedCollection',
     'filteredCollection',
     function contextUpdater() {
