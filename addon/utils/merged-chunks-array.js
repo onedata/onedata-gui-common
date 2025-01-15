@@ -58,6 +58,8 @@ export default class MergedChunksArray extends ReplacingChunksArray {
         item.index === index
       );
       if (itemWithIndexPosition !== -1) {
+        // Do not bother start of slice (always 0), because with the negative
+        // index, we get sortedArray items from the end.
         sortedArray = sortedArray.slice(0, itemWithIndexPosition + size + offset);
       }
     }
@@ -65,7 +67,10 @@ export default class MergedChunksArray extends ReplacingChunksArray {
     if (offset >= 0) {
       sliceRange = [0, size];
     } else {
-      sliceRange = [sortedArray.length - size, sortedArray.length];
+      // FIXME: napisać test nieprzechodzący do kodu z developa (bez Math.max)
+      // pobieramy chunka z ujemnym offsetem i zwraca nam mniej elementów niż chcieliśmy (size)
+      // wcześniej tablica była rozwalona (bo używało ujemnej wartości w range)
+      sliceRange = [Math.max(sortedArray.length - size, 0), sortedArray.length];
     }
     const result = _.sortBy(sortedArray, 'index').slice(...sliceRange);
     return result;
