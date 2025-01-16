@@ -163,7 +163,6 @@ export default EmberObject.extend({
   init() {
     this._super(...arguments);
     this.bindScrollAdjustHandler();
-    this.entriesLoadedObserver();
   },
 
   /**

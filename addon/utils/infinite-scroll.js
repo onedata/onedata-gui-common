@@ -6,7 +6,7 @@
  * - auto-updating of list (must be enabled manually using `listUpdater`)
  *
  * @author Jakub Liput
- * @copyright (C) 2022-2024 ACK CYFRONET AGH
+ * @copyright (C) 2022-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -106,6 +106,7 @@ export default EmberObject.extend({
     this.fetchingStatus?.destroy();
   },
 
+  // FIXME: mount stał się async
   /**
    * @public
    * @param {HTMLElement} listContainerElement
@@ -154,7 +155,7 @@ export default EmberObject.extend({
       itemIdProperty,
       onScroll,
     } = this;
-    this.set('scrollHandler', ScrollHandler.create({
+    const scrollHandler = ScrollHandler.create({
       scrollableContainerElement,
       listContainerElement,
       entries,
@@ -162,7 +163,22 @@ export default EmberObject.extend({
       singleRowHeight,
       itemIdProperty,
       onScroll,
-    }));
+    });
+    this.set('scrollHandler', scrollHandler);
+    const firstRowHeight = this.firstRowModel.height;
+    // If FirstRowModel's height is not 0, it means that the chunks array has been already
+    // scrolled down, so we need to adjust scroll position before invoking scroll handler,
+    // to avoid changing the array state in an unexpected way.
+    if (firstRowHeight > 0) {
+      const tableStartRow =
+        listContainerElement.querySelector('.table-start-row');
+      const itemsStartTop = tableStartRow.offsetTop;
+      const marginItemsCount = Math.min(entries._start, entries.indexMargin) + 1;
+      const marginItemsHeight = marginItemsCount * singleRowHeight;
+      const scrollTop = firstRowHeight + marginItemsHeight + itemsStartTop;
+      this.scrollHandler.scrollTo(null, scrollTop);
+    }
+    scrollHandler.entriesLoadedObserver();
   },
 
   initListUpdater() {

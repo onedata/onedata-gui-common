@@ -323,6 +323,7 @@ export default Component.extend(I18n, {
    */
   didInsertElement() {
     this._super(...arguments);
+    // FIXME: dla spójności zmienić na asyncObserver
     this.addObserver('primaryItem', this, 'handlePrimaryItemChange', false);
     this.handlePrimaryItemChange();
   },
