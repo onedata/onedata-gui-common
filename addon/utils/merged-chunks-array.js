@@ -6,7 +6,7 @@
  * fetch functions, instead of `fetch` directly.
  *
  * @author Jakub Liput
- * @copyright (C) 2024 ACK CYFRONET AGH
+ * @copyright (C) 2024-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -15,15 +15,7 @@ import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 
 export default class MergedChunksArray extends ReplacingChunksArray {
-  constructor() {
-    super(...arguments);
-
-    /**
-     * @virtual
-     * @type {Array<ChunksFetchFunction>}
-     */
-    this.fetchers;
-  }
+  // FIXME: udokumentować virtual fetchers (ale nie można jak wcześniej)
 
   /**
    * @override
