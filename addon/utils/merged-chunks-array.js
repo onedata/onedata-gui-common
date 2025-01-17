@@ -47,6 +47,7 @@ export default class MergedChunksArray extends ReplacingChunksArray {
         }
       }
       merged.array.push(...effArray);
+      // If at last one fetcher has not-last chunk, then the whole query is not last.
       if (result.isLast === false) {
         merged.isLast = false;
       }
@@ -72,7 +73,17 @@ export default class MergedChunksArray extends ReplacingChunksArray {
       // wcześniej tablica była rozwalona (bo używało ujemnej wartości w range)
       sliceRange = [Math.max(sortedArray.length - size, 0), sortedArray.length];
     }
-    const result = _.sortBy(sortedArray, 'index').slice(...sliceRange);
-    return result;
+    const finalArray = _.sortBy(sortedArray, 'index').slice(...sliceRange);
+    let isLast;
+    if (finalArray.length < mergedResult.array.length) {
+      // We have more items in the source than will be returned, so it cannot be the end
+      // regardless of any isLast.
+      isLast = false;
+    } else {
+      // All chunks have been used - it will be not the last merged chunk only if there is
+      // at last single non-last chunk (see how global isLast is computed earlier).
+      isLast = mergedResult.isLast;
+    }
+    return { array: finalArray, isLast };
   }
 }
