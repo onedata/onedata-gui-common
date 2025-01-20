@@ -77,12 +77,6 @@ export default EmberObject.extend({
    */
   listWatcher: undefined,
 
-  /**
-   * When scroll position is changed by code, use this flag to ignore next scroll event.
-   * @type {boolean}
-   */
-  ignoreNextScroll: false,
-
   //#endregion
 
   /**
@@ -90,11 +84,6 @@ export default EmberObject.extend({
    * @param {boolean} headerVisible
    */
   onTableScroll(items, headerVisible) {
-    if (this.ignoreNextScroll) {
-      this.set('ignoreNextScroll', false);
-      return;
-    }
-
     const {
       listContainerElement,
       fallbackEndIndex,
@@ -190,10 +179,7 @@ export default EmberObject.extend({
   },
 
   tryDestroyListWatcher() {
-    const listWatcher = this.get('listWatcher');
-    if (listWatcher) {
-      listWatcher.destroy();
-    }
+    this.listWatcher?.destroy();
   },
 
   bindScrollAdjustHandler() {
@@ -233,7 +219,6 @@ export default EmberObject.extend({
    * @param {number} topDiff Change in scroll position in px.
    */
   async adjustScroll(topDiff) {
-    this.set('ignoreNextScroll', true);
     await waitForRender();
     safeExec(this, () => {
       this.scrollTo(
