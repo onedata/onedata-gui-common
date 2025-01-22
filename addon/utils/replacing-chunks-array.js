@@ -463,20 +463,25 @@ export default ArraySlice.extend(Evented, {
     let fetchStartIndex = firstObject && this.getIndex(firstObject);
     if (
       fetchStartIndex === undefined ||
-      head
-      // FIXME: przyczyna problemów, kiedy robimy reload na pierwszym elemencie; zamiast tego raczej powinno się brać margin head
-      // (_start === 0 && !this.isFetchPrevNeeded())
+      head ||
+      (_start === 0 && !this.isFetchPrevNeeded())
     ) {
       fetchStartIndex = null;
     }
 
     const lengthBeforeFetch = this.getLength() || (this.endIndex - this.startIndex);
 
+    // FIXME: experimental: when reloading, include start margin
+    let effOffset = offset || 0;
+    if (this.indexMargin) {
+      effOffset -= indexMargin;
+    }
+
     try {
       const { arrayUpdate, endReached } = await this.fetchWrapper(
         fetchStartIndex,
         size,
-        offset,
+        effOffset,
       );
       if (this.isDestroyed) {
         return;
