@@ -471,17 +471,11 @@ export default ArraySlice.extend(Evented, {
 
     const lengthBeforeFetch = this.getLength() || (this.endIndex - this.startIndex);
 
-    // FIXME: experimental: when reloading, include start margin
-    let effOffset = offset || 0;
-    if (this.indexMargin) {
-      effOffset -= indexMargin;
-    }
-
     try {
       const { arrayUpdate, endReached } = await this.fetchWrapper(
         fetchStartIndex,
         size,
-        effOffset,
+        offset,
       );
       if (this.isDestroyed) {
         return;
