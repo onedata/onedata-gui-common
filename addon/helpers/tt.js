@@ -36,11 +36,12 @@ export default t.extend({
   compute([owner, key, contextObject], interpolations) {
     const type = typeOf(owner);
     let tOwner;
-    if (type === 'instance') {
-      tOwner = owner;
-    } else if (type === 'object' && owner instanceof GlimmerComponent) {
-      tOwner = owner.locale;
-      assert('helper:tt: component must have locale initialized', tOwner);
+    if (type === 'instance' || owner instanceof GlimmerComponent) {
+      tOwner = owner.locale ?? owner;
+      assert(
+        'helper:tt: component should have i18nPrefix defined (only classic components) or have "locale" property (either classic or Glimmer)',
+        tOwner?.i18nPrefix
+      );
     } else {
       assert('helper:tt: first argument should be set to parent component', false);
     }
