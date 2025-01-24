@@ -1,0 +1,1 @@
+export { default } from 'onedata-gui-common/components/octane-example-child';

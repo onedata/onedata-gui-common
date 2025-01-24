@@ -10,7 +10,7 @@ import { lookupInEmberApp } from 'onedata-gui-common/utils/ember-app';
 import { isMissingMessage } from './missing-message';
 import { I18nService, SafeString } from 'onedata-gui-common/utils/missing-types';
 
-function getI18nService(): I18nService | null {
+export function getI18nService(): I18nService | null {
   return lookupInEmberApp<I18nService>('service:i18n');
 }
 

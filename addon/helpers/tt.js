@@ -12,35 +12,42 @@
  * with `{provierName: "some provider"}` interpolation.
  *
  * @author Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import t from 'ember-i18n/helper';
 import { typeOf } from '@ember/utils';
-import { get } from '@ember/object';
 import { assert } from '@ember/debug';
+import GlimmerComponent from '@glimmer/component';
 
 export default t.extend({
   /**
-   * Extends `ember-i18n` `t` helper.
-   * Uses translation prefix provided by passed component object.
+   * Extends `ember-i18n` `t` helper. Uses translation prefix provided by passed
+   * component.
    *
-   * @param {Ember.Object} component typically an Ember.Component
-   *    that uses `mixin:i18n`
-   * @param {string} key specific key of translation - will be appended
-   *    to `tPrefix` of component
-   * @param {object} contextObject for original `t` helper
+   * @param {Ember.Object} owner A classic Ember.Component that uses `mixin:i18n` or
+   *   Glimmer component with `locale` initialized (`Locale` class).
+   * @param {string} key Specific key of translation - will be appended to `tPrefix` of
+   *    component
+   * @param {object} contextObject For original `t` helper.
    * @returns {SafeString}
    */
-  compute([component, key, contextObject], interpolations) {
-    assert(
-      'helper:tt: first argument should be set to parent component',
-      typeOf(component) === 'instance'
-    );
+  compute([owner, key, contextObject], interpolations) {
+    const type = typeOf(owner);
+    let tOwner;
+    if (type === 'instance') {
+      tOwner = owner;
+    } else if (type === 'object' && owner instanceof GlimmerComponent) {
+      tOwner = owner.locale;
+      assert('helper:tt: component must have locale initialized', tOwner);
+    } else {
+      assert('helper:tt: first argument should be set to parent component', false);
+    }
+
     return this._super(
       [
-        get(component, 'tPrefix') + key,
+        tOwner.tPrefix + key,
         contextObject,
       ],
       interpolations,
