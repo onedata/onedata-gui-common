@@ -2,7 +2,7 @@
  * Returns translation for specific translation path and placeholders.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2024 ACK CYFRONET AGH
+ * @copyright (C) 2024-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 

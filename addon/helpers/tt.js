@@ -1,15 +1,23 @@
 /**
- * Extends `ember-i18n` `t` helper by using translation prefix provided by
- * passed component object (which should implement `mixin:i18n`).
+ * Extends `ember-i18n` `t` helper by using translation prefix provided by passed
+ * component object (which should implement `mixin:i18n` or have `locale` field of type
+ * `Locale`).
  *
- * Example of usage:
- * If the using component is extended with `mixin:i18n`,
- * and `i18nPrefix` is set to "components.contentProviderRedirect":
+ * Implementation of JS file:
+ *
+ * - **Glimmer components and native-class classic component:** create `locale: Locale`
+ *   property in component, follow exmple of `<Examples::OctaneExample>` and
+ *   `<Examples::ClassicExample>` components,
+ * - **classic Ember components:** extend classic component with `mixin:i18n` and set
+ *   value of `i18nPrefix` property.
+ *
+ * For example, if the `i18nPrefix` is set to `someComponentName` and the HBS file looks
+ * like:
  * ```
- * {{tt this "error" providerName="some provider"}}
+ * {{tt this "someKey" someInterpolation="some text"}}
  * ```
- * it will render translation for `components.contentProviderRedirect.error`
- * with `{provierName: "some provider"}` interpolation.
+ * it will render translation for `components.someComponentName.someKey` with
+ * `{someInterpolation: "some text"}` interpolation.
  *
  * @author Jakub Liput
  * @copyright (C) 2018-2025 ACK CYFRONET AGH
