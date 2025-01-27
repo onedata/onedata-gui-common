@@ -46,20 +46,21 @@ export default t.extend({
     let tOwner;
     if (type === 'instance' || owner instanceof GlimmerComponent) {
       tOwner = owner.locale ?? owner;
-      assert(
-        'helper:tt: component should have i18nPrefix defined (only classic components) or have "locale" property (either classic or Glimmer)',
-        tOwner?.i18nPrefix
-      );
+      if (tOwner?.i18nPrefix) {
+        return this._super(
+          [
+            tOwner.tPrefix + key,
+            contextObject,
+          ],
+          interpolations,
+        );
+      } else {
+        assert(
+          'helper:tt: component should have i18nPrefix defined (only classic components) or have "locale" property (either classic or Glimmer)'
+        );
+      }
     } else {
-      assert('helper:tt: first argument should be set to parent component', false);
+      assert('helper:tt: first argument should be set to parent component');
     }
-
-    return this._super(
-      [
-        tOwner.tPrefix + key,
-        contextObject,
-      ],
-      interpolations,
-    );
   },
 });
