@@ -1,4 +1,5 @@
 $sidebar-item-line-height-desktop: 50px;
+// FIXME: ujednolicić do 50px albo dawać warunkowe zmienne w JS; sprawdzić użycia
 $sidebar-item-line-height-mobile: 54px;
 $sidebar-item-line-height-double-line: 54px;
 
@@ -65,8 +66,10 @@ $sidebar-item-line-height-double-line: 54px;
   padding-bottom: 20px;
 
   .one-list-item {
-    line-height: $sidebar-item-line-height-desktop;
+    // reset
+    line-height: normal;
     @media (max-width: $screen-xs-max) {
+      // FIXME: remove?
       line-height: $sidebar-item-line-height-mobile;
     }
   }
@@ -74,6 +77,13 @@ $sidebar-item-line-height-double-line: 54px;
     line-height: $sidebar-item-line-height-desktop - 4px;
     @media (max-width: $screen-xs-max) {
       line-height: $sidebar-item-line-height-mobile - 2px;
+    }
+  }
+
+  .resource-item {
+    > .item-header {
+      // item headers are flex, so it's better to use height instead of line-height
+      height: $sidebar-item-line-height-desktop;
     }
   }
 

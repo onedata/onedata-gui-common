@@ -25,6 +25,7 @@ export default class InfiniteScrollSidebar extends OneSidebar {
    * @type {number}
    */
   get rowHeight() {
+    // the same as $sidebar-item-line-height-desktop in SCSS
     return 50;
   }
 
