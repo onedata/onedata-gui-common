@@ -61,6 +61,9 @@ import atmInventoryInfoContent from './onedata-gui-common/components/atm-invento
 import clusterInfoContent from './onedata-gui-common/components/cluster-info-content';
 import pagesControl from './onedata-gui-common/components/pages-control';
 import websocketReconnectionModal from './onedata-gui-common/components/websocket-reconnection-modal';
+import octaneExample from './onedata-gui-common/components/examples/octane-example';
+import octaneExampleChild from './onedata-gui-common/components/examples/octane-example-child';
+import classicExample from './onedata-gui-common/components/examples/classic-example';
 import blockingAddonDetector from './onedata-gui-common/utils/blocking-addon-detector';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
@@ -191,6 +194,11 @@ const translations = {
         chartDashboardEditorModal: workflowVisualiserChartDashboardEditorModal,
         removeStoreModal: workflowVisualiserRemoveStoreModal,
       },
+    },
+    examples: {
+      octaneExample,
+      octaneExampleChild,
+      classicExample,
     },
   },
   mixins: {

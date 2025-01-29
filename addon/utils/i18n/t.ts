@@ -2,7 +2,7 @@
  * Returns translation for specific translation path and placeholders.
  *
  * @author Michał Borzęcki
- * @copyright (C) 2024 ACK CYFRONET AGH
+ * @copyright (C) 2024-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -10,7 +10,7 @@ import { lookupInEmberApp } from 'onedata-gui-common/utils/ember-app';
 import { isMissingMessage } from './missing-message';
 import { I18nService, SafeString } from 'onedata-gui-common/utils/missing-types';
 
-function getI18nService(): I18nService | null {
+export function getI18nService(): I18nService | null {
   return lookupInEmberApp<I18nService>('service:i18n');
 }
 
