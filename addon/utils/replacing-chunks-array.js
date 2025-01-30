@@ -21,7 +21,6 @@ import {
 } from 'rsvp';
 import Evented from '@ember/object/evented';
 import OneSingletonTaskQueue from 'onedata-gui-common/utils/one-singleton-task-queue';
-import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import { syncObserver } from 'onedata-gui-common/utils/observer';
 
 export const emptyItem = {};
@@ -201,7 +200,7 @@ export default ArraySlice.extend(Evented, {
       // is in progress (when user performs scroll and loading is in progress).
       taskQueueOptions.insertBeforeType = 'reload';
       taskFun = async () => {
-        while (this.isFetchPrevNeeded()) {
+        while (this.isFetchPrevNeeded() && !this.isDestroyed && !this.isDestroying) {
           await this[methodName](...args);
         }
       };
@@ -641,6 +640,37 @@ export default ArraySlice.extend(Evented, {
       taskQueue.getTaskPromise('fetchNext'),
     ];
     return allSettled(promises);
+  },
+
+  // FIXME: jak będzie rozwijane, to dorobić oczekiwanie na scheduleIndicesChange, które nie ja uruchomiłem (defer?)
+  async setIndices(startIndex, endIndex) {
+    const changes = {};
+    if (startIndex !== this.startIndex) {
+      changes.startIndex = startIndex;
+    }
+    if (endIndex !== this.endIndex) {
+      changes.endIndex = endIndex;
+    }
+    if (!Object.keys(changes).length) {
+      // nothing to do
+      return;
+    }
+    const prevState = this.indicesSetterState;
+    this.set('indicesSetterState', changes);
+    if (!prevState) {
+      await this.scheduleIndicesChange();
+    }
+  },
+
+  async scheduleIndicesChange() {
+    try {
+      console.log('FIXME: before wait');
+      await this.taskQueue.waitForAllTasks();
+      console.log('FIXME: after wait');
+      this.setProperties(this.indicesSetterState);
+    } finally {
+      this.set('indicesSetterState', null);
+    }
   },
 
   init() {
