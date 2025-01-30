@@ -274,12 +274,7 @@ export default ArraySlice.extend(Evented, {
       sourceArray,
       chunkSize,
       emptyIndex,
-    } = this.getProperties(
-      '_startReached',
-      'sourceArray',
-      'chunkSize',
-      'emptyIndex',
-    );
+    } = this;
 
     const firstItem = sourceArray[emptyIndex + 1];
     const fetchStartIndex = firstItem ? this.getIndex(firstItem) : null;
@@ -292,16 +287,17 @@ export default ArraySlice.extend(Evented, {
     }
 
     this.trigger('fetchPrevStarted');
-    const updatePromise = this.fetchWrapper(
-        fetchStartIndex,
-        currentChunkSize,
-        -currentChunkSize,
-      )
-      .then(({ arrayUpdate }) => {
+
+    const updatePromise = (async () => {
+      try {
+        const { arrayUpdate } = await this.fetchWrapper(
+          fetchStartIndex,
+          currentChunkSize,
+          -currentChunkSize,
+        );
         if (this.isDestroyed) {
           return;
         }
-
         // TODO: use of pullAllBy is working, but it is probably unsafe
         // it can remove items from update, while they should stay there
         // because some entries "fallen down" from further part of array
@@ -357,20 +353,16 @@ export default ArraySlice.extend(Evented, {
         } else {
           this.set('_startReached', false);
         }
-      })
-      .catch(error => {
+        this.trigger('fetchPrevResolved');
+      } catch (error) {
         this.trigger('fetchPrevRejected');
         throw error;
-      })
-      .then(result => {
-        this.trigger('fetchPrevResolved');
-        return result;
-      })
-      .finally(() => {
+      } finally {
         safeExec(this, () => {
           this.notifyPropertyChange('[]');
         });
-      });
+      }
+    })();
     return updatePromise;
   },
 
