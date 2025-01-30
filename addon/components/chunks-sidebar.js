@@ -9,7 +9,6 @@
 
 import InfiniteScrollSidebar from 'onedata-gui-common/components/infinite-scroll-sidebar';
 import { reads } from '@ember/object/computed';
-import { computed } from '@ember/object';
 import ConflictIdsArray from 'onedata-gui-common/utils/conflict-ids-array';
 
 export default class ChunksSidebar extends InfiniteScrollSidebar {
@@ -20,20 +19,16 @@ export default class ChunksSidebar extends InfiniteScrollSidebar {
   isFilteringEnabled = false;
 
   /**
-   * Fetched array is considered to be sorted by index.
-   * There is no standard conflict labels adding in lower levels of implementation, so add
-   * conflict labels here.
+   * Fetched array is considered to be sorted by index. There is no standard conflict
+   * labels adding in lower levels of implementation, so add conflict labels here.
+   * @type {ConflictIdsArray}
+   */
+  conflictArray;
+
+  /**
    * @override
    */
-  // FIXME: z jakiegoś powodu, ten conflictidsarray jest tworzony bardzo często, przy zmianach i powiadomieniach o fetchNext
-  @computed('model')
-  get sortedCollection() {
-    return ConflictIdsArray.create({
-      content: this.model.collection.chunksArray,
-      diffProperty: 'entityId',
-      conflictProperty: 'name',
-    });
-  }
+  @reads('model.collection.chunksArray') sortedCollection;
 
   /**
    * Disable filtering features.
@@ -43,6 +38,13 @@ export default class ChunksSidebar extends InfiniteScrollSidebar {
 
   init() {
     super.init(...arguments);
+    // FIXME: zmienić na coś w rodzaju watchera (rozbić albo wyciągnąć z tej klasy arraya esencję)
+    const conflictArray = ConflictIdsArray.create({
+      content: this.model.collection.chunksArray,
+      diffProperty: 'entityId',
+      conflictProperty: 'name',
+    });
+    this.set('conflictArray', conflictArray);
     this.addObserver(
       'navigationState.activeResource',
       this,
@@ -59,9 +61,17 @@ export default class ChunksSidebar extends InfiniteScrollSidebar {
     const includes = this.chunksArray.map(({ id }) => id).includes(activeResource.id);
     if (!includes) {
       await this.chunksArray.scheduleJump(activeResource.index, 50);
-      console.log('test');
-      // FIXME: eksperymenty
-      // this.notifyPropertyChange('primaryItem');
+    }
+  }
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.conflictArray?.destroy();
+    } finally {
+      super.willDestroy(...arguments);
     }
   }
 }
