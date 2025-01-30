@@ -198,7 +198,6 @@ export default ArraySlice.extend(Evented, {
       // loaded - if so, we need to schedule next fetchPrev.
       // We need to do this, because auto-fetchPrev scheduling is locked when fetchPrev
       // is in progress (when user performs scroll and loading is in progress).
-      taskQueueOptions.insertBeforeType = 'reload';
       taskFun = async () => {
         while (this.isFetchPrevNeeded() && !this.isDestroyed && !this.isDestroying) {
           await this[methodName](...args);
