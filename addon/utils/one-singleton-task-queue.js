@@ -8,8 +8,8 @@
  */
 
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
-import { get } from '@ember/object';
 import { defer } from 'rsvp';
+import sleep from 'onedata-gui-common/utils/sleep';
 
 /**
  * @typedef {Object} OneSingletonTaskQueueScheduleOptions
@@ -74,10 +74,18 @@ export default class OneSingletonTaskQueue {
   }
 
   tryExecuteQueue() {
-    if (this.executionPromiseObject && get(this.executionPromiseObject, 'isPending')) {
-      return this.executionPromiseObject;
+    if (!this.executionPromiseObject?.isPending) {
+      const promise = (async () => {
+        // Suspend execution to set this.executionPromiseObject first. It could be needed
+        // if first task in queue causes scheduling new task into the queue in its initial
+        // synchronous code.
+        // Without this, set of this.executionPromiseObject would be executed after the other
+        // task causes `tryExecuteQueue`.
+        await sleep(0);
+        this._executeQueue();
+      })();
+      this.executionPromiseObject = promiseObject(promise);
     }
-    this.executionPromiseObject = promiseObject(this._executeQueue());
     return this.executionPromiseObject;
   }
 
