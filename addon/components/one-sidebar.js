@@ -212,10 +212,10 @@ export default Component.extend(I18n, {
       if (this.primaryItemPrev !== this.primaryItemCache) {
         this.set('primaryItemPrev', this.primaryItemCache);
       }
-      // FIXME: debug
-      if (this.primaryItemCache?.id !== this.primaryItemId) {
+      const primaryItemId = this.primaryItemId;
+      if (this.primaryItemCache?.id !== primaryItemId) {
         const item = this.sortedCollection?.find(({ id }) =>
-          id === this.primaryItemId
+          id === primaryItemId
         );
         this.set('primaryItemCache', item);
       }
