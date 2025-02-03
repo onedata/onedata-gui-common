@@ -11,6 +11,7 @@
 import EmberObject, {
   get,
   getProperties,
+  setProperties,
 } from '@ember/object';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { next } from '@ember/runloop';
