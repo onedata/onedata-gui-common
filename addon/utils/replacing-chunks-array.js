@@ -199,8 +199,18 @@ export default ArraySlice.extend(Evented, {
       // We need to do this, because auto-fetchPrev scheduling is locked when fetchPrev
       // is in progress (when user performs scroll and loading is in progress).
       taskFun = async () => {
+        const prevSourceArrayLength = this.sourceArray.length;
         while (this.isFetchPrevNeeded() && !this.isDestroyed && !this.isDestroying) {
           await this[methodName](...args);
+          if (this.sourceArray.length === 0) {
+            break;
+          }
+          if (this.sourceArray.length === prevSourceArrayLength) {
+            console.error(
+              'ReplacingChunksArray: possible infinite fetchPrev loop detected'
+            );
+            break;
+          }
         }
       };
     } else {
