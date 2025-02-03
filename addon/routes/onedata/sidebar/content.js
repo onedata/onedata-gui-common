@@ -87,12 +87,6 @@ export default Route.extend({
         return { resourceId, collection, queryParams };
       }
     } else {
-      //       const presumableGri = this.findOutResourceId(resourceId, resourceType);
-
-      // FIXME: przywrócić walidację, czy użytkownik ma to na liście?
-      // można to zrobić dodatkową funkcją, która będzie korzystać np. z infinite scroll
-      // fetch sprawdzającego, czy ten konkretny rekord jest na liście (albo w kolekcji)
-      // ale to może być niepotrzebne
       try {
         /**
          * An ID of the real record - can differ from the resourceId which is a short
@@ -142,7 +136,9 @@ export default Route.extend({
   },
 
   /**
-   * Checks if collection contains model with specified resourceId.   * @param {string} resourceId ID of resource as in URL   * @param {SidebarCollection} collection
+   * Checks if collection contains model with specified resourceId.
+   * @param {string} resourceId ID of resource as in URL
+   * @param {SidebarCollection} collection
    * @returns {string} id of found model
    */
   availableResourceId(resourceId, collection) {
