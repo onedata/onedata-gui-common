@@ -1,6 +1,4 @@
 $sidebar-item-line-height-desktop: 50px;
-// FIXME: ujednolicić do 50px albo dawać warunkowe zmienne w JS; sprawdzić użycia
-$sidebar-item-line-height-mobile: 54px;
 $sidebar-item-line-height-double-line: 54px;
 $sidebar-separator-border: 1px solid $color-one-list-item-separator;
 
@@ -69,16 +67,9 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
   .one-list-item {
     // reset
     line-height: normal;
-    @media (max-width: $screen-xs-max) {
-      // FIXME: remove?
-      line-height: $sidebar-item-line-height-mobile;
-    }
   }
   .one-list.one-list-level-2 .one-list-item {
     line-height: $sidebar-item-line-height-desktop - 4px;
-    @media (max-width: $screen-xs-max) {
-      line-height: $sidebar-item-line-height-mobile - 2px;
-    }
   }
 
   .resource-item {
@@ -273,10 +264,6 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
   .one-inline-editor.editor {
     height: $sidebar-item-line-height-desktop - 2 * $padding-base-vertical;
     margin: $padding-base-vertical 0;
-
-    @media (max-width: $screen-xs-max) {
-      height: $sidebar-item-line-height-mobile - 2 * $padding-base-vertical;
-    }
 
     .one-icon {
       margin-right: 0;
