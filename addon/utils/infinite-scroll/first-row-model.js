@@ -26,6 +26,11 @@ export default EmberObject.extend({
   entries: undefined,
 
   /**
+   * @type {'height'|'min-height'}
+   */
+  styleHeightProperty: 'height',
+
+  /**
    * @type {ComputedProperty<number>}
    */
   height: computed(
@@ -39,8 +44,8 @@ export default EmberObject.extend({
   /**
    * @type {ComputedProperty<SafeString>}
    */
-  style: computed('height', function style() {
-    return htmlSafe(`height: ${this.get('height')}px;`);
+  style: computed('height', 'styleHeightProperty', function style() {
+    return htmlSafe(`${this.styleHeightProperty}: ${this.height}px;`);
   }),
 
   /**

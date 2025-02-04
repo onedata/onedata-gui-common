@@ -59,6 +59,32 @@ export default class InfiniteScrollSidebar extends OneSidebar {
   /**
    * @override
    */
+  @computed(
+    'chunksArray.{isReloading,initialLoad.isPending}',
+    'infiniteScroll.fetchingStatus.isFetchingPrev'
+  )
+  get isPrevSpinnerShown() {
+    return !this.chunksArray?.isReloading && (
+      this.chunksArray.initialLoad.isPending ||
+      this.infiniteScroll?.fetchingStatus.isFetchingPrev
+    );
+  }
+
+  /**
+   * @override
+   */
+  @computed(
+    'chunksArray.initialLoad.isSettled',
+    'infiniteScroll.fetchingStatus.isFetchingNext',
+  )
+  get isNextSpinnerShown() {
+    return this.chunksArray?.initialLoad.isSettled &&
+      this.infiniteScroll?.fetchingStatus.isFetchingNext;
+  }
+
+  /**
+   * @override
+   */
   init() {
     super.init(...arguments);
     if (!this.chunksArray) {
@@ -69,6 +95,7 @@ export default class InfiniteScrollSidebar extends OneSidebar {
       singleRowHeight: this.rowHeight,
       itemIdProperty: 'entityId',
     });
+    infiniteScroll.firstRowModel.styleHeightProperty = 'min-height';
     this.set('infiniteScroll', infiniteScroll);
 
     if (this.rowHeight !== this.primaryItemHeight) {

@@ -2,6 +2,7 @@ $sidebar-item-line-height-desktop: 50px;
 // FIXME: ujednolicić do 50px albo dawać warunkowe zmienne w JS; sprawdzić użycia
 $sidebar-item-line-height-mobile: 54px;
 $sidebar-item-line-height-double-line: 54px;
+$sidebar-separator-border: 1px solid $color-one-list-item-separator;
 
 .one-sidebar {
   .row-heading {
@@ -9,7 +10,7 @@ $sidebar-item-line-height-double-line: 54px;
     display: flex;
     height: 95px;
     align-items: center;
-    border-bottom: 1px solid $color-one-list-item-separator;
+    border-bottom: $sidebar-separator-border;
 
     .col-title {
       flex-grow: 1;
@@ -196,8 +197,25 @@ $sidebar-item-line-height-double-line: 54px;
     @include font-regular();
   }
 
+  .first-row .loading-row {
+    border-bottom: none;
+  }
+
+  .first-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-bottom: $sidebar-separator-border;
+  }
+
+  .first-row + .one-list-item {
+    &::after {
+      display: none;
+    }
+  }
+
   > .one-list {
-    border-bottom: 1px solid $color-one-list-item-separator;
+    border-bottom: $sidebar-separator-border;
 
     > .one-list-item:first-child::after,
     > .first-row + .one-list-item::after {
@@ -326,5 +344,14 @@ $sidebar-item-line-height-double-line: 54px;
       font-size: 2em;
       margin-right: $padding-small-horizontal * 0.8;
     }
+  }
+
+  .loading-row {
+    position: relative;
+    height: 120px;
+  }
+
+  .loading-row-prev {
+    border-bottom: $sidebar-separator-border;
   }
 }
