@@ -45,18 +45,7 @@
       <ul class="one-list one-sidebar-primary-item-list">
         {{#if isInfiniteScroll}}
           <li class="table-start-row"></li>
-          <li class="first-row" style={{infiniteScroll.firstRowModel.style}}>
-            {{#if isPrevSpinnerShown}}
-              {{!-- spinner is inside first row, because we want it to be right above the
-              first real item --}}
-              <div class="loading-row loading-row-prev">
-                <SpinSpinnerBlock
-                  @sizeClass={{infiniteScrollSpinnerSize}}
-                  class="absolute-middle-centered"
-                />
-              </div>
-            {{/if}}
-          </li>
+          <li class="first-row" style={{infiniteScroll.firstRowModel.style}}></li>
         {{/if}}
         {{#each filteredCollection as |item|}}
           {{#let (model-routable-id item) as |routableId|}}

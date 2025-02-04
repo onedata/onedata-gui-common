@@ -197,23 +197,6 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
     @include font-regular();
   }
 
-  .first-row .loading-row {
-    border-bottom: none;
-  }
-
-  .first-row {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    border-bottom: $sidebar-separator-border;
-  }
-
-  .first-row + .one-list-item {
-    &::after {
-      display: none;
-    }
-  }
-
   > .one-list {
     border-bottom: $sidebar-separator-border;
 
@@ -349,9 +332,5 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
   .loading-row {
     position: relative;
     height: 120px;
-  }
-
-  .loading-row-prev {
-    border-bottom: $sidebar-separator-border;
   }
 }
