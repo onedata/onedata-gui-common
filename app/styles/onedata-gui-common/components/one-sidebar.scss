@@ -196,6 +196,15 @@ $sidebar-item-line-height-double-line: 54px;
     @include font-regular();
   }
 
+  > .one-list {
+    border-bottom: 1px solid $color-one-list-item-separator;
+
+    > .one-list-item:first-child::after,
+    > .first-row + .one-list-item::after {
+      display: none;
+    }
+  }
+
   .empty-collection-sidebar {
     .one-list-item {
       line-height: 50px;
@@ -203,14 +212,8 @@ $sidebar-item-line-height-double-line: 54px;
     .one-list > .one-list-item:first-child::after {
       display: none;
     }
-  }
-
-  > .one-list {
-    border-bottom: 1px solid $color-one-list-item-separator;
-
-    > .one-list-item:first-child::after,
-    > .first-row + .one-list-item::after {
-      display: none;
+    + .one-list.one-sidebar-primary-item-list {
+      border-bottom: none;
     }
   }
 
