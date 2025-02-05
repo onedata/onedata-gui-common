@@ -7,10 +7,8 @@
  */
 
 import OneSidebar from 'onedata-gui-common/components/one-sidebar';
-import template from 'onedata-gui-common/templates/components/one-sidebar';
-import { classNames, layout } from '@ember-decorators/component';
+import { classNames } from '@ember-decorators/component';
 
-@layout(template)
 @classNames('sidebar-clusters')
 export default class SidebarClusters extends OneSidebar {
   /**
