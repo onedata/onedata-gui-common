@@ -652,7 +652,6 @@ export default ArraySlice.extend(Evented, {
     return allSettled(promises);
   },
 
-  // FIXME: jak będzie rozwijane, to dorobić oczekiwanie na scheduleIndicesChange, które nie ja uruchomiłem (defer?)
   async setIndices(startIndex, endIndex) {
     const changes = {};
     if (startIndex !== this.startIndex) {
@@ -674,9 +673,7 @@ export default ArraySlice.extend(Evented, {
 
   async scheduleIndicesChange() {
     try {
-      console.log('FIXME: before wait');
       await this.taskQueue.waitForAllTasks();
-      console.log('FIXME: after wait');
       this.setProperties(this.indicesSetterState);
     } finally {
       this.set('indicesSetterState', null);

@@ -128,10 +128,7 @@ export default EmberObject.extend({
       endIndex: oldEndIndex,
     } = getProperties(entries, 'startIndex', 'endIndex');
     if (oldStartIndex !== startIndex || oldEndIndex !== endIndex) {
-      // FIXME: tutaj alternatywnie można dorobić oczekiwanie na zakończenie kolejki
-      // FIXME: brak asynchroniczności jak coś
       entries.setIndices(startIndex, endIndex);
-      // setProperties(entries, { startIndex, endIndex });
     }
     safeExec(this, 'set', 'headerVisible', headerVisible);
     onScroll?.({ headerVisible });
