@@ -73,6 +73,7 @@ import _ from 'lodash';
 
 class CommonNavigationTabsConfiguration extends Service {
   @service sidebarResources;
+  @service contentResources;
 
   defaultAspect = 'index';
 
@@ -147,6 +148,10 @@ class CommonNavigationTabsConfiguration extends Service {
     });
   }
 
+  findOutResourceId(resourceId /* , resourceType */ ) {
+    return resourceId;
+  }
+
   /**
    * Default implementation for `defaultResource` callback in `OnedataTabModel`.
    * @param {OnedataSidebarRouteModel} sidebarModel
@@ -180,7 +185,45 @@ class CommonNavigationTabsConfiguration extends Service {
    * @returns {Promise<string>}
    */
   async getDefaultResourceId(sidebarRouteModel) {
-    const { resourceType, collection } = sidebarRouteModel;
+    const { resourceType } = sidebarRouteModel;
+    let resourceId;
+    resourceId = await this.getTabModelDefaultResourceId(sidebarRouteModel);
+    const isValid = await this.validateResourceId(resourceType, resourceId);
+    if (!isValid) {
+      resourceId = await this.getFirstResourceId(sidebarRouteModel);
+    }
+    return resourceId;
+  }
+
+  /**
+   * Check if the resource can be loaded as content. Sometimes the resolved default
+   * resource ID could be deleted or non available for the current user, so we need to
+   * check if the resource ID is valid.
+   * @private
+   * @param {string} resourceType
+   * @param {string} resourceId
+   * @returns {boolean} If true, the resource ID can be loaded.
+   */
+  async validateResourceId(resourceType, resourceId) {
+    if (!resourceId) {
+      return false;
+    }
+    try {
+      const resourceGri = this.findOutResourceId(resourceId, resourceType);
+      await this.contentResources.getModelFor(resourceType, resourceGri);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * @private
+   * @param {OnedataSidebarRouteModel} sidebarRouteModel
+   * @returns {Promise<string>}
+   */
+  async getTabModelDefaultResourceId(sidebarRouteModel) {
+    const { resourceType } = sidebarRouteModel;
     const tabId = camelize(resourceType);
     const tabModel = this.tabModels.find(tab => tab.id === tabId);
     let defaultResourceId;
@@ -192,21 +235,27 @@ class CommonNavigationTabsConfiguration extends Service {
         defaultResourceId = await tabModel?.defaultResource?.(sidebarRouteModel);
       }
     }
-    if (defaultResourceId) {
-      return defaultResourceId;
+    return defaultResourceId;
+  }
+
+  /**
+   * @private
+   * @param {OnedataSidebarRouteModel} sidebarRouteModel
+   * @returns {Promise<string>}
+   */
+  async getFirstResourceId(sidebarRouteModel) {
+    const { resourceType, collection } = sidebarRouteModel;
+    // FIXME: może być problem, jeśli chunksArray jest na pozycji nie-0
+    const array = collection.fullArray || collection.array;
+    const firstRecord = sortByProperties(
+      array,
+      this.sidebarResources.getItemsSortingFor(resourceType)
+    )[0];
+    if (firstRecord) {
+      // FIXME: działanie w onepanel-gui?
+      return firstRecord.entityId ?? firstRecord.id;
     } else {
-      // FIXME: może być problem, jeśli chunksArray jest na pozycji nie-0
-      const array = collection.fullArray || collection.array;
-      const firstRecord = sortByProperties(
-        array,
-        this.sidebarResources.getItemsSortingFor(resourceType)
-      )[0];
-      if (firstRecord) {
-        // FIXME: działanie w onepanel-gui?
-        return firstRecord.entityId ?? firstRecord.id;
-      } else {
-        return undefined;
-      }
+      return undefined;
     }
   }
 

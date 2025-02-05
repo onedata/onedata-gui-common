@@ -92,7 +92,8 @@ export default Route.extend({
          * An ID of the real record - can differ from the resourceId which is a short
          * form (eg. SpaceId vs it's GRI)
          */
-        const recordId = this.findOutResourceId(resourceId, resourceType);
+        const recordId =
+          this.navigationTabsConfiguration.findOutResourceId(resourceId, resourceType);
         if (!recordId) {
           throw { error: { id: 'notFound' } };
         }
@@ -143,10 +144,6 @@ export default Route.extend({
    */
   availableResourceId(resourceId, collection) {
     return collection.ids.includes(resourceId) ? resourceId : null;
-  },
-
-  findOutResourceId(resourceId /* , resourceType */ ) {
-    return resourceId;
   },
 
   actions: {
