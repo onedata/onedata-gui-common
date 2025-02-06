@@ -11,7 +11,7 @@ import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 
 /**
- * @typedef {Object} VirtualListFetcherItem
+ * @typedef {Object} ChunkableListModelFetcherItem
  * @property {string} index
  */
 
@@ -66,7 +66,7 @@ export default class VirtualListFetcher {
 
   /**
    * Returns native sorted array with all records loaded.
-   * @returns {Promise<Array<VirtualListFetcherItem>>}
+   * @returns {Promise<Array<ChunkableListModelFetcherItem>>}
    */
   async getPreparedList() {
     const list = await this.listModel.list;

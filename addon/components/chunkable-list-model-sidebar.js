@@ -1,6 +1,6 @@
 /**
  * An infinite scroll sidebar to use with `model.collection` of
- * `VirtualListChunksSidebarCollection` type.
+ * `ChunkableListModelSidebarCollection` type.
  *
  * @author Jakub Liput
  * @copyright (C) 2025 ACK CYFRONET AGH
@@ -11,9 +11,7 @@ import InfiniteScrollSidebar from 'onedata-gui-common/components/infinite-scroll
 import { reads } from '@ember/object/computed';
 import { debounce } from '@ember/runloop';
 
-// FIXME: ujednolicić nazewnictwo: VirtualListChunks albo VirtualChunksList
-
-export default class VirtualChunksListSidebar extends InfiniteScrollSidebar {
+export default class ChunkableListModelSidebar extends InfiniteScrollSidebar {
   /**
    * Should contain all known items ordered by index.
    * @override
@@ -54,9 +52,9 @@ export default class VirtualChunksListSidebar extends InfiniteScrollSidebar {
    */
   async mountInfiniteScroll(element) {
     await super.mountInfiniteScroll(element);
-    const virtualListReloader =
-      this.model.collection.virtualListChunksArray.virtualListReloader;
-    virtualListReloader.onListChanged = async () => {
+    const chunkableListModelReloader =
+      this.model.collection.chunkableListModel.chunkableListModelReloader;
+    chunkableListModelReloader.onListChanged = async () => {
       // FIXME: próba optymalizacji: jeśli po renderze aktywny item nie jest na widocznej liście
       if (this.primaryItem) {
         this.handlePrimaryItemChange();

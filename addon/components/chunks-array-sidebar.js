@@ -2,6 +2,8 @@
  * An infinite scroll sidebar to use with `model.collection` of
  * `ChunksArraySidebarCollection` type.
  *
+ * This type of sidebar is used with backend that support infinite scroll fetching.
+ *
  * @author Jakub Liput
  * @copyright (C) 2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -11,7 +13,7 @@ import InfiniteScrollSidebar from 'onedata-gui-common/components/infinite-scroll
 import { reads } from '@ember/object/computed';
 import ConflictIdsArray from 'onedata-gui-common/utils/conflict-ids-array';
 
-export default class ChunksSidebar extends InfiniteScrollSidebar {
+export default class ChunksArraySidebar extends InfiniteScrollSidebar {
   /**
    * There is no support for filtering in infinite scroll methods in backend.
    * @override

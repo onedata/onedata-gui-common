@@ -9,11 +9,6 @@
 
 import EmberObject, { computed } from '@ember/object';
 
-/**
- * @typedef {Object} VirtualListFetcherItem
- * @property {string} index
- */
-
 export default class VirtualListReloader extends EmberObject {
   listSortKey = 'index';
 

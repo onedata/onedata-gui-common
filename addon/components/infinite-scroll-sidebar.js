@@ -1,7 +1,8 @@
 /**
  * A base for implementing specific types of infinite scroll sidebars in Onedata main
  * layout. This is an abstract implementation - to create a specific sidebar component,
- * use `VirtualChunksListSidebar` or `ChunksSidebar`.
+ * use `ChunkableListModelSidebar`
+ or `ChunksArraySidebar`.
  *
  * @author Jakub Liput
  * @copyright (C) 2025 ACK CYFRONET AGH
