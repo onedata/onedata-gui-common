@@ -106,7 +106,7 @@ class CommonNavigationTabsConfiguration extends Service {
     // Without the following code, the user would see Space2, because the default resource
     // is read from LocalStorage, which is set by second web browser tab.
     globals.window.addEventListener('beforeunload', () =>
-      this.setLocalLastUsedResource(this.lastSidebarModel, this.lastContentModel)
+      this.setSessionLastUsedResource(this.lastSidebarModel, this.lastContentModel)
     );
   }
 
@@ -243,14 +243,14 @@ class CommonNavigationTabsConfiguration extends Service {
    */
   async getFirstResourceId(sidebarRouteModel) {
     const { resourceType, collection } = sidebarRouteModel;
-    // FIXME: może być problem, jeśli chunksArray jest na pozycji nie-0
+    // TODO: VFS-12643 If collection is ChunksArray, then it will get the first item from
+    // visible slice of collection. Maybe implement fetching first item (in collection).
     const array = collection.fullArray || collection.array;
     const firstRecord = sortByProperties(
       array,
       this.sidebarResources.getItemsSortingFor(resourceType)
     )[0];
     if (firstRecord) {
-      // FIXME: działanie w onepanel-gui?
       return firstRecord.entityId ?? firstRecord.id;
     } else {
       return undefined;
@@ -272,20 +272,29 @@ class CommonNavigationTabsConfiguration extends Service {
         this.lastUsedIdStorageKey(resourceType)
       );
     }
-    // FIXME: opisać zabezpieczenie
+    // Earlier versions of NavigationTabsConfiguration might write "null" string into
+    // storage.
     if (lastUsedId === 'null') {
-      console.log('FIXME: NavigationTabsConfiguration: lastUsedId is null');
       lastUsedId = null;
     }
     return lastUsedId;
   }
 
-  setLocalLastUsedResource(sidebarModel, contentModel) {
+  setSessionLastUsedResource(sidebarModel, contentModel) {
+    if (!sidebarModel || !contentModel) {
+      console.error(
+        'NavigationTabsConfiguration.setPersistentLastUsedResource: sidebar and content models are mandatory'
+      );
+      return;
+    }
     const { resourceType } = sidebarModel;
     const { resource } = contentModel;
     const resourceId = this.getResourceId(resource);
-    if (resourceId === null || resourceId === 'null') {
-      console.log('FIXME: NavigationTabsConfiguration.setLocalLastUsedResource: setting lastUsedId to null');
+    if (!resourceId || resourceId === 'null') {
+      console.warn(
+        'NavigationTabsConfiguration.setPersistentLastUsedResource: tried to set nullish last used resource - skipping'
+      );
+      return;
     }
     this.sessionStorage.setItem(
       this.lastUsedIdStorageKey(resourceType),
@@ -297,14 +306,23 @@ class CommonNavigationTabsConfiguration extends Service {
    * @param {OnedataSidebarRouteModel} sidebarModel
    * @param {OnedataContentRouteModel} contentModel
    */
-  setLastUsedResource(sidebarModel, contentModel) {
+  setPersistentLastUsedResource(sidebarModel, contentModel) {
+    if (!sidebarModel || !contentModel) {
+      console.error(
+        'NavigationTabsConfiguration.setPersistentLastUsedResource: sidebar and content models are mandatory'
+      );
+      return;
+    }
     const { resourceType } = sidebarModel;
     const { resource } = contentModel;
     this.lastSidebarModel = sidebarModel;
     this.lastContentModel = contentModel;
     const resourceId = this.getResourceId(resource);
-    if (resourceId === null || resourceId === 'null') {
-      console.log('FIXME: NavigationTabsConfiguration.setLastUsedResource: setting lastUsedId to null');
+    if (!resourceId || resourceId === 'null') {
+      console.warn(
+        'NavigationTabsConfiguration.setPersistentLastUsedResource: tried to set nullish last used resource - skipping'
+      );
+      return;
     }
     this.localStorage.setItem(
       this.lastUsedIdStorageKey(resourceType),

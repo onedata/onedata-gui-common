@@ -120,7 +120,7 @@ export default Route.extend({
   afterModel(model) {
     const sidebarModel = this.modelFor('onedata.sidebar');
     if (!isSpecialResourceId(model.resourceId)) {
-      this.navigationTabsConfiguration.setLastUsedResource(sidebarModel, model);
+      this.navigationTabsConfiguration.setPersistentLastUsedResource(sidebarModel, model);
     }
     this.navigationState.setProperties({
       activeResource: model.resource,
