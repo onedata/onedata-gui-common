@@ -512,15 +512,17 @@ export default Service.extend(I18n, {
     );
   },
 
-  // FIXME: z tym będzie problem, bo zakładamy statyczność i ids ogranizcza się obecnie
-  // do widocznej części
   /**
-   * Resolves to true if activeResourceCollections contains model with passed id
+   * Resolves to true if activeResourceCollections contains model with passed ID.
+   *
+   * NOTE: must be reimplemented, if meant to be used with ChunksArraySidebarCollection,
+   * because now it includes only visible slice of array.
    * @param {string} id
    * @returns {Promise<Boolean>}
    */
   resourceCollectionContainsId(id) {
-    return this.activeResourceCollection.ids.includes(id);
+    const ids = this.activeResourceCollection.allIds || this.activeResourceCollection.ids;
+    return ids.includes(id);
   },
 
   /**

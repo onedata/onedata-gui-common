@@ -39,8 +39,6 @@ import _ from 'lodash';
  * @typedef {(sidebarModel?: OnedataSidebarRouteModel) => string|Promise<string>} DefaultResourceGetter
  */
 
-// FIXME: być może nazwa wymaga refaktoru: defaultResource -> defaultResourceId
-
 /**
  * @typedef OnedataTabModel
  * @property {string} id
@@ -50,7 +48,7 @@ import _ from 'lodash';
  *     be default.
  * @property {string|DefaultAspectGetter} [defaultAspect] Aspect name, that should be
  *     rendered, when URL does not specify any.
- * @property {string|DefaultResourceGetter} [defaultResource] Resource ID (entityId),
+ * @property {string|DefaultResourceGetter} [defaultResourceId] Resource ID (entityId),
  *     that should be rendered, when URL does not specify any.
  * @property {boolean} [allowIndex] If true and URL does not specify any resource, then
  *     router will allow showing page not related to any resource - index page for
@@ -127,7 +125,7 @@ class CommonNavigationTabsConfiguration extends Service {
    */
   @computed
   get tabModels() {
-    const defaultResourceIdResolver = this.defaultResource.bind(this);
+    const defaultResourceIdResolver = this.defaultResourceId.bind(this);
     return [
       { id: 'spaces', icon: 'browser-directory' },
       { id: 'shares', icon: 'browser-share' },
@@ -143,7 +141,7 @@ class CommonNavigationTabsConfiguration extends Service {
         defaultAspect: 'overview',
       },
     ].map(tabModel => {
-      tabModel.defaultResource = defaultResourceIdResolver;
+      tabModel.defaultResourceId = defaultResourceIdResolver;
       return tabModel;
     });
   }
@@ -153,11 +151,11 @@ class CommonNavigationTabsConfiguration extends Service {
   }
 
   /**
-   * Default implementation for `defaultResource` callback in `OnedataTabModel`.
+   * Default implementation for `defaultResourceId` callback in `OnedataTabModel`.
    * @param {OnedataSidebarRouteModel} sidebarModel
    * @returns {object}
    */
-  async defaultResource(sidebarModel) {
+  async defaultResourceId(sidebarModel) {
     return this.getLastUsedResourceId(sidebarModel);
   }
 
@@ -228,11 +226,11 @@ class CommonNavigationTabsConfiguration extends Service {
     const tabModel = this.tabModels.find(tab => tab.id === tabId);
     let defaultResourceId;
     if (tabModel) {
-      if (typeof tabModel.defaultResource === 'string') {
-        defaultResourceId = tabModel.defaultResource;
+      if (typeof tabModel.defaultResourceId === 'string') {
+        defaultResourceId = tabModel.defaultResourceId;
       }
-      if (typeof tabModel.defaultResource === 'function') {
-        defaultResourceId = await tabModel?.defaultResource?.(sidebarRouteModel);
+      if (typeof tabModel.defaultResourceId === 'function') {
+        defaultResourceId = await tabModel?.defaultResourceId?.(sidebarRouteModel);
       }
     }
     return defaultResourceId;

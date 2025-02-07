@@ -24,6 +24,7 @@ import {
   initDestroyableCache,
 } from 'onedata-gui-common/utils/destroyable-computed';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
+import { asyncObserver } from 'onedata-gui-common/utils/observer';
 
 export default Component.extend(I18n, {
   layout,
@@ -275,6 +276,23 @@ export default Component.extend(I18n, {
     }
   ),
 
+  /**
+   * @returns {Promise<false|undefined>} Returns false if the procedure is aborted.
+   */
+  handlePrimaryItemChange: asyncObserver(
+    'primaryItem',
+    async function handlePrimaryItemChange() {
+      if (!this.primaryItem || this.primaryItemPrev === this.primaryItem) {
+        return false;
+      }
+      await waitForRender();
+      if (this.isDestroyed || this.isDestroying) {
+        return false;
+      }
+      await this.scrollSidebarToActiveItem();
+    }
+  ),
+
   init() {
     initDestroyableCache(this);
     this._super(...arguments);
@@ -313,23 +331,7 @@ export default Component.extend(I18n, {
    */
   didInsertElement() {
     this._super(...arguments);
-    // FIXME: dla spójności zmienić na asyncObserver
-    this.addObserver('primaryItem', this, 'handlePrimaryItemChange', false);
     this.handlePrimaryItemChange();
-  },
-
-  /**
-   * @returns {Promise<false|undefined>} Returns false if the procedure is aborted.
-   */
-  async handlePrimaryItemChange() {
-    if (!this.primaryItem || this.primaryItemPrev === this.primaryItem) {
-      return false;
-    }
-    await waitForRender();
-    if (this.isDestroyed || this.isDestroying) {
-      return false;
-    }
-    await this.scrollSidebarToActiveItem();
   },
 
   setFilter(expression) {
@@ -346,8 +348,7 @@ export default Component.extend(I18n, {
    * @returns
    */
   async scrollSidebarToActiveItem() {
-    // FIXME: wyszukać col-sidebar w parentach?
-    const colSidebar = globals.document.querySelector('.col-sidebar');
+    const colSidebar = this.element?.closest('.col-sidebar');
     if (!colSidebar || !this.primaryItem) {
       return;
     }
@@ -385,7 +386,6 @@ class SidebarContext extends EmberObject {
 
   @reads('sidebar.sortedCollection') sortedCollection;
 
-  // FIXME: to raczej nie zadziała jak trzeba? jak lista przefiltrowana nie mieści się?
   @reads('sidebar.filteredCollection') visibleCollection;
 }
 
