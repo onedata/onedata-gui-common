@@ -14,8 +14,26 @@ import ReplacingChunksArray from './replacing-chunks-array';
 import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 
+/**
+ * @typedef {(index: InfiniteScrollIndex, size: InfiniteScrollSize, offset: InfiniteScrollOffset) => Promise<InfiniteScrollPage>} MergedChunksArrayFetcher
+ */
+
 export default class MergedChunksArray extends ReplacingChunksArray {
-  // FIXME: udokumentować virtual fetchers (ale nie można jak wcześniej) - popróbować w testach constructor, field assignment itd.
+  /**
+   * Collection of fetch functions, whose results will be merged and sorted when using
+   * this chunks array main fetch method. It could be used when result list must be
+   * collected from multiple sources, which have their own infinite scroll API (eg. Shares
+   * collection from multiple Spaces).
+   * @virtual
+   * @type {Array<MergedChunksArrayFetcher>}
+   */
+  get fetchers() {
+    throw new Error('MergedChunksArray: fetchers not implemented');
+  }
+
+  set fetchers(value) {
+    defineFetchersUsingValue(this, value);
+  }
 
   /**
    * @override
@@ -78,4 +96,21 @@ export default class MergedChunksArray extends ReplacingChunksArray {
     }
     return { array: finalArray, isLast };
   }
+}
+
+/**
+ * Allows to set fetchers property using value, without need to override getter.
+ * @param {MergedChunksArray} self
+ * @param {Array<MergedChunksArrayFetcher>} value
+ */
+function defineFetchersUsingValue(self, value) {
+  Object.defineProperty(self, 'fetchers', {
+    configurable: true,
+    get() {
+      return value;
+    },
+    set(value) {
+      defineFetchersUsingValue(self, value);
+    },
+  });
 }
