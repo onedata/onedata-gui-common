@@ -102,7 +102,7 @@ export default class OneSingletonTaskQueue {
     return task && task.deferred.promise;
   }
 
-  // FIXME: testy
+  // TODO: VFS-12643 Write test
   async waitForAllTasks() {
     while (this.queue.length) {
       await this.executionPromiseObject;

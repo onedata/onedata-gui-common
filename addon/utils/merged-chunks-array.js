@@ -78,9 +78,9 @@ export default class MergedChunksArray extends ReplacingChunksArray {
     if (offset >= 0) {
       sliceRange = [0, size];
     } else {
-      // FIXME: napisać test nieprzechodzący do kodu z developa (bez Math.max)
-      // pobieramy chunka z ujemnym offsetem i zwraca nam mniej elementów niż chcieliśmy (size)
-      // wcześniej tablica była rozwalona (bo używało ujemnej wartości w range)
+      // TODO: VFS-12643 Write test: fetching with negative offset, which results in
+      // lesser items than expected. Before the "Math.max" code below, the array has been
+      // left corrupted (it used negative value in slice).
       sliceRange = [Math.max(sortedArray.length - size, 0), sortedArray.length];
     }
     const finalArray = _.sortBy(sortedArray, 'index').slice(...sliceRange);
