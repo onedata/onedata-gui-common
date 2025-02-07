@@ -13,7 +13,6 @@ import { isEmpty } from '@ember/utils';
 import EmberObject, {
   computed,
   get,
-  setProperties,
 } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-sidebar';
 import I18n from 'onedata-gui-common/mixins/i18n';
@@ -25,7 +24,6 @@ import {
   initDestroyableCache,
 } from 'onedata-gui-common/utils/destroyable-computed';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
-import { asyncObserver } from 'onedata-gui-common/utils/observer';
 
 export default Component.extend(I18n, {
   layout,
@@ -84,12 +82,13 @@ export default Component.extend(I18n, {
   isInfiniteScroll: bool('infiniteScroll'),
 
   /**
-   * @type {EmberObject}
+   * @type {ComputedProperty<SidebarContext>}
    */
-  context: computed(() => EmberObject.create({
-    sortedCollection: [],
-    visibleCollection: [],
-  })),
+  context: computed(function context() {
+    return SidebarContext.create({
+      sidebar: this,
+    });
+  }),
 
   /**
    * @type {Ember.ComputedProperty<Array<object>>}
@@ -276,24 +275,6 @@ export default Component.extend(I18n, {
     }
   ),
 
-  // FIXME: przetestować po zmianie na asyncObserver - uruchamia się na pewno zbyt często, przy każdym scrollu
-  contextUpdater: asyncObserver(
-    'sortedCollection',
-    'filteredCollection',
-    function contextUpdater() {
-      const {
-        sortedCollection,
-        filteredCollection,
-        context,
-      } = this;
-
-      setProperties(context, {
-        sortedCollection,
-        visibleCollection: filteredCollection,
-      });
-    }
-  ),
-
   init() {
     initDestroyableCache(this);
     this._super(...arguments);
@@ -314,8 +295,6 @@ export default Component.extend(I18n, {
     ) {
       this.set('areAdvancedFiltersVisible', false);
     }
-
-    this.contextUpdater();
   },
 
   /**
@@ -396,6 +375,19 @@ export default Component.extend(I18n, {
     },
   },
 });
+
+/**
+ * Provides context of sidebar for other parts of code.
+ */
+class SidebarContext extends EmberObject {
+  /** @type {Components.OneSidebar} */
+  sidebar = undefined;
+
+  @reads('sidebar.sortedCollection') sortedCollection;
+
+  // FIXME: to raczej nie zadziała jak trzeba? jak lista przefiltrowana nie mieści się?
+  @reads('sidebar.filteredCollection') visibleCollection;
+}
 
 /**
  * @param {HTMLElement} sidebarElement

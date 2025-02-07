@@ -23,6 +23,8 @@ export default class ChunksArraySidebar extends InfiniteScrollSidebar {
   /**
    * Fetched array is considered to be sorted by index. There is no standard conflict
    * labels adding in lower levels of implementation, so add conflict labels here.
+   * The conflict array provides observers that adds the conflict labels automatically.
+   * It is not used directly as an array, but as an "observer".
    * @type {ConflictIdsArray}
    */
   conflictArray;
@@ -40,7 +42,6 @@ export default class ChunksArraySidebar extends InfiniteScrollSidebar {
 
   init() {
     super.init(...arguments);
-    // FIXME: zmienić na coś w rodzaju watchera (rozbić albo wyciągnąć z tej klasy arraya esencję)
     const conflictArray = ConflictIdsArray.create({
       content: this.model.collection.chunksArray,
       diffProperty: 'entityId',

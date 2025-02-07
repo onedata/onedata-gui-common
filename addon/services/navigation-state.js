@@ -252,9 +252,10 @@ export default Service.extend(I18n, {
         activeResourceCollection,
       } = this;
 
-      const array = activeResourceCollection?.array;
+      const array = activeResourceCollection?.fullArray ??
+        activeResourceCollection?.array;
       return sidebarResources.getButtonsFor(activeResourceType, {
-        collection: array,
+        sortedCollection: array,
         // In global view we assume, that all items are visible - we cannot guess any
         // filtering from this point.
         visibleCollection: array,

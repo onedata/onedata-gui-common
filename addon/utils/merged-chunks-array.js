@@ -15,7 +15,7 @@ import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 
 export default class MergedChunksArray extends ReplacingChunksArray {
-  // FIXME: udokumentować virtual fetchers (ale nie można jak wcześniej)
+  // FIXME: udokumentować virtual fetchers (ale nie można jak wcześniej) - popróbować w testach constructor, field assignment itd.
 
   /**
    * @override

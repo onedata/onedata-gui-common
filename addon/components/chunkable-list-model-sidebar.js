@@ -10,6 +10,7 @@
 import InfiniteScrollSidebar from 'onedata-gui-common/components/infinite-scroll-sidebar';
 import { reads } from '@ember/object/computed';
 import { debounce } from '@ember/runloop';
+import EmberObject, { computed } from '@ember/object';
 
 export default class ChunkableListModelSidebar extends InfiniteScrollSidebar {
   /**
@@ -24,6 +25,16 @@ export default class ChunkableListModelSidebar extends InfiniteScrollSidebar {
    * @override
    */
   @reads('model.collection.array') filteredCollection;
+
+  /**
+   * @override
+   */
+  @computed()
+  get context() {
+    return ChunkableListModelSidebarContext.create({
+      sidebar: this,
+    });
+  }
 
   /**
    * @override
@@ -55,7 +66,6 @@ export default class ChunkableListModelSidebar extends InfiniteScrollSidebar {
     const chunkableListModelReloader =
       this.model.collection.chunkableListModel.chunkableListModelReloader;
     chunkableListModelReloader.onListChanged = async () => {
-      // FIXME: próba optymalizacji: jeśli po renderze aktywny item nie jest na widocznej liście
       if (this.primaryItem) {
         this.handlePrimaryItemChange();
       }
@@ -72,4 +82,13 @@ export default class ChunkableListModelSidebar extends InfiniteScrollSidebar {
       advanced: this.advancedFilters,
     });
   }
+}
+
+class ChunkableListModelSidebarContext extends EmberObject {
+  /** @type {Components.OneSidebar} */
+  sidebar = undefined;
+
+  @reads('sidebar.sortedCollection') sortedCollection;
+
+  @reads('sidebar.model.collection.filteredFullArray') visibleCollection;
 }

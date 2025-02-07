@@ -106,7 +106,6 @@ export default EmberObject.extend({
     this.fetchingStatus?.destroy();
   },
 
-  // FIXME: mount stał się async
   /**
    * @public
    * @param {HTMLElement} listContainerElement

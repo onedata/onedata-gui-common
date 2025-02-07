@@ -9,10 +9,10 @@
 
 import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
+import { tracked } from '@glimmer/tracking';
 
 /**
- * @typedef {Object} ChunkableListModelFetcherItem
- * @property {string} index
+ * @typedef {InfiniteScrollItem} ChunkableListModelFetcherItem
  */
 
 export default class VirtualListFetcher {
@@ -21,11 +21,13 @@ export default class VirtualListFetcher {
   /**
    * @type {string}
    */
+  @tracked
   filterExpression = '';
 
   /**
    * @type {any}
    */
+  @tracked
   filterAdvanced;
 
   /**
@@ -38,12 +40,11 @@ export default class VirtualListFetcher {
     this.listModel = listModel;
   }
 
-  // FIXME: returns type infinite scroll page
   /**
-   * @param {string|null} index
-   * @param {number} limit
-   * @param {number} offset
-   * @returns {{ array, isLast }}
+   * @param {InfiniteScrollIndex} index
+   * @param {InfiniteScrollLimit} limit
+   * @param {InfiniteScrollOffset} offset
+   * @returns {InfiniteScrollPage}
    */
   async fetch(index, limit, offset) {
     const list = this.filterItems(await this.getPreparedList());
@@ -81,6 +82,30 @@ export default class VirtualListFetcher {
   }
 
   filterItems(items) {
+    const itemsByExpression = this.filterByExpression(items);
+    if (this.filterAdvanced) {
+      return this.filterByAdvancedConditions(itemsByExpression, this.filterAdvanced);
+    } else {
+      return itemsByExpression;
+    }
+  }
+
+  /**
+   * To be overriden by subclasses if it should have advanced filters.
+   * @param {Array<T>} items
+   * @param {any} advancedFilter
+   * @returns {Array<T>}
+   */
+  filterByAdvancedConditions(items /*, advancedFilter */ ) {
+    return items;
+  }
+
+  /**
+   * @private
+   * @param {Array<T>} items
+   * @returns {Array<T>}
+   */
+  filterByExpression(items) {
     if (!this.filterExpression) {
       return items;
     }

@@ -85,12 +85,17 @@
  */
 
 /**
- * @typedef {Object} InfiniteScrollListingParams
- * @property {string|null} [index] an anchor where the listing should start.
+ * @typedef {string} InfiniteScrollIndex An anchor where the listing should start.
  *   Every entry received from the backend has that field so it is ease to start
  *   from the specific entry.
- * @property {number} [limit] how many entries should be fetched.
- * @property {number} [offset] says where the listing should start relative to
+ */
+
+/**
+ * @typedef {number} InfiniteScrollLimit How many entries should be fetched.
+ */
+
+/**
+ * @typedef {number} InfiniteScrollOffset Says where the listing should start relative to
  *   the provided `index`. Default is 0 which means that the specified entry
  *   will be the first one in the results. When negative integer is provided,
  *   the listing will start before specified entry. When it is a positive
@@ -98,14 +103,37 @@
  */
 
 /**
- * @typedef {Object} InfiniteScrollEntriesPage
- * @property {Array<InfiniteScrollEntry>} entries
+ * @typedef {Object} InfiniteScrollListingParams
+ * @property {InfiniteScrollIndex} [index]
+ * @property {InfiniteScrollLimit} [limit]
+ * @property {InfiniteScrollOffset} [offset]
+ */
+
+/**
+ * Generic item typedef for infinite scroll collections.
+ * @typedef {Object} InfiniteScrollItem
+ * @property {string} index
+ */
+
+/**
+ * Generic typedef for infinite scroll collection page.
+ * @typedef {Object} InfiniteScrollPage
+ * @property {Array<InfiniteScrollItem>} items
  * @property {boolean} isLast
  */
 
 /**
- * @typedef {Object} InfiniteScrollEntry
- * @property {string} index
+ * Typedef for backward compatibility with InfiniteScrollTable, where `entries` property
+ * is used instead of `array`.
+ * @typedef {InfiniteScrollItem} InfiniteScrollEntry
+ */
+
+/**
+ * Typedef for backward compatibility with InfiniteScrollTable, where `entries` property
+ * is used instead of `array`.
+ * @typedef {Object} InfiniteScrollEntriesPage
+ * @property {Array<InfiniteScrollEntry>} entries
+ * @property {boolean} isLast
  */
 
 /**
