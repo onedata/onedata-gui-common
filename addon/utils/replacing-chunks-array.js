@@ -119,7 +119,7 @@ export default ArraySlice.extend(Evented, {
   },
 
   isFetchPrevNeeded() {
-    return !get(this.sourceArray, 'length') ||
+    return !this.sourceArray.length ||
       !this._startReached && this._start - this.loadMoreThreshold <= this.emptyIndex;
   },
 
@@ -425,9 +425,15 @@ export default ArraySlice.extend(Evented, {
   },
 
   /**
-   * Reload current array view or load array from beginning (`head === true`).
-   * This method should be not used directly - instead use `scheduleReload(...)`
-   * to prevent issues with async array modification.
+   * Reload current array view or load array from beginning (`head === true`). This method
+   * should be not used directly - instead use `scheduleReload(...)` to prevent issues
+   * with async array modification.
+   * @param {Object} [options]
+   * @param {boolean} options.head If true, reload will be performed from the beginning of
+   *   the data source (index will be set to null).
+   * @param {InfiniteScrollSize} options.minSize Minimum size of queried items. The actual
+   *   query size could be larger and it's based on computed reload start/end.
+   * @param {InfiniteScrollOffset} options.offset
    * @returns {Promise}
    */
   async _reload({ head = false, minSize = this.chunkSize, offset = 0 } = {}) {
@@ -456,12 +462,16 @@ export default ArraySlice.extend(Evented, {
     }
     this.set('_isReloading', true);
     const firstObject = this.objectAt(0);
-    let fetchStartIndex = firstObject && this.getIndex(firstObject);
-    if (
-      fetchStartIndex === undefined ||
+    let fetchStartIndex;
+    if (!head) {
+      fetchStartIndex = firstObject && this.getIndex(firstObject);
+    }
+    const isEffHead = (
       head ||
+      fetchStartIndex === undefined ||
       (_start === 0 && !this.isFetchPrevNeeded())
-    ) {
+    );
+    if (isEffHead) {
       fetchStartIndex = null;
     }
 
@@ -479,7 +489,7 @@ export default ArraySlice.extend(Evented, {
       const fetchedCount = get(arrayUpdate, 'length');
       const updatedEnd = _start + fetchedCount;
       safeExec(this, 'setProperties', {
-        _startReached: Boolean(head),
+        _startReached: isEffHead,
         _endReached: Boolean(endReached),
         error: undefined,
       });
@@ -541,41 +551,41 @@ export default ArraySlice.extend(Evented, {
     const {
       sourceArray,
       indexMargin,
-    } = this.getProperties('sourceArray', 'indexMargin');
-    const updatePromise = this.fetchWrapper(
+    } = this;
+    const updatePromise = (async () => {
+      const { arrayUpdate, endReached } = await this.fetchWrapper(
         index,
         size + indexMargin * 2,
         -indexMargin,
-      )
-      .then(({ arrayUpdate, endReached }) => {
-        if (this.isDestroyed) {
-          return;
-        }
-        // clear array without notify
-        sourceArray.splice(0, get(sourceArray, 'length'));
-        sourceArray.push(...arrayUpdate);
-        // Empty index means a jump to the beginning
-        const startIndex = index ? arrayUpdate.findIndex(item =>
-          get(item, 'index') === index
-        ) : 0;
-        if (startIndex === -1) {
-          return false;
-        } else {
-          const endIndex = Math.min(
-            startIndex + size,
-            arrayUpdate.length
-          );
-          this.setProperties({
-            _startReached: false,
-            _endReached: Boolean(endReached),
-            startIndex,
-            endIndex,
-            emptyIndex: -1,
-          });
-          sourceArray.arrayContentDidChange();
-          return this;
-        }
-      });
+      );
+      if (this.isDestroyed) {
+        return;
+      }
+      // clear array without notify
+      sourceArray.splice(0, get(sourceArray, 'length'));
+      sourceArray.push(...arrayUpdate);
+      // Empty index means a jump to the beginning
+      const startIndex = index ? arrayUpdate.findIndex(item =>
+        get(item, 'index') === index
+      ) : 0;
+      if (startIndex === -1) {
+        return false;
+      } else {
+        const endIndex = Math.min(
+          startIndex + size,
+          arrayUpdate.length
+        );
+        this.setProperties({
+          _startReached: false,
+          _endReached: Boolean(endReached),
+          startIndex,
+          endIndex,
+          emptyIndex: -1,
+        });
+        sourceArray.arrayContentDidChange();
+        return this;
+      }
+    })();
     this.trigger('willResetArray', {
       updatePromise,
     });
