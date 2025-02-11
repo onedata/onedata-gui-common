@@ -493,7 +493,7 @@ export default ArraySlice.extend(Evented, {
         _endReached: Boolean(endReached),
         error: undefined,
       });
-      if (head) {
+      if (isEffHead) {
         // clear array without notify
         sourceArray.splice(0, get(sourceArray, 'length'));
         sourceArray.push(...arrayUpdate);
