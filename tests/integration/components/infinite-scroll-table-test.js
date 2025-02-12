@@ -251,6 +251,7 @@ describe('Integration | Component | infinite-scroll-table', function () {
 
         await scrollTo('.table-scrollable-container', 0, 10000);
         await settled();
+        console.log('FIXME: will scroll to top');
         await scrollTo('.table-scrollable-container', 0, 0);
         await settled();
         onFetchEntries.resetHistory();
@@ -424,6 +425,8 @@ describe('Integration | Component | infinite-scroll-table', function () {
 
 function createFetchEntriesMock({ getHangLoadingNext, getLatestEntryIndex }) {
   return async function fetchEntriesMock(listingParams) {
+    console.log('listingParams ', listingParams);
+
     if (getHangLoadingNext?.() && listingParams?.offset > 0) {
       return new Promise(() => {});
     }
@@ -442,6 +445,8 @@ function createFetchEntriesMock({ getHangLoadingNext, getLatestEntryIndex }) {
       }
       entries.push(generateEntryForTimestamp(entryIndex));
     }
+
+    console.log('entries ', entries);
 
     return {
       entries,
