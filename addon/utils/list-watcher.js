@@ -15,6 +15,7 @@ export default class ListWatcher {
    * @param {jQuery} $container
    * @param {String} itemsSelector
    * @param {(visibleElements: Element[], headerVisible: boolean, event: Event) => undefined} callback
+   * @param {string} [topSelector]
    */
   constructor($container, itemsSelector, callback, topSelector) {
     this.$container = $container;
