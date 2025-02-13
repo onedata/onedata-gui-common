@@ -475,7 +475,7 @@ export default ArraySlice.extend(Evented, {
       fetchStartIndex = null;
     }
 
-    const lengthBeforeFetch = this.getLength() || (this.endIndex - this.startIndex);
+    const endIndexBeforeFetch = this.endIndex;
 
     try {
       const { arrayUpdate, endReached } = await this.fetchWrapper(
@@ -500,8 +500,8 @@ export default ArraySlice.extend(Evented, {
         this.setProperties({
           emptyIndex: -1,
           startIndex: 0,
-          endIndex: lengthBeforeFetch <= 0 ?
-            fetchedCount : Math.min(lengthBeforeFetch, fetchedCount),
+          endIndex: endIndexBeforeFetch <= 0 ?
+            fetchedCount : Math.min(endIndexBeforeFetch, fetchedCount),
         });
       } else {
         this.setEmptyIndex(_start - 1);
