@@ -19,7 +19,7 @@ import ReplacingChunksArray from './replacing-chunks-array';
 import ChunkableListModelReloader from './chunkable-list-model-reloader';
 import _ from 'lodash';
 
-export default class ChunkableListModel {
+export class ChunkableListModel {
   /** @type {typeof ChunkableListModelFetcher} */
   get ChunkableListModelFetcherClass() {
     return ChunkableListModelFetcher;
@@ -75,3 +75,5 @@ export default class ChunkableListModel {
     this.chunkableListModelReloader.handleListChange();
   }
 }
+
+export default ChunkableListModel;
