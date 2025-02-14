@@ -195,6 +195,7 @@ export const FileAttribute = Object.freeze({
   Size: 'size',
   SymlinkValue: 'symlinkValue',
   Type: 'type',
+  JsonMetadata: 'jsonMetadata',
 });
 
 /**
