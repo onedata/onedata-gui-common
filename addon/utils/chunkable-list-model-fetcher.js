@@ -10,6 +10,7 @@
 import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 import { tracked } from '@glimmer/tracking';
+import { defaultAdvancedFilter } from 'onedata-gui-common/components/one-sidebar';
 
 /**
  * @typedef {InfiniteScrollItem} ChunkableListModelFetcherItem
@@ -28,7 +29,7 @@ export default class VirtualListFetcher {
    * @type {any}
    */
   @tracked
-  filterAdvanced;
+  filterAdvanced = defaultAdvancedFilter;
 
   /**
    * @virtual

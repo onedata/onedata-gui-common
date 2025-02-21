@@ -26,6 +26,8 @@ import {
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import { asyncObserver } from 'onedata-gui-common/utils/observer';
 
+export const defaultAdvancedFilter = Object.freeze({});
+
 export default Component.extend(I18n, {
   layout,
   classNames: ['one-sidebar'],
@@ -166,7 +168,7 @@ export default Component.extend(I18n, {
    * Filters received from advancedFiltersComponent.
    * @type {any}
    */
-  advancedFilters: Object.freeze({}),
+  advancedFilters: defaultAdvancedFilter,
 
   /**
    * @type {boolean}

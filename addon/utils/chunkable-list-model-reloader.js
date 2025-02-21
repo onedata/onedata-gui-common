@@ -20,7 +20,7 @@ export default class VirtualListReloader extends EmberObject {
 
   /**
    * @virtual optional
-   * @type {() => void}
+   * @type {() => Promise<void>|void}
    */
   onListChanged = undefined;
 
