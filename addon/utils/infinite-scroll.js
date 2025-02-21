@@ -20,7 +20,7 @@ import { reads } from '@ember/object/computed';
 /**
  * @typedef {Object} InfiniteListQuery
  * @property {string|null} [index] an anchor where the listing should start. Every item
- *   received from the backend has that field so it is ease to start from the specific log
+ *   received from the backend has that field so it is easy to start from the specific log
  *   entry.
  * @property {number} [limit] how many items should be fetched
  * @property {number} [offset] says where the listing should start relative to the

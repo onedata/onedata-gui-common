@@ -45,7 +45,7 @@ export default class InfiniteScrollSidebar extends OneSidebar {
 
   @computed(
     'primaryItemId',
-    // Due to some issues with ReplacingChuksArray.sourceArray notifications, we observer
+    // Due to some issues with ReplacingChunksArray.sourceArray notifications, we observe
     // `[]` of RCA, which causes recomputation practically on every scroll, which is bad
     // for performance. Maybe it will be fixed in the future.
     'chunksArray.[]'

@@ -50,7 +50,7 @@ export default EmberObject.extend({
 
   /**
    * A method that can be overriden to provide advanced way to compute height of first
-   * rowe. For example, when we know, that some item has other height than others.
+   * row. For example, when we know, that some item has other height than others.
    * @param {ReplacingChunksArray} [entries]
    * @param {() => number} [defaultComputeFun] Invoke this function to get standard height
    *   of first row (based on constant items height).

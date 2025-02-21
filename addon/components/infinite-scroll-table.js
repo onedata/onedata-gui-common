@@ -86,7 +86,7 @@
 
 /**
  * @typedef {string} InfiniteScrollIndex An anchor where the listing should start.
- *   Every entry received from the backend has that field so it is ease to start
+ *   Every entry received from the backend has that field so it is easy to start
  *   from the specific entry.
  */
 
