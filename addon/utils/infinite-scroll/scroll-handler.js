@@ -119,7 +119,8 @@ export default EmberObject.extend({
       }
     } else {
       startIndex = entriesIds.indexOf(firstId);
-      endIndex = entriesIds.indexOf(lastId, startIndex);
+      const searchEndFrom = startIndex === -1 ? 0 : startIndex;
+      endIndex = entriesIds.indexOf(lastId, searchEndFrom);
     }
 
     const {
