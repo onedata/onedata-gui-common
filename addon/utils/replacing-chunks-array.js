@@ -70,6 +70,11 @@ export default ArraySlice.extend(Evented, {
   error: undefined,
 
   /**
+   * @type {number}
+   */
+  customLoadMoreThreshold: undefined,
+
+  /**
    * @type {Ember.ComputedProperty<boolean>}
    */
   isLoaded: reads('initialLoad.isSettled'),
@@ -89,8 +94,13 @@ export default ArraySlice.extend(Evented, {
    */
   chunkSize: 24,
 
-  loadMoreThreshold: computed('chunkSize', function getLoadMoreThreshold() {
-    return this.get('chunkSize') / 2;
+  loadMoreThreshold: computed('chunkSize', 'customLoadMoreThreshold', {
+    get() {
+      return this.customLoadMoreThreshold ?? (this.chunkSize / 2);
+    },
+    set(key, value) {
+      return this.set('customLoadMoreThreshold', value);
+    },
   }),
 
   /**
