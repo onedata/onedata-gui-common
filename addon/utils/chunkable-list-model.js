@@ -49,6 +49,7 @@ export class ChunkableListModel {
       startIndex: 0,
       endIndex: 50,
       indexMargin: 10,
+      chunkSize: 10,
       ...chunksArrayOptions,
     });
 
