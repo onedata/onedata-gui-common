@@ -355,22 +355,6 @@ label {
       margin-bottom: 0;
     }
   }
-  &.json-tooltip .tooltip-inner {
-    pre {
-      @include font-monospace;
-      background-color: transparent;
-      border: none;
-      color: white;
-      padding: $padding-xs-horizontal;
-      margin: 0;
-    }
-    hr {
-      margin-top: 0;
-      margin-bottom: $padding-xs-horizontal;
-      opacity: 0.6;
-    }
-  }
-
 }
 
 @import "bootstrap/popovers";
