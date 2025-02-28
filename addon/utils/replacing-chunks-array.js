@@ -531,13 +531,13 @@ export default ArraySlice.extend(Evented, {
             fetchedCount : Math.min(endIndexBeforeFetch, fetchedCount),
         });
       } else {
-        this.setEmptyIndex(_start - 1);
-        if (updatedEnd < get(sourceArray, 'length')) {
-          set(sourceArray, 'length', updatedEnd);
-        }
         const updateBoundary = Math.min(updatedEnd, fetchedCount);
         for (let i = 0; i < updateBoundary; ++i) {
           sourceArray[i + _start] = arrayUpdate[i];
+        }
+        this.setEmptyIndex(_start - 1);
+        if (updatedEnd < get(sourceArray, 'length')) {
+          set(sourceArray, 'length', updatedEnd);
         }
         if (this.startIndex === this.endIndex) {
           this.setProperties({
