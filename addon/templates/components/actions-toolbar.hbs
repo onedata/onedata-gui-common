@@ -1,26 +1,27 @@
-{{#one-collapsible-toolbar
-  isMinimized=isMinimized
-  dropdownPlacement=dropdownPlacement
-  minimumFullWindowSize=minimumFullWindowSize
-  class=toolbarClasses
-  toggleBtnClass=toolbarToggleClasses
-  renderImmediately=renderImmediately
-  popoverClass=popoverClass
-  as |dropdown|}}
+<OneCollapsibleToolbar
+  @isMinimized={{isMinimized}}
+  @dropdownPlacement={{dropdownPlacement}}
+  @minimumFullWindowSize={{minimumFullWindowSize}}
+  class={{toolbarClasses}}
+  @toggleBtnClass={{toolbarToggleClasses}}
+  @renderImmediately={{renderImmediately}}
+  @popoverClass={{popoverClass}}
+  as |dropdown|
+>
   {{#each actionsArray key="class" as |act|}}
-    {{#dropdown.item
-      buttonStyle=act.buttonStyle
-      triggerClasses=(or act.class act.className)
-      itemAction=(action act.action actionsArg)
-      isDisabled=act.disabled
-    }}
+    <dropdown.item
+      @buttonStyle={{act.buttonStyle}}
+      @triggerClasses={{or act.class act.className}}
+      @itemAction={{action act.action actionsArg}}
+      @isDisabled={{act.disabled}}
+    >
       {{#if act.icon}}
-        {{one-icon icon=act.icon}}
+        <OneIcon @icon={{act.icon}} />
       {{/if}}
       <span class="text">{{act.title}}</span>
       {{#if act.tip}}
-        {{one-tooltip title=act.tip placement=(or act.tipPlacement "top")}}
+        <OneTooltip @title={{act.tip}} @placement={{or act.tipPlacement "top"}} />
       {{/if}}
-    {{/dropdown.item}}
+    </dropdown.item>
   {{/each}}
-{{/one-collapsible-toolbar}}
+</OneCollapsibleToolbar>

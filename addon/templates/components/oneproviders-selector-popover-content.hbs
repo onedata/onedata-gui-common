@@ -1,20 +1,26 @@
 <div class="oneproviders-list-title">{{tt this "oneproviders"}}</div>
 <div class="form-group-sm form-group-light search-group">
   <div class="input-group with-icon-addon">
-    {{search-bar search=(action "queryChanged") class="form-control"}}
+    <SearchBar @search={{action "queryChanged"}} class="form-control" />
     <div class="input-group-addon">
-      {{one-icon icon="search"}}
+      <OneIcon @icon="search" />
     </div>
   </div>
 </div>
-{{#perfect-scrollbar-element tagName="ul" class="oneproviders-list"}}
+<PerfectScrollbarElement @tagName="ul" class="oneproviders-list">
   {{#each filteredOneproviders as |oneprovider|}}
     <li
       class="oneproviders-list-item {{if (eq oneprovider selectedOneprovider) "active"}}"
       data-provider={{oneprovider.id}}
       {{action onOneproviderSelected oneprovider}}>
-      {{one-icon icon="provider" class=(if oneprovider.online "online-icon" "offline-icon")}}
-      {{#truncated-string}}{{name-conflict item=oneprovider tagName="span"}}{{/truncated-string}}
+      <OneIcon
+        @icon="provider"
+        class={{if oneprovider.online "online-icon" "offline-icon"}}
+      />
+      <TruncatedString><NameConflict
+        @item={{oneprovider}}
+        @tagName="span"
+      /></TruncatedString>
     </li>
   {{/each}}
-{{/perfect-scrollbar-element}}
+</PerfectScrollbarElement>

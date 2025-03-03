@@ -1,4 +1,4 @@
-{{#promise-proxy-container proxy=initialLoadingProxy}}
+<PromiseProxyContainer @proxy={{initialLoadingProxy}}>
   {{#if (eq mode "view")}}
     <div class="workflow-status-container">
       <div class="workflow-status-text">
@@ -6,60 +6,62 @@
         <span class="workflow-status">{{statusTranslation}}</span>
       </div>
       {{#if executionActions.length}}
-        {{actions-toolbar
-          isMinimized=(media "isMobile")
-          toolbarClasses="execution-actions"
-          dropdownPlacement="auto"
-          actionsArray=executionActions
-        }}
+        <ActionsToolbar
+          @isMinimized={{media "isMobile"}}
+          @toolbarClasses="execution-actions"
+          @dropdownPlacement="auto"
+          @actionsArray={{executionActions}}
+        />
       {{/if}}
     </div>
   {{/if}}
-  {{#perfect-scrollbar-element
+  <PerfectScrollbarElement
     class="visualiser-elements"
-    onScroll=(action "horizonalScroll")
-  }}
+    @onScroll={{action "horizonalScroll"}}
+  >
     {{#each visualiserElements as |visualiserElement|}}
-      {{workflow-visualiser/visualiser-element-renderer elementModel=visualiserElement}}
+      <WorkflowVisualiser::VisualiserElementRenderer
+        @elementModel={{visualiserElement}}
+      />
     {{/each}}
-  {{/perfect-scrollbar-element}}
+  </PerfectScrollbarElement>
   <div class="scrollers-container">
-    {{one-icon
-      icon="arrow-left"
-      click=(action "scrollLeft")
-      class=(concat-classes
+    <OneIcon
+      @icon="arrow-left"
+      @click={{action "scrollLeft"}}
+      class={{concat-classes
         "left-edge-scroll-step-trigger clickable"
         (if (not-eq laneIdxForNextLeftScroll null) "visible")
-      )
-    }}
-    {{one-icon
-      icon="arrow-right"
-      click=(action "scrollRight")
-      class=(concat-classes
+      }}
+    />
+    <OneIcon
+      @icon="arrow-right"
+      @click={{action "scrollRight"}}
+      class={{concat-classes
         "right-edge-scroll-step-trigger clickable"
         (if (not-eq laneIdxForNextRightScroll null) "visible")
-      )
-    }}
+      }}
+    />
   </div>
   <div class="visualiser-footer">
-    {{workflow-visualiser/stores-list
-      mode=mode
-      actionsFactory=actionsFactory
-      definedStores=definedStores
-    }}
-    {{#one-button
-      class=(concat-classes
+    <WorkflowVisualiser::StoresList
+      @mode={{mode}}
+      @actionsFactory={{actionsFactory}}
+      @definedStores={{definedStores}}
+    />
+    <OneButton
+      class={{concat-classes
         openWorkflowChartDashboardAction.className
         "open-workflow-chart-dashboard"
-      )
-      size="sm"
-      disableWhenPending=false
-      showSpinnerWhenPending=false
-      onClick=openWorkflowChartDashboardAction.executeCallback
-    }}
-      {{one-icon icon=openWorkflowChartDashboardAction.icon}}
+      }}
+      @size="sm"
+      @disableWhenPending={{false}}
+      @showSpinnerWhenPending={{false}}
+      @onClick={{openWorkflowChartDashboardAction.executeCallback}}
+    >
+      <OneIcon @icon={{openWorkflowChartDashboardAction.icon}} />
       <span class="text">{{openWorkflowChartDashboardAction.title}}</span>
-    {{/one-button}}
+    </OneButton>
   </div>
-{{/promise-proxy-container}}
+</PromiseProxyContainer>
 {{yield}}

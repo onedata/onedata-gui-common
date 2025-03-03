@@ -2,7 +2,7 @@
   <LoginBox::Header @model={{headerModel}} />
   {{#if showAuthenticationError}}
     <h1>
-      <OneIcon @icon="sign-warning-rounded" @class="login-warning-icon" />
+      <OneIcon @icon="sign-warning-rounded" class="login-warning-icon" />
       {{tt this "errorTitle"}}
     </h1>
     <div class="container-fluid authentication-error-message">
@@ -30,7 +30,7 @@
       </div>
     </div>
   {{else if isLoading}}
-    <SpinSpinnerBlock @sizeClass="lg" @class="absolute-middle-centered" />
+    <SpinSpinnerBlock @sizeClass="lg" class="absolute-middle-centered" />
   {{else}}
     <div class="row row-login-header text-center">
       <div class="col-xs-12">

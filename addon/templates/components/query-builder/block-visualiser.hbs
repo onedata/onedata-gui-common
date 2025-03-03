@@ -20,17 +20,17 @@
       onmouseenter={{action "removeButtonHover" true}}
       onmouseleave={{action "removeButtonHover" false}}
     >
-      {{one-icon icon="x"}}
+      <OneIcon @icon="x" />
     </button>
-    {{query-builder/block-settings
-      queryBlock=queryBlock
-      operators=operators
-      parentQueryBlock=parentQueryBlock
-      open=areSettingsVisible
-      triggerSelector=(concat "#" elementId)
-      popoverPlacement=popoverPlacement
-      onBlockReplace=onBlockReplace
-      onSettingsClose=(action "onSettingsClose")
-    }}
+    <QueryBuilder::BlockSettings
+      @queryBlock={{queryBlock}}
+      @operators={{operators}}
+      @parentQueryBlock={{parentQueryBlock}}
+      @open={{areSettingsVisible}}
+      @triggerSelector={{concat "#" elementId}}
+      @popoverPlacement={{popoverPlacement}}
+      @onBlockReplace={{onBlockReplace}}
+      @onSettingsClose={{action "onSettingsClose"}}
+    />
   {{/unless}}
 {{/component}}

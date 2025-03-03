@@ -1,5 +1,5 @@
-{{#parentTree.item class=(concat-classes 
-  (concat "item-" (if _field._isField _field.type "generic")) 
+{{#parentTree.item class=(concat-classes
+  (concat "item-" (if _field._isField _field.type "generic"))
   (if _allowSubtreeCheckboxSelect "has-checkbox-group")
 ) as |item|}}
   {{#item.content}}
@@ -9,53 +9,57 @@
       (if _isFieldDisabled "disabled")
       (if modificationState.isModified "modified-node-label")}}>
       {{#if definition.icon}}
-        {{one-icon icon=definition.icon}}
+        <OneIcon @icon={{definition.icon}} />
       {{/if}}
       {{definition.text}}
     </label>
     {{#if _renderField}}
-      {{#bsForm.group
-        validation=(if _field.isInvalid "error" (if _field.isValid "success"))}}
-        {{one-dynamic-tree/node/field 
-          field=_field
-          value=(get values _path)
-          inputChanged=(action inputValueChanged _path)
-          focusedOut=(action inputFocusedOut _path)
-          inputId=(concat parentView.elementId inputId)
-          disabled=_isFieldDisabled}}
+      <bsForm.group
+        @validation={{if _field.isInvalid "error" (if _field.isValid "success")}}
+      >
+        <OneDynamicTree::Node::Field
+          @field={{_field}}
+          @value={{get values _path}}
+          @inputChanged={{action inputValueChanged _path}}
+          @focusedOut={{action inputFocusedOut _path}}
+          @inputId={{concat parentView.elementId inputId}}
+          @disabled={{_isFieldDisabled}}
+        />
         <div class="form-message">{{_field.message}}</div>
-      {{/bsForm.group}}
+      </bsForm.group>
     {{else if _allowSubtreeCheckboxSelect}}
-      {{#bsForm.group}}
-        {{one-dynamic-tree/node/field 
-          field=_selectCheckboxesField
-          value=_areNestedCheckboxesSelected
-          inputChanged=(action selectNestedCheckboxes 
+      <bsForm.group>
+        <OneDynamicTree::Node::Field
+          @field={{_selectCheckboxesField}}
+          @value={{_areNestedCheckboxesSelected}}
+          @inputChanged={{action selectNestedCheckboxes
             (dot-to-dash _path)
             (if (eq _areNestedCheckboxesSelected 2) true (not _areNestedCheckboxesSelected))
-          )
-          inputId=(concat parentView.elementId inputId)
-          disabled=_isFieldDisabled}}
-      {{/bsForm.group}}
+          }}
+          @inputId={{concat parentView.elementId inputId}}
+          @disabled={{_isFieldDisabled}}
+        />
+      </bsForm.group>
     {{/if}}
   {{/item.content}}
   {{#if definition.subtree}}
-    {{#item.subtree as |subtree|}}
+    <item.subtree as |subtree|>
       {{#each definition.subtree as |subnodeDefinition|}}
-        {{one-dynamic-tree/node
-          definition=subnodeDefinition
-          bsForm=bsForm
-          parentTree=subtree
-          parentPath=_path
-          values=values
-          fields=fields
-          modificationState=(get (get modificationState "nodes") subnodeDefinition.name)
-          checkboxSelection=checkboxSelection
-          disabledFieldsPaths=disabledFieldsPaths
-          inputValueChanged=inputValueChanged
-          inputFocusedOut=inputFocusedOut
-          selectNestedCheckboxes=selectNestedCheckboxes}}
+        <OneDynamicTree::Node
+          @definition={{subnodeDefinition}}
+          @bsForm={{bsForm}}
+          @parentTree={{subtree}}
+          @parentPath={{_path}}
+          @values={{values}}
+          @fields={{fields}}
+          @modificationState={{get (get modificationState "nodes") subnodeDefinition.name}}
+          @checkboxSelection={{checkboxSelection}}
+          @disabledFieldsPaths={{disabledFieldsPaths}}
+          @inputValueChanged={{inputValueChanged}}
+          @inputFocusedOut={{inputFocusedOut}}
+          @selectNestedCheckboxes={{selectNestedCheckboxes}}
+        />
       {{/each}}
-    {{/item.subtree}}
+    </item.subtree>
   {{/if}}
 {{/parentTree.item}}

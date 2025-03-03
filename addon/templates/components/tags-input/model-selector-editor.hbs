@@ -1,19 +1,19 @@
-{{#one-webui-popover
+<OneWebuiPopover
   class="tags-selector model-selector"
-  open=true
-  triggerSelector=(concat "#" elementId)
-  arrow=false
-  registerApi=(action (mut popoverApi))
-  padding=false
-  placement="vertical"
-  popoverStyle="tags-selector"
+  @open={{true}}
+  @triggerSelector={{concat "#" elementId}}
+  @arrow={{false}}
+  @registerApi={{action (mut popoverApi)}}
+  @padding={{false}}
+  @placement="vertical"
+  @popoverStyle="tags-selector"
   as |popover|
-}}
-  {{#click-outside
+>
+  <ClickOutside
     class="selector-container"
-    onClickOutside=onEndTagCreation
-    exceptSelector=parentTagsInputSelector
-  }}
+    @onClickOutside={{onEndTagCreation}}
+    @exceptSelector={{parentTagsInputSelector}}
+  >
     <OneDropdown
       @triggerClass="small"
       @dropdownClass="small"
@@ -26,34 +26,34 @@
     >
       <div class="option-container">
         {{#if modelType.icon}}
-          {{one-icon icon=modelType.icon}}
+          <OneIcon @icon={{modelType.icon}} />
         {{/if}}
-        {{#truncated-string class="text"}}
+        <TruncatedString class="text">
           {{modelType.label}}
-        {{/truncated-string}}
+        </TruncatedString>
       </div>
     </OneDropdown>
-    {{#bs-button-group
-      value=selectedView
+    <BsButtonGroup
+      @value={{selectedView}}
       class="view-selector btn-group-justified"
-      type="radio"
-      onChange=(action (mut selectedView))
+      @type="radio"
+      @onChange={{action (mut selectedView)}}
       as |bg|
-    }}
+    >
       <div class="btn-group" role="group">
-        {{#bg.button type="default" class="btn-sm btn-list" value="list"}}
+        <bg.button @type="default" class="btn-sm btn-list" @value="list">
           {{tt this "view.list"}}
-        {{/bg.button}}
+        </bg.button>
       </div>
       <div class="btn-group" role="group">
-        {{#bg.button type="default" class="btn-sm btn-by-id" value="byId"}}
+        <bg.button @type="default" class="btn-sm btn-by-id" @value="byId">
           {{tt this "view.byId"}}
-        {{/bg.button}}
+        </bg.button>
       </div>
-    {{/bs-button-group}}
+    </BsButtonGroup>
     <hr class="content-separator">
     {{#if (eq selectedView "list")}}
-      {{#promise-proxy-container proxy=recordsProxy sizeClass="sm"}}
+      <PromiseProxyContainer @proxy={{recordsProxy}} @sizeClass="sm">
         {{#if isAllRecordsSelectedDescriptionVisible}}
           <p class="all-records-added-description">
             {{tt this (concat "allRecordsAdded." selectedModelName)}}
@@ -66,23 +66,23 @@
             oninput={{action (mut recordsFilter) value="target.value"}}
             placeholder={{tt this "recordsFilterPlaceholder"}}
           >
-          {{#perfect-scrollbar-element}}
+          <PerfectScrollbarElement>
             <ul class="selector-list">
               {{#each filteredTagsToRender key="label" as |tag|}}
                 <li class="selector-item {{if tag.value.record.representsAll "all-item" "record-item"}}" {{action "tagSelected" tag}}>
                   {{#if tag.icon}}
-                    {{one-icon icon=tag.icon class="tag-icon"}}
+                    <OneIcon @icon={{tag.icon}} class="tag-icon" />
                   {{/if}}
-                  {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
+                  <TruncatedString class="tag-label">{{tag.label}}</TruncatedString>
                   {{#if tag.tip}}
-                    {{one-tooltip title=tag.tip}}
+                    <OneTooltip @title={{tag.tip}} />
                   {{/if}}
                 </li>
               {{/each}}
             </ul>
-          {{/perfect-scrollbar-element}}
+          </PerfectScrollbarElement>
         {{/if}}
-      {{/promise-proxy-container}}
+      </PromiseProxyContainer>
     {{else}}
       {{#if hasAllRecordsTagSelected}}
         <p class="all-records-added-description">
@@ -104,17 +104,17 @@
             oninput={{action (mut idToAdd) value="target.value"}}
           >
         </div>
-        {{#one-button
-          size="sm"
-          type="primary"
+        <OneButton
+          @size="sm"
+          @type="primary"
           class="add-id pull-right"
-          disabled=(not trimmedIdToAdd)
-          onClick=(action "addId")
-        }}
+          @disabled={{not trimmedIdToAdd}}
+          @onClick={{action "addId"}}
+        >
           {{tt this "addId"}}
-        {{/one-button}}
+        </OneButton>
       {{/if}}
     {{/if}}
-  {{/click-outside}}
-{{/one-webui-popover}}
+  </ClickOutside>
+</OneWebuiPopover>
 {{yield}}

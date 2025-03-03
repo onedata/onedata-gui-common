@@ -1,18 +1,18 @@
 {{#if _inEditionMode}}
   {{#if (eq editorType "tags")}}
-    {{tags-input
-      tags=_inputValue
-      class=(concat-classes "form-control" inputClasses)
-      tagEditorComponentName=(or
+    <TagsInput
+      @tags={{_inputValue}}
+      class={{concat-classes "form-control" inputClasses}}
+      @tagEditorComponentName={{or
         editorSettings.tagEditorComponentName
         "tags-input/text-editor"
-      )
-      tagEditorSettings=editorSettings.tagEditorSettings
-      readonly=false
-      startTagCreationOnInit=editorSettings.startTagCreationOnInit
-      onChange=(action (mut _inputValue))
-      onFocusLost=(action onLostFocus)
-    }}
+      }}
+      @tagEditorSettings={{editorSettings.tagEditorSettings}}
+      @readonly={{false}}
+      @startTagCreationOnInit={{editorSettings.startTagCreationOnInit}}
+      @onChange={{action (mut _inputValue)}}
+      @onFocusLost={{action onLostFocus}}
+    />
   {{else if (eq editorType "custom")}}
     {{yield editorApi}}
   {{else}}
@@ -32,22 +32,22 @@
   {{/if}}
   <span class="action-icons">
     {{#if _whileSaving}}
-      {{spin-spinner-block sizeClass="xs"}}
+      <SpinSpinnerBlock @sizeClass="xs" />
     {{else if (not hideEditIcons)}}
-      {{#one-icon
-        icon="checked"
-        class=(concat-classes "save-icon" (if isSaveDisabled "disabled" "clickable"))
-        click=(action "saveEdition")
-      }}
+      <OneIcon
+        @icon="checked"
+        class={{concat-classes "save-icon" (if isSaveDisabled "disabled" "clickable")}}
+        @click={{action "saveEdition"}}
+      >
         {{#if saveButtonTip}}
-          {{one-tooltip title=saveButtonTip}}
+          <OneTooltip @title={{saveButtonTip}} />
         {{/if}}
-      {{/one-icon}}
-      {{one-icon
-        icon="ban-left"
+      </OneIcon>
+      <OneIcon
+        @icon="ban-left"
         class="cancel-icon clickable"
-        click=(action "cancelEdition")
-      }}
+        @click={{action "cancelEdition"}}
+      />
     {{/if}}
   </span>
 {{else}}
@@ -58,30 +58,27 @@
       </span>
     {{else}}
       <div class="tags-input-container" onclick={{action "startEdition"}}>
-        {{tags-input
-          tags=value
-          readonly=true
-        }}
+        <TagsInput @tags={{value}} @readonly={{true}} />
       </div>
     {{/if}}
   {{else}}
-    {{#truncated-string tagName="span" class="one-label" click=(action "startEdition")}}
+    <TruncatedString @tagName="span" class="one-label" @click={{action "startEdition"}}>
       {{#if (and isValueEmpty showEmptyInfo)}}
         <span class="empty-value">{{staticPlaceholder}}</span>
       {{else}}
         {{value}}
       {{/if}}
-    {{/truncated-string}}
+    </TruncatedString>
   {{/if}}
   <span class="action-icons">
     {{#if (not hideViewIcons)}}
-      {{one-icon
-        icon="browser-rename"
+      <OneIcon
+        @icon="browser-rename"
         class="edit-icon clickable"
-        click=(action "startEdition")
-      }}
+        @click={{action "startEdition"}}
+      />
       {{#if editHint}}
-        {{one-tooltip title=editHint placement="bottom"}}
+        <OneTooltip @title={{editHint}} @placement="bottom" />
       {{/if}}
     {{/if}}
   </span>

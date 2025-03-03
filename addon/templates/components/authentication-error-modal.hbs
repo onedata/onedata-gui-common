@@ -1,19 +1,19 @@
-{{#one-modal
+<OneModal
   class="authentication-error-modal"
-  open=opened
-  onHide=close
-  backdropClose=false
+  @open={{opened}}
+  @onHide={{close}}
+  @backdropClose={{false}}
   as |modal|
-}}
-  {{#modal.header}}
+>
+  <modal.header>
     <h1>
-      {{one-icon icon="sign-warning-rounded"}}
+      <OneIcon @icon="sign-warning-rounded" />
       <span class="one-label">
         {{t "components.authenticationErrorModal.title"}}
       </span>
     </h1>
-  {{/modal.header}}
-  {{#modal.body class=(if textCenter "text-center")}}
+  </modal.header>
+  <modal.body class={{if textCenter "text-center"}}>
     <div class="row row-authentication-error-message-text">
       <div class="authentication-error-message-text">
         {{authenticationErrorText}} {{if showErrorContactInfo (t "mixins.authenticationErrorMessage.contactInfo")}}
@@ -21,17 +21,17 @@
     </div>
     {{#if showErrorContactInfo}}
       <div class="row row-authentication-error-state-input-copy">
-        {{one-clipboard-line
-          value=authenticationErrorState
+        <OneClipboardLine
+          @value={{authenticationErrorState}}
           class="authentication-error-state-input-copy light"
-          btnType="primary"
-        }}
+          @btnType="primary"
+        />
       </div>
     {{/if}}
-  {{/modal.body}}
-  {{#modal.footer class="btn-toolbar"}}
-    {{#one-button onClick=modal.close}}
+  </modal.body>
+  <modal.footer class="btn-toolbar">
+    <OneButton @onClick={{modal.close}}>
       {{t "components.authenticationErrorModal.close"}}
-    {{/one-button}}
-  {{/modal.footer}}
-{{/one-modal}}
+    </OneButton>
+  </modal.footer>
+</OneModal>

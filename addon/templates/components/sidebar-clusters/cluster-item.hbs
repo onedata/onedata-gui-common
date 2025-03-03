@@ -1,33 +1,33 @@
-{{one-icon-tagged
-  class=(concat-classes
+<OneIconTagged
+  class={{concat-classes
     "sidebar-item-icon"
     (if offline "item-error")
     (if pending "item-pending")
-  )
-  icon=firstLevelItemIcon
-  iconClass=(if pending "pulse-inherit-disabled animated infinite hinge")
-  tagIcon=(if offline "x")
-  shadowType="none"
-}}
+  }}
+  @icon={{firstLevelItemIcon}}
+  @iconClass={{if pending "pulse-inherit-disabled animated infinite hinge"}}
+  @tagIcon={{if offline "x"}}
+  @shadowType="none"
+/>
 <div class="sidebar-item-title">
-  {{#truncated-string class="sidebar-item-title-upper"}}
+  <TruncatedString class="sidebar-item-title-upper">
     {{#if item.name}}
-      {{name-conflict item=item tagName="span" class="one-label"}}
+      <NameConflict @item={{item}} @tagName="span" class="one-label" />
     {{else if item.isNotDeployed}}
       {{t "components.sidebarClusters.clusterItem.newCluster"}}
     {{else}}
       {{t "components.sidebarClusters.clusterItem.nameNotAvailable"}}
     {{/if}}
-  {{/truncated-string}}
-  {{#truncated-string class="domain sidebar-item-title-lower"}}
+  </TruncatedString>
+  <TruncatedString class="domain sidebar-item-title-lower">
     {{or item.domain (t "components.sidebarClusters.clusterItem.domainNameNotAvailable")}}
-  {{/truncated-string}}
+  </TruncatedString>
 </div>
 
 {{#unless inSidenav}}
-  {{actions-toolbar
-    isMinimized=true
-    dropdownPlacement="auto"
-    actionsArray=itemActions
-  }}
+  <ActionsToolbar
+    @isMinimized={{true}}
+    @dropdownPlacement="auto"
+    @actionsArray={{itemActions}}
+  />
 {{/unless}}

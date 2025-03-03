@@ -1,7 +1,7 @@
-{{one-draggable-object-target
-  validateDragEvent=(action "validateDragEvent")
-  action=(action "acceptDraggedElement")
-}}
+<OneDraggableObjectTarget
+  @validateDragEvent={{action "validateDragEvent"}}
+  @action={{action "acceptDraggedElement"}}
+/>
 {{#if (not-eq arrowType "none")}}
   <div class="arrow">
     <div class="line"></div>
@@ -9,10 +9,10 @@
   </div>
 {{/if}}
 {{#if allowAdding}}
-  {{one-icon
-    class=(concat-classes createElementAction.className "create-block-action-trigger clickable")
-    icon=createElementAction.icon
-    click=createElementAction.executeCallback
-  }}
+  <OneIcon
+    class={{concat-classes createElementAction.className "create-block-action-trigger clickable"}}
+    @icon={{createElementAction.icon}}
+    @click={{createElementAction.executeCallback}}
+  />
 {{/if}}
 {{yield}}

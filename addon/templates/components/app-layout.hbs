@@ -1,35 +1,33 @@
 {{!-- Bootstrap layout for signed-in user --}}
 
-{{#side-menu width="85%" class="disable-user-select"}}
+<SideMenu @width="85%" class="disable-user-select">
   <div class="side-menu-background"></div>
   <div class="side-menu-header">
     <div class="row row-onedata-logo full-width">
       <div class="onedata-logo"></div>
     </div>
   </div>
-  {{user-account-button
-    isActive=(eq navigationState.activeResourceType "users")
-    onItemClick=(action "mobileMenuItemChanged")
-    mobileMode=true}}
-  {{main-menu
-    items=appModel.mainMenuItems
-    itemClicked=(action "mobileMenuItemChanged")
-  }}
-{{/side-menu}}
+  <UserAccountButton
+    @isActive={{eq navigationState.activeResourceType "users"}}
+    @onItemClick={{action "mobileMenuItemChanged"}}
+    @mobileMode={{true}}
+  />
+  <MainMenu
+    @items={{appModel.mainMenuItems}}
+    @itemClicked={{action "mobileMenuItemChanged"}}
+  />
+</SideMenu>
 {{content-backdrop}}
-{{main-menu-column mainMenuItems=appModel.mainMenuItems}}
-{{#perfect-scrollbar-element
-  tagName="div"
-  id="col-sidebar"
-  onScroll=(action "scrollOccurred")}}
+<MainMenuColumn @mainMenuItems={{appModel.mainMenuItems}} />
+<PerfectScrollbarElement @tagName="div" id="col-sidebar" @onScroll={{action "scrollOccurred"}}>
   {{yield "sidebar"}}
-{{/perfect-scrollbar-element}}
-{{brand-info class=brandInfoClasses}}
+</PerfectScrollbarElement>
+<BrandInfo class={{brandInfoClasses}} />
 <div class="col-sidenav-cover"></div>
 
 <div class={{appGridClass}}>
   {{#if withBottomBar}}
-    {{brand-info class="full-width" showLogout=true}}
+    <BrandInfo class="full-width" @showLogout={{true}} />
   {{/if}}
   <div class="row row-mobile-menu visible-xs-block visible-sm-block disable-user-select">
     {{#side-menu-toggle}}
@@ -38,16 +36,22 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-    {{/side-menu-toggle}}
-    {{#link-to "onedata.sidebar.index"
-      tagName="buton"
-      class=(concat-classes "navbar-toggle toggle-back hidden-sm" (if showMobileSidebar "hidden-xs"))}}
-      {{one-icon icon="arrow-right"}}
+    </SideMenuToggle>
+    <LinkTo
+      @route="onedata.sidebar.index"
+      @tagName="buton"
+      class={{concat-classes "navbar-toggle toggle-back hidden-sm" (if showMobileSidebar "hidden-xs")}}
+    >
+      <OneIcon @icon="arrow-right" />
       <div class="sidebar-title">{{navigationState.globalBarSidebarTitle}}</div>
-    {{/link-to}}
+    </LinkTo>
     <div class="tab-name">
-      <div class="visible-sm-block one-label">{{navigationState.globalBarSidebarTitle}}</div>
-      <div class="visible-xs-block one-label">{{navigationState.globalBarActiveTitle}}</div>
+      <div
+        class="visible-sm-block one-label"
+      >{{navigationState.globalBarSidebarTitle}}</div>
+      <div
+        class="visible-xs-block one-label"
+      >{{navigationState.globalBarActiveTitle}}</div>
     </div>
     <div class="global-menu-toggle-container {{if navigationState.showGlobalMenuTrigger "" " hidden"}}">
       <button type="button" class="navbar-toggle global-menu-toggle"
@@ -57,54 +61,58 @@
         <span class="icon-bar"></span>
       </button>
     </div>
-    {{#one-webui-popover
+    <OneWebuiPopover
       class="global-menu"
-      popoverStyle="with-dropdown"
-      padding=false
-      triggerSelector=".global-menu-toggle"
-      open=globalMenuOpened
-      onToggle=(action "toggleGlobalMenu")}}
-      {{#click-outside
-        onClickOutside=(action "toggleGlobalMenu" false)
-        exceptSelector=".global-menu-toggle-container"
-      }}
-        {{actions-popover-content
-          actionsArray=navigationState.globalMenuActions
-          actionClicked=(action "toggleGlobalMenu" false)
-        }}
-      {{/click-outside}}
-    {{/one-webui-popover}}
+      @popoverStyle="with-dropdown"
+      @padding={{false}}
+      @triggerSelector=".global-menu-toggle"
+      @open={{globalMenuOpened}}
+      @onToggle={{action "toggleGlobalMenu"}}
+    >
+      <ClickOutside
+        @onClickOutside={{action "toggleGlobalMenu" false}}
+        @exceptSelector=".global-menu-toggle-container"
+      >
+        <ActionsPopoverContent
+          @actionsArray={{navigationState.globalMenuActions}}
+          @actionClicked={{action "toggleGlobalMenu" false}}
+        />
+      </ClickOutside>
+    </OneWebuiPopover>
   </div>
   <div class="row visible-xs-block resource-name-row">
     {{#if navigationState.activeResource}}
-      {{name-conflict item=navigationState.activeResource tagName="span"}}
+      <NameConflict @item={{navigationState.activeResource}} @tagName="span" />
     {{else}}
       {{navigationState.globalBarSpecialResourceTitle}}
     {{/if}}
   </div>
   <div class={{rowAppClass}}>
-    {{#one-sidenav opened=sidenavResourceType
+    <OneSidenav
+      @opened={{sidenavResourceType}}
       id="sidenav-sidebar"
-      class=(if navigationState.mainMenuColumnExpanded "with-place-for-menu")
-      model=sidenavModel.content}}
-      {{#promise-proxy-container proxy=sidenavModel}}
+      class={{if navigationState.mainMenuColumnExpanded "with-place-for-menu"}}
+      @model={{sidenavModel.content}}
+    >
+      <PromiseProxyContainer @proxy={{sidenavModel}}>
         {{component sidenavContentComponent
           model=sidenavModel.content
           inSidenav=true
         }}
-      {{/promise-proxy-container}}
-    {{/one-sidenav}}
+      </PromiseProxyContainer>
+    </OneSidenav>
 
-    {{content-backdrop class="sidenav-backdrop"
-      progress=(if sidenavResourceType 100 0)
-      click=(action (mut navigationState.globalSidenavResourceType) null bubbles=true)
-    }}
+    <ContentBackdrop
+      class="sidenav-backdrop"
+      @progress={{if sidenavResourceType 100 0}}
+      @click={{action (mut navigationState.globalSidenavResourceType) null bubbles=true}}
+    />
 
-    {{#perfect-scrollbar-element
+    <PerfectScrollbarElement
       class="col-in-app-layout col-content col-xs-12"
-      onScroll=(action "scrollOccurred")
-    }}
+      @onScroll={{action "scrollOccurred"}}
+    >
       {{yield "content"}}
-    {{/perfect-scrollbar-element}}
+    </PerfectScrollbarElement>
   </div>
 </div>

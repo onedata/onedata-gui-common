@@ -27,31 +27,36 @@
         <div class={{concat-classes "row" (if (eq entryType "readonly") "readonly-key")}}>
           <div class="label-column {{layoutConfig.formLabelColumns}} control-label">
             {{#if (eq entryType "readonly")}}
-              {{#truncated-string class="one-label not-modified-key-param"}}
+              <TruncatedString class="one-label not-modified-key-param">
                 {{editRecord.key}}
-              {{/truncated-string}}
-              {{#one-icon class="lock-icon disabled-param-icon" icon="lock"}}
-                {{one-tooltip title=(tt this "cannotModify")}}
-              {{/one-icon}}
+              </TruncatedString>
+              <OneIcon class="lock-icon disabled-param-icon" @icon="lock">
+                <OneTooltip @title={{tt this "cannotModify"}} />
+              </OneIcon>
               {{#unless (eq editRecord activeParamEditRecords.lastObject)}}
-                {{#one-icon icon="close" class="form-field-right-addon disabled-param-icon"}}
-                  {{one-tooltip title=(tt this "cannotModify")}}
-                {{/one-icon}}
+                <OneIcon @icon="close" class="form-field-right-addon disabled-param-icon">
+                  <OneTooltip @title={{tt this "cannotModify"}} />
+                </OneIcon>
               {{/unless}}
             {{else}}
-              {{one-inline-editor
-                value=editRecord.key
-                isEditing=editRecord.isEditingKey
-                hideEditIcons=true
-                onInputValueChanged=(action "keyChanged" editRecord)
-                onEdit=(action "keyEdit" editRecord)
-                onSave=(action "keyChanged" editRecord)
-                onLostFocus=(action "inputLostFocus" "key" editRecord)
-                inputPlaceholder=(tt this "key")
-                ignoreInitialFocus=true
-                class="show-edit-icon"}}
+              <OneInlineEditor
+                @value={{editRecord.key}}
+                @isEditing={{editRecord.isEditingKey}}
+                @hideEditIcons={{true}}
+                @onInputValueChanged={{action "keyChanged" editRecord}}
+                @onEdit={{action "keyEdit" editRecord}}
+                @onSave={{action "keyChanged" editRecord}}
+                @onLostFocus={{action "inputLostFocus" "key" editRecord}}
+                @inputPlaceholder={{tt this "key"}}
+                @ignoreInitialFocus={{true}}
+                class="show-edit-icon"
+              />
               {{#unless (eq editRecord activeParamEditRecords.lastObject)}}
-                {{one-icon icon="close" class="form-field-right-addon remove-param" click=(action "removeRecord" editRecord)}}
+                <OneIcon
+                  @icon="close"
+                  class="form-field-right-addon remove-param"
+                  @click={{action "removeRecord" editRecord}}
+                />
               {{/unless}}
             {{/if}}
             {{#if editRecord.hasKeyError}}
@@ -72,7 +77,11 @@
           </div>
           <div class="form-control-column {{layoutConfig.formInputColumns}}">
             {{#if (eq entryType "readonly")}}
-              {{clipboard-line value=editRecord.value btnType="primary" class="qos-field"}}
+              <ClipboardLine
+                @value={{editRecord.value}}
+                @btnType="primary"
+                class="qos-field"
+              />
             {{else}}
               <input
                 type="text"

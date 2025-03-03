@@ -21,45 +21,43 @@
         }}
       >
         {{#if act.icon}}
-          {{one-icon icon=act.icon}}
+          <OneIcon @icon={{act.icon}} />
         {{/if}}
         <span class="one-label">{{act.title}}</span>
       </a>
       {{#if act.nestedActions}}
         {{#if nestedActionsInPopover}}
-          {{#one-webui-popover
-            class=(concat act.class "-nested-actions")
-            padding=false
-            popoverStyle="with-nested-dropdown"
-            triggerSelector=(concat "." elementId "-" act.class)
-            open=(eq nestedActionsOpened act)
-            onToggle=(action "toggleNestedActions" act)
-            multi=true
-            placement="context-menu"}}
-            {{#click-outside
-              onClickOutside=(action "toggleNestedActions" act false)
-              exceptSelector=(concat "." elementId "-" act.class)
-            }}
-              {{actions-popover-content
-                actionsArray=act.nestedActions
-                actionClicked=actionClicked
-              }}
-            {{/click-outside}}
-          {{/one-webui-popover}}
+          <OneWebuiPopover
+            class={{concat act.class "-nested-actions"}}
+            @padding={{false}}
+            @popoverStyle="with-nested-dropdown"
+            @triggerSelector={{concat "." elementId "-" act.class}}
+            @open={{eq nestedActionsOpened act}}
+            @onToggle={{action "toggleNestedActions" act}}
+            @multi={{true}}
+            @placement="context-menu"
+          >
+            <ClickOutside
+              @onClickOutside={{action "toggleNestedActions" act false}}
+              @exceptSelector={{concat "." elementId "-" act.class}}
+            >
+              <ActionsPopoverContent
+                @actionsArray={{act.nestedActions}}
+                @actionClicked={{actionClicked}}
+              />
+            </ClickOutside>
+          </OneWebuiPopover>
         {{else}}
-          {{actions-popover-content
-            actionsArray=act.nestedActions
-            actionClicked=actionClicked
-            class=(concat-classes
-              "nested-actions collapse-animation"
-              (if withoutNestedActionsTransition "without-transition")
-              (if (eq nestedActionsOpened act) "collapse-small" "collapse-hidden")
-            )}}
+          <ActionsPopoverContent
+            @actionsArray={{act.nestedActions}}
+            @actionClicked={{actionClicked}}
+            class={{concat-classes "nested-actions collapse-animation" (if withoutNestedActionsTransition "without-transition") (if (eq nestedActionsOpened act) "collapse-small" "collapse-hidden")}}
+          />
         {{/if}}
       {{/if}}
     {{/if}}
     {{#if act.tip}}
-      {{one-tooltip title=act.tip placement="right"}}
+      <OneTooltip @title={{act.tip}} @placement="right" />
     {{/if}}
   </li>
 {{/each}}
