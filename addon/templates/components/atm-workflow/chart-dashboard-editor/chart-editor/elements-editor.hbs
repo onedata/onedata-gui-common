@@ -1,15 +1,15 @@
 <h2>{{tt this "header"}}</h2>
-{{#bs-tab
-  activeId=selectedTab.id
+<BsTab
   class="only-tab-bar bs-tab-onedata"
-  fade=false
-  customTabs=true
+  @activeId={{selectedTab.id}}
+  @fade={{false}}
+  @customTabs={{true}}
   as |tab|
-}}
-  {{#perfect-scrollbar-element suppressScrollY=true}}
-    {{#bs-nav type="tabs" as |nav|}}
+>
+  <PerfectScrollbarElement @suppressScrollY={{true}}>
+    <BsNav @type="tabs" as |nav|>
       {{#each tabs as |tabSpec|}}
-        {{#nav.item active=(eq selectedTab tabSpec)}}
+        <nav.item @active={{eq selectedTab tabSpec}}>
           <a
             class={{concat-classes
               "nav-link element-editor-nav-link"
@@ -18,8 +18,8 @@
             role="tab"
             onclick={{action "openTab" tabSpec}}
           >
-            {{one-icon icon=tabSpec.icon}}
-            {{#truncated-string}}
+            <OneIcon @icon={{tabSpec.icon}} />
+            <TruncatedString>
               {{#if tabSpec.name}}
                 {{#if tabSpec.element.repeatPerPrefixedTimeSeries}}
                   <em>{{tabSpec.name}}</em>
@@ -29,20 +29,20 @@
               {{else}}
                 <em>{{namePlaceholder}}</em>
               {{/if}}
-            {{/truncated-string}}
+            </TruncatedString>
             {{#if tabSpec.validationErrorsMessage}}
-              {{warning-icon tooltipText=tabSpec.validationErrorsMessage}}
+              <WarningIcon @tooltipText={{tabSpec.validationErrorsMessage}} />
             {{/if}}
-            {{one-icon
-              icon="close"
-              click=(action "closeTab" tabSpec)
+            <OneIcon
               class="close-trigger clickable"
-            }}
+              @icon="close"
+              @click={{action "closeTab" tabSpec}}
+            />
           </a>
-        {{/nav.item}}
+        </nav.item>
       {{/each}}
-    {{/bs-nav}}
-  {{/perfect-scrollbar-element}}
+    </BsNav>
+  </PerfectScrollbarElement>
   <div class="tab-content">
     {{#if (not tabs.length)}}
       <div class="no-elements-info info-box">
@@ -61,14 +61,17 @@
       </div>
     {{/if}}
     {{#each tabs as |tabSpec|}}
-      {{#tab.pane class="element-editor-tab-pane" elementId=tabSpec.id}}
+      <tab.pane class="element-editor-tab-pane" @elementId={{tabSpec.id}}>
         {{component
-          (concat "atm-workflow/chart-dashboard-editor/chart-editor/" tabSpec.editorComponentName)
+          (concat
+            "atm-workflow/chart-dashboard-editor/chart-editor/"
+            tabSpec.editorComponentName
+          )
           chartElement=tabSpec.element
           chart=chart
           editorContext=editorContext
         }}
-      {{/tab.pane}}
+      </tab.pane>
     {{/each}}
   </div>
-{{/bs-tab}}
+</BsTab>

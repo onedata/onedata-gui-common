@@ -1,63 +1,62 @@
 {{#if canPackIntoArray}}
-  {{#one-icon
-    click=(action "packIntoArray")
-    icon="collection"
-    class=(concat-classes "pack-into-array" (if isEnabled "clickable"))
-  }}
+  <OneIcon
+    @click={{action "packIntoArray"}}
+    @icon="collection"
+    class={{concat-classes "pack-into-array" (if isEnabled "clickable")}}
+  >
     {{#if isEnabled}}
-      {{one-tooltip title=(tt this "actions.packIntoArray")}}
+      <OneTooltip @title={{tt this "actions.packIntoArray"}} />
     {{/if}}
-  {{/one-icon}}
+  </OneIcon>
 {{/if}}
 {{#if canUnpackFromArray}}
-  {{#one-icon
-    click=(action "unpackFromArray")
-    icon="flatten"
-    class=(concat-classes "unpack-from-array" (if isEnabled "clickable"))
-  }}
+  <OneIcon
+    @click={{action "unpackFromArray"}}
+    @icon="flatten"
+    class={{concat-classes "unpack-from-array" (if isEnabled "clickable")}}
+  >
     {{#if isEnabled}}
-      {{one-tooltip title=(tt this "actions.unpackFromArray")}}
+      <OneTooltip @title={{tt this "actions.unpackFromArray"}} />
     {{/if}}
-  {{/one-icon}}
+  </OneIcon>
 {{/if}}
-{{#one-icon
-  click=(action (if shouldWarnOnRemove "toggleRemoveWarn" "remove"))
-  icon="close"
-  class=(concat-classes "remove-trigger" (if isEnabled "clickable"))
-}}
+<OneIcon
+  @click={{action (if shouldWarnOnRemove "toggleRemoveWarn" "remove")}}
+  @icon="close" class={{concat-classes "remove-trigger" (if isEnabled "clickable")}}
+>
   {{#if isEnabled}}
-    {{one-tooltip title=(tt this "actions.remove")}}
+    <OneTooltip @title={{tt this "actions.remove"}} />
   {{/if}}
-{{/one-icon}}
-{{#render-later triggerRender=isRemoveWarnOpened}}
-  {{#one-webui-popover
-    triggerSelector=(local-selector elementId ".remove-trigger")
-    open=isRemoveWarnOpened
-  }}
-    {{#click-outside
-      onClickOutside=(action "toggleRemoveWarn" false)
-      exceptSelector=(local-selector elementId ".remove-trigger")
-    }}
+</OneIcon>
+<RenderLater @triggerRender={{isRemoveWarnOpened}}>
+  <OneWebuiPopover
+    @triggerSelector={{local-selector elementId ".remove-trigger"}}
+    @open={{isRemoveWarnOpened}}
+  >
+    <ClickOutside
+      @onClickOutside={{action "toggleRemoveWarn" false}}
+      @exceptSelector={{local-selector elementId ".remove-trigger"}}
+    >
       <p>{{tt this "removeWarn.content"}}</p>
       <div class="text-right">
-        {{#one-button
-          type="default"
-          size="sm"
-          onClick=(action "toggleRemoveWarn" false)
-        }}
+        <OneButton
+          @type="default"
+          @size="sm"
+          @onClick={{action "toggleRemoveWarn" false}}
+        >
           {{tt this "removeWarn.no"}}
-        {{/one-button}}
+        </OneButton>
         {{!-- Using HTML "space" entity to preserve space between inline elements --}}
         &#32;
-        {{#one-button
-          type="danger"
-          size="sm"
-          onClick=(action "remove")
-        }}
+        <OneButton
+          @type="danger"
+          @size="sm"
+          @onClick={{action "remove"}}
+        >
           {{tt this "removeWarn.yes"}}
-        {{/one-button}}
+        </OneButton>
       </div>
-    {{/click-outside}}
-  {{/one-webui-popover}}
-{{/render-later}}
+    </ClickOutside>
+  </OneWebuiPopover>
+</RenderLater>
 {{yield}}
