@@ -26,9 +26,7 @@
       {{text}}
       {{#if detailsText}}
         {{#if (not alwaysShowDetails)}}
-          <a
-            class="toggle-details-link clickable {{expandDetailsLinkClass}}"
-          >
+          <a class="toggle-details-link clickable {{expandDetailsLinkClass}}" {{action "toggleDetails"}}>
             {{tt this (if areDetailsExpanded "hideDetails" "showDetails")}}
             <OneIcon
               class="collapse-arrow"

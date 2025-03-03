@@ -1,6 +1,6 @@
 {{#if canPackIntoArray}}
   <OneIcon
-    @click={{action "packIntoArray"}}
+    onclick={{action "packIntoArray"}}
     @icon="collection"
     class={{concat-classes "pack-into-array" (if isEnabled "clickable")}}
   >
@@ -11,7 +11,7 @@
 {{/if}}
 {{#if canUnpackFromArray}}
   <OneIcon
-    @click={{action "unpackFromArray"}}
+    onclick={{action "unpackFromArray"}}
     @icon="flatten"
     class={{concat-classes "unpack-from-array" (if isEnabled "clickable")}}
   >
@@ -21,7 +21,7 @@
   </OneIcon>
 {{/if}}
 <OneIcon
-  @click={{action (if shouldWarnOnRemove "toggleRemoveWarn" "remove")}}
+  onclick={{action (if shouldWarnOnRemove "toggleRemoveWarn" "remove")}}
   @icon="close" class={{concat-classes "remove-trigger" (if isEnabled "clickable")}}
 >
   {{#if isEnabled}}

@@ -37,7 +37,7 @@
       <OneIcon
         @icon="checked"
         class={{concat-classes "save-icon" (if isSaveDisabled "disabled" "clickable")}}
-        @click={{action "saveEdition"}}
+        onclick={{action "saveEdition"}}
       >
         {{#if saveButtonTip}}
           <OneTooltip @title={{saveButtonTip}} />
@@ -46,7 +46,7 @@
       <OneIcon
         @icon="ban-left"
         class="cancel-icon clickable"
-        @click={{action "cancelEdition"}}
+        onclick={{action "cancelEdition"}}
       />
     {{/if}}
   </span>
@@ -75,7 +75,7 @@
       <OneIcon
         @icon="browser-rename"
         class="edit-icon clickable"
-        @click={{action "startEdition"}}
+        onclick={{action "startEdition"}}
       />
       {{#if editHint}}
         <OneTooltip @title={{editHint}} @placement="bottom" />

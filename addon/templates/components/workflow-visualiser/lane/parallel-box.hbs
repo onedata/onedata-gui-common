@@ -18,7 +18,7 @@
         (concat "actions-trigger-" elementId)
         (if areActionsOpened "active")
       }}
-      @click={{action "toggleActionsOpen" (not areActionsOpened)}}
+      onclick={{action "toggleActionsOpen" (not areActionsOpened)}}
     />
     <RenderLater @triggerRender={{areActionsOpened}}>
       <OneWebuiPopover

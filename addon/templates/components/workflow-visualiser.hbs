@@ -28,7 +28,7 @@
   <div class="scrollers-container">
     <OneIcon
       @icon="arrow-left"
-      @click={{action "scrollLeft"}}
+      onclick={{action "scrollLeft"}}
       class={{concat-classes
         "left-edge-scroll-step-trigger clickable"
         (if (not-eq laneIdxForNextLeftScroll null) "visible")
@@ -36,7 +36,7 @@
     />
     <OneIcon
       @icon="arrow-right"
-      @click={{action "scrollRight"}}
+      onclick={{action "scrollRight"}}
       class={{concat-classes
         "right-edge-scroll-step-trigger clickable"
         (if (not-eq laneIdxForNextRightScroll null) "visible")

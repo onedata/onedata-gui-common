@@ -12,7 +12,7 @@
   <OneIcon
     class={{concat-classes createElementAction.className "create-block-action-trigger clickable"}}
     @icon={{createElementAction.icon}}
-    @click={{createElementAction.executeCallback}}
+    onclick={{createElementAction.executeCallback}}
   />
 {{/if}}
 {{yield}}

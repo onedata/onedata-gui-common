@@ -9,7 +9,7 @@
     {{/if}}
     <TruncatedString class="tag-label">{{tag.label}}</TruncatedString>
     {{#if allowModification}}
-      <OneIcon @icon="close" class="tag-remove" @click={{action "removeTag" tag}} />
+      <OneIcon @icon="close" class="tag-remove" onclick={{action "removeTag" tag}} />
     {{/if}}
     {{#if tag.tip}}
       <OneTooltip @title={{tag.tip}} />

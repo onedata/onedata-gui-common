@@ -14,7 +14,7 @@
         <OneIcon
           class="remove-action action"
           @icon="x"
-          @click={{action "removeFunction"}}
+          onclick={{action "removeFunction"}}
         />
       </div>
     {{/if}}
@@ -73,12 +73,12 @@
                     <OneIcon
                       class="add-action action"
                       @icon="plus"
-                      @click={{action "toggleAdder" argumentInfo.name index}}
+                      onclick={{action "toggleAdder" argumentInfo.name index}}
                     />
                     <OneIcon
                       class="remove-action action"
                       @icon="x"
-                      @click={{action "detachFunction" func}}
+                      onclick={{action "detachFunction" func}}
                     />
                     <AtmWorkflow::ChartDashboardEditor::FunctionEditor::FunctionAdder
                       @executionContext={{executionContext}}
