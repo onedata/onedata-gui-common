@@ -11,7 +11,7 @@
       placement="top"
     }}
   {{/if}}
-  {{#if data.length}}
+  {{#if (and data.length (lte data.length chartMaxSpaces))}}
     {{#bs-button-group
       value=mode
       type="radio"
@@ -27,7 +27,7 @@
   {{/if}}
 </div>
 {{#if (not dataError)}}
-  {{#if (or (eq mode "table") (eq data.length 0))}}
+  {{#if (or (or (eq mode "table") (eq data.length 0)) (gt data.length chartMaxSpaces))}}
     <div class="row content-row">
       {{support-size-info/table
         data=supportTableData

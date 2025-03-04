@@ -36,6 +36,13 @@ export default Component.extend(I18n, {
   header: '',
 
   /**
+   * Defines the maximum number of spaces displayed in the chart view.
+   * If the number of spaces exceeds this limit, only the table version is displayed.
+   * @type {number}
+   */
+  chartMaxSpaces: 18,
+
+  /**
    * Tip for header in `chart` mode.
    * @type {string}
    */
