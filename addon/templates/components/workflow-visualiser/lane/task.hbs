@@ -1,28 +1,31 @@
-<OneDraggableObject
-  @content={{task}}
-  @dragHandle=".task-drag-handle"
-  @isDraggable={{eq mode "edit"}}
+{{!--
+  TODO: VFS-12694 Turning one-draggable-object into curly component causes crash when rendering. First try to update ember-drag-drop to latest version.
+--}}
+{{#one-draggable-object
+  content=task
+  dragHandle=".task-drag-handle"
+  isDraggable=(eq mode "edit")
   class="draggable-task"
-  @click={{action "headerClick"}}
->
-  <div class="task-drag-handle"><RecordIcon @modelName="atmLambda" /></div>
+  click=(action "headerClick")
+}}
+  <div class="task-drag-handle">{{record-icon modelName="atmLambda"}}</div>
   {{#if (eq mode "edit")}}
-    <OneInlineEditor
+    {{one-inline-editor
       class="task-name"
-      @value={{name}}
-      @hideViewIcons={{true}}
-      @onSave={{action "changeName"}}
-    />
+      value=name
+      hideViewIcons=true
+      onSave=(action "changeName")
+    }}
     {{#if task.validationErrors.length}}
       <div class="validation-error-indicator">
         <img
           class="warning-icon"
           src={{root-url "assets/images/sign-warning-large.svg"}}
         />
-        <OneTooltip
-          @triggerElement={{local-selector elementId ".warning-icon"}}
-          @title={{task.validationErrors.0.errorMessage}}
-        />
+        {{one-tooltip
+          triggerElement=(local-selector elementId ".warning-icon")
+          title=task.validationErrors.0.errorMessage
+        }}
       </div>
     {{/if}}
     <OneIcon
@@ -34,40 +37,43 @@
       }}
       onclick={{action "toggleActionsOpen" (not areActionsOpened)}}
     />
-    <RenderLater @triggerRender={{areActionsOpened}}>
-      <OneWebuiPopover
+    {{#render-later triggerRender=areActionsOpened}}
+      {{#one-webui-popover
         class="task-actions"
-        @padding={{false}}
-        @popoverStyle="with-dropdown"
-        @triggerSelector={{concat ".actions-trigger-" elementId}}
-        @open={{areActionsOpened}}
-        @onToggle={{action "toggleActionsOpen"}}
+        padding=false
+        popoverStyle="with-dropdown"
+        triggerSelector=(concat ".actions-trigger-" elementId)
+        open=areActionsOpened
+        onToggle=(action "toggleActionsOpen")
         as |popover|
-      >
-        <ClickOutside
-          @onClickOutside={{action "toggleActionsOpen" false}}
-          @exceptSelector={{concat ".actions-trigger-" elementId}}
-        >
-          <ActionsPopoverContent
-            @actionsArray={{editTaskActions}}
-            @actionClicked={{action (mut areActionsOpened) false}}
-          />
-        </ClickOutside>
-      </OneWebuiPopover>
-    </RenderLater>
+      }}
+        {{#click-outside
+          onClickOutside=(action "toggleActionsOpen" false)
+          exceptSelector=(concat ".actions-trigger-" elementId)
+        }}
+          {{actions-popover-content
+            actionsArray=editTaskActions
+            actionClicked=(action (mut areActionsOpened) false)
+          }}
+        {{/click-outside}}
+      {{/one-webui-popover}}
+    {{/render-later}}
   {{else}}
-    <TruncatedString class="task-name">{{name}}</TruncatedString>
+    {{#truncated-string class="task-name"}}{{name}}{{/truncated-string}}
   {{/if}}
-</OneDraggableObject>
+{{/one-draggable-object}}
 {{#if (eq mode "view")}}
-  <OneCollapse class="task-details-collapse" @collapsed={{not areDetailsExpanded}}>
+  {{#one-collapse
+    class="task-details-collapse"
+    collapsed=(not areDetailsExpanded)
+  }}
     <div class="task-details">
       <div class="detail-entries">
         {{#if task.instanceId}}
           <div class="detail-entry instance-id-detail">
             <div class="detail-label">{{tt this "details.instanceId"}}:</div>
             <div class="detail-value">
-              <TruncatedString>{{task.instanceId}}</TruncatedString>
+              {{#truncated-string}}{{task.instanceId}}{{/truncated-string}}
               <OneIcon
                 @icon={{copyInstanceIdAction.icon}}
                 class={{copyInstanceIdAction.className}}
@@ -107,6 +113,6 @@
         {{/if}}
       </div>
     </div>
-  </OneCollapse>
+  {{/one-collapse}}
 {{/if}}
 {{yield}}
