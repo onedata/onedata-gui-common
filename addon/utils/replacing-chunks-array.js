@@ -487,23 +487,40 @@ export default ArraySlice.extend(Evented, {
 
     const endIndexBeforeFetch = this.endIndex;
 
+    let effStartReached = isEffHead;
     try {
-      const { arrayUpdate, endReached } = await this.fetchWrapper(
+      let { arrayUpdate, endReached } = await this.fetchWrapper(
         fetchStartIndex,
         size,
         offset,
       );
-      if (this.isDestroyed) {
+      if (this.isDestroyed || this.isDestroying) {
         return;
       }
       const fetchedCount = get(arrayUpdate, 'length');
       const updatedEnd = _start + fetchedCount;
-      safeExec(this, 'setProperties', {
-        _startReached: isEffHead,
+      if (!isEffHead && !fetchedCount) {
+        const backwardResponse = (await this.fetchWrapper(
+          // The backend makes sorting based on ASCII chars (single byte), so instead
+          // using the highest possible Unicode char (\u10FFFF) we send query with four
+          // highest bytes (the highest Unicode char has 0x10h first byte).
+          '\uFFFF\uFFFF',
+          size,
+          -size,
+        ));
+        if (this.isDestroyed || this.isDestroying) {
+          return;
+        }
+        arrayUpdate = backwardResponse.arrayUpdate;
+        endReached = backwardResponse.endReached;
+        effStartReached = backwardResponse.arrayUpdate.length < size;
+      }
+      this.setProperties({
+        _startReached: effStartReached,
         _endReached: Boolean(endReached),
         error: undefined,
       });
-      if (isEffHead) {
+      if (isEffHead || !fetchedCount) {
         // clear array without notify
         sourceArray.splice(0, get(sourceArray, 'length'));
         sourceArray.push(...arrayUpdate);
@@ -514,13 +531,13 @@ export default ArraySlice.extend(Evented, {
             fetchedCount : Math.min(endIndexBeforeFetch, fetchedCount),
         });
       } else {
-        this.setEmptyIndex(_start - 1);
-        if (updatedEnd < get(sourceArray, 'length')) {
-          set(sourceArray, 'length', updatedEnd);
-        }
         const updateBoundary = Math.min(updatedEnd, fetchedCount);
         for (let i = 0; i < updateBoundary; ++i) {
           sourceArray[i + _start] = arrayUpdate[i];
+        }
+        this.setEmptyIndex(_start - 1);
+        if (updatedEnd < get(sourceArray, 'length')) {
+          set(sourceArray, 'length', updatedEnd);
         }
         if (this.startIndex === this.endIndex) {
           this.setProperties({
@@ -529,7 +546,7 @@ export default ArraySlice.extend(Evented, {
           });
         }
       }
-      sourceArray.arrayContentDidChange(this._start);
+      sourceArray.arrayContentDidChange(_start);
       return this;
     } catch (error) {
       safeExec(this, 'set', 'error', error);
