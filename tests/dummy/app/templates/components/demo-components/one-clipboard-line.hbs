@@ -39,7 +39,8 @@
         >
       </div>
       <OneCopyButton
-        class="clipboard-btn clipboard-btn-input"
+        {{!-- NOTE: OneCopyButton uses @class= --}} {{!-- formatter ignore --}}
+        @class="clipboard-btn clipboard-btn-input" {{!-- formatter ignore --}}
         @clipboardTarget=".custom-large-clipboard input.clipboard-input"
       >
         <div class="copy-btn-background"></div>

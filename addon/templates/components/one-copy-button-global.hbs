@@ -1,8 +1,9 @@
 {{#if (not-eq clipboardText undefined)}}
-  {{one-copy-button
-    clipboardText=clipboardText
-    textType=textType
-    class="hidden btn-global-copy-button"
-    notify=(action "copyEnded")
-  }}
+  <OneCopyButton
+    @clipboardText={{clipboardText}}
+    @textType={{textType}}
+    {{!-- NOTE: OneCopyButton uses @class= --}} {{!-- formatter ignore --}}
+    @class="hidden btn-global-copy-button" {{!-- formatter ignore --}}
+    @notify={{action "copyEnded"}}
+  />
 {{/if}}

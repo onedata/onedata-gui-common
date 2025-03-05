@@ -42,7 +42,8 @@
   <input class="hidden-clipboard-source" value={{rawValue}} readonly>
 {{/if}}
 <OneCopyButton
-  class={{concat-classes "clipboard-btn" clipboardBtnClass}}
+  {{!-- NOTE: OneCopyButton uses @class= --}} {{!-- formatter ignore --}}
+  @class={{concat-classes "clipboard-btn" clipboardBtnClass}} {{!-- formatter ignore --}}
   @parentElementId={{elementId}}
   @localTarget={{if rawValue ".hidden-clipboard-source" ".clipboard-input"}}
   @notify={{action "notify"}}
