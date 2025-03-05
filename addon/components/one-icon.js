@@ -1,5 +1,5 @@
 /**
- * Inserts a icon from oneicons font.
+ * Inserts an icon from oneicons font.
  * Typical usage: `<OneIcon @icon="home" />`
  *
  * @author Jakub Liput, Michał Borzęcki
@@ -17,21 +17,21 @@ export default class OneIconComponent extends Component {
   /**
    * Icon name (from oneicons font, without `oneicon-` prefix).
    * @virtual
-   * @type {OneIconName}
+   * @type {OneIconName|undefined}
    */
   @computed('args.icon')
   get icon() {
-    return this.args.icon || 'checkbox-x';
+    return this.args.icon;
   }
 
   /**
    * Icon color applied to style.
    * @virtual optional
-   * @type {string}
+   * @type {string|undefined}
    */
   @computed('args.color')
   get color() {
-    return this.args.color || '';
+    return this.args.color;
   }
 
   /**
