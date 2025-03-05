@@ -1,11 +1,12 @@
 {{#if (and _outerTextPresent (eq outerTextSide "left"))}}
   <div class="outer-text">{{outerText}}</div>
 {{/if}}
-<OneIcon @icon={{icon}} class="one-icon-status">
+{{!-- Non-standard formatting to avoid spaces --}}
+{{#if icon}}<OneIcon @icon={{icon}} class="one-icon-status">
   {{#if _innerTextPresent}}
     <div class="inner-text">{{innerText}}</div>
   {{/if}}
-</OneIcon>{{#if (and _outerTextPresent (eq outerTextSide "right"))}}<div class="outer-text">{{outerText}}</div>{{/if}}
+</OneIcon>{{/if}}{{#if (and _outerTextPresent (eq outerTextSide "right"))}}<div class="outer-text">{{outerText}}</div>{{/if}}
 {{#if subIcon}}
   <OneIcon class={{concat-classes "sub-status-icon" subIconClass}} @icon={{subIcon}} />
 {{/if}}
