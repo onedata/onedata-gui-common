@@ -9,4 +9,5 @@ export default {
     chart: 'Chart',
     table: 'Table',
   },
+  chartDisabledTooltip: 'The chart view is unavailable because the number of spaces exceeds the display limit.',
 };
