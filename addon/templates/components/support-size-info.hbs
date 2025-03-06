@@ -6,42 +6,52 @@
     </div>
   {{/if}}
   {{#if _tipVisible}}
-    {{one-label-tip
-      title=(if (eq mode "chart") chartHeaderTip tableHeaderTip)
-      placement="top"
-    }}
+    <OneLabelTip
+      @title={{if (eq mode "chart") chartHeaderTip tableHeaderTip}}
+      @placement="top"
+    />
   {{/if}}
-  {{#if (and data.length (lte data.length chartMaxSpaces))}}
-    {{#bs-button-group
-      value=mode
-      type="radio"
-      onChange=(action "modeChanged") as |bg|
-    }}
-      {{#bg.button type="default" class="btn-sm chart-mode" value="chart"}}
+  {{#if data.length}}
+    <BsButtonGroup
+      @value={{mode}}
+      @type="radio"
+      @onChange={{action "modeChanged"}}
+      as |bg|
+    >
+      <bg.button
+        @type="default"
+        class="btn-sm chart-mode"
+        @value="chart"
+        @disabled={{disabledChartMode}}
+      >
         {{tt this "mode.chart"}}
-      {{/bg.button}}
-      {{#bg.button type="default" class="btn-sm table-mode" value="table"}}
+        {{#if disabledChartMode}}
+          <OneTooltip @title={{tt this "chartDisabledTooltip"}} />
+        {{/if}}
+      </bg.button>
+      <bg.button @type="default" class="btn-sm table-mode" @value="table">
         {{tt this "mode.table"}}
-      {{/bg.button}}
-    {{/bs-button-group}}
+      </bg.button>
+    </BsButtonGroup>
   {{/if}}
 </div>
 {{#if (not dataError)}}
-  {{#if (or (or (eq mode "table") (eq data.length 0)) (gt data.length chartMaxSpaces))}}
+  {{#if (or (eq mode "table") (eq data.length 0))}}
     <div class="row content-row">
-      {{support-size-info/table
-        data=supportTableData
-        supporterNameHeader=supporterNameHeader
-        noDataToShowMessage=noDataToShowMessage
-        type=type}}
+      <SupportSizeInfo::Table
+        @data={{supportTableData}}
+        @supporterNameHeader={{supporterNameHeader}}
+        @noDataToShowMessage={{noDataToShowMessage}}
+        @type={{type}}
+      />
     </div>
   {{else}}
     <div class="row chart-row content-row">
-      {{support-size-info/chart data=data sort=true}}
+      <SupportSizeInfo::Chart @data={{data}} @sort={{true}} />
     </div>
   {{/if}}
 {{else}}
   <div class="row content row">
-    {{resource-load-error reason=dataError}}
+    <ResourceLoadError @reason={{dataError}} />
   </div>
 {{/if}}

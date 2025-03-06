@@ -81,6 +81,17 @@ export default Component.extend(I18n, {
   mode: 'chart',
 
   /**
+   * @type {boolean}
+   */
+  disabledChartMode: computed(
+    'data.length',
+    'chartMaxSpaces',
+    function disabledChartMode() {
+      return this.data.length > this.chartMaxSpaces;
+    }
+  ),
+
+  /**
    * If true, header tip is visible.
    * @type {boolean}
    */
@@ -117,6 +128,13 @@ export default Component.extend(I18n, {
     }
     return _.sum(data.map((series) => series.get('value')));
   }),
+
+  init() {
+    this._super(...arguments);
+    if (this.disabledChartMode) {
+      this.set('mode', 'table');
+    }
+  },
 
   actions: {
     modeChanged(mode) {
