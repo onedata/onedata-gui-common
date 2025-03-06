@@ -4,7 +4,7 @@
   @container=".modal-content, body:not(.modal-open)"
   @success={{success}}
   @error={{error}}
-  class={{class}}
+  ...attributes
 >
   {{#if hasBlock}}
     {{yield}}

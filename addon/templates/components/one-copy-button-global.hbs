@@ -2,8 +2,7 @@
   <OneCopyButton
     @clipboardText={{clipboardText}}
     @textType={{textType}}
-    {{!-- NOTE: OneCopyButton uses @class= --}} {{!-- formatter ignore --}}
-    @class="hidden btn-global-copy-button" {{!-- formatter ignore --}}
+    class="hidden btn-global-copy-button"
     @notify={{action "copyEnded"}}
   />
 {{/if}}
