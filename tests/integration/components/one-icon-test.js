@@ -9,7 +9,6 @@ describe('Integration | Component | one-icon', function () {
 
   it('renders element with oneicon class', async function () {
     await render(hbs`<OneIcon @icon="space" />`);
-    console.log(this.element.outerHTML);
     expect(find('.one-icon')).to.have.class('oneicon-space');
   });
 
@@ -48,5 +47,15 @@ describe('Integration | Component | one-icon', function () {
   it('renders with provided custom classes', async function () {
     await render(hbs `<OneIcon class="hello" />`);
     expect(find('.one-icon')).to.have.class('hello');
+  });
+
+  it('has auto-generated element ID if not specified in attributes', async function () {
+    await render(hbs `<OneIcon />`);
+    expect(find('.one-icon').getAttribute('id')).to.be.not.empty;
+  });
+
+  it('has custom element ID if specified in attributes', async function () {
+    await render(hbs `<OneIcon id="hello" />`);
+    expect(find('.one-icon').getAttribute('id')).to.equal('hello');
   });
 });

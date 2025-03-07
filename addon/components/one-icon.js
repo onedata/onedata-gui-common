@@ -12,6 +12,7 @@ import isOneicon from 'onedata-gui-common/utils/is-oneicon';
 import config from 'ember-get-config';
 import Component from '@glimmer/component';
 import { computed } from '@ember/object';
+import { guidFor } from '@ember/object/internals';
 
 export default class OneIconComponent extends Component {
   /**
@@ -56,5 +57,9 @@ export default class OneIconComponent extends Component {
   @computed('color')
   get style() {
     return this.color ? htmlSafe(`color: ${this.color};`) : undefined;
+  }
+
+  get elementId() {
+    return guidFor(this);
   }
 }
