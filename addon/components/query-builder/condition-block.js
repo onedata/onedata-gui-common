@@ -22,7 +22,7 @@ export default Component.extend(...mixins, {
   layout,
 
   classNames: ['query-builder-block', 'query-builder-condition-block'],
-  classNameBindings: ['readonly'],
+  classNameBindings: ['isReadOnly:readonly'],
 
   i18nPrefix: 'components.queryBuilder.conditionBlock',
 
@@ -146,7 +146,7 @@ export default Component.extend(...mixins, {
 
   actions: {
     startEdit() {
-      if (this.get('readonly')) {
+      if (this.get('isReadOnly')) {
         return;
       }
 

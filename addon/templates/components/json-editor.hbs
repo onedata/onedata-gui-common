@@ -4,7 +4,7 @@
   oninput={{action "onChange" value="target.value"}}
   placeholder={{placeholder}}
   disabled={{disabled}}
-  readonly={{if readonly "readonly"}}
+  readonly={{if isReadOnly "readonly"}}
   spellcheck="false"
   onblur={{action onFocusLost}}
   class="form-control json-editor-textarea no-resize {{inputClassName}}"></textarea>

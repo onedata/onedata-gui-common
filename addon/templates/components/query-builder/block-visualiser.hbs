@@ -5,7 +5,7 @@
   queryProperties=queryProperties
   valuesBuilder=valuesBuilder
   level=level
-  readonly=readonly
+  isReadOnly=isReadOnly
   popoverPlacement=popoverPlacement
   onConditionEditionStart=onConditionEditionStart
   onConditionEditionEnd=onConditionEditionEnd
@@ -13,7 +13,7 @@
   onBlockRemoved=onBlockRemoved
   refreshQueryProperties=(action refreshQueryProperties)
 }}
-  {{#unless readonly}}
+  {{#unless isReadOnly}}
     <button
       class="block-button remove-block clickable"
       onclick={{onBlockRemove}}

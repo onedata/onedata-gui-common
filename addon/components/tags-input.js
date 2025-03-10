@@ -49,9 +49,9 @@ export default Component.extend(I18n, {
   classNames: ['tags-input'],
   classNameBindings: [
     'isCreatingTag:creating-tag',
-    'readonly',
-    'readonly::form-control',
-    'readonly::clickable',
+    'isReadOnly:readonly',
+    'isReadOnly::form-control',
+    'isReadOnly::clickable',
     'allowCreation::creation-disabled',
     'isClearButtonEffectivelyVisible:has-clear-button',
   ],
@@ -91,7 +91,7 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {boolean}
    */
-  readonly: false,
+  isReadOnly: false,
 
   /**
    * @virtual optional
@@ -176,11 +176,11 @@ export default Component.extend(I18n, {
 
   displayedTags: computed(
     'tags.[]',
-    'readonly',
+    'isReadOnly',
     'tagsLimitExceeded',
     'tagsDisplayedOnLimitExceed',
     function limitedTags() {
-      if (this.readonly && this.tagsLimitExceeded) {
+      if (this.isReadOnly && this.tagsLimitExceeded) {
         return this.tags.slice(0, this.tagsDisplayedOnLimitExceed);
       } else {
         return this.tags;
@@ -215,7 +215,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  allowModification: not(or('readonly', 'disabled')),
+  allowModification: not(or('isReadOnly', 'disabled')),
 
   /**
    * @type {ComputedProperty<String|undefined>}

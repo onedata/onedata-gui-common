@@ -8,7 +8,7 @@
         "tags-input/text-editor"
       }}
       @tagEditorSettings={{editorSettings.tagEditorSettings}}
-      @readonly={{false}}
+      @isReadOnly={{false}}
       @startTagCreationOnInit={{editorSettings.startTagCreationOnInit}}
       @onChange={{action (mut _inputValue)}}
       @onFocusLost={{action onLostFocus}}
@@ -58,7 +58,7 @@
       </span>
     {{else}}
       <div class="tags-input-container" onclick={{action "startEdition"}}>
-        <TagsInput @tags={{value}} @readonly={{true}} />
+        <TagsInput @tags={{value}} @isReadOnly={{true}} />
       </div>
     {{/if}}
   {{else}}

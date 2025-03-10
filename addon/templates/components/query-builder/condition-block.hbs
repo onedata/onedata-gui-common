@@ -7,7 +7,7 @@
     {{query-builder/condition-comparator-value-editor
       queryProperty=queryProperty
       valuesBuilder=valuesBuilder
-      mode=(if readonly "view" mode)
+      mode=(if isReadOnly "view" mode)
       comparator=comparator
       value=(if (eq mode "edit") editComparatorValue queryBlock.comparatorValue)
       isValueInvalid=(not isEditComparatorValueValid)
