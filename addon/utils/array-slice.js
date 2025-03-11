@@ -22,8 +22,9 @@ export default ArrayProxy.extend({
 
   sourceArray: alias('content'),
 
-  _start: computed('startIndex', 'indexMargin', function _start() {
-    return Math.max(0, this.startIndex - this.indexMargin);
+  _start: computed('startIndex', 'indexMargin', 'sourceArray.length', function _start() {
+    const sourceLength = this.sourceArray.length;
+    return Math.max(0, Math.min(this.startIndex - this.indexMargin, sourceLength));
   }),
 
   _end: computed('endIndex', 'indexMargin', 'sourceArray.length', function _end() {
