@@ -8,7 +8,7 @@
   class="draggable-task"
   click=(action "headerClick")
 }}
-  <div class="task-drag-handle">{{record-icon modelName="atmLambda"}}</div>
+  <div class="task-drag-handle"><RecordIcon @modelName="atmLambda" /></div>
   {{#if (eq mode "edit")}}
     {{one-inline-editor
       class="task-name"
