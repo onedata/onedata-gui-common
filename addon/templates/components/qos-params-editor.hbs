@@ -29,8 +29,10 @@
             {{#if (eq entryType "readonly")}}
               <TruncatedString class="one-label not-modified-key-param">
                 {{editRecord.key}}
-              </TruncatedString>
-              <OneIcon class="lock-icon disabled-param-icon" @icon="lock">
+              </TruncatedString><OneIcon
+                class="lock-icon disabled-param-icon"
+                @icon="lock"
+              >
                 <OneTooltip @title={{tt this "cannotModify"}} />
               </OneIcon>
               {{#unless (eq editRecord activeParamEditRecords.lastObject)}}
