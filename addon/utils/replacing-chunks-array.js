@@ -346,9 +346,11 @@ export default ArraySlice.extend(Evented, {
             for (let i = insertIndex; i < fetchedArraySize; ++i) {
               sourceArray[i] = arrayUpdate[i];
             }
+            const newStartIndex = this.startIndex + additionalFrontSpace;
+            const newEndIndex = this.endIndex + additionalFrontSpace;
             this.setProperties({
-              startIndex: this.get('startIndex') + additionalFrontSpace,
-              endIndex: this.get('endIndex') + additionalFrontSpace,
+              startIndex: newStartIndex,
+              endIndex: newEndIndex,
               emptyIndex: -1,
             });
           }
@@ -359,9 +361,11 @@ export default ArraySlice.extend(Evented, {
           for (let i = 0; i < insertIndex; ++i) {
             sourceArray.shift();
           }
+          const newStartIndex = this.startIndex - insertIndex;
+          const newEndIndex = this.endIndex - insertIndex;
           this.setProperties({
-            startIndex: this.get('startIndex') - insertIndex,
-            endIndex: this.get('endIndex') - insertIndex,
+            startIndex: newStartIndex,
+            endIndex: newEndIndex,
             _startReached: true,
           });
         } else {
@@ -603,7 +607,7 @@ export default ArraySlice.extend(Evented, {
           arrayUpdate.length
         );
         this.setProperties({
-          _startReached: false,
+          _startReached: startIndex < indexMargin,
           _endReached: Boolean(endReached),
           startIndex,
           endIndex,
@@ -689,7 +693,7 @@ export default ArraySlice.extend(Evented, {
     return allSettled(promises);
   },
 
-  async setIndices(startIndex, endIndex) {
+  setIndices(startIndex, endIndex) {
     const changes = {};
     if (startIndex !== this.startIndex) {
       changes.startIndex = startIndex;
@@ -701,23 +705,7 @@ export default ArraySlice.extend(Evented, {
       // nothing to do
       return;
     }
-    const prevState = this.indicesSetterState;
-    this.set('indicesSetterState', changes);
-    if (!prevState) {
-      await this.scheduleIndicesChange();
-    }
-  },
-
-  async scheduleIndicesChange() {
-    try {
-      await this.taskQueue.waitForAllTasks();
-      if (this.isDestroyed || this.isDestroying) {
-        return;
-      }
-      this.setProperties(this.indicesSetterState);
-    } finally {
-      trySet(this, 'indicesSetterState', null);
-    }
+    this.setProperties(changes);
   },
 
   init() {
