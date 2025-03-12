@@ -8,19 +8,21 @@
 
 import layout from 'onedata-gui-common/templates/components/one-custom-trigger';
 import Trigger from 'ember-power-select/components/power-select/trigger';
-import { scheduleOnce } from '@ember/runloop';
 import { computed } from '@ember/object';
+import notImplementedWarn from 'onedata-gui-common/utils/not-implemented-warn';
 
 export default Trigger.extend({
   layout,
 
-  autofocus: true,
+  /**
+   * @virtual
+   * @type {Function}
+   */
+  onInput: notImplementedWarn,
 
-  willDestroyElement() {
-    this._super(...arguments);
-    scheduleOnce('actions', this, this.select.actions.search, '');
-  },
-
+  /**
+   * @type {ComputedProperty<string>}
+   */
   inputValue: computed('select.{searchText,selected}', function inputValue() {
     return this.select.selected?.value ?? this.select.searchText;
   }),

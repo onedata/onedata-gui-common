@@ -3,18 +3,18 @@
   @triggerClass={{concat-classes
     "dropdown-field-trigger"
     (if (eq size "sm") "small")
-    "custom-value-dropdown-field-trigger"
+    "autocomplete-dropdown-field-trigger"
   }}
   @dropdownClass={{concat-classes
     "dropdown-field-dropdown"
     (concat field.name "-field-dropdown")
     (if (eq size "sm") "small")
-    "custom-value-dropdown-field-dropdown"
+    "autocomplete-dropdown-field-dropdown"
   }}
   @disabled={{not isEffectivelyEnabled}}
   @options={{preparedOptions}}
   @selected={{selectedOption}}
-  @placeholder={{placeholder}}
+  @placeholder={{customValueInputPlaceholder}}
   @renderInPlace={{false}}
   @triggerId={{fieldId}}
   @searchEnabled={{true}}

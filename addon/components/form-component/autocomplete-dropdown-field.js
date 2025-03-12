@@ -25,17 +25,20 @@ export default DropdownField.extend({
     return [...this.field.preparedOptions];
   }),
 
-  selectedOption: computed('preparedOptions.@each.value', 'value', function selectedOption() {
-    if (this.findOption(this.value)) {
-      return this.findOption(this.value);
-    } else {
-      return {
-        name: this.value,
-        value: this.value,
-        label: this.value,
-      };
+  selectedOption: computed(
+    'preparedOptions.@each.value', 'value',
+    function selectedOption() {
+      if (this.findOption(this.value)) {
+        return this.findOption(this.value);
+      } else {
+        return {
+          name: this.value,
+          value: this.value,
+          label: this.value,
+        };
+      }
     }
-  }),
+  ),
 
   findOption(value) {
     return _.findLast(this.preparedOptions, option => option?.value === value);
@@ -50,7 +53,7 @@ export default DropdownField.extend({
         label: e,
       });
     },
-    open(powerSelect, event) {
+    open(powerSelect) {
       powerSelect.actions.search(this.value);
       this.actions.onInput.bind(this)(this.value);
     },
