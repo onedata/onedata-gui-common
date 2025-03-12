@@ -1,0 +1,32 @@
+<OneDropdown
+  @tagName="div"
+  @triggerClass={{concat-classes
+    "dropdown-field-trigger"
+    (if (eq size "sm") "small")
+    "custom-value-dropdown-field-trigger"
+  }}
+  @dropdownClass={{concat-classes
+    "dropdown-field-dropdown"
+    (concat field.name "-field-dropdown")
+    (if (eq size "sm") "small")
+    "custom-value-dropdown-field-dropdown"
+  }}
+  @disabled={{not isEffectivelyEnabled}}
+  @options={{preparedOptions}}
+  @selected={{selectedOption}}
+  @placeholder={{placeholder}}
+  @renderInPlace={{false}}
+  @triggerId={{fieldId}}
+  @searchEnabled={{true}}
+  @matcher={{matchDropdownOption}}
+  @onChange={{action "valueChanged"}}
+  @onInput={{action "onInput"}}
+  @onOpen={{action "open"}}
+  @triggerComponent="one-custom-trigger"
+  @beforeOptionsComponent={{null}}
+  @searchField="name"
+  as |option|
+>
+  {{option.name}}
+</OneDropdown>
+{{yield}}
