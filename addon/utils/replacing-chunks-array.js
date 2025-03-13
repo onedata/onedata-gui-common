@@ -10,7 +10,7 @@
 import ArraySlice from 'onedata-gui-common/utils/array-slice';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
-import { get, set, computed, trySet } from '@ember/object';
+import { get, set, computed } from '@ember/object';
 import { reads, not } from '@ember/object/computed';
 import { A, isArray } from '@ember/array';
 import _ from 'lodash';
