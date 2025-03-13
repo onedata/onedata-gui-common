@@ -22,7 +22,8 @@
 {{/if}}
 <OneIcon
   onclick={{action (if shouldWarnOnRemove "toggleRemoveWarn" "remove")}}
-  @icon="close" class={{concat-classes "remove-trigger" (if isEnabled "clickable")}}
+  @icon="close"
+  class={{concat-classes "remove-trigger" (if isEnabled "clickable")}}
 >
   {{#if isEnabled}}
     <OneTooltip @title={{tt this "actions.remove"}} />
