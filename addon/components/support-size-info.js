@@ -36,6 +36,13 @@ export default Component.extend(I18n, {
   header: '',
 
   /**
+   * Defines the maximum number of spaces displayed in the chart view.
+   * If the number of spaces exceeds this limit, only the table version is displayed.
+   * @type {number}
+   */
+  chartMaxSpaces: 18,
+
+  /**
    * Tip for header in `chart` mode.
    * @type {string}
    */
@@ -74,6 +81,17 @@ export default Component.extend(I18n, {
   mode: 'chart',
 
   /**
+   * @type {boolean}
+   */
+  disabledChartMode: computed(
+    'data.length',
+    'chartMaxSpaces',
+    function disabledChartMode() {
+      return this.data.length > this.chartMaxSpaces;
+    }
+  ),
+
+  /**
    * If true, header tip is visible.
    * @type {boolean}
    */
@@ -110,6 +128,13 @@ export default Component.extend(I18n, {
     }
     return _.sum(data.map((series) => series.get('value')));
   }),
+
+  init() {
+    this._super(...arguments);
+    if (this.disabledChartMode) {
+      this.set('mode', 'table');
+    }
+  },
 
   actions: {
     modeChanged(mode) {

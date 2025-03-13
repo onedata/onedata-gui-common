@@ -10,6 +10,10 @@
 
 import ViewTester from 'onedata-gui-common/utils/view-tester';
 
+import config from 'ember-get-config';
+
+const isThrowingOnWarning = config.environment !== 'production';
+
 export default class ListWatcher {
   /**
    * @param {jQuery} $container
@@ -29,7 +33,16 @@ export default class ListWatcher {
 
     /** @type {HTMLElement} */
     const element = $container[0];
-    element.addEventListener('scroll', this._scrollHandler);
+    if (element) {
+      element.addEventListener('scroll', this._scrollHandler);
+    } else {
+      const message = 'ListWatcher.constructor: scroll container element not found';
+      if (isThrowingOnWarning) {
+        throw new Error(message);
+      } else {
+        console.error(message);
+      }
+    }
   }
 
   /**
@@ -77,7 +90,7 @@ export default class ListWatcher {
   destroy() {
     /** @type {HTMLElement} */
     const element = this.$container[0];
-    element.removeEventListener('scroll', this._scrollHandler);
+    element?.removeEventListener('scroll', this._scrollHandler);
   }
 }
 

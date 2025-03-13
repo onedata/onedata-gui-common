@@ -49,7 +49,9 @@ export class ChunkableListModel {
       startIndex: 0,
       endIndex: 50,
       indexMargin: 10,
+      // TODO: VFS-12726 Remove chunkSize hack that fixes sidebar jump
       chunkSize: 10,
+      reloadMinSize: 24,
       ...chunksArrayOptions,
     });
 

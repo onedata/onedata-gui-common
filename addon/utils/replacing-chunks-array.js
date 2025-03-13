@@ -10,7 +10,7 @@
 import ArraySlice from 'onedata-gui-common/utils/array-slice';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
-import { get, set, computed, trySet } from '@ember/object';
+import { get, set, computed } from '@ember/object';
 import { reads, not } from '@ember/object/computed';
 import { A, isArray } from '@ember/array';
 import _ from 'lodash';
@@ -90,9 +90,16 @@ export default ArraySlice.extend(Evented, {
   isReloading: reads('_isReloading'),
 
   /**
-   * @type {Ember.ComputedProperty<number>}
+   * @type {number}
    */
   chunkSize: 24,
+
+  /**
+   * Minimum size of query when doing reload. It it set to the `chunksSize` by default
+   * if not specified.
+   * @type {number}
+   */
+  reloadMinSize: undefined,
 
   loadMoreThreshold: computed('chunkSize', 'customLoadMoreThreshold', {
     get() {
@@ -346,9 +353,11 @@ export default ArraySlice.extend(Evented, {
             for (let i = insertIndex; i < fetchedArraySize; ++i) {
               sourceArray[i] = arrayUpdate[i];
             }
+            const newStartIndex = this.startIndex + additionalFrontSpace;
+            const newEndIndex = this.endIndex + additionalFrontSpace;
             this.setProperties({
-              startIndex: this.get('startIndex') + additionalFrontSpace,
-              endIndex: this.get('endIndex') + additionalFrontSpace,
+              startIndex: newStartIndex,
+              endIndex: newEndIndex,
               emptyIndex: -1,
             });
           }
@@ -359,9 +368,11 @@ export default ArraySlice.extend(Evented, {
           for (let i = 0; i < insertIndex; ++i) {
             sourceArray.shift();
           }
+          const newStartIndex = this.startIndex - insertIndex;
+          const newEndIndex = this.endIndex - insertIndex;
           this.setProperties({
-            startIndex: this.get('startIndex') - insertIndex,
-            endIndex: this.get('endIndex') - insertIndex,
+            startIndex: newStartIndex,
+            endIndex: newEndIndex,
             _startReached: true,
           });
         } else {
@@ -446,7 +457,7 @@ export default ArraySlice.extend(Evented, {
    * @param {InfiniteScrollOffset} options.offset
    * @returns {Promise}
    */
-  async _reload({ head = false, minSize = this.chunkSize, offset = 0 } = {}) {
+  async _reload({ head = false, minSize = this.reloadMinSize, offset = 0 } = {}) {
     const {
       _start,
       _end,
@@ -603,7 +614,7 @@ export default ArraySlice.extend(Evented, {
           arrayUpdate.length
         );
         this.setProperties({
-          _startReached: false,
+          _startReached: startIndex < indexMargin,
           _endReached: Boolean(endReached),
           startIndex,
           endIndex,
@@ -689,7 +700,7 @@ export default ArraySlice.extend(Evented, {
     return allSettled(promises);
   },
 
-  async setIndices(startIndex, endIndex) {
+  setIndices(startIndex, endIndex) {
     const changes = {};
     if (startIndex !== this.startIndex) {
       changes.startIndex = startIndex;
@@ -701,30 +712,17 @@ export default ArraySlice.extend(Evented, {
       // nothing to do
       return;
     }
-    const prevState = this.indicesSetterState;
-    this.set('indicesSetterState', changes);
-    if (!prevState) {
-      await this.scheduleIndicesChange();
-    }
-  },
-
-  async scheduleIndicesChange() {
-    try {
-      await this.taskQueue.waitForAllTasks();
-      if (this.isDestroyed || this.isDestroying) {
-        return;
-      }
-      this.setProperties(this.indicesSetterState);
-    } finally {
-      trySet(this, 'indicesSetterState', null);
-    }
+    this.setProperties(changes);
   },
 
   init() {
-    if (!this.get('sourceArray')) {
+    if (typeof this.reloadMinSize !== 'number') {
+      this.set('reloadMinSize', this.chunkSize);
+    }
+    if (!this.sourceArray) {
       this.set('sourceArray', A());
     }
-    if (!this.get('taskQueue')) {
+    if (!this.taskQueue) {
       this.set('taskQueue', new OneSingletonTaskQueue());
     }
     this._super(...arguments);
