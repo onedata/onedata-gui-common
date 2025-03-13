@@ -48,7 +48,8 @@ export default class VirtualListFetcher {
    * @returns {InfiniteScrollPage}
    */
   async fetch(index, limit, offset) {
-    const list = this.filterItems(await this.getPreparedList());
+    const completeList = await this.getPreparedList();
+    const list = this.filterItems(completeList);
     let recordPos = 0;
     if (index !== null) {
       recordPos = list.findIndex(record => record.index === index);
@@ -84,7 +85,7 @@ export default class VirtualListFetcher {
 
   filterItems(items) {
     const itemsByExpression = this.filterByExpression(items);
-    if (this.filterAdvanced) {
+    if (this.filterAdvanced && this.filterAdvanced !== defaultAdvancedFilter) {
       return this.filterByAdvancedConditions(itemsByExpression, this.filterAdvanced);
     } else {
       return itemsByExpression;

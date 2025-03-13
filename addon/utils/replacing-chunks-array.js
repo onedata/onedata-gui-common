@@ -90,9 +90,16 @@ export default ArraySlice.extend(Evented, {
   isReloading: reads('_isReloading'),
 
   /**
-   * @type {Ember.ComputedProperty<number>}
+   * @type {number}
    */
   chunkSize: 24,
+
+  /**
+   * Minimum size of query when doing reload. It it set to the `chunksSize` by default
+   * if not specified.
+   * @type {number}
+   */
+  reloadMinSize: undefined,
 
   loadMoreThreshold: computed('chunkSize', 'customLoadMoreThreshold', {
     get() {
@@ -450,7 +457,7 @@ export default ArraySlice.extend(Evented, {
    * @param {InfiniteScrollOffset} options.offset
    * @returns {Promise}
    */
-  async _reload({ head = false, minSize = this.chunkSize, offset = 0 } = {}) {
+  async _reload({ head = false, minSize = this.reloadMinSize, offset = 0 } = {}) {
     const {
       _start,
       _end,
@@ -709,10 +716,13 @@ export default ArraySlice.extend(Evented, {
   },
 
   init() {
-    if (!this.get('sourceArray')) {
+    if (typeof this.reloadMinSize !== 'number') {
+      this.set('reloadMinSize', this.chunkSize);
+    }
+    if (!this.sourceArray) {
       this.set('sourceArray', A());
     }
-    if (!this.get('taskQueue')) {
+    if (!this.taskQueue) {
       this.set('taskQueue', new OneSingletonTaskQueue());
     }
     this._super(...arguments);
