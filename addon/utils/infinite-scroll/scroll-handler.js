@@ -4,14 +4,13 @@
  * registers.
  *
  * @author Jakub Liput
- * @copyright (C) 2022 ACK CYFRONET AGH
+ * @copyright (C) 2022-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import EmberObject, {
   get,
   getProperties,
-  setProperties,
 } from '@ember/object';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { next } from '@ember/runloop';
@@ -58,6 +57,14 @@ export default EmberObject.extend({
    */
   onScroll: undefined,
 
+  /**
+   * Property of record that contains ID of record. Should be the same as `data-row-id` of
+   * items in template.
+   * @virtual
+   * @type {string}
+   */
+  itemIdProperty: 'id',
+
   fallbackEndIndex: 50,
 
   //#region state
@@ -69,12 +76,6 @@ export default EmberObject.extend({
    */
   listWatcher: undefined,
 
-  /**
-   * When scroll position is changed by code, use this flag to ignore next scroll event.
-   * @type {boolean}
-   */
-  ignoreNextScroll: false,
-
   //#endregion
 
   /**
@@ -82,30 +83,20 @@ export default EmberObject.extend({
    * @param {boolean} headerVisible
    */
   onTableScroll(items, headerVisible) {
-    if (this.ignoreNextScroll) {
-      this.set('ignoreNextScroll', false);
-      return;
-    }
-
     const {
       listContainerElement,
       fallbackEndIndex,
       entries,
       firstRowModel,
+      itemIdProperty,
       onScroll,
-    } = this.getProperties(
-      'listContainerElement',
-      'fallbackEndIndex',
-      'entries',
-      'firstRowModel',
-      'onScroll',
-    );
+    } = this;
     if (!firstRowModel) {
       return;
     }
 
     const sourceArray = this.get('entries.sourceArray');
-    const entriesIds = sourceArray.mapBy('id');
+    const entriesIds = sourceArray.mapBy(itemIdProperty);
     const firstNonEmptyRow = items.find(elem => elem.getAttribute('data-row-id'));
     const firstId =
       firstNonEmptyRow && firstNonEmptyRow.getAttribute('data-row-id') || null;
@@ -128,7 +119,8 @@ export default EmberObject.extend({
       }
     } else {
       startIndex = entriesIds.indexOf(firstId);
-      endIndex = entriesIds.indexOf(lastId, startIndex);
+      const searchEndFrom = startIndex === -1 ? 0 : startIndex;
+      endIndex = entriesIds.indexOf(lastId, searchEndFrom);
     }
 
     const {
@@ -136,7 +128,7 @@ export default EmberObject.extend({
       endIndex: oldEndIndex,
     } = getProperties(entries, 'startIndex', 'endIndex');
     if (oldStartIndex !== startIndex || oldEndIndex !== endIndex) {
-      setProperties(entries, { startIndex, endIndex });
+      entries.setIndices(startIndex, endIndex);
     }
     safeExec(this, 'set', 'headerVisible', headerVisible);
     onScroll?.({ headerVisible });
@@ -160,7 +152,6 @@ export default EmberObject.extend({
   init() {
     this._super(...arguments);
     this.bindScrollAdjustHandler();
-    this.entriesLoadedObserver();
   },
 
   /**
@@ -168,6 +159,7 @@ export default EmberObject.extend({
    */
   destroy() {
     try {
+      this.entries?.off('willChangeArrayBeginning', this, 'handleScrollAdjust');
       this.tryDestroyListWatcher();
     } finally {
       this._super(...arguments);
@@ -187,22 +179,21 @@ export default EmberObject.extend({
   },
 
   tryDestroyListWatcher() {
-    const listWatcher = this.get('listWatcher');
-    if (listWatcher) {
-      listWatcher.destroy();
-    }
+    this.listWatcher?.destroy();
   },
 
   bindScrollAdjustHandler() {
-    this.entries.on(
-      'willChangeArrayBeginning',
-      async ({ updatePromise, newItemsCount }) => {
-        await updatePromise;
-        safeExec(this, () => {
-          this.adjustScrollAfterBeginningChange(newItemsCount);
-        });
-      }
-    );
+    this.entries.on('willChangeArrayBeginning', this, 'handleScrollAdjust');
+  },
+
+  /**
+   * Handler for willChangeArrayBeginning of entries ReplacingChunksArray.
+   */
+  async handleScrollAdjust({ updatePromise, newItemsCount }) {
+    await updatePromise;
+    safeExec(this, () => {
+      this.adjustScrollAfterBeginningChange(newItemsCount);
+    });
   },
 
   /**
@@ -220,8 +211,14 @@ export default EmberObject.extend({
     if (topDiff <= 0 || !this.scrollableContainerElement) {
       return;
     }
+    await this.adjustScroll(topDiff);
+  },
 
-    this.set('ignoreNextScroll', true);
+  /**
+   * Changes scroll position, but prevents infinite scroll handlers from run.
+   * @param {number} topDiff Change in scroll position in px.
+   */
+  async adjustScroll(topDiff) {
     await waitForRender();
     safeExec(this, () => {
       this.scrollTo(

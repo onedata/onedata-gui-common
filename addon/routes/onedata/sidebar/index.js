@@ -52,14 +52,12 @@ export default Route.extend({
 
   async redirectToDefaultResource(model) {
     const { resourceType, collection } = model;
-    const guiUtils = this.get('guiUtils');
     let resourceIdToRedirect;
     if (!collection.array.length) {
       resourceIdToRedirect = 'empty';
     } else {
-      const defaultResource =
-        await this.navigationTabsConfiguration.getDefaultResource(model);
-      resourceIdToRedirect = guiUtils.getRoutableIdFor(defaultResource);
+      resourceIdToRedirect =
+        await this.navigationTabsConfiguration.getDefaultResourceId(model);
     }
     if (resourceIdToRedirect != null) {
       this.transitionTo('onedata.sidebar.content', resourceType, resourceIdToRedirect);

@@ -101,7 +101,10 @@ export default Route.extend({
     // (eg. spaces), and navigates between resources and clusters. The similiar mechanism
     // of storing last used resource in session is described in
     // src/lib/onedata-gui-common/addon/services/navigation-tabs-configuration.js.
-    this.navigationTabsConfiguration.setLocalLastUsedResource(sidebarModel, contentModel);
+    this.navigationTabsConfiguration.setSessionLastUsedResource(
+      sidebarModel,
+      contentModel
+    );
   },
 
   getTemplateName(resourceType, aspectId) {
