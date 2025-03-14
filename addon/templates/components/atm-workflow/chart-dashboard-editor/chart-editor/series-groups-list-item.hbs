@@ -1,4 +1,4 @@
-{{one-icon icon=icon}}
+<OneIcon @icon={{icon}} />
 <span class="name">
   {{#if item.name}}
     {{item.name}}
@@ -13,6 +13,6 @@
   {{#if item.showSum}}
     {{tt this "sum"}} |
   {{/if}}
-  {{one-icon icon=seriesIcon}}
+  <OneIcon @icon={{seriesIcon}} />
   <span class="series-count">{{item.series.length}}</span>
 </span>

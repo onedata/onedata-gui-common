@@ -301,7 +301,7 @@ describe('Integration | Component | tags-input', function () {
   it('does not allow to add and remove tags in readonly mode',
     async function () {
       await render(hbs `{{tags-input
-        readonly=true
+        isReadOnly=true
         tags=tags
         tagEditorComponentName="test-component"
       }}`);
@@ -319,16 +319,16 @@ describe('Integration | Component | tags-input', function () {
 
   it('stops tag creation when becomes readonly',
     async function () {
-      this.set('readonly', false);
+      this.set('isReadOnly', false);
 
       await render(hbs `{{tags-input
-        readonly=readonly
+        isReadOnly=isReadOnly
         tags=tags
         tagEditorComponentName="test-component"
       }}`);
 
       await click('.tags-input');
-      this.set('readonly', true);
+      this.set('isReadOnly', true);
       await settled();
 
       expect(find('.tags-input')).to.not.have.class('creating-tag');
@@ -479,12 +479,12 @@ describe('Integration | Component | tags-input', function () {
     }
   );
 
-  it('shows limited tags number with more tags text if readonlyTagsDisplayLimit is set in readonly mode',
+  it('shows limited tags number with more tags text if readonlyTagsDisplayLimit is set in isReadOnly mode',
     async function () {
       const tags = _.range(5).map(i => ({ label: `tag-${i}` }));
       this.set('tags', tags);
       await render(hbs `{{tags-input
-        readonly=true
+        isReadOnly=true
         tags=tags
         readonlyTagsDisplayLimit=3
         tagEditorComponentName="test-component"
@@ -505,7 +505,7 @@ describe('Integration | Component | tags-input', function () {
       const tags = _.range(3).map(i => ({ label: `tag-${i}` }));
       this.set('tags', tags);
       await render(hbs `{{tags-input
-        readonly=true
+        isReadOnly=true
         tags=tags
         readonlyTagsDisplayLimit=3
         tagEditorComponentName="test-component"
@@ -526,7 +526,7 @@ describe('Integration | Component | tags-input', function () {
         return `lorem ${moreTagsCount} ipsum`;
       });
       await render(hbs `{{tags-input
-        readonly=true
+        isReadOnly=true
         tags=tags
         readonlyTagsDisplayLimit=3
         tagEditorComponentName="test-component"

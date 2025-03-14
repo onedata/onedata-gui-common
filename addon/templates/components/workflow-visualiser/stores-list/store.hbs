@@ -1,11 +1,11 @@
-{{#truncated-string class="store-name"}}
+<TruncatedString class="store-name">
   <OneIcon @icon={{store.icon}} />{{store.name}}
-{{/truncated-string}}
+</TruncatedString>
 {{#if (and (eq mode "edit") isRemovingAllowed)}}
-  {{one-icon
-    icon="close"
-    class=(concat-classes "tag-remove clickable" removeAction.className)
-    click=removeAction.executeCallback
-  }}
+  <OneIcon
+    @icon="close"
+    class={{concat-classes "tag-remove clickable" removeAction.className}}
+    onclick={{removeAction.executeCallback}}
+  />
 {{/if}}
 {{yield}}

@@ -1,30 +1,30 @@
-{{#one-webui-popover
+<OneWebuiPopover
   class="tags-selector"
-  open=true
-  triggerSelector=(concat "#" elementId)
-  arrow=false
-  registerApi=(action (mut popoverApi))
-  padding=false
-  placement="vertical"
-  popoverStyle="tags-selector"
+  @open={{true}}
+  @triggerSelector={{concat "#" elementId}}
+  @arrow={{false}}
+  @registerApi={{action (mut popoverApi)}}
+  @padding={{false}}
+  @placement="vertical"
+  @popoverStyle="tags-selector"
   as |popover|
-}}
-  {{#perfect-scrollbar-element}}
-    {{#click-outside
-      onClickOutside=onEndTagCreation
-      exceptSelector=parentTagsInputSelector
-    }}
+>
+  <PerfectScrollbarElement>
+    <ClickOutside
+      @onClickOutside={{onEndTagCreation}}
+      @exceptSelector={{parentTagsInputSelector}}
+    >
       <ul class="selector-list">
         {{#each tagsToSelect as |tag|}}
           <li class="selector-item" onClick={{action "tagSelected" tag}}>
             {{#if tag.icon}}
-              {{one-icon icon=tag.icon class="tag-icon"}}
+              <OneIcon @icon={{tag.icon}} class="tag-icon" />
             {{/if}}
-            {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
+            <TruncatedString class="tag-label">{{tag.label}}</TruncatedString>
           </li>
         {{/each}}
       </ul>
-    {{/click-outside}}
-  {{/perfect-scrollbar-element}}
-{{/one-webui-popover}}
+    </ClickOutside>
+  </PerfectScrollbarElement>
+</OneWebuiPopover>
 {{yield}}

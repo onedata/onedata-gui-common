@@ -1,19 +1,19 @@
 {{#if (and (not editorContext.isReadOnly) (not hideActions))}}
   <div class="list-header">
-    {{#one-button
+    <OneButton
       class="add-series-btn"
-      type="primary"
-      size="sm"
-      onClick=(action "addSeries")
-    }}
-      {{one-icon icon="plus"}}
+      @type="primary"
+      @size="sm"
+      @onClick={{action "addSeries"}}
+    >
+      <OneIcon @icon="plus" />
       <span class="text">{{tt this "addSeries"}}</span>
-    {{/one-button}}
+    </OneButton>
   </div>
 {{/if}}
-{{atm-workflow/chart-dashboard-editor/chart-editor/elements-list
-  itemModels=itemModels
-  allowDragDrop=(not hideActions)
-  hideActions=hideActions
-  editorContext=editorContext
-}}
+<AtmWorkflow::ChartDashboardEditor::ChartEditor::ElementsList
+  @itemModels={{itemModels}}
+  @allowDragDrop={{not hideActions}}
+  @hideActions={{hideActions}}
+  @editorContext={{editorContext}}
+/>

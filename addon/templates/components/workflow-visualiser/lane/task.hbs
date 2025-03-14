@@ -1,3 +1,6 @@
+{{!--
+  TODO: VFS-12694 Turning one-draggable-object into curly component causes crash when rendering. First try to update ember-drag-drop to latest version.
+--}}
 {{#one-draggable-object
   content=task
   dragHandle=".task-drag-handle"
@@ -5,7 +8,7 @@
   class="draggable-task"
   click=(action "headerClick")
 }}
-  <div class="task-drag-handle">{{record-icon modelName="atmLambda"}}</div>
+  <div class="task-drag-handle"><RecordIcon @modelName="atmLambda" /></div>
   {{#if (eq mode "edit")}}
     {{one-inline-editor
       class="task-name"
@@ -25,15 +28,15 @@
         }}
       </div>
     {{/if}}
-    {{one-icon
-      icon="settings-circle-filled"
-      class=(concat-classes
+    <OneIcon
+      @icon="settings-circle-filled"
+      class={{concat-classes
         "task-actions-trigger clickable"
         (concat "actions-trigger-" elementId)
         (if areActionsOpened "active")
-      )
-      click=(action "toggleActionsOpen" (not areActionsOpened))
-    }}
+      }}
+      onclick={{action "toggleActionsOpen" (not areActionsOpened)}}
+    />
     {{#render-later triggerRender=areActionsOpened}}
       {{#one-webui-popover
         class="task-actions"
@@ -71,11 +74,11 @@
             <div class="detail-label">{{tt this "details.instanceId"}}:</div>
             <div class="detail-value">
               {{#truncated-string}}{{task.instanceId}}{{/truncated-string}}
-              {{one-icon
-                icon=copyInstanceIdAction.icon
-                class=copyInstanceIdAction.className
-                click=copyInstanceIdAction.executeCallback
-              }}
+              <OneIcon
+                @icon={{copyInstanceIdAction.icon}}
+                class={{copyInstanceIdAction.className}}
+                onclick={{copyInstanceIdAction.executeCallback}}
+              />
             </div>
           </div>
         {{/if}}

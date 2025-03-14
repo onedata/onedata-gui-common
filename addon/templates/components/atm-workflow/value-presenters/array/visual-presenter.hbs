@@ -17,10 +17,10 @@
             dataSpec=itemDataSpec
             context=context
           }}
-          {{one-icon
-            icon=(if isExpanded "arrow-up" "arrow-down")
+          <OneIcon
+            @icon={{if isExpanded "arrow-up" "arrow-down"}}
             class="array-item-collapse-icon"
-          }}
+          />
         </div>
         {{#if isExpanded}}
           <div class="array-item-content">
@@ -38,11 +38,11 @@
 </ol>
 
 {{#if isShowingMoreItemsPossible}}
-  {{#one-button
-    size="sm"
+  <OneButton
+    @size="sm"
     class="show-more-array-items"
-    onClick=(action "showMoreItems")
-  }}
+    @onClick={{action "showMoreItems"}}
+  >
     {{tt this "showMoreItems" count=showMoreItemsChunkSize}}
-  {{/one-button}}
+  </OneButton>
 {{/if}}

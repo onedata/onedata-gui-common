@@ -9,7 +9,7 @@
       queryBlock=firstOperand
       queryProperties=queryProperties
       valuesBuilder=valuesBuilder
-      readonly=readonly
+      isReadOnly=isReadOnly
       level=(sub level 1)
       onBlockReplace=(action "replaceBlock" firstOperand)
       onBlockRemove=(action "removeBlock" firstOperand)
@@ -19,7 +19,7 @@
       onConditionEditionValidityChange=onConditionEditionValidityChange
       onBlockRemoved=onBlockRemoved
     }}
-    {{#if (and (not readonly) (eq queryBlock.operator "root"))}}
+    {{#if (and (not isReadOnly) (eq queryBlock.operator "root"))}}
       {{query-builder/block-adder
         btnClass="surround-root"
         operators=operators
@@ -30,7 +30,7 @@
         onBlockAdd=(action "addBlock")
       }}
     {{/if}}
-  {{else if (not readonly)}}
+  {{else if (not isReadOnly)}}
     {{query-builder/block-adder
       refreshQueryProperties=(action refreshQueryProperties)
       operators=operators
@@ -45,7 +45,7 @@
     {{query-builder/block-visualiser
       parentQueryBlock=queryBlock
       level=(sub level 1)
-      readonly=readonly
+      isReadOnly=isReadOnly
       operators=operators
       queryBlock=operandBlock
       queryProperties=queryProperties
@@ -62,7 +62,7 @@
     {{#if (and
       queryBlock.operator
       (or
-        (not readonly)
+        (not isReadOnly)
         (not (eq index (sub queryBlock.operands.length 1)))
       )
     )}}
@@ -71,7 +71,7 @@
       </div>
     {{/if}}
   {{else}}
-    {{#unless readonly}}
+    {{#unless isReadOnly}}
       {{query-builder/block-adder
         operators=operators
         valuesBuilder=valuesBuilder
@@ -87,7 +87,7 @@
       {{/if}}
     {{/unless}}
   {{/each}}
-  {{#unless readonly}}
+  {{#unless isReadOnly}}
     {{query-builder/block-adder
       operators=operators
       valuesBuilder=valuesBuilder

@@ -1,6 +1,6 @@
 <div class="tree-item-content-container">
   <div class="tree-circle" {{action "show" key on="click"}}>
-    {{one-icon icon=_bulletIcon}}
+    <OneIcon @icon={{_bulletIcon}} />
   </div>
   {{yield (hash
     content=(component 'one-tree/item/content' 

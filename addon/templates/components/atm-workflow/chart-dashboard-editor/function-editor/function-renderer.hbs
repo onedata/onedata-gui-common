@@ -3,19 +3,19 @@
     <span class="function-name">
       {{readableName}}
       {{#if tip}}
-        {{one-tooltip title=tip}}
+        <OneTooltip @title={{tip}} />
       {{/if}}
     </span>
     {{#if functionOnlyValidationErrorsMessage}}
-      {{warning-icon tooltipText=functionOnlyValidationErrorsMessage}}
+      <WarningIcon @tooltipText={{functionOnlyValidationErrorsMessage}} />
     {{/if}}
     {{#if (and (not editorContext.isReadOnly) (not chartFunction.isRoot))}}
       <div class="function-actions">
-        {{one-icon
+        <OneIcon
           class="remove-action action"
-          icon="x"
-          click=(action "removeFunction")
-        }}
+          @icon="x"
+          onclick={{action "removeFunction"}}
+        />
       </div>
     {{/if}}
   </div>
@@ -44,14 +44,14 @@
           (not isInDraggedChartFunction)
         )}}
           <div class="between-args-drop-target-container before-first-arg">
-            {{one-draggable-object-target
-              action=(action
+            <OneDraggableObjectTarget
+              @action={{action
                 "acceptDraggedFunction"
                 argumentInfo.name
                 "before"
                 argumentInfo.attachedFunctions.[0]
-              )
-            }}
+              }}
+            />
           </div>
         {{/if}}
         {{#each argumentInfo.attachedFunctions as |func index|}}
@@ -64,46 +64,49 @@
             <div class="argument-end-line argument-line">
               <div class="over-line-content">
                 {{#if (get perArgumentValidationErrorsMessages func.id)}}
-                  {{warning-icon
-                    tooltipText=(get perArgumentValidationErrorsMessages func.id)
-                  }}
+                  <WarningIcon
+                    @tooltipText={{get perArgumentValidationErrorsMessages func.id}}
+                  />
                 {{/if}}
                 {{#if (not editorContext.isReadOnly)}}
                   <div class="attachment-actions">
-                    {{one-icon
+                    <OneIcon
                       class="add-action action"
-                      icon="plus"
-                      click=(action "toggleAdder" argumentInfo.name index)
-                    }}
-                    {{one-icon
+                      @icon="plus"
+                      onclick={{action "toggleAdder" argumentInfo.name index}}
+                    />
+                    <OneIcon
                       class="remove-action action"
-                      icon="x"
-                      click=(action "detachFunction" func)
-                    }}
-                    {{atm-workflow/chart-dashboard-editor/function-editor/function-adder
-                      executionContext=executionContext
-                      editorContext=editorContext
-                      parentFunction=chartFunction
-                      parentFunctionArgumentName=argumentInfo.name
-                      insertAtIndex=index
-                      functionToAttach=func
-                      triggerSelector=(evaluate-function
+                      @icon="x"
+                      onclick={{action "detachFunction" func}}
+                    />
+                    <AtmWorkflow::ChartDashboardEditor::FunctionEditor::FunctionAdder
+                      @executionContext={{executionContext}}
+                      @editorContext={{editorContext}}
+                      @parentFunction={{chartFunction}}
+                      @parentFunctionArgumentName={{argumentInfo.name}}
+                      @insertAtIndex={{index}}
+                      @functionToAttach={{func}}
+                      @triggerSelector={{evaluate-function
                         (action getInChainFunctionAdderTriggerSelector)
                         argumentInfo.name
                         index
-                      )
-                      isOpened=(or (get (get adderOpenState argumentInfo.name) index) false)
-                      onClose=(action "toggleAdder" argumentInfo.name index false)
-                    }}
+                      }}
+                      @isOpened={{or
+                        (get (get adderOpenState argumentInfo.name) index)
+                        false
+                      }}
+                      @onClose={{action "toggleAdder" argumentInfo.name index false}}
+                    />
                   </div>
                 {{/if}}
               </div>
             </div>
-            {{atm-workflow/chart-dashboard-editor/function-editor/function-renderer
-              chartFunction=func
-              executionContext=executionContext
-              editorContext=editorContext
-            }}
+            <AtmWorkflow::ChartDashboardEditor::FunctionEditor::FunctionRenderer
+              @chartFunction={{func}}
+              @executionContext={{executionContext}}
+              @editorContext={{editorContext}}
+            />
           </div>
           {{#if (and
             (not editorContext.isReadOnly)
@@ -114,14 +117,9 @@
             (not isInDraggedChartFunction)
           )}}
             <div class="between-args-drop-target-container">
-              {{one-draggable-object-target
-                action=(action
-                  "acceptDraggedFunction"
-                  argumentInfo.name
-                  "after"
-                  func
-                )
-              }}
+              <OneDraggableObjectTarget
+                @action={{action "acceptDraggedFunction" argumentInfo.name "after" func}}
+              />
             </div>
           {{/if}}
         {{/each}}
@@ -129,33 +127,33 @@
           <div class="function-argument-block">
             <div class="argument-middle-line argument-line"></div>
             <div class="argument-end-line argument-line"></div>
-            {{#one-draggable-object-target
+            <OneDraggableObjectTarget
               class="adder-draggable-object-target"
-              validateDragEvent=(action "validateOnAdderDragEvent")
-              action=(action "acceptDraggedFunction" argumentInfo.name null null)
-            }}
-              {{#one-button
-                type="default"
-                size="sm"
+              @validateDragEvent={{action "validateOnAdderDragEvent"}}
+              @action={{action "acceptDraggedFunction" argumentInfo.name null null}}
+            >
+              <OneButton
                 class="add-selector-trigger"
-                disabled=editorContext.isReadOnly
-                onClick=(action "toggleAdder" argumentInfo.name -1)
-              }}
+                @type="default"
+                @size="sm"
+                @disabled={{editorContext.isReadOnly}}
+                @onClick={{action "toggleAdder" argumentInfo.name -1}}
+              >
                 {{tt this "addArgument"}}
-              {{/one-button}}
-            {{/one-draggable-object-target}}
+              </OneButton>
+            </OneDraggableObjectTarget>
             {{#if (not editorContext.isReadOnly)}}
-              {{atm-workflow/chart-dashboard-editor/function-editor/function-adder
-                executionContext=executionContext
-                editorContext=editorContext
-                actionsFactory=actionsFactory
-                parentFunction=chartFunction
-                parentFunctionArgumentName=argumentInfo.name
-                insertAtIndex=argumentInfo.attachedFunctions.length
-                triggerSelector=(local-selector this.elementId ".add-selector-trigger")
-                isOpened=(get (get adderOpenState argumentInfo.name) -1)
-                onClose=(action "toggleAdder" argumentInfo.name -1 false)
-              }}
+              <AtmWorkflow::ChartDashboardEditor::FunctionEditor::FunctionAdder
+                @executionContext={{executionContext}}
+                @editorContext={{editorContext}}
+                @actionsFactory={{actionsFactory}}
+                @parentFunction={{chartFunction}}
+                @parentFunctionArgumentName={{argumentInfo.name}}
+                @insertAtIndex={{argumentInfo.attachedFunctions.length}}
+                @triggerSelector={{local-selector this.elementId ".add-selector-trigger"}}
+                @isOpened={{get (get adderOpenState argumentInfo.name) -1}}
+                @onClose={{action "toggleAdder" argumentInfo.name -1 false}}
+              />
             {{/if}}
           </div>
         {{/if}}

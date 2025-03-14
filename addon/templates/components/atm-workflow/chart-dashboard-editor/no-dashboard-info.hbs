@@ -1,12 +1,15 @@
-<h3 class="header">{{tt this "header"}} {{one-label-tip title=(tt this "headerTip")}}</h3>
+<h3 class="header">
+  {{tt this "header"}}
+  <OneLabelTip @title={{tt this "headerTip"}} />
+</h3>
 {{#if (not editorContext.isReadOnly)}}
   <p class="description">{{tt this "description"}}</p>
-  {{#one-button
+  <OneButton
     class="create-btn"
-    type="primary"
-    onClick=onCreateDashboard
-  }}
-    {{one-icon icon="plus"}}
+    @type="primary"
+    @onClick={{onCreateDashboard}}
+  >
+    <OneIcon @icon="plus" />
     <span class="text">{{tt this "createButton"}}</span>
-  {{/one-button}}
+  </OneButton>
 {{/if}}

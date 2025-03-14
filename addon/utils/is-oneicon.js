@@ -6,6 +6,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+/**
+ * Icon name from oneicons font, without `oneicon-` prefix.
+ * Valid icons are defined in `knownOneicons` set.
+ * @typedef {string} OneIconName
+ */
+
 export const knownOneicons = new Set([
   'add-filled',
   'arrow-circle-down',

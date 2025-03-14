@@ -1,68 +1,69 @@
 {{!-- TODO: VFS-10331 unify modal layout in zone and provider --}}
-{{#global-modal
-  classNames=(concat-classes
+<GlobalModal
+  @classNames={{concat-classes
     "chart-dashboard-editor-modal"
     (concat "mode-" mode)
-    (if (eq mode "view") "without-footer modal-content-overlay with-close-button")
-  )
-  allowClose=isReadOnly
-  modalId=modalId
-  size="full"
+    (if (eq mode "view")
+    "without-footer modal-content-overlay with-close-button")
+  }}
+  @allowClose={{isReadOnly}}
+  @modalId={{modalId}}
+  @size="full"
   as |modal|
-}}
-  {{#modal.header}}
+>
+  <modal.header>
     <h1>{{tt this (concat "header." dashboardOwnerType)}}</h1>
     {{#if dashboardOwner.name}}
       <h2 class="normal-case">
-        {{#truncated-string class="header-content"}}
+        <TruncatedString class="header-content">
           {{#if dashboardOwner.icon}}
             <div class="inline-icon-container header-icon">
               <OneIcon @icon={{dashboardOwner.icon}} />
             </div>
           {{/if}}
           {{dashboardOwner.name}}
-        {{/truncated-string}}
+        </TruncatedString>
       </h2>
     {{/if}}
-  {{/modal.header}}
+  </modal.header>
 
-  {{#modal.body}}
-    {{atm-workflow/chart-dashboard-editor
-      dashboardModel=dashboardModel
-      isReadOnly=(eq mode "view")
-    }}
-  {{/modal.body}}
+  <modal.body>
+    <AtmWorkflow::ChartDashboardEditor
+      @dashboardModel={{dashboardModel}}
+      @isReadOnly={{eq mode "view"}}
+    />
+  </modal.body>
 
   {{#if (not-eq mode "view")}}
-    {{#modal.footer class="btn-toolbar"}}
+    <modal.footer class="btn-toolbar">
       {{#if isModelChanged}}
-        {{#one-button
-          type="warning"
+        <OneButton
+          @type="warning"
           class="btn-cancel"
-          onClick=(action "cancel" modal.close)
-          disabled=isSubmitting
-        }}
+          @onClick={{action "cancel" modal.close}}
+          @disabled={{isSubmitting}}
+        >
           {{tt this (concat "buttons.cancel")}}
-        {{/one-button}}
+        </OneButton>
 
-        {{#one-button
-          type="primary"
-          buttonType="submit"
+        <OneButton
+          @type="primary"
+          @buttonType="submit"
           class="btn-submit"
-          onClick=(action "submit" modal.submit)
-        }}
+          @onClick={{action "submit" modal.submit}}
+        >
           {{tt this "buttons.submit"}}
-        {{/one-button}}
+        </OneButton>
       {{else}}
-        {{#one-button
-          type="default"
+        <OneButton
+          @type="default"
           class="btn-close"
-          onClick=modal.close
-        }}
+          @onClick={{modal.close}}
+        >
           {{tt this "buttons.close"}}
-        {{/one-button}}
+        </OneButton>
       {{/if}}
-    {{/modal.footer}}
+    </modal.footer>
   {{/if}}
 
-{{/global-modal}}
+</GlobalModal>

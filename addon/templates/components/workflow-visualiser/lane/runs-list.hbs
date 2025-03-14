@@ -3,7 +3,7 @@
   disabled={{lte hiddenPrevRunsCount 0}}
   {{action "showPrevRuns"}}
 >
-  {{one-icon icon="arrow-left"}}
+  <OneIcon @icon="arrow-left" />
 </button>
 <ol class="run-indicators-list">
   {{#each visibleRunsArray key="runNumber" as |run|}}
@@ -11,14 +11,14 @@
       class="run-indicators-item {{get visibleRunsClasses run.runNumber}}"
       style={{html-safe (get visibleRunsStyles run.runNumber)}}
     >
-      {{workflow-visualiser/lane/run-indicator
-        status=run.status
-        runNumber=run.runNumber
-        originRunNumber=run.originRunNumber
-        runType=run.runType
-        isSelected=(eq selectedRunNumber run.runNumber)
-        onClick=(action "selectRun" run.runNumber)
-      }}
+      <WorkflowVisualiser::Lane::RunIndicator
+        @status={{run.status}}
+        @runNumber={{run.runNumber}}
+        @originRunNumber={{run.originRunNumber}}
+        @runType={{run.runType}}
+        @isSelected={{eq selectedRunNumber run.runNumber}}
+        @onClick={{action "selectRun" run.runNumber}}
+      />
     </li>
   {{/each}}
 </ol>
@@ -27,6 +27,6 @@
   disabled={{lte hiddenNextRunsCount 0}}
   {{action "showNextRuns"}}
 >
-  {{one-icon icon="arrow-right"}}
+  <OneIcon @icon="arrow-right" />
 </button>
 {{yield}}

@@ -1,7 +1,7 @@
 {{yield (hash section="start")}}
 <td class="column-name">
-  {{#truncated-string}}
-    {{one-icon class=(concat-classes "dataset-icon" iconClass) icon=icon}}
+  <TruncatedString>
+    <OneIcon class={{concat-classes "dataset-icon" iconClass}} @icon={{icon}} />
     {{#if urlProxy.content}}
       <a
         class="dataset-name details-title clickable navy"
@@ -15,10 +15,10 @@
         {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
       </span>
     {{/if}}
-  {{/truncated-string}}
+  </TruncatedString>
 </td>
 <td class="column-root-file-path">
-  {{#truncated-string class=(if rootFileUrlProxy.content "truncate-from-left")}}
+  <TruncatedString class={{if rootFileUrlProxy.content "truncate-from-left"}}>
     {{#if rootFilePath}}
       {{#if rootFileUrlProxy.content}}
         <a
@@ -34,6 +34,6 @@
     {{else}}
       <em>{{tt this "unknown"}}</em>
     {{/if}}
-  {{/truncated-string}}
+  </TruncatedString>
 </td>
 {{yield (hash section="end")}}
