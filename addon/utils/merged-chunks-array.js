@@ -47,54 +47,7 @@ export default class MergedChunksArray extends ReplacingChunksArray {
     const results = await allFulfilled(
       this.fetchers.map(fetcher => fetcher(index, effSize, effOffset))
     );
-    const mergedResult = results.reduce((merged, result) => {
-      let effArray = result.array;
-      if (offset > 0) {
-        if (effArray[0]?.index === index) {
-          effArray = _.tail(effArray, offset);
-        } else if (!result.isLast) {
-          effArray = _.dropRight(effArray, offset);
-        }
-      }
-      merged.array.push(...effArray);
-      // If at last one fetcher has not-last chunk, then the whole query is not last.
-      if (result.isLast === false) {
-        merged.isLast = false;
-      }
-      return merged;
-    }, { array: [], isLast: true });
-    let sortedArray = _.sortBy(mergedResult.array, 'index');
-    if (offset < 0) {
-      const itemWithIndexPosition = _.findLastIndex(sortedArray, item =>
-        item.index === index
-      );
-      if (itemWithIndexPosition !== -1) {
-        // Do not bother start of slice (always 0), because with the negative
-        // index, we get sortedArray items from the end.
-        sortedArray = sortedArray.slice(0, itemWithIndexPosition + size + offset);
-      }
-    }
-    let sliceRange;
-    if (offset >= 0) {
-      sliceRange = [0, size];
-    } else {
-      // TODO: VFS-12643 Write test: fetching with negative offset, which results in
-      // lesser items than expected. Before the "Math.max" code below, the array has been
-      // left corrupted (it used negative value in slice).
-      sliceRange = [Math.max(sortedArray.length - size, 0), sortedArray.length];
-    }
-    const finalArray = _.sortBy(sortedArray, 'index').slice(...sliceRange);
-    let isLast;
-    if (finalArray.length < mergedResult.array.length) {
-      // We have more items in the source than will be returned, so it cannot be the end
-      // regardless of any isLast.
-      isLast = false;
-    } else {
-      // All chunks have been used - it will be not the last merged chunk only if there is
-      // at last single non-last chunk (see how global isLast is computed earlier).
-      isLast = mergedResult.isLast;
-    }
-    return { array: finalArray, isLast };
+    return mergeResults(results, { index, size, offset });
   }
 }
 
@@ -113,4 +66,61 @@ function defineFetchersUsingValue(self, value) {
       defineFetchersUsingValue(self, value);
     },
   });
+}
+
+/**
+ * @param {Array<ChunksFetchResult>} results
+ * @param {InfiniteListQuery} query
+ * @returns {ChunksFetchResult}
+ */
+export function mergeResults(results, query) {
+  const { index, size, offset } = query;
+  const mergedResult = results.reduce((merged, result) => {
+    let effArray = result.array;
+    if (offset > 0) {
+      if (effArray[0]?.index === index) {
+        effArray = _.tail(effArray, offset);
+      } else if (!result.isLast) {
+        effArray = _.dropRight(effArray, offset);
+      }
+    }
+    merged.array.push(...effArray);
+    // If at last one fetcher has not-last chunk, then the whole query is not last.
+    if (result.isLast === false) {
+      merged.isLast = false;
+    }
+    return merged;
+  }, { array: [], isLast: true });
+  let sortedArray = _.sortBy(mergedResult.array, 'index');
+  if (offset < 0) {
+    const itemWithIndexPosition = _.findLastIndex(sortedArray, item =>
+      item.index === index
+    );
+    if (itemWithIndexPosition !== -1) {
+      // Do not bother start of slice (always 0), because with the negative
+      // index, we get sortedArray items from the end.
+      sortedArray = sortedArray.slice(0, itemWithIndexPosition + size + offset);
+    }
+  }
+  let sliceRange;
+  if (offset >= 0) {
+    sliceRange = [0, size];
+  } else {
+    // TODO: VFS-12643 Write test: fetching with negative offset, which results in
+    // lesser items than expected. Before the "Math.max" code below, the array has been
+    // left corrupted (it used negative value in slice).
+    sliceRange = [Math.max(sortedArray.length - size, 0), sortedArray.length];
+  }
+  const finalArray = _.sortBy(sortedArray, 'index').slice(...sliceRange);
+  let isLast;
+  if (finalArray.length < mergedResult.array.length) {
+    // We have more items in the source than will be returned, so it cannot be the end
+    // regardless of any isLast.
+    isLast = false;
+  } else {
+    // All chunks have been used - it will be not the last merged chunk only if there is
+    // at last single non-last chunk (see how global isLast is computed earlier).
+    isLast = mergedResult.isLast;
+  }
+  return { array: finalArray, isLast };
 }
