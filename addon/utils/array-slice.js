@@ -22,20 +22,18 @@ export default ArrayProxy.extend({
 
   sourceArray: alias('content'),
 
-  _start: computed('startIndex', 'indexMargin', function _start() {
-    return Math.max(0, this.startIndex - this.indexMargin);
+  _start: computed('startIndex', 'indexMargin', 'sourceArray.length', function _start() {
+    const sourceLength = this.sourceArray.length;
+    return Math.max(0, Math.min(this.startIndex - this.indexMargin, sourceLength));
   }),
 
   _end: computed('endIndex', 'indexMargin', 'sourceArray.length', function _end() {
     const {
       endIndex,
       indexMargin,
-    } = this.getProperties(
-      'endIndex',
-      'indexMargin'
-    );
+    } = this;
 
-    const sourceLength = this.get('sourceArray.length');
+    const sourceLength = this.sourceArray.length;
     return Math.max(Math.min(sourceLength, endIndex + indexMargin), 0);
   }),
 
@@ -43,10 +41,7 @@ export default ArrayProxy.extend({
     const {
       _startCache,
       _start,
-    } = this.getProperties(
-      '_startCache',
-      '_start'
-    );
+    } = this;
 
     try {
       if (_startCache !== undefined && _start !== _startCache) {
@@ -68,10 +63,7 @@ export default ArrayProxy.extend({
     const {
       _endCache,
       _end,
-    } = this.getProperties(
-      '_endCache',
-      '_end'
-    );
+    } = this;
     try {
       if (_endCache !== undefined && _end !== _endCache) {
         let removeAmt = 0;
@@ -113,7 +105,7 @@ export default ArrayProxy.extend({
    * @override
    */
   pushObject(obj) {
-    return this.get('sourceArray').pushObject(obj);
+    return this.sourceArray.pushObject(obj);
   },
 
   /**
@@ -122,7 +114,7 @@ export default ArrayProxy.extend({
    * @override
    */
   pushObjects(objects) {
-    return this.get('sourceArray').pushObjects(objects);
+    return this.sourceArray.pushObjects(objects);
   },
 
   /**
@@ -133,7 +125,7 @@ export default ArrayProxy.extend({
       _start,
       _end,
       sourceArray,
-    } = this.getProperties('_start', '_end', 'sourceArray');
+    } = this;
     let effBegin = begin;
     let effEnd = end;
     if (typeof effBegin === 'number') {
@@ -157,15 +149,14 @@ export default ArrayProxy.extend({
    * @override
    */
   replace(idx, amt, objects) {
-    const sourceArray = this.get('sourceArray');
-    return sourceArray.replace(this._translateIndex(idx), amt, objects);
+    return this.sourceArray.replace(this._translateIndex(idx), amt, objects);
   },
 
   /**
    * @override
    */
   objectAt(idx) {
-    const sourceArray = this.get('sourceArray');
+    const sourceArray = this.sourceArray;
     if (sourceArray) {
       return sourceArray.objectAt(this._translateIndex(idx));
     }
@@ -218,17 +209,13 @@ export default ArrayProxy.extend({
     const {
       _start,
       _end,
-    } = this.getProperties(
-      '_start',
-      '_end'
-    );
+    } = this;
     const translatedIndex = _start + index;
     return translatedIndex > _end ? -1 : translatedIndex;
   },
 
   _translateNegativeIndex(negativeIndex) {
-    const _end = this.get('_end');
-    return Math.max(_end + negativeIndex, 0);
+    return Math.max(this._end + negativeIndex, 0);
   },
 
   overrideAsNotImplemented(methodName) {

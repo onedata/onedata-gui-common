@@ -48,7 +48,7 @@ export default Component.extend(I18n, {
   /**
    * @type {boolean}
    */
-  readonly: false,
+  isReadOnly: false,
 
   /**
    * @type {boolean}
@@ -106,22 +106,17 @@ export default Component.extend(I18n, {
     'useBootstrapClasses',
     'isValid',
     'disabled',
-    'readonly',
+    'isReadOnly',
     function bootstrapClasses() {
       const {
         useBootstrapClasses,
         isValid,
         disabled,
-        readonly,
-      } = this.getProperties(
-        'useBootstrapClasses',
-        'isValid',
-        'disabled',
-        'readonly'
-      );
+        isReadOnly,
+      } = this;
       if (useBootstrapClasses) {
         let classes = 'form-group';
-        if (!disabled && !readonly) {
+        if (!disabled && !isReadOnly) {
           if (isValid === true) {
             classes += ' has-success';
           } else if (isValid === false) {

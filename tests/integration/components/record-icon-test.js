@@ -9,9 +9,13 @@ describe('Integration | Component | record-icon', function () {
   setupRenderingTest();
 
   it('has class "record-icon"', async function () {
-    await render(hbs `{{record-icon}}`);
-
+    await render(hbs `<RecordIcon />`);
     expect(findAll('.record-icon')).to.have.length(1);
+  });
+
+  it('set color if color property is "red"', async function () {
+    await render(hbs `<RecordIcon @color="red" />`);
+    expect(find('.one-icon').getAttribute('style') || '').to.contain('color: red');
   });
 
   [{
@@ -51,7 +55,7 @@ describe('Integration | Component | record-icon', function () {
           },
         });
 
-        await render(hbs `{{record-icon record=record}}`);
+        await render(hbs `<RecordIcon @record={{record}} />`);
 
         expect(find('.record-icon')).to.have.class(`oneicon-${icon}`);
       }
@@ -62,7 +66,7 @@ describe('Integration | Component | record-icon', function () {
       async function () {
         this.set('modelName', modelName);
 
-        await render(hbs `{{record-icon modelName=modelName}}`);
+        await render(hbs `<RecordIcon @modelName={{modelName}} />`);
 
         expect(find('.record-icon')).to.have.class(`oneicon-${icon}`);
       }
@@ -75,7 +79,7 @@ describe('Integration | Component | record-icon', function () {
         async function () {
           this.set('modelName', modelName);
 
-          await render(hbs `{{record-icon modelName=modelName}}`);
+          await render(hbs `<RecordIcon @modelName={{modelName}} />`);
 
           expect(find('.record-icon')).to.have.class(`oneicon-${icon}`);
         }
@@ -202,7 +206,7 @@ describe('Integration | Component | record-icon', function () {
             },
           }, properties));
 
-          await render(hbs `{{record-icon useSubtypeIcon=true record=record}}`);
+          await render(hbs `<RecordIcon @useSubtypeIcon={{true}} @record={{record}} />`);
 
           expect(find('.record-icon')).to.have.class(`oneicon-${icon}`);
         }

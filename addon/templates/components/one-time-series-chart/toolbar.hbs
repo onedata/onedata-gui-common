@@ -12,26 +12,26 @@
   {{option.label}}
 </OneDropdown>
 <div class="btn-group navigation-buttons">
-  {{#one-button
+  <OneButton
     class="show-older-btn"
-    disabled=isShowOlderDisabled
-    onClick=(action "showOlder")
-  }}
-    {{one-icon icon="arrow-left"}}
-  {{/one-button}}
-  {{#one-button
+    @disabled={{isShowOlderDisabled}}
+    @onClick={{action "showOlder"}}
+  >
+    <OneIcon @icon="arrow-left" />
+  </OneButton>
+  <OneButton
     class="show-newer-btn"
-    disabled=isShowNewerAndNewestDisabled
-    onClick=(action "showNewer")
-  }}
-    {{one-icon icon="arrow-right"}}
-  {{/one-button}}
-  {{#one-button
+    @disabled={{isShowNewerAndNewestDisabled}}
+    @onClick={{action "showNewer"}}
+  >
+    <OneIcon @icon="arrow-right" />
+  </OneButton>
+  <OneButton
     class="show-newest-btn"
-    disabled=isShowNewerAndNewestDisabled
-    onClick=(action "showNewest")
-  }}
-    {{one-icon icon="arrow-right"}}
-    {{one-icon icon="arrow-right"}}
-  {{/one-button}}
+    @disabled={{isShowNewerAndNewestDisabled}}
+    @onClick={{action "showNewest"}}
+  >
+    <OneIcon @icon="arrow-right" />
+    <OneIcon @icon="arrow-right" />
+  </OneButton>
 </div>

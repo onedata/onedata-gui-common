@@ -1,33 +1,33 @@
-{{#global-modal
-  classNames="charts-modal without-footer modal-content-overlay with-close-button"
-  modalId=modalId
-  size="lg"
+<GlobalModal
+  @classNames="charts-modal without-footer modal-content-overlay with-close-button"
+  @modalId={{modalId}}
+  @size="lg"
   as |modal|
-}}
-  {{#modal.header}}
+>
+  <modal.header>
     <h1>
       {{tt this (concat "header." dashboardOwnerType)}}
     </h1>
     {{#if dashboardOwner.name}}
       <h2 class="normal-case">
-        {{#truncated-string class="header-content"}}
+        <TruncatedString class="header-content">
           {{#if dashboardOwner.icon}}
             <div class="inline-icon-container header-icon">
               <OneIcon @icon={{dashboardOwner.icon}} />
             </div>
           {{/if}}
           {{dashboardOwner.name}}
-        {{/truncated-string}}
+        </TruncatedString>
       </h2>
     {{/if}}
-  {{/modal.header}}
+  </modal.header>
 
-  {{#modal.body}}
-    {{workflow-visualiser/charts-presenter
-      dashboardModelOwner=dashboardOwner
-      onGetStoreContent=getStoreContentCallback
-      onGetTimeSeriesCollectionRefsMap=getTimeSeriesCollectionRefsMapCallback
-      live=isLiveProxy.content
-    }}
-  {{/modal.body}}
-{{/global-modal}}
+  <modal.body>
+    <WorkflowVisualiser::ChartsPresenter
+      @dashboardModelOwner={{dashboardOwner}}
+      @onGetStoreContent={{getStoreContentCallback}}
+      @onGetTimeSeriesCollectionRefsMap={{getTimeSeriesCollectionRefsMapCallback}}
+      @live={{isLiveProxy.content}}
+    />
+  </modal.body>
+</GlobalModal>

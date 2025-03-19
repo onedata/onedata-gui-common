@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, afterEach } from 'mocha';
 import MergedChunksArray from 'onedata-gui-common/utils/merged-chunks-array';
 import _ from 'lodash';
-import { get } from '@ember/object';
+import { computed, get } from '@ember/object';
 import {
   MockArray,
   Record,
@@ -12,6 +12,39 @@ import { settled } from '@ember/test-helpers';
 describe('Unit | Utility | merged-chunks-array', function () {
   afterEach(function () {
     this.array?.destroy();
+  });
+
+  it('fetchers can be overriden in subclasses using computed property getter', async function () {
+    const mockFetchers = [];
+    class ChildChunksArray extends MergedChunksArray {
+      @computed()
+      get fetchers() {
+        return mockFetchers;
+      }
+    }
+    this.array = ChildChunksArray.create();
+
+    expect(this.array.fetchers).to.equal(mockFetchers);
+  });
+
+  it('fetchers can be overriden in EmberObject.create', async function () {
+    const mockFetchers = [];
+    this.array = MergedChunksArray.create({
+      fetchers: mockFetchers,
+    });
+
+    expect(this.array.fetchers).to.equal(mockFetchers);
+  });
+
+  it('fetchers can be set multiple times in EmberObject', async function () {
+    const mockFetchers1 = [];
+    const mockFetchers2 = [];
+    this.array = MergedChunksArray.create({
+      fetchers: mockFetchers1,
+    });
+    this.array.set('fetchers', mockFetchers2);
+
+    expect(this.array.fetchers).to.equal(mockFetchers2);
   });
 
   it('exposes fragment of array merged from multiple sources ', async function () {

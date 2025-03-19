@@ -20,6 +20,24 @@ export default Component.extend({
   search: () => {},
 
   input() {
-    this.get('search')(this.element.value);
+    this.search(this.element.value);
+  },
+
+  /**
+   * @override
+   */
+  didInsertElement() {
+    this._super(...arguments);
+    this.search(this.element.value);
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    this._super(...arguments);
+    if (this.element.value) {
+      this.search('');
+    }
   },
 });

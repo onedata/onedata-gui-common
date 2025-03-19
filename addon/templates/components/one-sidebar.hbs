@@ -1,98 +1,106 @@
 <div class="container-fluid">
   <div class="row-heading row">
     <div class="col-title">{{title}}</div>
-    {{one-sidebar-toolbar buttons=buttons}}
+    <OneSidebarToolbar @buttons={{buttons}} />
   </div>
   <div class="row-body row">
     <div class="two-level-sidebar">
       {{#if isCollectionEmpty}}
-        {{empty-collection-sidebar resourceType=resourceType showGetStarted=showGetStartedWhenEmpty}}
-      {{else}}
-        {{#if isFilteringEnabled}}
-          <div class="sidebar-filters-container">
-            <div class="form-group form-group-sm form-group-light search-bar-form-group">
-              <div class="input-group with-icon-addon">
-                {{search-bar search=(action (mut filter)) class="form-control"}}
-                <div class="input-group-addon">
-                  {{one-icon icon="search"}}
-                </div>
+        <EmptyCollectionSidebar
+          @resourceType={{resourceType}}
+          @showGetStarted={{showGetStartedWhenEmpty}}
+        />
+      {{else if isFilteringEnabled}}
+        <div class="sidebar-filters-container">
+          <div class="form-group form-group-sm form-group-light search-bar-form-group">
+            <div class="input-group with-icon-addon">
+              <SearchBar @search={{action "setFilter"}} class="form-control" />
+              <div class="input-group-addon">
+                <OneIcon @icon="search" />
               </div>
             </div>
-            {{#if advancedFiltersComponent}}
-              <a class="toggle-more-filters clickable" {{action "toggleAdvancedFilters"}}>
-                {{#if areAdvancedFiltersVisible}}
-                  {{tt this "hideAdvancedFilters"}}
-                  {{one-icon class="arrow-icon" icon="arrow-up"}}
-                {{else}}
-                  {{tt this "showAdvancedFilters"}}
-                  {{one-icon class="arrow-icon" icon="arrow-down"}}
-                {{/if}}
-              </a>
-              {{#one-collapse
-                class="advanced-filters-collapse"
-                collapsed=(not areAdvancedFiltersVisible)
-              }}
-                {{component advancedFiltersComponent
-                  collection=sortedCollection
-                  onChange=(action (mut advancedFilters))}}
-              {{/one-collapse}}
-            {{/if}}
           </div>
+          {{#if advancedFiltersComponent}}
+            <a class="toggle-more-filters clickable" {{action "toggleAdvancedFilters"}}>
+              {{#if areAdvancedFiltersVisible}}
+                {{tt this "hideAdvancedFilters"}}
+                <OneIcon class="arrow-icon" @icon="arrow-up" />
+              {{else}}
+                {{tt this "showAdvancedFilters"}}
+                <OneIcon class="arrow-icon" @icon="arrow-down" />
+              {{/if}}
+            </a>
+            <OneCollapse
+              class="advanced-filters-collapse"
+              @collapsed={{not areAdvancedFiltersVisible}}
+            >
+              {{component advancedFiltersComponent
+                collection=sortedCollection
+                onChange=(action "setAdvancedFilter")
+              }}
+            </OneCollapse>
+          {{/if}}
+        </div>
+      {{/if}}
+      <ul class="one-list one-sidebar-primary-item-list">
+        {{#if isInfiniteScroll}}
+          <li class="table-start-row"></li>
+          <li class="first-row" style={{infiniteScroll.firstRowModel.style}}></li>
         {{/if}}
-        {{#if filteredCollection}}
-          <ul class="one-list one-sidebar-primary-item-list">
-            {{#if isInfiniteScroll}}
-              <li class="table-start-row"></li>
-              <li class="first-row" style={{infiniteScroll.firstRowModel.style}}></li>
-            {{/if}}
-            {{#each filteredCollection as |item|}}
-              {{#let (model-routable-id item) as |routableId|}}
-                <li
-                  class={{concat-classes
-                    "one-list-item clickable resource-item"
-                    (if (eq primaryItem item) "active")
+        {{#each filteredCollection as |item|}}
+          {{#let (model-routable-id item) as |routableId|}}
+            <li
+              class={{concat-classes
+                "one-list-item clickable resource-item data-row"
+                (if (eq primaryItem item) "active")
+              }}
+              data-row-id={{item.entityId}}
+            >
+              <OneSidebar::LinkTo
+                @route={{if routableId "onedata.sidebar.content.index" "onedata.sidebar"}}
+                @models={{if routableId
+                  (array sidebarType (model-routable-id item))
+                  (array sidebarType)
+                }}
+                class="item-header"
+              >
+                {{#if firstLevelItemComponent}}
+                  {{component firstLevelItemComponent
+                    item=item
+                    inSidenav=inSidenav
+                    sidebar=this
                   }}
-                  data-row-id={{item.entityId}}
-                >
-                  <OneSidebar::LinkTo
-                    @route={{if routableId "onedata.sidebar.content.index" "onedata.sidebar"}}
-                    @models={{if routableId
-                      (array sidebarType (model-routable-id item))
-                      (array sidebarType)
-                    }}
-                    class="item-header"
-                  >
-                    {{#if firstLevelItemComponent}}
-                      {{component firstLevelItemComponent
-                        item=item
-                        inSidenav=inSidenav
-                        sidebar=this
-                      }}
-                    {{else}}
-                      {{#if firstLevelItemIcon}}
-                        {{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}}
-                      {{/if}}
-                      {{#truncated-string}}
-                        {{name-conflict item=item tagName="span" class="one-label"}}
-                      {{/truncated-string}}
-                    {{/if}}
-                  </OneSidebar::LinkTo>
-                  {{#if (eq primaryItem item)}}
-                    <ul class="one-list one-list-level-2">
-                      {{component secondLevelItemsComponent
-                        item=item
-                        secondaryItemId=secondaryItemId
-                        sidebar=this
-                        secondLevelItems=secondLevelItems
-                        sidebarType=sidebarType
-                      }}
-                    </ul>
+                {{else}}
+                  {{#if firstLevelItemIcon}}
+                    <OneIcon class="sidebar-item-icon" @icon={{firstLevelItemIcon}} />
                   {{/if}}
-                </li>
-              {{/let}}
-            {{/each}}
-          </ul>
-        {{/if}}
+                  <TruncatedString>
+                    <NameConflict @item={{item}} @tagName="span" class="one-label" />
+                  </TruncatedString>
+                {{/if}}
+              </OneSidebar::LinkTo>
+              {{#if (eq primaryItem item)}}
+                <ul class="one-list one-list-level-2">
+                  {{component secondLevelItemsComponent
+                    item=item
+                    secondaryItemId=secondaryItemId
+                    sidebar=this
+                    secondLevelItems=secondLevelItems
+                    sidebarType=sidebarType
+                  }}
+                </ul>
+              {{/if}}
+            </li>
+          {{/let}}
+        {{/each}}
+      </ul>
+      {{#if isNextSpinnerShown}}
+        <div class="loading-row loading-row-next">
+          <SpinSpinnerBlock
+            @sizeClass={{infiniteScrollSpinnerSize}}
+            class="absolute-middle-centered"
+          />
+        </div>
       {{/if}}
     </div>
   </div>

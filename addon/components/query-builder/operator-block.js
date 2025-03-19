@@ -81,6 +81,12 @@ export default Component.extend(...mixins, {
   queryProperties: Object.freeze([]),
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isReadOnly: false,
+
+  /**
    * @type {String}
    */
   popoverPlacement: 'vertical',

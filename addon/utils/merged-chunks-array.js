@@ -6,7 +6,7 @@
  * fetch functions, instead of `fetch` directly.
  *
  * @author Jakub Liput
- * @copyright (C) 2024 ACK CYFRONET AGH
+ * @copyright (C) 2024-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -14,15 +14,25 @@ import ReplacingChunksArray from './replacing-chunks-array';
 import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 
-export default class MergedChunksArray extends ReplacingChunksArray {
-  constructor() {
-    super(...arguments);
+/**
+ * @typedef {(index: InfiniteScrollIndex, size: InfiniteScrollSize, offset: InfiniteScrollOffset) => Promise<InfiniteScrollPage>} MergedChunksArrayFetcher
+ */
 
-    /**
-     * @virtual
-     * @type {Array<ChunksFetchFunction>}
-     */
-    this.fetchers;
+export default class MergedChunksArray extends ReplacingChunksArray {
+  /**
+   * Collection of fetch functions, whose results will be merged and sorted when using
+   * this chunks array main fetch method. It could be used when result list must be
+   * collected from multiple sources, which have their own infinite scroll API (eg. Shares
+   * collection from multiple Spaces).
+   * @virtual
+   * @type {Array<MergedChunksArrayFetcher>}
+   */
+  get fetchers() {
+    throw new Error('MergedChunksArray: fetchers not implemented');
+  }
+
+  set fetchers(value) {
+    defineFetchersUsingValue(this, value);
   }
 
   /**
@@ -47,6 +57,7 @@ export default class MergedChunksArray extends ReplacingChunksArray {
         }
       }
       merged.array.push(...effArray);
+      // If at last one fetcher has not-last chunk, then the whole query is not last.
       if (result.isLast === false) {
         merged.isLast = false;
       }
@@ -58,16 +69,48 @@ export default class MergedChunksArray extends ReplacingChunksArray {
         item.index === index
       );
       if (itemWithIndexPosition !== -1) {
-        sortedArray = sortedArray.slice(0, itemWithIndexPosition);
+        // Do not bother start of slice (always 0), because with the negative
+        // index, we get sortedArray items from the end.
+        sortedArray = sortedArray.slice(0, itemWithIndexPosition + size + offset);
       }
     }
     let sliceRange;
     if (offset >= 0) {
       sliceRange = [0, size];
     } else {
-      sliceRange = [sortedArray.length - size, sortedArray.length];
+      // TODO: VFS-12643 Write test: fetching with negative offset, which results in
+      // lesser items than expected. Before the "Math.max" code below, the array has been
+      // left corrupted (it used negative value in slice).
+      sliceRange = [Math.max(sortedArray.length - size, 0), sortedArray.length];
     }
-    const result = _.sortBy(sortedArray, 'index').slice(...sliceRange);
-    return result;
+    const finalArray = _.sortBy(sortedArray, 'index').slice(...sliceRange);
+    let isLast;
+    if (finalArray.length < mergedResult.array.length) {
+      // We have more items in the source than will be returned, so it cannot be the end
+      // regardless of any isLast.
+      isLast = false;
+    } else {
+      // All chunks have been used - it will be not the last merged chunk only if there is
+      // at last single non-last chunk (see how global isLast is computed earlier).
+      isLast = mergedResult.isLast;
+    }
+    return { array: finalArray, isLast };
   }
+}
+
+/**
+ * Allows to set fetchers property using value, without need to override getter.
+ * @param {MergedChunksArray} self
+ * @param {Array<MergedChunksArrayFetcher>} value
+ */
+function defineFetchersUsingValue(self, value) {
+  Object.defineProperty(self, 'fetchers', {
+    configurable: true,
+    get() {
+      return value;
+    },
+    set(value) {
+      defineFetchersUsingValue(self, value);
+    },
+  });
 }

@@ -5,7 +5,7 @@
  * GUI with tabs.
  *
  * @author Jakub Liput
- * @copyright (C) 2024 ACK CYFRONET AGH
+ * @copyright (C) 2024-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -48,7 +48,7 @@ import _ from 'lodash';
  *     be default.
  * @property {string|DefaultAspectGetter} [defaultAspect] Aspect name, that should be
  *     rendered, when URL does not specify any.
- * @property {string|DefaultResourceGetter} [defaultResource] Resource ID (entityId),
+ * @property {string|DefaultResourceGetter} [defaultResourceId] Resource ID (entityId),
  *     that should be rendered, when URL does not specify any.
  * @property {boolean} [allowIndex] If true and URL does not specify any resource, then
  *     router will allow showing page not related to any resource - index page for
@@ -71,6 +71,7 @@ import _ from 'lodash';
 
 class CommonNavigationTabsConfiguration extends Service {
   @service sidebarResources;
+  @service contentResources;
 
   defaultAspect = 'index';
 
@@ -105,7 +106,7 @@ class CommonNavigationTabsConfiguration extends Service {
     // Without the following code, the user would see Space2, because the default resource
     // is read from LocalStorage, which is set by second web browser tab.
     globals.window.addEventListener('beforeunload', () =>
-      this.setLocalLastUsedResource(this.lastSidebarModel, this.lastContentModel)
+      this.setSessionLastUsedResource(this.lastSidebarModel, this.lastContentModel)
     );
   }
 
@@ -124,7 +125,7 @@ class CommonNavigationTabsConfiguration extends Service {
    */
   @computed
   get tabModels() {
-    const defaultResource = this.defaultResource.bind(this);
+    const defaultResourceIdResolver = this.defaultResourceId.bind(this);
     return [
       { id: 'spaces', icon: 'browser-directory' },
       { id: 'shares', icon: 'browser-share' },
@@ -140,18 +141,22 @@ class CommonNavigationTabsConfiguration extends Service {
         defaultAspect: 'overview',
       },
     ].map(tabModel => {
-      tabModel.defaultResource = defaultResource;
+      tabModel.defaultResourceId = defaultResourceIdResolver;
       return tabModel;
     });
   }
 
+  findOutResourceId(resourceId /* , resourceType */ ) {
+    return resourceId;
+  }
+
   /**
-   * Default implementation for `defaultResource` callback in `OnedataTabModel`.
+   * Default implementation for `defaultResourceId` callback in `OnedataTabModel`.
    * @param {OnedataSidebarRouteModel} sidebarModel
    * @returns {object}
    */
-  async defaultResource(sidebarModel) {
-    return this.getLastUsedResource(sidebarModel);
+  async defaultResourceId(sidebarModel) {
+    return this.getLastUsedResourceId(sidebarModel);
   }
 
   /**
@@ -175,36 +180,89 @@ class CommonNavigationTabsConfiguration extends Service {
 
   /**
    * @param {OnedataSidebarRouteModel} sidebarRouteModel
-   * @returns {Promise<object>}
+   * @returns {Promise<string>}
    */
-  async getDefaultResource(sidebarRouteModel) {
-    const { resourceType, collection } = sidebarRouteModel;
-    const tabModel = this.tabModels.find(tab => tab.id === resourceType);
-    let defaultResource;
+  async getDefaultResourceId(sidebarRouteModel) {
+    const { resourceType } = sidebarRouteModel;
+    let resourceId;
+    resourceId = await this.getTabModelDefaultResourceId(sidebarRouteModel);
+    const isValid = await this.validateResourceId(resourceType, resourceId);
+    if (!isValid) {
+      resourceId = await this.getFirstResourceId(sidebarRouteModel);
+    }
+    return resourceId;
+  }
+
+  /**
+   * Check if the resource can be loaded as content. Sometimes the resolved default
+   * resource ID could be deleted or non available for the current user, so we need to
+   * check if the resource ID is valid.
+   * @private
+   * @param {string} resourceType
+   * @param {string} resourceId
+   * @returns {boolean} If true, the resource ID can be loaded.
+   */
+  async validateResourceId(resourceType, resourceId) {
+    if (!resourceId) {
+      return false;
+    }
+    try {
+      const resourceGri = this.findOutResourceId(resourceId, resourceType);
+      await this.contentResources.getModelFor(resourceType, resourceGri);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * @private
+   * @param {OnedataSidebarRouteModel} sidebarRouteModel
+   * @returns {Promise<string>}
+   */
+  async getTabModelDefaultResourceId(sidebarRouteModel) {
+    const { resourceType } = sidebarRouteModel;
+    const tabId = camelize(resourceType);
+    const tabModel = this.tabModels.find(tab => tab.id === tabId);
+    let defaultResourceId;
     if (tabModel) {
-      if (typeof tabModel.defaultResource === 'string') {
-        defaultResource = tabModel.defaultResource;
+      if (typeof tabModel.defaultResourceId === 'string') {
+        defaultResourceId = tabModel.defaultResourceId;
       }
-      if (typeof tabModel.defaultResource === 'function') {
-        defaultResource = await tabModel?.defaultResource?.(sidebarRouteModel);
+      if (typeof tabModel.defaultResourceId === 'function') {
+        defaultResourceId = await tabModel?.defaultResourceId?.(sidebarRouteModel);
       }
     }
-    if (defaultResource) {
-      return defaultResource;
+    return defaultResourceId;
+  }
+
+  /**
+   * @private
+   * @param {OnedataSidebarRouteModel} sidebarRouteModel
+   * @returns {Promise<string>}
+   */
+  async getFirstResourceId(sidebarRouteModel) {
+    const { resourceType, collection } = sidebarRouteModel;
+    // TODO: VFS-12643 If collection is ChunksArray, then it will get the first item from
+    // visible slice of collection. Maybe implement fetching first item (in collection).
+    const array = collection.fullArray || collection.array;
+    const firstRecord = sortByProperties(
+      array,
+      this.sidebarResources.getItemsSortingFor(resourceType)
+    )[0];
+    if (firstRecord) {
+      return firstRecord.entityId ?? firstRecord.id;
     } else {
-      return sortByProperties(
-        collection.array,
-        this.sidebarResources.getItemsSortingFor(resourceType)
-      )[0];
+      return undefined;
     }
   }
 
   /**
    * @param {OnedataSidebarRouteModel} sidebarModel
-   * @returns {object}
+   * @returns {string}
    */
-  getLastUsedResource(sidebarModel) {
-    const { resourceType, collection } = sidebarModel;
+  getLastUsedResourceId(sidebarModel) {
+    const { resourceType } = sidebarModel;
     let lastUsedId;
     lastUsedId = this.sessionStorage.getItem(
       this.lastUsedIdStorageKey(resourceType)
@@ -214,20 +272,33 @@ class CommonNavigationTabsConfiguration extends Service {
         this.lastUsedIdStorageKey(resourceType)
       );
     }
-    if (lastUsedId) {
-      const lastUsedResource = collection.array.find(resource =>
-        get(resource, 'entityId') === lastUsedId
-      );
-      return lastUsedResource;
+    // Earlier versions of NavigationTabsConfiguration might write "null" string into
+    // storage.
+    if (lastUsedId === 'null') {
+      lastUsedId = null;
     }
+    return lastUsedId;
   }
 
-  setLocalLastUsedResource(sidebarModel, contentModel) {
+  setSessionLastUsedResource(sidebarModel, contentModel) {
+    if (!sidebarModel || !contentModel) {
+      console.error(
+        'NavigationTabsConfiguration.setPersistentLastUsedResource: sidebar and content models are mandatory'
+      );
+      return;
+    }
     const { resourceType } = sidebarModel;
     const { resource } = contentModel;
+    const resourceId = this.getResourceId(resource);
+    if (!resourceId || resourceId === 'null') {
+      console.warn(
+        'NavigationTabsConfiguration.setPersistentLastUsedResource: tried to set nullish last used resource - skipping'
+      );
+      return;
+    }
     this.sessionStorage.setItem(
       this.lastUsedIdStorageKey(resourceType),
-      this.getResourceId(resource)
+      resourceId
     );
   }
 
@@ -235,12 +306,24 @@ class CommonNavigationTabsConfiguration extends Service {
    * @param {OnedataSidebarRouteModel} sidebarModel
    * @param {OnedataContentRouteModel} contentModel
    */
-  setLastUsedResource(sidebarModel, contentModel) {
+  setPersistentLastUsedResource(sidebarModel, contentModel) {
+    if (!sidebarModel || !contentModel) {
+      console.error(
+        'NavigationTabsConfiguration.setPersistentLastUsedResource: sidebar and content models are mandatory'
+      );
+      return;
+    }
     const { resourceType } = sidebarModel;
     const { resource } = contentModel;
     this.lastSidebarModel = sidebarModel;
     this.lastContentModel = contentModel;
     const resourceId = this.getResourceId(resource);
+    if (!resourceId || resourceId === 'null') {
+      console.warn(
+        'NavigationTabsConfiguration.setPersistentLastUsedResource: tried to set nullish last used resource - skipping'
+      );
+      return;
+    }
     this.localStorage.setItem(
       this.lastUsedIdStorageKey(resourceType),
       resourceId

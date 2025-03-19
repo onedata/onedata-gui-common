@@ -17,7 +17,7 @@
             as |apiCommand|
           >
             <div class="option-container">
-              {{#truncated-string class="text api-command-container"}}
+              <TruncatedString class="text api-command-container">
                 <span class="api-command-title">
                   {{apiCommand.name}}
                 </span>
@@ -29,7 +29,7 @@
                     {{tt this (concat "apiType." apiCommand.type)}}
                   </span>
                 </span>
-              {{/truncated-string}}
+              </TruncatedString>
             </div>
           </OneDropdown>
         </div>
@@ -52,30 +52,30 @@
             class="inline-icon-container api-command-type-info-trigger-container"
             {{action (mut apiCommandTypeInfoOpened) (not apiCommandTypeInfoOpened)}}
           >
-            {{one-icon
-              id=apiCommandInfoTriggerId
-              icon="sign-question-rounded"
+            <OneIcon
+              id={{apiCommandInfoTriggerId}}
+              @icon="sign-question-rounded"
               class="api-command-type-info-trigger hint-trigger clickable"
-            }}
+            />
           </div>
         </div>
-        {{#one-webui-popover
-          popoverStyle="api-command-type-info"
-          padding=true
-          open=apiCommandTypeInfoOpened
-          triggerSelector=(concat "#" apiCommandInfoTriggerId)
-          placement=(if (media "isMobile") "bottom-right" "auto")
+        <OneWebuiPopover
+          @popoverStyle="api-command-type-info"
+          @padding={{true}}
+          @open={{apiCommandTypeInfoOpened}}
+          @triggerSelector={{concat "#" apiCommandInfoTriggerId}}
+          @placement={{if (media "isMobile") "bottom-right" "auto"}}
           as |popover|
-        }}
-          {{#click-outside
-            onClickOutside=(action (mut apiCommandTypeInfoOpened) false)
-            exceptSelector=".api-command-type-info-trigger, .webui-popover-api-command-type-info"
-          }}
+        >
+          <ClickOutside
+            @onClickOutside={{action (mut apiCommandTypeInfoOpened) false}}
+            @exceptSelector=".api-command-type-info-trigger, .webui-popover-api-command-type-info"
+          >
             <p class="api-command-tip-intro">
               {{apiCommandTipIntro}}
             </p>
-          {{/click-outside}}
-        {{/one-webui-popover}}
+          </ClickOutside>
+        </OneWebuiPopover>
       </td>
     </tr>
     <tr class="item-info-row-description">
@@ -84,19 +84,19 @@
       </td>
       <td class="property-value description-value">
         {{description}}
-        {{one-doc-see-more
-          linkName=(tt this
+        <OneDocSeeMore
+          @linkName={{tt this
             (concat "apiCommandTipLinkName." effSelectedApiCommand.type)
-          )
-          href=(if (eq effSelectedApiCommand.type "xrootd")
+          }}
+          @href={{if (eq effSelectedApiCommand.type "xrootd")
             "https://xrootd.slac.stanford.edu/"
             (one-api-doc-url
               product=product
               version="latest"
               anchor=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
             )
-          )
-        }}
+          }}
+        />
       </td>
     </tr>
     <tr class="item-info-row-api-command">
@@ -105,12 +105,12 @@
       </td>
       <td class="property-value">
         <div class="input-group-clipboard-textarea">
-          {{clipboard-line
-            value=selectedApiCommandString
-            type="textarea"
-            size=(if smallContent "sm")
+          <ClipboardLine
+            @value={{selectedApiCommandString}}
+            @type="textarea"
+            @size={{if smallContent "sm"}}
             class="monospace-font compact"
-          }}
+          />
           {{#if hasOptionalParameters}}
             <div class="optional-parameters-text">
               {{tt this "apiOptionalParameters"}}
@@ -136,8 +136,8 @@
         <td class="property-name with-input">
           {{tt this "envVariables"}}
           <span class="env-variables-info-icon-container">
-            {{one-icon icon="sign-question-rounded" class="env-variables-info-icon"}}
-            {{one-tooltip title=(tt this "variablesTooltip")}}
+            <OneIcon @icon="sign-question-rounded" class="env-variables-info-icon" />
+            <OneTooltip @title={{tt this "variablesTooltip"}} />
           </span>
         </td>
         <td class="property-value placeholders-value with-input">
@@ -159,7 +159,10 @@
                     </td>
                     <td class="placeholder-description">
                       {{tt this "authorizationTokenDescription"}}
-                      <a href={{accessTokenUrl}} target="_blank">{{tt this "tokenPage"}}</a>.
+                      <a
+                        href={{accessTokenUrl}}
+                        target="_blank"
+                      >{{tt this "tokenPage"}}</a>.
                     </td>
                   </tr>
                 {{/if}}

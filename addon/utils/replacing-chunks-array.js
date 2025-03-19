@@ -21,7 +21,6 @@ import {
 } from 'rsvp';
 import Evented from '@ember/object/evented';
 import OneSingletonTaskQueue from 'onedata-gui-common/utils/one-singleton-task-queue';
-import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import { syncObserver } from 'onedata-gui-common/utils/observer';
 
 export const emptyItem = {};
@@ -71,6 +70,11 @@ export default ArraySlice.extend(Evented, {
   error: undefined,
 
   /**
+   * @type {number}
+   */
+  customLoadMoreThreshold: undefined,
+
+  /**
    * @type {Ember.ComputedProperty<boolean>}
    */
   isLoaded: reads('initialLoad.isSettled'),
@@ -86,12 +90,24 @@ export default ArraySlice.extend(Evented, {
   isReloading: reads('_isReloading'),
 
   /**
-   * @type {Ember.ComputedProperty<number>}
+   * @type {number}
    */
   chunkSize: 24,
 
-  loadMoreThreshold: computed('chunkSize', function getLoadMoreThreshold() {
-    return this.get('chunkSize') / 2;
+  /**
+   * Minimum size of query when doing reload. It it set to the `chunksSize` by default
+   * if not specified.
+   * @type {number}
+   */
+  reloadMinSize: undefined,
+
+  loadMoreThreshold: computed('chunkSize', 'customLoadMoreThreshold', {
+    get() {
+      return this.customLoadMoreThreshold ?? (this.chunkSize / 2);
+    },
+    set(key, value) {
+      return this.set('customLoadMoreThreshold', value);
+    },
   }),
 
   /**
@@ -120,8 +136,13 @@ export default ArraySlice.extend(Evented, {
   },
 
   isFetchPrevNeeded() {
-    return !get(this.sourceArray, 'length') ||
+    return !this.sourceArray.length ||
       !this._startReached && this._start - this.loadMoreThreshold <= this.emptyIndex;
+  },
+
+  isFetchNextNeeded() {
+    return !this.isReloading && !this._endReached &&
+      this._end + this.loadMoreThreshold >= this.sourceArray.length;
   },
 
   /**
@@ -149,11 +170,7 @@ export default ArraySlice.extend(Evented, {
     'loadMoreThreshold',
     'sourceArray.[]',
     function endChanged() {
-      if (
-        !this.isReloading &&
-        !this._endReached &&
-        this._end + this.loadMoreThreshold >= this.sourceArray.length
-      ) {
+      if (this.isFetchNextNeeded()) {
         return this.scheduleTask('fetchNext');
       }
     }
@@ -190,30 +207,35 @@ export default ArraySlice.extend(Evented, {
       console.debug('util:replacing-chunks-array: cancelled scheduling', taskName);
       return false;
     }
-    const fun = () => this[methodName](...args);
-    let taskFun = fun;
+
     const taskQueueOptions = {};
-    if (options?.ignoreCurrentTask) {
-      taskQueueOptions.ignoreCurrentTask = options.ignoreCurrentTask;
-    }
+    let taskFun;
     if (taskName === 'fetchPrev') {
-      taskQueueOptions.insertBeforeType = 'reload';
       // For fetch prev: schedule check if user did scroll to region that is still not
       // loaded - if so, we need to schedule next fetchPrev.
       // We need to do this, because auto-fetchPrev scheduling is locked when fetchPrev
       // is in progress (when user performs scroll and loading is in progress).
-      taskFun = () => fun().then(async (result) => {
-        await waitForRender();
-        if (this.isFetchPrevNeeded()) {
-          console.debug('util:replacing-chunks-array: next serial fetchPrev needed');
-          this.taskQueue.forceScheduleTask(
-            'fetchPrev',
-            () => this.fetchPrev(),
-            taskQueueOptions
-          );
+      taskFun = async () => {
+        let prevSourceArrayLength;
+        while (this.isFetchPrevNeeded() && !this.isDestroyed && !this.isDestroying) {
+          await this[methodName](...args);
+          if (this.sourceArray.length === 0) {
+            break;
+          }
+          if (this.sourceArray.length === prevSourceArrayLength) {
+            console.error(
+              'ReplacingChunksArray: possible infinite fetchPrev loop detected'
+            );
+            break;
+          }
+          prevSourceArrayLength = this.sourceArray.length;
         }
-        return result;
-      });
+      };
+    } else {
+      taskFun = () => this[methodName](...args);
+    }
+    if (options?.ignoreCurrentTask) {
+      taskQueueOptions.ignoreCurrentTask = options.ignoreCurrentTask;
     }
     return await this.taskQueue.scheduleTask(
       taskName,
@@ -273,12 +295,7 @@ export default ArraySlice.extend(Evented, {
       sourceArray,
       chunkSize,
       emptyIndex,
-    } = this.getProperties(
-      '_startReached',
-      'sourceArray',
-      'chunkSize',
-      'emptyIndex',
-    );
+    } = this;
 
     const firstItem = sourceArray[emptyIndex + 1];
     const fetchStartIndex = firstItem ? this.getIndex(firstItem) : null;
@@ -291,16 +308,17 @@ export default ArraySlice.extend(Evented, {
     }
 
     this.trigger('fetchPrevStarted');
-    const updatePromise = this.fetchWrapper(
-        fetchStartIndex,
-        currentChunkSize,
-        -currentChunkSize,
-      )
-      .then(({ arrayUpdate }) => {
+
+    const updatePromise = (async () => {
+      try {
+        const { arrayUpdate } = await this.fetchWrapper(
+          fetchStartIndex,
+          currentChunkSize,
+          -currentChunkSize,
+        );
         if (this.isDestroyed) {
           return;
         }
-
         // TODO: use of pullAllBy is working, but it is probably unsafe
         // it can remove items from update, while they should stay there
         // because some entries "fallen down" from further part of array
@@ -335,9 +353,11 @@ export default ArraySlice.extend(Evented, {
             for (let i = insertIndex; i < fetchedArraySize; ++i) {
               sourceArray[i] = arrayUpdate[i];
             }
+            const newStartIndex = this.startIndex + additionalFrontSpace;
+            const newEndIndex = this.endIndex + additionalFrontSpace;
             this.setProperties({
-              startIndex: this.get('startIndex') + additionalFrontSpace,
-              endIndex: this.get('endIndex') + additionalFrontSpace,
+              startIndex: newStartIndex,
+              endIndex: newEndIndex,
               emptyIndex: -1,
             });
           }
@@ -348,28 +368,26 @@ export default ArraySlice.extend(Evented, {
           for (let i = 0; i < insertIndex; ++i) {
             sourceArray.shift();
           }
+          const newStartIndex = this.startIndex - insertIndex;
+          const newEndIndex = this.endIndex - insertIndex;
           this.setProperties({
-            startIndex: this.get('startIndex') - insertIndex,
-            endIndex: this.get('endIndex') - insertIndex,
+            startIndex: newStartIndex,
+            endIndex: newEndIndex,
             _startReached: true,
           });
         } else {
           this.set('_startReached', false);
         }
-      })
-      .catch(error => {
+        this.trigger('fetchPrevResolved');
+      } catch (error) {
         this.trigger('fetchPrevRejected');
         throw error;
-      })
-      .then(result => {
-        this.trigger('fetchPrevResolved');
-        return result;
-      })
-      .finally(() => {
+      } finally {
         safeExec(this, () => {
           this.notifyPropertyChange('[]');
         });
-      });
+      }
+    })();
     return updatePromise;
   },
 
@@ -428,12 +446,18 @@ export default ArraySlice.extend(Evented, {
   },
 
   /**
-   * Reload current array view or load array from beginning (`head === true`).
-   * This method should be not used directly - instead use `scheduleReload(...)`
-   * to prevent issues with async array modification.
+   * Reload current array view or load array from beginning (`head === true`). This method
+   * should be not used directly - instead use `scheduleReload(...)` to prevent issues
+   * with async array modification.
+   * @param {Object} [options]
+   * @param {boolean} options.head If true, reload will be performed from the beginning of
+   *   the data source (index will be set to null).
+   * @param {InfiniteScrollSize} options.minSize Minimum size of queried items. The actual
+   *   query size could be larger and it's based on computed reload start/end.
+   * @param {InfiniteScrollOffset} options.offset
    * @returns {Promise}
    */
-  async _reload({ head = false, minSize = this.chunkSize, offset = 0 } = {}) {
+  async _reload({ head = false, minSize = this.reloadMinSize, offset = 0 } = {}) {
     const {
       _start,
       _end,
@@ -441,14 +465,7 @@ export default ArraySlice.extend(Evented, {
       endIndex,
       sourceArray,
       indexMargin,
-    } = this.getProperties(
-      '_start',
-      '_end',
-      'startIndex',
-      'endIndex',
-      'sourceArray',
-      'indexMargin',
-    );
+    } = this;
 
     // currently, if data is not loaded between start and startIndex
     const lastSourceIndex = get(sourceArray, 'length') - 1;
@@ -466,50 +483,81 @@ export default ArraySlice.extend(Evented, {
     }
     this.set('_isReloading', true);
     const firstObject = this.objectAt(0);
-    let fetchStartIndex = firstObject && this.getIndex(firstObject);
-    if (fetchStartIndex === undefined || head || _start === 0) {
+    let fetchStartIndex;
+    if (!head) {
+      fetchStartIndex = firstObject && this.getIndex(firstObject);
+    }
+    const isEffHead = (
+      head ||
+      fetchStartIndex === undefined ||
+      (_start === 0 && !this.isFetchPrevNeeded())
+    );
+    if (isEffHead) {
       fetchStartIndex = null;
     }
 
-    const lengthBeforeFetch = this.getLength() || (this.endIndex - this.startIndex);
+    const endIndexBeforeFetch = this.endIndex;
 
+    let effStartReached = isEffHead;
     try {
-      const { arrayUpdate, endReached } = await this.fetchWrapper(
+      let { arrayUpdate, endReached } = await this.fetchWrapper(
         fetchStartIndex,
         size,
         offset,
       );
-      if (this.isDestroyed) {
+      if (this.isDestroyed || this.isDestroying) {
         return;
       }
       const fetchedCount = get(arrayUpdate, 'length');
       const updatedEnd = _start + fetchedCount;
-      safeExec(this, 'setProperties', {
-        _startReached: Boolean(head),
+      if (!isEffHead && !fetchedCount) {
+        const backwardResponse = (await this.fetchWrapper(
+          // The backend makes sorting based on ASCII chars (single byte), so instead
+          // using the highest possible Unicode char (\u10FFFF) we send query with four
+          // highest bytes (the highest Unicode char has 0x10h first byte).
+          '\uFFFF\uFFFF',
+          size,
+          -size,
+        ));
+        if (this.isDestroyed || this.isDestroying) {
+          return;
+        }
+        arrayUpdate = backwardResponse.arrayUpdate;
+        endReached = backwardResponse.endReached;
+        effStartReached = backwardResponse.arrayUpdate.length < size;
+      }
+      this.setProperties({
+        _startReached: effStartReached,
         _endReached: Boolean(endReached),
         error: undefined,
       });
-      if (head) {
+      if (isEffHead || !fetchedCount) {
         // clear array without notify
         sourceArray.splice(0, get(sourceArray, 'length'));
         sourceArray.push(...arrayUpdate);
         this.setProperties({
           emptyIndex: -1,
           startIndex: 0,
-          endIndex: lengthBeforeFetch <= 0 ?
-            fetchedCount : Math.min(lengthBeforeFetch, fetchedCount),
+          endIndex: endIndexBeforeFetch <= 0 ?
+            fetchedCount : Math.min(endIndexBeforeFetch, fetchedCount),
         });
       } else {
-        this.setEmptyIndex(_start - 1);
-        if (updatedEnd < get(sourceArray, 'length')) {
-          set(sourceArray, 'length', updatedEnd);
-        }
         const updateBoundary = Math.min(updatedEnd, fetchedCount);
         for (let i = 0; i < updateBoundary; ++i) {
           sourceArray[i + _start] = arrayUpdate[i];
         }
+        this.setEmptyIndex(_start - 1);
+        if (updatedEnd < get(sourceArray, 'length')) {
+          set(sourceArray, 'length', updatedEnd);
+        }
+        if (this.startIndex === this.endIndex) {
+          this.setProperties({
+            startIndex: 0,
+            endIndex: sourceArray.length,
+          });
+        }
       }
-      sourceArray.arrayContentDidChange(this._start);
+      sourceArray.arrayContentDidChange(_start);
       return this;
     } catch (error) {
       safeExec(this, 'set', 'error', error);
@@ -541,41 +589,41 @@ export default ArraySlice.extend(Evented, {
     const {
       sourceArray,
       indexMargin,
-    } = this.getProperties('sourceArray', 'indexMargin');
-    const updatePromise = this.fetchWrapper(
+    } = this;
+    const updatePromise = (async () => {
+      const { arrayUpdate, endReached } = await this.fetchWrapper(
         index,
         size + indexMargin * 2,
         -indexMargin,
-      )
-      .then(({ arrayUpdate, endReached }) => {
-        if (this.isDestroyed) {
-          return;
-        }
-        // clear array without notify
-        sourceArray.splice(0, get(sourceArray, 'length'));
-        sourceArray.push(...arrayUpdate);
-        // Empty index means a jump to the beginning
-        const startIndex = index ? arrayUpdate.findIndex(item =>
-          get(item, 'index') === index
-        ) : 0;
-        if (startIndex === -1) {
-          return false;
-        } else {
-          const endIndex = Math.min(
-            startIndex + size,
-            arrayUpdate.length
-          );
-          this.setProperties({
-            _startReached: false,
-            _endReached: Boolean(endReached),
-            startIndex,
-            endIndex,
-            emptyIndex: -1,
-          });
-          sourceArray.arrayContentDidChange();
-          return this;
-        }
-      });
+      );
+      if (this.isDestroyed) {
+        return;
+      }
+      // clear array without notify
+      sourceArray.splice(0, get(sourceArray, 'length'));
+      sourceArray.push(...arrayUpdate);
+      // Empty index means a jump to the beginning
+      const startIndex = index ? arrayUpdate.findIndex(item =>
+        get(item, 'index') === index
+      ) : 0;
+      if (startIndex === -1) {
+        return false;
+      } else {
+        const endIndex = Math.min(
+          startIndex + size,
+          arrayUpdate.length
+        );
+        this.setProperties({
+          _startReached: startIndex < indexMargin,
+          _endReached: Boolean(endReached),
+          startIndex,
+          endIndex,
+          emptyIndex: -1,
+        });
+        sourceArray.arrayContentDidChange();
+        return this;
+      }
+    })();
     this.trigger('willResetArray', {
       updatePromise,
     });
@@ -652,11 +700,29 @@ export default ArraySlice.extend(Evented, {
     return allSettled(promises);
   },
 
+  setIndices(startIndex, endIndex) {
+    const changes = {};
+    if (startIndex !== this.startIndex) {
+      changes.startIndex = startIndex;
+    }
+    if (endIndex !== this.endIndex) {
+      changes.endIndex = endIndex;
+    }
+    if (!Object.keys(changes).length) {
+      // nothing to do
+      return;
+    }
+    this.setProperties(changes);
+  },
+
   init() {
-    if (!this.get('sourceArray')) {
+    if (typeof this.reloadMinSize !== 'number') {
+      this.set('reloadMinSize', this.chunkSize);
+    }
+    if (!this.sourceArray) {
       this.set('sourceArray', A());
     }
-    if (!this.get('taskQueue')) {
+    if (!this.taskQueue) {
       this.set('taskQueue', new OneSingletonTaskQueue());
     }
     this._super(...arguments);

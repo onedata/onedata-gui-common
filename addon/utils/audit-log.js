@@ -49,7 +49,7 @@ import _ from 'lodash';
  * @property {string|null} [index] an anchor where the listing should start.
  *   Only one of `index` and `timestamp` fields should be provided during
  *   the listing. Every log entry received from the backend has that field
- *   so it is ease to start from the specific log entry.
+ *   so it is easy to start from the specific log entry.
  * @property {number|null} [timestamp] a timestamp specifying from which log
  *   entry listing should start. Only one of `index` and `timestamp` fields
  *   should be provided during the listing.

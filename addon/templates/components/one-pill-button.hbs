@@ -11,27 +11,27 @@
       <div class="icon-dot"></div>
       <div class="icon-dot"></div>
     {{else}}
-      {{one-icon icon=arrowIcon}}
+      <OneIcon @icon={{arrowIcon}} />
     {{/if}}
   </div>
-  {{#one-webui-popover
+  <OneWebuiPopover
     class="one-pill-button-actions-popover"
-    popoverStyle=(concat-classes "with-dropdown" popoverClass)
-    padding=false
-    popoverTrigger="manual"
-    triggerSelector=(concat "#" elementId " .one-pill-button-actions-trigger")
-    open=actionsOpen
+    @popoverStyle={{concat-classes "with-dropdown" popoverClass}}
+    @padding={{false}}
+    @popoverTrigger="manual"
+    @triggerSelector={{concat "#" elementId " .one-pill-button-actions-trigger"}}
+    @open={{actionsOpen}}
     as |popover|
-  }}
-    {{#click-outside onClickOutside=(action "toggleActions" false)}}
-      {{#popover-content-limit opened=popover.visible}}
-        {{actions-popover-content
-          actionsArray=menuItems
-          actionClicked=(action "toggleActions" false)
+  >
+    <ClickOutside @onClickOutside={{action "toggleActions" false}}>
+      <PopoverContentLimit @opened={{popover.visible}}>
+        <ActionsPopoverContent
+          @actionsArray={{menuItems}}
+          @actionClicked={{action "toggleActions" false}}
           class="button-actions ps--focus"
-        }}
-      {{/popover-content-limit}}
-    {{/click-outside}}
-  {{/one-webui-popover}}
+        />
+      </PopoverContentLimit>
+    </ClickOutside>
+  </OneWebuiPopover>
 
 </div>

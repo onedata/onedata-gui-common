@@ -1,21 +1,21 @@
 <div class="tags-input">
   <span class="stores-label">{{tt this "label"}}:</span>
   {{#each sortedStores as |store|}}
-    {{workflow-visualiser/stores-list/store
-      store=store
-      mode=mode
-      actionsFactory=actionsFactory
-    }}
+    <WorkflowVisualiser::StoresList::Store
+      @store={{store}}
+      @mode={{mode}}
+      @actionsFactory={{actionsFactory}}
+    />
   {{/each}}
   {{#if (eq mode "edit")}}
-    {{#one-button
-      class=(concat-classes createAction.className "input-element")
-      onClick=createAction.executeCallback
-      size="sm"
-    }}
-      {{one-icon icon=createAction.icon}}
+    <OneButton
+      class={{concat-classes createAction.className "input-element"}}
+      @onClick={{createAction.executeCallback}}
+      @size="sm"
+    >
+      <OneIcon @icon={{createAction.icon}} />
       <span class="text">{{createAction.title}}</span>
-    {{/one-button}}
+    </OneButton>
   {{/if}}
 </div>
 {{yield}}

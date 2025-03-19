@@ -8,21 +8,13 @@
     <tr class="row-with-text">
       <td class="property-name">{{tt this "name"}}</td>
       <td class="property-value">
-        {{one-clipboard-line
-          size="sm"
-          value=record.name
-          type="text"
-        }}
+        <OneClipboardLine @size="sm" @value={{record.name}} @type="text" />
       </td>
     </tr>
     <tr class="row-with-text">
       <td class="property-name">{{tt this "id"}}</td>
       <td class="property-value">
-        {{one-clipboard-line
-          size="sm"
-          value=record.entityId
-          type="text"
-        }}
+        <OneClipboardLine @size="sm" @value={{record.entityId}} @type="text" />
       </td>
     </tr>
   </tbody>
@@ -31,7 +23,7 @@
   <div class="links-container">
     <a href={{linkToAtmInventory}} class="info-link clickable">
       {{tt this "openAtmInventory"}}
-      {{one-icon icon="link-external"}}
+      <OneIcon @icon="link-external" />
     </a>
   </div>
 {{/if}}

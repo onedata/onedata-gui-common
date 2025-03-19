@@ -5,32 +5,32 @@
   @disabled={{disabled}}
   @onClick={{action "togglePopover"}}
 >
-  {{one-icon icon="plus" class="adder-icon"}}
+  <OneIcon @icon="plus" class="adder-icon" />
 </OneButton>
 
-{{#render-later triggerRender=popoverOpen}}
-  {{#click-outside
+<RenderLater @triggerRender={{popoverOpen}}>
+  <ClickOutside
     class="click-outside"
-    onClickOutside=(action "togglePopover" false)
-    exceptSelector=".ember-basic-dropdown, .webui-popover-block-adder, .query-builder-block-adder, .ember-basic-dropdown-content.ember-basic-dropdown-content-comparator-value"
-  }}
-    {{#one-webui-popover
-      popoverStyle="unlimited-width webui-popover-block-adder"
+    @onClickOutside={{action "togglePopover" false}}
+    @exceptSelector=".ember-basic-dropdown, .webui-popover-block-adder, .query-builder-block-adder, .ember-basic-dropdown-content.ember-basic-dropdown-content-comparator-value"
+  >
+    <OneWebuiPopover
+      @popoverStyle="unlimited-width webui-popover-block-adder"
       class="block-adder-popover"
-      popoverTrigger="manual"
-      open=popoverOpen
-      padding=true
-      placement=popoverPlacement
-      triggerSelector=(concat "#" btnId)
-    }}
-      {{query-builder/block-selector
-        mode="create"
-        hideConditionCreation=hideConditionCreation
-        operators=operators
-        queryProperties=queryProperties
-        valuesBuilder=valuesBuilder
-        onBlockAdd=(action "addBlock" (action "togglePopover" false))
-      }}
-    {{/one-webui-popover}}
-  {{/click-outside}}
-{{/render-later}}
+      @popoverTrigger="manual"
+      @open={{popoverOpen}}
+      @padding={{true}}
+      @placement={{popoverPlacement}}
+      @triggerSelector={{concat "#" btnId}}
+    >
+      <QueryBuilder::BlockSelector
+        @mode="create"
+        @hideConditionCreation={{hideConditionCreation}}
+        @operators={{operators}}
+        @queryProperties={{queryProperties}}
+        @valuesBuilder={{valuesBuilder}}
+        @onBlockAdd={{action "addBlock" (action "togglePopover" false)}}
+      />
+    </OneWebuiPopover>
+  </ClickOutside>
+</RenderLater>

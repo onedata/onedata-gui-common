@@ -1,31 +1,31 @@
-{{#global-modal
-  classNames=(concat-classes "question-modal" modalClassName)
-  allowClose=(not isSubmitting)
-  modalId=modalId
-  shouldCloseOnTransition=shouldCloseOnTransition
+<GlobalModal
+  @classNames={{concat-classes "question-modal" modalClassName}}
+  @allowClose={{not isSubmitting}}
+  @modalId={{modalId}}
+  @shouldCloseOnTransition={{shouldCloseOnTransition}}
   as |modal|
-}}
+>
 
-  {{#modal.header}}
+  <modal.header>
     <h1>
       {{#if headerIcon}}
-        {{one-icon icon=headerIcon}}
+        <OneIcon @icon={{headerIcon}} />
       {{/if}}
       <span class="one-label">{{headerText}}</span>
     </h1>
-  {{/modal.header}}
+  </modal.header>
 
-  {{#modal.body}}
+  <modal.body>
     {{#each descriptionParagraphs as |paragraph|}}
       <p class={{paragraph.className}}>{{paragraph.text}}</p>
     {{/each}}
     {{#if isCheckboxVisible}}
       <div class="row content-row no-border row-understand-notice">
-        {{one-checkbox
+        <OneCheckbox
           class="danger one-checkbox-danger one-checkbox-understand"
-          checked=isCheckboxChecked
-          update=(action (mut isCheckboxChecked))
-        }}
+          @checked={{isCheckboxChecked}}
+          @update={{action (mut isCheckboxChecked)}}
+        />
         <div
           class="text-understand clickable"
           {{action (mut isCheckboxChecked) (not isCheckboxChecked)}}
@@ -34,30 +34,30 @@
         </div>
       </div>
     {{/if}}
-  {{/modal.body}}
+  </modal.body>
 
-  {{#modal.footer class="btn-toolbar"}}
+  <modal.footer class="btn-toolbar">
     {{#unless isNoButtonHidden}}
-      {{#one-button
-        type="default"
+      <OneButton
+        @type="default"
         class="question-no"
-        onClick=modal.close
-        disabled=isSubmitting
-      }}
+        @onClick={{modal.close}}
+        @disabled={{isSubmitting}}
+      >
         {{noButtonText}}
-      {{/one-button}}
+      </OneButton>
     {{/unless}}
     {{#unless isYesButtonHidden}}
-      {{#one-button
-        type=yesButtonType
-        buttonType="submit"
+      <OneButton
+        @type={{yesButtonType}}
+        @buttonType="submit"
         class="question-yes"
-        onClick=(action "submit" modal.submit)
-        disabled=isYesButtonDisabled
-      }}
+        @onClick={{action "submit" modal.submit}}
+        @disabled={{isYesButtonDisabled}}
+      >
         {{yesButtonText}}
-      {{/one-button}}
+      </OneButton>
     {{/unless}}
-  {{/modal.footer}}
+  </modal.footer>
 
-{{/global-modal}}
+</GlobalModal>

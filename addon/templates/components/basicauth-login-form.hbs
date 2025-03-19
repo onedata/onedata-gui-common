@@ -1,15 +1,16 @@
 <div class="row text-center">
   <div class="col-xs-12">
-    {{#bs-form class="form-horizontal"
-      onSubmit=(action "submitLogin" username password)
-      formLayout="horizontal"
+    <BsForm
+      class="form-horizontal"
+      @onSubmit={{action "submitLogin" username password}}
+      @formLayout="horizontal"
       as |form|
-    }}
+    >
       {{#unless passphraseMode}}
-        {{#form.group class=(if areCredentialsInvalid "has-error")}}
+        <form.group class={{if areCredentialsInvalid "has-error"}}>
           <div class="input-group with-icon-addon">
             <div class="input-group-addon">
-              {{one-icon icon="user"}}
+              <OneIcon @icon="user" />
             </div>
             <input
               class="form-control login-username"
@@ -19,12 +20,12 @@
               disabled={{isDisabled}}
             >
           </div>
-        {{/form.group}}
+        </form.group>
       {{/unless}}
-      {{#form.group class=(if areCredentialsInvalid "has-error")}}
+      <form.group class={{if areCredentialsInvalid "has-error"}}>
         <div class="input-group with-icon-addon">
           <div class="input-group-addon">
-            {{one-icon icon="lock"}}
+            <OneIcon @icon="lock" />
           </div>
           <input
             type="password"
@@ -35,25 +36,29 @@
             disabled={{isDisabled}}
           >
         </div>
-      {{/form.group}}
+      </form.group>
       <div class="login-error-message{{if areCredentialsInvalid " active" ""}}">
         {{tt this (concat "invalidCredentials" (if passphraseMode "OnlyPassphrase" ""))}}
       </div>
       <div class="row text-center">
         {{#if backButtonAction}}
-          <button type="button" class="btn btn-warning back-button" {{action "backAction"}}>
-            {{one-icon icon="arrow-right"}}
+          <button
+            type="button"
+            class="btn btn-warning back-button"
+            {{action "backAction"}}
+          >
+            <OneIcon @icon="arrow-right" />
             {{tt this "back"}}
           </button>
         {{/if}}
-        {{#one-button
-          type="primary"
-          buttonType="submit"
-          onClick=(action "submitLogin" username password)
-        }}
+        <OneButton
+          @type="primary"
+          @buttonType="submit"
+          @onClick={{action "submitLogin" username password}}
+        >
           {{tt this "signIn"}}
-        {{/one-button}}
+        </OneButton>
       </div>
-    {{/bs-form}}
+    </BsForm>
   </div>
 </div>

@@ -1,13 +1,13 @@
-{{#one-modal
-  class=(concat-classes "alert-global" alert.type)
-  open=open
-  shouldCloseOnTransition=false
-  onHide=(action "onHide")
+<OneModal
+  class={{concat-classes "alert-global" alert.type}}
+  @open={{open}}
+  @shouldCloseOnTransition={{false}}
+  @onHide={{action "onHide"}}
   as |modal|
-}}
-  {{#modal.header}}
+>
+  <modal.header>
     <h1>
-      {{one-icon icon=icon class="header-icon"}}
+      <OneIcon @icon={{icon}} class="header-icon" />
       <span class="one-label">
         {{#if options.header}}
           {{options.header}}
@@ -18,8 +18,8 @@
         {{/if}}
       </span>
     </h1>
-  {{/modal.header}}
-  {{#modal.body}}
+  </modal.header>
+  <modal.body>
     {{#if options.componentName}}
       {{component options.componentName options=options}}
     {{else}}
@@ -28,23 +28,24 @@
         {{#if (not alwaysShowDetails)}}
           <a class="toggle-details-link clickable {{expandDetailsLinkClass}}" {{action "toggleDetails"}}>
             {{tt this (if areDetailsExpanded "hideDetails" "showDetails")}}
-            {{one-icon class="collapse-arrow" icon=(if areDetailsExpanded "arrow-up" "arrow-down")}}
+            <OneIcon
+              class="collapse-arrow"
+              @icon={{if areDetailsExpanded "arrow-up" "arrow-down"}}
+            />
           </a>
         {{/if}}
-        {{#one-collapse
+        <OneCollapse
           class="details-collapse"
-          collapsed=(if alwaysShowDetails false (not areDetailsExpanded))}}
+          @collapsed={{if alwaysShowDetails false (not areDetailsExpanded)}}
+        >
           {{detailsText}}
-        {{/one-collapse}}
+        </OneCollapse>
       {{/if}}
     {{/if}}
-  {{/modal.body}}
-  {{#modal.footer class="btn-toolbar"}}
-    {{#one-button
-      onClick=(action modal.close)
-      class=closeBtnClass
-    }}
+  </modal.body>
+  <modal.footer class="btn-toolbar">
+    <OneButton @onClick={{action modal.close}} class={{closeBtnClass}}>
       {{tt this "close"}}
-    {{/one-button}}
-  {{/modal.footer}}
-{{/one-modal}}
+    </OneButton>
+  </modal.footer>
+</OneModal>

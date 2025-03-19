@@ -1,62 +1,57 @@
 {{#if editedChart}}
-  {{#one-button
-    class="back-btn"
-    type="default"
-    size="sm"
-    onClick=(action "back")
-  }}
-    {{one-icon icon="arrow-left"}}
+  <OneButton class="back-btn" @type="default" @size="sm" @onClick={{action "back"}}>
+    <OneIcon @icon="arrow-left" />
     <span class="text">{{tt this "back"}}</span>
-  {{/one-button}}
+  </OneButton>
 {{/if}}
 
-{{#truncated-string class="view-title"}}
+<TruncatedString class="view-title">
   {{title}}
   {{#if (not editedChart)}}
-    <span class="space"></span>{{one-label-tip title=(tt this "chartDashboardTooltip")}}
+    <span class="space"></span><OneLabelTip @title={{tt this "chartDashboardTooltip"}} />
   {{/if}}
-{{/truncated-string}}
+</TruncatedString>
 
 {{#if (not editorContext.isReadOnly)}}
-  {{#one-button
+  <OneButton
     class="undo-btn"
-    type="default"
-    size="sm"
-    disabled=(not undoManager.canUndo)
-    onClick=(action "undo")
-  }}
-    {{one-icon icon="undo"}}
+    @type="default"
+    @size="sm"
+    @disabled={{not undoManager.canUndo}}
+    @onClick={{action "undo"}}
+  >
+    <OneIcon @icon="undo" />
     <span class="text">{{tt this "undo"}}</span>
-  {{/one-button}}
+  </OneButton>
 
-  {{#one-button
+  <OneButton
     class="redo-btn"
-    type="default"
-    size="sm"
-    disabled=(not undoManager.canRedo)
-    onClick=(action "redo")
-  }}
-    {{one-icon icon="redo"}}
+    @type="default"
+    @size="sm"
+    @disabled={{not undoManager.canRedo}}
+    @onClick={{action "redo"}}
+  >
+    <OneIcon @icon="redo" />
     <span class="text">{{tt this "redo"}}</span>
-  {{/one-button}}
+  </OneButton>
 
-  {{#one-button
+  <OneButton
     class="remove-dashboard-btn"
-    type="danger"
-    size="sm"
-    onClick=(action
+    @type="danger"
+    @size="sm"
+    @onClick={{action
       (mut isRemoveDashboardConfirmationOpened)
       (not isRemoveDashboardConfirmationOpened)
-    )
-  }}
-    {{one-icon icon="browser-delete"}}
-    <span class="text">{{tt this "removeDashboard"}}</span>
-    {{remove-ack-popover
-      triggerSelector=(local-selector elementId ".remove-dashboard-btn")
-      isOpened=(and isRemoveDashboardConfirmationOpened (not editorContext.isReadOnly))
-      question=(tt this "removeDashboardConfirmation")
-      onConfirm=(action "removeDashboard")
-      onClose=(action (mut isRemoveDashboardConfirmationOpened) false)
     }}
-  {{/one-button}}
+  >
+    <OneIcon @icon="browser-delete" />
+    <span class="text">{{tt this "removeDashboard"}}</span>
+    <RemoveAckPopover
+      @triggerSelector={{local-selector elementId ".remove-dashboard-btn"}}
+      @isOpened={{and isRemoveDashboardConfirmationOpened (not editorContext.isReadOnly)}}
+      @question={{tt this "removeDashboardConfirmation"}}
+      @onConfirm={{action "removeDashboard"}}
+      @onClose={{action (mut isRemoveDashboardConfirmationOpened) false}}
+    />
+  </OneButton>
 {{/if}}

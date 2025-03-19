@@ -3,7 +3,7 @@
     <h3>Input group with icon (large)</h3>
     <div class="input-group with-icon-addon">
       <input type="text" class="form-control" placeholder="Space name">
-      <span class="input-group-addon">{{one-icon icon="space"}}</span>
+      <span class="input-group-addon"><OneIcon @icon="space" /></span>
     </div>
   </div>
   
@@ -11,7 +11,7 @@
     <h3>Input group with icon (small)</h3>
     <div class="input-group input-group-sm with-icon-addon">
       <input type="text" class="form-control" placeholder="Space name">
-      <span class="input-group-addon">{{one-icon icon="space"}}</span>
+      <span class="input-group-addon"><OneIcon @icon="space" /></span>
     </div>
   </div>
   
@@ -33,11 +33,11 @@
       <input type="text" class="form-control" placeholder="Space name">
       <span class="input-group-btn">
         <button class="btn btn-primary">
-          {{one-icon icon="checked"}}
+          <OneIcon @icon="checked" />
           Save
         </button>
         <button class="btn btn-default">
-          {{one-icon icon="ban-left"}}
+          <OneIcon @icon="ban-left" />
           Cancel
         </button>
       </span>
@@ -51,7 +51,12 @@
         <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
         <div class="input-group">
           <div class="input-group-addon">$</div>
-          <input type="text" class="form-control" id="exampleInputAmount" placeholder="Amount">
+          <input
+            type="text"
+            class="form-control"
+            id="exampleInputAmount"
+            placeholder="Amount"
+          >
           <div class="input-group-addon">.00</div>
         </div>
       </div>
@@ -65,7 +70,12 @@
         <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
         <div class="input-group input-group-sm">
           <div class="input-group-addon">$</div>
-          <input type="text" class="form-control" id="exampleInputAmount" placeholder="Amount">
+          <input
+            type="text"
+            class="form-control"
+            id="exampleInputAmount"
+            placeholder="Amount"
+          >
           <div class="input-group-addon">.00</div>
         </div>
       </div>

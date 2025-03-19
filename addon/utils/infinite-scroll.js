@@ -6,7 +6,7 @@
  * - auto-updating of list (must be enabled manually using `listUpdater`)
  *
  * @author Jakub Liput
- * @copyright (C) 2022-2024 ACK CYFRONET AGH
+ * @copyright (C) 2022-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -20,7 +20,7 @@ import { reads } from '@ember/object/computed';
 /**
  * @typedef {Object} InfiniteListQuery
  * @property {string|null} [index] an anchor where the listing should start. Every item
- *   received from the backend has that field so it is ease to start from the specific log
+ *   received from the backend has that field so it is easy to start from the specific log
  *   entry.
  * @property {number} [limit] how many items should be fetched
  * @property {number} [offset] says where the listing should start relative to the
@@ -42,6 +42,14 @@ export default EmberObject.extend({
    * @type {number}
    */
   singleRowHeight: 0,
+
+  /**
+   * Property of record that contains ID of record. Should be the same as `data-row-id` of
+   * items in template.
+   * @virtual
+   * @type {string} optional
+   */
+  itemIdProperty: 'id',
 
   /**
    * @virtual
@@ -143,16 +151,33 @@ export default EmberObject.extend({
       entries,
       firstRowModel,
       singleRowHeight,
+      itemIdProperty,
       onScroll,
     } = this;
-    this.set('scrollHandler', ScrollHandler.create({
+    const scrollHandler = ScrollHandler.create({
       scrollableContainerElement,
       listContainerElement,
       entries,
       firstRowModel,
       singleRowHeight,
+      itemIdProperty,
       onScroll,
-    }));
+    });
+    this.set('scrollHandler', scrollHandler);
+    const firstRowHeight = this.firstRowModel.height;
+    // If FirstRowModel's height is not 0, it means that the chunks array has been already
+    // scrolled down, so we need to adjust scroll position before invoking scroll handler,
+    // to avoid changing the array state in an unexpected way.
+    if (firstRowHeight > 0) {
+      const tableStartRow =
+        listContainerElement.querySelector('.table-start-row');
+      const itemsStartTop = tableStartRow.offsetTop;
+      const marginItemsCount = Math.min(entries._start, entries.indexMargin) + 1;
+      const marginItemsHeight = marginItemsCount * singleRowHeight;
+      const scrollTop = firstRowHeight + marginItemsHeight + itemsStartTop;
+      this.scrollHandler.scrollTo(null, scrollTop);
+    }
+    scrollHandler.entriesLoadedObserver();
   },
 
   initListUpdater() {

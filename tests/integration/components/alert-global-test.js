@@ -55,7 +55,8 @@ describe('Integration | Component | alert-global', function () {
 
       await render(hbs `{{alert-global}}`);
 
-      expect(getModal().querySelector('.header-icon')).to.have.class(`oneicon-${icon}`);
+      const modalElement = getModal();
+      expect(modalElement.querySelector('.header-icon')).to.have.class(`oneicon-${icon}`);
     });
   });
 

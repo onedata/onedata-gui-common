@@ -3,7 +3,7 @@
     class="action {{actionSpec.name}}-action clickable"
     onClick={{action actionSpec.name}}
   >
-    {{one-icon icon=actionSpec.icon}}
-    {{one-tooltip title=(tt this actionSpec.name)}}
+    <OneIcon @icon={{actionSpec.icon}} />
+    <OneTooltip @title={{tt this actionSpec.name}} />
   </span>
 {{/each}}

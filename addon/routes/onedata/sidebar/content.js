@@ -20,12 +20,8 @@
  */
 
 import Route from '@ember/routing/route';
-
 import { inject as service } from '@ember/service';
-import { resolve } from 'rsvp';
 import { get, setProperties } from '@ember/object';
-import { scheduleOnce } from '@ember/runloop';
-import globals from 'onedata-gui-common/utils/globals';
 
 /**
  * @typedef {'empty'|'add'|'new'|'join'|'not-selected'|'null'} SpecialResourceId
@@ -91,63 +87,32 @@ export default Route.extend({
         return { resourceId, collection, queryParams };
       }
     } else {
-      // TODO: VFS-12506 Special case for shares, which currently is only model with
-      // infinite scroll - refactor to do it in generic way
-      let existingResourceId;
-      if (resourceType === 'shares') {
-        existingResourceId = `share.${resourceId}.instance:private`;
-      } else {
-        existingResourceId = this.availableResourceId(resourceId, collection);
-      }
-      this.set('navigationState.activeResourceId', existingResourceId);
-      if (existingResourceId) {
-        const resource = await this.contentResources
-          .getModelFor(resourceType, existingResourceId);
-        // TODO: VFS-12506 draft of code to jump to share opened with URL (not working);
-        // re-implement or remove it
-        // if (resource.index && collection.chunksArray) {
-        //   (async () => {
-        //     await collection.chunksArray.scheduleJump(resource.index, 50);
-        //     await waitForRender();
-        //     const item = document.querySelector(
-        //       `.one-sidebar .resource-item[data-row-id="${resource.entityId}"]`);
-        //     if (item) {
-        //       item.scrollIntoView({ block: 'center' });
-        //     }
-        //   })();
-        // }
+      try {
+        /**
+         * An ID of the real record - can differ from the resourceId which is a short
+         * form (eg. SpaceId vs it's GRI)
+         */
+        const recordId =
+          this.navigationTabsConfiguration.findOutResourceId(resourceId, resourceType);
+        if (!recordId) {
+          throw { error: { id: 'notFound' } };
+        }
+        const resource = await this.contentResources.getModelFor(resourceType, recordId);
+        this.set('navigationState.activeResourceId', recordId);
         return {
-          resourceId: existingResourceId,
+          resourceId,
           resource,
           collection,
           queryParams,
         };
-      } else {
-        // if the resource to load is not present on the list,
-        // try to guess it's ID and try to fetch it to detect why it isn't
-        // available - eg. because of forbidden error that should be passed
-        // to route model
-        const presumableGri = this.findOutResourceId(resourceId, resourceType);
-        return (presumableGri ?
-            this.get('contentResources').getModelFor(resourceType, presumableGri) :
-            resolve(null)
-          )
-          .then(( /* record */ ) => {
-            // this is resource that shouldn't be presented to user,
-            // because we do not have it on a list anyway
-            return { error: { id: 'forbidden' } };
-          })
-          .catch(error => ({ error }))
-          .then(data => {
-            const error = data && data.error;
-            return {
-              resourceId: null,
-              resource: null,
-              collection,
-              queryParams,
-              error,
-            };
-          });
+      } catch (error) {
+        return {
+          resourceId: null,
+          resource: null,
+          collection,
+          queryParams,
+          error,
+        };
       }
     }
   },
@@ -155,7 +120,7 @@ export default Route.extend({
   afterModel(model) {
     const sidebarModel = this.modelFor('onedata.sidebar');
     if (!isSpecialResourceId(model.resourceId)) {
-      this.navigationTabsConfiguration.setLastUsedResource(sidebarModel, model);
+      this.navigationTabsConfiguration.setPersistentLastUsedResource(sidebarModel, model);
     }
     this.navigationState.setProperties({
       activeResource: model.resource,
@@ -169,45 +134,16 @@ export default Route.extend({
       into: 'onedata',
       outlet: 'content',
     });
-    scheduleOnce('afterRender', this, 'scrollSidebarToActiveSidebarItem');
   },
 
   /**
    * Checks if collection contains model with specified resourceId.
    * @param {string} resourceId ID of resource as in URL
-   * @param {object} collection collection object
+   * @param {SidebarCollection} collection
    * @returns {string} id of found model
    */
   availableResourceId(resourceId, collection) {
     return collection.ids.includes(resourceId) ? resourceId : null;
-  },
-
-  findOutResourceId(resourceId /* , resourceType */ ) {
-    return resourceId;
-  },
-
-  scrollSidebarToActiveSidebarItem() {
-    const sidebar = globals.document.querySelector('.col-sidebar');
-    const sidebarActiveItemNode =
-      globals.document.querySelector('.col-sidebar .resource-item.active .item-header');
-    if (!sidebarActiveItemNode) {
-      return;
-    }
-
-    const sidebarBoundingRect = sidebar.getBoundingClientRect();
-    const activeItemBoundingRect = sidebarActiveItemNode.getBoundingClientRect();
-    const activeItemYInSidebar = activeItemBoundingRect.top - sidebarBoundingRect.top;
-
-    const minAllowedActiveItemY = 0;
-    // At least 3/4 of the active item must be visible
-    const maxAllowedActiveItemY = sidebarBoundingRect.height -
-      activeItemBoundingRect.height * 0.75;
-    if (
-      activeItemYInSidebar < minAllowedActiveItemY ||
-      activeItemYInSidebar > maxAllowedActiveItemY
-    ) {
-      sidebarActiveItemNode.scrollIntoView();
-    }
   },
 
   actions: {

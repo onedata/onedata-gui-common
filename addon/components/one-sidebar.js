@@ -2,20 +2,17 @@
  * A base component for building a sidebar view with two-level list
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2024 ACK CYFRONET AGH
+ * @copyright (C) 2017-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
-
 import { inject as service } from '@ember/service';
-import { reads, equal, sort } from '@ember/object/computed';
+import { reads, equal, sort, bool } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
 import EmberObject, {
   computed,
-  observer,
   get,
-  setProperties,
 } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-sidebar';
 import I18n from 'onedata-gui-common/mixins/i18n';
@@ -26,6 +23,10 @@ import {
   destroyableComputed,
   initDestroyableCache,
 } from 'onedata-gui-common/utils/destroyable-computed';
+import waitForRender from 'onedata-gui-common/utils/wait-for-render';
+import { asyncObserver } from 'onedata-gui-common/utils/observer';
+
+export const defaultAdvancedFilter = Object.freeze({});
 
 export default Component.extend(I18n, {
   layout,
@@ -45,11 +46,18 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.oneSidebar',
 
   /**
-   * @type {Object}
-   * @property {SidebarCollection} collection
-   * @property {string} resourceType
+   * @virtual
+   * @type {OnedataSidebarRouteModel}
    */
   model: null,
+
+  /**
+   * Implementing infinite scroll in sidebar enables infinite scroll elements in the
+   * common template.
+   * @virtual optional
+   * @type {Utils.InfiniteScroll}
+   */
+  infiniteScroll: undefined,
 
   /**
    * Name of oneicon that should be displayed for each first-level element
@@ -60,15 +68,30 @@ export default Component.extend(I18n, {
 
   isFilteringEnabled: true,
 
-  isInfiniteScroll: false,
+  /**
+   * If true, the spinner will be rendered at the bottom of the list.
+   * @type {boolean}
+   */
+  isNextSpinnerShown: false,
 
   /**
-   * @type {EmberObject}
+   * @type {string}
    */
-  context: computed(() => EmberObject.create({
-    sortedCollection: [],
-    visibleCollection: [],
-  })),
+  infiniteScrollSpinnerSize: 'sm',
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isInfiniteScroll: bool('infiniteScroll'),
+
+  /**
+   * @type {ComputedProperty<SidebarContext>}
+   */
+  context: computed(function context() {
+    return SidebarContext.create({
+      sidebar: this,
+    });
+  }),
 
   /**
    * @type {Ember.ComputedProperty<Array<object>>}
@@ -145,7 +168,7 @@ export default Component.extend(I18n, {
    * Filters received from advancedFiltersComponent.
    * @type {any}
    */
-  advancedFilters: Object.freeze({}),
+  advancedFilters: defaultAdvancedFilter,
 
   /**
    * @type {boolean}
@@ -180,15 +203,36 @@ export default Component.extend(I18n, {
   activeResourceType: reads('navigationState.activeResourceType'),
 
   /**
+   * Stores last found primary item to avoid frequent find.
+   * @type {Object}
+   */
+  primaryItemCache: undefined,
+
+  /**
+   * Stores previous primary item to avoid running jumps in observer when the item does
+   * not change (but the observer is triggered).
+   * @type {Object}
+   */
+  primaryItemPrev: undefined,
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   primaryItem: computed(
-    'model.collection.array.@each.id',
+    'sortedCollection.@each.id',
     'primaryItemId',
     function primaryItem() {
-      return this.model?.collection?.array?.find(({ id }) =>
-        id === this.primaryItemId
-      );
+      if (this.primaryItemPrev !== this.primaryItemCache) {
+        this.set('primaryItemPrev', this.primaryItemCache);
+      }
+      const primaryItemId = this.primaryItemId;
+      if (this.primaryItemCache?.id !== primaryItemId) {
+        const item = this.sortedCollection?.find(({ id }) =>
+          id === primaryItemId
+        );
+        this.set('primaryItemCache', item);
+      }
+      return this.primaryItemCache;
     }
   ),
 
@@ -234,20 +278,20 @@ export default Component.extend(I18n, {
     }
   ),
 
-  contextUpdater: observer(
-    'sortedCollection',
-    'filteredCollection',
-    function contextUpdater() {
-      const {
-        sortedCollection,
-        filteredCollection,
-        context,
-      } = this;
-
-      setProperties(context, {
-        sortedCollection,
-        visibleCollection: filteredCollection,
-      });
+  /**
+   * @returns {Promise<false|undefined>} Returns false if the procedure is aborted.
+   */
+  handlePrimaryItemChange: asyncObserver(
+    'primaryItem',
+    async function handlePrimaryItemChange() {
+      if (!this.primaryItem || this.primaryItemPrev === this.primaryItem) {
+        return false;
+      }
+      await waitForRender();
+      if (this.isDestroyed || this.isDestroying) {
+        return false;
+      }
+      await this.scrollSidebarToActiveItem();
     }
   ),
 
@@ -271,8 +315,6 @@ export default Component.extend(I18n, {
     ) {
       this.set('areAdvancedFiltersVisible', false);
     }
-
-    this.contextUpdater();
   },
 
   /**
@@ -286,7 +328,46 @@ export default Component.extend(I18n, {
     }
   },
 
+  /**
+   * @override
+   */
+  didInsertElement() {
+    this._super(...arguments);
+    this.handlePrimaryItemChange();
+  },
+
+  setFilter(expression) {
+    this.set('filter', expression);
+  },
+
+  setAdvancedFilter(advancedFilter) {
+    this.set('advancedFilters', advancedFilter);
+  },
+
+  /**
+   * Note that this method works only if the sidebar is rendered in the static column (not
+   * in temporary sidenav).
+   * @returns
+   */
+  async scrollSidebarToActiveItem() {
+    const colSidebar = this.element?.closest('.col-sidebar');
+    if (!colSidebar || !this.primaryItem) {
+      return;
+    }
+    await scrollSidebarToActiveItem(
+      colSidebar,
+      this.model.collection,
+      this.primaryItem
+    );
+  },
+
   actions: {
+    setFilter(expression) {
+      this.setFilter(expression);
+    },
+    setAdvancedFilter(advancedFilter) {
+      this.setAdvancedFilter(advancedFilter);
+    },
     toggleAdvancedFilters() {
       this.toggleProperty('areAdvancedFiltersVisible');
 
@@ -297,3 +378,65 @@ export default Component.extend(I18n, {
     },
   },
 });
+
+/**
+ * Provides context of sidebar for other parts of code.
+ */
+class SidebarContext extends EmberObject {
+  /** @type {Components.OneSidebar} */
+  sidebar = undefined;
+
+  @reads('sidebar.sortedCollection') sortedCollection;
+
+  @reads('sidebar.filteredCollection') visibleCollection;
+}
+
+/**
+ * @param {HTMLElement} sidebarElement
+ * @param {SidebarCollection} collection
+ * @param {any} resource
+ * @returns
+ */
+async function scrollSidebarToActiveItem(sidebarElement, collection, resource) {
+  if (!resource) {
+    return;
+  }
+  let sidebarActiveItemNode = getActiveSidebarItemElement(sidebarElement);
+
+  if (
+    resource.index &&
+    collection.chunksArray &&
+    !sidebarActiveItemNode &&
+    !collection.chunksArray.map(item => item.index).includes(resource.index)
+  ) {
+    await collection.chunksArray.scheduleJump(resource.index, 50);
+    await waitForRender();
+    sidebarActiveItemNode = getActiveSidebarItemElement(sidebarElement);
+  }
+  if (!sidebarActiveItemNode) {
+    return;
+  }
+
+  const sidebarBoundingRect = sidebarElement.getBoundingClientRect();
+  const activeItemBoundingRect = sidebarActiveItemNode.getBoundingClientRect();
+  const activeItemYInSidebar = activeItemBoundingRect.top - sidebarBoundingRect.top;
+
+  const minAllowedActiveItemY = 0;
+  // At least 3/4 of the active item must be visible
+  const maxAllowedActiveItemY = sidebarBoundingRect.height -
+    activeItemBoundingRect.height * 0.75;
+  if (
+    activeItemYInSidebar < minAllowedActiveItemY ||
+    activeItemYInSidebar > maxAllowedActiveItemY
+  ) {
+    sidebarActiveItemNode.scrollIntoView();
+  }
+}
+
+/**
+ * @param {HTMLElement} sidebarElement
+ * @returns {HTMLElement|null}
+ */
+function getActiveSidebarItemElement(sidebarElement) {
+  return sidebarElement.querySelector('.resource-item.active .item-header');
+}

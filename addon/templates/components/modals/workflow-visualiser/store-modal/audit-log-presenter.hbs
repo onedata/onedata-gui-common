@@ -1,33 +1,33 @@
 <div class="audit-log-actions">
-  {{#one-button
-    type="default"
-    size="sm"
-    class=downloadAction.className
-    onClick=downloadAction.executeCallback
-  }}
-    {{one-icon icon=downloadAction.icon}}
+  <OneButton
+    @type="default"
+    @size="sm"
+    class={{downloadAction.className}}
+    @onClick={{downloadAction.executeCallback}}
+  >
+    <OneIcon @icon={{downloadAction.icon}} />
     <span class="text">{{downloadAction.title}}</span>
-  {{/one-button}}
+  </OneButton>
 </div>
-{{#audit-log-browser
-  onFetchLogEntries=fetchLogEntriesCallback
-  customColumnHeaders=customColumnHeaders
-  isSeverityColumnVisible=true
-  doesOpenDetailsOnClick=true
+<AuditLogBrowser
+  @onFetchLogEntries={{fetchLogEntriesCallback}}
+  @customColumnHeaders={{customColumnHeaders}}
+  @isSeverityColumnVisible={{true}}
+  @doesOpenDetailsOnClick={{true}}
   as |logEntry|
-}}
+>
   {{#if (eq logEntry.source "system")}}
     <td class="description-cell truncate">{{logEntry.content.description}}</td>
-    {{modals/workflow-visualiser/store-modal/audit-log-presenter/references-cell
-      referencedElements=logEntry.content.referencedElements
-      taskExecutionId=taskExecutionId
-      getTaskRunForInstanceIdCallback=getTaskRunForInstanceIdCallback
-      actionsFactory=actionsFactory
-    }}
+    <Modals::WorkflowVisualiser::StoreModal::AuditLogPresenter::ReferencesCell
+      @referencedElements={{logEntry.content.referencedElements}}
+      @taskExecutionId={{taskExecutionId}}
+      @getTaskRunForInstanceIdCallback={{getTaskRunForInstanceIdCallback}}
+      @actionsFactory={{actionsFactory}}
+    />
   {{else}}
-    {{modals/workflow-visualiser/store-modal/audit-log-presenter/user-log-content-cell
-      content=logEntry.content
-      colspan=customColumnHeaders.length
-    }}
+    <Modals::WorkflowVisualiser::StoreModal::AuditLogPresenter::UserLogContentCell
+      @content={{logEntry.content}}
+      @colspan={{customColumnHeaders.length}}
+    />
   {{/if}}
-{{/audit-log-browser}}
+</AuditLogBrowser>

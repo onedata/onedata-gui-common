@@ -4,23 +4,20 @@
     <div class="one-way-toggle-track"></div>
     <div class="one-way-toggle-thumb">
       {{#if icon}}
-        {{one-icon class="thumb-icon" icon=icon}}
+        <OneIcon class="thumb-icon" @icon={{icon}} />
       {{/if}}
     </div>
   </div>
   {{#if (and isReadOnly showLockForReadOnly)}}
     <div class="one-way-toggle-readonly-icon">
-      {{one-icon icon="lock"}}
+      <OneIcon @icon="lock" />
     </div>
   {{/if}}
   {{#if _isInProgress}}
-    {{spin-spinner-block
-      class="one-way-toggle-spinner"
-      sizeClass="xxs"
-    }}
+    <SpinSpinnerBlock class="one-way-toggle-spinner" @sizeClass="xxs" />
   {{/if}}
   {{#if effectiveTip}}
-    {{one-tooltip title=effectiveTip placement="top" triggerEvents="hover"}}
+    <OneTooltip @title={{effectiveTip}} @placement="top" @triggerEvents="hover" />
   {{/if}}
 </div>
 

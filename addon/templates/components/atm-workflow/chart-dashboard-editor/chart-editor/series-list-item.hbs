@@ -1,4 +1,4 @@
-{{one-icon icon=icon}}
+<OneIcon @icon={{icon}} />
 <span class="name">
   {{#if name}}
     {{#if this.item.repeatPerPrefixedTimeSeries}}
@@ -17,11 +17,11 @@
   <span class="type">{{typeTranslation}}</span>
   {{#if (or item.group item.axis)}}|{{/if}}
   {{#if item.group}}
-    {{one-icon icon=seriesGroupIcon}}
+    <OneIcon @icon={{seriesGroupIcon}} />
     <span class="series-group-name">{{item.group.name}}</span>
     {{#if item.axis}}|{{/if}}
   {{/if}}
   {{#if item.axis}}
-    {{one-icon icon=axisIcon}} <span class="axis-name">{{item.axis.name}}</span>
+    <OneIcon @icon={{axisIcon}} /> <span class="axis-name">{{item.axis.name}}</span>
   {{/if}}
 </span>
