@@ -1,0 +1,8 @@
+<div
+  class="ember-power-select-option"
+  onclick={{action "onClick"}}
+  onmouseover={{action "onMouseOver"}}
+  onmouseout={{action "onMouseOut"}}
+>
+  {{tt this "customValue"}} {{#if select.lastSearchedText}}{{select.lastSearchedText}}{{else}}...{{/if}}
+</div>

@@ -21,9 +21,7 @@ export default DropdownField.extend({
   /**
    * @type {ComputedProperty<Array<FieldOption>>}
    */
-  preparedOptions: computed('field.preparedOptions', function preparedOptions() {
-    return [...this.field.preparedOptions];
-  }),
+  preparedOptions: reads('field.preparedOptions'),
 
   selectedOption: computed(
     'preparedOptions.@each.value', 'value',
@@ -45,12 +43,12 @@ export default DropdownField.extend({
   },
 
   actions: {
-    onInput(e) {
+    onInput(value) {
       this._super(...arguments);
       this.actions.valueChanged.bind(this)({
-        name: e,
-        value: e,
-        label: e,
+        name: value,
+        value: value,
+        label: value,
       });
     },
     open(powerSelect) {

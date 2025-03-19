@@ -1,32 +1,37 @@
-<OneDropdown
-  @tagName="div"
-  @triggerClass={{concat-classes
-    "dropdown-field-trigger"
-    (if (eq size "sm") "small")
-    "autocomplete-dropdown-field-trigger"
-  }}
-  @dropdownClass={{concat-classes
-    "dropdown-field-dropdown"
-    (concat field.name "-field-dropdown")
-    (if (eq size "sm") "small")
-    "autocomplete-dropdown-field-dropdown"
-  }}
-  @disabled={{not isEffectivelyEnabled}}
-  @options={{preparedOptions}}
-  @selected={{selectedOption}}
-  @placeholder={{customValueInputPlaceholder}}
-  @renderInPlace={{false}}
-  @triggerId={{fieldId}}
-  @searchEnabled={{true}}
-  @matcher={{matchDropdownOption}}
-  @onChange={{action "valueChanged"}}
-  @onInput={{action "onInput"}}
-  @onOpen={{action "open"}}
-  @triggerComponent="one-custom-trigger"
-  @beforeOptionsComponent={{null}}
-  @searchField="name"
-  as |option|
->
-  {{option.name}}
-</OneDropdown>
+{{#if isInViewMode}}
+  <span class="text">{{selectedOption.name}}</span>
+{{else}}
+  <OneDropdown
+    @tagName="div"
+    @triggerClass={{concat-classes
+      "dropdown-field-trigger"
+      (if (eq size "sm") "small")
+      "autocomplete-dropdown-field-trigger"
+    }}
+    @dropdownClass={{concat-classes
+      "dropdown-field-dropdown"
+      (concat field.name "-field-dropdown")
+      (if (eq size "sm") "small")
+      "autocomplete-dropdown-field-dropdown"
+    }}
+    @disabled={{not isEffectivelyEnabled}}
+    @options={{preparedOptions}}
+    @selected={{selectedOption}}
+    @placeholder={{customValueInputPlaceholder}}
+    @renderInPlace={{false}}
+    @triggerId={{fieldId}}
+    @searchEnabled={{true}}
+    @matcher={{matchDropdownOption}}
+    @onChange={{action "valueChanged"}}
+    @onInput={{action "onInput"}}
+    @onOpen={{action "open"}}
+    @triggerComponent="form-component/autocomplete-dropdown/one-custom-trigger"
+    @beforeOptionsComponent="form-component/autocomplete-dropdown/one-custom-before-options"
+    @searchField="name"
+    @mustShowNoMessages={{false}}
+    as |option|
+  >
+    {{option.name}}
+  </OneDropdown>
+{{/if}}
 {{yield}}

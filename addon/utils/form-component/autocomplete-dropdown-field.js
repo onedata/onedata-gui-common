@@ -1,8 +1,9 @@
 /**
  * Autocomplete input with dropdown form field.
  *
- * It represents set of predefined options to select and special option that allows
- * to enter own string.
+ * It displays a list of predefined suggestions in dropdown that are dynamically filtered
+ * as the user types in input. Users can either select a suggestion from the dropdown
+ * or enter in input a completely custom value.
  *
  * @author Agnieszka Warchoł
  * @copyright (C) 2025 ACK CYFRONET AGH
@@ -46,7 +47,7 @@ export default DropdownField.extend({
   ),
 
   /**
-   * @type {string | null}
+   * @type {string|null}
    */
   injectedCustomValueInputPlaceholder: null,
 });

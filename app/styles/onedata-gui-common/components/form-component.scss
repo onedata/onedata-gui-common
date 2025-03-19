@@ -430,6 +430,16 @@ $form-component-view-margin: $padding-base-vertical;
   }
 }
 
+.autocomplete-dropdown-field .ember-power-select-search-input {
+  border: none;
+}
+
+.autocomplete-dropdown-field-dropdown {
+  .highlighted {
+    background-color: #F2F4FA;
+  }
+}
+
 .ember-power-select-trigger.custom-value-dropdown-field-trigger.small,
 .form-group-sm .ember-power-select-trigger.custom-value-dropdown-field-trigger {
   --dropdown-arrow-separator-spacing: 8px;
