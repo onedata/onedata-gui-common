@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, blur, focus, click, find, findAll, fillIn } from '@ember/test-helpers';
+import { render, click, find, findAll, fillIn } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AutocompleteDropdownField from 'onedata-gui-common/utils/form-component/autocomplete-dropdown-field';
 import { lookupService } from '../../../helpers/stub-service';
