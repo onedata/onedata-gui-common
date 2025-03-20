@@ -182,6 +182,7 @@ export const FileAttribute = Object.freeze({
   FileId: 'fileId',
   HardlinkCount: 'hardlinkCount',
   HasCustomMetadata: 'hasCustomMetadata',
+  HasJsonMetadata: 'hasJsonMetadata',
   Index: 'index',
   IsFullyReplicatedLocally: 'isFullyReplicatedLocally',
   LocalReplicationRate: 'localReplicationRate',
@@ -195,6 +196,7 @@ export const FileAttribute = Object.freeze({
   Size: 'size',
   SymlinkValue: 'symlinkValue',
   Type: 'type',
+  JsonMetadata: 'jsonMetadata',
 });
 
 /**
