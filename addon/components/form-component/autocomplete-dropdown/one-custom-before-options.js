@@ -25,8 +25,9 @@ export default Component.extend(I18n, {
   isHighlighted: false,
 
   actions: {
-    onClick() {
+    onClick(event) {
       this.select.actions.close();
+      event.stopPropagation();
     },
     onMouseOver() {
       this.select.actions.highlight();
