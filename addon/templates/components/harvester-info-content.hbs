@@ -8,32 +8,20 @@
     <tr class="row-with-text">
       <td class="property-name">{{tt this "name"}}</td>
       <td class="property-value">
-        {{one-clipboard-line
-          size="sm"
-          value=record.name
-          type="text"
-        }}
+        <OneClipboardLine @size="sm" @value={{record.name}} @type="text" />
       </td>
     </tr>
     <tr class="row-with-text">
       <td class="property-name">{{tt this "id"}}</td>
       <td class="property-value">
-        {{one-clipboard-line
-          size="sm"
-          value=record.entityId
-          type="text"
-        }}
+        <OneClipboardLine @size="sm" @value={{record.entityId}} @type="text" />
       </td>
     </tr>
     {{#if (and showDetails publicUrl)}}
       <tr class="row-with-text">
         <td class="property-name">{{tt this "publicUrl"}}</td>
         <td class="property-value">
-          {{one-clipboard-line
-            size="sm"
-            value=publicUrl
-            type="text"
-          }}
+          <OneClipboardLine @size="sm" @value={{publicUrl}} @type="text" />
         </td>
       </tr>
     {{/if}}
@@ -42,7 +30,7 @@
         <td class="property-name">{{tt this "creator"}}</td>
         <td class="property-value">
           {{#if creator.fullName}}
-            {{record-name record=creator}}
+            <RecordName @record={{creator}} />
           {{else}}
             –
           {{/if}}
@@ -63,7 +51,7 @@
   <div class="links-container">
     <a href={{linkToHarvester}} class="info-link clickable">
       {{tt this "openHarvester"}}
-      {{one-icon icon="link-external"}}
+      <OneIcon @icon="link-external" />
     </a>
   </div>
 {{/if}}

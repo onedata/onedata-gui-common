@@ -24,7 +24,7 @@
   </div>
 {{else if (eq type "text")}}
   {{!-- do not break that line, to avoid copying value with whitespace characters --}}
-  <div class="clipboard-input">{{#truncated-string}}{{value}}{{/truncated-string}}</div>
+  <div class="clipboard-input"><TruncatedString>{{value}}</TruncatedString></div>
 {{else}}
   <span class="clipboard-container">
     <input
@@ -34,20 +34,20 @@
       readonly
     >
     {{#if enableValueTip}}
-      {{one-tooltip class="string-path-tooltip" title=value}}
+      <OneTooltip class="string-path-tooltip" @title={{value}} />
     {{/if}}
   </span>
 {{/if}}
 {{#if rawValue}}
   <input class="hidden-clipboard-source" value={{rawValue}} readonly>
 {{/if}}
-{{#one-copy-button
-  class=(concat-classes "clipboard-btn" clipboardBtnClass)
-  parentElementId=elementId
-  localTarget=(if rawValue ".hidden-clipboard-source" ".clipboard-input")
-  notify=(action "notify")
-}}
+<OneCopyButton
+  class={{concat-classes "clipboard-btn" clipboardBtnClass}}
+  @parentElementId={{elementId}}
+  @localTarget={{if rawValue ".hidden-clipboard-source" ".clipboard-input"}}
+  @notify={{action "notify"}}
+>
   <div class="copy-btn-background"></div>
-  {{one-icon class="copy-btn-icon" icon="browser-copy"}}
-  {{one-tooltip title=(or buttonTip (tt this "copyHint"))}}
-{{/one-copy-button}}
+  <OneIcon class="copy-btn-icon" @icon="browser-copy" />
+  <OneTooltip @title={{or buttonTip (tt this "copyHint")}} />
+</OneCopyButton>

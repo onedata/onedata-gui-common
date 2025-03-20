@@ -172,10 +172,8 @@ describe('Integration | Component | one-sidebar', function () {
       'getButtonsFor'
     );
 
-    await render(hbs `{{one-sidebar
-      model=model
-      filter="1"
-    }}`);
+    await render(hbs`<OneSidebar @model={{model}} />`);
+    await fillIn('.search-bar-form-group .search-bar', '1');
 
     expect(getButtonsForSpy).to.be.calledOnce;
     expect(getButtonsForSpy.lastCall.args[0]).to.equal('testResource');

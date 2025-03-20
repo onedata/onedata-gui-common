@@ -4,48 +4,48 @@
     item=itemModel.item
   }}
   {{#if validationErrorsMessage}}
-    {{warning-icon tooltipText=validationErrorsMessage}}
+    <WarningIcon @tooltipText={{validationErrorsMessage}} />
   {{/if}}
   {{#if (and (not editorContext.isReadOnly) (not hideActions))}}
     <div class="actions">
       {{#if allowNesting}}
-        {{#one-icon
+        <OneIcon
           class="action add-action clickable"
-          icon="plus"
-          click=(action "add")
-        }}
-          {{one-tooltip
-            title=(tt this (concat "actions.add." itemModel.item.elementType))
-          }}
-        {{/one-icon}}
+          @icon="plus"
+          onclick={{action "add"}}
+        >
+          <OneTooltip
+            @title={{tt this (concat "actions.add." itemModel.item.elementType)}}
+          />
+        </OneIcon>
       {{/if}}
-      {{#one-icon
+      <OneIcon
         class="action duplicate-action clickable"
-        icon="browser-copy"
-        click=(action "duplicate")
-      }}
-        {{one-tooltip title=(tt this "actions.duplicate")}}
-      {{/one-icon}}
-      {{#one-icon
+        @icon="browser-copy"
+        onclick={{action "duplicate"}}
+      >
+        <OneTooltip @title={{tt this "actions.duplicate"}} />
+      </OneIcon>
+      <OneIcon
         class="action remove-action clickable"
-        icon="browser-delete"
-        click=(action "remove")
-      }}
-        {{one-tooltip title=(tt this "actions.remove")}}
-      {{/one-icon}}
+        @icon="browser-delete"
+        onclick={{action "remove"}}
+      >
+        <OneTooltip @title={{tt this "actions.remove"}} />
+      </OneIcon>
     </div>
   {{/if}}
 </div>
 {{#if itemModel.nestedModels.length}}
   <ol class="list-items nested-items">
     {{#each itemModel.nestedModels as |subitemModel|}}
-      {{atm-workflow/chart-dashboard-editor/chart-editor/elements-list-item
-        itemModel=subitemModel
-        allowNesting=allowNesting
-        isDraggable=isDraggable
-        hideActions=hideActions
-        editorContext=editorContext
-      }}
+      <AtmWorkflow::ChartDashboardEditor::ChartEditor::ElementsListItem
+        @itemModel={{subitemModel}}
+        @allowNesting={{allowNesting}}
+        @isDraggable={{isDraggable}}
+        @hideActions={{hideActions}}
+        @editorContext={{editorContext}}
+      />
     {{/each}}
   </ol>
 {{/if}}

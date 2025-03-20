@@ -1,40 +1,40 @@
-{{#one-modal
-  class=modalClass
-  open=opened
-  onShown=onShown
-  onHide=close
-  onHidden=onHidden
-  size=size
-  backdropClose=(not processing)
-  shouldCloseOnTransition=shouldCloseOnTransition
+<OneModal
+  class={{modalClass}}
+  @open={{opened}}
+  @onShown={{onShown}}
+  @onHide={{close}}
+  @onHidden={{onHidden}}
+  @size={{size}}
+  @backdropClose={{not processing}}
+  @shouldCloseOnTransition={{shouldCloseOnTransition}}
   as |modal|
-}}
-  {{#modal.header}}
+>
+  <modal.header>
     <h1>
       {{#if modalIcon}}
-        {{one-icon icon=modalIcon}}
+        <OneIcon @icon={{modalIcon}} />
       {{/if}}
       <span class="one-label">{{headerText}}</span>
     </h1>
-  {{/modal.header}}
-  {{#modal.body class=(if textCenter "text-center")}}
+  </modal.header>
+  <modal.body class={{if textCenter "text-center"}}>
     {{#if (has-block)}}
       {{yield (hash proceed=(action "proceed") processing=processing)}}
     {{else}}
       <p class="proceed-process-text">{{messageText}}</p>
     {{/if}}
-  {{/modal.body}}
-  {{#modal.footer class="btn-toolbar"}}
-    {{#one-button disabled=processing onClick=close class="cancel"}}
+  </modal.body>
+  <modal.footer class="btn-toolbar">
+    <OneButton @disabled={{processing}} @onClick={{close}} class="cancel">
       {{cancelButtonText}}
-    {{/one-button}}
-    {{#one-button
-      buttonType="submit"
-      onClick=(action "proceed")
-      class=proceedButtonClass
-      disabled=proceedDisabled
-    }}
+    </OneButton>
+    <OneButton
+      @buttonType="submit"
+      @onClick={{action "proceed"}}
+      class={{proceedButtonClass}}
+      @disabled={{proceedDisabled}}
+    >
       {{proceedButtonText}}
-    {{/one-button}}
-  {{/modal.footer}}
-{{/one-modal}}
+    </OneButton>
+  </modal.footer>
+</OneModal>

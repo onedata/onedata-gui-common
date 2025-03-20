@@ -4,13 +4,13 @@
       {{title}}
     </span>
     {{#if titleTip}}
-      {{one-label-tip tooltipClass=titleTooltipClass title=titleTip}}
+      <OneLabelTip @tooltipClass={{titleTooltipClass}} @title={{titleTip}} />
     {{/if}}
     {{#if moreText}}
       {{#if linkToParams}}
-        {{#link-to params=linkToParams class="more-link"}}
+        <LinkTo @params={{linkToParams}} class="more-link">
           {{moreText}} &raquo;
-        {{/link-to}}
+        </LinkTo>
       {{else if customLink}}
         <a href={{customLink}} class="more-link">
           {{moreText}} &raquo;
@@ -18,8 +18,8 @@
       {{/if}}
     {{else if showDismissButton}}
       <div class="dismiss-button clickable" onclick={{action "dismiss"}}>
-        {{one-icon icon="close"}}
-        {{one-tooltip title=(tt this "dismissTip")}}
+        <OneIcon @icon="close" />
+        <OneTooltip @title={{tt this "dismissTip"}} />
       </div>
     {{/if}}
   </h1>
@@ -32,22 +32,25 @@
 {{#if footerText}}
   <div class={{concat-classes "tile-footer" footerClass}}>
     {{#if footerLinkToParams}}
-      {{#link-to params=footerLinkToParams class="tile-footer-text tile-footer-link black"}}
+      <LinkTo
+        @params={{footerLinkToParams}}
+        class="tile-footer-text tile-footer-link black"
+      >
         {{#if footerTextIcon}}
           <div class="inline-icon-container footer-text-icon-container">
-            {{one-icon icon=footerTextIcon class="tile-footer-icon"}}
+            <OneIcon @icon={{footerTextIcon}} class="tile-footer-icon" />
           </div>{{/if}}{{footerText}}
           {{!-- ^ no space for Firefox --}}
-      {{/link-to}}
+      </LinkTo>
     {{else}}
       {{#if footerTextIcon}}
         <div class="inline-icon-container footer-text-icon-container">
-          {{one-icon icon=footerTextIcon class="tile-footer-icon"}}
+          <OneIcon @icon={{footerTextIcon}} class="tile-footer-icon" />
         </div>
       {{/if}}
       <span class="tile-footer-text">{{footerText}}</span>
       {{#if tooltipText}}
-        {{one-tooltip title=tooltipText}}
+        <OneTooltip @title={{tooltipText}} />
       {{/if}}
     {{/if}}
   </div>

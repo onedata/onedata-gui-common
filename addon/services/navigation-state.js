@@ -252,9 +252,10 @@ export default Service.extend(I18n, {
         activeResourceCollection,
       } = this;
 
-      const array = activeResourceCollection?.array;
+      const array = activeResourceCollection?.fullArray ??
+        activeResourceCollection?.array;
       return sidebarResources.getButtonsFor(activeResourceType, {
-        collection: array,
+        sortedCollection: array,
         // In global view we assume, that all items are visible - we cannot guess any
         // filtering from this point.
         visibleCollection: array,
@@ -512,12 +513,16 @@ export default Service.extend(I18n, {
   },
 
   /**
-   * Resolves to true if activeResourceCollections contains model with passed id
+   * Resolves to true if activeResourceCollections contains model with passed ID.
+   *
+   * NOTE: must be reimplemented, if meant to be used with ChunksArraySidebarCollection,
+   * because now it includes only visible slice of array.
    * @param {string} id
    * @returns {Promise<Boolean>}
    */
   resourceCollectionContainsId(id) {
-    return this.activeResourceCollection.ids.includes(id);
+    const ids = this.activeResourceCollection.allIds || this.activeResourceCollection.ids;
+    return ids.includes(id);
   },
 
   /**

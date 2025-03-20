@@ -1,0 +1,8 @@
+.sidebar-clusters {
+  .two-level-sidebar {
+    .resource-item > .item-header {
+      // as in sidebar-shares.js
+      height: $sidebar-item-line-height-double-line;
+    }
+  }
+}

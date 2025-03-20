@@ -1,24 +1,19 @@
-{{#one-draggable-object
-  content=lane
-  dragHandle=".lane-drag-handle"
-  isDraggable=(eq mode "edit")
-  class="draggable-lane"
-}}
+<OneDraggableObject @content={{lane}} @dragHandle=".lane-drag-handle" @isDraggable={{eq mode "edit"}} class="draggable-lane">
   <div class="lane-header">
     <div class="lane-menu-trigger-space lane-drag-handle">
       {{#if (eq mode "edit")}}
-        {{one-icon icon="move"}}
+        <OneIcon @icon="move" />
       {{/if}}
     </div>
     {{#if (eq mode "edit")}}
-      {{one-inline-editor
+      <OneInlineEditor
         class="lane-name"
-        value=name
-        hideViewIcons=true
-        onSave=(action "changeName")
-      }}
+        @value={{name}}
+        @hideViewIcons={{true}}
+        @onSave={{action "changeName"}}
+      />
     {{else}}
-      {{#truncated-string class="lane-name"}}{{name}}{{/truncated-string}}
+      <TruncatedString class="lane-name">{{name}}</TruncatedString>
     {{/if}}
     <div class="lane-menu-trigger-space">
       {{#if lane.validationErrors.length}}
@@ -27,117 +22,115 @@
             class="warning-icon"
             src={{root-url "assets/images/sign-warning-large.svg"}}
           />
-          {{one-tooltip
-            triggerElement=(local-selector elementId ".warning-icon")
-            title=lane.validationErrors.0.errorMessage
-          }}
+          <OneTooltip
+            @triggerElement={{local-selector elementId ".warning-icon"}}
+            @title={{lane.validationErrors.0.errorMessage}}
+          />
         </div>
       {{/if}}
-      {{one-menu-toggle
-        class=(concat-classes
+      <OneMenuToggle
+        class={{concat-classes
           "lane-actions-trigger"
           (concat "actions-trigger-" elementId)
           (if areActionsOpened "active")
-        )
-        click=(action "toggleActionsOpen" (not areActionsOpened))
-      }}
-      {{#render-later triggerRender=areActionsOpened}}
-        {{#one-webui-popover
-          class="lane-actions"
-          padding=false
-          popoverStyle="with-dropdown"
-          triggerSelector=(concat ".actions-trigger-" elementId)
-          open=areActionsOpened
-          onToggle=(action "toggleActionsOpen")
-          as |popover|
         }}
-          {{#click-outside
-            onClickOutside=(action (mut areActionsOpened) false)
-            exceptSelector=(concat ".actions-trigger-" elementId)
-          }}
-            {{actions-popover-content
-              actionsArray=laneActions
-              actionClicked=(action "toggleActionsOpen" false)
-            }}
-          {{/click-outside}}
-        {{/one-webui-popover}}
-      {{/render-later}}
+        @click={{action "toggleActionsOpen" (not areActionsOpened)}}
+      />
+      <RenderLater @triggerRender={{areActionsOpened}}>
+        <OneWebuiPopover
+          class="lane-actions"
+          @padding={{false}}
+          @popoverStyle="with-dropdown"
+          @triggerSelector={{concat ".actions-trigger-" elementId}}
+          @open={{areActionsOpened}}
+          @onToggle={{action "toggleActionsOpen"}}
+          as |popover|
+        >
+          <ClickOutside
+            @onClickOutside={{action (mut areActionsOpened) false}}
+            @exceptSelector={{concat ".actions-trigger-" elementId}}
+          >
+            <ActionsPopoverContent
+              @actionsArray={{laneActions}}
+              @actionClicked={{action "toggleActionsOpen" false}}
+            />
+          </ClickOutside>
+        </OneWebuiPopover>
+      </RenderLater>
     </div>
   </div>
   {{#if (eq mode "view")}}
     <div class="lane-runs-info">
-      {{workflow-visualiser/lane/runs-list
-        visibleRunsLimit=6
-        runsRegistry=lane.runsRegistry
-        visibleRunsPosition=lane.visibleRunsPosition
-        selectedRunNumber=lane.visibleRunNumber
-        onSelectionChange=(action "changeRun")
-        onVisibleRunsPositionChange=(action (mut lane.visibleRunsPosition))
-      }}
+      <WorkflowVisualiser::Lane::RunsList
+        @visibleRunsLimit={{6}}
+        @runsRegistry={{lane.runsRegistry}}
+        @visibleRunsPosition={{lane.visibleRunsPosition}}
+        @selectedRunNumber={{lane.visibleRunNumber}}
+        @onSelectionChange={{action "changeRun"}}
+        @onVisibleRunsPositionChange={{action (mut lane.visibleRunsPosition)}}
+      />
     </div>
     <div class="lane-visible-run-info">
-      {{workflow-visualiser/lane/run-indicator
+      <WorkflowVisualiser::Lane::RunIndicator
         class="visible-run-indicator"
-        isSelected=true
-        status=lane.status
-        runNumber=lane.visibleRunNumber
-        originRunNumber=lane.visibleRun.originRunNumber
-        runType=lane.visibleRun.runType
-      }}
+        @isSelected={{true}}
+        @status={{lane.status}}
+        @runNumber={{lane.visibleRunNumber}}
+        @originRunNumber={{lane.visibleRun.originRunNumber}}
+        @runType={{lane.visibleRun.runType}}
+      />
       <span class="visible-run-timing-label">{{visibleRunTimingLabel}}</span>
       <span class="visible-run-status-label">{{visibleRunStatusLabel}}</span>
-      {{one-menu-toggle
-        class=(concat-classes
+      <OneMenuToggle
+        class={{concat-classes
           "lane-run-actions-trigger"
           (concat "run-actions-trigger-" elementId)
           (if areRunActionsOpened "active")
-        )
-        click=(action "toggleRunActionsOpen" (not areRunActionsOpened))
-      }}
-      {{#render-later triggerRender=areRunActionsOpened}}
-        {{#one-webui-popover
-          class="lane-run-actions"
-          padding=false
-          popoverStyle="with-dropdown"
-          triggerSelector=(concat ".run-actions-trigger-" elementId)
-          open=areRunActionsOpened
-          onToggle=(action "toggleRunActionsOpen")
-          as |popover|
         }}
-          {{#click-outside
-            onClickOutside=(action (mut areRunActionsOpened) false)
-            exceptSelector=(concat ".run-actions-trigger-" elementId)
-          }}
-            {{actions-popover-content
-              actionsArray=laneRunActions
-              actionClicked=(action "toggleRunActionsOpen" false)
-            }}
-          {{/click-outside}}
-        {{/one-webui-popover}}
-      {{/render-later}}
+        @click={{action "toggleRunActionsOpen" (not areRunActionsOpened)}}
+      />
+      <RenderLater @triggerRender={{areRunActionsOpened}}>
+        <OneWebuiPopover
+          class="lane-run-actions"
+          @padding={{false}}
+          @popoverStyle="with-dropdown"
+          @triggerSelector={{concat ".run-actions-trigger-" elementId}}
+          @open={{areRunActionsOpened}}
+          @onToggle={{action "toggleRunActionsOpen"}}
+          as |popover|
+        >
+          <ClickOutside
+            @onClickOutside={{action (mut areRunActionsOpened) false}}
+            @exceptSelector={{concat ".run-actions-trigger-" elementId}}
+          >
+            <ActionsPopoverContent
+              @actionsArray={{laneRunActions}}
+              @actionClicked={{action "toggleRunActionsOpen" false}}
+            />
+          </ClickOutside>
+        </OneWebuiPopover>
+      </RenderLater>
     </div>
   {{/if}}
   <div class="lane-store-info">
     <span class="one-label">{{iteratorLabel}}</span>
     {{#if lane.iteratedStore}}
       <div class="tags-input readonly">
-        {{workflow-visualiser/stores-list/store
-          store=lane.iteratedStore
-          mode=mode
-          actionsFactory=actionsFactory
-          isRemovingAllowed=false
-        }}
+        <WorkflowVisualiser::StoresList::Store
+          @store={{lane.iteratedStore}}
+          @mode={{mode}}
+          @actionsFactory={{actionsFactory}}
+          @isRemovingAllowed={{false}}
+        />
       </div>
     {{else}}
       <span class="one-label">{{tt this "unknownStore"}}</span>
     {{/if}}
   </div>
-  {{#perfect-scrollbar-element class="lane-elements"}}
+  <PerfectScrollbarElement class="lane-elements">
     {{#each laneElements as |laneElement|}}
-      {{workflow-visualiser/visualiser-element-renderer
-        elementModel=laneElement
-      }}
+      <WorkflowVisualiser::VisualiserElementRenderer @elementModel={{laneElement}} />
     {{/each}}
-  {{/perfect-scrollbar-element}}
-{{/one-draggable-object}}
+  </PerfectScrollbarElement>
+</OneDraggableObject>
 {{yield}}

@@ -5,55 +5,62 @@
  * To get a more detailed icon (e.g. icon dedicated for a specific group type)
  * you must pass `record` and set `useSubtypeIcon` to true.
  *
- * @author Michał Borzęcki
- * @copyright (C) 2020 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2020-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import { computed } from '@ember/object';
 import recordIcon from 'onedata-gui-common/utils/record-icon';
-import OneIcon from 'onedata-gui-common/components/one-icon';
+import Component from '@glimmer/component';
 
-export default OneIcon.extend({
-  classNames: ['record-icon'],
+/**
+ * @typedef {Object} RecordIconArgs
+ * @param {boolean} [useSubtypeIcon=false]
+ * @param {Object} [record]
+ * @param {string} [modelName]
+ */
 
+/**
+ * @type {Component<RecordIconArgs>}
+ */
+export default class RecordIconComponent extends Component {
   /**
-   * @virtual optional
    * @type {boolean}
    */
-  useSubtypeIcon: false,
+  get useSubtypeIcon() {
+    return this.args.useSubtypeIcon ?? false;
+  }
 
   /**
-   * @virtual optional
    * @type {Object}
    */
-  record: undefined,
+  get record() {
+    return this.args.record;
+  }
 
   /**
-   * @virtual optional
-   * @type {String}
+   * @type {string}
    */
-  modelName: undefined,
+  get modelName() {
+    return this.args.modelName;
+  }
 
   /**
-   * @type {ComputedProperty<String>}
+   * @type {OneIconName}
    */
-  icon: computed(
+  @computed(
     'useSubtypeIcon',
     'record',
     'modelName',
-    function iconName() {
-      const {
-        useSubtypeIcon,
-        record,
-        modelName,
-      } = this.getProperties(
-        'useSubtypeIcon',
-        'record',
-        'modelName'
-      );
+  )
+  get icon() {
+    const {
+      useSubtypeIcon,
+      record,
+      modelName,
+    } = this;
 
-      return recordIcon(record || modelName, useSubtypeIcon);
-    }
-  ),
-});
+    return recordIcon(record ?? modelName, useSubtypeIcon);
+  }
+}

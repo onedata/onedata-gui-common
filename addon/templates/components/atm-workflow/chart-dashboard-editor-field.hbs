@@ -1,14 +1,14 @@
-{{#one-button
+<OneButton
   class="open-chart-dashboard"
-  size="sm"
-  disabled=(not isEffectivelyEnabled)
-  disableWhenPending=false
-  showSpinnerWhenPending=false
-  onClick=(action "showEditor")
-}}
-  {{one-icon icon="overview"}}
+  @size="sm"
+  @disabled={{not isEffectivelyEnabled}}
+  @disableWhenPending={{false}}
+  @showSpinnerWhenPending={{false}}
+  @onClick={{action "showEditor"}}
+>
+  <OneIcon @icon="overview" />
   <span class="text">{{buttonLabel}}</span>
-{{/one-button}}
+</OneButton>
 
 <span class="content-labels">
   {{#each contentLabels as |contentLabel|}}

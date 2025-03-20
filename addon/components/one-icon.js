@@ -1,44 +1,45 @@
 /**
- * Inserts a icon from oneicons font.
- * Typical usage: ``{{one-icon icon='home'}}``
+ * Inserts an icon from oneicons font.
+ * Typical usage: `<OneIcon @icon="home" />`
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2016-2023 ACK CYFRONET AGH
+ * @copyright (C) 2016-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Component from '@ember/component';
-import { computed } from '@ember/object';
-import layout from 'onedata-gui-common/templates/components/one-icon';
 import { htmlSafe } from '@ember/template';
 import isOneicon from 'onedata-gui-common/utils/is-oneicon';
 import config from 'ember-get-config';
+import Component from '@glimmer/component';
+import { computed } from '@ember/object';
+import { guidFor } from '@ember/object/internals';
 
-export default Component.extend({
-  layout,
-  tagName: 'span',
-  classNames: ['one-icon', 'oneicon'],
-  classNameBindings: ['iconClass'],
-  attributeBindings: ['style'],
-
+export default class OneIconComponent extends Component {
   /**
-   * Icon name (from oneicons font, without `oneicon-` prefix)
+   * Icon name (from oneicons font, without `oneicon-` prefix).
    * @virtual
-   * @type {string}
+   * @type {OneIconName|undefined}
    */
-  icon: 'checkbox-x',
+  @computed('args.icon')
+  get icon() {
+    return this.args.icon;
+  }
 
   /**
-   * Icon color
+   * Icon color applied to style.
    * @virtual optional
-   * @type {string}
+   * @type {string|undefined}
    */
-  color: '',
+  @computed('args.color')
+  get color() {
+    return this.args.color;
+  }
 
   /**
-   * @type {Ember.ComputedProperty<string>}
+   * @type {string}
    */
-  iconClass: computed('icon', function iconClass() {
+  @computed('icon')
+  get iconClass() {
     if (config.environment !== 'production' && !isOneicon(this.icon)) {
       const message = `Unknown oneicon used: "${this.icon}"`;
       if (config.environment === 'test' && this.icon) {
@@ -48,15 +49,17 @@ export default Component.extend({
       }
     }
     return `oneicon-${this.icon}`;
-  }),
+  }
 
   /**
-   * @type {Ember.ComputedProperty<string>}
+   * @type {string|undefined}
    */
-  style: computed('color', function style() {
-    const color = this.get('color');
-    if (color) {
-      return htmlSafe(`color: ${color};`);
-    }
-  }),
-});
+  @computed('color')
+  get style() {
+    return this.color ? htmlSafe(`color: ${this.color};`) : undefined;
+  }
+
+  get elementId() {
+    return guidFor(this);
+  }
+}

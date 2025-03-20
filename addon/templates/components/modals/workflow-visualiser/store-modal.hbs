@@ -1,46 +1,43 @@
 {{!-- TODO: VFS-10331 unify modal layout in zone and provider --}}
 {{!-- TODO: VFS-11301 fade is false when indicesToHighlight is not empty as fade
   animation breaks down randomly infinite scroll jump --}}
-{{#global-modal
-  classNames=(concat-classes
-    "store-modal"
-    (if (eq mode "view") "without-footer modal-content-overlay with-close-button")
-  )
-  allowClose=(not isSubmitting)
-  modalId=modalId
-  size="lg"
-  fade=(not indicesToHighlight.length)
+<GlobalModal
+  @classNames={{concat-classes "store-modal" (if (eq mode "view") "without-footer modal-content-overlay with-close-button")}}
+  @allowClose={{not isSubmitting}}
+  @modalId={{modalId}}
+  @size="lg"
+  @fade={{not indicesToHighlight.length}}
   as |modal|
-}}
+>
 
-  {{#modal.header}}
-    <h1>{{#truncated-string}}{{headerText}}{{/truncated-string}}</h1>
+  <modal.header>
+    <h1><TruncatedString>{{headerText}}</TruncatedString></h1>
     {{#if subheaderText}}
       <h2 class="normal-case">
-        {{#truncated-string class="header-content"}}
+        <TruncatedString class="header-content">
           {{#if subheaderIcon}}
             <div class="inline-icon-container header-icon">
               <OneIcon @icon={{subheaderIcon}} />
             </div>
           {{/if}}
           {{subheaderText}}
-        {{/truncated-string}}
+        </TruncatedString>
       </h2>
     {{/if}}
-  {{/modal.header}}
+  </modal.header>
 
-  {{#modal.body}}
+  <modal.body>
     {{#if areTabsVisible}}
-      {{#bs-tab
+      <BsTab
         class="bs-tab-onedata bs-tab-modern"
-        activeId=activeTab
-        customTabs=true
-        onChange=(action "changeTab")
+        @activeId={{activeTab}}
+        @customTabs={{true}}
+        @onChange={{action "changeTab"}}
         as |tab|
-      }}
-        {{#bs-nav type="tabs" as |nav|}}
+      >
+        <BsNav @type="tabs" as |nav|>
           {{#each (array "details" "content") as |tabId|}}
-            {{#nav.item active=(eq tab.activeId tabId)}}
+            <nav.item @active={{eq tab.activeId tabId}}>
               <a
                 class={{concat "nav-link nav-link-" tabId}}
                 role="tab"
@@ -48,94 +45,94 @@
               >
                 {{tt this (concat "tabs." tabId ".title")}}
               </a>
-            {{/nav.item}}
+            </nav.item>
           {{/each}}
-        {{/bs-nav}}
-      {{/bs-tab}}
+        </BsNav>
+      </BsTab>
     {{/if}}
     {{#if (eq activeTab "details")}}
-      {{modals/workflow-visualiser/store-modal/store-form
-        mode=mode
-        store=store
-        allowedStoreTypes=allowedStoreTypes
-        allowedStoreReadDataSpec=allowedStoreReadDataSpec
-        allowedStoreWriteDataSpec=allowedStoreWriteDataSpec
-        onChange=(action "formChange")
-        isDisabled=isSubmitting
-      }}
+      <Modals::WorkflowVisualiser::StoreModal::StoreForm
+        @mode={{mode}}
+        @store={{store}}
+        @allowedStoreTypes={{allowedStoreTypes}}
+        @allowedStoreReadDataSpec={{allowedStoreReadDataSpec}}
+        @allowedStoreWriteDataSpec={{allowedStoreWriteDataSpec}}
+        @onChange={{action "formChange"}}
+        @isDisabled={{isSubmitting}}
+      />
     {{else}}
       {{#if (eq store.type "range")}}
-        {{modals/workflow-visualiser/store-modal/range-presenter
-          store=store
-          getStoreContentCallback=getStoreContentCallback
-          context=storeContentPresenterContext
-        }}
+        <Modals::WorkflowVisualiser::StoreModal::RangePresenter
+          @store={{store}}
+          @getStoreContentCallback={{getStoreContentCallback}}
+          @context={{storeContentPresenterContext}}
+        />
       {{else if (eq store.type "singleValue")}}
-        {{modals/workflow-visualiser/store-modal/single-value-presenter
-          store=store
-          getStoreContentCallback=getStoreContentCallback
-          context=storeContentPresenterContext
-        }}
+        <Modals::WorkflowVisualiser::StoreModal::SingleValuePresenter
+          @store={{store}}
+          @getStoreContentCallback={{getStoreContentCallback}}
+          @context={{storeContentPresenterContext}}
+        />
       {{else if (eq store.type "list")}}
-        {{modals/workflow-visualiser/store-modal/list-presenter
-          store=store
-          getStoreContentCallback=getStoreContentCallback
-          context=storeContentPresenterContext
-        }}
+        <Modals::WorkflowVisualiser::StoreModal::ListPresenter
+          @store={{store}}
+          @getStoreContentCallback={{getStoreContentCallback}}
+          @context={{storeContentPresenterContext}}
+        />
       {{else if (eq store.type "treeForest")}}
-        {{modals/workflow-visualiser/store-modal/tree-forest-presenter
-          store=store
-          getStoreContentCallback=getStoreContentCallback
-          context=storeContentPresenterContext
-        }}
+        <Modals::WorkflowVisualiser::StoreModal::TreeForestPresenter
+          @store={{store}}
+          @getStoreContentCallback={{getStoreContentCallback}}
+          @context={{storeContentPresenterContext}}
+        />
       {{else if (eq store.type "auditLog")}}
-        {{modals/workflow-visualiser/store-modal/audit-log-presenter
-          store=store
-          taskExecutionId=(or taskExecutionId null)
-          getStoreContentCallback=getStoreContentCallback
-          getTaskRunForInstanceIdCallback=getTaskRunForInstanceIdCallback
-          actionsFactory=actionsFactory
-        }}
+        <Modals::WorkflowVisualiser::StoreModal::AuditLogPresenter
+          @store={{store}}
+          @taskExecutionId={{or taskExecutionId null}}
+          @getStoreContentCallback={{getStoreContentCallback}}
+          @getTaskRunForInstanceIdCallback={{getTaskRunForInstanceIdCallback}}
+          @actionsFactory={{actionsFactory}}
+        />
       {{else if (eq store.type "timeSeries")}}
-        {{workflow-visualiser/charts-presenter
-          dashboardModelOwner=(or store.containerElement store)
-          onGetStoreContent=getStoreContentCallbackWithStoreArg
-          onGetTimeSeriesCollectionRefsMap=getTimeSeriesCollectionRefsMapCallback
-          live=store.contentMayChange
-        }}
+        <WorkflowVisualiser::ChartsPresenter
+          @dashboardModelOwner={{or store.containerElement store}}
+          @onGetStoreContent={{getStoreContentCallbackWithStoreArg}}
+          @onGetTimeSeriesCollectionRefsMap={{getTimeSeriesCollectionRefsMapCallback}}
+          @live={{store.contentMayChange}}
+        />
       {{else if (eq store.type "exception")}}
-        {{modals/workflow-visualiser/store-modal/exception-presenter
-          store=store
-          getStoreContentCallback=getStoreContentCallback
-          context=storeContentPresenterContext
-          indicesToHighlight=indicesToHighlight
-        }}
+        <Modals::WorkflowVisualiser::StoreModal::ExceptionPresenter
+          @store={{store}}
+          @getStoreContentCallback={{getStoreContentCallback}}
+          @context={{storeContentPresenterContext}}
+          @indicesToHighlight={{indicesToHighlight}}
+        />
       {{else}}
         <p class="text-danger">{{tt this "noContentDueToUnknownStoreType"}}</p>
       {{/if}}
     {{/if}}
-  {{/modal.body}}
+  </modal.body>
 
   {{#if (not-eq mode "view")}}
-    {{#modal.footer class="btn-toolbar"}}
-      {{#one-button
-        type="default"
+    <modal.footer class="btn-toolbar">
+      <OneButton
+        @type="default"
         class="btn-cancel"
-        onClick=modal.close
-        disabled=isSubmitting
-      }}
+        @onClick={{modal.close}}
+        @disabled={{isSubmitting}}
+      >
         {{cancelBtnText}}
-      {{/one-button}}
+      </OneButton>
 
-      {{#one-button
-        type="primary"
-        buttonType="submit"
+      <OneButton
+        @type="primary"
+        @buttonType="submit"
         class="btn-submit"
-        onClick=(action "submit" modal.submit)
-        disabled=(not formIsValid)
-      }}
+        @onClick={{action "submit" modal.submit}}
+        @disabled={{not formIsValid}}
+      >
         {{submitBtnText}}
-      {{/one-button}}
-    {{/modal.footer}}
+      </OneButton>
+    </modal.footer>
   {{/if}}
-{{/global-modal}}
+</GlobalModal>

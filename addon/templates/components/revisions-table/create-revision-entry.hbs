@@ -1,9 +1,9 @@
-<td class="revisions-table-data-cell">{{one-icon icon=createRevisionAction.icon}}</td>
+<td class="revisions-table-data-cell"><OneIcon @icon={{createRevisionAction.icon}} /></td>
 <td class="revisions-table-data-cell" colspan={{sub columnsCount 1}}>
   <span class="action-title">
     {{createRevisionAction.title}}
     {{#if createRevisionAction.tip}}
-      {{one-tooltip title=createRevisionAction.tip}}
+      <OneTooltip @title={{createRevisionAction.tip}} />
     {{/if}}
   </span>
 </td>

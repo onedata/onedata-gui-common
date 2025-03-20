@@ -22,7 +22,7 @@ export default Component.extend({
     'isHoveredClass',
     'isRemoveHoveredClass',
     'areSettingsVisible:has-open-settings',
-    'readonly',
+    'isReadOnly:readonly',
   ],
 
   /**
@@ -39,7 +39,7 @@ export default Component.extend({
    * @virtual
    * @type {Boolean}
    */
-  readonly: undefined,
+  isReadOnly: undefined,
 
   /**
    * @virtual
@@ -154,7 +154,7 @@ export default Component.extend({
    * @param {MouseEvent} clickEvent
    */
   click(clickEvent) {
-    if (this.get('readonly')) {
+    if (this.isReadOnly) {
       return;
     }
 

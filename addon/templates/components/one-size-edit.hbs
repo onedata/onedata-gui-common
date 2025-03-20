@@ -1,32 +1,33 @@
 {{#if _inEditionMode}}
-  {{one-way-capacity
-    inputClasses=inputClasses
-    value=_inputValue
-    onChange=(action "updateInputValue")
-    onKeyUp=(action "inputOnKeyUp")
-    disabled=_whileSaving}}
+  <OneWayCapacity
+    @inputClasses={{inputClasses}}
+    @value={{_inputValue}}
+    @onChange={{action "updateInputValue"}}
+    @onKeyUp={{action "inputOnKeyUp"}}
+    @disabled={{_whileSaving}}
+  />
   {{#if validationMessage}}
     <div class="form-message">{{validationMessage}}</div>
   {{/if}}
   <span class="input-group-btn">
-    {{#one-button
-      type="primary"
-      buttonType="submit"
+    <OneButton
+      @type="primary"
+      @buttonType="submit"
       class="btn-confirm-choose btn-save"
-      onClick=(action "saveEdition")
-      disabled=hasError
-      isPending=_whileSaving
-    }}
-      {{one-icon icon="checked"}}
-    {{/one-button}}
-    {{#one-button
-      type="default"
-      onClick=(action "cancelEdition")
+      @onClick={{action "saveEdition"}}
+      @disabled={{hasError}}
+      @isPending={{_whileSaving}}
+    >
+      <OneIcon @icon="checked" />
+    </OneButton>
+    <OneButton
+      @type="default"
+      @onClick={{action "cancelEdition"}}
       class="btn-confirm-choose btn-cancel"
-      disabled=_whileSaving
-    }}
-      {{one-icon icon="ban-left"}}
-    {{/one-button}}
+      @disabled={{_whileSaving}}
+    >
+      <OneIcon @icon="ban-left" />
+    </OneButton>
   </span>
 {{else}}
   <input
@@ -36,13 +37,9 @@
     readonly=true
   >
   <span class="input-group-btn">
-    {{#one-button
-      type="default"
-      class="btn-modify"
-      onClick=(action "startEdition")
-    }}
-      {{one-icon icon="browser-rename"}}
+    <OneButton @type="default" class="btn-modify" @onClick={{action "startEdition"}}>
+      <OneIcon @icon="browser-rename" />
       <span class="btn-label">{{tt this "modify"}}</span>
-    {{/one-button}}
+    </OneButton>
   </span>
 {{/if}}

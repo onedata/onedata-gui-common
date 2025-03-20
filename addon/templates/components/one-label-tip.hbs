@@ -1,18 +1,18 @@
-{{#one-icon icon=icon}}
+<OneIcon @icon={{icon}}>
   {{#if hasBlock}}
-    {{#one-tooltip
-      class=tooltipClassInternal
-      placement=placement
-      triggerEvents=triggerEvents
-    }}
+    <OneTooltip
+      class={{tooltipClassInternal}}
+      @placement={{placement}}
+      @triggerEvents={{triggerEvents}}
+    >
       {{yield}}
-    {{/one-tooltip}}
+    </OneTooltip>
   {{else}}
-    {{one-tooltip
-      class=tooltipClassInternal
-      title=title
-      placement=placement
-      triggerEvents=triggerEvents
-    }}
+    <OneTooltip
+      class={{tooltipClassInternal}}
+      @title={{title}}
+      @placement={{placement}}
+      @triggerEvents={{triggerEvents}}
+    />
   {{/if}}
-{{/one-icon}}
+</OneIcon>

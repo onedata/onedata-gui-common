@@ -1,16 +1,16 @@
-{{#one-modal
+<OneModal
   class="cease-oneprovider-support-modal"
-  open=opened
-  onHidden=close
+  @open={{opened}}
+  @onHidden={{close}}
   as |modal|
-}}
-  {{#modal.header}}
+>
+  <modal.header>
     <h1>
-      {{one-icon icon="sign-warning-rounded"}}
+      <OneIcon @icon="sign-warning-rounded" />
       <span class="one-label">{{tt this "headerText"}}</span>
     </h1>
-  {{/modal.header}}
-  {{#modal.body}}
+  </modal.header>
+  <modal.body>
     <p>{{tt this "mainDescription"}}</p>
     <ul class="info info-condensed info-gray">
       <li>
@@ -26,10 +26,10 @@
       <li>{{tt this "secondWayDescription"}}</li>
     </ul>
     <p>{{tt this "planDescription"}}</p>
-  {{/modal.body}}
-  {{#modal.footer class="btn-toolbar"}}
-    {{#one-button onClick=close}}
+  </modal.body>
+  <modal.footer class="btn-toolbar">
+    <OneButton @onClick={{close}}>
       {{tt this "close"}}
-    {{/one-button}}
-  {{/modal.footer}}
-{{/one-modal}}
+    </OneButton>
+  </modal.footer>
+</OneModal>

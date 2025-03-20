@@ -1,6 +1,6 @@
 $sidebar-item-line-height-desktop: 50px;
-$sidebar-item-line-height-mobile: 54px;
 $sidebar-item-line-height-double-line: 54px;
+$sidebar-separator-border: 1px solid $color-one-list-item-separator;
 
 .one-sidebar {
   .row-heading {
@@ -8,7 +8,7 @@ $sidebar-item-line-height-double-line: 54px;
     display: flex;
     height: 95px;
     align-items: center;
-    border-bottom: 1px solid $color-one-list-item-separator;
+    border-bottom: $sidebar-separator-border;
 
     .col-title {
       flex-grow: 1;
@@ -65,15 +65,17 @@ $sidebar-item-line-height-double-line: 54px;
   padding-bottom: 20px;
 
   .one-list-item {
-    line-height: $sidebar-item-line-height-desktop;
-    @media (max-width: $screen-xs-max) {
-      line-height: $sidebar-item-line-height-mobile;
-    }
+    // reset
+    line-height: normal;
   }
   .one-list.one-list-level-2 .one-list-item {
     line-height: $sidebar-item-line-height-desktop - 4px;
-    @media (max-width: $screen-xs-max) {
-      line-height: $sidebar-item-line-height-mobile - 2px;
+  }
+
+  .resource-item {
+    > .item-header {
+      // item headers are flex, so it's better to use height instead of line-height
+      height: $sidebar-item-line-height-desktop;
     }
   }
 
@@ -187,10 +189,23 @@ $sidebar-item-line-height-double-line: 54px;
   }
 
   > .one-list {
-    border-bottom: 1px solid $color-one-list-item-separator;
+    border-bottom: $sidebar-separator-border;
 
-    > .one-list-item:first-child::after {
+    > .one-list-item:first-child::after,
+    > .first-row + .one-list-item::after {
       display: none;
+    }
+  }
+
+  .empty-collection-sidebar {
+    .one-list-item {
+      line-height: 50px;
+    }
+    .one-list > .one-list-item:first-child::after {
+      display: none;
+    }
+    + .one-list.one-sidebar-primary-item-list {
+      border-bottom: none;
     }
   }
 
@@ -250,10 +265,6 @@ $sidebar-item-line-height-double-line: 54px;
     height: $sidebar-item-line-height-desktop - 2 * $padding-base-vertical;
     margin: $padding-base-vertical 0;
 
-    @media (max-width: $screen-xs-max) {
-      height: $sidebar-item-line-height-mobile - 2 * $padding-base-vertical;
-    }
-
     .one-icon {
       margin-right: 0;
     }
@@ -303,5 +314,10 @@ $sidebar-item-line-height-double-line: 54px;
       font-size: 2em;
       margin-right: $padding-small-horizontal * 0.8;
     }
+  }
+
+  .loading-row {
+    position: relative;
+    height: 120px;
   }
 }

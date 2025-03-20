@@ -1,48 +1,48 @@
 <h2>{{tt this "header"}}</h2>
-{{#bs-tab
-  activeId=activeTabId
+<BsTab
   class="only-tab-bar bs-tab-onedata"
-  fade=false
-  customTabs=true
+  @activeId={{activeTabId}}
+  @fade={{false}}
+  @customTabs={{true}}
   as |tab|
-}}
-  {{#bs-nav type="tabs" as |nav|}}
+>
+  <BsNav @type="tabs" as |nav|>
     {{#each tabs as |tabSpec|}}
-      {{#nav.item active=(eq activeTabId tabSpec.id)}}
+      <nav.item @active={{eq activeTabId tabSpec.id}}>
         <a class="nav-link" role="tab" {{action (mut activeTabId) tabSpec.id}}>
-          {{one-icon icon=tabSpec.icon}}
+          <OneIcon @icon={{tabSpec.icon}} />
           {{tt this (concat "tabNames." tabSpec.name)}}
           {{#if tabSpec.validationErrorsMessage}}
-            {{warning-icon tooltipText=tabSpec.validationErrorsMessage}}
+            <WarningIcon @tooltipText={{tabSpec.validationErrorsMessage}} />
           {{/if}}
         </a>
-      {{/nav.item}}
+      </nav.item>
     {{/each}}
-    {{one-icon
-      icon="sign-question-rounded"
-      class="elements-info-trigger clickable"
-    }}
-    {{#one-switchable-popover-modal
+    <OneIcon @icon="sign-question-rounded" class="elements-info-trigger clickable" />
+    <OneSwitchablePopoverModal
       class="elements-info-popover"
-      triggersConfiguration=(local-selector elementId ".elements-info-trigger")
-    }}
+      @triggersConfiguration={{local-selector elementId ".elements-info-trigger"}}
+    >
       <h1>{{tt this "info.series.header"}}</h1>
       <p>{{tt this "info.series.content"}}</p>
       <h1>{{tt this "info.seriesGroups.header"}}</h1>
       <p>{{tt this "info.seriesGroups.content"}}</p>
       <h1>{{tt this "info.axes.header"}}</h1>
       <p>{{tt this "info.axes.content"}}</p>
-    {{/one-switchable-popover-modal}}
-  {{/bs-nav}}
+    </OneSwitchablePopoverModal>
+  </BsNav>
   <div class="tab-content">
     {{#each tabs as |tabSpec|}}
-      {{#tab.pane elementId=tabSpec.id}}
+      <tab.pane @elementId={{tabSpec.id}}>
         {{component
-          (concat "atm-workflow/chart-dashboard-editor/chart-editor/" tabSpec.componentName)
+          (concat
+            "atm-workflow/chart-dashboard-editor/chart-editor/"
+            tabSpec.componentName
+          )
           chart=chart
           editorContext=editorContext
         }}
-      {{/tab.pane}}
+      </tab.pane>
     {{/each}}
   </div>
-{{/bs-tab}}
+</BsTab>

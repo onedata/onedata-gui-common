@@ -1,21 +1,21 @@
-{{#one-collapsible-list
-  hasCheckboxes=isSelectable
-  allowOnlySingleSelection=(eq selectionMode "single")
-  selectionChanged=(action "selectionChanged")
+<OneCollapsibleList
+  @hasCheckboxes={{isSelectable}}
+  @allowOnlySingleSelection={{eq selectionMode "single"}}
+  @selectionChanged={{action "selectionChanged"}}
   as |list|
-}}
+>
   {{#if (or listHeader isSelectable)}}
-    {{list.header title=listHeader isCollapsible=false}}
+    <list.header @title={{listHeader}} @isCollapsible={{false}} />
   {{/if}}
   {{#each sortedItems as |item|}}
-    {{#list.item class="resource-item" selectionValue=item as |listItem|}}
-      {{#listItem.header
-        tagName=(if item.link "a" "div")
-        href=item.link
-        isCollapsible=false
-        toggleSelectionOnClick=isSelectable
-        class=(if isSelectable "clickable")
-      }}
+    <list.item class="resource-item" @selectionValue={{item}} as |listItem|>
+      <listItem.header
+        @tagName={{if item.link "a" "div"}}
+        @href={{item.link}}
+        @isCollapsible={{false}}
+        @toggleSelectionOnClick={{isSelectable}}
+        class={{if isSelectable "clickable"}}
+      >
         {{#if item.icon}}
           <span
             class={{concat-classes
@@ -32,66 +32,58 @@
             onmouseleave={{action "itemInfoHovered" item false}}
           >
             {{#if isResourceWithAdditionalInfo}}
-              {{flippable-icons
-                iconName=item.icon
-                iconColor=iconColor
-                isHovered=item.hasItemInfoHovered
-                suppressFlipping=item.itemInfoOpened
-              }}
+              <FlippableIcons
+                @iconName={{item.icon}}
+                @iconColor={{iconColor}}
+                @isHovered={{item.hasItemInfoHovered}}
+                @suppressFlipping={{item.itemInfoOpened}}
+              />
             {{else}}
-              {{one-icon
-                class="item-icon"
-                icon=item.icon
-              }}
-              {{#one-tooltip
-                placement="top"
-                triggerEvents="hover"
-              }}
+              <OneIcon class="item-icon" @icon={{item.icon}} />
+              <OneTooltip @placement="top" @triggerEvents="hover">
                 {{#if item.conflictingLabelSource}}
-                  {{name-conflict
-                    item=item.conflictingLabelSource
-                  }}
+                  <NameConflict @item={{item.conflictingLabelSource}} />
                 {{else}}
                   {{item.label}}
                 {{/if}}
-              {{/one-tooltip}}
+              </OneTooltip>
             {{/if}}
           </span>
         {{/if}}
-        {{#truncated-string}}
+        <TruncatedString>
           <span
             class="one-label"
             onmouseover={{action "itemInfoHovered" item true}}
             onmouseleave={{action "itemInfoHovered" item false}}
           >
             {{#if item.conflictingLabelSource}}
-              {{name-conflict item=item.conflictingLabelSource}}
+              <NameConflict @item={{item.conflictingLabelSource}} />
             {{else}}
               {{item.label}}
             {{/if}}
           </span>
-        {{/truncated-string}}
+        </TruncatedString>
         {{#if item.actions.length}}
-          {{actions-toolbar
-            isMinimized=true
-            toolbarClasses=""
-            toolbarToggleClasses="btn-menu-toggle"
-            dropdownPlacement="auto"
-            actionsArray=item.actions
-          }}
+          <ActionsToolbar
+            @isMinimized={{true}}
+            @toolbarClasses=""
+            @toolbarToggleClasses="btn-menu-toggle"
+            @dropdownPlacement="auto"
+            @actionsArray={{item.actions}}
+          />
         {{/if}}
-      {{/listItem.header}}
+      </listItem.header>
       {{#if isResourceWithAdditionalInfo}}
-        {{#record-info-popover
-          isOpened=item.itemInfoOpened
-          triggerSelector=item.itemInfoTriggerSelector
-        }}
+        <RecordInfoPopover
+          @isOpened={{item.itemInfoOpened}}
+          @triggerSelector={{item.itemInfoTriggerSelector}}
+        >
           {{component (concat item.record.constructor.modelName "-info-content")
             record=item.record
           }}
-        {{/record-info-popover}}
+        </RecordInfoPopover>
       {{/if}}
-    {{/list.item}}
+    </list.item>
   {{/each}}
-{{/one-collapsible-list}}
+</OneCollapsibleList>
 {{yield}}
