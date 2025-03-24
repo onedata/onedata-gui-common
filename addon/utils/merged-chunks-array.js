@@ -40,6 +40,7 @@ export default class MergedChunksArray extends ReplacingChunksArray {
    * @param {string} index
    * @param {number} size
    * @param {number} offset
+   * @returns {Promise<ChunksFetchResult>}
    */
   async fetch(index, size, offset) {
     const effSize = offset > 0 ? (size + offset) : size;
