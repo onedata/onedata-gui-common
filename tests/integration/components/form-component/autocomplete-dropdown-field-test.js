@@ -104,7 +104,6 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
 
     await this.helper.render();
     expect(this.helper.dropdown.getTrigger()).to.have.attr('id', 'abc');
-
   });
 
   it('filters available options according to query in input', async function () {
@@ -256,7 +255,7 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
     }
   );
 
-  it('has custom value option selected with value filled in if non-predefined value if specified in field',
+  it('has custom value option selected with value filled in if non-predefined value is specified in field',
     async function () {
       this.helper = new Helper(this);
       this.helper.field = this.helper.createField({

@@ -436,7 +436,7 @@ $form-component-view-margin: $padding-base-vertical;
 
 .autocomplete-dropdown-field-dropdown {
   .highlighted {
-    background-color: #F2F4FA;
+    background-color: $ember-power-select-highlighted-background;
   }
 }
 

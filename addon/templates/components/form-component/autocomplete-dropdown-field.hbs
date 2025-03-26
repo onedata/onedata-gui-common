@@ -25,10 +25,10 @@
     @onChange={{action "valueChanged"}}
     @onInput={{action "onInput"}}
     @onOpen={{action "open"}}
-    @triggerComponent="form-component/autocomplete-dropdown/one-custom-trigger"
-    @beforeOptionsComponent="form-component/autocomplete-dropdown/one-custom-before-options"
+    @triggerComponent="form-component/autocomplete-dropdown/trigger"
+    @beforeOptionsComponent="form-component/autocomplete-dropdown/before-options"
     @searchField="name"
-    @isDisabledShowNoMessages={{true}}
+    @isShowNoMessagesDisabled={{true}}
     as |option|
   >
     {{option.name}}

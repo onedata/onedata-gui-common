@@ -9,7 +9,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import layout from 'onedata-gui-common/templates/components/form-component/autocomplete-dropdown/one-custom-trigger';
+import layout from 'onedata-gui-common/templates/components/form-component/autocomplete-dropdown/trigger';
 import Trigger from 'ember-power-select/components/power-select/trigger';
 import { computed } from '@ember/object';
 import notImplementedWarn from 'onedata-gui-common/utils/not-implemented-warn';

@@ -78,6 +78,7 @@ export default Component.extend({
           this.colorField,
           this.dropdownField,
           this.customValueDropdownField,
+          this.autocompleteDropdownField,
           this.aceField,
           this.radioField,
           this.datetimeField,
@@ -86,7 +87,6 @@ export default Component.extend({
           this.tagsField,
           this.staticTextField,
           this.staticUserField,
-          this.autocompleteDropdownField,
         ],
       });
   }),

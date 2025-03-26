@@ -1,5 +1,5 @@
-import oneCustomBeforeOptions from './autocomplete-dropdown/one-custom-before-options';
+import beforeOptions from './autocomplete-dropdown/before-options';
 
 export default {
-  oneCustomBeforeOptions,
+  beforeOptions,
 };

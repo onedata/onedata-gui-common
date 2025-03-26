@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import layout from 'onedata-gui-common/templates/components/form-component/autocomplete-dropdown/one-custom-before-options';
+import layout from 'onedata-gui-common/templates/components/form-component/autocomplete-dropdown/before-options';
 import Component from '@ember/component';
 import I18n from 'onedata-gui-common/mixins/i18n';
 
@@ -20,7 +20,7 @@ export default Component.extend(I18n, {
   /**
    * @override
    */
-  i18nPrefix: 'components.formComponent.autocompleteDropdown.oneCustomBeforeOptions',
+  i18nPrefix: 'components.formComponent.autocompleteDropdown.beforeOptions',
 
   isHighlighted: false,
 

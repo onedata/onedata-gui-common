@@ -18,7 +18,7 @@ export default class OneDropdown extends PowerSelect {
   /**
    * @type {boolean}
    */
-  isDisabledShowNoMessages = false;
+  isShowNoMessagesDisabled = false;
 
   /**
    * @type {ScrollListener}
@@ -30,7 +30,7 @@ export default class OneDropdown extends PowerSelect {
    */
   @computed('search', 'publicAPI.{lastSearchedText,resultsCount,loading}')
   get mustShowNoMessages() {
-    return !this.isDisabledShowNoMessages &&
+    return !this.isShowNoMessagesDisabled &&
       !this.publicAPI.loading &&
       this.publicAPI.resultsCount === 0 &&
       (!this.search || this.publicAPI.lastSearchedText.length > 0);
