@@ -291,17 +291,14 @@ export default Component.extend({
       isCustomInputOptionIconShown: true,
       options: [{
           value: 'one',
-          name: 'one',
           label: 'one',
         },
         {
           value: 'two',
-          name: 'two',
           label: 'two',
         },
         {
           value: 'three',
-          name: 'three',
           label: 'three',
         },
       ],

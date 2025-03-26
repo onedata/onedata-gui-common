@@ -18,10 +18,26 @@ export default DropdownField.extend({
 
   customValueInputPlaceholder: reads('field.customValueInputPlaceholder'),
 
+  customValueOptionText: reads('field.customValueOptionText'),
+
   /**
    * @type {ComputedProperty<Array<FieldOption>>}
    */
-  preparedOptions: reads('field.preparedOptions'),
+  preparedOptions: computed(
+    'field.preparedOptions',
+    'customValueOption.value',
+    function preparedOptions() {
+      if (this.customValueOption && this.customValueOption.value) {
+        return [
+          ...this.field.options,
+          this.customValueOption,
+        ];
+      }
+      return this.field.options;
+    }
+  ),
+
+  customValueOption: undefined,
 
   selectedOption: computed(
     'preparedOptions.@each.value', 'value',
@@ -30,7 +46,6 @@ export default DropdownField.extend({
         return this.findOption(this.value);
       } else {
         return {
-          name: this.value,
           value: this.value,
           label: this.value,
         };
@@ -45,8 +60,16 @@ export default DropdownField.extend({
   actions: {
     onInput(value) {
       this._super(...arguments);
+      if (this.findOption(value) && !this.findOption(value).isCustom) {
+        this.set('customValueOption', undefined);
+      } else {
+        this.set('customValueOption', {
+          value: value,
+          label: value,
+          isCustom: true,
+        });
+      }
       this.actions.valueChanged.bind(this)({
-        name: value,
         value: value,
         label: value,
       });

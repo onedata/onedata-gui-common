@@ -46,8 +46,34 @@ export default DropdownField.extend({
     }
   ),
 
+  customValueOptionText: computed(
+    'i18nPrefix',
+    'translationPath', {
+      get() {
+        return this.injectedCustomValueOptionText ?? this.getTranslation(
+          'customValueOptionText', {}, {
+            defaultValue: this.t(
+              `${defaultI18nPrefix}.customValueOptionText`, {}, {
+                defaultValue: '',
+                usePrefix: false,
+              },
+            ),
+          }
+        );
+      },
+      set(key, value) {
+        return this.injectedCustomValueOptionText = value;
+      },
+    }
+  ),
+
   /**
    * @type {string|null}
    */
   injectedCustomValueInputPlaceholder: null,
+
+  /**
+   * @type {string|null}
+   */
+  injectedCustomValueOptionText: null,
 });

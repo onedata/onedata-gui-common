@@ -1,5 +1,5 @@
 {{#if isInViewMode}}
-  <span class="text">{{selectedOption.name}}</span>
+  <span class="text">{{selectedOption.label}}</span>
 {{else}}
   <OneDropdown
     @tagName="div"
@@ -26,12 +26,14 @@
     @onInput={{action "onInput"}}
     @onOpen={{action "open"}}
     @triggerComponent="form-component/autocomplete-dropdown/trigger"
-    @beforeOptionsComponent="form-component/autocomplete-dropdown/before-options"
+    @beforeOptionsComponent={{null}}
     @searchField="name"
-    @isShowNoMessagesDisabled={{true}}
     as |option|
   >
-    {{option.name}}
+    {{#if option.isCustom}}
+      {{customValueOptionText}}
+    {{/if}}
+    {{option.label}}
   </OneDropdown>
 {{/if}}
 {{yield}}

@@ -34,9 +34,9 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
       i18nPrefix,
       name: fieldName,
       options: [
-        { value: 'First', name: 'First', label: 'First' },
-        { value: 'Second', name: 'Second', label: 'Second' },
-        { value: 'Third', name: 'Third', label: 'Third' },
+        { value: 'first-value', label: 'First' },
+        { value: 'second-value', label: 'Second' },
+        { value: 'third-value', label: 'Third' },
       ],
     });
 
@@ -60,6 +60,7 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
       await this.helper.render();
 
       expect(this.helper.dropdown.getTrigger()).to.have.attr('aria-disabled', 'true');
+      expect(find('.ember-power-select-search-input').disabled).to.be.true;
     }
   );
 
@@ -68,9 +69,9 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
       this.helper = new Helper(this);
       this.helper.field = this.helper.createField({
         options: [
-          { name: 'First', value: 'First', label: 'First' },
-          { name: 'Second', value: 'Second', label: 'Second' },
-          { name: 'Third', value: 'Third', label: 'Third' },
+          { value: 'first-value', label: 'First' },
+          { value: 'second-value', label: 'Second' },
+          { value: 'third-value', label: 'Third' },
         ],
       });
       const valueChangedSpy = sinon.spy(this.helper.field, 'valueChanged');
@@ -79,7 +80,7 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
 
       await this.helper.dropdown.selectOptionByText('Second');
       expect(valueChangedSpy).to.be.calledTwice;
-      expect(valueChangedSpy).to.be.calledWith('Second');
+      expect(valueChangedSpy).to.be.calledWith('second-value');
     }
   );
 
@@ -87,9 +88,9 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
     this.helper = new Helper(this);
     this.helper.field = this.helper.createField({
       options: [
-        { name: 'First', value: 'First', label: 'First' },
-        { name: 'Second', value: 'Second', label: 'Second' },
-        { name: 'Third', value: 'Third', label: 'Third' },
+        { value: 'first-value', label: 'First' },
+        { value: 'second-value', label: 'Second' },
+        { value: 'third-value', label: 'Third' },
       ],
       defaultValue: 'Second',
     });
@@ -110,10 +111,10 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
     this.helper = new Helper(this);
     this.helper.field = this.helper.createField({
       options: [
-        { name: 'Hello One', value: 'Hello One', label: 'Hello One' },
-        { name: 'Hello Two', value: 'Hello Two', label: 'Hello Two' },
-        { name: 'World One', value: 'World One', label: 'World One' },
-        { name: 'World Two', value: 'World Two', label: 'World Two' },
+        { value: 'hello-one', label: 'Hello One' },
+        { value: 'hello-two', label: 'Hello Two' },
+        { value: 'world-one', label: 'World One' },
+        { value: 'world-two', label: 'World Two' },
       ],
     });
     await this.helper.renderUsingRenderer();
@@ -121,17 +122,18 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
     await fillIn(this.helper.customValueInput, 'Two');
 
     const options = await this.helper.dropdown.getOptions();
-    expect(options).to.have.lengthOf(2);
+    expect(options).to.have.lengthOf(3);
     expect(options[0]).to.have.trimmed.text('Hello Two');
     expect(options[1]).to.have.trimmed.text('World Two');
+    expect(options[2]).to.have.trimmed.text('Custom value:\n    Two');
   });
 
   it('renders label of selected option when field is in "view" mode', async function () {
     this.helper = new Helper(this);
     this.helper.field = this.helper.createField({
       options: [
-        { name: 'One', value: 1, label: 'One' },
-        { name: 'Two', value: 2, label: 'Two' },
+        { value: 1, label: 'One' },
+        { value: 2, label: 'Two' },
       ],
       value: 1,
     });
@@ -147,8 +149,8 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
     this.helper = new Helper(this);
     this.helper.field = this.helper.createField({
       options: [
-        { name: 'one', value: 1, label: 'One' },
-        { name: 'two', value: 2, label: 'Two' },
+        { value: 1, label: 'One' },
+        { value: 2, label: 'Two' },
       ],
       size: 'md',
     });
@@ -191,7 +193,9 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
       await click(this.helper.customValueInput);
       await fillIn(this.helper.customValueInput, 'hello');
 
-      expect(find('div.ember-power-select-option')).to.contain.text('hello');
+      const options = await this.helper.dropdown.getOptions();
+      expect(options).to.have.lengthOf(1);
+      expect(options[0]).to.have.trimmed.text('Custom value:\n    hello');
     }
   );
 
@@ -206,7 +210,7 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
       await this.helper.renderUsingRenderer();
       await click(this.helper.customValueInput);
       await fillIn(this.helper.customValueInput, 'hello');
-      await click(find('div.ember-power-select-option'));
+      await click(find('.ember-power-select-option'));
       expect(this.helper.customValueInput).to.have.value('hello');
       expect(find('.ember-basic-dropdown')).to.not.exist;
     }

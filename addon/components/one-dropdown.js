@@ -9,32 +9,15 @@
 import PowerSelect from 'ember-power-select/components/power-select';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
 
 export default class OneDropdown extends PowerSelect {
   @service scrollState;
   @service media;
 
   /**
-   * @type {boolean}
-   */
-  isShowNoMessagesDisabled = false;
-
-  /**
    * @type {ScrollListener}
    */
   scrollListener = undefined;
-
-  /**
-   * @override
-   */
-  @computed('search', 'publicAPI.{lastSearchedText,resultsCount,loading}')
-  get mustShowNoMessages() {
-    return !this.isShowNoMessagesDisabled &&
-      !this.publicAPI.loading &&
-      this.publicAPI.resultsCount === 0 &&
-      (!this.search || this.publicAPI.lastSearchedText.length > 0);
-  }
 
   init() {
     super.init(...arguments);
