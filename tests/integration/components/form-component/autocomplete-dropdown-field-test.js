@@ -123,9 +123,9 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
 
     const options = await this.helper.dropdown.getOptions();
     expect(options).to.have.lengthOf(3);
-    expect(options[0]).to.have.trimmed.text('Hello Two');
-    expect(options[1]).to.have.trimmed.text('World Two');
-    expect(options[2].textContent.trim()).to.match(/Custom value:\s+Two/);
+    expect(options[0].textContent.trim()).to.match(/Custom value:\s+Two/);
+    expect(options[1]).to.have.trimmed.text('Hello Two');
+    expect(options[2]).to.have.trimmed.text('World Two');
   });
 
   it('renders label of selected option when field is in "view" mode', async function () {
