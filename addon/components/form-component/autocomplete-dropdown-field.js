@@ -12,9 +12,23 @@ import { computed } from '@ember/object';
 import _ from 'lodash';
 import { reads } from '@ember/object/computed';
 
+/**
+ * @typedef {object} ValueOption
+ * @property {string} value
+ * @property {string} label
+ * @property {boolean} isCustom
+ */
+
 export default DropdownField.extend({
   layout,
   classNames: ['autocomplete-dropdown-field'],
+
+  /**
+   * @type {ValueOption}
+   */
+  customValueOption: undefined,
+
+  isCustomInputFocused: false,
 
   customValueInputPlaceholder: reads('field.customValueInputPlaceholder'),
 
@@ -29,15 +43,13 @@ export default DropdownField.extend({
     function preparedOptions() {
       if (this.customValueOption && this.customValueOption.value) {
         return [
-          ...this.field.options,
           this.customValueOption,
+          ...this.field.options,
         ];
       }
       return this.field.options;
     }
   ),
-
-  customValueOption: undefined,
 
   selectedOption: computed(
     'preparedOptions.@each.value', 'value',
@@ -60,7 +72,8 @@ export default DropdownField.extend({
   actions: {
     onInput(value) {
       this._super(...arguments);
-      if (this.findOption(value) && !this.findOption(value).isCustom) {
+      const option = this.findOption(value);
+      if (option && !option.isCustom) {
         this.set('customValueOption', undefined);
       } else {
         this.set('customValueOption', {
@@ -77,6 +90,12 @@ export default DropdownField.extend({
     open(powerSelect) {
       powerSelect.actions.search(this.value);
       this.actions.onInput.bind(this)(this.value);
+    },
+    onInputFocus() {
+      this.set('isCustomInputFocused', true);
+    },
+    onInputBlur() {
+      this.set('isCustomInputFocused', false);
     },
   },
 });

@@ -430,13 +430,51 @@ $form-component-view-margin: $padding-base-vertical;
   }
 }
 
-.autocomplete-dropdown-field .ember-power-select-search-input {
-  border: none;
+.autocomplete-dropdown-field {
+  .ember-power-select-search-input {
+    border: none;
+  }
+
+  .autocomplete-dropdown-field-trigger {
+    padding: 0;
+    padding-right: var(--ember-power-select-trigger-padding-right);
+
+    &.ember-power-select-trigger--active {
+      @include box-shadow($control-box-shadow-focus);
+      border: $ember-power-select-border-width solid $input-border-focus;
+    }
+  }
+
+  .power-select-input-container {
+    padding-right: 8px;
+    position: relative;
+    padding-right: 12px;
+
+    &::before {
+      $vertical-spacing: 8px;
+      position: absolute;
+      content: '';
+      right: 12px;
+      top: $vertical-spacing;
+      bottom: $vertical-spacing;
+      border-right: 1px solid $main-border-color;
+    }
+
+    .ember-power-select-search-input {
+      padding: 12px;
+    }
+  }
 }
 
 .autocomplete-dropdown-field-dropdown {
   .highlighted {
     background-color: $ember-power-select-highlighted-background;
+  }
+
+  .ember-power-select-options {
+    .custom-option {
+      font-style: italic;
+    }
   }
 }
 

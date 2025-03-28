@@ -99,7 +99,7 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
     expect(this.helper.customValueInput).to.have.value('Second');
   });
 
-  it('sets input id according to "fieldId"', async function () {
+  it('sets trigger id according to "fieldId"', async function () {
     this.helper = new Helper(this);
     this.helper.fieldId = 'abc';
 
@@ -125,7 +125,7 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
     expect(options).to.have.lengthOf(3);
     expect(options[0]).to.have.trimmed.text('Hello Two');
     expect(options[1]).to.have.trimmed.text('World Two');
-    expect(options[2]).to.have.trimmed.text('Custom value:\n    Two');
+    expect(options[2].textContent.trim()).to.match(/Custom value:\s+Two/);
   });
 
   it('renders label of selected option when field is in "view" mode', async function () {
@@ -195,7 +195,7 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
 
       const options = await this.helper.dropdown.getOptions();
       expect(options).to.have.lengthOf(1);
-      expect(options[0]).to.have.trimmed.text('Custom value:\n    hello');
+      expect(options[0].textContent.trim()).to.match(/Custom value:\s+hello/);
     }
   );
 

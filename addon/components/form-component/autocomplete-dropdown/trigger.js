@@ -34,5 +34,11 @@ export default Trigger.extend({
     onInput(value) {
       this.onInput(value);
     },
+    onFocus() {
+      this.onFocus();
+    },
+    onBlur() {
+      this.onBlur();
+    },
   },
 });

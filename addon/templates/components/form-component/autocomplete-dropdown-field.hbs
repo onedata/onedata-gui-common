@@ -7,6 +7,7 @@
       "dropdown-field-trigger"
       (if (eq size "sm") "small")
       "autocomplete-dropdown-field-trigger"
+      (if isCustomInputFocused "ember-power-select-trigger--active")
     }}
     @dropdownClass={{concat-classes
       "dropdown-field-dropdown"
@@ -25,13 +26,15 @@
     @onChange={{action "valueChanged"}}
     @onInput={{action "onInput"}}
     @onOpen={{action "open"}}
+    @onFocus={{action "onInputFocus"}}
+    @onBlur={{action "onInputBlur"}}
     @triggerComponent="form-component/autocomplete-dropdown/trigger"
     @beforeOptionsComponent={{null}}
     @searchField="name"
     as |option|
   >
     {{#if option.isCustom}}
-      {{customValueOptionText}}
+      <span class="custom-option">{{customValueOptionText}}</span>
     {{/if}}
     {{option.label}}
   </OneDropdown>
