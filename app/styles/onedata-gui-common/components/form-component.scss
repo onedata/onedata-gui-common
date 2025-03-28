@@ -446,9 +446,8 @@ $form-component-view-margin: $padding-base-vertical;
   }
 
   .power-select-input-container {
-    padding-right: 8px;
     position: relative;
-    padding-right: 12px;
+    width: 100%;
 
     &::before {
       $vertical-spacing: 8px;
@@ -462,6 +461,20 @@ $form-component-view-margin: $padding-base-vertical;
 
     .ember-power-select-search-input {
       padding: 12px;
+    }
+  }
+
+  .small {
+    .ember-power-select-search-input {
+      padding-top: $ember-power-select-option-small-padding-vertical;
+      padding-bottom: $ember-power-select-option-small-padding-vertical;
+      padding-left: $ember-power-select-option-small-padding-horizontal;
+    }
+    .power-select-input-container::before {
+      $vertical-spacing: 4px;
+      right: 8px;
+      top: $vertical-spacing;
+      bottom: $vertical-spacing;
     }
   }
 }
