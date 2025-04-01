@@ -123,7 +123,7 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
 
     const options = await this.helper.dropdown.getOptions();
     expect(options).to.have.lengthOf(3);
-    expect(options[0].textContent.trim()).to.match(/Custom value:\s+Two/);
+    expect(options[0].textContent.trim()).to.match(/Two\s+custom value/);
     expect(options[1]).to.have.trimmed.text('Hello Two');
     expect(options[2]).to.have.trimmed.text('World Two');
   });
@@ -195,7 +195,7 @@ describe('Integration | Component | form-component/autocomplete-dropdown-field',
 
       const options = await this.helper.dropdown.getOptions();
       expect(options).to.have.lengthOf(1);
-      expect(options[0].textContent.trim()).to.match(/Custom value:\s+hello/);
+      expect(options[0].textContent.trim()).to.match(/hello\s+custom value/);
     }
   );
 
