@@ -34,9 +34,11 @@
     as |option|
   >
     {{#if option.isCustom}}
-      <span class="custom-option">{{customValueOptionText}}</span>
+      <TruncatedString class="custom-option">{{option.label}}</TruncatedString>
+      <span class="custom-option-text">{{customValueOptionText}}</span>
+    {{else}}
+      {{option.label}}
     {{/if}}
-    {{option.label}}
   </OneDropdown>
 {{/if}}
 {{yield}}

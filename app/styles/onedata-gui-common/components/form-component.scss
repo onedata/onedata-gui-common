@@ -484,9 +484,14 @@ $form-component-view-margin: $padding-base-vertical;
     background-color: $ember-power-select-highlighted-background;
   }
 
-  .ember-power-select-options {
-    .custom-option {
-      font-style: italic;
+  .ember-power-select-option {
+    display: flex;
+    justify-content: space-between;
+
+    .custom-option-text {
+      opacity: 0.6;
+      white-space: nowrap;
+      padding-left: $ember-power-select-option-small-padding-horizontal;
     }
   }
 }

@@ -16,6 +16,7 @@ import notImplementedWarn from 'onedata-gui-common/utils/not-implemented-warn';
 
 export default Trigger.extend({
   layout,
+  tagName: 'div',
 
   /**
    * @virtual
@@ -39,6 +40,9 @@ export default Trigger.extend({
     },
     onBlur() {
       this.onBlur();
+    },
+    onClick() {
+      this.element.querySelector('input').focus();
     },
   },
 });

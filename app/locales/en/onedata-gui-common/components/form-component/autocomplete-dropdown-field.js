@@ -1,4 +1,4 @@
 export default {
   customValueInputPlaceholder: 'Enter value...',
-  customValueOptionText: 'Custom value:',
+  customValueOptionText: 'custom value',
 };
