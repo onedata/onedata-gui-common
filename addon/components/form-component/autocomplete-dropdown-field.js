@@ -13,7 +13,7 @@ import _ from 'lodash';
 import { reads } from '@ember/object/computed';
 
 /**
- * @typedef {object} ValueOption
+ * @typedef {object} AutocompleteDropdownOption
  * @property {string} value
  * @property {string} label
  * @property {boolean} isCustom
@@ -24,7 +24,7 @@ export default DropdownField.extend({
   classNames: ['autocomplete-dropdown-field'],
 
   /**
-   * @type {ValueOption}
+   * @type {AutocompleteDropdownOption}
    */
   customValueOption: undefined,
 
