@@ -731,7 +731,10 @@ export default ArraySlice.extend(Evented, {
     const initialLoad = promiseObject((async () => {
       const loadPromise = initialJumpIndex ?
         this.scheduleJump(initialJumpIndex) :
-        this.scheduleReload({ head: true }).then(() => this.startEndChanged());
+        this.scheduleReload({ head: true }).then(() => {
+          // do not wait for initialLoad resolve for async start/end hooks
+          this.startEndChanged();
+        });
       try {
         return await loadPromise;
       } catch (error) {
