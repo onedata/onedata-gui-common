@@ -1,60 +1,75 @@
-// FIXME: jsdoc
+// FIXME: jsdoc: może być invalid (nie initialized) albo valid (initialized)
 
 import { computed } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { defer } from 'rsvp';
 
 // FIXME: jeśli nie będzie nic specyficznego, to można zmienić nazwę na bardziej generyczną
 // nawet nie BatchProgress, a Progress?
 export default class SidebarBatchProgress {
-  #totalCount = 0;
+  /**
+   * Internal state of total count - do not modify it outside of the class.
+   * It is not JS private property because it is used in computed.
+   * To get value, readonly `totalCount`. To set new `totalCount`, use `reset` method.
+   * @type {number}
+   */
+  @tracked
+  privateTotalCount;
 
   @tracked
-  doneCount = 0;
-
-  get totalCount() {
-    return this.#totalCount;
-  }
-
-  get donePromise() {
-    return this.doneDefer.promise;
-  }
+  privateDoneCount;
 
   /**
-   * @param {number} totalCount
+   * @param {number} [totalCount]
    */
   constructor(totalCount) {
-    /** @type {number} */
-    this.#totalCount = totalCount;
+    this.reset(totalCount);
+  }
 
-    // FIXME: debug code
-    // this.mockLoading();
+  /** @type {number} */
+  @computed('privateDoneCount')
+  get doneCount() {
+    return this.privateDoneCount;
+  }
+
+  /** @param {number} value */
+  set doneCount(value) {
+    if (typeof this.totalCount !== 'number') {
+      throw new Error(
+        'SidebarBatchProgress.doneCount setter: totalCount must be initialized'
+      );
+    }
+    this.privateDoneCount = value;
+  }
+
+  @computed('privateTotalCount')
+  get totalCount() {
+    return this.privateTotalCount;
   }
 
   /**
    * Number from 0 to 1 indicating progress.
    * @type {number}
    */
-  @computed('doneCount')
+  @computed('doneCount', 'totalCount', 'isValid')
   get progress() {
-    if (!this.#totalCount) {
+    if (!this.isValid) {
       return 0;
     }
-    return this.doneCount / this.#totalCount;
+    return this.doneCount / this.totalCount;
   }
 
-  // // FIXME: debug code
-  // mockLoading() {
-  //   this.doneDefer = defer();
-  //   this.increase();
-  // }
+  @computed('totalCount')
+  get isValid() {
+    return typeof this.totalCount === 'number' && this.totalCount > 0;
+  }
 
-  // increase() {
-  //   this.doneCount += Math.min(Math.floor(this.totalCount / 10), 1);
-  //   if (this.progress < 1) {
-  //     setTimeout(this.increase.bind(this), 1000);
-  //   } else {
-  //     this.doneDefer.resolve();
-  //   }
-  // }
+  /**
+   * @param {number|undefined} totalCount If positive number is provided then initialize
+   *   valid progress and reset done counter. When no `totalCount` is provided, then the
+   *   object will be invalid - it should be initialized to be used.
+   */
+  reset(totalCount) {
+    this.privateTotalCount = totalCount;
+    this.privateDoneCount = 0;
+  }
 }

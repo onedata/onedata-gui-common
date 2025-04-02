@@ -92,7 +92,8 @@ class CommonNavigationTabsConfiguration extends Service {
    * data is updated - for observing purposes.
    * @type {number}
    */
-  @tracked recentlyUsedWriteTimestamp = 0;
+  @tracked
+  recentlyUsedWriteTimestamp = 0;
 
   constructor() {
     super(...arguments);

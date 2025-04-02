@@ -1,6 +1,5 @@
 // FIXME: jsdoc
 
-import { reads } from '@ember/object/computed';
 import { tracked } from '@glimmer/tracking';
 
 export default class SidebarModelLoader {
@@ -26,7 +25,7 @@ export default class SidebarModelLoader {
     }
     if (typeof sidebarCollectionPromise?.then !== 'function') {
       throw new Error(
-        'SidebarModelLoader.constructor: resourceCategory must be a Promise'
+        'SidebarModelLoader.constructor: sidebarCollectionPromise must be a Promise'
       );
     }
     this.#resourceCategory = resourceCategory;
@@ -40,8 +39,6 @@ export default class SidebarModelLoader {
   get resourceCategory() {
     return this.#resourceCategory;
   }
-
-  @reads('batchProgress.totalCount') totalCount;
 
   /**
    * @returns {OnedataSidebarRouteModel}

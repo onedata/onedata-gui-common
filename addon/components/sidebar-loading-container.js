@@ -36,7 +36,8 @@ export default class SidebarLoadingContainerComponent extends Component {
   }
 
   /** @type {SidebarModelLoader} */
-  @reads('args.sidebarModelLoader') sidebarModelLoader;
+  @reads('args.sidebarModelLoader')
+  sidebarModelLoader;
 
   /** @type {PromiseObject<SidebarCollection>|null} */
   @computed('sidebarModelLoader')
@@ -48,9 +49,11 @@ export default class SidebarLoadingContainerComponent extends Component {
   }
 
   /** @type {OnedataResourceCategory} */
-  @reads('sidebarModelLoader.resourceCategory') resourceCategory;
+  @reads('sidebarModelLoader.resourceCategory')
+  resourceCategory;
 
-  @reads('sidebarModelLoader.totalCount') totalCount;
+  @reads('sidebarModelLoader.batchProgress.totalCount')
+  totalCount;
 
   @computed('sidebarModelLoader.batchProgress.progress')
   get progressPercentage() {
