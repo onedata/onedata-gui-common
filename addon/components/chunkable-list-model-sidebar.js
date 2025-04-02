@@ -63,6 +63,9 @@ export default class ChunkableListModelSidebar extends InfiniteScrollSidebar {
    */
   async mountInfiniteScroll(element) {
     await super.mountInfiniteScroll(element);
+    if (this.isDestroyed) {
+      return;
+    }
     const chunkableListModelReloader =
       this.model.collection.chunkableListModel.chunkableListModelReloader;
     chunkableListModelReloader.onListChanged = async () => {

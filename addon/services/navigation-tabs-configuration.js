@@ -19,7 +19,7 @@ import _ from 'lodash';
 
 /**
  * @typedef {OnedataSidebarRouteModel<ResourceT>} Object
- * @property {string} resourceType
+ * @property {OnedataResourceCategory} resourceType
  * @property {SidebarCollection<ResourceT>} collection
  */
 

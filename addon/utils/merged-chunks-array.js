@@ -37,18 +37,30 @@ export default class MergedChunksArray extends ReplacingChunksArray {
 
   /**
    * @override
-   * @param {string} index
-   * @param {number} size
-   * @param {number} offset
+   * @param {InfiniteScrollIndex} index
+   * @param {InfiniteScrollSize} size
+   * @param {InfiniteScrollOffset} offset
    * @returns {Promise<ChunksFetchResult>}
    */
   async fetch(index, size, offset) {
     const effSize = offset > 0 ? (size + offset) : size;
     const effOffset = offset > 0 ? 0 : offset;
-    const results = await allFulfilled(
-      this.fetchers.map(fetcher => fetcher(index, effSize, effOffset))
-    );
+    const results = await this.executeAllFetchers(index, effSize, effOffset);
     return mergeResults(results, { index, size, offset });
+  }
+
+  /**
+   * Invokes fetchers paralelly (all requests sent at once).
+   * @protected
+   * @param {InfiniteScrollIndex} index
+   * @param {InfiniteScrollSize} size
+   * @param {InfiniteScrollOffset} offset
+   * @returns {Promise<Array<InfiniteScrollPage>>}
+   */
+  async executeAllFetchers(index, size, offset) {
+    return await allFulfilled(
+      this.fetchers.map(fetcher => fetcher(index, size, offset))
+    );
   }
 }
 

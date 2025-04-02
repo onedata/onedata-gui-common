@@ -92,20 +92,27 @@
       @opened={{sidenavResourceType}}
       @id="sidenav-sidebar"
       class={{if navigationState.mainMenuColumnExpanded "with-place-for-menu"}}
-      @model={{sidenavModel.content}}
     >
-      <PromiseProxyContainer @proxy={{sidenavModel}}>
-        {{component sidenavContentComponent
-          model=sidenavModel.content
-          inSidenav=true
-        }}
-      </PromiseProxyContainer>
+      {{!-- FIXME: trzeba wprowadzić DummySidebarLoader, żeby yieldować od razu --}}
+      {{#if sidenavResourceType}}
+        <SidebarLoadingContainer
+          @sidebarModelLoader={{this.sidebarModelLoader}}
+          as |sidebarModel|
+        >
+          {{#let (component sidenavContentComponent) as |SidenavContent|}}
+            <SidenavContent
+              @model={{sidebarModel}}
+              @inSidenav={{true}}
+            />
+          {{/let}}
+        </SidebarLoadingContainer>
+      {{/if}}
     </OneSidenav>
 
     <ContentBackdrop
       class="sidenav-backdrop"
       @progress={{if sidenavResourceType 100 0}}
-      @click={{action (mut navigationState.globalSidenavResourceType) null bubbles=true}}
+      @click={{action "clearSidebarResourceType" bubbles=true}}
     />
 
     <PerfectScrollbarElement

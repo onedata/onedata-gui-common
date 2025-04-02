@@ -6,7 +6,7 @@
  * parts of view.
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -15,7 +15,6 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
-import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { dasherize } from '@ember/string';
 
 export default Component.extend({
@@ -52,27 +51,16 @@ export default Component.extend({
       const {
         sidebarResources,
         sidenavResourceType,
-      } = this.getProperties('sidebarResources', 'sidenavResourceType');
+      } = this;
 
       return sidebarResources.getSidebarComponentNameFor(sidenavResourceType);
     }
   ),
 
-  /**
-   * Creates a proxy model for floating sidebar based on sidenavResourceType
-   * @type {PromiseObject|null}
-   */
-  sidenavModel: computed('sidenavResourceType', function () {
-    const {
-      sidenavResourceType,
-      sidebarResources,
-    } = this.getProperties('sidenavResourceType', 'sidebarResources');
-
-    const resourceType = sidenavResourceType;
-    if (resourceType != null) {
-      return PromiseObject.create({
-        promise: sidebarResources.getSidebarModelFor(resourceType),
-      });
+  sidebarModelLoader: computed('sidenavResourceType', function sidebarModelLoader() {
+    const { sidenavResourceType } = this;
+    if (sidenavResourceType != null) {
+      return this.sidebarResources.createSidebarModelLoader(sidenavResourceType);
     } else {
       return null;
     }
@@ -158,6 +146,12 @@ export default Component.extend({
     this._super(...arguments);
     // activate observer
     this.get('colSidebarClassArray');
+
+    // FIXME: debug code
+    ((name) => {
+      window[name] = this;
+      console.log(`window.${name}`, window[name]);
+    })('debug_app_layout');
   },
 
   didInsertElement() {
@@ -182,6 +176,9 @@ export default Component.extend({
       if (opened !== this.get('globalMenuOpened')) {
         this.set('globalMenuOpened', opened);
       }
+    },
+    clearSidebarResourceType() {
+      this.set('navigationState.globalSidenavResourceType', null);
     },
   },
 });

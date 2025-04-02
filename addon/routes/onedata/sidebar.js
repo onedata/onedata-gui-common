@@ -6,25 +6,28 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { get } from '@ember/object';
+import { get, action } from '@ember/object';
 import Route from '@ember/routing/route';
-import { inject as service } from '@ember/service';
 import { scheduleOnce } from '@ember/runloop';
 import { camelize } from '@ember/string';
 import findRouteInfo from 'onedata-gui-common/utils/find-route-info';
 import globals from 'onedata-gui-common/utils/globals';
+import { inject as service } from '@ember/service';
 
-export default Route.extend({
-  sidebarResources: service(),
-  navigationState: service(),
-  navigationTabsConfiguration: service(),
+export default class SidebarRoute extends Route {
+  @service sidebarResources;
+  @service navigationState;
+  @service navigationTabsConfiguration;
 
   isValidTab(tabName) {
     const onedataTabs = this.navigationTabsConfiguration.tabModels;
     return Boolean(onedataTabs.findBy('id', camelize(tabName))) ||
       tabName === 'users';
-  },
+  }
 
+  /**
+   * @override
+   */
   beforeModel(transition) {
     const resourceType = findRouteInfo(transition, 'onedata.sidebar').params['type'];
     if (!this.isValidTab(resourceType)) {
@@ -35,29 +38,45 @@ export default Route.extend({
       this.transitionTo('onedata.sidebar', this.getDefaultTab());
       return;
     } else {
-      this.get('navigationState').setProperties({
+      this.navigationState.setProperties({
         isActiveResourceCollectionLoading: true,
         hasActiveResourceCollectionLoadingFailed: false,
         activeResourceCollection: undefined,
         activeResourceId: undefined,
       });
     }
-  },
+  }
 
-  model({ type }) {
-    return this.get('sidebarResources').getSidebarModelFor(type);
-  },
+  /**
+   * @override
+   */
+  async model({ type }) {
+    // FIXME: debug code
+    /** @type {SidebarModelLoader} */
+    const sidebarModelLoader = this.sidebarResources.createSidebarModelLoader(type);
+    /** @type {SidebarLoadingController} */
+    const loadingController = this.controllerFor('onedata.sidebar-loading');
+    loadingController.set('sidebarModelLoader', sidebarModelLoader);
+    const sidebarCollection = await sidebarModelLoader.sidebarCollectionPromise;
+    return { collection: sidebarCollection, resourceType: type };
+  }
 
+  /**
+   * @override
+   */
   afterModel(model) {
-    this.get('navigationState').setProperties({
+    this.navigationState.setProperties({
       activeResourceType: model.resourceType,
       activeResourceCollection: model.collection,
       isActiveResourceCollectionLoading: false,
     });
-  },
+  }
 
+  /**
+   * @override
+   */
   renderTemplate(controller, model) {
-    const sidebarComponentName = this.get('sidebarResources')
+    const sidebarComponentName = this.sidebarResources
       .getSidebarComponentNameFor(get(model, 'resourceType'));
 
     this.render('onedata.sidebar', {
@@ -66,14 +85,14 @@ export default Route.extend({
       model: Object.assign({}, model, { sidebarComponentName }),
     });
     scheduleOnce('afterRender', this, 'scrollSidebarToTop');
-  },
+  }
 
   scrollSidebarToTop() {
     const sidebar = globals.document.querySelector('.col-sidebar');
     if (sidebar) {
       sidebar.scrollTop = 0;
     }
-  },
+  }
 
   /**
    * Returns default application tab, that can be used as a fallback when
@@ -83,15 +102,14 @@ export default Route.extend({
   getDefaultTab() {
     const onedataTabs = this.navigationTabsConfiguration.tabModels;
     return onedataTabs[0]?.id;
-  },
+  }
 
-  actions: {
-    error() {
-      this.get('navigationState').setProperties({
-        hasActiveResourceCollectionLoadingFailed: true,
-        isActiveResourceCollectionLoading: false,
-      });
-      return true;
-    },
-  },
-});
+  @action
+  error() {
+    this.navigationState.setProperties({
+      hasActiveResourceCollectionLoadingFailed: true,
+      isActiveResourceCollectionLoading: false,
+    });
+    return true;
+  }
+}

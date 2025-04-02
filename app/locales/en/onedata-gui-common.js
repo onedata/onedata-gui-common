@@ -64,7 +64,7 @@ import websocketReconnectionModal from './onedata-gui-common/components/websocke
 import octaneExample from './onedata-gui-common/components/examples/octane-example';
 import octaneExampleChild from './onedata-gui-common/components/examples/octane-example-child';
 import classicExample from './onedata-gui-common/components/examples/classic-example';
-import blockingAddonDetector from './onedata-gui-common/utils/blocking-addon-detector';
+import sidebarLoadingContainer from './onedata-gui-common/components/sidebar-loading-container';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -101,6 +101,7 @@ import timeSeriesDashboard from './onedata-gui-common/utils/time-series-dashboar
 import file from './onedata-gui-common/utils/file';
 import group from './onedata-gui-common/utils/group';
 import utilOneTimeSeriesChart from './onedata-gui-common/utils/one-time-series-chart';
+import blockingAddonDetector from './onedata-gui-common/utils/blocking-addon-detector';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
 
@@ -173,6 +174,7 @@ const translations = {
     clusterInfoContent,
     pagesControl,
     websocketReconnectionModal,
+    sidebarLoadingContainer,
     alerts: {
       endpointError,
     },

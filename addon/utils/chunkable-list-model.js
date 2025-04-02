@@ -33,6 +33,13 @@ export class ChunkableListModel {
     return this.chunkableListModelFetcher.filterAdvanced;
   }
 
+  /**
+   * @type {SidebarBatchProgress|null}
+   */
+  get batchProgress() {
+    return this.chunkableListModelFetcher.batchProgress;
+  }
+
   constructor({ listModel, batchRequestRegistry, chunksArrayOptions }) {
     if (!listModel) {
       throw new Error(

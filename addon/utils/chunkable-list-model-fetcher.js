@@ -30,6 +30,14 @@ export default class ChunkableListModelFetcher {
   batchFetchSize = 100;
 
   /**
+   * Initialized in `getPreparedList` which is invoked by `fetch`. Progress can be
+   * initialized when we know how many items (divided into batches) are going to be
+   * fetched. We know that when the fetch starts.
+   * @type {SidebarBatchProgress|null}
+   */
+  batchProgress = null;
+
+  /**
    * @type {string}
    */
   @tracked
@@ -103,48 +111,6 @@ export default class ChunkableListModelFetcher {
     };
   }
 
-  /**
-   * Returns native sorted array with all records loaded.
-   * @returns {Promise<Array<ChunkableListModelFetcherItem>>}
-   */
-  async getPreparedList() {
-    const itemsGris = this.listModel.belongsTo('list').ids();
-    // FIXME: to chyba już w tym momencie trzeba utworzyć kontenery
-    // bo niewykluczone, że await ...list.toArray() spowoduje dociąganie od razu
-    const containers = _.chunk(itemsGris, this.batchFetchSize).map(grisChunk => {
-      const containerSpec = new GrisBatchContainerSpec(
-        OwsGraphOperation.Get,
-        grisChunk
-      );
-      return this.batchRequestRegistry.createContainer(
-        containerSpec,
-        DebouncedBatchFlushStrategy
-      );
-    });
-    try {
-      // FIXME: sprawdzić czy tutaj występuje fetch
-      const recordsProxy = this.listModel.list;
-      // FIXME: na razie nie jest dokładne - granulacja liczbami kontenerów, można to poprawić wystawiając size konetenera na zewnątrz
-      this.batchProgress = new SidebarBatchProgress(containers.length);
-      for (const container of containers) {
-        try {
-          await container.flush();
-        } finally {
-          this.batchRequestRegistry.destroyContainer(container);
-        }
-        this.batchProgress += 1;
-      }
-      const staticList = await allFulfilled((await recordsProxy).toArray());
-      const sortedStaticList = _.sortBy(staticList, this.listSortKey);
-      return sortedStaticList;
-
-    } finally {
-      for (const container of containers) {
-        this.batchRequestRegistry.destroyContainer(container);
-      }
-    }
-  }
-
   setFilter({ expression, advanced }) {
     this.filterExpression = expression;
     this.filterAdvanced = advanced;
@@ -167,6 +133,49 @@ export default class ChunkableListModelFetcher {
    */
   filterByAdvancedConditions(items /*, advancedFilter */ ) {
     return items;
+  }
+
+  /**
+   * Returns native sorted array with all records loaded.
+   * @private
+   * @returns {Promise<Array<Object>>}
+   */
+  async getPreparedList() {
+    const itemsGris = this.listModel.belongsTo('list').ids();
+    // FIXME: to chyba już w tym momencie trzeba utworzyć kontenery
+    // bo niewykluczone, że await ...list.toArray() spowoduje dociąganie od razu
+    const containers = _.chunk(itemsGris, this.batchFetchSize).map(grisChunk => {
+      const containerSpec = new GrisBatchContainerSpec(
+        OwsGraphOperation.Get,
+        grisChunk
+      );
+      return this.batchRequestRegistry.createContainer(
+        containerSpec,
+        DebouncedBatchFlushStrategy
+      );
+    });
+    // FIXME: na razie nie jest dokładne - granulacja liczbami kontenerów, można to poprawić wystawiając size konetenera na zewnątrz
+    this.batchProgress = new SidebarBatchProgress(itemsGris.length);
+    try {
+      // FIXME: sprawdzić czy tutaj występuje fetch
+      const recordsProxy = this.listModel.list;
+      for (const container of containers) {
+        const messagesCount = container.messagesCount;
+        try {
+          await container.flush();
+        } finally {
+          this.batchRequestRegistry.destroyContainer(container);
+        }
+        this.batchProgress.doneCount += messagesCount;
+      }
+      const staticList = await allFulfilled((await recordsProxy).toArray());
+      const sortedStaticList = _.sortBy(staticList, this.listSortKey);
+      return sortedStaticList;
+    } finally {
+      for (const container of containers) {
+        this.batchRequestRegistry.destroyContainer(container);
+      }
+    }
   }
 
   /**

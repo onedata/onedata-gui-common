@@ -3,21 +3,24 @@
  * An abstraction layer for getting data for sidebar of various tabs
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2024 ACK CYFRONET AGH
+ * @copyright (C) 2017-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import { computed } from '@ember/object';
 import Service from '@ember/service';
-import { Promise } from 'rsvp';
 import { camelize, dasherize } from '@ember/string';
 
 // TODO: VFS-12506 Refactor - check if isRecord is still in use
 
 /**
  * @typedef {Object} SidebarCollection
- * @property {Array<ResorceT>} array
+ * @property {Array<OnedataResourceCategory>} array
  * @property {Array<string>} ids
+ */
+
+/**
+ * @typedef {'shares'|'clusters'|'spaces'|'providers'|'groups'|'tokens'|'harvesters'|'atm-inventories'|'uploads'|'users'} OnedataResourceCategory
  */
 
 export default Service.extend({
@@ -32,39 +35,21 @@ export default Service.extend({
   routeResourceTypeToModelNameMapping: computed(
     'modelNameToRouteResourceTypeMapping',
     function routeResourceTypeToModelNameMapping() {
-      const modelNameToRouteResourceTypeMapping =
-        this.get('modelNameToRouteResourceTypeMapping');
       const routeResourceTypeMap = new Map();
-
-      modelNameToRouteResourceTypeMapping.forEach((resourceType, modelName) =>
+      this.modelNameToRouteResourceTypeMapping.forEach((resourceType, modelName) =>
         routeResourceTypeMap.set(resourceType, modelName)
       );
-
       return routeResourceTypeMap;
     }
   ),
 
   /**
    * @virtual
-   * @param {string} type
-   * @returns {Promise<SidebarCollection>}
+   * @param {OnedataResourceCategory} resourceType
+   * @returns {SidebarModelLoader}
    */
-  async getCollectionFor( /* type */ ) {
-    throw new Error('service:sidebar-resources: not implemented');
-  },
-
-  /**
-   * Returns Promise ready to be consumed by sidebar
-   * @param {string} resourceType
-   * @returns {Promise<OnedataSidebarRouteModel>}
-   */
-  async getSidebarModelFor(resourceType) {
-    const collection = await this.getCollectionFor(resourceType);
-    await Promise.all(collection.array);
-    return {
-      resourceType,
-      collection,
-    };
+  createSidebarModelLoader() {
+    throw new Error('SidebarResources.createSidebarModelLoader not implemented');
   },
 
   /**
@@ -87,7 +72,6 @@ export default Service.extend({
   getButtonsFor( /* resourceType, context */ ) {
     return [];
   },
-
   /**
    * @param {string} resourceType
    * @returns {string}
