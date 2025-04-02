@@ -11,7 +11,7 @@ import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 import { tracked } from '@glimmer/tracking';
 import { defaultAdvancedFilter } from 'onedata-gui-common/components/one-sidebar';
-import SidebarBatchProgress from './sidebar-batch-progress';
+import ProgressTracker from './progress-tracker';
 import GrisBatchContainerSpec from 'onedata-gui-websocket-client/utils/gris-batch-container-spec';
 import { OwsGraphOperation } from 'onedata-gui-websocket-client/services/onedata-graph';
 import { DebouncedBatchFlushStrategy } from 'onedata-gui-websocket-client/utils/batch-flush-strategies';
@@ -30,12 +30,9 @@ export default class ChunkableListModelFetcher {
   batchFetchSize = 100;
 
   /**
-   * Initialized in `getPreparedList` which is invoked by `fetch`. Progress can be
-   * initialized when we know how many items (divided into batches) are going to be
-   * fetched. We know that when the fetch starts.
-   * @type {SidebarBatchProgress|null}
+   * @type {ProgressTracker}
    */
-  batchProgress = null;
+  progressTracker = new ProgressTracker();
 
   /**
    * @type {string}
@@ -48,18 +45,6 @@ export default class ChunkableListModelFetcher {
    */
   @tracked
   filterAdvanced = defaultAdvancedFilter;
-
-  /**
-   * @virtual
-   * @type {GraphListModel}
-   */
-  listModel;
-
-  /**
-   * @virtual
-   * @type {BatchRequestRegistryService}
-   */
-  batchRequestRegistry;
 
   /**
    * @param {GraphListModel} listModel
@@ -77,12 +62,11 @@ export default class ChunkableListModelFetcher {
       );
     }
 
+    /** @type {GraphListModel} */
     this.listModel = listModel;
 
+    /** @type {BatchRequestRegistryService} */
     this.batchRequestRegistry = batchRequestRegistry;
-
-    /** @type {SidebarBatchProgress} */
-    this.batchProgress;
   }
 
   /**
@@ -142,8 +126,6 @@ export default class ChunkableListModelFetcher {
    */
   async getPreparedList() {
     const itemsGris = this.listModel.belongsTo('list').ids();
-    // FIXME: to chyba już w tym momencie trzeba utworzyć kontenery
-    // bo niewykluczone, że await ...list.toArray() spowoduje dociąganie od razu
     const containers = _.chunk(itemsGris, this.batchFetchSize).map(grisChunk => {
       const containerSpec = new GrisBatchContainerSpec(
         OwsGraphOperation.Get,
@@ -154,10 +136,8 @@ export default class ChunkableListModelFetcher {
         DebouncedBatchFlushStrategy
       );
     });
-    // FIXME: na razie nie jest dokładne - granulacja liczbami kontenerów, można to poprawić wystawiając size konetenera na zewnątrz
-    this.batchProgress = new SidebarBatchProgress(itemsGris.length);
+    this.progressTracker.reset(itemsGris.length);
     try {
-      // FIXME: sprawdzić czy tutaj występuje fetch
       const recordsProxy = this.listModel.list;
       for (const container of containers) {
         const messagesCount = container.messagesCount;
@@ -166,7 +146,7 @@ export default class ChunkableListModelFetcher {
         } finally {
           this.batchRequestRegistry.destroyContainer(container);
         }
-        this.batchProgress.doneCount += messagesCount;
+        this.progressTracker.doneCount += messagesCount;
       }
       const staticList = await allFulfilled((await recordsProxy).toArray());
       const sortedStaticList = _.sortBy(staticList, this.listSortKey);

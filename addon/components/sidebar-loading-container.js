@@ -1,4 +1,12 @@
-// FIXME: jsdoc
+/**
+ * A loading container for sidebar content showing progress of collection loading.
+ *
+ * Loading info is provided by SidebarModelLoader.
+ *
+ * @author Jakub Liput
+ * @copyright (C) 2025 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
 
 import { computed } from '@ember/object';
 import Component from '@glimmer/component';
@@ -20,15 +28,6 @@ export default class SidebarLoadingContainerComponent extends Component {
   loadingContainerSizeClass = 'lg';
 
   loadingContainerClass = 'sidebar-loading-container';
-
-  constructor() {
-    super(...arguments);
-    // FIXME: debug code
-    ((name) => {
-      window[name] = this;
-      console.log(`window.${name}`, window[name]);
-    })('debug_sidebar_loading_container');
-  }
 
   @computed()
   get locale() {
@@ -52,12 +51,12 @@ export default class SidebarLoadingContainerComponent extends Component {
   @reads('sidebarModelLoader.resourceCategory')
   resourceCategory;
 
-  @reads('sidebarModelLoader.batchProgress.totalCount')
+  @reads('sidebarModelLoader.progressTracker.totalCount')
   totalCount;
 
-  @computed('sidebarModelLoader.batchProgress.progress')
+  @computed('sidebarModelLoader.progressTracker.progress')
   get progressPercentage() {
-    const progress = this.sidebarModelLoader?.batchProgress?.progress;
+    const progress = this.sidebarModelLoader?.progressTracker?.progress;
     if (typeof progress !== 'number') {
       return undefined;
     }

@@ -1,11 +1,20 @@
-// FIXME: jsdoc
+/**
+ * A wrapper for resolving sidebar route model which contains sidebar collection.
+ *
+ * Provides progress info via injected ProgressTracker and OnedataSidebarRouteModel
+ * creation. It is considered as a main model for SidebarLoadingContainerComponent.
+ *
+ * @author Jakub Liput
+ * @copyright (C) 2025 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
 
 import { tracked } from '@glimmer/tracking';
 
 export default class SidebarModelLoader {
-  /** @type {SidebarBatchProgress} */
+  /** @type {ProgressTracker} */
   @tracked
-  batchProgress;
+  progressTracker;
 
   /** @type {Promise<SidebarCollection>} */
   #sidebarCollectionPromise;
@@ -41,7 +50,7 @@ export default class SidebarModelLoader {
   }
 
   /**
-   * @returns {OnedataSidebarRouteModel}
+   * @returns {Promise<OnedataSidebarRouteModel>}
    */
   async resolveSidebarModel() {
     return {

@@ -34,10 +34,10 @@ export class ChunkableListModel {
   }
 
   /**
-   * @type {SidebarBatchProgress|null}
+   * @type {ProgressTracker|null}
    */
-  get batchProgress() {
-    return this.chunkableListModelFetcher.batchProgress;
+  get progressTracker() {
+    return this.chunkableListModelFetcher.progressTracker;
   }
 
   constructor({ listModel, batchRequestRegistry, chunksArrayOptions }) {

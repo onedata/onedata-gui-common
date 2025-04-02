@@ -5,7 +5,7 @@ import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { find } from 'ember-test-helpers';
 import SidebarModelLoader from 'onedata-gui-common/utils/sidebar-model-loader';
-import SidebarBatchProgress from 'onedata-gui-common/utils/sidebar-batch-progress';
+import ProgressTracker from 'onedata-gui-common/utils/progress-tracker';
 import { Promise } from 'rsvp';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
@@ -30,14 +30,14 @@ describe('Integration | Component | sidebar-loading-container', function () {
   it('renders text with name of collection, total number of items and percentage progress',
     async function () {
       const helper = new Helper(this);
-      const batchProgress = new SidebarBatchProgress(100);
-      batchProgress.doneCount = 25;
+      const progressTracker = new ProgressTracker(100);
+      progressTracker.doneCount = 25;
       const sidebarCollectionPromise = new Promise(() => {});
       helper.sidebarModelLoader = new SidebarModelLoader(
         'spaces',
         sidebarCollectionPromise
       );
-      helper.sidebarModelLoader.batchProgress = batchProgress;
+      helper.sidebarModelLoader.progressTracker = progressTracker;
 
       // when
       await helper.render();
@@ -52,16 +52,16 @@ describe('Integration | Component | sidebar-loading-container', function () {
   it('renders percentage progress as floor integer',
     async function () {
       const helper = new Helper(this);
-      const batchProgress = new SidebarBatchProgress(6);
+      const progressTracker = new ProgressTracker(6);
       const sidebarCollectionPromise = new Promise(() => {});
       helper.sidebarModelLoader = new SidebarModelLoader(
         'spaces',
         sidebarCollectionPromise
       );
-      helper.sidebarModelLoader.batchProgress = batchProgress;
+      helper.sidebarModelLoader.progressTracker = progressTracker;
 
       // when
-      batchProgress.doneCount = 1;
+      progressTracker.doneCount = 1;
       await helper.render();
 
       // then
@@ -72,21 +72,21 @@ describe('Integration | Component | sidebar-loading-container', function () {
   it('renders percentage progress updates',
     async function () {
       const helper = new Helper(this);
-      const batchProgress = new SidebarBatchProgress(100);
+      const progressTracker = new ProgressTracker(100);
       const sidebarCollectionPromise = new Promise(() => {});
       helper.sidebarModelLoader = new SidebarModelLoader(
         'spaces',
         sidebarCollectionPromise
       );
-      helper.sidebarModelLoader.batchProgress = batchProgress;
+      helper.sidebarModelLoader.progressTracker = progressTracker;
 
       // when-then (25%)
-      batchProgress.doneCount = 25;
+      progressTracker.doneCount = 25;
       await helper.render();
       expect(helper.spinnerLabel).to.include('25%');
 
       // when-then (50%)
-      batchProgress.doneCount = 50;
+      progressTracker.doneCount = 50;
       await waitForRender();
       expect(helper.spinnerLabel).to.include('50%');
     }
@@ -125,14 +125,14 @@ describe('Integration | Component | sidebar-loading-container', function () {
   it('renders special text for shares when total count is available',
     async function () {
       const helper = new Helper(this);
-      const batchProgress = new SidebarBatchProgress(100);
-      batchProgress.doneCount = 25;
+      const progressTracker = new ProgressTracker(100);
+      progressTracker.doneCount = 25;
       const sidebarCollectionPromise = new Promise(() => {});
       helper.sidebarModelLoader = new SidebarModelLoader(
         'shares',
         sidebarCollectionPromise
       );
-      helper.sidebarModelLoader.batchProgress = batchProgress;
+      helper.sidebarModelLoader.progressTracker = progressTracker;
 
       // when
       await helper.render();
