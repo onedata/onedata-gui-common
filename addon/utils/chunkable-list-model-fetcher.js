@@ -137,6 +137,7 @@ export default class ChunkableListModelFetcher {
     });
     this.progressTracker.reset(itemsGris.length);
     try {
+      const list = this.listModel.list;
       for (const container of containers) {
         const messagesCount = container.messagesCount;
         try {
@@ -149,7 +150,7 @@ export default class ChunkableListModelFetcher {
       try {
         // Awaiting for list might fail when some single records cannot be fetched,
         // but we can still try to read list afterwards.
-        await this.listModel.list;
+        await list;
       } catch {
         console.warn(
           'ChunkableListModelFetcher.getPreparedList: list cannot be fully resolved, some records may be missing'
@@ -157,7 +158,7 @@ export default class ChunkableListModelFetcher {
       }
       // If record cannot be found, it is either not included in the list or it is
       // destroyed.
-      const recordsArray = this.listModel.list.filter(r => !r.isDestroyed);
+      const recordsArray = list.filter(r => !r.isDestroyed);
       const sortedStaticList = _.sortBy(recordsArray, this.listSortKey);
       return sortedStaticList;
     } finally {
