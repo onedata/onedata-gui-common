@@ -46,6 +46,30 @@ export default Component.extend(I18n, {
   onPageChange: undefined,
 
   /**
+   * @virtual optional
+   * @type {string}
+   */
+  customPerPageText: undefined,
+
+  isFiltered: false,
+
+  customFilteredText: undefined,
+
+  filteredText: computed('customFilteredText', function filteredText() {
+    if (this.customFilteredText) {
+      return this.customFilteredText;
+    }
+    return this.t('filtered');
+  }),
+
+  perPage: computed('customPerPageText', function perPage() {
+    if (this.customPerPageText) {
+      return this.customPerPageText;
+    }
+    return this.t('perPage');
+  }),
+
+  /**
    * @type {number}
    */
   hasPageNumberInput: true,

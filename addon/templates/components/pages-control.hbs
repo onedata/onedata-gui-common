@@ -26,6 +26,9 @@
 <div class="pages-control-pages-count">
   {{tt this "of"}}
   <span class="pages-control-pages-count-number">{{pagesCount}}</span>
+  {{#if isFiltered}}
+    ({{filteredText}})
+  {{/if}}
 </div>
 <button
   class="pages-control-btn pages-control-next-page-btn"
@@ -43,6 +46,6 @@
 </button>
 <div class="pages-control-page-size">
   <span class="pages-control-page-size-number">{{pageSize}}</span>
-  {{tt this "perPage"}}
+  {{perPage}}
 </div>
 {{yield}}
