@@ -93,7 +93,6 @@
       @id="sidenav-sidebar"
       class={{if navigationState.mainMenuColumnExpanded "with-place-for-menu"}}
     >
-      {{!-- FIXME: trzeba wprowadzić DummySidebarLoader, żeby yieldować od razu --}}
       {{#if sidenavResourceType}}
         <SidebarLoadingContainer
           @sidebarModelLoader={{this.sidebarModelLoader}}

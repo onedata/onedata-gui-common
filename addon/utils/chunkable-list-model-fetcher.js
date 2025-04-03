@@ -7,7 +7,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
 import { tracked } from '@glimmer/tracking';
 import { defaultAdvancedFilter } from 'onedata-gui-common/components/one-sidebar';
@@ -138,7 +137,6 @@ export default class ChunkableListModelFetcher {
     });
     this.progressTracker.reset(itemsGris.length);
     try {
-      const recordsProxy = this.listModel.list;
       for (const container of containers) {
         const messagesCount = container.messagesCount;
         try {
@@ -148,8 +146,19 @@ export default class ChunkableListModelFetcher {
         }
         this.progressTracker.doneCount += messagesCount;
       }
-      const staticList = await allFulfilled((await recordsProxy).toArray());
-      const sortedStaticList = _.sortBy(staticList, this.listSortKey);
+      try {
+        // Awaiting for list might fail when some single records cannot be fetched,
+        // but we can still try to read list afterwards.
+        await this.listModel.list;
+      } catch {
+        console.warn(
+          'ChunkableListModelFetcher.getPreparedList: list cannot be fully resolved, some records may be missing'
+        );
+      }
+      // If record cannot be found, it is either not included in the list or it is
+      // destroyed.
+      const recordsArray = this.listModel.list.filter(r => !r.isDestroyed);
+      const sortedStaticList = _.sortBy(recordsArray, this.listSortKey);
       return sortedStaticList;
     } finally {
       for (const container of containers) {

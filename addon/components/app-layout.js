@@ -146,12 +146,6 @@ export default Component.extend({
     this._super(...arguments);
     // activate observer
     this.get('colSidebarClassArray');
-
-    // FIXME: debug code
-    ((name) => {
-      window[name] = this;
-      console.log(`window.${name}`, window[name]);
-    })('debug_app_layout');
   },
 
   didInsertElement() {

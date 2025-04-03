@@ -51,7 +51,6 @@ export default class SidebarRoute extends Route {
    * @override
    */
   async model({ type }) {
-    // FIXME: debug code
     /** @type {SidebarModelLoader} */
     const sidebarModelLoader = this.sidebarResources.createSidebarModelLoader(type);
     /** @type {SidebarLoadingController} */
