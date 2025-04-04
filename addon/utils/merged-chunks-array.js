@@ -83,11 +83,13 @@ function defineFetchersUsingValue(self, value) {
 
 /**
  * @param {Array<ChunksFetchResult>} results
- * @param {InfiniteListQuery} query
+ * @param {InfiniteListQuery} query Size in this query can be null which means that result
+ *   should not be trimmed.
  * @returns {ChunksFetchResult}
  */
 export function mergeResults(results, query) {
   const { index, size, offset } = query;
+  const isInfiniteSize = size === null;
   const mergedResult = results.reduce((merged, result) => {
     let effArray = result.array;
     if (offset > 0) {
@@ -109,22 +111,25 @@ export function mergeResults(results, query) {
     const itemWithIndexPosition = _.findLastIndex(sortedArray, item =>
       item.index === index
     );
-    if (itemWithIndexPosition !== -1) {
+    if (itemWithIndexPosition !== -1 && !isInfiniteSize) {
       // Do not bother start of slice (always 0), because with the negative
       // index, we get sortedArray items from the end.
       sortedArray = sortedArray.slice(0, itemWithIndexPosition + size + offset);
     }
   }
-  let sliceRange;
-  if (offset >= 0) {
-    sliceRange = [0, size];
-  } else {
-    // TODO: VFS-12643 Write test: fetching with negative offset, which results in
-    // lesser items than expected. Before the "Math.max" code below, the array has been
-    // left corrupted (it used negative value in slice).
-    sliceRange = [Math.max(sortedArray.length - size, 0), sortedArray.length];
+  let finalArray = sortedArray;
+  if (!isInfiniteSize) {
+    let sliceRange;
+    if (offset >= 0) {
+      sliceRange = [0, size];
+    } else {
+      // TODO: VFS-12643 Write test: fetching with negative offset, which results in
+      // lesser items than expected. Before the "Math.max" code below, the array has been
+      // left corrupted (it used negative value in slice).
+      sliceRange = [Math.max(sortedArray.length - size, 0), sortedArray.length];
+    }
+    finalArray = sortedArray.slice(...sliceRange);
   }
-  const finalArray = _.sortBy(sortedArray, 'index').slice(...sliceRange);
   let isLast;
   if (finalArray.length < mergedResult.array.length) {
     // We have more items in the source than will be returned, so it cannot be the end
