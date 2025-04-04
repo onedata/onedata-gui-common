@@ -85,6 +85,7 @@ describe('Unit | Utility | merged-chunks-array', function () {
       startIndex: 5,
       endIndex: 15,
     });
+    await settled();
 
     expect(this.array.toArray(), this.array.toArray()).to.deep.equal(
       _.range(5, 15).map(i => new Record(i))
