@@ -73,12 +73,37 @@ export default class SidebarLoadingContainerComponent extends Component {
     );
   }
 
+  /**
+   * @type {boolean}
+   */
+  @computed('totalCount')
+  get isProgressPercentageHidden() {
+    return this.totalCount <= 100;
+  }
+
+  /**
+   * @type {string|undefined}
+   */
+  @computed('isProgressPercentageHidden', 'progressPercentage')
+  get progressPercentageText() {
+    const { progressPercentage, isProgressPercentageHidden } = this;
+    if (
+      !isProgressPercentageHidden &&
+      typeof progressPercentage === 'number' &&
+      !Number.isNaN(progressPercentage)
+    ) {
+      return `${progressPercentage}%`;
+    } else {
+      return undefined;
+    }
+  }
+
   @computed(
     'sidebarModelLoader',
     'totalCount',
     'resourceCategoryText',
     'resourceCategory',
-    'progressPercentage',
+    'progressPercentageText',
   )
   get loadingLabel() {
     if (!this.sidebarModelLoader) {
@@ -88,7 +113,7 @@ export default class SidebarLoadingContainerComponent extends Component {
       totalCount,
       resourceCategoryText,
       resourceCategory,
-      progressPercentage,
+      progressPercentageText,
     } = this;
     let upperSafeText;
     if (typeof totalCount !== 'number') {
@@ -105,8 +130,8 @@ export default class SidebarLoadingContainerComponent extends Component {
         resourceCategoryText,
       });
     }
-    if (typeof progressPercentage === 'number' && !Number.isNaN(progressPercentage)) {
-      return htmlSafe(`${String(upperSafeText)}<br>${progressPercentage}%`);
+    if (progressPercentageText) {
+      return htmlSafe(`${String(upperSafeText)}<br>${progressPercentageText}`);
     } else {
       return upperSafeText;
     }

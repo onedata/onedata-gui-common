@@ -30,8 +30,8 @@ describe('Integration | Component | sidebar-loading-container', function () {
   it('renders text with name of collection, total number of items and percentage progress',
     async function () {
       const helper = new Helper(this);
-      const progressTracker = new ProgressTracker(100);
-      progressTracker.doneCount = 25;
+      const progressTracker = new ProgressTracker(1000);
+      progressTracker.doneCount = 250;
       const sidebarCollectionPromise = new Promise(() => {});
       helper.sidebarModelLoader = new SidebarModelLoader(
         'spaces',
@@ -44,7 +44,7 @@ describe('Integration | Component | sidebar-loading-container', function () {
 
       // then
       const spinnerLabel = helper.spinnerLabel;
-      expect(spinnerLabel).to.include('Loading 100 spaces...');
+      expect(spinnerLabel).to.include('Loading 1000 spaces...');
       expect(spinnerLabel).to.include('25%');
     }
   );
@@ -52,7 +52,7 @@ describe('Integration | Component | sidebar-loading-container', function () {
   it('renders percentage progress as floor integer',
     async function () {
       const helper = new Helper(this);
-      const progressTracker = new ProgressTracker(6);
+      const progressTracker = new ProgressTracker(600);
       const sidebarCollectionPromise = new Promise(() => {});
       helper.sidebarModelLoader = new SidebarModelLoader(
         'spaces',
@@ -61,7 +61,7 @@ describe('Integration | Component | sidebar-loading-container', function () {
       helper.sidebarModelLoader.progressTracker = progressTracker;
 
       // when
-      progressTracker.doneCount = 1;
+      progressTracker.doneCount = 100;
       await helper.render();
 
       // then
@@ -72,7 +72,7 @@ describe('Integration | Component | sidebar-loading-container', function () {
   it('renders percentage progress updates',
     async function () {
       const helper = new Helper(this);
-      const progressTracker = new ProgressTracker(100);
+      const progressTracker = new ProgressTracker(1000);
       const sidebarCollectionPromise = new Promise(() => {});
       helper.sidebarModelLoader = new SidebarModelLoader(
         'spaces',
@@ -81,12 +81,12 @@ describe('Integration | Component | sidebar-loading-container', function () {
       helper.sidebarModelLoader.progressTracker = progressTracker;
 
       // when-then (25%)
-      progressTracker.doneCount = 25;
+      progressTracker.doneCount = 250;
       await helper.render();
       expect(helper.spinnerLabel).to.include('25%');
 
       // when-then (50%)
-      progressTracker.doneCount = 50;
+      progressTracker.doneCount = 500;
       await waitForRender();
       expect(helper.spinnerLabel).to.include('50%');
     }
@@ -125,8 +125,8 @@ describe('Integration | Component | sidebar-loading-container', function () {
   it('renders special text for shares when total count is available',
     async function () {
       const helper = new Helper(this);
-      const progressTracker = new ProgressTracker(100);
-      progressTracker.doneCount = 25;
+      const progressTracker = new ProgressTracker(1000);
+      progressTracker.doneCount = 250;
       const sidebarCollectionPromise = new Promise(() => {});
       helper.sidebarModelLoader = new SidebarModelLoader(
         'shares',
@@ -139,8 +139,29 @@ describe('Integration | Component | sidebar-loading-container', function () {
 
       // then
       const spinnerLabel = helper.spinnerLabel;
-      expect(spinnerLabel).to.include('Loading shares for 100 spaces...');
+      expect(spinnerLabel).to.include('Loading shares for 1000 spaces...');
       expect(spinnerLabel).to.include('25%');
+    }
+  );
+
+  it('does not render percentage if totalCount is <= 100',
+    async function () {
+      const helper = new Helper(this);
+      const progressTracker = new ProgressTracker(100);
+      progressTracker.doneCount = 1;
+      const sidebarCollectionPromise = new Promise(() => {});
+      helper.sidebarModelLoader = new SidebarModelLoader(
+        'shares',
+        sidebarCollectionPromise
+      );
+      helper.sidebarModelLoader.progressTracker = progressTracker;
+
+      // when
+      await helper.render();
+
+      // then
+      const spinnerLabel = helper.spinnerLabel;
+      expect(spinnerLabel.trim()).to.equal('Loading shares for 100 spaces...');
     }
   );
 });
