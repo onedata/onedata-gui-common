@@ -67,6 +67,27 @@ export default DropdownField.extend({
     }
   ),
 
+  noMatchesMessage: computed(
+    'i18nPrefix',
+    'translationPath', {
+      get() {
+        return this.injectedNoMatchesMessage ?? this.getTranslation(
+          'noMatchesMessage', {}, {
+            defaultValue: this.t(
+              `${defaultI18nPrefix}.noMatchesMessage`, {}, {
+                defaultValue: '',
+                usePrefix: false,
+              },
+            ),
+          }
+        );
+      },
+      set(key, value) {
+        return this.injectedNoMatchesMessage = value;
+      },
+    }
+  ),
+
   /**
    * @type {string|null}
    */
@@ -76,4 +97,9 @@ export default DropdownField.extend({
    * @type {string|null}
    */
   injectedCustomValueOptionText: null,
+
+  /**
+   * @type {string|null}
+   */
+  injectedNoMatchesMessage: null,
 });

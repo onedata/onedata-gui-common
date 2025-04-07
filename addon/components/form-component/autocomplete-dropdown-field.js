@@ -34,6 +34,8 @@ export default DropdownField.extend({
 
   customValueOptionText: reads('field.customValueOptionText'),
 
+  noMatchesMessage: reads('field.noMatchesMessage'),
+
   /**
    * @type {ComputedProperty<Array<FieldOption>>}
    */

@@ -444,21 +444,22 @@ $form-component-view-margin: $padding-base-vertical;
     }
   }
 
-  .trigger {
+  .autocomplete-dropdown-trigger {
     width: 100%;
   }
 
   .power-select-input-container {
     position: relative;
     --dropdown-arrow-separator-spacing: 12px;
-    --vertical-spacing: 8px;
+    --autocomplete-dropdown-vertical-spacing: 8px;
+    padding-right: calc(var(--ember-power-select-trigger-padding-right) + var(--dropdown-arrow-separator-spacing));
 
     &::before {
       position: absolute;
       content: '';
       right: calc(var(--ember-power-select-trigger-padding-right) + var(--dropdown-arrow-separator-spacing));
-      top: var(--vertical-spacing);
-      bottom: var(--vertical-spacing);
+      top: var(--autocomplete-dropdown-vertical-spacing);
+      bottom: var(--autocomplete-dropdown-vertical-spacing);
       border-right: $ember-power-select-border-width solid $main-border-color;
     }
 
@@ -466,23 +467,19 @@ $form-component-view-margin: $padding-base-vertical;
       padding-top: $padding-base-vertical;
       padding-bottom: $padding-base-vertical;
       padding-left: $padding-large-horizontal;
-      padding-right: calc(var(--ember-power-select-trigger-padding-right) + 2 * var(--dropdown-arrow-separator-spacing));
+      padding-right: var(--dropdown-arrow-separator-spacing);
     }
   }
 
   .small .power-select-input-container {
     --dropdown-arrow-separator-spacing: 8px;
-    --vertical-spacing: 4px;
+    --autocomplete-dropdown-vertical-spacing: 4px;
 
     .ember-power-select-search-input {
       padding-top: $ember-power-select-option-small-padding-vertical;
       padding-bottom: $ember-power-select-option-small-padding-vertical;
       padding-left: $ember-power-select-option-small-padding-horizontal;
     }
-  }
-
-  .ember-power-select-status-icon {
-    cursor: text;
   }
 }
 

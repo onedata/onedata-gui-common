@@ -17,7 +17,7 @@ import notImplementedWarn from 'onedata-gui-common/utils/not-implemented-warn';
 export default Trigger.extend({
   layout,
   tagName: 'div',
-  classNames: ['trigger'],
+  classNames: ['autocomplete-dropdown-trigger'],
 
   /**
    * @virtual
@@ -43,9 +43,10 @@ export default Trigger.extend({
       this.onBlur();
     },
     onClick() {
-      this.element.querySelector('input').focus();
-      const length = this.element.querySelector('input').value.length;
-      this.element.querySelector('input').setSelectionRange(length, length);
+      const input = this.element.querySelector('.ember-power-select-search-input');
+      input.focus();
+      const length = input.value.length;
+      input.setSelectionRange(length, length);
     },
   },
 });

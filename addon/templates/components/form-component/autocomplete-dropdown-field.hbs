@@ -31,6 +31,7 @@
     @triggerComponent="form-component/autocomplete-dropdown/trigger"
     @beforeOptionsComponent={{null}}
     @searchField="name"
+    @noMatchesMessage={{noMatchesMessage}}
     as |option|
   >
     {{#if option.isCustom}}
