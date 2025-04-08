@@ -1,0 +1,11 @@
+{{!-- This template is rendered in the content section when sidebar is loading --}}
+{{#if (media "isMobile")}}
+  <SidebarLoadingContainer
+    @sidebarModelLoader={{this.sidebarModelLoader}}
+  />
+{{else}}
+  <LoadingContainer
+    @sizeClass="lg"
+    @isLoading={{true}}
+  />
+{{/if}}
