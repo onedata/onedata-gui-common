@@ -446,41 +446,43 @@ $form-component-view-margin: $padding-base-vertical;
 
   .autocomplete-dropdown-trigger {
     width: 100%;
-  }
-
-  .power-select-input-container {
-    position: relative;
+    padding-right: calc(var(--ember-power-select-trigger-padding-right) + var(--dropdown-arrow-separator-spacing));
     --dropdown-arrow-separator-spacing: 12px;
     --autocomplete-dropdown-vertical-spacing: 8px;
-    padding-right: calc(var(--ember-power-select-trigger-padding-right) + var(--dropdown-arrow-separator-spacing));
-    padding-top: $padding-base-vertical;
-    padding-bottom: $padding-base-vertical;
-    cursor: text;
 
-    &::before {
-      position: absolute;
-      content: '';
-      right: calc(var(--ember-power-select-trigger-padding-right) + var(--dropdown-arrow-separator-spacing));
-      top: var(--autocomplete-dropdown-vertical-spacing);
-      bottom: var(--autocomplete-dropdown-vertical-spacing);
-      border-right: $ember-power-select-border-width solid $main-border-color;
-    }
+    .power-select-input-container {
+      position: relative;
+      padding-top: $padding-base-vertical;
+      padding-bottom: $padding-base-vertical;
+      cursor: text;
 
-    .ember-power-select-search-input {
+      &::before {
+        position: absolute;
+        content: '';
+        right: 0;
+        top: var(--autocomplete-dropdown-vertical-spacing);
+        bottom: var(--autocomplete-dropdown-vertical-spacing);
+        border-right: $ember-power-select-border-width solid $main-border-color;
+      }
 
-      padding-left: $padding-large-horizontal;
-      padding-right: var(--dropdown-arrow-separator-spacing);
+      .ember-power-select-search-input {
+        padding-left: $padding-large-horizontal;
+        padding-right: var(--dropdown-arrow-separator-spacing);
+      }
     }
   }
 
-  .small .power-select-input-container {
+  .small .autocomplete-dropdown-trigger {
     --dropdown-arrow-separator-spacing: 8px;
     --autocomplete-dropdown-vertical-spacing: 4px;
-    padding-top: $ember-power-select-option-small-padding-vertical;
-    padding-bottom: $ember-power-select-option-small-padding-vertical;
 
-    .ember-power-select-search-input {
-      padding-left: $ember-power-select-option-small-padding-horizontal;
+    .power-select-input-container {
+      padding-top: $ember-power-select-option-small-padding-vertical;
+      padding-bottom: $ember-power-select-option-small-padding-vertical;
+
+      .ember-power-select-search-input {
+        padding-left: $ember-power-select-option-small-padding-horizontal;
+      }
     }
   }
 }
