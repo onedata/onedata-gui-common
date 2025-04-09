@@ -476,10 +476,10 @@ $form-component-view-margin: $padding-base-vertical;
   .small .power-select-input-container {
     --dropdown-arrow-separator-spacing: 8px;
     --autocomplete-dropdown-vertical-spacing: 4px;
+    padding-top: $ember-power-select-option-small-padding-vertical;
+    padding-bottom: $ember-power-select-option-small-padding-vertical;
 
     .ember-power-select-search-input {
-      padding-top: $ember-power-select-option-small-padding-vertical;
-      padding-bottom: $ember-power-select-option-small-padding-vertical;
       padding-left: $ember-power-select-option-small-padding-horizontal;
     }
   }
