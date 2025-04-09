@@ -468,6 +468,7 @@ $form-component-view-margin: $padding-base-vertical;
       .ember-power-select-search-input {
         padding-left: $padding-large-horizontal;
         padding-right: var(--dropdown-arrow-separator-spacing);
+        background: none;
       }
     }
   }
