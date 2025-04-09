@@ -111,7 +111,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
 
     it('allows to show lane details', async function () {
       await render(hbs `
-        {{global-modal-mounter}}
+        <GlobalModalMounter />
         {{workflow-visualiser/lane elementModel=lane}}
       `);
 
@@ -158,7 +158,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
       const onModifySpy = sinon.stub().resolves();
       this.set('lane.onModify', onModifySpy);
       await render(hbs `
-        {{global-modal-mounter}}
+        <GlobalModalMounter />
         {{workflow-visualiser/lane elementModel=lane}}
       `);
 
@@ -222,7 +222,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
         ],
       });
       await render(hbs `
-        {{global-modal-mounter}}
+        <GlobalModalMounter />
         {{workflow-visualiser/lane elementModel=lane}}
       `);
 
@@ -252,7 +252,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
       const onRemoveSpy = sinon.stub().resolves();
       this.set('lane.onRemove', onRemoveSpy);
       await render(hbs `
-        {{global-modal-mounter}}
+        <GlobalModalMounter />
         {{workflow-visualiser/lane elementModel=lane}}
       `);
 

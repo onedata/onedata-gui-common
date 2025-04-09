@@ -115,7 +115,7 @@ describe('Integration | Component | workflow-visualiser/interlane-space', functi
 
 async function renderComponent() {
   await render(hbs `
-    {{global-modal-mounter}}
+    <GlobalModalMounter />
     {{workflow-visualiser/interlane-space elementModel=interlaneSpace}}
   `);
 }

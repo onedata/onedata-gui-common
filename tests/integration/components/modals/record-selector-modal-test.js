@@ -217,7 +217,7 @@ async function showModal(testCase) {
     modalOptions,
   } = testCase.getProperties('modalManager', 'modalOptions');
 
-  await render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `<GlobalModalMounter />`);
 
   return modalManager.show('record-selector-modal', modalOptions).shownPromise;
 }

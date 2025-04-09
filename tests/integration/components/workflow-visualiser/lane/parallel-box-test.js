@@ -160,7 +160,7 @@ describe('Integration | Component | workflow-visualiser/lane/parallel-box', func
       const onRemoveSpy = sinon.stub().resolves();
       this.set('block.onRemove', onRemoveSpy);
       await render(hbs `
-        {{global-modal-mounter}}
+        <GlobalModalMounter />
         {{workflow-visualiser/lane/parallel-box elementModel=block}}
       `);
 

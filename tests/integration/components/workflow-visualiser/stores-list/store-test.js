@@ -122,7 +122,7 @@ describe('Integration | Component | workflow-visualiser/stores-list/store', func
 
 async function renderComponent() {
   await render(hbs `
-    {{global-modal-mounter}}
+    <GlobalModalMounter />
     {{workflow-visualiser/stores-list/store
       mode=mode
       store=store

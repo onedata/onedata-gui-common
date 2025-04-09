@@ -128,7 +128,7 @@ describe('Integration | Utility | workflow-visualiser/actions/create-lane-action
 });
 
 async function executeAction(testCase) {
-  await render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `<GlobalModalMounter />`);
   const resultPromise = testCase.get('action').execute();
   await settled();
   return { resultPromise };

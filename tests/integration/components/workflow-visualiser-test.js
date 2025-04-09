@@ -880,7 +880,7 @@ async function renderWithRawData(testCase, rawData) {
     initialRawData: _.cloneDeep(rawData),
   });
   await render(hbs `
-    {{global-modal-mounter}}
+    <GlobalModalMounter />
     {{workflow-visualiser
       mode=mode
       rawData=rawData

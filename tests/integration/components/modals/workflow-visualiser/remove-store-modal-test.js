@@ -177,7 +177,7 @@ class Helper {
   }
 
   async render() {
-    await render(hbs `{{global-modal-mounter}}`);
+    await render(hbs `<GlobalModalMounter />`);
 
     await this.modalManager
       .show('workflow-visualiser/remove-store-modal', this.modalOptions)
