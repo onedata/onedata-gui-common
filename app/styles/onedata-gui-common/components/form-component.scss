@@ -453,6 +453,9 @@ $form-component-view-margin: $padding-base-vertical;
     --dropdown-arrow-separator-spacing: 12px;
     --autocomplete-dropdown-vertical-spacing: 8px;
     padding-right: calc(var(--ember-power-select-trigger-padding-right) + var(--dropdown-arrow-separator-spacing));
+    padding-top: $padding-base-vertical;
+    padding-bottom: $padding-base-vertical;
+    cursor: text;
 
     &::before {
       position: absolute;
@@ -464,8 +467,7 @@ $form-component-view-margin: $padding-base-vertical;
     }
 
     .ember-power-select-search-input {
-      padding-top: $padding-base-vertical;
-      padding-bottom: $padding-base-vertical;
+
       padding-left: $padding-large-horizontal;
       padding-right: var(--dropdown-arrow-separator-spacing);
     }
