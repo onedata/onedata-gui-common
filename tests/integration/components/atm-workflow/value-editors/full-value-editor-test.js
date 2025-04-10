@@ -152,8 +152,8 @@ describe('Integration | Component | atm-workflow/value-editors/full-value-editor
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-editors/full-value-editor
-    stateManager=stateManager
-    onRemove=onRemove
-  }}`);
+  await render(hbs`<AtmWorkflow::ValueEditors::FullValueEditor
+    @stateManager={{stateManager}}
+    @onRemove={{onRemove}}
+  />`);
 }

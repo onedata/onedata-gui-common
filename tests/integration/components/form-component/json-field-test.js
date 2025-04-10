@@ -23,7 +23,7 @@ describe('Integration | Component | form-component/json-field', function () {
   it(
     'has class "json-field"',
     async function () {
-      await render(hbs `{{form-component/json-field field=field}}`);
+      await render(hbs `<FormComponent::JsonField @field={{field}} />`);
 
       expect(find('.json-field')).to.exist;
     }
@@ -32,7 +32,7 @@ describe('Integration | Component | form-component/json-field', function () {
   it(
     'renders textarea',
     async function () {
-      await render(hbs `{{form-component/json-field field=field}}`);
+      await render(hbs `<FormComponent::JsonField @field={{field}} />`);
 
       expect(find('textarea')).to.exist;
     }
@@ -43,7 +43,7 @@ describe('Integration | Component | form-component/json-field', function () {
     async function () {
       this.set('field.isEnabled', false);
 
-      await render(hbs `{{form-component/json-field field=field}}`);
+      await render(hbs `<FormComponent::JsonField @field={{field}} />`);
 
       expect(find('textarea').disabled).to.be.true;
     }
@@ -54,7 +54,7 @@ describe('Integration | Component | form-component/json-field', function () {
     async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      await render(hbs `{{form-component/json-field field=field}}`);
+      await render(hbs `<FormComponent::JsonField @field={{field}} />`);
 
       return focus('textarea')
         .then(() => blur('textarea'))
@@ -67,7 +67,7 @@ describe('Integration | Component | form-component/json-field', function () {
     async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      await render(hbs `{{form-component/json-field field=field}}`);
+      await render(hbs `<FormComponent::JsonField @field={{field}} />`);
 
       return fillIn('textarea', '"test"')
         .then(() => {
@@ -80,14 +80,14 @@ describe('Integration | Component | form-component/json-field', function () {
   it('sets textarea value to string specified in field object', async function () {
     this.set('field.value', '"test"');
 
-    await render(hbs `{{form-component/json-field field=field}}`);
+    await render(hbs `<FormComponent::JsonField @field={{field}} />`);
 
     expect(find('textarea').value).to.equal('"test"');
   });
 
   it('sets textarea id according to "fieldId"', async function () {
     await render(hbs `
-      {{form-component/json-field field=field fieldId="abc"}}
+      <FormComponent::JsonField @field={{field}} @fieldId="abc" />
     `);
 
     expect(find('textarea#abc')).to.exist;
@@ -98,7 +98,7 @@ describe('Integration | Component | form-component/json-field', function () {
     set(field, 'value', '"test"');
     field.changeMode('view');
 
-    await render(hbs `{{form-component/json-field field=field}}`);
+    await render(hbs `<FormComponent::JsonField @field={{field}} />`);
 
     expect(find('textarea').value).to.equal('"test"');
     expect(find('textarea').readOnly).to.be.true;
@@ -107,7 +107,7 @@ describe('Integration | Component | form-component/json-field', function () {
   it('sets placeholder according to "placeholder"', async function () {
     this.set('field.placeholder', 'test');
 
-    await render(hbs `{{form-component/json-field field=field}}`);
+    await render(hbs `<FormComponent::JsonField @field={{field}} />`);
 
     expect(find('textarea').placeholder).to.equal('test');
   });

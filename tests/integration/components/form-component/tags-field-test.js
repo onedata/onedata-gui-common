@@ -29,7 +29,7 @@ describe('Integration | Component | form-component/tags-field', function () {
   it(
     'has class "tags-field"',
     async function () {
-      await render(hbs `{{form-component/tags-field field=field}}`);
+      await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
       expect(find('.tags-field')).to.exist;
     }
@@ -38,7 +38,7 @@ describe('Integration | Component | form-component/tags-field', function () {
   it(
     'renders tags-input component',
     async function () {
-      await render(hbs `{{form-component/tags-field field=field}}`);
+      await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
       expect(find('.tags-input')).to.exist;
     }
@@ -49,7 +49,7 @@ describe('Integration | Component | form-component/tags-field', function () {
     async function () {
       this.set('field.isEnabled', false);
 
-      await render(hbs `{{form-component/tags-field field=field}}`);
+      await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
       expect(find('.tags-input')).to.have.attr('disabled');
     }
@@ -60,7 +60,7 @@ describe('Integration | Component | form-component/tags-field', function () {
     async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      await render(hbs `{{form-component/tags-field field=field}}`);
+      await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
       return focus('.tags-input')
         .then(() => blur('.tags-input'))
@@ -73,7 +73,7 @@ describe('Integration | Component | form-component/tags-field', function () {
     async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      await render(hbs `{{form-component/tags-field field=field}}`);
+      await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
       return click('.tag-creator-trigger')
         .then(() => fillIn('.text-editor-input', 'test,aest,'))
@@ -87,7 +87,7 @@ describe('Integration | Component | form-component/tags-field', function () {
   it('sets input value to tags specified in field object', async function () {
     this.set('field.value', ['test', 'test2']);
 
-    await render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
     const tags = findAll('.tag-item');
     expect(tags).to.have.length(2);
@@ -97,7 +97,7 @@ describe('Integration | Component | form-component/tags-field', function () {
 
   it('sets input id according to "fieldId"', async function () {
     await render(hbs `
-      {{form-component/tags-field field=field fieldId="abc"}}
+      <FormComponent::TagsField @field={{field}} @fieldId="abc" />
     `);
 
     expect(find('.tags-input#abc')).to.exist;
@@ -110,7 +110,7 @@ describe('Integration | Component | form-component/tags-field', function () {
       tagEditorSettings: settings,
     });
 
-    await render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
     return click('.tag-creator-trigger')
       .then(() => {
@@ -125,7 +125,7 @@ describe('Integration | Component | form-component/tags-field', function () {
     this.set('field.sort', true);
     const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-    await render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', 'test,aest,'))
@@ -138,7 +138,7 @@ describe('Integration | Component | form-component/tags-field', function () {
   it('renders readonly tags input when field is in "view" mode', async function () {
     this.get('field').changeMode('view');
 
-    await render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
     expect(find('.tags-input')).to.have.class('readonly');
   });
@@ -147,7 +147,7 @@ describe('Integration | Component | form-component/tags-field', function () {
     this.set('field.value', ['test', 'test2']);
     this.set('field.tagsLimit', 1);
 
-    await render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
     expect(find('.tag-creator-trigger')).to.have.class('disabled');
   });
@@ -156,7 +156,7 @@ describe('Integration | Component | form-component/tags-field', function () {
     this.set('field.value', ['test']);
     this.set('field.isClearButtonVisible', false);
 
-    await render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
     expect(find('.input-clear-trigger')).to.not.exist;
   });
@@ -165,7 +165,7 @@ describe('Integration | Component | form-component/tags-field', function () {
     this.set('field.value', ['test']);
     this.set('field.isClearButtonVisible', true);
 
-    await render(hbs `{{form-component/tags-field field=field}}`);
+    await render(hbs `<FormComponent::TagsField @field={{field}} />`);
 
     expect(find('.input-clear-trigger')).to.exist;
   });

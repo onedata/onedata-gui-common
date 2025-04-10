@@ -39,7 +39,9 @@ describe('Integration | Component | global-modal', function () {
   it('renders modal only when modalInstance.isOpened is true', async function () {
     this.set('modalInstance.isOpened', true);
 
-    await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
+    await render(hbs `<GlobalModal
+      @modalId={{modalManager.modalInstances.lastObject.id}}
+    />`);
 
     expect(isGlobalModalOpened()).to.be.true;
   });
@@ -47,10 +49,10 @@ describe('Integration | Component | global-modal', function () {
   it('renders modal with custom class', async function () {
     this.set('modalInstance.isOpened', true);
 
-    await render(hbs `{{global-modal
-      modalId=modalManager.modalInstances.lastObject.id
-      classNames="custom-modal-class"
-    }}`);
+    await render(hbs `<GlobalModal
+      @modalId={{modalManager.modalInstances.lastObject.id}}
+      @classNames="custom-modal-class"
+    />`);
 
     expect(getGlobalModal()).to.have.class('custom-modal-class');
   });
@@ -58,7 +60,9 @@ describe('Integration | Component | global-modal', function () {
   it('hides modal if modal instance isOpened turns from true to false', async function () {
     this.set('modalInstance.isOpened', true);
 
-    await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
+    await render(hbs `<GlobalModal
+      @modalId={{modalManager.modalInstances.lastObject.id}}
+    />`);
 
     this.set('modalInstance.isOpened', false);
     await settled();
@@ -69,17 +73,17 @@ describe('Integration | Component | global-modal', function () {
     this.set('modalInstance.isOpened', true);
 
     await render(hbs `
-      {{#global-modal modalId=modalManager.modalInstances.lastObject.id as |modal|}}
-        {{#modal.header}}
+      <GlobalModal @modalId={{modalManager.modalInstances.lastObject.id}} as |modal|>
+        <modal.header>
           <div class="header-content-test"></div>
-        {{/modal.header}}
-        {{#modal.body}}
+        </modal.header>
+        <modal.body>
           <div class="body-content-test"></div>
-        {{/modal.body}}
-        {{#modal.footer}}
+        </modal.body>
+        <modal.footer>
           <div class="footer-content-test"></div>
-        {{/modal.footer}}
-      {{/global-modal}}
+        </modal.footer>
+      </GlobalModal>
     `);
 
     const modal = getGlobalModal();
@@ -96,7 +100,9 @@ describe('Integration | Component | global-modal', function () {
   it(
     'notifies about onShown event through resolve of modalManager.show().shownPromise promise',
     async function () {
-      await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
+      await render(hbs `<GlobalModal
+        @modalId={{modalManager.modalInstances.lastObject.id}}
+      />`);
 
       await this.get('modalManager').show().shownPromise;
       expect(isGlobalModalOpened()).to.be.true;
@@ -109,11 +115,11 @@ describe('Integration | Component | global-modal', function () {
       const hiddenSpy = sinon.spy();
 
       await render(hbs `
-        {{#global-modal modalId=modalManager.modalInstances.lastObject.id as |modal|}}
-          {{#modal.body}}
+        <GlobalModal @modalId={{modalManager.modalInstances.lastObject.id}} as |modal|>
+          <modal.body>
             <button class="close-button" {{action modal.close}}></button>
-          {{/modal.body}}
-        {{/global-modal}}
+          </modal.body>
+        </GlobalModal>
       `);
 
       const {
@@ -135,7 +141,9 @@ describe('Integration | Component | global-modal', function () {
   it(
     'notifies about onHidden event through resolve of modalManager.hide() promise',
     async function () {
-      await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
+      await render(hbs `<GlobalModal
+        @modalId={{modalManager.modalInstances.lastObject.id}}
+      />`);
 
       const modalManager = this.get('modalManager');
       await modalManager.show().shownPromise;
@@ -148,7 +156,9 @@ describe('Integration | Component | global-modal', function () {
   it(
     'returns the same promise for two consecutive modalManager.hide() calls',
     async function () {
-      await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
+      await render(hbs `<GlobalModal
+        @modalId={{modalManager.modalInstances.lastObject.id}}
+      />`);
 
       const modalManager = this.get('modalManager');
       await modalManager.show().shownPromise;
@@ -162,11 +172,11 @@ describe('Integration | Component | global-modal', function () {
 
   it('hides modal on modal.close action', async function () {
     await render(hbs `
-      {{#global-modal modalId=modalManager.modalInstances.lastObject.id as |modal|}}
-        {{#modal.body}}
+      <GlobalModal @modalId={{modalManager.modalInstances.lastObject.id}} as |modal|>
+        <modal.body>
           <button class="close-button" {{action modal.close}}></button>
-        {{/modal.body}}
-      {{/global-modal}}
+        </modal.body>
+      </GlobalModal>
     `);
 
     await this.get('modalManager').show().shownPromise;
@@ -182,15 +192,15 @@ describe('Integration | Component | global-modal', function () {
       this.set('hide', hideSpy);
 
       await render(hbs `
-        {{#global-modal
-          modalId=modalManager.modalInstances.lastObject.id
-          onHide=(action hide)
+        <GlobalModal
+          @modalId={{modalManager.modalInstances.lastObject.id}}
+          @onHide={{action hide}}
           as |modal|
-        }}
-          {{#modal.body}}
+        >
+          <modal.body>
             <button class="close-button" {{action modal.close}}></button>
-          {{/modal.body}}
-        {{/global-modal}}
+          </modal.body>
+        </GlobalModal>
       `);
 
       await this.get('modalManager').show().shownPromise;
@@ -207,11 +217,11 @@ describe('Integration | Component | global-modal', function () {
       const hideSpy = sinon.spy();
 
       await render(hbs `
-        {{#global-modal modalId=modalManager.modalInstances.lastObject.id as |modal|}}
-          {{#modal.body}}
+        <GlobalModal @modalId={{modalManager.modalInstances.lastObject.id}} as |modal|>
+          <modal.body>
             <button class="close-button" {{action modal.close}}></button>
-          {{/modal.body}}
-        {{/global-modal}}
+          </modal.body>
+        </GlobalModal>
       `);
 
       await this.get('modalManager')
@@ -231,15 +241,15 @@ describe('Integration | Component | global-modal', function () {
       this.set('hide', hideStubViaProp);
 
       await render(hbs `
-        {{#global-modal
-          modalId=modalManager.modalInstances.lastObject.id
-          onHide=(action hide)
+        <GlobalModal
+          @modalId={{modalManager.modalInstances.lastObject.id}}
+          @onHide={{action hide}}
           as |modal|
-        }}
-          {{#modal.body}}
+        >
+          <modal.body>
             <button class="close-button" {{action modal.close}}></button>
-          {{/modal.body}}
-        {{/global-modal}}
+          </modal.body>
+        </GlobalModal>
       `);
 
       await this.get('modalManager')
@@ -260,15 +270,15 @@ describe('Integration | Component | global-modal', function () {
       this.set('hide', hideSpyViaProp);
 
       await render(hbs `
-        {{#global-modal
-          modalId=modalManager.modalInstances.lastObject.id
-          onHide=(action hide)
+        <GlobalModal
+          @modalId={{modalManager.modalInstances.lastObject.id}}
+          @onHide={{action hide}}
           as |modal|
-        }}
-          {{#modal.body}}
+        >
+          <modal.body>
             <button class="close-button" {{action modal.close}}></button>
-          {{/modal.body}}
-        {{/global-modal}}
+          </modal.body>
+        </GlobalModal>
       `);
 
       await this.get('modalManager')
@@ -287,15 +297,15 @@ describe('Integration | Component | global-modal', function () {
       this.set('submit', submitSpy);
 
       await render(hbs `
-        {{#global-modal
-          modalId=modalManager.modalInstances.lastObject.id
-          onSubmit=(action submit)
+        <GlobalModal
+          @modalId={{modalManager.modalInstances.lastObject.id}}
+          @onSubmit={{action submit}}
           as |modal|
-        }}
-          {{#modal.body}}
+        >
+          <modal.body>
             <button class="submit-button" {{action modal.submit "value"}}></button>
-          {{/modal.body}}
-        {{/global-modal}}
+          </modal.body>
+        </GlobalModal>
       `);
 
       await this.get('modalManager').show().shownPromise;
@@ -312,11 +322,11 @@ describe('Integration | Component | global-modal', function () {
       const submitSpy = sinon.spy();
 
       await render(hbs `
-        {{#global-modal modalId=modalManager.modalInstances.lastObject.id as |modal|}}
-          {{#modal.body}}
+        <GlobalModal @modalId={{modalManager.modalInstances.lastObject.id}} as |modal|>
+          <modal.body>
             <button class="submit-button" {{action modal.submit "value"}}></button>
-          {{/modal.body}}
-        {{/global-modal}}
+          </modal.body>
+        </GlobalModal>
       `);
 
       await this.get('modalManager')
@@ -351,15 +361,15 @@ describe('Integration | Component | global-modal', function () {
       this.set('submit', submitSpyViaProp);
 
       await render(hbs `
-        {{#global-modal
-          modalId=modalManager.modalInstances.lastObject.id
-          onSubmit=(action submit)
+        <GlobalModal
+          @modalId={{modalManager.modalInstances.lastObject.id}}
+          @onSubmit={{action submit}}
           as |modal|
-        }}
-          {{#modal.body}}
+        >
+          <modal.body>
             <button class="submit-button" {{action modal.submit "value"}}></button>
-          {{/modal.body}}
-        {{/global-modal}}
+          </modal.body>
+        </GlobalModal>
       `);
 
       await this.get('modalManager')
@@ -392,15 +402,15 @@ describe('Integration | Component | global-modal', function () {
       this.set('submit', submitStubViaProp);
 
       await render(hbs `
-        {{#global-modal
-          modalId=modalManager.modalInstances.lastObject.id
-          onSubmit=(action submit)
+        <GlobalModal
+          @modalId={{modalManager.modalInstances.lastObject.id}}
+          @onSubmit={{action submit}}
           as |modal|
-        }}
-          {{#modal.body}}
+        >
+          <modal.body>
             <button class="submit-button" {{action modal.submit}}></button>
-          {{/modal.body}}
-        {{/global-modal}}
+          </modal.body>
+        </GlobalModal>
       `);
 
       await this.get('modalManager')
@@ -414,11 +424,11 @@ describe('Integration | Component | global-modal', function () {
 
   it('closes modal on modal.submit', async function () {
     await render(hbs `
-      {{#global-modal modalId=modalManager.modalInstances.lastObject.id as |modal|}}
-        {{#modal.body}}
+      <GlobalModal @modalId={{modalManager.modalInstances.lastObject.id}} as |modal|>
+        <modal.body>
           <button class="submit-button" {{action modal.submit}}></button>
-        {{/modal.body}}
-      {{/global-modal}}
+        </modal.body>
+      </GlobalModal>
     `);
 
     await this.get('modalManager').show().shownPromise;
@@ -431,11 +441,11 @@ describe('Integration | Component | global-modal', function () {
     'does not close modal on modal.submit when hideAfterSubmit show() option is false',
     async function () {
       await render(hbs `
-        {{#global-modal modalId=modalManager.modalInstances.lastObject.id as |modal|}}
-          {{#modal.body}}
+        <GlobalModal @modalId={{modalManager.modalInstances.lastObject.id}} as |modal|>
+          <modal.body>
             <button class="submit-button" {{action modal.submit}}></button>
-          {{/modal.body}}
-        {{/global-modal}}
+          </modal.body>
+        </GlobalModal>
       `);
 
       await this.get('modalManager')
@@ -447,7 +457,9 @@ describe('Integration | Component | global-modal', function () {
   );
 
   it('closes modal on Escape key press by default', async function () {
-    await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
+    await render(hbs `<GlobalModal
+      @modalId={{modalManager.modalInstances.lastObject.id}}
+    />`);
 
     await this.get('modalManager').show().shownPromise;
     await triggerKeyEvent(getGlobalModal(), 'keydown', 'Escape');
@@ -456,9 +468,10 @@ describe('Integration | Component | global-modal', function () {
   });
 
   it('does not close modal on Escape key press when allowClose is false', async function () {
-    await render(hbs `{{global-modal
-      modalId=modalManager.modalInstances.lastObject.id
-      allowClose=false}}
+    await render(hbs `<GlobalModal
+      @modalId={{modalManager.modalInstances.lastObject.id}}
+      @allowClose={{false}}
+    />
     `);
 
     await this.get('modalManager').show().shownPromise;
@@ -468,7 +481,9 @@ describe('Integration | Component | global-modal', function () {
   });
 
   it('closes modal on backdrop click by default', async function () {
-    await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
+    await render(hbs `<GlobalModal
+      @modalId={{modalManager.modalInstances.lastObject.id}}
+    />`);
 
     await this.get('modalManager').show().shownPromise;
     await click(getGlobalModal());
@@ -477,10 +492,10 @@ describe('Integration | Component | global-modal', function () {
   });
 
   it('does not close modal on backdrop click when allowClose is false', async function () {
-    await render(hbs `{{global-modal
-      modalId=modalManager.modalInstances.lastObject.id
-      allowClose=false
-    }}`);
+    await render(hbs `<GlobalModal
+      @modalId={{modalManager.modalInstances.lastObject.id}}
+      @allowClose={{false}}
+    />`);
 
     await this.get('modalManager').show().shownPromise;
     await click(getGlobalModal());
@@ -490,7 +505,9 @@ describe('Integration | Component | global-modal', function () {
 
   it('closes modal after calling "close" callback returned from "show" method',
     async function () {
-      await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
+      await render(hbs `<GlobalModal
+        @modalId={{modalManager.modalInstances.lastObject.id}}
+      />`);
 
       const { api, shownPromise } = this.get('modalManager').show();
       await shownPromise;
@@ -503,7 +520,9 @@ describe('Integration | Component | global-modal', function () {
   it('submits modal after calling "submit" callback returned from "show" method',
     async function () {
       const submitSpy = sinon.spy();
-      await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
+      await render(hbs `<GlobalModal
+        @modalId={{modalManager.modalInstances.lastObject.id}}
+      />`);
 
       const { api, shownPromise } = this.get('modalManager').show('someComponent', {
         onSubmit: submitSpy,
@@ -519,10 +538,10 @@ describe('Integration | Component | global-modal', function () {
   it('renders modal in specified size', async function () {
     this.set('modalInstance.isOpened', true);
 
-    await render(hbs `{{global-modal
-      modalId=modalManager.modalInstances.lastObject.id
-      size="lg"
-    }}`);
+    await render(hbs `<GlobalModal
+      @modalId={{modalManager.modalInstances.lastObject.id}}
+      @size="lg"
+    />`);
 
     expect(getGlobalModal().querySelector('.modal-dialog')).to.have.class('modal-lg');
   });

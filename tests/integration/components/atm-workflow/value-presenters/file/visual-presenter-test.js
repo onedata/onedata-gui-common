@@ -27,7 +27,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/visual-pr
   });
 
   it('has classes "visual-presenter" and "file-visual-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::VisualPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('visual-presenter')
@@ -41,10 +41,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/visual-pr
       type: FileType.Regular,
       size: 1024,
     });
-    await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter
-      context=context
-      value=file
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::VisualPresenter
+      @context={{context}}
+      @value={{file}}
+    />`);
 
     expect(find('.one-file-icon')).to.have.class('main-type-regular');
     expect(find('.file-name')).to.have.trimmed.text(file.name)
@@ -58,10 +58,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/visual-pr
 
   it('handles case when all file properties are missing', async function () {
     this.set('file', null);
-    await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter
-      context=context
-      value=file
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::VisualPresenter
+      @context={{context}}
+      @value={{file}}
+    />`);
 
     expect(find('.one-file-icon')).to.have.class('main-type-regular');
     expect(find('.file-name')).to.have.trimmed.text('Unknown')
@@ -77,10 +77,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/visual-pr
     this.set('file', {
       fileId: 'some_id',
     });
-    await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter
-      context=context
-      value=file
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::VisualPresenter
+      @context={{context}}
+      @value={{file}}
+    />`);
 
     expect(find('.one-file-icon')).to.have.class('main-type-regular');
     expect(find('.file-name')).to.have.trimmed.text('Unknown')
@@ -99,10 +99,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/visual-pr
       type: FileType.SymbolicLink,
       size: 1024,
     });
-    await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter
-      context=context
-      value=file
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::VisualPresenter
+      @context={{context}}
+      @value={{file}}
+    />`);
 
     expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
       .and.to.have.class('effective-type-directory');
@@ -128,10 +128,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/visual-pr
         filePath: () => null,
         fileUrl: () => null,
       });
-      await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter
-        context=context
-        value=file
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::File::VisualPresenter
+        @context={{context}}
+        @value={{file}}
+      />`);
 
       expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')
@@ -159,10 +159,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/visual-pr
         filePath: () => reject('someError2'),
         fileUrl: () => reject('someError3'),
       });
-      await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter
-        context=context
-        value=file
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::File::VisualPresenter
+        @context={{context}}
+        @value={{file}}
+      />`);
 
       expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')
@@ -190,10 +190,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/visual-pr
         filePath: () => new Promise(() => {}),
         fileUrl: () => new Promise(() => {}),
       });
-      await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter
-        context=context
-        value=file
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::File::VisualPresenter
+        @context={{context}}
+        @value={{file}}
+      />`);
 
       expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')
@@ -218,9 +218,9 @@ describe('Integration | Component | atm-workflow/value-presenters/file/visual-pr
           size: 1024,
         },
       });
-      await render(hbs`{{atm-workflow/value-presenters/file/visual-presenter
-        value=file
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::File::VisualPresenter
+        @value={{file}}
+      />`);
 
       expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')

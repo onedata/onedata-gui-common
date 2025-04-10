@@ -160,13 +160,13 @@ describe('Integration | Component | atm-workflow/value-editors/file/selector', f
 });
 
 async function renderComponent() {
-  await render(hbs`{{#atm-workflow/value-editors/file/selector
-    atmDataSpec=atmDataSpec
-    editorContext=editorContext
-    onFilesSelected=onFilesSelected
-    onIdProvidingStarted=onIdProvidingStarted
-    allowManyFiles=allowManyFiles
-  }}
+  await render(hbs`<AtmWorkflow::ValueEditors::File::Selector
+    @atmDataSpec={{atmDataSpec}}
+    @editorContext={{editorContext}}
+    @onFilesSelected={{onFilesSelected}}
+    @onIdProvidingStarted={{onIdProvidingStarted}}
+    @allowManyFiles={{allowManyFiles}}
+  >
     {{triggerText}}
-  {{/atm-workflow/value-editors/file/selector}}`);
+  </AtmWorkflow::ValueEditors::File::Selector>`);
 }

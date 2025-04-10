@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/fallback/table
   setupRenderingTest();
 
   it('has classes "table-body-row-presenter" and "fallback-table-body-row-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/fallback/table-body-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Fallback::TableBodyRowPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('table-body-row-presenter')
@@ -17,9 +17,9 @@ describe('Integration | Component | atm-workflow/value-presenters/fallback/table
 
   it('shows single column - value', async function () {
     this.set('value', [{ a: 1 }, 3]);
-    await render(hbs`{{atm-workflow/value-presenters/fallback/table-body-row-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Fallback::TableBodyRowPresenter
+      @value={{value}}
+    />`);
 
     const tds = findAll('.table-body-row-presenter td');
     expect(tds).to.have.length(1);

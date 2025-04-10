@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/range/table-he
   setupRenderingTest();
 
   it('has classes "table-header-row-presenter" and "range-table-header-row-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/range/table-header-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Range::TableHeaderRowPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('table-header-row-presenter')
@@ -16,7 +16,7 @@ describe('Integration | Component | atm-workflow/value-presenters/range/table-he
   });
 
   it('shows three column headers - start, end and step', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/range/table-header-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Range::TableHeaderRowPresenter />`);
 
     const ths = findAll('.table-header-row-presenter th');
     expect(ths).to.have.length(3);

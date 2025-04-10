@@ -151,9 +151,9 @@ describe('Integration | Component | atm-workflow/value-editors/time-series-measu
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-editors/time-series-measurement/editor
-    stateManager=stateManager
-    editorId=stateManager.rootValueEditorStateId
-    onRemove=onRemove
-  }}`);
+  await render(hbs`<AtmWorkflow::ValueEditors::TimeSeriesMeasurement::Editor
+    @stateManager={{stateManager}}
+    @editorId={{stateManager.rootValueEditorStateId}}
+    @onRemove={{onRemove}}
+  />`);
 }

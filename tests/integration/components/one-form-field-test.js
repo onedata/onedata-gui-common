@@ -15,7 +15,7 @@ describe('Integration | Component | one-form-field', function () {
     });
     this.set('value', 'hello');
     await render(hbs `
-      {{one-form-field field=field value=value}}
+      <OneFormField @field={{field}} @value={{value}} />
     `);
     expect(findAll('input[type=text]')).to.have.length(1);
     expect(find('input').value).to.be.equal('hello');
@@ -27,7 +27,7 @@ describe('Integration | Component | one-form-field', function () {
       type: 'text',
     });
     await render(hbs `
-      {{one-form-field field=field}}
+      <OneFormField @field={{field}} />
     `);
     const field = find('input');
     expect(field).to.have.class('field-one');
@@ -41,11 +41,11 @@ describe('Integration | Component | one-form-field', function () {
     const inputChanged = sinon.stub();
     this.set('inputChanged', inputChanged);
     await render(hbs `
-      {{one-form-field
-        inputId="test-field"
-        field=field
-        inputChanged=(action inputChanged)
-      }}
+      <OneFormField
+        @inputId="test-field"
+        @field={{field}}
+        @inputChanged={{action inputChanged}}
+      />
     `);
     return fillIn('#test-field', 'hello').then(() => {
       expect(inputChanged).to.have.been.calledWith('one', 'hello');

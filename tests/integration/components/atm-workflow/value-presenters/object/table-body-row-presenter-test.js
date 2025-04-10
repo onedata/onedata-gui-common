@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/object/table-b
   setupRenderingTest();
 
   it('has classes "table-body-row-presenter" and "object-table-body-row-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/object/table-body-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Object::TableBodyRowPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('table-body-row-presenter')
@@ -17,9 +17,9 @@ describe('Integration | Component | atm-workflow/value-presenters/object/table-b
 
   it('shows single column - value - when columns are not specified', async function () {
     this.set('value', { a: 1 });
-    await render(hbs`{{atm-workflow/value-presenters/object/table-body-row-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Object::TableBodyRowPresenter
+      @value={{value}}
+    />`);
 
     const tds = findAll('.table-body-row-presenter td');
     expect(tds).to.have.length(1);
@@ -33,10 +33,10 @@ describe('Integration | Component | atm-workflow/value-presenters/object/table-b
       columns: [],
       value: { a: 1 },
     });
-    await render(hbs`{{atm-workflow/value-presenters/object/table-body-row-presenter
-      columns=columns
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Object::TableBodyRowPresenter
+      @columns={{columns}}
+      @value={{value}}
+    />`);
 
     const tds = findAll('.table-body-row-presenter td');
     expect(tds).to.have.length(1);
@@ -50,10 +50,10 @@ describe('Integration | Component | atm-workflow/value-presenters/object/table-b
       columns: ['a', 'b', 'c'],
       value: { a: 1, b: null },
     });
-    await render(hbs`{{atm-workflow/value-presenters/object/table-body-row-presenter
-      columns=columns
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Object::TableBodyRowPresenter
+      @columns={{columns}}
+      @value={{value}}
+    />`);
 
     const tds = findAll('.table-body-row-presenter td');
     expect(tds).to.have.length(3);

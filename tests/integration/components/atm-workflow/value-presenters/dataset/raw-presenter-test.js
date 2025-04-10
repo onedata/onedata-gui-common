@@ -13,7 +13,7 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/raw-pr
   });
 
   it('has classes "raw-presenter" and "dataset-raw-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/dataset/raw-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::RawPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('raw-presenter')
@@ -22,9 +22,9 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/raw-pr
 
   it('presents passed value', async function () {
     this.set('value', { datasetId: 'abc', rootFilePath: '/spc1/abc' });
-    await render(hbs`{{atm-workflow/value-presenters/dataset/raw-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::RawPresenter
+      @value={{value}}
+    />`);
 
     const expectedValue = `{
   "datasetId": "abc",

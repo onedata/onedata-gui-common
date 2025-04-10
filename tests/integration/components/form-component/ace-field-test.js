@@ -20,13 +20,13 @@ describe('Integration | Component | form-component/ace-field', function () {
   });
 
   it('has class "ace-field"', async function () {
-    await render(hbs `{{form-component/ace-field field=field}}`);
+    await render(hbs `<FormComponent::AceField @field={{field}} />`);
 
     expect(find('.ace-field')).to.exist;
   });
 
   it('renders ace editor', async function () {
-    await render(hbs `{{form-component/ace-field field=field}}`);
+    await render(hbs `<FormComponent::AceField @field={{field}} />`);
 
     // We are checking for textarea element, as it is a replacement of ember-ace
     // in this test suite. See `replaceEmberAceWithTextarea` function.
@@ -36,14 +36,14 @@ describe('Integration | Component | form-component/ace-field', function () {
   it('can be disabled', async function () {
     this.set('field.isEnabled', false);
 
-    await render(hbs `{{form-component/ace-field field=field}}`);
+    await render(hbs `<FormComponent::AceField @field={{field}} />`);
 
     expect(find('textarea')).to.have.attr('disabled');
   });
 
   it('notifies field object about lost focus', async function () {
     const focusLostSpy = sinon.spy(this.field, 'focusLost');
-    await render(hbs `{{form-component/ace-field field=field}}`);
+    await render(hbs `<FormComponent::AceField @field={{field}} />`);
 
     await focus('textarea');
     await blur('textarea');
@@ -53,7 +53,7 @@ describe('Integration | Component | form-component/ace-field', function () {
 
   it('notifies field object about changed value', async function () {
     const valueChangedSpy = sinon.spy(this.field, 'valueChanged');
-    await render(hbs `{{form-component/ace-field field=field}}`);
+    await render(hbs `<FormComponent::AceField @field={{field}} />`);
 
     await fillIn('textarea', 'abc');
 
@@ -64,7 +64,7 @@ describe('Integration | Component | form-component/ace-field', function () {
   it('sets input value to value specified in field object', async function () {
     this.set('field.value', 'abc');
 
-    await render(hbs `{{form-component/ace-field field=field}}`);
+    await render(hbs `<FormComponent::AceField @field={{field}} />`);
 
     expect(find('textarea')).to.have.value('abc');
   });
@@ -72,7 +72,7 @@ describe('Integration | Component | form-component/ace-field', function () {
   it('renders blocked editor when field is in "view" mode', async function () {
     this.field.changeMode('view');
 
-    await render(hbs `{{form-component/ace-field field=field}}`);
+    await render(hbs `<FormComponent::AceField @field={{field}} />`);
 
     expect(find('textarea')).to.have.attr('disabled');
   });

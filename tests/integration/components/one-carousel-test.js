@@ -14,20 +14,20 @@ describe('Integration | Component | one-carousel', function () {
   });
 
   it('does not render any slide, when empty', async function () {
-    await render(hbs `{{#one-carousel}}{{/one-carousel}}`);
+    await render(hbs `<OneCarousel></OneCarousel>`);
     expect(find('.one-carousel-slide')).to.not.exist;
   });
 
   it('renders slides', async function () {
     await render(hbs `
-      {{#one-carousel as |carousel|}}
-        {{#carousel.slide slideId="first"}}
+      <OneCarousel as |carousel|>
+        <carousel.slide @slideId="first">
           slide 1
-        {{/carousel.slide}}
-        {{#carousel.slide slideId="second"}}
+        </carousel.slide>
+        <carousel.slide @slideId="second">
           slide 2
-        {{/carousel.slide}}
-      {{/one-carousel}}
+        </carousel.slide>
+      </OneCarousel>
     `);
 
     expect(findAll('.one-carousel-slide')).to.have.length(2);
@@ -37,10 +37,10 @@ describe('Integration | Component | one-carousel', function () {
 
   it('shows active slide', async function () {
     await render(hbs `
-      {{#one-carousel activeSlideId="second" as |carousel|}}
-        {{carousel.slide slideId="first"}}
-        {{carousel.slide slideId="second"}}
-      {{/one-carousel}}
+      <OneCarousel @activeSlideId="second" as |carousel|>
+        <carousel.slide @slideId="first" />
+        <carousel.slide @slideId="second" />
+      </OneCarousel>
     `);
 
     expect(getSlide('second').classList.contains('active')).to.be.true;
@@ -50,10 +50,10 @@ describe('Integration | Component | one-carousel', function () {
   it('allows to change slide to next one', async function () {
     this.set('activeSlideId', 'first');
     await render(hbs `
-      {{#one-carousel activeSlideId=activeSlideId as |carousel|}}
-        {{carousel.slide slideId="first"}}
-        {{carousel.slide slideId="second"}}
-      {{/one-carousel}}
+      <OneCarousel @activeSlideId={{activeSlideId}} as |carousel|>
+        <carousel.slide @slideId="first" />
+        <carousel.slide @slideId="second" />
+      </OneCarousel>
     `);
     this.set('activeSlideId', 'second');
 
@@ -64,10 +64,10 @@ describe('Integration | Component | one-carousel', function () {
   it('allows to change slide to previous one', async function () {
     this.set('activeSlideId', 'second');
     await render(hbs `
-      {{#one-carousel activeSlideId=activeSlideId as |carousel|}}
-        {{carousel.slide slideId="first"}}
-        {{carousel.slide slideId="second"}}
-      {{/one-carousel}}
+      <OneCarousel @activeSlideId={{activeSlideId}} as |carousel|>
+        <carousel.slide @slideId="first" />
+        <carousel.slide @slideId="second" />
+      </OneCarousel>
     `);
     this.set('activeSlideId', 'first');
 
@@ -77,10 +77,10 @@ describe('Integration | Component | one-carousel', function () {
 
   it('does not show any slide if active slide does not exist', async function () {
     await render(hbs `
-      {{#one-carousel activeSlideId="third" as |carousel|}}
-        {{carousel.slide slideId="first"}}
-        {{carousel.slide slideId="second"}}
-      {{/one-carousel}}
+      <OneCarousel @activeSlideId="third" as |carousel|>
+        <carousel.slide @slideId="first" />
+        <carousel.slide @slideId="second" />
+      </OneCarousel>
     `);
 
     [

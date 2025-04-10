@@ -12,7 +12,7 @@ describe('Integration | Component | time-from-now', function () {
     const date = moment();
     this.set('date', date);
 
-    await render(hbs `{{time-from-now date=date}}`);
+    await render(hbs `<TimeFromNow @date={{date}} />`);
 
     const timeFromNowElem = find('.time-from-now');
 

@@ -268,11 +268,11 @@ describe('Integration | Component | atm-workflow/value-editors/file/editor', fun
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-editors/file/editor
-    stateManager=stateManager
-    editorId=stateManager.rootValueEditorStateId
-    onRemove=onRemove
-  }}`);
+  await render(hbs`<AtmWorkflow::ValueEditors::File::Editor
+    @stateManager={{stateManager}}
+    @editorId={{stateManager.rootValueEditorStateId}}
+    @onRemove={{onRemove}}
+  />`);
 }
 
 async function expectShowingExampleFile(testCase) {

@@ -796,10 +796,10 @@ class Helper {
       field: this.field,
       fieldId: this.fieldId,
     });
-    await render(hbs`{{form-component/custom-value-dropdown-field
-      field=field
-      fieldId=fieldId
-    }}`);
+    await render(hbs`<FormComponent::CustomValueDropdownField
+      @field={{field}}
+      @fieldId={{fieldId}}
+    />`);
     this.dropdown = new OneDropdownHelper('.custom-value-dropdown-field-trigger');
   }
   async renderUsingRenderer() {
@@ -809,7 +809,7 @@ class Helper {
     this.mochaContext.setProperties({
       rootGroup: this.rootGroup,
     });
-    await render(hbs`{{form-component/field-renderer field=rootGroup}}`);
+    await render(hbs`<FormComponent::FieldRenderer @field={{rootGroup}} />`);
     this.dropdown = new OneDropdownHelper('.custom-value-dropdown-field-trigger');
   }
 }

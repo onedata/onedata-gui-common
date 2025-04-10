@@ -24,15 +24,16 @@ describe('Integration | Component | one-modal', function () {
       this.set('hidden', hiddenSpy);
 
       await render(hbs `
-        {{#one-modal
-          open=isModalOpened
-          onShown=(action shown)
-          onHidden=(action hidden)
-          as |modal|}}
-          {{#modal.body}}
+        <OneModal
+          @open={{isModalOpened}}
+          @onShown={{action shown}}
+          @onHidden={{action hidden}}
+          as |modal|
+        >
+          <modal.body>
             <div class="content">modal!</div>
-          {{/modal.body}}
-        {{/one-modal}}
+          </modal.body>
+        </OneModal>
       `);
 
       this.set('isModalOpened', true);
@@ -56,14 +57,11 @@ describe('Integration | Component | one-modal', function () {
       this.set('hide', hideSpy);
 
       await render(hbs `
-        {{#one-modal
-          open=isModalOpened
-          onHide=(action hide)
-          as |modal|}}
-          {{#modal.body}}
+        <OneModal @open={{isModalOpened}} @onHide={{action hide}} as |modal|>
+          <modal.body>
             <div class="content">modal!</div>
-          {{/modal.body}}
-        {{/one-modal}}
+          </modal.body>
+        </OneModal>
       `);
 
       this.set('isModalOpened', true);
@@ -81,7 +79,7 @@ describe('Integration | Component | one-modal', function () {
       const hideSpy = sinon.spy();
       this.set('hide', hideSpy);
 
-      await render(hbs `{{one-modal class="my-modal"}}`);
+      await render(hbs `<OneModal class="my-modal" />`);
 
       expect(find('.my-modal').id).to.match(/.*-modal/);
     }
@@ -93,7 +91,7 @@ describe('Integration | Component | one-modal', function () {
       const hideSpy = sinon.spy();
       this.set('hide', hideSpy);
 
-      await render(hbs `{{one-modal id="some-id" class="my-modal"}}`);
+      await render(hbs `<OneModal @id="some-id" class="my-modal" />`);
 
       expect(find('.my-modal').id).to.equal('some-id');
     }

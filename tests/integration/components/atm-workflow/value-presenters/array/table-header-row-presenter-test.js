@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/array/table-he
   setupRenderingTest();
 
   it('has classes "table-header-row-presenter" and "array-table-header-row-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/array/table-header-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Array::TableHeaderRowPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('table-header-row-presenter')
@@ -16,7 +16,7 @@ describe('Integration | Component | atm-workflow/value-presenters/array/table-he
   });
 
   it('shows single column header - value', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/array/table-header-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Array::TableHeaderRowPresenter />`);
 
     const ths = findAll('.table-header-row-presenter th');
     expect(ths).to.have.length(1);

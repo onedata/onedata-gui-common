@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/array/table-bo
   setupRenderingTest();
 
   it('has classes "table-body-row-presenter" and "array-table-body-row-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/array/table-body-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Array::TableBodyRowPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('table-body-row-presenter')
@@ -31,10 +31,10 @@ describe('Integration | Component | atm-workflow/value-presenters/array/table-bo
         },
       },
     });
-    await render(hbs`{{atm-workflow/value-presenters/array/table-body-row-presenter
-      value=value
-      dataSpec=dataSpec
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Array::TableBodyRowPresenter
+      @value={{value}}
+      @dataSpec={{dataSpec}}
+    />`);
 
     const tds = findAll('.table-body-row-presenter td');
     expect(tds).to.have.length(1);

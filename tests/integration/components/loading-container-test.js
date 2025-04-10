@@ -8,25 +8,25 @@ describe('Integration | Component | loading-container', function () {
   setupRenderingTest();
 
   it('renders yielded content if isLoading is false', async function () {
-    await render(hbs `{{#loading-container isLoading=false}}
+    await render(hbs `<LoadingContainer @isLoading={{false}}>
       <div class="some-content">Some content</div>
-    {{/loading-container}}
+    </LoadingContainer>
     `);
     expect(find('.some-content')).to.exist;
   });
 
   it('does not render yielded content if isLoading is true', async function () {
-    await render(hbs `{{#loading-container isLoading=true}}
+    await render(hbs `<LoadingContainer @isLoading={{true}}>
       <div class="some-content">Some content</div>
-    {{/loading-container}}
+    </LoadingContainer>
     `);
     expect(find('.some-content')).to.not.exist;
   });
 
   it('render erroReason if available', async function () {
-    await render(hbs `{{#loading-container errorReason="some reason"}}
+    await render(hbs `<LoadingContainer @errorReason="some reason">
       <div class="some-content">Some content</div>
-    {{/loading-container}}
+    </LoadingContainer>
     `);
     expect(find('.some-content')).to.not.exist;
     expect(find('.resource-load-error').textContent).to.contain('some reason');

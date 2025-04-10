@@ -34,7 +34,7 @@ describe('Integration | Component | revisions-table/state-tag', function () {
 });
 
 async function renderComponent() {
-  await render(hbs `{{revisions-table/state-tag state=state}}`);
+  await render(hbs `<RevisionsTable::StateTag @state={{state}} />`);
 }
 
 function itShowsState({ state, label, style }) {

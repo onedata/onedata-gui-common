@@ -20,7 +20,7 @@ describe('Integration | Component | one-inline-editor', function () {
   it('renders value', async function () {
     const value = 'asdf';
     this.set('value', value);
-    await render(hbs `{{one-inline-editor value=value}}`);
+    await render(hbs `<OneInlineEditor @value={{value}} />`);
 
     expect(find('.one-label').textContent.trim()).to.equal(value);
   });
@@ -28,7 +28,7 @@ describe('Integration | Component | one-inline-editor', function () {
   it('shows input with value after text click', async function () {
     const value = 'asdf';
     this.set('value', value);
-    await render(hbs `{{one-inline-editor value=value}}`);
+    await render(hbs `<OneInlineEditor @value={{value}} />`);
 
     await click('.one-label');
 
@@ -40,7 +40,7 @@ describe('Integration | Component | one-inline-editor', function () {
   it('allows to cancel edition', async function () {
     const value = 'asdf';
     this.set('value', value);
-    await render(hbs `{{one-inline-editor value=value}}`);
+    await render(hbs `<OneInlineEditor @value={{value}} />`);
 
     await click('.one-label');
     await fillIn('input', 'anotherValue');
@@ -56,7 +56,7 @@ describe('Integration | Component | one-inline-editor', function () {
     const saveSpy = sinon.spy(() =>
       new Promise((resolve) => promiseResolve = resolve));
     this.set('save', saveSpy);
-    await render(hbs `{{one-inline-editor value=value onSave=(action save)}}`);
+    await render(hbs `<OneInlineEditor @value={{value}} @onSave={{action save}} />`);
 
     await click('.one-label');
     const newValue = 'anotherValue';
@@ -78,7 +78,10 @@ describe('Integration | Component | one-inline-editor', function () {
     this.set('value', value);
     const onInputChanged = sinon.spy();
     this.set('onInputValueChanged', onInputChanged);
-    await render(hbs `{{one-inline-editor value=value onInputValueChanged=(action onInputValueChanged)}}`);
+    await render(hbs `<OneInlineEditor
+      @value={{value}}
+      @onInputValueChanged={{action onInputValueChanged}}
+    />`);
 
     await click('.one-label');
     await fillIn('input', 'anotherValue');
@@ -96,11 +99,11 @@ describe('Integration | Component | one-inline-editor', function () {
       save: saveSpy,
     });
 
-    await render(hbs`{{one-inline-editor
-      value=value
-      isSaveDisabled=true
-      onSave=(action save)
-    }}`);
+    await render(hbs`<OneInlineEditor
+      @value={{value}}
+      @isSaveDisabled={{true}}
+      @onSave={{action save}}
+    />`);
     await click('.one-label');
     await fillIn('input', 'another value');
 
@@ -114,10 +117,7 @@ describe('Integration | Component | one-inline-editor', function () {
       value: 'asfg',
     });
 
-    await render(hbs`{{one-inline-editor
-      value=value
-      saveButtonTip="foo bar"
-    }}`);
+    await render(hbs`<OneInlineEditor @value={{value}} @saveButtonTip="foo bar" />`);
     await click('.one-label');
     const tooltip = new OneTooltipHelper('.save-icon');
 
@@ -130,7 +130,7 @@ describe('Integration | Component | one-inline-editor', function () {
       { icon: 'provider', label: 'world' },
     ]);
 
-    await render(hbs`{{one-inline-editor value=value editorType="tags"}}`);
+    await render(hbs`<OneInlineEditor @value={{value}} @editorType="tags" />`);
 
     const tagItems = findAll('.tag-item');
     expect(tagItems[0]).to.contain.text('hello');

@@ -41,12 +41,12 @@ describe('Integration | Component | query-builder/condition-comparator-value-edi
               value,
             });
 
-            await render(hbs `{{query-builder/condition-comparator-value-editor
-              mode="view"
-              comparator=comparator
-              value=value
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+              @mode="view"
+              @comparator={{comparator}}
+              @value={{value}}
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             expect(find('.comparator-value').textContent.trim()).to.equal(viewValue);
           }
@@ -56,13 +56,13 @@ describe('Integration | Component | query-builder/condition-comparator-value-edi
       it('calls "onStartEdit" on click', async function () {
         const onStartEditSpy = this.set('onStartEditSpy', sinon.spy());
 
-        await render(hbs `{{query-builder/condition-comparator-value-editor
-          mode="view"
-          comparator="string.eq"
-          value="hello"
-          onStartEdit=onStartEditSpy
-          valuesBuilder=valuesBuilder
-        }}`);
+        await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+          @mode="view"
+          @comparator="string.eq"
+          @value="hello"
+          @onStartEdit={{onStartEditSpy}}
+          @valuesBuilder={{valuesBuilder}}
+        />`);
 
         await click('.comparator-value');
 
@@ -102,12 +102,12 @@ describe('Integration | Component | query-builder/condition-comparator-value-edi
         it(`has focused editor on init for "${comparatorName}" comparator for ${propertyType} property`,
           async function () {
             beforeTest(this);
-            await render(hbs `{{query-builder/condition-comparator-value-editor
-              mode="edit"
-              comparator=comparator
-              value=value
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+              @mode="edit"
+              @comparator={{comparator}}
+              @value={{value}}
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             expect(find('.comparator-value'), '.comparator-value is active')
               .to.equal(globals.document.activeElement);
@@ -118,12 +118,12 @@ describe('Integration | Component | query-builder/condition-comparator-value-edi
           async function () {
             beforeTest(this);
 
-            await render(hbs `{{query-builder/condition-comparator-value-editor
-              mode="edit"
-              comparator=comparator
-              value="abc"
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+              @mode="edit"
+              @comparator={{comparator}}
+              @value="abc"
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             expect(find('.comparator-value').value).to.equal('abc');
           }
@@ -140,14 +140,14 @@ describe('Integration | Component | query-builder/condition-comparator-value-edi
               finishEditSpy: sinon.spy(),
             });
 
-            await render(hbs `{{query-builder/condition-comparator-value-editor
-              mode="edit"
-              comparator=comparator
-              value="abc"
-              onValueChange=changeSpy
-              onFinishEdit=finishEditSpy
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+              @mode="edit"
+              @comparator={{comparator}}
+              @value="abc"
+              @onValueChange={{changeSpy}}
+              @onFinishEdit={{finishEditSpy}}
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             await fillIn('.comparator-value', newValue);
             await triggerKeyEvent('.comparator-value', 'keydown', 'Enter');
@@ -168,14 +168,14 @@ describe('Integration | Component | query-builder/condition-comparator-value-edi
               finishEditSpy: sinon.spy(),
             });
 
-            await render(hbs `{{query-builder/condition-comparator-value-editor
-              mode="edit"
-              comparator=comparator
-              value=value
-              onValueChange=changeSpy
-              onFinishEdit=finishEditSpy
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+              @mode="edit"
+              @comparator={{comparator}}
+              @value={{value}}
+              @onValueChange={{changeSpy}}
+              @onFinishEdit={{finishEditSpy}}
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             await fillIn('.comparator-value', newValue);
             await blur('.comparator-value');
@@ -196,14 +196,14 @@ describe('Integration | Component | query-builder/condition-comparator-value-edi
               finishEditSpy: sinon.spy(),
             });
 
-            await render(hbs `{{query-builder/condition-comparator-value-editor
-              mode="edit"
-              comparator=comparator
-              value=value
-              onValueChange=changeSpy
-              onFinishEdit=finishEditSpy
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+              @mode="edit"
+              @comparator={{comparator}}
+              @value={{value}}
+              @onValueChange={{changeSpy}}
+              @onFinishEdit={{finishEditSpy}}
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             await fillIn('.comparator-value', 'de');
 
@@ -223,14 +223,14 @@ describe('Integration | Component | query-builder/condition-comparator-value-edi
               cancelEditSpy: sinon.spy(),
             });
 
-            await render(hbs `{{query-builder/condition-comparator-value-editor
-              mode="edit"
-              comparator=comparator
-              value=value
-              onFinishEdit=finishEditSpy
-              onCancelEdit=cancelEditSpy
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+              @mode="edit"
+              @comparator={{comparator}}
+              @value={{value}}
+              @onFinishEdit={{finishEditSpy}}
+              @onCancelEdit={{cancelEditSpy}}
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             await click('.comparator-value');
             await fillIn('.comparator-value', newValue);
@@ -245,12 +245,12 @@ describe('Integration | Component | query-builder/condition-comparator-value-edi
           async function () {
             beforeTest(this);
 
-            await render(hbs `{{query-builder/condition-comparator-value-editor
-              mode="edit"
-              comparator=comparator
-              value="abc"
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+              @mode="edit"
+              @comparator={{comparator}}
+              @value="abc"
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             expect(find('.comparator-value')).to.not.have.class('is-invalid');
           }
@@ -260,13 +260,13 @@ describe('Integration | Component | query-builder/condition-comparator-value-edi
           async function () {
             beforeTest(this);
 
-            await render(hbs `{{query-builder/condition-comparator-value-editor
-              mode="edit"
-              comparator=comparator
-              isValueInvalid=true
-              value="abc"
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+              @mode="edit"
+              @comparator={{comparator}}
+              @isValueInvalid={{true}}
+              @value="abc"
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             expect(find('.comparator-value')).to.have.class('is-invalid');
           }
@@ -298,12 +298,12 @@ function itShowsPowerSelectWithOptions(
         comparator,
       });
 
-      await render(hbs `{{query-builder/condition-comparator-value-editor
-        mode="create"
-        comparator=comparator
-        queryProperty=queryProperty
-        valuesBuilder=valuesBuilder
-      }}`);
+      await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+        @mode="create"
+        @comparator={{comparator}}
+        @queryProperty={{queryProperty}}
+        @valuesBuilder={{valuesBuilder}}
+      />`);
 
       expect(find('.dropdown-editor-trigger.comparator-value'), 'dropdown trigger')
         .to.exist;
@@ -322,11 +322,11 @@ function itShowsTextInput(comparator) {
     async function () {
       this.set('comparator', comparator);
 
-      await render(hbs `{{query-builder/condition-comparator-value-editor
-        mode="create"
-        comparator=comparator
-        valuesBuilder=valuesBuilder
-      }}`);
+      await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+        @mode="create"
+        @comparator={{comparator}}
+        @valuesBuilder={{valuesBuilder}}
+      />`);
 
       expect(find('input[type="text"].comparator-value'), 'input.comparator-value')
         .to.exist;
@@ -343,12 +343,12 @@ function itCallsOnValueChange(comparator, valueToInput) {
         changeSpy: sinon.spy(),
       });
 
-      await render(hbs `{{query-builder/condition-comparator-value-editor
-        mode="create"
-        comparator=comparator
-        onValueChange=changeSpy
-        valuesBuilder=valuesBuilder
-      }}`);
+      await render(hbs `<QueryBuilder::ConditionComparatorValueEditor
+        @mode="create"
+        @comparator={{comparator}}
+        @onValueChange={{changeSpy}}
+        @valuesBuilder={{valuesBuilder}}
+      />`);
 
       await fillIn('.comparator-value', valueToInput);
 

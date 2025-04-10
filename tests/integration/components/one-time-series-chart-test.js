@@ -193,5 +193,5 @@ describe('Integration | Component | one-time-series-chart', function () {
 });
 
 async function renderComponent() {
-  await render(hbs `{{one-time-series-chart configuration=configuration}}`);
+  await render(hbs `<OneTimeSeriesChart @configuration={{configuration}} />`);
 }

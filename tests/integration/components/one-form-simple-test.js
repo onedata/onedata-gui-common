@@ -45,11 +45,11 @@ describe('Integration | Component | one-form-simple', function () {
 
   it('renders injected fields', async function () {
     await render(hbs `
-      {{one-form-simple
-        validations=fakeValidations
-        fields=fields
-        submitButton=false
-      }}
+      <OneFormSimple
+        @validations={{fakeValidations}}
+        @fields={{fields}}
+        @submitButton={{false}}
+      />
     `);
 
     expect(find('.field-main-first'), 'field first').to.exist;
@@ -58,11 +58,11 @@ describe('Integration | Component | one-form-simple', function () {
 
   it('renders errors after field change', async function () {
     await render(hbs `
-      {{one-form-simple
-        validations=fakeValidations
-        fields=fields
-        submitButton=false
-      }}
+      <OneFormSimple
+        @validations={{fakeValidations}}
+        @fields={{fields}}
+        @submitButton={{false}}
+      />
     `);
 
     const firstField = find('.field-main-first');
@@ -78,11 +78,11 @@ describe('Integration | Component | one-form-simple', function () {
 
   it('renders errors after field loses its focus', async function () {
     await render(hbs `
-      {{one-form-simple
-        validations=fakeValidations
-        fields=fields
-        submitButton=false
-      }}
+      <OneFormSimple
+        @validations={{fakeValidations}}
+        @fields={{fields}}
+        @submitButton={{false}}
+      />
     `);
 
     const firstField = find('.field-main-first');
@@ -99,11 +99,11 @@ describe('Integration | Component | one-form-simple', function () {
 
   it('reacts when field error changes', async function () {
     await render(hbs `
-      {{one-form-simple
-        validations=fakeValidations
-        fields=fields
-        submitButton=false
-      }}
+      <OneFormSimple
+        @validations={{fakeValidations}}
+        @fields={{fields}}
+        @submitButton={{false}}
+      />
     `);
 
     const newErrorMsg = 'error2!';
@@ -126,11 +126,11 @@ describe('Integration | Component | one-form-simple', function () {
     });
 
     await render(hbs `
-    {{one-form-simple
-      validations=fakeValidations
-      fields=fields
-      submit=(action submitAction)
-    }}
+    <OneFormSimple
+      @validations={{fakeValidations}}
+      @fields={{fields}}
+      @submit={{action submitAction}}
+    />
       `);
 
     const submitBtn = find('button[type=submit]');

@@ -155,13 +155,13 @@ describe('Integration | Component | atm-workflow/value-editors/dataset/selector'
 });
 
 async function renderComponent() {
-  await render(hbs`{{#atm-workflow/value-editors/dataset/selector
-    atmDataSpec=atmDataSpec
-    editorContext=editorContext
-    onDatasetsSelected=onDatasetsSelected
-    onIdProvidingStarted=onIdProvidingStarted
-    allowManyDatasets=allowManyDatasets
-  }}
+  await render(hbs`<AtmWorkflow::ValueEditors::Dataset::Selector
+    @atmDataSpec={{atmDataSpec}}
+    @editorContext={{editorContext}}
+    @onDatasetsSelected={{onDatasetsSelected}}
+    @onIdProvidingStarted={{onIdProvidingStarted}}
+    @allowManyDatasets={{allowManyDatasets}}
+  >
     {{triggerText}}
-  {{/atm-workflow/value-editors/dataset/selector}}`);
+  </AtmWorkflow::ValueEditors::Dataset::Selector>`);
 }

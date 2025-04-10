@@ -13,7 +13,7 @@ describe('Integration | Component | atm-workflow/value-presenters/string/raw-pre
   });
 
   it('has classes "raw-presenter" and "string-raw-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/string/raw-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::String::RawPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('raw-presenter')
@@ -21,9 +21,9 @@ describe('Integration | Component | atm-workflow/value-presenters/string/raw-pre
   });
 
   it('presents passed value', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/string/raw-presenter
-      value="abcd"
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::String::RawPresenter
+      @value="abcd"
+    />`);
 
     expect(find('.raw-presenter textarea')).to.have.value('"abcd"');
   });

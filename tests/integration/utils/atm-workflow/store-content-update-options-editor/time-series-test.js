@@ -320,7 +320,7 @@ describe('Integration | Utility | atm-workflow/store-content-update-options-edit
 });
 
 async function renderForm() {
-  await render(hbs `{{form-component/field-renderer field=rootGroup}}`);
+  await render(hbs `<FormComponent::FieldRenderer @field={{rootGroup}} />`);
 }
 
 function getDispatchRuleFormValues(testCase) {

@@ -33,7 +33,7 @@ describe('Integration | Component | query-builder-main-component', function () {
   });
 
   it('has class "query-builder', async function () {
-    await render(hbs `{{query-builder valuesBuilder=valuesBuilder}}`);
+    await render(hbs `<QueryBuilder @valuesBuilder={{valuesBuilder}} />`);
 
     expect(find('.query-builder')).to.exist;
   });
@@ -41,10 +41,10 @@ describe('Integration | Component | query-builder-main-component', function () {
   it('calls refreshQueryProperties when add condition popover is opened', async function () {
     const refreshQueryProperties = sinon.spy();
     this.set('refreshQueryProperties', refreshQueryProperties);
-    await render(hbs `{{query-builder
-      valuesBuilder=valuesBuilder
-      refreshQueryProperties=(action refreshQueryProperties)
-    }}`);
+    await render(hbs `<QueryBuilder
+      @valuesBuilder={{valuesBuilder}}
+      @refreshQueryProperties={{action refreshQueryProperties}}
+    />`);
     await click('.query-builder-block-adder');
     expect(refreshQueryProperties).to.be.calledOnce;
     await click('.operator-or');
@@ -89,11 +89,11 @@ describe('Integration | Component | query-builder-main-component', function () {
         notifyUpdateSpy,
       });
 
-      render(hbs `{{query-builder
-        queryProperties=queryProperties
-        rootQueryBlock=rootQueryBlock
-        valuesBuilder=valuesBuilder
-      }}`);
+      render(hbs `<QueryBuilder
+        @queryProperties={{queryProperties}}
+        @rootQueryBlock={{rootQueryBlock}}
+        @valuesBuilder={{valuesBuilder}}
+      />`);
       notifyUpdateSpy.resetHistory();
     });
 
@@ -142,7 +142,7 @@ describe('Integration | Component | query-builder-main-component', function () {
       rootQueryBlock,
     });
 
-    await render(hbs `{{query-builder rootQueryBlock=rootQueryBlock}}`);
+    await render(hbs `<QueryBuilder @rootQueryBlock={{rootQueryBlock}} />`);
 
     await click('.or-operator-block');
     await click('.change-to-section .operator-and');

@@ -261,11 +261,11 @@ describe('Integration | Component | atm-workflow/value-editors/group/editor', fu
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-editors/group/editor
-    stateManager=stateManager
-    editorId=stateManager.rootValueEditorStateId
-    onRemove=onRemove
-  }}`);
+  await render(hbs`<AtmWorkflow::ValueEditors::Group::Editor
+    @stateManager={{stateManager}}
+    @editorId={{stateManager.rootValueEditorStateId}}
+    @onRemove={{onRemove}}
+  />`);
 }
 
 async function expectShowingExampleGroup(testCase) {

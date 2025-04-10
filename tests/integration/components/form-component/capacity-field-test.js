@@ -21,13 +21,13 @@ describe('Integration | Component | form-component/capacity-field', function () 
   });
 
   it('has class "capacity-field"', async function () {
-    await render(hbs `{{form-component/capacity-field field=field}}`);
+    await render(hbs `<FormComponent::CapacityField @field={{field}} />`);
 
     expect(find('.capacity-field')).to.exist;
   });
 
   it('renders one-way-capacity component', async function () {
-    await render(hbs `{{form-component/capacity-field field=field}}`);
+    await render(hbs `<FormComponent::CapacityField @field={{field}} />`);
 
     expect(find('.one-way-capacity')).to.exist;
   });
@@ -35,7 +35,7 @@ describe('Integration | Component | form-component/capacity-field', function () 
   it('can be disabled', async function () {
     this.set('field.isEnabled', false);
 
-    await render(hbs `{{form-component/capacity-field field=field}}`);
+    await render(hbs `<FormComponent::CapacityField @field={{field}} />`);
 
     expect(find('.size-number-input').disabled).to.be.true;
     expect(find('.ember-power-select-trigger'))
@@ -44,7 +44,7 @@ describe('Integration | Component | form-component/capacity-field', function () 
 
   it('notifies field object about lost focus', async function () {
     const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
-    await render(hbs `{{form-component/capacity-field field=field}}`);
+    await render(hbs `<FormComponent::CapacityField @field={{field}} />`);
 
     await focus('.size-number-input');
     await blur('.size-number-input');
@@ -54,7 +54,7 @@ describe('Integration | Component | form-component/capacity-field', function () 
 
   it('notifies field object about changed value', async function () {
     const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
-    await render(hbs `{{form-component/capacity-field field=field}}`);
+    await render(hbs `<FormComponent::CapacityField @field={{field}} />`);
 
     await fillIn('.size-number-input', '10');
     await selectChoose('.capacity-field', 'GiB');
@@ -65,7 +65,7 @@ describe('Integration | Component | form-component/capacity-field', function () 
 
   it('notifies field object about changed value (due to changed unit)', async function () {
     const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
-    await render(hbs `{{form-component/capacity-field field=field}}`);
+    await render(hbs `<FormComponent::CapacityField @field={{field}} />`);
 
     await fillIn('.size-number-input', '10');
 
@@ -76,7 +76,7 @@ describe('Integration | Component | form-component/capacity-field', function () 
   it('sets input value to tags specified in field object', async function () {
     this.set('field.value', '20971520');
 
-    await render(hbs `{{form-component/capacity-field field=field}}`);
+    await render(hbs `<FormComponent::CapacityField @field={{field}} />`);
 
     expect(find('.size-number-input').value).to.equal('20');
     expect(find('.ember-power-select-trigger').textContent).to.contain('MiB');
@@ -84,14 +84,14 @@ describe('Integration | Component | form-component/capacity-field', function () 
 
   it('sets input id according to "fieldId"', async function () {
     await render(hbs `
-      {{form-component/capacity-field field=field fieldId="abc"}}
+      <FormComponent::CapacityField @field={{field}} @fieldId="abc" />
     `);
 
     expect(find('.size-number-input#abc')).to.exist;
   });
 
   it('shows units starting from "MiB"s by default', async function () {
-    await render(hbs `{{form-component/capacity-field field=field}}`);
+    await render(hbs `<FormComponent::CapacityField @field={{field}} />`);
 
     await expectUnits(['MiB', 'GiB', 'TiB', 'PiB']);
   });
@@ -99,7 +99,7 @@ describe('Integration | Component | form-component/capacity-field', function () 
   it('allows to specify custom list of units', async function () {
     const expectedUnits = this.set('field.allowedUnits', ['B', 'KiB', 'MiB']);
 
-    await render(hbs `{{form-component/capacity-field field=field}}`);
+    await render(hbs `<FormComponent::CapacityField @field={{field}} />`);
 
     await expectUnits(expectedUnits);
   });
@@ -107,7 +107,7 @@ describe('Integration | Component | form-component/capacity-field', function () 
   it('sets placeholder according to "placeholder"', async function () {
     this.set('field.placeholder', 'test');
 
-    await render(hbs `{{form-component/capacity-field field=field}}`);
+    await render(hbs `<FormComponent::CapacityField @field={{field}} />`);
 
     expect(find('input').placeholder).to.equal('test');
   });
@@ -117,7 +117,7 @@ describe('Integration | Component | form-component/capacity-field', function () 
     set(field, 'value', '20971520');
     field.changeMode('view');
 
-    await render(hbs `{{form-component/capacity-field field=field}}`);
+    await render(hbs `<FormComponent::CapacityField @field={{field}} />`);
 
     expect(this.element.textContent.trim()).to.equal('20 MiB');
   });

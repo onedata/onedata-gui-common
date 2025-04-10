@@ -191,7 +191,7 @@ describe('Integration | Component | one-time-series-chart/plot', function () {
 });
 
 async function renderComponent() {
-  await render(hbs `{{one-time-series-chart/plot model=model}}`);
+  await render(hbs `<OneTimeSeriesChart::Plot @model={{model}} />`);
 }
 
 function setupModel(testCase, configInitOptions) {

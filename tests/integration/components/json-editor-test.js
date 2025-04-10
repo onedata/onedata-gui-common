@@ -11,7 +11,7 @@ describe('Integration | Component | json-editor', function () {
   it('shows passed value', async function () {
     const value = { a: 'a' };
     this.set('value', JSON.stringify(value));
-    await render(hbs `{{json-editor value=value}}`);
+    await render(hbs `<JsonEditor @value={{value}} />`);
 
     expect(JSON.parse(find('textarea').value)).to.deep.equal(value);
   });
@@ -25,7 +25,7 @@ describe('Integration | Component | json-editor', function () {
       expect(res.isValid).to.be.true;
     });
     this.set('onChange', spy);
-    await render(hbs `{{json-editor onChange=(action onChange)}}`);
+    await render(hbs `<JsonEditor @onChange={{action onChange}} />`);
 
     return fillIn('.json-editor-textarea', JSON.stringify(value)).then(() => {
       expect(spy).to.be.calledOnce;
@@ -41,7 +41,7 @@ describe('Integration | Component | json-editor', function () {
       expect(res.isValid).to.be.false;
     });
     this.set('onChange', spy);
-    await render(hbs `{{json-editor onChange=(action onChange)}}`);
+    await render(hbs `<JsonEditor @onChange={{action onChange}} />`);
 
     return fillIn('.json-editor-textarea', JSON.stringify(value) + 'x').then(() => {
       expect(spy).to.be.calledOnce;
@@ -54,7 +54,7 @@ describe('Integration | Component | json-editor', function () {
     this.set('onChange', (res) => {
       this.set('value', res.value);
     });
-    await render(hbs `{{json-editor value=value onChange=(action onChange)}}`);
+    await render(hbs `<JsonEditor @value={{value}} @onChange={{action onChange}} />`);
 
     return fillIn('.json-editor-textarea', JSON.stringify(value) + 'x').then(() => {
       expect(find('.form-message')).to.exist;

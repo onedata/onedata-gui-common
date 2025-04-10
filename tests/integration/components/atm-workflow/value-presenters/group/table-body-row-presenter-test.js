@@ -19,7 +19,7 @@ describe('Integration | Component | atm-workflow/value-presenters/group/table-bo
   });
 
   it('has classes "table-body-row-presenter" and "group-table-body-row-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/group/table-body-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Group::TableBodyRowPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('table-body-row-presenter')
@@ -27,7 +27,7 @@ describe('Integration | Component | atm-workflow/value-presenters/group/table-bo
   });
 
   it('shows two columns - name and type', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/group/table-body-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Group::TableBodyRowPresenter />`);
 
     const tds = findAll('.table-body-row-presenter td');
     expect(tds).to.have.length(2);
@@ -41,10 +41,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/table-bo
       name: 'group1',
       type: GroupType.Organization,
     });
-    await render(hbs`{{atm-workflow/value-presenters/group/table-body-row-presenter
-      context=context
-      value=group
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Group::TableBodyRowPresenter
+      @context={{context}}
+      @value={{group}}
+    />`);
 
     expect(find('.column-name .group-icon')).to.have.class('oneicon-organization');
     expect(find('.column-name .group-name')).to.have.trimmed.text('group1')
@@ -55,10 +55,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/table-bo
 
   it('handles case when all group properties are missing', async function () {
     this.set('group', null);
-    await render(hbs`{{atm-workflow/value-presenters/group/table-body-row-presenter
-      context=context
-      value=group
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Group::TableBodyRowPresenter
+      @context={{context}}
+      @value={{group}}
+    />`);
 
     expect(find('.column-name .group-icon')).to.have.class('oneicon-group');
     expect(find('.column-name .group-name')).to.have.trimmed.text('Unknown')
@@ -71,10 +71,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/table-bo
     const group = this.set('group', {
       groupId: 'some_id',
     });
-    await render(hbs`{{atm-workflow/value-presenters/group/table-body-row-presenter
-      context=context
-      value=group
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Group::TableBodyRowPresenter
+      @context={{context}}
+      @value={{group}}
+    />`);
 
     expect(find('.column-name .group-icon')).to.have.class('oneicon-group');
     expect(find('.column-name .group-name')).to.have.trimmed.text('Unknown')
@@ -93,10 +93,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/table-bo
         },
         groupUrl: () => null,
       });
-      await render(hbs`{{atm-workflow/value-presenters/group/table-body-row-presenter
-        context=context
-        value=group
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::Group::TableBodyRowPresenter
+        @context={{context}}
+        @value={{group}}
+      />`);
 
       expect(find('.column-name .group-icon')).to.have.class('oneicon-organization');
       expect(find('.column-name .group-name')).to.have.trimmed.text('group1')
@@ -116,10 +116,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/table-bo
         },
         groupUrl: () => reject('someError1'),
       });
-      await render(hbs`{{atm-workflow/value-presenters/group/table-body-row-presenter
-        context=context
-        value=group
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::Group::TableBodyRowPresenter
+        @context={{context}}
+        @value={{group}}
+      />`);
 
       expect(find('.column-name .group-icon')).to.have.class('oneicon-organization');
       expect(find('.column-name .group-name')).to.have.trimmed.text('group1')
@@ -138,10 +138,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/table-bo
       },
       groupUrl: () => new Promise(() => {}),
     });
-    await render(hbs`{{atm-workflow/value-presenters/group/table-body-row-presenter
-      context=context
-      value=group
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Group::TableBodyRowPresenter
+      @context={{context}}
+      @value={{group}}
+    />`);
 
     expect(find('.column-name .group-icon')).to.have.class('oneicon-organization');
     expect(find('.column-name .group-name')).to.have.trimmed.text('group1')
@@ -159,9 +159,9 @@ describe('Integration | Component | atm-workflow/value-presenters/group/table-bo
           type: GroupType.Organization,
         },
       });
-      await render(hbs`{{atm-workflow/value-presenters/group/table-body-row-presenter
-        value=group
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::Group::TableBodyRowPresenter
+        @value={{group}}
+      />`);
 
       expect(find('.column-name .group-icon')).to.have.class('oneicon-organization');
       expect(find('.column-name .group-name')).to.have.trimmed.text('group1')

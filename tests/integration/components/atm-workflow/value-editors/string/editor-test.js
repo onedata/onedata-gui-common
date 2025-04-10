@@ -126,9 +126,9 @@ describe('Integration | Component | atm-workflow/value-editors/string/editor', f
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-editors/string/editor
-    stateManager=stateManager
-    editorId=stateManager.rootValueEditorStateId
-    onRemove=onRemove
-  }}`);
+  await render(hbs`<AtmWorkflow::ValueEditors::String::Editor
+    @stateManager={{stateManager}}
+    @editorId={{stateManager.rootValueEditorStateId}}
+    @onRemove={{onRemove}}
+  />`);
 }

@@ -104,11 +104,11 @@ describe('Integration | Component | workflow-visualiser/stores-list', function (
 async function renderComponent() {
   await render(hbs `
     <GlobalModalMounter />
-    {{workflow-visualiser/stores-list
-      actionsFactory=actionsFactory
-      mode=mode
-      definedStores=definedStores
-    }}
+    <WorkflowVisualiser::StoresList
+      @actionsFactory={{actionsFactory}}
+      @mode={{mode}}
+      @definedStores={{definedStores}}
+    />
   `);
 }
 

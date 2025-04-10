@@ -27,7 +27,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
   });
 
   it('has classes "table-body-row-presenter" and "file-table-body-row-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/file/table-body-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::TableBodyRowPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('table-body-row-presenter')
@@ -35,7 +35,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
   });
 
   it('shows three columns - name, path and size', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/file/table-body-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::TableBodyRowPresenter />`);
 
     const tds = findAll('.table-body-row-presenter td');
     expect(tds).to.have.length(3);
@@ -51,10 +51,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
       type: FileType.Regular,
       size: 1024,
     });
-    await render(hbs`{{atm-workflow/value-presenters/file/table-body-row-presenter
-      context=context
-      value=file
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::TableBodyRowPresenter
+      @context={{context}}
+      @value={{file}}
+    />`);
 
     expect(find('.column-name .one-file-icon')).to.have.class('main-type-regular');
     expect(find('.column-name .file-name')).to.have.trimmed.text(file.name)
@@ -68,10 +68,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
 
   it('handles case when all file properties are missing', async function () {
     this.set('file', null);
-    await render(hbs`{{atm-workflow/value-presenters/file/table-body-row-presenter
-      context=context
-      value=file
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::TableBodyRowPresenter
+      @context={{context}}
+      @value={{file}}
+    />`);
 
     expect(find('.column-name .one-file-icon')).to.have.class('main-type-regular');
     expect(find('.column-name .file-name')).to.have.trimmed.text('Unknown')
@@ -85,10 +85,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
     this.set('file', {
       fileId: 'some_id',
     });
-    await render(hbs`{{atm-workflow/value-presenters/file/table-body-row-presenter
-      context=context
-      value=file
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::TableBodyRowPresenter
+      @context={{context}}
+      @value={{file}}
+    />`);
 
     expect(find('.column-name .one-file-icon')).to.have.class('main-type-regular');
     expect(find('.column-name .file-name')).to.have.trimmed.text('Unknown')
@@ -106,10 +106,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
       type: FileType.SymbolicLink,
       size: 1024,
     });
-    await render(hbs`{{atm-workflow/value-presenters/file/table-body-row-presenter
-      context=context
-      value=file
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::TableBodyRowPresenter
+      @context={{context}}
+      @value={{file}}
+    />`);
 
     expect(find('.column-name .one-file-icon')).to.have.class('main-type-symbolic-link')
       .and.to.have.class('effective-type-directory');
@@ -134,10 +134,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
         filePath: () => null,
         fileUrl: () => null,
       });
-      await render(hbs`{{atm-workflow/value-presenters/file/table-body-row-presenter
-        context=context
-        value=file
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::File::TableBodyRowPresenter
+        @context={{context}}
+        @value={{file}}
+      />`);
 
       expect(find('.column-name .one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')
@@ -163,10 +163,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
         filePath: () => reject('someError2'),
         fileUrl: () => reject('someError3'),
       });
-      await render(hbs`{{atm-workflow/value-presenters/file/table-body-row-presenter
-        context=context
-        value=file
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::File::TableBodyRowPresenter
+        @context={{context}}
+        @value={{file}}
+      />`);
 
       expect(find('.column-name .one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')
@@ -192,10 +192,10 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
         filePath: () => new Promise(() => {}),
         fileUrl: () => new Promise(() => {}),
       });
-      await render(hbs`{{atm-workflow/value-presenters/file/table-body-row-presenter
-        context=context
-        value=file
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::File::TableBodyRowPresenter
+        @context={{context}}
+        @value={{file}}
+      />`);
 
       expect(find('.column-name .one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')
@@ -218,9 +218,9 @@ describe('Integration | Component | atm-workflow/value-presenters/file/table-bod
           size: 1024,
         },
       });
-      await render(hbs`{{atm-workflow/value-presenters/file/table-body-row-presenter
-        value=file
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::File::TableBodyRowPresenter
+        @value={{file}}
+      />`);
 
       expect(find('.column-name .one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')

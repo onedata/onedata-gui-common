@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/boolean/single
   setupRenderingTest();
 
   it('has classes "single-line-presenter" and "boolean-single-line-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/boolean/single-line-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Boolean::SingleLinePresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('single-line-presenter')
@@ -16,9 +16,9 @@ describe('Integration | Component | atm-workflow/value-presenters/boolean/single
   });
 
   it('presents passed value as a number', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/boolean/single-line-presenter
-      value=true
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Boolean::SingleLinePresenter
+      @value={{true}}
+    />`);
 
     expect(find('.single-line-presenter')).to.have.trimmed.text('true');
   });

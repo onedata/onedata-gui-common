@@ -238,8 +238,8 @@ function createAxis(testCase, props = {}) {
 }
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/chart-editor/axis-editor-form
-    axis=axis
-    editorContext=editorContext
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::ChartEditor::AxisEditorForm
+    @axis={{axis}}
+    @editorContext={{editorContext}}
+  />`);
 }

@@ -28,7 +28,7 @@ describe('Integration | Component | remove-icon', function () {
   });
 
   it('has "disabled" class if disabled', async function () {
-    await render(hbs `{{remove-icon isDisabled=true}}`);
+    await render(hbs `<RemoveIcon @isDisabled={{true}} />`);
 
     expect(find('.remove-icon')).to.have.class('disabled');
   });
@@ -37,7 +37,7 @@ describe('Integration | Component | remove-icon', function () {
     const clickHandler = sinon.spy();
     this.set('clickHandler', clickHandler);
 
-    await render(hbs `{{remove-icon onClick=(action clickHandler)}}`);
+    await render(hbs `<RemoveIcon @onClick={{action clickHandler}} />`);
 
     return click('.remove-icon')
       .then(() => expect(clickHandler).to.be.calledOnce);
@@ -47,7 +47,7 @@ describe('Integration | Component | remove-icon', function () {
     const clickHandler = sinon.spy();
     this.set('click', clickHandler);
 
-    await render(hbs `{{remove-icon onClick=(action click) isDisabled=true}}`);
+    await render(hbs `<RemoveIcon @onClick={{action click}} @isDisabled={{true}} />`);
 
     return click('.remove-icon')
       .then(() => expect(clickHandler).to.be.not.called);
@@ -57,7 +57,7 @@ describe('Integration | Component | remove-icon', function () {
     const tooltipText = 'Tip text';
     this.set('tooltipText', tooltipText);
 
-    await render(hbs `{{remove-icon tooltipText=tooltipText}}`);
+    await render(hbs `<RemoveIcon @tooltipText={{tooltipText}} />`);
 
     return triggerEvent('.remove-icon', 'mouseenter')
       .then(() =>

@@ -54,13 +54,13 @@ describe('Integration | Component | form-component/privileges-field', function (
   });
 
   it('has class "privileges-field"', async function () {
-    await render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `<FormComponent::PrivilegesField @field={{field}} />`);
 
     expect(find('.privileges-field')).to.exist;
   });
 
   it('renders privileges tree', async function () {
-    await render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `<FormComponent::PrivilegesField @field={{field}} />`);
 
     Object.values(translations).forEach(translation => {
       expect(findInElementsByText(findAll('.node-text'), translation)).to.exist;
@@ -70,7 +70,7 @@ describe('Integration | Component | form-component/privileges-field', function (
   it('can be disabled', async function () {
     this.set('field.isEnabled', false);
 
-    await render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `<FormComponent::PrivilegesField @field={{field}} />`);
 
     expect(find('.one-way-toggle:not(.disabled)')).to.not.exist;
   });
@@ -78,7 +78,7 @@ describe('Integration | Component | form-component/privileges-field', function (
   it('notifies field object about changed value', async function () {
     const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-    await render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `<FormComponent::PrivilegesField @field={{field}} />`);
     const toggle = findToggleNextToText(this, 'group0');
 
     await click(toggle);
@@ -92,7 +92,7 @@ describe('Integration | Component | form-component/privileges-field', function (
   it('sets tree value to privileges specified in field object', async function () {
     this.set('field.value', { privileges: ['g1a'] });
 
-    await render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `<FormComponent::PrivilegesField @field={{field}} />`);
     const toggle = findToggleNextToText(this, 'privilege1a');
 
     expect(toggle).to.have.class('checked');
@@ -106,7 +106,7 @@ describe('Integration | Component | form-component/privileges-field', function (
       defaultValue: { privileges: ['g0a', 'g1a'] },
     });
 
-    await render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `<FormComponent::PrivilegesField @field={{field}} />`);
 
     const modifiedLabels = findAll('.modified-node-label');
     expect(modifiedLabels).to.have.length(2);
@@ -119,7 +119,7 @@ describe('Integration | Component | form-component/privileges-field', function (
     set(field, 'value', { privileges: ['g1a'] });
     field.changeMode('view');
 
-    await render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `<FormComponent::PrivilegesField @field={{field}} />`);
     const toggle = findToggleNextToText(this, 'privilege1a');
 
     expect(toggle).to.have.class('checked');

@@ -25,7 +25,7 @@ describe('Integration | Component | form-component/datetime-field', function () 
   it(
     'has class "datetime-field"',
     async function () {
-      await render(hbs `{{form-component/datetime-field field=textField}}`);
+      await render(hbs `<FormComponent::DatetimeField @field={{textField}} />`);
 
       expect(find('.datetime-field')).to.exist;
     }
@@ -34,7 +34,7 @@ describe('Integration | Component | form-component/datetime-field', function () 
   it(
     'renders text input and datetime picker',
     async function () {
-      await render(hbs `{{form-component/datetime-field field=field}}`);
+      await render(hbs `<FormComponent::DatetimeField @field={{field}} />`);
 
       expect(find('input')).to.exist;
       const picker = new OneDatetimePickerHelper(find('input'));
@@ -48,7 +48,7 @@ describe('Integration | Component | form-component/datetime-field', function () 
     async function () {
       this.set('field.isEnabled', false);
 
-      await render(hbs `{{form-component/datetime-field field=field}}`);
+      await render(hbs `<FormComponent::DatetimeField @field={{field}} />`);
 
       expect(find('input').disabled).to.be.true;
     }
@@ -59,7 +59,7 @@ describe('Integration | Component | form-component/datetime-field', function () 
     async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      await render(hbs `{{form-component/datetime-field field=field}}`);
+      await render(hbs `<FormComponent::DatetimeField @field={{field}} />`);
 
       const picker = new OneDatetimePickerHelper(find('input'));
       return picker.openPicker(true)
@@ -73,7 +73,7 @@ describe('Integration | Component | form-component/datetime-field', function () 
     async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      await render(hbs `{{form-component/datetime-field field=field}}`);
+      await render(hbs `<FormComponent::DatetimeField @field={{field}} />`);
 
       const picker = new OneDatetimePickerHelper(find('input'));
       return picker.selectToday()
@@ -88,14 +88,14 @@ describe('Integration | Component | form-component/datetime-field', function () 
     const date = new Date();
     this.set('field.value', date);
 
-    await render(hbs `{{form-component/datetime-field field=field}}`);
+    await render(hbs `<FormComponent::DatetimeField @field={{field}} />`);
 
     const expectedValue = moment(date).format(datetimeFormat);
     expect(find('input').value).to.equal(expectedValue);
   });
 
   it('sets input id according to "fieldId"', async function () {
-    await render(hbs `{{form-component/datetime-field field=field fieldId="abc"}}`);
+    await render(hbs `<FormComponent::DatetimeField @field={{field}} @fieldId="abc" />`);
 
     expect(find('input#abc')).to.exist;
   });
@@ -106,7 +106,7 @@ describe('Integration | Component | form-component/datetime-field', function () 
     set(field, 'value', date);
     field.changeMode('view');
 
-    await render(hbs `{{form-component/datetime-field field=field}}`);
+    await render(hbs `<FormComponent::DatetimeField @field={{field}} />`);
 
     expect(this.element.textContent.trim()).to.equal(moment(date).format(datetimeFormat));
     expect(find('input')).to.not.exist;

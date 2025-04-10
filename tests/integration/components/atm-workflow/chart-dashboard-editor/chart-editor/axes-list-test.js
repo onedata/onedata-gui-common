@@ -151,10 +151,10 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/chart-editor/axes-list
-    editorContext=editorContext
-    chart=model.rootSection.charts.[0]
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::ChartEditor::AxesList
+    @editorContext={{editorContext}}
+    @chart={{model.rootSection.charts.[0]}}
+  />`);
 }
 
 function createModel(chartSpec = {}) {

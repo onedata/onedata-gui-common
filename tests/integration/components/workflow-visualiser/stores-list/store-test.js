@@ -42,7 +42,7 @@ describe('Integration | Component | workflow-visualiser/stores-list/store', func
   });
 
   it('has class "workflow-visualiser-stores-list-store"', async function () {
-    await render(hbs `{{workflow-visualiser/stores-list/store}}`);
+    await render(hbs `<WorkflowVisualiser::StoresList::Store />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0])
@@ -123,11 +123,11 @@ describe('Integration | Component | workflow-visualiser/stores-list/store', func
 async function renderComponent() {
   await render(hbs `
     <GlobalModalMounter />
-    {{workflow-visualiser/stores-list/store
-      mode=mode
-      store=store
-      actionsFactory=actionsFactory
-    }}
+    <WorkflowVisualiser::StoresList::Store
+      @mode={{mode}}
+      @store={{store}}
+      @actionsFactory={{actionsFactory}}
+    />
   `);
 }
 

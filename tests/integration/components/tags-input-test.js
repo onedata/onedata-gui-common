@@ -36,7 +36,7 @@ describe('Integration | Component | tags-input', function () {
   });
 
   it('shows passed tags', async function () {
-    await render(hbs `{{tags-input tags=tags}}`);
+    await render(hbs `<TagsInput @tags={{tags}} />`);
 
     const tags = findAll('.tag-item');
     expect(tags).to.have.length(2);
@@ -47,7 +47,7 @@ describe('Integration | Component | tags-input', function () {
   it('shows tags icons', async function () {
     this.set('tags.firstObject.icon', 'space');
 
-    await render(hbs `{{tags-input tags=tags}}`);
+    await render(hbs `<TagsInput @tags={{tags}} />`);
 
     expect(find('.tag-item:nth-child(1) .tag-icon'))
       .to.have.class('oneicon-space');
@@ -59,7 +59,7 @@ describe('Integration | Component | tags-input', function () {
     const changeSpy = sinon.spy(tags => this.set('tags', tags));
     this.set('change', changeSpy);
 
-    await render(hbs `{{tags-input tags=tags onChange=(action change)}}`);
+    await render(hbs `<TagsInput @tags={{tags}} @onChange={{action change}} />`);
 
     await click('.tag-item:first-child .tag-remove');
 
@@ -73,7 +73,7 @@ describe('Integration | Component | tags-input', function () {
 
   it('does not perform tag removing if "onChange" property is not specified',
     async function () {
-      await render(hbs `{{tags-input tags=tags}}`);
+      await render(hbs `<TagsInput @tags={{tags}} />`);
 
       await click('.tag-item:first-child .tag-remove');
 
@@ -87,7 +87,7 @@ describe('Integration | Component | tags-input', function () {
       this.set('focusLost', focusLostSpy);
 
       await render(hbs `
-        {{tags-input tags=tags onFocusLost=(action focusLost)}}
+        <TagsInput @tags={{tags}} @onFocusLost={{action focusLost}} />
       `);
 
       await focus('.tags-input');
@@ -100,7 +100,7 @@ describe('Integration | Component | tags-input', function () {
 
   it('goes into creating new tag mode on tag-creator-trigger click',
     async function () {
-      await render(hbs `{{tags-input tags=tags}}`);
+      await render(hbs `<TagsInput @tags={{tags}} />`);
 
       expect(find('.tag-creator')).to.not.exist;
 
@@ -112,7 +112,7 @@ describe('Integration | Component | tags-input', function () {
 
   it('goes into creating new tag mode on click',
     async function () {
-      await render(hbs `{{tags-input tags=tags}}`);
+      await render(hbs `<TagsInput @tags={{tags}} />`);
 
       await click('.tags-input');
 
@@ -124,7 +124,7 @@ describe('Integration | Component | tags-input', function () {
   it('uses "tagEditorComponentName" property to render tag creation editor component',
     async function () {
       await render(hbs `
-        {{tags-input tags=tags tagEditorComponentName="test-component"}}
+        <TagsInput @tags={{tags}} @tagEditorComponentName="test-component" />
       `);
 
       await click('.tag-creator-trigger');
@@ -135,7 +135,7 @@ describe('Integration | Component | tags-input', function () {
 
   it('uses tags-input/text-editor as a default tag creation editor component',
     async function () {
-      await render(hbs `{{tags-input tags=tags}}`);
+      await render(hbs `<TagsInput @tags={{tags}} />`);
 
       await click('.tag-creator-trigger');
       expect(find('.tag-creator .tags-input-text-editor')).to.exist;
@@ -145,7 +145,7 @@ describe('Integration | Component | tags-input', function () {
   it('allows to end creating tag operation from within tag creation editor',
     async function () {
       await render(hbs `
-        {{tags-input tags=tags tagEditorComponentName="test-component"}}
+        <TagsInput @tags={{tags}} @tagEditorComponentName="test-component" />
       `);
 
       await click('.tag-creator-trigger');
@@ -167,11 +167,11 @@ describe('Integration | Component | tags-input', function () {
       }];
       const changeSpy = sinon.spy();
       this.set('change', changeSpy);
-      await render(hbs `{{tags-input
-        tags=tags
-        tagEditorComponentName="test-component"
-        onChange=(action change)
-      }}`);
+      await render(hbs `<TagsInput
+        @tags={{tags}}
+        @tagEditorComponentName="test-component"
+        @onChange={{action change}}
+      />`);
 
       await click('.tag-creator-trigger');
       const testComponent = find('.tag-creator .test-component').componentInstance;
@@ -184,10 +184,10 @@ describe('Integration | Component | tags-input', function () {
 
   it('injects currently selected tags into creation editor',
     async function () {
-      await render(hbs `{{tags-input
-        tags=tags
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @tags={{tags}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       await click('.tag-creator-trigger');
 
@@ -197,11 +197,11 @@ describe('Integration | Component | tags-input', function () {
   );
 
   it('injects tags limit into creation editor', async function () {
-    await render(hbs `{{tags-input
-      tags=tags
-      tagsLimit=10
-      tagEditorComponentName="test-component"
-    }}`);
+    await render(hbs `<TagsInput
+      @tags={{tags}}
+      @tagsLimit={{10}}
+      @tagEditorComponentName="test-component"
+    />`);
 
     await click('.tag-creator-trigger');
 
@@ -211,10 +211,10 @@ describe('Integration | Component | tags-input', function () {
 
   it('injects undefined tags limit into creation editor when tags limit is not defined',
     async function () {
-      await render(hbs `{{tags-input
-        tags=tags
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @tags={{tags}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       await click('.tag-creator-trigger');
 
@@ -230,10 +230,10 @@ describe('Integration | Component | tags-input', function () {
       });
       this.set('settings', settings);
 
-      await render(hbs `{{tags-input
-        tagEditorComponentName="test-component"
-        tagEditorSettings=settings
-      }}`);
+      await render(hbs `<TagsInput
+        @tagEditorComponentName="test-component"
+        @tagEditorSettings={{settings}}
+      />`);
 
       await click('.tag-creator-trigger');
 
@@ -246,10 +246,10 @@ describe('Integration | Component | tags-input', function () {
     async function () {
       const focusSpy = sinon.spy();
 
-      await render(hbs `{{tags-input
-        tags=tags
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @tags={{tags}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       await click('.tag-creator-trigger');
       const testComponent = find('.tag-creator .test-component').componentInstance;
@@ -262,11 +262,11 @@ describe('Integration | Component | tags-input', function () {
 
   it('does not allow to add and remove tags when disabled',
     async function () {
-      await render(hbs `{{tags-input
-        disabled=true
-        tags=tags
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @disabled={{true}}
+        @tags={{tags}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       const tagsInput = find('.tags-input');
       expect(tagsInput).to.have.attr('disabled');
@@ -283,11 +283,11 @@ describe('Integration | Component | tags-input', function () {
     async function () {
       this.set('disabled', false);
 
-      await render(hbs `{{tags-input
-        disabled=disabled
-        tags=tags
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @disabled={{disabled}}
+        @tags={{tags}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       await click('.tags-input');
       this.set('disabled', true);
@@ -300,11 +300,11 @@ describe('Integration | Component | tags-input', function () {
 
   it('does not allow to add and remove tags in readonly mode',
     async function () {
-      await render(hbs `{{tags-input
-        isReadOnly=true
-        tags=tags
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @isReadOnly={{true}}
+        @tags={{tags}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       const tagsInput = find('.tags-input');
       expect(tagsInput).to.have.class('readonly');
@@ -321,11 +321,11 @@ describe('Integration | Component | tags-input', function () {
     async function () {
       this.set('isReadOnly', false);
 
-      await render(hbs `{{tags-input
-        isReadOnly=isReadOnly
-        tags=tags
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @isReadOnly={{isReadOnly}}
+        @tags={{tags}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       await click('.tags-input');
       this.set('isReadOnly', true);
@@ -338,11 +338,11 @@ describe('Integration | Component | tags-input', function () {
 
   it('disables tag creation when number of already provided tags is equal to the limit',
     async function () {
-      await render(hbs `{{tags-input
-        tags=tags
-        tagsLimit=tags.length
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @tags={{tags}}
+        @tagsLimit={{tags.length}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       const createTrigger = find('.tag-creator-trigger');
       expect(createTrigger).to.have.class('disabled');
@@ -355,11 +355,11 @@ describe('Integration | Component | tags-input', function () {
 
   it('disables tag creation when number of already provided tags is greater that the limit',
     async function () {
-      await render(hbs `{{tags-input
-        tags=tags
-        tagsLimit=0
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @tags={{tags}}
+        @tagsLimit={{0}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       const createTrigger = find('.tag-creator-trigger');
       expect(createTrigger).to.have.class('disabled');
@@ -373,11 +373,11 @@ describe('Integration | Component | tags-input', function () {
   it('does not disable tag creation when number of already provided tags is lower that the limit',
     async function () {
       this.set('tagsLimit', this.get('tags.length') + 1);
-      await render(hbs `{{tags-input
-        tags=tags
-        tagsLimit=9999
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @tags={{tags}}
+        @tagsLimit={{9999}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       const createTrigger = find('.tag-creator-trigger');
       expect(createTrigger).to.not.have.class('disabled');
@@ -392,11 +392,11 @@ describe('Integration | Component | tags-input', function () {
     async function () {
       this.set('tagsLimit', 10);
 
-      await render(hbs `{{tags-input
-        tagsLimit=tagsLimit
-        tags=tags
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @tagsLimit={{tagsLimit}}
+        @tags={{tags}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       await click('.tag-creator-trigger');
       this.set('tagsLimit', 1);
@@ -411,11 +411,11 @@ describe('Integration | Component | tags-input', function () {
     async function () {
       this.set('tagsLimit', 10);
 
-      await render(hbs `{{tags-input
-        tagsLimit=tagsLimit
-        tags=tags
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @tagsLimit={{tagsLimit}}
+        @tags={{tags}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       await click('.tag-creator-trigger');
       this.set('tagsLimit', 8);
@@ -430,11 +430,11 @@ describe('Integration | Component | tags-input', function () {
     async function () {
       const tags = this.get('tags');
 
-      await render(hbs `{{tags-input
-        tagsLimit=3
-        tags=tags
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @tagsLimit={{3}}
+        @tags={{tags}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       await click('.tag-creator-trigger');
       this.set('tags', [...tags, ...tags]);
@@ -447,7 +447,7 @@ describe('Integration | Component | tags-input', function () {
 
   it('does not show clear-input button when input is not empty and isClearButtonVisible is false',
     async function () {
-      await render(hbs `{{tags-input tags=tags isClearButtonVisible=false}}`);
+      await render(hbs `<TagsInput @tags={{tags}} @isClearButtonVisible={{false}} />`);
 
       expect(find('.input-clear-trigger')).to.not.exist;
     }
@@ -457,7 +457,7 @@ describe('Integration | Component | tags-input', function () {
     async function () {
       this.set('tags', []);
 
-      await render(hbs `{{tags-input tags=tags isClearButtonVisible=true}}`);
+      await render(hbs `<TagsInput @tags={{tags}} @isClearButtonVisible={{true}} />`);
 
       expect(find('.input-clear-trigger')).to.not.exist;
     }
@@ -466,11 +466,11 @@ describe('Integration | Component | tags-input', function () {
   it('has working clear-input button when input is not empty and isClearButtonVisible is true',
     async function () {
       this.set('change', tags => this.set('tags', tags));
-      await render(hbs `{{tags-input
-        tags=tags
-        isClearButtonVisible=true
-        onChange=change
-      }}`);
+      await render(hbs `<TagsInput
+        @tags={{tags}}
+        @isClearButtonVisible={{true}}
+        @onChange={{change}}
+      />`);
 
       const clearBtn = find('.input-clear-trigger');
       expect(clearBtn).to.exist;
@@ -483,12 +483,12 @@ describe('Integration | Component | tags-input', function () {
     async function () {
       const tags = _.range(5).map(i => ({ label: `tag-${i}` }));
       this.set('tags', tags);
-      await render(hbs `{{tags-input
-        isReadOnly=true
-        tags=tags
-        readonlyTagsDisplayLimit=3
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @isReadOnly={{true}}
+        @tags={{tags}}
+        @readonlyTagsDisplayLimit={{3}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       /** @type {HTMLElement} */
       const tagsInput = find('.tags-input');
@@ -504,12 +504,12 @@ describe('Integration | Component | tags-input', function () {
     async function () {
       const tags = _.range(3).map(i => ({ label: `tag-${i}` }));
       this.set('tags', tags);
-      await render(hbs `{{tags-input
-        isReadOnly=true
-        tags=tags
-        readonlyTagsDisplayLimit=3
-        tagEditorComponentName="test-component"
-      }}`);
+      await render(hbs `<TagsInput
+        @isReadOnly={{true}}
+        @tags={{tags}}
+        @readonlyTagsDisplayLimit={{3}}
+        @tagEditorComponentName="test-component"
+      />`);
 
       /** @type {HTMLElement} */
       const tagsInput = find('.tags-input');
@@ -525,13 +525,13 @@ describe('Integration | Component | tags-input', function () {
       this.set('onEvaluateMoreTagsText', (moreTagsCount) => {
         return `lorem ${moreTagsCount} ipsum`;
       });
-      await render(hbs `{{tags-input
-        isReadOnly=true
-        tags=tags
-        readonlyTagsDisplayLimit=3
-        tagEditorComponentName="test-component"
-        onEvaluateMoreTagsText=onEvaluateMoreTagsText
-      }}`);
+      await render(hbs `<TagsInput
+        @isReadOnly={{true}}
+        @tags={{tags}}
+        @readonlyTagsDisplayLimit={{3}}
+        @tagEditorComponentName="test-component"
+        @onEvaluateMoreTagsText={{onEvaluateMoreTagsText}}
+      />`);
 
       /** @type {HTMLElement} */
       const tagsInput = find('.tags-input');

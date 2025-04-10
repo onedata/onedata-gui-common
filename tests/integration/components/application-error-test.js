@@ -11,7 +11,7 @@ describe('Integration | Component | application-error', function () {
     this.set('model', {
       some: 'some_error',
     });
-    await render(hbs `{{application-error error=model}}`);
+    await render(hbs `<ApplicationError @error={{model}} />`);
     expect(find('.error-details')).to.exist;
     expect(find('.error-details').textContent).to.match(/some_error/);
   });

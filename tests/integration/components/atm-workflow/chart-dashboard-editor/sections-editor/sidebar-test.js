@@ -41,7 +41,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/sections-editor/sidebar
-    selectedElement=selectedElement
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::SectionsEditor::Sidebar
+    @selectedElement={{selectedElement}}
+  />`);
 }

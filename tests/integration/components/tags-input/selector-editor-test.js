@@ -21,22 +21,22 @@ describe('Integration | Component | tags-input/selector-editor', function () {
   });
 
   it('has class "tags-input-selector-editor"', async function () {
-    await render(hbs `{{tags-input/selector-editor}}`);
+    await render(hbs `<TagsInput::SelectorEditor />`);
 
     expect(find('.tags-input-selector-editor')).to.exist;
   });
 
   it('renders popover', async function () {
-    await render(hbs `{{tags-input/selector-editor}}`);
+    await render(hbs `<TagsInput::SelectorEditor />`);
 
     expect(getSelector()).to.exist;
   });
 
   it('renders passed available tags', async function () {
-    await render(hbs `{{tags-input
-      tagEditorComponentName="tags-input/selector-editor"
-      tagEditorSettings=settings
-    }}`);
+    await render(hbs `<TagsInput
+      @tagEditorComponentName="tags-input/selector-editor"
+      @tagEditorSettings={{settings}}
+    />`);
 
     return click('.tag-creator-trigger')
       .then(() => {
@@ -54,11 +54,11 @@ describe('Integration | Component | tags-input/selector-editor', function () {
     // if it will deal with the same tags, but under different object references.
     this.set('selectedTags', [{ label: 'b' }]);
 
-    await render(hbs `{{tags-input
-      tags=selectedTags
-      tagEditorComponentName="tags-input/selector-editor"
-      tagEditorSettings=settings
-    }}`);
+    await render(hbs `<TagsInput
+      @tags={{selectedTags}}
+      @tagEditorComponentName="tags-input/selector-editor"
+      @tagEditorSettings={{settings}}
+    />`);
 
     return click('.tag-creator-trigger')
       .then(() => {
@@ -73,12 +73,12 @@ describe('Integration | Component | tags-input/selector-editor', function () {
     const changeSpy = sinon.spy(tags => this.set('tags', tags));
     this.set('change', changeSpy);
 
-    await render(hbs `{{tags-input
-      tags=tags
-      tagEditorComponentName="tags-input/selector-editor"
-      tagEditorSettings=settings
-      onChange=(action change)
-    }}`);
+    await render(hbs `<TagsInput
+      @tags={{tags}}
+      @tagEditorComponentName="tags-input/selector-editor"
+      @tagEditorSettings={{settings}}
+      @onChange={{action change}}
+    />`);
 
     return click('.tag-creator-trigger')
       .then(() => click(getSelector().querySelector('.selector-item')))
@@ -96,12 +96,12 @@ describe('Integration | Component | tags-input/selector-editor', function () {
     const changeSpy = sinon.spy(tags => this.set('tags', tags));
     this.set('change', changeSpy);
 
-    await render(hbs `{{tags-input
-      tags=tags
-      tagEditorComponentName="tags-input/selector-editor"
-      tagEditorSettings=settings
-      onChange=(action change)
-    }}`);
+    await render(hbs `<TagsInput
+      @tags={{tags}}
+      @tagEditorComponentName="tags-input/selector-editor"
+      @tagEditorSettings={{settings}}
+      @onChange={{action change}}
+    />`);
 
     return click('.tag-creator-trigger')
       .then(() => click(getSelector().querySelector('.selector-item')))
@@ -114,11 +114,11 @@ describe('Integration | Component | tags-input/selector-editor', function () {
 
   it('closes selector on click on non-parent tags-input', async function () {
     await render(hbs `
-      {{tags-input
-        tagEditorSettings=settings
-        tagEditorComponentName="tags-input/selector-editor"
-      }}
-      {{tags-input tagEditorComponentName="test-component"}}
+      <TagsInput
+        @tagEditorSettings={{settings}}
+        @tagEditorComponentName="tags-input/selector-editor"
+      />
+      <TagsInput @tagEditorComponentName="test-component" />
     `);
 
     return click('.tags-input:first-child .tag-creator-trigger')
@@ -128,11 +128,11 @@ describe('Integration | Component | tags-input/selector-editor', function () {
 
   it('does not close selector on click on parent tags-input', async function () {
     await render(hbs `
-      {{tags-input
-        tagEditorSettings=settings
-        tagEditorComponentName="tags-input/selector-editor"
-      }}
-      {{tags-input tagEditorComponentName="test-component"}}
+      <TagsInput
+        @tagEditorSettings={{settings}}
+        @tagEditorComponentName="tags-input/selector-editor"
+      />
+      <TagsInput @tagEditorComponentName="test-component" />
     `);
 
     return click('.tags-input:first-child .tag-creator-trigger')

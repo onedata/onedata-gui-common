@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/single-li
   setupRenderingTest();
 
   it('has classes "single-line-presenter" and "file-single-line-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/file/single-line-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::SingleLinePresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('single-line-presenter')
@@ -17,9 +17,9 @@ describe('Integration | Component | atm-workflow/value-presenters/file/single-li
 
   it('presents passed value as a file', async function () {
     this.set('value', { name: 'file1.txt' });
-    await render(hbs`{{atm-workflow/value-presenters/file/single-line-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::SingleLinePresenter
+      @value={{value}}
+    />`);
 
     expect(find('.single-line-presenter')).to.have.trimmed.text('[File "file1.txt"]');
   });

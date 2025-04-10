@@ -16,7 +16,7 @@ describe('Integration | Component | warning-icon', function () {
   });
 
   it('has a tooltip then "tooltipText" was specified', async function () {
-    await render(hbs`{{warning-icon tooltipText="abc"}}`);
+    await render(hbs`<WarningIcon @tooltipText="abc" />`);
 
     const tooltipHelper = new OneTooltipHelper('.warning-icon-image');
     expect(await tooltipHelper.getText()).to.equal('abc');

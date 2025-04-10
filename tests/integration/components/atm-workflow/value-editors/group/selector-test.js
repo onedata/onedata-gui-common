@@ -155,13 +155,13 @@ describe('Integration | Component | atm-workflow/value-editors/group/selector', 
 });
 
 async function renderComponent() {
-  await render(hbs`{{#atm-workflow/value-editors/group/selector
-    atmDataSpec=atmDataSpec
-    editorContext=editorContext
-    onGroupsSelected=onGroupsSelected
-    onIdProvidingStarted=onIdProvidingStarted
-    allowManyGroups=allowManyGroups
-  }}
+  await render(hbs`<AtmWorkflow::ValueEditors::Group::Selector
+    @atmDataSpec={{atmDataSpec}}
+    @editorContext={{editorContext}}
+    @onGroupsSelected={{onGroupsSelected}}
+    @onIdProvidingStarted={{onIdProvidingStarted}}
+    @allowManyGroups={{allowManyGroups}}
+  >
     {{triggerText}}
-  {{/atm-workflow/value-editors/group/selector}}`);
+  </AtmWorkflow::ValueEditors::Group::Selector>`);
 }

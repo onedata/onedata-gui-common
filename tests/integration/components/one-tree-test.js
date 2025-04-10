@@ -23,19 +23,19 @@ describe('Integration | Component | one-tree', function () {
 
   it('renders content in a tree', async function () {
     await render(hbs `
-      {{#one-tree as |tree|}}
-        {{#tree.item class="item" as |item|}}
-          {{#item.content}}item1{{/item.content}}
-        {{/tree.item}}
-        {{#tree.item class="item" as |item|}}
-          {{#item.content}}item2{{/item.content}}
-          {{#item.subtree as |subtree|}}
-            {{#subtree.item class="subitem" as |subitem|}}
-              {{#subitem.content}}item2.1{{/subitem.content}}
-            {{/subtree.item}}
-          {{/item.subtree}}
-        {{/tree.item}}
-      {{/one-tree}}
+      <OneTree as |tree|>
+        <tree.item class="item" as |item|>
+          <item.content>item1</item.content>
+        </tree.item>
+        <tree.item class="item" as |item|>
+          <item.content>item2</item.content>
+          <item.subtree as |subtree|>
+            <subtree.item class="subitem" as |subitem|>
+              <subitem.content>item2.1</subitem.content>
+            </subtree.item>
+          </item.subtree>
+        </tree.item>
+      </OneTree>
     `);
 
     const treeDirectItems = findAll('.item');
@@ -49,16 +49,16 @@ describe('Integration | Component | one-tree', function () {
 
   it('collapses/expands subtrees', async function () {
     await render(hbs `
-      {{#one-tree as |tree|}}
-        {{#tree.item as |item|}}
-          {{#item.content class="item-content"}}item1{{/item.content}}
-          {{#item.subtree class="subtree" as |subtree|}}
-            {{#subtree.item as |subitem|}}
-              {{#subitem.content}}item1.1{{/subitem.content}}
-            {{/subtree.item}}
-          {{/item.subtree}}
-        {{/tree.item}}
-      {{/one-tree}}
+      <OneTree as |tree|>
+        <tree.item as |item|>
+          <item.content class="item-content">item1</item.content>
+          <item.subtree class="subtree" as |subtree|>
+            <subtree.item as |subitem|>
+              <subitem.content>item1.1</subitem.content>
+            </subtree.item>
+          </item.subtree>
+        </tree.item>
+      </OneTree>
     `);
 
     const subtree = find('.subtree');
@@ -70,21 +70,23 @@ describe('Integration | Component | one-tree', function () {
 
   it('collapses children recursively when collapseRecursively==true', async function () {
     await render(hbs `
-      {{#one-tree collapseRecursively=true as |tree|}}
-        {{#tree.item as |item|}}
-          {{#item.content class="first-level-item-content"}}item1{{/item.content}}
-          {{#item.subtree as |subtree|}}
-            {{#subtree.item as |subitem|}}
-              {{#subitem.content class="second-level-item-content"}}item1.1{{/subitem.content}}
-              {{#subitem.subtree class="second-level-subtree" as |subsubtree|}}
-                {{#subsubtree.item as |subsubitem|}}
-                  {{#subsubitem.content}}item1.1.1{{/subsubitem.content}}
-                {{/subsubtree.item}}
-              {{/subitem.subtree}}
-            {{/subtree.item}}
-          {{/item.subtree}}
-        {{/tree.item}}
-      {{/one-tree}}
+      <OneTree @collapseRecursively={{true}} as |tree|>
+        <tree.item as |item|>
+          <item.content class="first-level-item-content">item1</item.content>
+          <item.subtree as |subtree|>
+            <subtree.item as |subitem|>
+              <subitem.content
+                class="second-level-item-content"
+              >item1.1</subitem.content>
+              <subitem.subtree class="second-level-subtree" as |subsubtree|>
+                <subsubtree.item as |subsubitem|>
+                  <subsubitem.content>item1.1.1</subsubitem.content>
+                </subsubtree.item>
+              </subitem.subtree>
+            </subtree.item>
+          </item.subtree>
+        </tree.item>
+      </OneTree>
     `);
 
     const firstLevelItemContent = find('.first-level-item-content');
@@ -102,21 +104,23 @@ describe('Integration | Component | one-tree', function () {
 
   it('does not collapse children recursively', async function () {
     await render(hbs `
-      {{#one-tree as |tree|}}
-        {{#tree.item as |item|}}
-          {{#item.content class="first-level-item-content"}}item1{{/item.content}}
-          {{#item.subtree as |subtree|}}
-            {{#subtree.item as |subitem|}}
-              {{#subitem.content class="second-level-item-content"}}item1.1{{/subitem.content}}
-              {{#subitem.subtree class="second-level-subtree" as |subsubtree|}}
-                {{#subsubtree.item as |subsubitem|}}
-                  {{#subsubitem.content}}item1.1.1{{/subsubitem.content}}
-                {{/subsubtree.item}}
-              {{/subitem.subtree}}
-            {{/subtree.item}}
-          {{/item.subtree}}
-        {{/tree.item}}
-      {{/one-tree}}
+      <OneTree as |tree|>
+        <tree.item as |item|>
+          <item.content class="first-level-item-content">item1</item.content>
+          <item.subtree as |subtree|>
+            <subtree.item as |subitem|>
+              <subitem.content
+                class="second-level-item-content"
+              >item1.1</subitem.content>
+              <subitem.subtree class="second-level-subtree" as |subsubtree|>
+                <subsubtree.item as |subsubitem|>
+                  <subsubitem.content>item1.1.1</subsubitem.content>
+                </subsubtree.item>
+              </subitem.subtree>
+            </subtree.item>
+          </item.subtree>
+        </tree.item>
+      </OneTree>
     `);
 
     const firstLevelItemContent = find('.first-level-item-content');
@@ -136,16 +140,16 @@ describe('Integration | Component | one-tree', function () {
     const eventsBus = this.get('eventsBus');
 
     await render(hbs `
-      {{#one-tree key="root" as |tree|}}
-        {{#tree.item key="item1" class="item1" as |item|}}
-          {{#item.content}}item1{{/item.content}}
-          {{#item.subtree class="item1-tree" as |subtree|}}
-            {{#subtree.item as |subitem|}}
-              {{#subitem.content}}item1.1{{/subitem.content}}
-            {{/subtree.item}}
-          {{/item.subtree}}
-        {{/tree.item}}
-      {{/one-tree}}
+      <OneTree @key="root" as |tree|>
+        <tree.item @key="item1" class="item1" as |item|>
+          <item.content>item1</item.content>
+          <item.subtree class="item1-tree" as |subtree|>
+            <subtree.item as |subitem|>
+              <subitem.content>item1.1</subitem.content>
+            </subtree.item>
+          </item.subtree>
+        </tree.item>
+      </OneTree>
     `);
 
     const itemTree = find('.item1-tree');
@@ -160,16 +164,16 @@ describe('Integration | Component | one-tree', function () {
     const eventsBus = this.get('eventsBus');
 
     await render(hbs `
-      {{#one-tree key="root" as |tree|}}
-        {{#tree.item key="item1" as |item|}}
-          {{#item.content}}item1{{/item.content}}
-          {{#item.subtree class="subtree" as |subtree|}}
-            {{#subtree.item as |subitem|}}
-              {{#subitem.content}}item1.1{{/subitem.content}}
-            {{/subtree.item}}
-          {{/item.subtree}}
-        {{/tree.item}}
-      {{/one-tree}}
+      <OneTree @key="root" as |tree|>
+        <tree.item @key="item1" as |item|>
+          <item.content>item1</item.content>
+          <item.subtree class="subtree" as |subtree|>
+            <subtree.item as |subitem|>
+              <subitem.content>item1.1</subitem.content>
+            </subtree.item>
+          </item.subtree>
+        </tree.item>
+      </OneTree>
     `);
 
     const subtree = find('.subtree');
@@ -188,21 +192,21 @@ describe('Integration | Component | one-tree', function () {
     const eventsBus = this.get('eventsBus');
 
     await render(hbs `
-      {{#one-tree key="root" as |tree|}}
-        {{#tree.item as |item|}}
-          {{#item.content}}item1{{/item.content}}
-          {{#item.subtree class="item1-tree" as |subtree|}}
-            {{#subtree.item key="item11" as |subitem|}}
-              {{#subitem.content}}item1.1{{/subitem.content}}
-              {{#subitem.subtree class="item11-tree" as |subsubtree|}}
-                {{#subsubtree.item as |subsubitem|}}
-                  {{#subsubitem.content}}item1.1.1{{/subsubitem.content}}
-                {{/subsubtree.item}}
-              {{/subitem.subtree}}
-            {{/subtree.item}}
-          {{/item.subtree}}
-        {{/tree.item}}
-      {{/one-tree}}
+      <OneTree @key="root" as |tree|>
+        <tree.item as |item|>
+          <item.content>item1</item.content>
+          <item.subtree class="item1-tree" as |subtree|>
+            <subtree.item @key="item11" as |subitem|>
+              <subitem.content>item1.1</subitem.content>
+              <subitem.subtree class="item11-tree" as |subsubtree|>
+                <subsubtree.item as |subsubitem|>
+                  <subsubitem.content>item1.1.1</subsubitem.content>
+                </subsubtree.item>
+              </subitem.subtree>
+            </subtree.item>
+          </item.subtree>
+        </tree.item>
+      </OneTree>
     `);
 
     const parentItemTree = find('.item1-tree');
@@ -218,19 +222,19 @@ describe('Integration | Component | one-tree', function () {
 
   it('filters items', async function () {
     await render(hbs `
-      {{#one-tree searchQuery="item2" as |tree|}}
-        {{#tree.item class="item1" as |item|}}
-          {{#item.content}}item1aaa{{/item.content}}
-          {{#item.subtree as |subtree|}}
-            {{#subtree.item class="item11" as |subitem|}}
-              {{#subitem.content}}item1.1{{/subitem.content}}
-            {{/subtree.item}}
-          {{/item.subtree}}
-        {{/tree.item}}
-        {{#tree.item class="item2" as |item|}}
-          {{#item.content}}item2{{/item.content}}
-        {{/tree.item}}
-      {{/one-tree}}
+      <OneTree @searchQuery="item2" as |tree|>
+        <tree.item class="item1" as |item|>
+          <item.content>item1aaa</item.content>
+          <item.subtree as |subtree|>
+            <subtree.item class="item11" as |subitem|>
+              <subitem.content>item1.1</subitem.content>
+            </subtree.item>
+          </item.subtree>
+        </tree.item>
+        <tree.item class="item2" as |item|>
+          <item.content>item2</item.content>
+        </tree.item>
+      </OneTree>
     `);
 
     expect(find('.item1')).to.have.class('collapse-hidden');
@@ -238,16 +242,16 @@ describe('Integration | Component | one-tree', function () {
 
   it('does not filter nested items in items, that match', async function () {
     await render(hbs `
-      {{#one-tree searchQuery="item1" as |tree|}}
-        {{#tree.item class="item1" as |item|}}
-          {{#item.content}}item1aaa{{/item.content}}
-          {{#item.subtree as |subtree|}}
-            {{#subtree.item class="item11" as |subitem|}}
-              {{#subitem.content}}abc{{/subitem.content}}
-            {{/subtree.item}}
-          {{/item.subtree}}
-        {{/tree.item}}
-      {{/one-tree}}
+      <OneTree @searchQuery="item1" as |tree|>
+        <tree.item class="item1" as |item|>
+          <item.content>item1aaa</item.content>
+          <item.subtree as |subtree|>
+            <subtree.item class="item11" as |subitem|>
+              <subitem.content>abc</subitem.content>
+            </subtree.item>
+          </item.subtree>
+        </tree.item>
+      </OneTree>
     `);
 
     expect(find('.item11')).to.not.have.class('collapse-hidden');
@@ -255,21 +259,21 @@ describe('Integration | Component | one-tree', function () {
 
   it('highlights parents of items matched by filter', async function () {
     await render(hbs `
-      {{#one-tree searchQuery="item1" as |tree|}}
-        {{#tree.item as |item|}}
-          {{#item.content class="item1-content"}}item1{{/item.content}}
-          {{#item.subtree as |subtree|}}
-            {{#subtree.item as |subitem|}}
-              {{#subitem.content class="item11-content"}}item1a{{/subitem.content}}
-              {{#subitem.subtree as |sub2tree|}}
-                {{#sub2tree.item as |sub2item|}}
-                  {{#sub2item.content class="item111-content"}}abc{{/sub2item.content}}
-                {{/sub2tree.item}}
-              {{/subitem.subtree}}
-            {{/subtree.item}}
-          {{/item.subtree}}
-        {{/tree.item}}
-      {{/one-tree}}
+      <OneTree @searchQuery="item1" as |tree|>
+        <tree.item as |item|>
+          <item.content class="item1-content">item1</item.content>
+          <item.subtree as |subtree|>
+            <subtree.item as |subitem|>
+              <subitem.content class="item11-content">item1a</subitem.content>
+              <subitem.subtree as |sub2tree|>
+                <sub2tree.item as |sub2item|>
+                  <sub2item.content class="item111-content">abc</sub2item.content>
+                </sub2tree.item>
+              </subitem.subtree>
+            </subtree.item>
+          </item.subtree>
+        </tree.item>
+      </OneTree>
     `);
 
     expect(find('.item1-content')).to.have.class('semibold');
