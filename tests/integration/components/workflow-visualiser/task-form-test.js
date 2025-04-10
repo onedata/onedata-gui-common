@@ -1582,7 +1582,7 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
 async function renderComponent() {
   await render(hbs `<WorkflowVisualiser::TaskForm
     @mode={{mode}}
-    @task={{task}}
+    @task={{this.task}}
     @atmLambda={{atmLambda}}
     @atmLambdaRevisionNumber={{atmLambdaRevisionNumber}}
     @definedStores={{definedStores}}
