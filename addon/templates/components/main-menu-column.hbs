@@ -1,23 +1,27 @@
-{{#perfect-scrollbar-element
-  tagName="div"
+<PerfectScrollbarElement
+  @tagName="div"
   class="main-menu-content"
-  onScroll=(action "scrollOccurred")
-  suppressScrollX=true}}
+  @onScroll={{action "scrollOccurred"}}
+  @suppressScrollX={{true}}
+>
   <div class="row row-onedata-logo full-width">
-    <div class="onedata-logo">{{one-animated-logo opened=isExpanded}}</div>
+    <div class="onedata-logo"><OneAnimatedLogo @opened={{isExpanded}} /></div>
   </div>
   <div class="row row-main-menu full-width">
-    {{main-menu
-      items=(reject-by "stickyBottom" mainMenuItems)
-      itemClicked=(action "mainMenuItemClicked")}}
+    <MainMenu
+      @items={{reject-by "stickyBottom" mainMenuItems}}
+      @itemClicked={{action "mainMenuItemClicked"}}
+    />
   </div>
-{{/perfect-scrollbar-element}}
+</PerfectScrollbarElement>
 <div class="row row-account-button">
   <div class="groove-border"></div>
-  {{main-menu
-    items=(filter-by "stickyBottom" mainMenuItems)
-    itemClicked=(action "mainMenuItemClicked")}}
-  {{user-account-button
-    isActive=(eq navigationState.activeResourceType "users")
-    onMenuOpened=(action "userAccountPopoverOpened")}}
+  <MainMenu
+    @items={{filter-by "stickyBottom" mainMenuItems}}
+    @itemClicked={{action "mainMenuItemClicked"}}
+  />
+  <UserAccountButton
+    @isActive={{eq navigationState.activeResourceType "users"}}
+    @onMenuOpened={{action "userAccountPopoverOpened"}}
+  />
 </div>

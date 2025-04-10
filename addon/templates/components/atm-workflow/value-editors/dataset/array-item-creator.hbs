@@ -5,15 +5,15 @@
     onRemove=(action "idProvidingCancelled")
   }}
 {{else}}
-  {{#atm-workflow/value-editors/dataset/selector
+  <AtmWorkflow::ValueEditors::Dataset::Selector
     class="add-item-trigger"
-    atmDataSpec=itemAtmDataSpec
-    editorContext=editorContext
-    allowManyDatasets=true
-    isDisabled=isDisabled
-    onDatasetsSelected=(action "datasetsSelected")
-    onIdProvidingStarted=(action "idProvidingStarted")
-  }}
+    @atmDataSpec={{itemAtmDataSpec}}
+    @editorContext={{editorContext}}
+    @allowManyDatasets={{true}}
+    @isDisabled={{isDisabled}}
+    @onDatasetsSelected={{action "datasetsSelected"}}
+    @onIdProvidingStarted={{action "idProvidingStarted"}}
+  >
     {{tt this "label"}}
-  {{/atm-workflow/value-editors/dataset/selector}}
+  </AtmWorkflow::ValueEditors::Dataset::Selector>
 {{/if}}

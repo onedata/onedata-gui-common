@@ -4,18 +4,18 @@
 {{#unless (eq queryProperty.type "symbol")}}
   <dd class="property-comparison">
     <span class="comparator">{{tt this (concat "comparators." comparator)}}</span>
-    {{query-builder/condition-comparator-value-editor
-      queryProperty=queryProperty
-      valuesBuilder=valuesBuilder
-      mode=(if isReadOnly "view" mode)
-      comparator=comparator
-      value=(if (eq mode "edit") editComparatorValue queryBlock.comparatorValue)
-      isValueInvalid=(not isEditComparatorValueValid)
-      onStartEdit=(action "startEdit")
-      onValueChange=(action "comparatorValueChange")
-      onFinishEdit=(action "finishEdit")
-      onCancelEdit=(action "cancelEdit")
-    }}
+    <QueryBuilder::ConditionComparatorValueEditor
+      @queryProperty={{queryProperty}}
+      @valuesBuilder={{valuesBuilder}}
+      @mode={{if isReadOnly "view" mode}}
+      @comparator={{comparator}}
+      @value={{if (eq mode "edit") editComparatorValue queryBlock.comparatorValue}}
+      @isValueInvalid={{not isEditComparatorValueValid}}
+      @onStartEdit={{action "startEdit"}}
+      @onValueChange={{action "comparatorValueChange"}}
+      @onFinishEdit={{action "finishEdit"}}
+      @onCancelEdit={{action "cancelEdit"}}
+    />
   </dd>
 {{/unless}}
 {{yield}}

@@ -5,10 +5,7 @@
   {{tt this (concat "text1Suffix." serverType)}}
 </p>
 <p>
-  {{clipboard-line
-    value=connectionUrl
-    size="sm"
-  }}
+  <ClipboardLine @value={{connectionUrl}} @size="sm" />
 </p>
 <p>
   {{tt this "text2"}}

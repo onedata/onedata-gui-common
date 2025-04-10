@@ -1,12 +1,12 @@
-{{json-editor
-  disabled=(not isEffectivelyEnabled)
-  isReadOnly=isInViewMode
-  value=value
-  placeholder=placeholder
-  isErrorMsgVisible=false
-  useBootstrapClasses=false
-  inputId=fieldId
-  onChange=(action "valueChanged")
-  onFocusLost=(action "focusLost")
-}}
+<JsonEditor
+  @disabled={{not isEffectivelyEnabled}}
+  @isReadOnly={{isInViewMode}}
+  @value={{value}}
+  @placeholder={{placeholder}}
+  @isErrorMsgVisible={{false}}
+  @useBootstrapClasses={{false}}
+  @inputId={{fieldId}}
+  @onChange={{action "valueChanged"}}
+  @onFocusLost={{action "focusLost"}}
+/>
 {{yield}}

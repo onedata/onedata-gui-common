@@ -2,7 +2,7 @@
   <label class={{concat "control-label " layoutConfig.formLabelColumns}}>
     {{field.label}}:
     {{#if field.tip}}
-      {{one-label-tip title=field.tip class="form-field-right-addon"}}
+      <OneLabelTip @title={{field.tip}} class="form-field-right-addon" />
     {{/if}}
   </label>
   <span class={{concat-classes
@@ -12,18 +12,15 @@
     layoutConfig.formInputColumns
   }}>
     {{#if (eq (data-type value) "boolean")}}
-      {{one-way-toggle
-        checked=value
-        isReadOnly=true
-      }}
+      <OneWayToggle @checked={{value}} @isReadOnly={{true}} />
     {{else}}
       {{#if fakePassword}}
         {{fake-password}}
       {{else if field.copyable}}
-        {{one-clipboard-line
-          value=(one-form-field-formatter value field.format)
-          size="sm"
-        }}
+        <OneClipboardLine
+          @value={{one-form-field-formatter value field.format}}
+          @size="sm"
+        />
       {{else}}
         {{one-form-field-formatter value field.format}}
         {{#if field.rightText}}<span class="field-suffix">{{field.rightText}}</span>{{/if}}

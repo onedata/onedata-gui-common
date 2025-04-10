@@ -7,32 +7,29 @@
     class="record-info-trigger popover-info-trigger"
     onclick={{action "recordInfoClick"}}
   >
-    {{flippable-icons
-      iconName=icon
-      iconColor=iconColor
-      isHovered=hasRecordInfoHovered
-      suppressFlipping=recordInfoOpened
-    }}
+    <FlippableIcons
+      @iconName={{icon}}
+      @iconColor={{iconColor}}
+      @isHovered={{hasRecordInfoHovered}}
+      @suppressFlipping={{recordInfoOpened}}
+    />
   </div>
-  {{#truncated-string
-    tagName="div"
-    class="record-text-container"
-  }}
+  <TruncatedString @tagName="div" class="record-text-container">
     {{#if record.name}}
-      {{record-name record=record}}
+      <RecordName @record={{record}} />
     {{else}}
       —
     {{/if}}
-  {{/truncated-string}}
+  </TruncatedString>
 </div>
 {{#if recordType}}
-  {{#record-info-popover
-    isOpened=recordInfoOpened
-    triggerSelector=(concat "#" elementId " .record-info-trigger")
-  }}
+  <RecordInfoPopover
+    @isOpened={{recordInfoOpened}}
+    @triggerSelector={{concat "#" elementId " .record-info-trigger"}}
+  >
     {{component (concat recordType "-info-content")
       record=record
       errorReason=errorReason
     }}
-  {{/record-info-popover}}
+  </RecordInfoPopover>
 {{/if}}

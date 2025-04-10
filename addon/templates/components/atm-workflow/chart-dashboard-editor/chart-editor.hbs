@@ -1,12 +1,10 @@
-{{atm-workflow/chart-dashboard-editor/chart-editor/elements
-  chart=chart
-  editorContext=editorContext
-}}
-{{atm-workflow/chart-dashboard-editor/chart-editor/preview
-  chart=chart
-}}
-{{atm-workflow/chart-dashboard-editor/chart-editor/elements-editor
-  chart=chart
-  selectedElement=selectedElement
-  editorContext=editorContext
-}}
+<AtmWorkflow::ChartDashboardEditor::ChartEditor::Elements
+  @chart={{chart}}
+  @editorContext={{editorContext}}
+/>
+<AtmWorkflow::ChartDashboardEditor::ChartEditor::Preview @chart={{chart}} />
+<AtmWorkflow::ChartDashboardEditor::ChartEditor::ElementsEditor
+  @chart={{chart}}
+  @selectedElement={{selectedElement}}
+  @editorContext={{editorContext}}
+/>

@@ -5,15 +5,15 @@
     onRemove=(action "idProvidingCancelled")
   }}
 {{else}}
-  {{#atm-workflow/value-editors/file/selector
+  <AtmWorkflow::ValueEditors::File::Selector
     class="add-item-trigger"
-    atmDataSpec=itemAtmDataSpec
-    editorContext=editorContext
-    allowManyFiles=true
-    isDisabled=isDisabled
-    onFilesSelected=(action "filesSelected")
-    onIdProvidingStarted=(action "idProvidingStarted")
-  }}
+    @atmDataSpec={{itemAtmDataSpec}}
+    @editorContext={{editorContext}}
+    @allowManyFiles={{true}}
+    @isDisabled={{isDisabled}}
+    @onFilesSelected={{action "filesSelected"}}
+    @onIdProvidingStarted={{action "idProvidingStarted"}}
+  >
     {{tt this "label"}}
-  {{/atm-workflow/value-editors/file/selector}}
+  </AtmWorkflow::ValueEditors::File::Selector>
 {{/if}}

@@ -1,27 +1,27 @@
-{{#render-later triggerRender=open}}
-  {{#one-webui-popover
+<RenderLater @triggerRender={{open}}>
+  <OneWebuiPopover
     class="block-settings-popover"
-    popoverStyle="unlimited-width one-webui-popover-block-settings"
-    onHide=(action "close")
-    padding=true
-    placement=popoverPlacement
-    triggerSelector=triggerSelector
-    open=open
+    @popoverStyle="unlimited-width one-webui-popover-block-settings"
+    @onHide={{action "close"}}
+    @padding={{true}}
+    @placement={{popoverPlacement}}
+    @triggerSelector={{triggerSelector}}
+    @open={{open}}
     as |popover|
-  }}
-    {{#click-outside
+  >
+    <ClickOutside
       class="click-outside"
-      onClickOutside=popover.hide
-      exceptSelector=clickOutsideExceptSelector
-    }}
-      {{query-builder/block-selector
-        mode="edit"
-        operators=operators
-        editBlock=queryBlock
-        editParentBlock=parentQueryBlock
-        selectionDone=(not open)
-        onBlockReplace=(action "blockReplace" (action (mut open) false))
-      }}
-    {{/click-outside}}
-  {{/one-webui-popover}}
-{{/render-later}}
+      @onClickOutside={{popover.hide}}
+      @exceptSelector={{clickOutsideExceptSelector}}
+    >
+      <QueryBuilder::BlockSelector
+        @mode="edit"
+        @operators={{operators}}
+        @editBlock={{queryBlock}}
+        @editParentBlock={{parentQueryBlock}}
+        @selectionDone={{not open}}
+        @onBlockReplace={{action "blockReplace" (action (mut open) false)}}
+      />
+    </ClickOutside>
+  </OneWebuiPopover>
+</RenderLater>

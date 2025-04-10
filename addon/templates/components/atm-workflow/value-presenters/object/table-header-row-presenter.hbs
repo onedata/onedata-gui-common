@@ -2,7 +2,7 @@
 {{#if columns.length}}
   {{#each columns as |column|}}
     <th class="column-object-property">
-      {{#truncated-string}}{{column}}{{/truncated-string}}
+      <TruncatedString>{{column}}</TruncatedString>
     </th>
   {{/each}}
 {{else}}

@@ -5,16 +5,16 @@
     <div class="icon-dot"></div>
     <div class="icon-dot"></div>
   </div>
-  {{#render-later triggerRender=(or dropdownOpened renderImmediately)}}
-    {{#one-webui-popover
-      class=(concat "one-collapsible-toolbar-popover popover-" elementId)
-      placement=dropdownPlacement
-      popoverStyle=(concat-classes "with-dropdown" popoverClass)
-      padding=false
-      triggerSelector=(concat "#" (concat elementId " .collapsible-toolbar-toggle"))
-      open=dropdownOpened
+  <RenderLater @triggerRender={{or dropdownOpened renderImmediately}}>
+    <OneWebuiPopover
+      class={{concat "one-collapsible-toolbar-popover popover-" elementId}}
+      @placement={{dropdownPlacement}}
+      @popoverStyle={{concat-classes "with-dropdown" popoverClass}}
+      @padding={{false}}
+      @triggerSelector={{concat "#" (concat elementId " .collapsible-toolbar-toggle")}}
+      @open={{dropdownOpened}}
       as |popover|
-    }}
+    >
       <ul class="dropdown-menu actions-popover-content">
         {{yield (hash
           item=(component 'one-collapsible-toolbar-item'
@@ -24,14 +24,14 @@
           )
         )}}
       </ul>
-    {{/one-webui-popover}}
-  {{/render-later}}
+    </OneWebuiPopover>
+  </RenderLater>
 {{/if}}
 
-{{#render-later triggerRender=(or (not isMinimized) renderImmediately)}}
+<RenderLater @triggerRender={{or (not isMinimized) renderImmediately}}>
   <span class="collapsible-toolbar-buttons {{if isInternallyMinimized "hidden"}}">
     {{yield (hash
       item=(component 'one-collapsible-toolbar-item' isMinimized=false
       ))}}
   </span>
-{{/render-later}}
+</RenderLater>

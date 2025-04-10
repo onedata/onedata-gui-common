@@ -1,15 +1,15 @@
 {{#if (eq _renderMode "popover")}}
   <div>
-    {{#one-webui-popover
-      class=_popoverClass
-      placement=popoverPlacement
-      padding=popoverPadding
-      popoverStyle=popoverStyle
-      triggerSelector=_activeTriggerConfiguration.selector
-      open=_contentVisible
-      animation=null
-      windowEvent=popoverWindowEvent
-    }}
+    <OneWebuiPopover
+      class={{_popoverClass}}
+      @placement={{popoverPlacement}}
+      @padding={{popoverPadding}}
+      @popoverStyle={{popoverStyle}}
+      @triggerSelector={{_activeTriggerConfiguration.selector}}
+      @open={{_contentVisible}}
+      @animation={{null}}
+      @windowEvent={{popoverWindowEvent}}
+    >
       {{yield (hash
         modal=(hash
           header=(component "one-generic-component" class="switchable-popover-header")
@@ -19,16 +19,16 @@
         close=(action "close")
         submit=(action "submit")
       )}}
-    {{/one-webui-popover}}
+    </OneWebuiPopover>
   </div>
 {{else if (eq _renderMode "modal")}}
-  {{#one-modal
-    open=_contentVisible
-    onHide=(action "onModalHide")
-    class=_modalClass
-    transitionDuration=modalTransitionDuration
+  <OneModal
+    @open={{_contentVisible}}
+    @onHide={{action "onModalHide"}}
+    class={{_modalClass}}
+    @transitionDuration={{modalTransitionDuration}}
     as |modal|
-  }}
+  >
     {{#if (eq layoutType "modal")}}
       {{yield (hash
         modal=modal
@@ -36,12 +36,12 @@
         submit=(action "submit")
       )}}
     {{else}}
-      {{#modal.body}}
+      <modal.body>
         {{yield (hash
           close=(action "close")
           submit=(action "submit")
         )}}
-      {{/modal.body}}
+      </modal.body>
     {{/if}}
-  {{/one-modal}}
+  </OneModal>
 {{/if}}

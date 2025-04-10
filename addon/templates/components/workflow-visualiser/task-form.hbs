@@ -1,4 +1,4 @@
 <form class="form form-horizontal form-component" onSubmit={{action "formNativeSubmit"}}>
-  {{form-component/field-renderer field=fields}}
+  <FormComponent::FieldRenderer @field={{fields}} />
 </form>
 {{yield}}

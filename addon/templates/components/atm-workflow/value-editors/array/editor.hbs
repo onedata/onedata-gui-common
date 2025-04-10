@@ -1,13 +1,15 @@
-{{#atm-workflow/value-editors/commons/editor-box
-  editorState=editorState
-  onRemove=onRemove
-  class=(if (eq mode "raw") (concat-classes
-    "editor-with-json"
-    (if (not isValid) "invalid")
-  ))
-  removeConfirmationQuestion=(if isThereSomethingToClear (tt this "removeConfirmationQuestion") null)
+<AtmWorkflow::ValueEditors::Commons::EditorBox
+  @editorState={{editorState}}
+  @onRemove={{onRemove}}
+  class={{if (eq mode "raw")
+    (concat-classes "editor-with-json" (if (not isValid) "invalid"))
+  }}
+  @removeConfirmationQuestion={{if isThereSomethingToClear
+    (tt this "removeConfirmationQuestion")
+    null
+  }}
   as |editorBox|
-}}
+>
   {{#if (eq editorBox.section "toolbar")}}
     <a
       class="mode-trigger action-link {{if isToggleModeDisabled "disabled" "clickable"}}"
@@ -15,7 +17,7 @@
     >
       {{tt this (concat "modes." (if (eq mode "visual") "raw" "visual"))}}
       {{#if (and isToggleModeDisabled toggleModeDisabledTip)}}
-        {{one-tooltip title=toggleModeDisabledTip}}
+        <OneTooltip @title={{toggleModeDisabledTip}} />
       {{/if}}
     </a>
     {{#if (eq mode "visual")}}
@@ -30,13 +32,13 @@
         {{action "toggleClearConfirmation" (not isClearConfirmationOpened)}}
       >
         {{tt this "clear"}}
-        {{remove-ack-popover
-          triggerSelector=clearTriggerSelector
-          isOpened=isClearConfirmationOpened
-          question=(tt this "clearConfirmationQuestion")
-          onConfirm=(action "confirmClear")
-          onClose=(action "toggleClearConfirmation" false)
-        }}
+        <RemoveAckPopover
+          @triggerSelector={{clearTriggerSelector}}
+          @isOpened={{isClearConfirmationOpened}}
+          @question={{tt this "clearConfirmationQuestion"}}
+          @onConfirm={{action "confirmClear"}}
+          @onClose={{action "toggleClearConfirmation" false}}
+        />
       </a>
     {{/if}}
   {{else if (eq editorBox.section "content")}}
@@ -105,23 +107,23 @@
         onItemsCreated=(action "itemCreated")
       }}
     {{else}}
-      {{ember-ace
-        editorClass="full-height"
-        value=stringifiedValue
-        worker="ace/mode/json_worker"
-        mode="ace/mode/json"
-        theme="ace/theme/textmate"
-        tabSize=2
-        useWrapMode=true
-        highlightActiveLine=true
-        showLineNumbers=true
-        showPrintMargin=false
-        update=(action "rawValueChanged")
-        readOnly=isDisabled
-      }}
+      <EmberAce
+        @editorClass="full-height"
+        @value={{stringifiedValue}}
+        @worker="ace/mode/json_worker"
+        @mode="ace/mode/json"
+        @theme="ace/theme/textmate"
+        @tabSize={{2}}
+        @useWrapMode={{true}}
+        @highlightActiveLine={{true}}
+        @showLineNumbers={{true}}
+        @showPrintMargin={{false}}
+        @update={{action "rawValueChanged"}}
+        @readOnly={{isDisabled}}
+      />
       {{#if rawEditorValidationError}}
         <div class="form-message text-danger">{{rawEditorValidationError}}</div>
       {{/if}}
     {{/if}}
   {{/if}}
-{{/atm-workflow/value-editors/commons/editor-box}}
+</AtmWorkflow::ValueEditors::Commons::EditorBox>

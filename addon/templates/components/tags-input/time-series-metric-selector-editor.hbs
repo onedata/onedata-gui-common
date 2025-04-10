@@ -1,19 +1,19 @@
-{{#one-webui-popover
+<OneWebuiPopover
   class="tags-selector time-series-metric-selector"
-  open=true
-  triggerSelector=(concat "#" elementId)
-  arrow=false
-  registerApi=(action (mut popoverApi))
-  padding=false
-  placement="vertical"
-  popoverStyle="tags-selector"
+  @open={{true}}
+  @triggerSelector={{concat "#" elementId}}
+  @arrow={{false}}
+  @registerApi={{action (mut popoverApi)}}
+  @padding={{false}}
+  @placement="vertical"
+  @popoverStyle="tags-selector"
   as |popover|
-}}
-  {{#click-outside
+>
+  <ClickOutside
     class="selector-container"
-    onClickOutside=onEndTagCreation
-    exceptSelector=popoverClickOutsideIgnoreSelector
-  }}
+    @onClickOutside={{onEndTagCreation}}
+    @exceptSelector={{popoverClickOutsideIgnoreSelector}}
+  >
 
     <div class="aggregator-dropdown">
       <OneDropdown
@@ -27,36 +27,36 @@
         as |option|
       >
         <div class="option-container">
-          {{#truncated-string class="text"}}
+          <TruncatedString class="text">
             {{option.label}}
-          {{/truncated-string}}
+          </TruncatedString>
         </div>
       </OneDropdown>
     </div>
 
-    {{#bs-button-group
-      value=selectedView
+    <BsButtonGroup
+      @value={{selectedView}}
       class="view-selector btn-group-justified"
-      type="radio"
-      onChange=(action (mut selectedView))
+      @type="radio"
+      @onChange={{action (mut selectedView)}}
       as |bg|
-    }}
+    >
       {{#each (array "presets" "custom") as |viewName|}}
         <div class="btn-group" role="group">
-          {{#bg.button
-            type="default"
-            class=(concat "btn-sm btn-" viewName)
-            value=viewName
-          }}
+          <bg.button
+            @type="default"
+            class={{concat "btn-sm btn-" viewName}}
+            @value={{viewName}}
+          >
             {{tt this (concat "view." viewName)}}
-          {{/bg.button}}
+          </bg.button>
         </div>
       {{/each}}
-    {{/bs-button-group}}
+    </BsButtonGroup>
 
     <hr class="content-separator">
 
-    {{#perfect-scrollbar-element}}
+    <PerfectScrollbarElement>
       {{#if (eq selectedView "presets")}}
         {{#if tagsToRender.length}}
             <ul class="selector-list">
@@ -65,9 +65,11 @@
                   class="selector-item {{if tag.disabledReason "disabled"}}"
                   {{action "tagSelected" tag}}
                 >
-                  {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
+                  <TruncatedString class="tag-label">{{tag.label}}</TruncatedString>
                   {{#if tag.disabledReason}}
-                    {{one-tooltip title=(tt this (concat "disabled." tag.disabledReason))}}
+                    <OneTooltip
+                      @title={{tt this (concat "disabled." tag.disabledReason)}}
+                    />
                   {{/if}}
                 </li>
               {{/each}}
@@ -77,18 +79,18 @@
         {{/if}}
       {{else}}
         <form class="form form-horizontal form-component">
-          {{form-component/field-renderer field=customMetricFields}}
-          {{#one-button
-            size="sm"
-            type="primary"
+          <FormComponent::FieldRenderer @field={{customMetricFields}} />
+          <OneButton
+            @size="sm"
+            @type="primary"
             class="submit-custom-metric pull-right"
-            disabled=(not customMetricFields.isValid)
-            onClick=(action "submitCustomMetric")
-          }}
+            @disabled={{not customMetricFields.isValid}}
+            @onClick={{action "submitCustomMetric"}}
+          >
             {{tt this "submitCustomMetric"}}
-          {{/one-button}}
+          </OneButton>
         </form>
       {{/if}}
-    {{/perfect-scrollbar-element}}
-  {{/click-outside}}
-{{/one-webui-popover}}
+    </PerfectScrollbarElement>
+  </ClickOutside>
+</OneWebuiPopover>

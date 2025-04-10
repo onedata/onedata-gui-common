@@ -1,4 +1,9 @@
-<OneDraggableObject @content={{lane}} @dragHandle=".lane-drag-handle" @isDraggable={{eq mode "edit"}} class="draggable-lane">
+<OneDraggableObject
+  @content={{lane}}
+  @dragHandle=".lane-drag-handle"
+  @isDraggable={{eq mode "edit"}}
+  class="draggable-lane"
+>
   <div class="lane-header">
     <div class="lane-menu-trigger-space lane-drag-handle">
       {{#if (eq mode "edit")}}

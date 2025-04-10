@@ -1,17 +1,17 @@
-{{#infinite-scroll-table
-  onFetchEntries=onFetchEntries
-  columnsCount=columnsCount
-  rowHeight=50
-  noEntriesText=(or noLogEntriesText (tt this "noLogEntries"))
-  noEntriesTip=(tt this "noLogEntriesTip")
-  title=title
-  titleTip=titleTip
-  titleTipClassName=titleTipClassName
-  doesOpenDetailsOnClick=doesOpenDetailsOnClick
-  renderEntriesOneByOne=renderEntriesOneByOne
-  updateStrategy=updateStrategy
+<InfiniteScrollTable
+  @onFetchEntries={{onFetchEntries}}
+  @columnsCount={{columnsCount}}
+  @rowHeight={{50}}
+  @noEntriesText={{or noLogEntriesText (tt this "noLogEntries")}}
+  @noEntriesTip={{tt this "noLogEntriesTip"}}
+  @title={{title}}
+  @titleTip={{titleTip}}
+  @titleTipClassName={{titleTipClassName}}
+  @doesOpenDetailsOnClick={{doesOpenDetailsOnClick}}
+  @renderEntriesOneByOne={{renderEntriesOneByOne}}
+  @updateStrategy={{updateStrategy}}
   as |section|
-}}
+>
   {{#if (eq section.sectionName "tableHead")}}
 
     <tr>
@@ -42,12 +42,12 @@
       data-row-id={{section.dataRowId}}
       onclick={{section.onRowClick}}
     >
-      {{audit-log-browser/timestamp-cell
-        logEntry=section.entry
-        isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
-      }}
+      <AuditLogBrowser::TimestampCell
+        @logEntry={{section.entry}}
+        @isTimestampRoundedToSeconds={{isTimestampRoundedToSeconds}}
+      />
       {{#if isSeverityColumnVisible}}
-        {{audit-log-browser/severity-cell logEntry=section.entry}}
+        <AuditLogBrowser::SeverityCell @logEntry={{section.entry}} />
       {{/if}}
 
       {{yield section.entry}}
@@ -61,4 +61,4 @@
     }}
 
   {{/if}}
-{{/infinite-scroll-table}}
+</InfiniteScrollTable>

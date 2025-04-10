@@ -1,8 +1,9 @@
-{{one-dynamic-tree
+<OneDynamicTree
   class="border-dashed"
-  definition=initialTreeState
-  compareValues=comparePrivileges
-  overrideValues=overridePrivileges
-  disabledFieldsPaths=treeDisabledPaths
-  valuesChanged=(action "treeValuesChanged")}}
+  @definition={{initialTreeState}}
+  @compareValues={{comparePrivileges}}
+  @overrideValues={{overridePrivileges}}
+  @disabledFieldsPaths={{treeDisabledPaths}}
+  @valuesChanged={{action "treeValuesChanged"}}
+/>
 {{yield}}

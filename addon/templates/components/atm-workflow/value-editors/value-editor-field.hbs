@@ -1,25 +1,21 @@
 {{#if isValueCreatorButtonVisible}}
   <span class="btn-tooltip-container">
-    {{#one-button
-      type="default"
-      size="sm"
+    <OneButton
+      @type="default"
+      @size="sm"
       class="create-value-btn"
-      disabled=(or isInViewMode (not isEffectivelyEnabled) hasInvalidAtmDataSpec)
-      onClick=(action "createValue")
-    }}
+      @disabled={{or isInViewMode (not isEffectivelyEnabled) hasInvalidAtmDataSpec}}
+      @onClick={{action "createValue"}}
+    >
       {{valueCreatorButtonLabel}}
-    {{/one-button}}
+    </OneButton>
     {{#if hasInvalidAtmDataSpec}}
-      {{one-tooltip title=invalidAtmDataSpecMessage}}
+      <OneTooltip @title={{invalidAtmDataSpecMessage}} />
     {{/if}}
   </span>
 {{else}}
-  {{atm-workflow/value-editors/full-value-editor
-    stateManager=editorStateManager
-    onRemove=(if
-      (and isInEditMode isEffectivelyEnabled isClearable)
-      (action "removeValue")
-      null
-    )
-  }}
+  <AtmWorkflow::ValueEditors::FullValueEditor
+    @stateManager={{editorStateManager}}
+    @onRemove={{if (and isInEditMode isEffectivelyEnabled isClearable) (action "removeValue") null}}
+  />
 {{/if}}
