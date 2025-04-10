@@ -3,14 +3,14 @@
     <OneIcon @icon={{_bulletIcon}} />
   </div>
   {{yield (hash
-    content=(component 'one-tree/item/content' 
+    content=(component "one-tree/item/content"
       _showAction=(action "show" key)
       hasSubtree=_hasSubtree
       itemFilteredOut=(action "itemFilteredOut")
       isSubtreeFilteredOut=_subtreeFilteredOut
       searchQuery=searchQuery
     )
-    subtree=(component 'one-tree' 
+    subtree=(component "one-tree"
       key=key
       collapseRecursively=collapseRecursively
       treeFilteredOut=(action "subtreeFilteredOut")

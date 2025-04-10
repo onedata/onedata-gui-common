@@ -26,7 +26,7 @@
         >
           <OneDynamicTree::Node::Field
             @field={{_field}}
-            @value={{get values _path}}
+            @value={{get this.values _path}}
             @inputChanged={{action inputValueChanged _path}}
             @focusedOut={{action inputFocusedOut _path}}
             @inputId={{concat parentView.elementId inputId}}
@@ -39,10 +39,9 @@
           <OneDynamicTree::Node::Field
             @field={{_selectCheckboxesField}}
             @value={{_areNestedCheckboxesSelected}}
-            @inputChanged={{action
-              selectNestedCheckboxes
+            @inputChanged={{action selectNestedCheckboxes
               (dot-to-dash _path)
-              (if (eq _areNestedCheckboxesSelected 2)
+              (if  (eq _areNestedCheckboxesSelected 2)
                 true
                 (not _areNestedCheckboxesSelected)
               )
@@ -61,7 +60,7 @@
             @bsForm={{this.bsForm}}
             @parentTree={{subtree}}
             @parentPath={{_path}}
-            @values={{values}}
+            @values={{this.values}}
             @fields={{fields}}
             @modificationState={{get
               (get modificationState "nodes")

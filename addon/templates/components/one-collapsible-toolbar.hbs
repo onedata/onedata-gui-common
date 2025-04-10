@@ -17,7 +17,7 @@
     >
       <ul class="dropdown-menu actions-popover-content">
         {{yield (hash
-          item=(component 'one-collapsible-toolbar-item'
+          item=(component "one-collapsible-toolbar-item"
             tagName="li"
             isMinimized=true
             closeDropdown=(action "closeDropdown")
@@ -31,7 +31,7 @@
 <RenderLater @triggerRender={{or (not isMinimized) renderImmediately}}>
   <span class="collapsible-toolbar-buttons {{if isInternallyMinimized "hidden"}}">
     {{yield (hash
-      item=(component 'one-collapsible-toolbar-item' isMinimized=false
+      item=(component "one-collapsible-toolbar-item" isMinimized=false
       ))}}
   </span>
 </RenderLater>
