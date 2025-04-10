@@ -44,8 +44,24 @@
 >
   <OneIcon @icon="navigate-last" />
 </button>
-<div class="pages-control-page-size">
-  <span class="pages-control-page-size-number">{{pageSize}}</span>
+<div class={{concat-classes
+  "pages-control-page-size"
+  (if isPerPageControlDropdown "with-dropdown")
+}}>
+  {{#if isPerPageControlDropdown}}
+    <OneDropdown
+      @triggerClass="small pages-control-page-size-dropdown"
+      @dropdownClass="small"
+      @options={{array 10 20 50 100}}
+      @selected={{pageSize}}
+      @onChange={{action "perPageChange"}}
+      as |value|
+    >
+      {{value}}
+    </OneDropdown>
+  {{else}}
+    <span class="pages-control-page-size-number">{{pageSize}}</span>
+  {{/if}}
   {{perPage}}
 </div>
 {{yield}}

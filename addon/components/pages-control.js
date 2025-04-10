@@ -51,6 +51,12 @@ export default Component.extend(I18n, {
    */
   customPerPageText: undefined,
 
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isPerPageControlDropdown: false,
+
   isFiltered: false,
 
   customFilteredText: undefined,
@@ -121,6 +127,10 @@ export default Component.extend(I18n, {
       } catch {
         // ignore wrong numbers
       }
+    },
+    perPageChange(value) {
+      this.perPageChange(value);
+      this.set('pageSize', value);
     },
   },
 });

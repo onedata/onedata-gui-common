@@ -1,4 +1,6 @@
-<span class="record-name-general">{{record.name}}</span>
 {{#if record.username}}
+  <span class="record-name-general">{{record.name}}</span>
   <span class="record-username">({{record.username}})</span>
+{{else}}
+  {{name-conflict item=record tagName="span" class="record-name-general"}}
 {{/if}}
