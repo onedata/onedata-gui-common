@@ -4,32 +4,37 @@
 
 <div class="row"
   style="position: relative; height: 200px; border: 1px solid green;">
-  {{#promise-proxy-container proxy=resolvingProxy}}
+  <PromiseProxyContainer @proxy={{resolvingProxy}}>
     Hello world
-  {{/promise-proxy-container}}
+  </PromiseProxyContainer>
 </div>
 
 <div class="row"
   style="position: relative; height: 200px; border: 1px solid red;">
-  {{#promise-proxy-container proxy=rejectingProxy}}
+  <PromiseProxyContainer @proxy={{rejectingProxy}}>
     Bad world
-  {{/promise-proxy-container}}
+  </PromiseProxyContainer>
 </div>
 
 <div class="row"
   style="position: relative; height: 200px; border: 1px solid red;">
-  {{#promise-proxy-container
-    customErrorMessage="The rejecting proxy failed."
-    proxy=rejectingProxy}}
+  <PromiseProxyContainer
+    @customErrorMessage="The rejecting proxy failed."
+    @proxy={{rejectingProxy}}
+  >
     Bad world
-  {{/promise-proxy-container}}
+  </PromiseProxyContainer>
 </div>
 
 {{#each (array "xxs" "xs" "sm" "md" "lg") as |sizeClass|}}
   <div class="row"
     style="position: relative; height: 300px; border: 1px solid black;">
-    {{#promise-proxy-container proxy=infiniteProxy loadingLabel="Loading some data..." sizeClass=sizeClass}}
+    <PromiseProxyContainer
+      @proxy={{infiniteProxy}}
+      @loadingLabel="Loading some data..."
+      @sizeClass={{sizeClass}}
+    >
       Hello world
-    {{/promise-proxy-container}}
+    </PromiseProxyContainer>
   </div>
 {{/each}}

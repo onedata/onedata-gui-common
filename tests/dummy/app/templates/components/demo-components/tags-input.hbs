@@ -1,37 +1,37 @@
 <h1>tags-input</h1>
 
 <h2>With text-editor</h2>
-{{tags-input tags=tagsText onChange=(action (mut tagsText))}}
+<TagsInput @tags={{tagsText}} @onChange={{action (mut tagsText)}} />
 
 <h2>With selector-editor</h2>
-{{tags-input
-  tags=tagsSelector
-  tagEditorComponentName="tags-input/selector-editor"
-  tagEditorSettings=selectorSettings
-  onChange=(action (mut tagsSelector))
-}}
+<TagsInput
+  @tags={{tagsSelector}}
+  @tagEditorComponentName="tags-input/selector-editor"
+  @tagEditorSettings={{selectorSettings}}
+  @onChange={{action (mut tagsSelector)}}
+/>
 
 <h2>With time-series-metric-editor</h2>
-{{tags-input
-  tags=tagsTimeSeriesMetrics
-  tagEditorComponentName="tags-input/time-series-metric-selector-editor"
-  onChange=(action (mut tagsTimeSeriesMetrics))
-}}
+<TagsInput
+  @tags={{tagsTimeSeriesMetrics}}
+  @tagEditorComponentName="tags-input/time-series-metric-selector-editor"
+  @onChange={{action (mut tagsTimeSeriesMetrics)}}
+/>
 
 <h2>Readonly</h2>
-{{tags-input tags=tags isReadOnly=true}}
+<TagsInput @tags={{tags}} @isReadOnly={{true}} />
 
 <h2>Readonly with limit</h2>
-{{tags-input tags=manyTags isReadOnly=true readonlyTagsDisplayLimit=4}}
+<TagsInput @tags={{manyTags}} @isReadOnly={{true}} @readonlyTagsDisplayLimit={{4}} />
 
 <h2>Tooltip with tags</h2>
 <p>
   <strong>
     <span>Hover me!</span>
-    {{#one-tooltip class="tooltip-items tooltip-with-tags"}}
+    <OneTooltip class="tooltip-items tooltip-with-tags">
       <ul class="tags-input">
         {{#each (repeat 50)}}<li class="tag-item">Hello</li><li class="tag-item">World</li>{{/each}}
       </ul>
-    {{/one-tooltip}}
+    </OneTooltip>
   </strong>
 </p>

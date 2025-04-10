@@ -10,18 +10,18 @@
 </p>
 
 <div style="display: grid; height: 30em; width: 50em;">
-  {{#audit-log-browser
-    title="My audit log"
-    titleTip="Some very very very very very very very very very very very very very very very very long tip"
-    titleTipClassName="tooltip-lg tooltip-text-left"
-    onFetchLogEntries=onFetchLogEntries
-    customColumnHeaders=customColumnHeaders
-    isTimestampRoundedToSeconds=isTimestampRoundedToSeconds
-    isSeverityColumnVisible=isSeverityColumnVisible
-    doesOpenDetailsOnClick=true
+  <AuditLogBrowser
+    @title="My audit log"
+    @titleTip="Some very very very very very very very very very very very very very very very very long tip"
+    @titleTipClassName="tooltip-lg tooltip-text-left"
+    @onFetchLogEntries={{onFetchLogEntries}}
+    @customColumnHeaders={{customColumnHeaders}}
+    @isTimestampRoundedToSeconds={{isTimestampRoundedToSeconds}}
+    @isSeverityColumnVisible={{isSeverityColumnVisible}}
+    @doesOpenDetailsOnClick={{true}}
     as |entry|
-  }}
+  >
     <td class="description-cell">{{entry.content.description}}</td>
     <td class="state-cell">{{entry.content.state}}</td>
-  {{/audit-log-browser}}
+  </AuditLogBrowser>
 </div>
