@@ -321,7 +321,7 @@ describe('Integration | Component | checkbox-list', function () {
   it(
     'disables and unchecks total selection state checkbox when there are no items',
     async function () {
-      await render(hbs `{{checkbox-list}}`);
+      await render(hbs `<CheckboxList />`);
 
       const headerCheckbox = find('.checkbox-list-header .one-checkbox');
       expect(headerCheckbox).to.not.have.class('checked');
