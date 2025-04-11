@@ -134,7 +134,7 @@ describe('Integration | Component | one-collapsible-list', function () {
         @selectionChanged={{action selectionChanged}}
         as |list|
       >
-        {{list.header}}
+        <list.header />
         <list.item @selectionValue={{1}} as |listItem|>
           <listItem.header>
             <h1>Some header</h1>
@@ -159,7 +159,7 @@ describe('Integration | Component | one-collapsible-list', function () {
   it('can filter items', async function () {
     await render(hbs `
       <OneCollapsibleList as |list|>
-        {{list.header}}
+        <list.header />
         <list.item as |listItem|>
           <listItem.header>
             <h1>item1</h1>
@@ -181,7 +181,7 @@ describe('Integration | Component | one-collapsible-list', function () {
   it('shows filtered out and checked items', async function () {
     await render(hbs `
       <OneCollapsibleList @hasCheckboxes={{true}} as |list|>
-        {{list.header}}
+        <list.header />
         <list.item class="item1" @selectionValue={{1}} as |listItem|>
           <listItem.header>
             <h1>item1</h1>

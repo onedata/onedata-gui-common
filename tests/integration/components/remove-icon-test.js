@@ -10,19 +10,19 @@ describe('Integration | Component | remove-icon', function () {
   setupRenderingTest();
 
   it('has class "remove-icon"', async function () {
-    await render(hbs `{{remove-icon}}`);
+    await render(hbs `<RemoveIcon />`);
 
     expect(find('.remove-icon')).to.exist;
   });
 
   it('renders proper icon', async function () {
-    await render(hbs `{{remove-icon}}`);
+    await render(hbs `<RemoveIcon />`);
 
     expect(find('.one-icon')).to.have.class('oneicon-checkbox-filled-x');
   });
 
   it('has "enabled" class if not disabled', async function () {
-    await render(hbs `{{remove-icon}}`);
+    await render(hbs `<RemoveIcon />`);
 
     expect(find('.remove-icon')).to.have.class('enabled');
   });
@@ -67,7 +67,7 @@ describe('Integration | Component | remove-icon', function () {
   });
 
   it('does not show tooltip if tooltipText property is empty', async function () {
-    await render(hbs `{{remove-icon}}`);
+    await render(hbs `<RemoveIcon />`);
 
     return triggerEvent('.remove-icon', 'mouseenter')
       .then(() => expect(globals.document.querySelector('.tooltip.in')).to.not.exist);

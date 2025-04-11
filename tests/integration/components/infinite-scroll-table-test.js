@@ -35,7 +35,7 @@ describe('Integration | Component | infinite-scroll-table', function () {
   });
 
   it('has class "infinite-scroll-table"', async function () {
-    await render(hbs`{{infinite-scroll-table}}`);
+    await render(hbs`<InfiniteScrollTable />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('infinite-scroll-table');
@@ -55,7 +55,7 @@ describe('Integration | Component | infinite-scroll-table', function () {
   });
 
   it('shows information about no entries when no "onFetchEntries" was passed', async function () {
-    await render(hbs`{{infinite-scroll-table}}`);
+    await render(hbs`<InfiniteScrollTable />`);
 
     const emptyRow = find('.table-is-empty-row');
     expect(emptyRow).to.exist;
@@ -69,7 +69,7 @@ describe('Integration | Component | infinite-scroll-table', function () {
   });
 
   it('does not render tooltip about no entries when "noEntriesTip" is not set', async function () {
-    await render(hbs`{{infinite-scroll-table}}`);
+    await render(hbs`<InfiniteScrollTable />`);
 
     expect(find('.table-is-empty-row .no-entries-tip')).to.not.exist;
   });
@@ -269,7 +269,7 @@ describe('Integration | Component | infinite-scroll-table', function () {
   });
 
   it('does not render table title when "title" is not set', async function () {
-    await render(hbs`{{infinite-scroll-table}}`);
+    await render(hbs`<InfiniteScrollTable />`);
 
     expect(find('.table-title')).to.not.exist;
   });

@@ -60,7 +60,7 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
   });
 
   it(`has class "${componentClass}"`, async function () {
-    await render(hbs `{{modals/workflow-visualiser/lane-modal/lane-form}}`);
+    await render(hbs `<Modals::WorkflowVisualiser::LaneModal::LaneForm />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class(componentClass);
@@ -477,14 +477,14 @@ describe('Integration | Component | modals/workflow-visualiser/lane-modal/lane-f
 });
 
 async function renderComponent() {
-  await render(hbs `{{modals/workflow-visualiser/lane-modal/lane-form
-    mode=mode
-    lane=lane
-    definedStores=definedStores
-    createStoreAction=createStoreAction
-    isDisabled=isDisabled
-    onChange=changeSpy
-  }}`);
+  await render(hbs `<Modals::WorkflowVisualiser::LaneModal::LaneForm
+    @mode={{mode}}
+    @lane={{lane}}
+    @definedStores={{definedStores}}
+    @createStoreAction={{createStoreAction}}
+    @isDisabled={{isDisabled}}
+    @onChange={{changeSpy}}
+  />`);
 }
 
 function itHasModeClass(mode) {

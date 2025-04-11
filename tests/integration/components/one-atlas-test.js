@@ -28,7 +28,7 @@ describe('Integration | Component | one-atlas', function () {
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     await render(hbs `
       <div style={{parentStyle}}>
-        {{one-atlas}}
+        <OneAtlas />
       </div>
     `);
 
@@ -45,7 +45,7 @@ describe('Integration | Component | one-atlas', function () {
     this.set('parentStyle', htmlSafe(`width: ${width}px; height: ${height}px`));
     await render(hbs `
       <div style={{parentStyle}}>
-        {{one-atlas}}
+        <OneAtlas />
       </div>
     `);
 
@@ -60,7 +60,7 @@ describe('Integration | Component | one-atlas', function () {
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     await render(hbs `
       <div style={{parentStyle}}>
-        {{one-atlas}}
+        <OneAtlas />
       </div>
     `);
 

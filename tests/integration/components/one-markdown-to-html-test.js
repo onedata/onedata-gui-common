@@ -21,7 +21,7 @@ Some text
 <a>Link2</a>
       `);
 
-      await render(hbs `{{one-markdown-to-html markdown=markdown}}`);
+      await renderComponent();
 
       const html = this.element.innerHTML;
       expect(html).to.match(/<h1.*?>\s*Header\s*<\/h1>/);
@@ -34,7 +34,7 @@ Some text
     it('with open new window links', async function () {
       this.set('markdown', '[onedata](https://onedata.org)');
 
-      await render(hbs `{{one-markdown-to-html markdown=markdown}}`);
+      await renderComponent();
 
       const html = this.element.innerHTML;
       expect(html).to.contain('target="_blank"');
@@ -43,7 +43,7 @@ Some text
     it('with open new window links for HTML a-tag', async function () {
       this.set('markdown', '<a href="https://onedata.org">hello</a>');
 
-      await render(hbs `{{one-markdown-to-html markdown=markdown}}`);
+      await renderComponent();
 
       const html = this.element.innerHTML;
       expect(html).to.contain('target="_blank"');
@@ -52,7 +52,7 @@ Some text
     it('with auto-created links', async function () {
       this.set('markdown', 'https://onedata.org');
 
-      await render(hbs `{{one-markdown-to-html markdown=markdown}}`);
+      await renderComponent();
 
       const html = this.element.innerHTML;
       expect(html).to.contain('href="https://onedata.org"');
@@ -61,7 +61,7 @@ Some text
     it('with strikethrough', async function () {
       this.set('markdown', '~~cancel~~');
 
-      await render(hbs `{{one-markdown-to-html markdown=markdown}}`);
+      await renderComponent();
 
       const html = this.element.innerHTML;
       expect(html).to.contain('<del>cancel</del>');
@@ -88,7 +88,7 @@ Some text
       const js = this.get('attackingJs');
       this.set('markdown', `<a href="javascript:${js}">link</a>`);
 
-      await render(hbs `{{one-markdown-to-html markdown=markdown}}`);
+      await renderComponent();
 
       await click('a');
 
@@ -101,7 +101,7 @@ Some text
       const js = this.get('attackingJs');
       this.set('markdown', `<a onclick="${js}">link</a>`);
 
-      await render(hbs `{{one-markdown-to-html markdown=markdown}}`);
+      await renderComponent();
 
       await click('a');
 
@@ -117,7 +117,7 @@ Some text
         `<script type="text/javascript">${js}</script>`
       );
 
-      await render(hbs `{{one-markdown-to-html markdown=markdown}}`);
+      await renderComponent();
 
       const html = this.element.innerHTML;
       expect(globals.window[propertyName], `window.${propertyName}`).to.be.undefined;
@@ -125,3 +125,7 @@ Some text
     });
   });
 });
+
+async function renderComponent() {
+  await render(hbs`<OneMarkdownToHtml @markdown={{this.markdown}} />`);
+}

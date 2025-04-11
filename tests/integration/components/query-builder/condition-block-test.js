@@ -50,10 +50,10 @@ describe('Integration | Component | query-builder/condition-block', function () 
         comparatorValue: 'hello',
       }));
 
-      await render(hbs `{{query-builder/condition-block
-        queryBlock=queryBlock
-        valuesBuilder=valuesBuilder
-      }}`);
+      await render(hbs `<QueryBuilder::ConditionBlock
+        @queryBlock={{queryBlock}}
+        @valuesBuilder={{valuesBuilder}}
+      />`);
 
       expect(find('.query-builder-block.query-builder-condition-block')).to.exist;
     }
@@ -90,10 +90,10 @@ describe('Integration | Component | query-builder/condition-block', function () 
           })
         );
 
-        await render(hbs `{{query-builder/condition-block
-          queryBlock=queryBlock
-          valuesBuilder=valuesBuilder
-        }}`);
+        await render(hbs `<QueryBuilder::ConditionBlock
+          @queryBlock={{queryBlock}}
+          @valuesBuilder={{valuesBuilder}}
+        />`);
 
         expect(find('.property-key').textContent.trim()).to.equal('some_key');
         expect(find('.comparator').textContent.trim()).to.equal(comparatorSymbol);
@@ -110,12 +110,12 @@ describe('Integration | Component | query-builder/condition-block', function () 
       comparatorValue: 'hello',
     }));
 
-    await render(hbs `{{#query-builder/condition-block
-      queryBlock=queryBlock
-      valuesBuilder=valuesBuilder
-    }}
+    await render(hbs `<QueryBuilder::ConditionBlock
+      @queryBlock={{queryBlock}}
+      @valuesBuilder={{valuesBuilder}}
+    >
       <span class="test-element"></span>
-    {{/query-builder/condition-block}}
+    </QueryBuilder::ConditionBlock>
     `);
 
     expect(find('.test-element')).to.exist;
@@ -134,11 +134,11 @@ describe('Integration | Component | query-builder/condition-block', function () 
       editionStartSpy: sinon.spy(),
     });
 
-    await render(hbs `{{query-builder/condition-block
-      queryBlock=queryBlock
-      onConditionEditionStart=editionStartSpy
-      valuesBuilder=valuesBuilder
-    }}`);
+    await render(hbs `<QueryBuilder::ConditionBlock
+      @queryBlock={{queryBlock}}
+      @onConditionEditionStart={{editionStartSpy}}
+      @valuesBuilder={{valuesBuilder}}
+    />`);
 
     expect(editionStartSpy).to.not.be.called;
     await click('.comparator-value');
@@ -163,12 +163,12 @@ describe('Integration | Component | query-builder/condition-block', function () 
       editionValidityChangeSpy: sinon.spy(),
     });
 
-    await render(hbs `{{query-builder/condition-block
-      queryBlock=queryBlock
-      onConditionEditionEnd=editionEndSpy
-      onConditionEditionValidityChange=editionValidityChangeSpy
-      valuesBuilder=valuesBuilder
-    }}`);
+    await render(hbs `<QueryBuilder::ConditionBlock
+      @queryBlock={{queryBlock}}
+      @onConditionEditionEnd={{editionEndSpy}}
+      @onConditionEditionValidityChange={{editionValidityChangeSpy}}
+      @valuesBuilder={{valuesBuilder}}
+    />`);
 
     await click('.comparator-value');
     expect(editionValidityChangeSpy).to.not.be.called;
@@ -200,12 +200,12 @@ describe('Integration | Component | query-builder/condition-block', function () 
       editionValidityChangeSpy: sinon.spy(),
     });
 
-    await render(hbs `{{query-builder/condition-block
-      queryBlock=queryBlock
-      onConditionEditionEnd=editionEndSpy
-      onConditionEditionValidityChange=editionValidityChangeSpy
-      valuesBuilder=valuesBuilder
-    }}`);
+    await render(hbs `<QueryBuilder::ConditionBlock
+      @queryBlock={{queryBlock}}
+      @onConditionEditionEnd={{editionEndSpy}}
+      @onConditionEditionValidityChange={{editionValidityChangeSpy}}
+      @valuesBuilder={{valuesBuilder}}
+    />`);
 
     await click('.comparator-value');
     expect(editionValidityChangeSpy).to.not.be.called;
@@ -250,10 +250,10 @@ describe('Integration | Component | query-builder/condition-block', function () 
               comparatorValue: initialValue,
             }));
 
-            await render(hbs `{{query-builder/condition-block
-              queryBlock=queryBlock
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::ConditionBlock
+              @queryBlock={{queryBlock}}
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             await click('.comparator-value');
 
@@ -284,12 +284,12 @@ describe('Integration | Component | query-builder/condition-block', function () 
               editionValidityChangeSpy: sinon.spy(),
             });
 
-            await render(hbs `{{query-builder/condition-block
-              queryBlock=queryBlock
-              onConditionEditionEnd=editionEndSpy
-              onConditionEditionValidityChange=editionValidityChangeSpy
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::ConditionBlock
+              @queryBlock={{queryBlock}}
+              @onConditionEditionEnd={{editionEndSpy}}
+              @onConditionEditionValidityChange={{editionValidityChangeSpy}}
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             await click('.comparator-value');
             await fillIn('.comparator-value', incorrectValue);

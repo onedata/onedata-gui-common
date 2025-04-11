@@ -30,7 +30,7 @@ describe('Integration | Component | tags-input', function () {
   });
 
   it('has class "tags-input"', async function () {
-    await render(hbs `{{tags-input}}`);
+    await render(hbs `<TagsInput />`);
 
     expect(find('.tags-input')).to.exist;
   });

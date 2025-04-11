@@ -438,11 +438,11 @@ describe('Integration | Component | atm-workflow/value-editors/array/editor', fu
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-editors/array/editor
-    stateManager=stateManager
-    editorId=stateManager.rootValueEditorStateId
-    onRemove=onRemove
-  }}`);
+  await render(hbs`<AtmWorkflow::ValueEditors::Array::Editor
+    @stateManager={{this.stateManager}}
+    @editorId={{this.stateManager.rootValueEditorStateId}}
+    @onRemove={{this.onRemove}}
+  />`);
 }
 
 function expectVisibleStringItems(values) {

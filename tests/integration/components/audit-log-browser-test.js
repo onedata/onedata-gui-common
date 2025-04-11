@@ -35,21 +35,21 @@ describe('Integration | Component | audit-log-browser', function () {
   });
 
   it('has class "audit-log-browser"', async function () {
-    await render(hbs`{{audit-log-browser}}`);
+    await renderWithoutParams();
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('audit-log-browser');
   });
 
   it('shows timestamp column header', async function () {
-    await render(hbs`{{audit-log-browser}}`);
+    await renderWithoutParams();
 
     const columnHeader = find('.timestamp-column-header');
     expect(columnHeader).to.have.trimmed.text('Time');
   });
 
   it('does not show severity column header by default', async function () {
-    await render(hbs`{{audit-log-browser}}`);
+    await renderWithoutParams();
 
     const columnHeader = find('.severity-column-header');
     expect(columnHeader).to.not.exist;
@@ -63,7 +63,7 @@ describe('Integration | Component | audit-log-browser', function () {
   });
 
   it('shows only timestamp column header when no custom column headers are defined', async function () {
-    await render(hbs`{{audit-log-browser}}`);
+    await renderWithoutParams();
 
     const columnHeaders = findAll('.audit-log-table-column-header');
     expect(columnHeaders).to.have.length(1);
@@ -89,7 +89,7 @@ describe('Integration | Component | audit-log-browser', function () {
   });
 
   it('shows information about no entries when no "onFetchLogEntries" was passed', async function () {
-    await render(hbs`{{audit-log-browser}}`);
+    await renderWithoutParams();
 
     const emptyRow = find('.table-is-empty-row');
     expect(emptyRow).to.exist;
@@ -103,7 +103,7 @@ describe('Integration | Component | audit-log-browser', function () {
   });
 
   it('shows tooltip about no entries', async function () {
-    await render(hbs`{{audit-log-browser}}`);
+    await renderWithoutParams();
 
     const tooltipHelper = new OneTooltipHelper(
       '.table-is-empty-row .no-entries-tip .one-icon'
@@ -311,6 +311,10 @@ describe('Integration | Component | audit-log-browser', function () {
     );
   });
 });
+
+async function renderWithoutParams() {
+  await render(hbs`<AuditLogBrowser />`);
+}
 
 async function fetchEntriesMock(listingParams) {
   let startTimestamp = typeof listingParams.index === 'string' ?

@@ -36,7 +36,7 @@ describe('Integration | Component | one-map', function () {
   it('shows whole world map by default', async function () {
     await render(hbs `
       <div style="width: 1400px; height: 700px">
-        {{one-map}}
+        <OneMap />
       </div>
     `);
     [

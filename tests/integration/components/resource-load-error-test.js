@@ -13,7 +13,7 @@ describe('Integration | Component | resource-load-error', function () {
   });
 
   it('does not renders show details button if reason is not provided', async function () {
-    await render(hbs `{{resource-load-error}}`);
+    await render(hbs `<ResourceLoadError />`);
     expect(find('.promise-error-show-details')).to.not.exist;
   });
 

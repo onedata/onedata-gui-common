@@ -15,7 +15,7 @@ describe('Integration | Component | user-credentials-form', function () {
   setupRenderingTest();
 
   it('shows secret password field by default', async function () {
-    await render(hbs `{{user-credentials-form}}`);
+    await render(hbs `<UserCredentialsForm />`);
 
     const form = new UserCredentialsFormHelper(this.element);
 

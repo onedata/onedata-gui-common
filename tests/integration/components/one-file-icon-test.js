@@ -9,7 +9,7 @@ describe('Integration | Component | one-file-icon', function () {
   setupRenderingTest();
 
   it('has class "one-file-icon"', async function () {
-    await render(hbs`{{one-file-icon}}`);
+    await render(hbs`<OneFileIcon />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('one-file-icon');

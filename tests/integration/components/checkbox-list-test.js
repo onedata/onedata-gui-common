@@ -24,9 +24,9 @@ describe('Integration | Component | checkbox-list', function () {
 
   it('lists passed items by yielding each one', async function () {
     await render(hbs `
-      {{#checkbox-list items=items as |listItem|}}
+      <CheckboxList @items={{items}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     const renderedItems = findAll('.checkbox-list-item');
@@ -39,9 +39,9 @@ describe('Integration | Component | checkbox-list', function () {
     this.set('selectedItems', [this.get('items')[0]]);
 
     await render(hbs `
-      {{#checkbox-list items=items selectedItems=selectedItems as |listItem|}}
+      <CheckboxList @items={{items}} @selectedItems={{selectedItems}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     const renderedItems = findAll('.checkbox-list-item');
@@ -57,14 +57,14 @@ describe('Integration | Component | checkbox-list', function () {
     this.set('change', changeSpy);
 
     await render(hbs `
-      {{#checkbox-list
-        items=items
-        selectedItems=selectedItems
-        onChange=(action change)
+      <CheckboxList
+        @items={{items}}
+        @selectedItems={{selectedItems}}
+        @onChange={{action change}}
         as |listItem|
-      }}
+      >
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     const firstItemCheckboxSelector =
@@ -88,14 +88,14 @@ describe('Integration | Component | checkbox-list', function () {
       this.set('change', changeSpy);
 
       await render(hbs `
-        {{#checkbox-list
-          items=items
-          selectedItems=selectedItems
-          onChange=(action change)
+        <CheckboxList
+          @items={{items}}
+          @selectedItems={{selectedItems}}
+          @onChange={{action change}}
           as |listItem|
-        }}
+        >
           {{listItem.model.name}}
-        {{/checkbox-list}}
+        </CheckboxList>
       `);
 
       const firstItemCheckboxSelector =
@@ -117,9 +117,9 @@ describe('Integration | Component | checkbox-list', function () {
     this.set('selectedItems', [this.get('items')[0]]);
 
     await render(hbs `
-      {{#checkbox-list items=items selectedItems=selectedItems as |listItem|}}
+      <CheckboxList @items={{items}} @selectedItems={{selectedItems}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     expect(find('.selected-counter').textContent.trim()).to.equal('(1/2)');
@@ -129,9 +129,9 @@ describe('Integration | Component | checkbox-list', function () {
     this.set('selectedItems', this.get('items'));
 
     await render(hbs `
-      {{#checkbox-list items=items selectedItems=selectedItems as |listItem|}}
+      <CheckboxList @items={{items}} @selectedItems={{selectedItems}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     expect(find('.checkbox-list-header .one-checkbox')).to.have.class('checked');
@@ -141,9 +141,9 @@ describe('Integration | Component | checkbox-list', function () {
     this.set('selectedItems', [this.get('items')[0]]);
 
     await render(hbs `
-      {{#checkbox-list items=items selectedItems=selectedItems as |listItem|}}
+      <CheckboxList @items={{items}} @selectedItems={{selectedItems}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     expect(find('.checkbox-list-header .one-checkbox')).to.have.class('maybe');
@@ -151,9 +151,9 @@ describe('Integration | Component | checkbox-list', function () {
 
   it('shows empty selection state via header', async function () {
     await render(hbs `
-      {{#checkbox-list items=items selectedItems=selectedItems as |listItem|}}
+      <CheckboxList @items={{items}} @selectedItems={{selectedItems}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     const headerCheckbox = find('.checkbox-list-header .one-checkbox');
@@ -170,14 +170,14 @@ describe('Integration | Component | checkbox-list', function () {
     this.set('change', changeSpy);
 
     await render(hbs `
-      {{#checkbox-list
-        items=items
-        selectedItems=selectedItems
-        onChange=(action change)
+      <CheckboxList
+        @items={{items}}
+        @selectedItems={{selectedItems}}
+        @onChange={{action change}}
         as |listItem|
-      }}
+      >
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     const headerCheckboxSelector = '.checkbox-list-header .one-checkbox';
@@ -205,9 +205,9 @@ describe('Integration | Component | checkbox-list', function () {
 
   it('shows passed headerText', async function () {
     await render(hbs `
-      {{#checkbox-list items=items headerText="listHeader" as |listItem|}}
+      <CheckboxList @items={{items}} @headerText="listHeader" as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     expect(find('.header-text').textContent.trim()).to.equal('listHeader');
@@ -215,9 +215,9 @@ describe('Integration | Component | checkbox-list', function () {
 
   it('shows expanded list by default', async function () {
     await render(hbs `
-      {{#checkbox-list items=items as |listItem|}}
+      <CheckboxList @items={{items}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     expect(find('.checkbox-list-collapse')).to.have.class('in');
@@ -225,9 +225,9 @@ describe('Integration | Component | checkbox-list', function () {
 
   it('shows collapsed list when isInitiallyExpanded is false', async function () {
     await render(hbs `
-      {{#checkbox-list items=items isInitiallyExpanded=false as |listItem|}}
+      <CheckboxList @items={{items}} @isInitiallyExpanded={{false}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     expect(find('.checkbox-list-collapse')).to.not.have.class('in');
@@ -235,9 +235,9 @@ describe('Integration | Component | checkbox-list', function () {
 
   it('collapses and expands list via header click', async function () {
     await render(hbs `
-      {{#checkbox-list items=items as |listItem|}}
+      <CheckboxList @items={{items}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     return click('.checkbox-list-header')
@@ -248,9 +248,9 @@ describe('Integration | Component | checkbox-list', function () {
 
   it('shows arrow-down icon when list is collapsed', async function () {
     await render(hbs `
-      {{#checkbox-list items=items isInitiallyExpanded=false as |listItem|}}
+      <CheckboxList @items={{items}} @isInitiallyExpanded={{false}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     expect(find('.checkbox-list-header .arrow-icon'))
@@ -259,9 +259,9 @@ describe('Integration | Component | checkbox-list', function () {
 
   it('shows arrow-up icon when list is expanded', async function () {
     await render(hbs `
-      {{#checkbox-list items=items isInitiallyExpanded=true as |listItem|}}
+      <CheckboxList @items={{items}} @isInitiallyExpanded={{true}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     expect(find('.checkbox-list-header .arrow-icon'))
@@ -270,9 +270,9 @@ describe('Integration | Component | checkbox-list', function () {
 
   it('does not collapse list on header checkbox click', async function () {
     await render(hbs `
-      {{#checkbox-list items=items isInitiallyExpanded=true as |listItem|}}
+      <CheckboxList @items={{items}} @isInitiallyExpanded={{true}} as |listItem|>
         {{listItem.model.name}}
-      {{/checkbox-list}}
+      </CheckboxList>
     `);
 
     return click('.checkbox-list-header .one-checkbox')
@@ -289,15 +289,15 @@ describe('Integration | Component | checkbox-list', function () {
       this.set('change', changeSpy);
 
       await render(hbs `
-        {{#checkbox-list
-          items=items
-          selectedItems=selectedItems
-          onChange=(action change)
+        <CheckboxList
+          @items={{items}}
+          @selectedItems={{selectedItems}}
+          @onChange={{action change}}
           as |listItem|
-        }}
+        >
           {{listItem.checkbox}}
           <label for={{listItem.checkboxId}}>{{listItem.model.name}}</label>
-        {{/checkbox-list}}
+        </CheckboxList>
       `);
 
       return click('.checkbox-list-item:first-child label')
@@ -308,7 +308,7 @@ describe('Integration | Component | checkbox-list', function () {
   it(
     'renders <label> tag with model.name as a content for each item when component is not block',
     async function () {
-      await render(hbs `{{checkbox-list items=items}}`);
+      await render(hbs `<CheckboxList @items={{items}} />`);
 
       const itemLabels = findAll('.checkbox-list-item label');
       expect(itemLabels).to.have.length(2);
@@ -331,7 +331,7 @@ describe('Integration | Component | checkbox-list', function () {
   );
 
   it('does not allow to expand a list when there are no items', async function () {
-    await render(hbs `{{checkbox-list isInitiallyExpanded=true}}`);
+    await render(hbs `<CheckboxList @isInitiallyExpanded={{true}} />`);
 
     const collapse = find('.checkbox-list-collapse');
     expect(collapse).to.not.have.class('in');
@@ -340,7 +340,7 @@ describe('Integration | Component | checkbox-list', function () {
   });
 
   it('does not change selection when onChange is not defined', async function () {
-    await render(hbs `{{checkbox-list items=items}}`);
+    await render(hbs `<CheckboxList @items={{items}} />`);
 
     return click('.checkbox-list-header .one-checkbox')
       .then(() =>
@@ -358,7 +358,11 @@ describe('Integration | Component | checkbox-list', function () {
     });
 
     await render(hbs `
-      {{checkbox-list items=items onChange=(action change) isInitiallyExpanded=false}}
+      <CheckboxList
+        @items={{items}}
+        @onChange={{action change}}
+        @isInitiallyExpanded={{false}}
+      />
     `);
 
     return click('.checkbox-list-header')

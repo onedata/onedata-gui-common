@@ -208,7 +208,7 @@ describe('Integration | Component | one-way-toggle', function () {
   });
 
   it('has no tooltip by default', async function () {
-    await render(hbs `{{one-way-toggle}}`);
+    await render(hbs `<OneWayToggle />`);
 
     const tooltipHelper = new OneTooltipHelper('.one-way-toggle-control');
     expect(await tooltipHelper.hasTooltip()).to.be.false;

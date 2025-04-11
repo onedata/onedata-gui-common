@@ -31,7 +31,7 @@ describe('Integration | Component | global-modal', function () {
   });
 
   it('does not render anything in place', async function () {
-    await render(hbs `{{global-modal}}`);
+    await render(hbs `<GlobalModal />`);
 
     expect(this.element.children).to.have.length(0);
   });

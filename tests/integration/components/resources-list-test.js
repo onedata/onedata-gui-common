@@ -16,7 +16,7 @@ describe('Integration | Component | resources-list', function () {
   });
 
   it('has class "resources-list', async function () {
-    await render(hbs `{{resources-list}}`);
+    await render(hbs `<ResourcesList />`);
 
     expect(find('.resources-list')).to.exist;
   });

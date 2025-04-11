@@ -9,7 +9,7 @@ describe('Integration | Component | one-carousel', function () {
   setupRenderingTest();
 
   it('has class "one-carousel"', async function () {
-    await render(hbs `{{one-carousel}}`);
+    await render(hbs `<OneCarousel />`);
     expect(findAll('.one-carousel')).to.have.length(1);
   });
 

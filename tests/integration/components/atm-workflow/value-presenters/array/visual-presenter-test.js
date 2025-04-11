@@ -21,7 +21,7 @@ describe('Integration | Component | atm-workflow/value-presenters/array/visual-p
   });
 
   it('has classes "visual-presenter" and "array-visual-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/array/visual-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Array::VisualPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('visual-presenter')
@@ -236,11 +236,11 @@ describe('Integration | Component | atm-workflow/value-presenters/array/visual-p
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-presenters/array/visual-presenter
-    value=value
-    dataSpec=dataSpec
-    context=context
-  }}`);
+  await render(hbs`<AtmWorkflow::ValuePresenters::Array::VisualPresenter
+    @value={{value}}
+    @dataSpec={{dataSpec}}
+    @context={{context}}
+  />`);
 }
 
 function createArrayDataSpec(itemType, arrayNesting = 1) {

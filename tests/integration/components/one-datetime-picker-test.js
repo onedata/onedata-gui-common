@@ -18,7 +18,7 @@ describe('Integration | Component | one-datetime-picker', function () {
   });
 
   it('has class "one-datetime-picker"', async function () {
-    await render(hbs `{{one-datetime-picker}}`);
+    await renderWithoutParams();
 
     expect(find('.one-datetime-picker')).to.exist;
   });
@@ -30,7 +30,7 @@ describe('Integration | Component | one-datetime-picker', function () {
     });
     this.set('clock', clock);
 
-    await render(hbs `{{one-datetime-picker}}`);
+    await renderWithoutParams();
 
     const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.waitForPickerInit(clock)
@@ -40,7 +40,7 @@ describe('Integration | Component | one-datetime-picker', function () {
   });
 
   it('does render datetime picker after input click', async function () {
-    await render(hbs `{{one-datetime-picker}}`);
+    await renderWithoutParams();
 
     const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.openPicker()
@@ -50,7 +50,7 @@ describe('Integration | Component | one-datetime-picker', function () {
   });
 
   it('adds "datetime-picker" class to datetime picker element', async function () {
-    await render(hbs `{{one-datetime-picker}}`);
+    await renderWithoutParams();
 
     const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.openPicker()
@@ -93,3 +93,7 @@ describe('Integration | Component | one-datetime-picker', function () {
     expect(find('input').placeholder).to.equal(placeholderText);
   });
 });
+
+async function renderWithoutParams() {
+  await renderWithoutParams();
+}

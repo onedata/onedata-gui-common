@@ -9,7 +9,7 @@ describe('Integration | Component | warning-icon', function () {
   setupRenderingTest();
 
   it('does not have any tooltip then "tooltipText" was not specified', async function () {
-    await render(hbs`{{warning-icon}}`);
+    await render(hbs`<WarningIcon />`);
 
     const tooltipHelper = new OneTooltipHelper('.warning-icon-image');
     expect(await tooltipHelper.hasTooltip()).to.be.false;
