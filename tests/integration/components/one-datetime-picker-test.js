@@ -95,5 +95,5 @@ describe('Integration | Component | one-datetime-picker', function () {
 });
 
 async function renderWithoutParams() {
-  await renderWithoutParams();
+  await render(hbs `<OneDatetimePicker />`);
 }
