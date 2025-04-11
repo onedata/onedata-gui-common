@@ -534,7 +534,7 @@ async function renderOneDropdown() {
       @searchEnabled={{searchEnabled0}}
       as |option|
     >
-      <option />
+      {{option}}
     </OneDropdown>
     <div class="testing-dropdowns">
       {{!-- dropdown "1" is the main dropdown to be tested --}}
@@ -549,7 +549,7 @@ async function renderOneDropdown() {
         @searchEnabled={{searchEnabled1}}
         as |option|
       >
-        <option />
+        {{option}}
       </OneDropdown>
       {{!-- dropdown "2" to check if helpers will take the first found
       dropdown and omit the rest of matching dropdowns --}}
@@ -564,7 +564,7 @@ async function renderOneDropdown() {
         @searchEnabled={{searchEnabled2}}
         as |option|
       >
-        <option />
+        {{option}}
       </OneDropdown>
     </div>
   `);
