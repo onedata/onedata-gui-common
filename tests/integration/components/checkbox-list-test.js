@@ -295,7 +295,6 @@ describe('Integration | Component | checkbox-list', function () {
           @onChange={{action change}}
           as |listItem|
         >
-          {{listItem.checkbox}}
           <label for={{listItem.checkboxId}}>{{listItem.model.name}}</label>
         </CheckboxList>
       `);
