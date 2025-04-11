@@ -17,7 +17,7 @@ describe('Integration | Component | checkbox-list', function () {
   });
 
   it('has class "checkbox-list"', async function () {
-    await render(hbs `{{checkbox-list}}`);
+    await render(hbs `<CheckboxList />`);
 
     expect(find('.checkbox-list')).to.exist;
   });
