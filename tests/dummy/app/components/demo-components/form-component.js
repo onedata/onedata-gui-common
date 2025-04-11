@@ -15,6 +15,7 @@ import StaticUserField from 'onedata-gui-common/utils/form-component/static-user
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import ColorField from 'onedata-gui-common/utils/form-component/color-field';
 import CustomValueDropdownField from 'onedata-gui-common/utils/form-component/custom-value-dropdown-field';
+import AutocompleteDropdownField from 'onedata-gui-common/utils/form-component/autocomplete-dropdown-field';
 import AceField from 'onedata-gui-common/utils/form-component/ace-field';
 import {
   Tag as RecordTag,
@@ -77,6 +78,7 @@ export default Component.extend({
           this.colorField,
           this.dropdownField,
           this.customValueDropdownField,
+          this.autocompleteDropdownField,
           this.aceField,
           this.radioField,
           this.datetimeField,
@@ -277,6 +279,27 @@ export default Component.extend({
           name: 'three',
           icon: 'browser-dataset',
           label: 'wrong address',
+        },
+      ],
+    });
+  }),
+
+  autocompleteDropdownField: computed(function autocompleteDropdownField() {
+    return AutocompleteDropdownField.create({
+      name: 'autocompleteDropdown',
+      label: 'Autocomplete dropdown',
+      isCustomInputOptionIconShown: true,
+      options: [{
+          value: 'one',
+          label: 'one',
+        },
+        {
+          value: 'two',
+          label: 'two',
+        },
+        {
+          value: 'three',
+          label: 'three',
         },
       ],
     });
