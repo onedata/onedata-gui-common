@@ -56,7 +56,7 @@ describe('Integration | Component | audit-log-browser', function () {
   });
 
   it('shows severity column header when "isSeverityColumnVisible" is true', async function () {
-    await render(hbs`{{audit-log-browser isSeverityColumnVisible=true}}`);
+    await render(hbs`<AuditLogBrowser @isSeverityColumnVisible={{true}} />`);
 
     const columnHeader = find('.severity-column-header');
     expect(columnHeader).to.have.trimmed.text('Severity');
@@ -78,9 +78,7 @@ describe('Integration | Component | audit-log-browser', function () {
       classNames: 'col2',
       content: 'Col 2',
     }]);
-    await render(hbs`{{audit-log-browser
-      customColumnHeaders=customColumnHeaders
-    }}`);
+    await render(hbs`<AuditLogBrowser @customColumnHeaders={{customColumnHeaders}} />`);
 
     const columnHeaders = findAll('.audit-log-table-column-header');
     expect(columnHeaders).to.have.length(1 + customColumnHeaders.length);
@@ -99,7 +97,7 @@ describe('Integration | Component | audit-log-browser', function () {
   });
 
   it('shows custom information about no entries when "noLogEntriesText" is set', async function () {
-    await render(hbs`{{audit-log-browser noLogEntriesText="some text"}}`);
+    await render(hbs`<AuditLogBrowser @noLogEntriesText="some text" />`);
 
     expect(find('.table-is-empty-row')).to.have.trimmed.text('some text');
   });
@@ -117,7 +115,7 @@ describe('Integration | Component | audit-log-browser', function () {
 
   it('shows fetched log entries from newest to oldest', async function () {
     await render(hbs`<div style="display: flex; height: 10em;">
-      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+      <AuditLogBrowser @onFetchLogEntries={{onFetchLogEntries}} />
     </div>`);
 
     const logRows = findAll('.audit-log-table-entry');
@@ -131,7 +129,7 @@ describe('Integration | Component | audit-log-browser', function () {
 
   it('shows fetched log entries timestamps', async function () {
     await render(hbs`<div style="display: flex; height: 10em;">
-      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+      <AuditLogBrowser @onFetchLogEntries={{onFetchLogEntries}} />
     </div>`);
 
     expect(find('.audit-log-table-entry .timestamp-cell'))
@@ -141,10 +139,10 @@ describe('Integration | Component | audit-log-browser', function () {
   it('shows fetched log entries timestamps without milliseconds when "isTimestampRoundedToSeconds" is true',
     async function () {
       await render(hbs`<div style="display: flex; height: 10em;">
-        {{audit-log-browser
-          onFetchLogEntries=onFetchLogEntries
-          isTimestampRoundedToSeconds=true
-        }}
+        <AuditLogBrowser
+          @onFetchLogEntries={{onFetchLogEntries}}
+          @isTimestampRoundedToSeconds={{true}}
+        />
       </div>`);
 
       expect(find('.audit-log-table-entry .timestamp-cell'))
@@ -154,7 +152,7 @@ describe('Integration | Component | audit-log-browser', function () {
 
   it('does not show severity for fetched log entries by default', async function () {
     await render(hbs`<div style="display: flex; height: 10em;">
-      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+      <AuditLogBrowser @onFetchLogEntries={{onFetchLogEntries}} />
     </div>`);
 
     expect(find('.audit-log-table-entry .severity-cell')).to.not.exist;
@@ -162,10 +160,10 @@ describe('Integration | Component | audit-log-browser', function () {
 
   it('shows severity for fetched log entries when "isSeverityColumnVisible" is true', async function () {
     await render(hbs`<div style="display: flex; height: 10em;">
-      {{audit-log-browser
-        onFetchLogEntries=onFetchLogEntries
-        isSeverityColumnVisible=true
-      }}
+      <AuditLogBrowser
+        @onFetchLogEntries={{onFetchLogEntries}}
+        @isSeverityColumnVisible={{true}}
+      />
     </div>`);
 
     const correctSeverity = generateSeverityForTimestamp(latestLogEntryTimestamp);
@@ -176,7 +174,7 @@ describe('Integration | Component | audit-log-browser', function () {
 
   it('adds class to each rendered log entry based on severity', async function () {
     await render(hbs`<div style="display: flex; height: 10em;">
-      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+      <AuditLogBrowser @onFetchLogEntries={{onFetchLogEntries}} />
     </div>`);
 
     const logRows = findAll('.audit-log-table-entry');
@@ -191,10 +189,10 @@ describe('Integration | Component | audit-log-browser', function () {
 
   it('shows icons for each possible entry severity', async function () {
     await render(hbs`<div style="display: flex; height: 10em;">
-      {{audit-log-browser
-        onFetchLogEntries=onFetchLogEntries
-        isSeverityColumnVisible=true
-      }}
+      <AuditLogBrowser
+        @onFetchLogEntries={{onFetchLogEntries}}
+        @isSeverityColumnVisible={{true}}
+      />
     </div>`);
 
     allSeverities.forEach((severity) => {
@@ -205,7 +203,7 @@ describe('Integration | Component | audit-log-browser', function () {
 
   it('shows only timestamp for fetched log entries when there are no custom columns', async function () {
     await render(hbs`<div style="display: flex; height: 10em;">
-      {{audit-log-browser onFetchLogEntries=onFetchLogEntries}}
+      <AuditLogBrowser @onFetchLogEntries={{onFetchLogEntries}} />
     </div>`);
 
     expect(find('.audit-log-table-entry').querySelectorAll('td')).to.have.length(1);
@@ -216,13 +214,13 @@ describe('Integration | Component | audit-log-browser', function () {
       content: 'Description',
     }]);
     await render(hbs`<div style="display: flex; height: 10em;">
-      {{#audit-log-browser
-        onFetchLogEntries=onFetchLogEntries
-        customColumnHeaders=customColumnHeaders
+      <AuditLogBrowser
+        @onFetchLogEntries={{onFetchLogEntries}}
+        @customColumnHeaders={{customColumnHeaders}}
         as |logEntry|
-      }}
+      >
         <td class="description-cell">{{logEntry.content.description}}</td>
-      {{/audit-log-browser}}
+      </AuditLogBrowser>
     </div>`);
 
     expect(find('.audit-log-table-entry').querySelectorAll('td')).to.have.length(2);
@@ -233,10 +231,10 @@ describe('Integration | Component | audit-log-browser', function () {
   it('allows to add custom class names to entries via "onGetClassNamesForLogEntry"', async function () {
     this.set('onGetClassNamesForLogEntry', (logEntry) => `custom-${logEntry.severity}`);
     await render(hbs`<div style="display: flex; height: 10em;">
-      {{audit-log-browser
-        onFetchLogEntries=onFetchLogEntries
-        onGetClassNamesForLogEntry=onGetClassNamesForLogEntry
-      }}
+      <AuditLogBrowser
+        @onFetchLogEntries={{onFetchLogEntries}}
+        @onGetClassNamesForLogEntry={{onGetClassNamesForLogEntry}}
+      />
     </div>`);
 
     const logRows = findAll('.audit-log-table-entry');
@@ -250,11 +248,11 @@ describe('Integration | Component | audit-log-browser', function () {
   });
 
   it('renders table title with tip', async function () {
-    await render(hbs`{{audit-log-browser
-      title="test"
-      titleTip="some tip"
-      titleTipClassName="abc"
-    }}`);
+    await render(hbs`<AuditLogBrowser
+      @title="test"
+      @titleTip="some tip"
+      @titleTipClassName="abc"
+    />`);
 
     expect(find('.table-title')).to.have.trimmed.text('test');
     const tooltipHelper = new OneTooltipHelper(
@@ -268,10 +266,10 @@ describe('Integration | Component | audit-log-browser', function () {
   it('adds "clickable" class to entries and shows details on entry click when "doesOpenDetailsOnClick" is true',
     async function () {
       await render(hbs`<div style="display: flex; height: 10em;">
-        {{audit-log-browser
-          onFetchLogEntries=onFetchLogEntries
-          doesOpenDetailsOnClick=true
-        }}
+        <AuditLogBrowser
+          @onFetchLogEntries={{onFetchLogEntries}}
+          @doesOpenDetailsOnClick={{true}}
+        />
       </div>`);
 
       const firstEntry = find('.audit-log-table-entry');
@@ -293,10 +291,10 @@ describe('Integration | Component | audit-log-browser', function () {
     const copyStub = sinon.stub(lookupService(this, 'global-clipboard'), 'copy');
 
     await render(hbs`<div style="display: flex; height: 10em;">
-      {{audit-log-browser
-        onFetchLogEntries=onFetchLogEntries
-        doesOpenDetailsOnClick=true
-      }}
+      <AuditLogBrowser
+        @onFetchLogEntries={{onFetchLogEntries}}
+        @doesOpenDetailsOnClick={{true}}
+      />
     </div>`);
 
     await click('.audit-log-table-entry');

@@ -881,12 +881,12 @@ async function renderWithRawData(testCase, rawData) {
   });
   await render(hbs `
     <GlobalModalMounter />
-    {{workflow-visualiser
-      mode=mode
-      rawData=rawData
-      actionsFactory=actionsFactory
-      onChange=changeStub
-    }}
+    <WorkflowVisualiser
+      @mode={{mode}}
+      @rawData={{rawData}}
+      @actionsFactory={{actionsFactory}}
+      @onChange={{changeStub}}
+    />
   `);
 }
 
@@ -899,10 +899,7 @@ async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
 
   await render(hbs `
     <div style={{containerStyle}}>
-      {{workflow-visualiser
-        mode="view"
-        rawData=rawData
-      }}
+      <WorkflowVisualiser @mode="view" @rawData={{rawData}} />
     </div>
   `);
 }

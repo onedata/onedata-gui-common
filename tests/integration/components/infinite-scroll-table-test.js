@@ -43,11 +43,11 @@ describe('Integration | Component | infinite-scroll-table', function () {
 
   it('shows thead section content', async function () {
     await render(hbs`
-      {{#infinite-scroll-table as |section|}}
+      <InfiniteScrollTable as |section|>
         {{#if (eq section.sectionName "tableHead")}}
           <tr><th class="my-th"></th></tr>
         {{/if}}
-      {{/infinite-scroll-table}}
+      </InfiniteScrollTable>
     `);
 
     expect(find('thead .my-th')).to.exist;
@@ -63,7 +63,7 @@ describe('Integration | Component | infinite-scroll-table', function () {
   });
 
   it('shows custom information about no entries when "noEntriesText" is set', async function () {
-    await render(hbs`{{infinite-scroll-table noEntriesText="some text"}}`);
+    await render(hbs`<InfiniteScrollTable @noEntriesText="some text" />`);
 
     expect(find('.table-is-empty-row')).to.have.trimmed.text('some text');
   });
@@ -75,7 +75,7 @@ describe('Integration | Component | infinite-scroll-table', function () {
   });
 
   it('renders tip about no entries when "noEntriesTip" is set', async function () {
-    await render(hbs`{{infinite-scroll-table noEntriesTip="some tip"}}`);
+    await render(hbs`<InfiniteScrollTable @noEntriesTip="some tip" />`);
 
     const tipContent = await new OneTooltipHelper(
       '.table-is-empty-row .no-entries-tip .one-icon'
@@ -85,13 +85,13 @@ describe('Integration | Component | infinite-scroll-table', function () {
 
   it('shows fetched entries', async function () {
     await render(hbs`<div style="display: grid; height: 10em;">
-      {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
+      <InfiniteScrollTable @onFetchEntries={{onFetchEntries}} as |section|>
         {{#if (eq section.sectionName "entryRow")}}
           <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}>
             <td class="my-td">{{section.entry.index}}</td>
           </tr>
         {{/if}}
-      {{/infinite-scroll-table}}
+      </InfiniteScrollTable>
     </div>`);
 
     const rows = findAll('.table-entry');
@@ -110,11 +110,11 @@ describe('Integration | Component | infinite-scroll-table', function () {
   it('shows spinner during initial load', async function () {
     this.set('onFetchEntries', () => new Promise(() => {}));
     await render(hbs`<div style="display: grid; height: 10em;">
-      {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
+      <InfiniteScrollTable @onFetchEntries={{onFetchEntries}} as |section|>
         {{#if (eq section.sectionName "entryRow")}}
           <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}></tr>
         {{/if}}
-      {{/infinite-scroll-table}}
+      </InfiniteScrollTable>
     </div>`);
 
     expect(findAll('.loading-row .spinner')).to.have.length(1);
@@ -123,11 +123,11 @@ describe('Integration | Component | infinite-scroll-table', function () {
 
   it('does not show any spinner when entries are loaded', async function () {
     await render(hbs`<div style="display: grid; height: 10em;">
-      {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
+      <InfiniteScrollTable @onFetchEntries={{onFetchEntries}} as |section|>
         {{#if (eq section.sectionName "entryRow")}}
           <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}><td></td></tr>
         {{/if}}
-      {{/infinite-scroll-table}}
+      </InfiniteScrollTable>
     </div>`);
 
     expect(find('.loading-row .spinner')).to.not.exist;
@@ -135,11 +135,11 @@ describe('Integration | Component | infinite-scroll-table', function () {
 
   it('shows bottom spinner when next entries are being loaded', async function () {
     await render(hbs`<div style="display: grid; height: 10em;">
-      {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
+      <InfiniteScrollTable @onFetchEntries={{onFetchEntries}} as |section|>
         {{#if (eq section.sectionName "entryRow")}}
           <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}><td></td></tr>
         {{/if}}
-      {{/infinite-scroll-table}}
+      </InfiniteScrollTable>
     </div>`);
 
     this.set('hangLoadingNext', true);
@@ -176,17 +176,17 @@ describe('Integration | Component | infinite-scroll-table', function () {
         const onFetchEntries = this.get('onFetchEntries');
         this.set('updateStrategy', strategy);
         await render(hbs`<div style="display: grid; height: 10em;">
-          {{#infinite-scroll-table
-            onFetchEntries=onFetchEntries
-            updateStrategy=updateStrategy
+          <InfiniteScrollTable
+            @onFetchEntries={{onFetchEntries}}
+            @updateStrategy={{updateStrategy}}
             as |section|
-          }}
+          >
             {{#if (eq section.sectionName "entryRow")}}
               <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}>
                 <td>{{section.entry.index}}</td>
               </tr>
             {{/if}}
-          {{/infinite-scroll-table}}
+          </InfiniteScrollTable>
         </div>`);
 
         onFetchEntries.resetHistory();
@@ -208,15 +208,15 @@ describe('Integration | Component | infinite-scroll-table', function () {
         const onFetchEntries = this.get('onFetchEntries');
         this.set('updateStrategy', strategy);
         await render(hbs`<div style="display: grid; height: 10em;">
-          {{#infinite-scroll-table
-            onFetchEntries=onFetchEntries
-            updateStrategy=updateStrategy
+          <InfiniteScrollTable
+            @onFetchEntries={{onFetchEntries}}
+            @updateStrategy={{updateStrategy}}
             as |section|
-          }}
+          >
             {{#if (eq section.sectionName "entryRow")}}
               <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}><td></td></tr>
             {{/if}}
-          {{/infinite-scroll-table}}
+          </InfiniteScrollTable>
         </div>`);
 
         await scrollTo('.table-scrollable-container', 0, 10000);
@@ -236,17 +236,17 @@ describe('Integration | Component | infinite-scroll-table', function () {
         const onFetchEntries = this.get('onFetchEntries');
         this.set('updateStrategy', strategy);
         await render(hbs`<div style="display: grid; height: 10em;">
-          {{#infinite-scroll-table
-            onFetchEntries=onFetchEntries
-            updateStrategy=updateStrategy
+          <InfiniteScrollTable
+            @onFetchEntries={{onFetchEntries}}
+            @updateStrategy={{updateStrategy}}
             as |section|
-          }}
+          >
             {{#if (eq section.sectionName "entryRow")}}
               <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}>
                 <td>{{section.entry.index}}</td>
               </tr>
             {{/if}}
-          {{/infinite-scroll-table}}
+          </InfiniteScrollTable>
         </div>`);
 
         await scrollTo('.table-scrollable-container', 0, 10000);
@@ -275,19 +275,19 @@ describe('Integration | Component | infinite-scroll-table', function () {
   });
 
   it('renders table title when "title" is set', async function () {
-    await render(hbs`{{infinite-scroll-table title="some title"}}`);
+    await render(hbs`<InfiniteScrollTable @title="some title" />`);
 
     expect(find('.table-title')).to.have.trimmed.text('some title');
   });
 
   it('does not render table title tip when "titleTip" is not set', async function () {
-    await render(hbs`{{infinite-scroll-table title="test"}}`);
+    await render(hbs`<InfiniteScrollTable @title="test" />`);
 
     expect(find('.table-title .title-tip')).to.not.exist;
   });
 
   it('renders table title tip when "titleTip" is set', async function () {
-    await render(hbs`{{infinite-scroll-table title="test" titleTip="some tip"}}`);
+    await render(hbs`<InfiniteScrollTable @title="test" @titleTip="some tip" />`);
 
     const tipContent = await new OneTooltipHelper(
       '.table-title .title-tip .one-icon'
@@ -296,11 +296,11 @@ describe('Integration | Component | infinite-scroll-table', function () {
   });
 
   it('adds custom classes to the table title tip when "titleTipClassName" is set', async function () {
-    await render(hbs`{{infinite-scroll-table
-      title="test"
-      titleTip="some tip"
-      titleTipClassName="abc"
-    }}`);
+    await render(hbs`<InfiniteScrollTable
+      @title="test"
+      @titleTip="some tip"
+      @titleTipClassName="abc"
+    />`);
 
     const tooltipHelper = await new OneTooltipHelper(
       '.table-title .title-tip .one-icon'
@@ -312,11 +312,11 @@ describe('Integration | Component | infinite-scroll-table', function () {
   it('does not add "clickable" class to entries and does not react to user click when "doesOpenDetailsOnClick" is not set',
     async function () {
       await render(hbs`<div style="display: grid; height: 10em;">
-        {{#infinite-scroll-table onFetchEntries=onFetchEntries as |section|}}
+        <InfiniteScrollTable @onFetchEntries={{onFetchEntries}} as |section|>
           {{#if (eq section.sectionName "entryRow")}}
             <tr class={{section.rowClassName}} data-row-id={{section.dataRowId}}><td></td></tr>
           {{/if}}
-        {{/infinite-scroll-table}}
+        </InfiniteScrollTable>
       </div>`);
 
       expect(find('.table-entry.clickable')).to.not.exist;
@@ -328,11 +328,11 @@ describe('Integration | Component | infinite-scroll-table', function () {
   it('adds "clickable" class to entries and shows details on entry click when "doesOpenDetailsOnClick" is true',
     async function () {
       await render(hbs`<div style="display: grid; height: 10em;">
-        {{#infinite-scroll-table
-          onFetchEntries=onFetchEntries
-          doesOpenDetailsOnClick=true
+        <InfiniteScrollTable
+          @onFetchEntries={{onFetchEntries}}
+          @doesOpenDetailsOnClick={{true}}
           as |section|
-        }}
+        >
           {{#if (eq section.sectionName "entryRow")}}
             <tr
               class={{section.rowClassName}}
@@ -342,7 +342,7 @@ describe('Integration | Component | infinite-scroll-table', function () {
           {{else if (eq section.sectionName "entryDetails")}}
             <span class="my-span">{{section.entry.index}}</span>
           {{/if}}
-        {{/infinite-scroll-table}}
+        </InfiniteScrollTable>
       </div>`);
 
       const firstEntry = find('.table-entry');
@@ -367,12 +367,12 @@ describe('Integration | Component | infinite-scroll-table', function () {
   }].forEach(({ triggerDescription, trigger }) => {
     it(`hides details on ${triggerDescription} click`, async function () {
       await render(hbs`<div style="display: grid; height: 10em;">
-        {{#infinite-scroll-table
-          title="my title"
-          onFetchEntries=onFetchEntries
-          doesOpenDetailsOnClick=true
+        <InfiniteScrollTable
+          @title="my title"
+          @onFetchEntries={{onFetchEntries}}
+          @doesOpenDetailsOnClick={{true}}
           as |section|
-        }}
+        >
           {{#if (eq section.sectionName "tableHead")}}
             <tr><th class="my-th"></th></tr>
           {{else if (eq section.sectionName "entryRow")}}
@@ -382,7 +382,7 @@ describe('Integration | Component | infinite-scroll-table', function () {
               onclick={{section.onRowClick}}
             ><td></td></tr>
           {{/if}}
-        {{/infinite-scroll-table}}
+        </InfiniteScrollTable>
       </div>`);
 
       await click('.table-entry');
@@ -394,11 +394,11 @@ describe('Integration | Component | infinite-scroll-table', function () {
 
   it('changes visible details when user clicks on another entry', async function () {
     await render(hbs`<div style="display: grid; height: 10em;">
-      {{#infinite-scroll-table
-        onFetchEntries=onFetchEntries
-        doesOpenDetailsOnClick=true
+      <InfiniteScrollTable
+        @onFetchEntries={{onFetchEntries}}
+        @doesOpenDetailsOnClick={{true}}
         as |section|
-      }}
+      >
         {{#if (eq section.sectionName "entryRow")}}
           <tr
             class={{section.rowClassName}}
@@ -408,7 +408,7 @@ describe('Integration | Component | infinite-scroll-table', function () {
         {{else if (eq section.sectionName "entryDetails")}}
           <span class="my-span">{{section.entry.index}}</span>
         {{/if}}
-      {{/infinite-scroll-table}}
+      </InfiniteScrollTable>
     </div>`);
 
     const entries = findAll('.table-entry');
