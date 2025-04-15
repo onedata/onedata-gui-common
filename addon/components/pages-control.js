@@ -139,6 +139,7 @@ export default Component.extend(I18n, {
     changePerPage(value) {
       this.changePerPage(value);
       this.set('pageSize', value);
+      this.changePage(1);
     },
   },
 });

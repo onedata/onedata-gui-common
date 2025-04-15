@@ -44,7 +44,7 @@ export default EmberObject.extend({
         return [];
       }
       const startIndex = (this.activePageNumber - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
+      const endIndex = startIndex + parseInt(this.pageSize);
       return this.array.slice(startIndex, endIndex);
     }
   ),
