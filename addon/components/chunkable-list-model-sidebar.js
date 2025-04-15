@@ -17,19 +17,21 @@ export default class ChunkableListModelSidebar extends InfiniteScrollSidebar {
    * Should contain all known items ordered by index.
    * @override
    */
-  @reads('model.collection.fullArray') sortedCollection;
+  @reads('model.collection.fullArray')
+  sortedCollection;
 
   /**
    * Disable OneSidebar filtering features - the filtering will be set on the collection
    * object.
    * @override
    */
-  @reads('model.collection.array') filteredCollection;
+  @reads('model.collection.array')
+  filteredCollection;
 
   /**
    * @override
    */
-  @computed()
+  @computed
   get context() {
     return ChunkableListModelSidebarContext.create({
       sidebar: this,
@@ -63,6 +65,9 @@ export default class ChunkableListModelSidebar extends InfiniteScrollSidebar {
    */
   async mountInfiniteScroll(element) {
     await super.mountInfiniteScroll(element);
+    if (this.isDestroyed) {
+      return;
+    }
     const chunkableListModelReloader =
       this.model.collection.chunkableListModel.chunkableListModelReloader;
     chunkableListModelReloader.onListChanged = async () => {
@@ -88,7 +93,9 @@ class ChunkableListModelSidebarContext extends EmberObject {
   /** @type {Components.OneSidebar} */
   sidebar = undefined;
 
-  @reads('sidebar.sortedCollection') sortedCollection;
+  @reads('sidebar.sortedCollection')
+  sortedCollection;
 
-  @reads('sidebar.model.collection.filteredFullArray') visibleCollection;
+  @reads('sidebar.model.collection.filteredFullArray')
+  visibleCollection;
 }

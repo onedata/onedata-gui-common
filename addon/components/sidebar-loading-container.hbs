@@ -1,0 +1,17 @@
+{{#if sidebarModelProxy}}
+  <PromiseProxyContainer
+    @spinnerBlockClass={{this.loadingContainerClass}}
+    @sizeClass={{this.loadingContainerSizeClass}}
+    @loadingLabel={{this.loadingLabel}}
+    @proxy={{this.sidebarModelProxy}}
+  >
+    {{yield this.sidebarModelProxy.content}}
+  </PromiseProxyContainer>
+{{else}}
+  <LoadingContainer
+    @spinnerBlockClass={{this.loadingContainerClass}}
+    @sizeClass={{this.loadingContainerSizeClass}}
+    @loadingLabel={{this.loadingLabel}}
+    @isLoading={{true}}
+  />
+{{/if}}

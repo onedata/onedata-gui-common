@@ -386,9 +386,11 @@ class SidebarContext extends EmberObject {
   /** @type {Components.OneSidebar} */
   sidebar = undefined;
 
-  @reads('sidebar.sortedCollection') sortedCollection;
+  @reads('sidebar.sortedCollection')
+  sortedCollection;
 
-  @reads('sidebar.filteredCollection') visibleCollection;
+  @reads('sidebar.filteredCollection')
+  visibleCollection;
 }
 
 /**

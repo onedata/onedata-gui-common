@@ -33,13 +33,33 @@ export class ChunkableListModel {
     return this.chunkableListModelFetcher.filterAdvanced;
   }
 
-  constructor(listModel, chunksArrayOptions) {
+  /**
+   * @type {ProgressTracker|null}
+   */
+  get progressTracker() {
+    return this.chunkableListModelFetcher.progressTracker;
+  }
+
+  constructor({ listModel, batchRequestRegistry, chunksArrayOptions }) {
+    if (!listModel) {
+      throw new Error(
+        'ChunkableListModel.constructor: listModel is mandatory'
+      );
+    }
+    if (!batchRequestRegistry) {
+      throw new Error(
+        'ChunkableListModel.constructor: batchRequestRegistry is mandatory'
+      );
+    }
 
     /** @type {GraphListModel} */
     this.listModel = listModel;
 
     /** @type {ChunkableListModelFetcher} */
-    this.chunkableListModelFetcher = new this.ChunkableListModelFetcherClass(listModel);
+    this.chunkableListModelFetcher = new this.ChunkableListModelFetcherClass(
+      listModel,
+      batchRequestRegistry
+    );
 
     /** @type {ReplacingChunksArray} */
     this.chunksArray = ReplacingChunksArray.create({
