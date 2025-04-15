@@ -1,0 +1,15 @@
+<div class="power-select-input-container" onclick={{action "onClick"}}>
+  <input
+    type="search"
+    role="combobox"
+    class="ember-power-select-search-input"
+    value={{inputValue}}
+    aria-controls={{listboxId}}
+    placeholder={{placeholder}}
+    oninput={{action "onInput"}}
+    disabled={{select.disabled}}
+    onfocus={{action "onFocus"}}
+    onblur={{action "onBlur"}}
+  >
+</div>
+<span class="ember-power-select-status-icon" onclick={{action "onClick"}}></span>

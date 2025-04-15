@@ -41,7 +41,8 @@ export default class InfiniteScrollSidebar extends OneSidebar {
     return this.rowHeight;
   }
 
-  @reads('model.collection.chunksArray') chunksArray;
+  @reads('model.collection.chunksArray')
+  chunksArray;
 
   @computed(
     'primaryItemId',

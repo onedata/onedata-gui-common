@@ -32,13 +32,15 @@ export default class ChunksArraySidebar extends InfiniteScrollSidebar {
   /**
    * @override
    */
-  @reads('model.collection.chunksArray') sortedCollection;
+  @reads('model.collection.chunksArray')
+  sortedCollection;
 
   /**
    * Disable filtering features.
    * @override
    */
-  @reads('sortedCollection') filteredCollection;
+  @reads('sortedCollection')
+  filteredCollection;
 
   init() {
     super.init(...arguments);

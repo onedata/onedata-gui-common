@@ -17,5 +17,6 @@ export default class StaticListField extends FieldComponentBase {
   /**
    * @type {ComputedProperty<Array<string|ListFieldComponent>>}
    */
-  @reads('field.value') items;
+  @reads('field.value')
+  items;
 }
