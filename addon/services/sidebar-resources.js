@@ -72,6 +72,7 @@ export default Service.extend({
   getButtonsFor( /* resourceType, context */ ) {
     return [];
   },
+
   /**
    * @param {string} resourceType
    * @returns {string}
