@@ -55,10 +55,18 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {boolean}
    */
-  isPerPageControlDropdown: false,
+  isPerPageDropdownVisible: false,
 
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
   isFiltered: false,
 
+  /**
+   * @virtual optional
+   * @type {string}
+   */
   customFilteredText: undefined,
 
   filteredText: computed('customFilteredText', function filteredText() {
@@ -68,7 +76,7 @@ export default Component.extend(I18n, {
     return this.t('filtered');
   }),
 
-  perPage: computed('customPerPageText', function perPage() {
+  perPageText: computed('customPerPageText', function perPageText() {
     if (this.customPerPageText) {
       return this.customPerPageText;
     }
@@ -128,8 +136,8 @@ export default Component.extend(I18n, {
         // ignore wrong numbers
       }
     },
-    perPageChange(value) {
-      this.perPageChange(value);
+    changePerPage(value) {
+      this.changePerPage(value);
       this.set('pageSize', value);
     },
   },

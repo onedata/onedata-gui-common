@@ -46,15 +46,15 @@
 </button>
 <div class={{concat-classes
   "pages-control-page-size"
-  (if isPerPageControlDropdown "with-dropdown")
+  (if isPerPageDropdownVisible "with-dropdown")
 }}>
-  {{#if isPerPageControlDropdown}}
+  {{#if isPerPageDropdownVisible}}
     <OneDropdown
       @triggerClass="small pages-control-page-size-dropdown"
       @dropdownClass="small"
       @options={{array 10 20 50 100}}
       @selected={{pageSize}}
-      @onChange={{action "perPageChange"}}
+      @onChange={{action "changePerPage"}}
       as |value|
     >
       {{value}}
@@ -62,6 +62,6 @@
   {{else}}
     <span class="pages-control-page-size-number">{{pageSize}}</span>
   {{/if}}
-  {{perPage}}
+  {{perPageText}}
 </div>
 {{yield}}
