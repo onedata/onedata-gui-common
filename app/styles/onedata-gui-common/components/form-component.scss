@@ -430,6 +430,88 @@ $form-component-view-margin: $padding-base-vertical;
   }
 }
 
+.autocomplete-dropdown-field {
+  .ember-power-select-search-input {
+    border: none;
+  }
+
+  .autocomplete-dropdown-field-trigger {
+    padding: 0;
+
+    &.ember-power-select-trigger--active {
+      @include box-shadow($control-box-shadow-focus);
+      border: $ember-power-select-border-width solid $input-border-focus;
+    }
+  }
+
+  .autocomplete-dropdown-trigger {
+    width: 100%;
+    padding-right: calc(var(--ember-power-select-trigger-padding-right) + var(--dropdown-arrow-separator-spacing));
+    --dropdown-arrow-separator-spacing: 12px;
+    --autocomplete-dropdown-vertical-spacing: 8px;
+
+    .power-select-input-container {
+      position: relative;
+      padding-top: $padding-base-vertical;
+      padding-bottom: $padding-base-vertical;
+      cursor: text;
+
+      &::before {
+        position: absolute;
+        content: '';
+        right: 0;
+        top: var(--autocomplete-dropdown-vertical-spacing);
+        bottom: var(--autocomplete-dropdown-vertical-spacing);
+        border-right: $ember-power-select-border-width solid $main-border-color;
+      }
+
+      .ember-power-select-search-input {
+        padding-left: $padding-large-horizontal;
+        padding-right: var(--dropdown-arrow-separator-spacing);
+        background: none;
+      }
+    }
+  }
+
+  .small .autocomplete-dropdown-trigger {
+    --dropdown-arrow-separator-spacing: 8px;
+    --autocomplete-dropdown-vertical-spacing: 4px;
+
+    .power-select-input-container {
+      padding-top: $ember-power-select-option-small-padding-vertical;
+      padding-bottom: $ember-power-select-option-small-padding-vertical;
+
+      .ember-power-select-search-input {
+        padding-left: $ember-power-select-option-small-padding-horizontal;
+      }
+    }
+  }
+}
+
+.autocomplete-dropdown-field-dropdown {
+  .highlighted {
+    background-color: $ember-power-select-highlighted-background;
+  }
+
+  .ember-power-select-option {
+    display: flex;
+    justify-content: space-between;
+    padding-left: $padding-large-horizontal;
+
+    .custom-option-text {
+      opacity: $disabled-opacity;
+      white-space: nowrap;
+      padding-left: $ember-power-select-option-small-padding-horizontal;
+      // empirical alignment to arrow in input
+      padding-right: 8px;
+    }
+  }
+  &.small .custom-option-text {
+    // empirical alignment to arrow in input
+    padding-right: 1px;
+  }
+}
+
 .ember-power-select-trigger.custom-value-dropdown-field-trigger.small,
 .form-group-sm .ember-power-select-trigger.custom-value-dropdown-field-trigger {
   --dropdown-arrow-separator-spacing: 8px;
