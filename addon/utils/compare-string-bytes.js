@@ -1,6 +1,6 @@
 // FIXME: jsdoc
 
-import { compareNumberArrays } from './compare-number-arrays';
+import compareNumberArrays from './compare-number-arrays';
 
 export default function compareStringBytes(a, b) {
   return compareNumberArrays(stringToBytes(a), stringToBytes(b));
