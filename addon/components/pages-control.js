@@ -69,6 +69,12 @@ export default Component.extend(I18n, {
    */
   customFilteredText: undefined,
 
+  /**
+   * @virtual optional
+   * @type {number}
+   */
+  hasPageNumberInput: true,
+
   filteredText: computed('customFilteredText', function filteredText() {
     if (this.customFilteredText) {
       return this.customFilteredText;
@@ -82,11 +88,6 @@ export default Component.extend(I18n, {
     }
     return this.t('perPage');
   }),
-
-  /**
-   * @type {number}
-   */
-  hasPageNumberInput: true,
 
   disabledButtons: computed(
     'pagesCount',

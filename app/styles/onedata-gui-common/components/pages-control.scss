@@ -44,7 +44,11 @@
   }
 
   .pages-control-page-size-dropdown {
-    margin-right: 10px;
+    margin-right: 0.8em;
+
+    .ember-power-select-selected-item {
+      margin-right: 0.4em;
+    }
   }
 }
 
