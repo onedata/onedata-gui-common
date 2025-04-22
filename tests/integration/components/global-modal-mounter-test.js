@@ -15,14 +15,14 @@ describe('Integration | Component | global-modal-mounter', function () {
   });
 
   it('does not render anything in place', async function () {
-    await render(hbs `{{global-modal-mounter}}`);
+    await render(hbs `<GlobalModalMounter />`);
 
     expect(this.element.children).to.have.length(0);
   });
 
   it('renders component specified by modalManager.show call', async function () {
     this.owner.register('component:modals/some-modal', TestComponent);
-    await render(hbs `{{global-modal-mounter}}`);
+    await render(hbs `<GlobalModalMounter />`);
 
     this.get('modalManager').show('some-modal');
     await settled();
@@ -33,7 +33,7 @@ describe('Integration | Component | global-modal-mounter', function () {
   it('passes modal id, options and api to modal component', async function () {
     const modalOptions = Object.freeze({ a: 1 });
     this.owner.register('component:modals/some-modal', TestComponent);
-    await render(hbs `{{global-modal-mounter}}`);
+    await render(hbs `<GlobalModalMounter />`);
 
     this.get('modalManager').show('some-modal', modalOptions);
     await settled();

@@ -1,16 +1,16 @@
-{{#one-modal
-  class=modalClasses
-  open=open
-  size=size
-  keyboard=allowClose
-  backdropClose=allowClose
-  shouldCloseOnTransition=shouldCloseOnTransition
-  onShown=(action "shown")
-  onHide=(action "hide")
-  onHidden=(action "hidden")
-  fade=fade
+<OneModal
+  class={{modalClasses}}
+  @open={{open}}
+  @size={{size}}
+  @keyboard={{allowClose}}
+  @backdropClose={{allowClose}}
+  @shouldCloseOnTransition={{shouldCloseOnTransition}}
+  @onShown={{action "shown"}}
+  @onHide={{action "hide"}}
+  @onHidden={{action "hidden"}}
+  @fade={{fade}}
   as |modal|
-}}
+>
 
   {{yield (hash
     header=modal.header
@@ -20,6 +20,6 @@
     close=modal.close
   )}}
 
-{{/one-modal}}
+</OneModal>
 
 {{yield}}

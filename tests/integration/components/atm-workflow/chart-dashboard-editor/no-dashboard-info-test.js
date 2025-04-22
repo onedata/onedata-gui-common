@@ -43,7 +43,7 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/no-dashb
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/no-dashboard-info
-    onCreateDashboard=onCreateDashboard
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::NoDashboardInfo
+    @onCreateDashboard={{onCreateDashboard}}
+  />`);
 }

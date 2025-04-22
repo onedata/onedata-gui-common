@@ -18,10 +18,10 @@ describe('Integration | Component | content-clusters-onepanel-redirect', functio
       });
       this.set('redirectToOnepanelApp', redirectToOnepanelApp);
 
-      await render(hbs `{{content-clusters-onepanel-redirect
-        redirectToOnepanelApp=redirectToOnepanelApp
-        checkOnepanelAvailability=checkOnepanelAvailability
-      }}`);
+      await render(hbs `<ContentClustersOnepanelRedirect
+        @redirectToOnepanelApp={{redirectToOnepanelApp}}
+        @checkOnepanelAvailability={{checkOnepanelAvailability}}
+      />`);
 
       expect(checkOnepanelAvailability).to.be.calledOnce;
       expect(redirectToOnepanelApp).to.be.calledOnce;

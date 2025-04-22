@@ -11,14 +11,14 @@ describe('Integration | Component | one-size-edit', function () {
 
   it('displays size number and unit in display mode', async function () {
     this.set('value', 3 * Math.pow(1024, 3));
-    await render(hbs `{{one-size-edit value=value}}`);
+    await render(hbs `<OneSizeEdit @value={{value}} />`);
     expect(find('.size-number-input').value, 'size number').to.equal('3 GiB');
   });
 
   it('sets the size number and selector to proper size unit when editing',
     async function () {
       this.set('value', 3 * Math.pow(1024, 3));
-      await render(hbs `{{one-size-edit value=value forceStartEdit=true}}`);
+      await render(hbs `<OneSizeEdit @value={{value}} @forceStartEdit={{true}} />`);
 
       expect(find('.size-number-input').value, 'size number')
         .to.equal('3');
@@ -33,7 +33,11 @@ describe('Integration | Component | one-size-edit', function () {
     this.set('value', 1 * Math.pow(1024, 2));
     const onSave = sinon.stub().resolves();
     this.set('onSave', onSave);
-    await render(hbs `{{one-size-edit value=value forceStartEdit=true onSave=onSave}}`);
+    await render(hbs `<OneSizeEdit
+      @value={{value}}
+      @forceStartEdit={{true}}
+      @onSave={{onSave}}
+    />`);
 
     await fillIn('.size-number-input', '2');
     await selectChoose('.size-unit-select-group', 'GiB');

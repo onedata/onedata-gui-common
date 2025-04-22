@@ -1,9 +1,9 @@
 {{#if isPending}}
-  {{spin-spinner-block sizeClass=spinnerSize}}
+  <SpinSpinnerBlock @sizeClass={{spinnerSize}} />
   {{#if loadingText}}
     <span class="loading-text">{{loadingText}}</span>
   {{/if}}
 {{else if isRejected}}
-  {{resource-load-error reason=loadingError}}
+  <ResourceLoadError @reason={{loadingError}} />
 {{/if}}
 {{yield}}

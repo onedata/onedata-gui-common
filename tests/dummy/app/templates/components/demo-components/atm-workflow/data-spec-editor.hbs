@@ -1,5 +1,5 @@
 <form class="form form-component form-horizontal">
-  {{form-component/field-renderer field=rootGroup}}
+  <FormComponent::FieldRenderer @field={{rootGroup}} />
 </form>
 <textarea rows="10" cols="40" disabled>{{formattedLatestUserValue}}</textarea>
 {{yield}}

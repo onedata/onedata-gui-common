@@ -31,7 +31,7 @@ describe('Integration | Utility | is-new-tab-request-event', function () {
     const myActionSpy = sinon.spy(myAction);
     this.set('myActionSpy', myActionSpy);
 
-    await render(hbs `{{dummy-component myAction=myActionSpy}}`);
+    await render(hbs `<DummyComponent @myAction={{myActionSpy}} />`);
     await click('#btn');
 
     expect(myActionSpy).to.have.been.calledOnce;
@@ -44,7 +44,7 @@ describe('Integration | Utility | is-new-tab-request-event', function () {
     const myActionSpy = sinon.spy(myAction);
     this.set('myActionSpy', myActionSpy);
 
-    await render(hbs `{{dummy-component myAction=myActionSpy}}`);
+    await render(hbs `<DummyComponent @myAction={{myActionSpy}} />`);
     await click('#btn', { ctrlKey: true });
 
     expect(myActionSpy).to.have.been.calledOnce;
@@ -57,7 +57,7 @@ describe('Integration | Utility | is-new-tab-request-event', function () {
     const myActionSpy = sinon.spy(myAction);
     this.set('myActionSpy', myActionSpy);
 
-    await render(hbs `{{dummy-component myAction=myActionSpy}}`);
+    await render(hbs `<DummyComponent @myAction={{myActionSpy}} />`);
 
     await triggerKeyEvent('#btn', 'keydown', 13, { key: 'Enter' });
 
@@ -71,7 +71,7 @@ describe('Integration | Utility | is-new-tab-request-event', function () {
     const myActionSpy = sinon.spy(myAction);
     this.set('myActionSpy', myActionSpy);
 
-    await render(hbs `{{dummy-component myAction=myActionSpy}}`);
+    await render(hbs `<DummyComponent @myAction={{myActionSpy}} />`);
 
     await click('#btn', { button: 1, which: 2 });
 

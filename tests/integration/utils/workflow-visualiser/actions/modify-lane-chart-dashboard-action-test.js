@@ -109,7 +109,7 @@ describe('Integration | Utility | workflow-visualiser/actions/modify-lane-chart-
 });
 
 async function executeAction(testCase) {
-  await render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `<GlobalModalMounter />`);
   const resultPromise = testCase.action.execute();
   await settled();
   return { resultPromise };

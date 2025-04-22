@@ -3,10 +3,10 @@
     {{tt this "showDashboardEditor"}}
   </a>
 </p>
-{{one-time-series-charts-section
-  live=live
-  sectionSpec=rootChartsSection
-  onGetTimeSeriesSchemas=onGetTimeSeriesSchemas
-  externalDataSources=externalDataSources
-  onQueryBatcherFetchData=onQueryBatcherFetchData
-}}
+<OneTimeSeriesChartsSection
+  @live={{live}}
+  @sectionSpec={{rootChartsSection}}
+  @onGetTimeSeriesSchemas={{onGetTimeSeriesSchemas}}
+  @externalDataSources={{externalDataSources}}
+  @onQueryBatcherFetchData={{onQueryBatcherFetchData}}
+/>

@@ -1,26 +1,26 @@
 {{#if (eq field.type "checkbox")}}
-  {{one-way-toggle
-    class=inputClass
-    inputId=inputId
-    checked=value
-    update=(action "inputChanged")
-    isReadOnly=disabled
-    onFocusOut=(action "focusedOut")
-    threeState=field.threeState
-    allowThreeStateToggle=field.allowThreeStateToggle
-    showLockForReadOnly=false
-  }}
+  <OneWayToggle
+    class={{inputClass}}
+    @inputId={{inputId}}
+    @checked={{value}}
+    @update={{action "inputChanged"}}
+    @isReadOnly={{disabled}}
+    @onFocusOut={{action "focusedOut"}}
+    @threeState={{field.threeState}}
+    @allowThreeStateToggle={{field.allowThreeStateToggle}}
+    @showLockForReadOnly={{false}}
+  />
 {{else if (eq field.type "radio-group")}}
-  {{one-way-radio-group
-    class=inputClass
-    inputId=inputId
-    value=value
-    fieldName=field.name
-    options=field.options
-    isReadOnly=disabled
-    update=(action "inputChanged")
-    onFocusOut=(action "focusedOut")
-  }}
+  <OneWayRadioGroup
+    class={{inputClass}}
+    @inputId={{inputId}}
+    @value={{value}}
+    @fieldName={{field.name}}
+    @options={{field.options}}
+    @isReadOnly={{disabled}}
+    @update={{action "inputChanged"}}
+    @onFocusOut={{action "focusedOut"}}
+  />
 {{else}}
   {{!-- using input and change events to be compatible with one-way-input --}}
   <input

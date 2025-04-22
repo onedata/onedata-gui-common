@@ -3,24 +3,24 @@
 {{/if}}
 
 {{#if (eq itemDataSpec.type "object")}}
-  {{modals/workflow-visualiser/store-modal/visible-properties-selector
-    availableProperties=availableColumns
-    visibleProperties=visibleColumns
-    isMaxPropertiesCountReached=(gte availableColumns.length maxAvailableColumnsCount)
-    onTogglePropertyVisibility=(action "toggleColumnVisibility")
-  }}
+  <Modals::WorkflowVisualiser::StoreModal::VisiblePropertiesSelector
+    @availableProperties={{availableColumns}}
+    @visibleProperties={{visibleColumns}}
+    @isMaxPropertiesCountReached={{gte availableColumns.length maxAvailableColumnsCount}}
+    @onTogglePropertyVisibility={{action "toggleColumnVisibility"}}
+  />
 {{/if}}
 
 {{!-- Adding 1 to tableColumnsCount to include traceId column --}}
-{{#infinite-scroll-table
-  onFetchEntries=fetchEntriesCallback
-  columnsCount=(add tableColumnsCount 1)
-  updateStrategy="always"
-  rowHeight=45
-  doesOpenDetailsOnClick=true
-  initialJumpIndex=(get indicesToHighlight "0")
+<InfiniteScrollTable
+  @onFetchEntries={{fetchEntriesCallback}}
+  @columnsCount={{add tableColumnsCount 1}}
+  @updateStrategy="always"
+  @rowHeight={{45}}
+  @doesOpenDetailsOnClick={{true}}
+  @initialJumpIndex={{get indicesToHighlight "0"}}
   as |section|
-}}
+>
   {{#if (eq section.sectionName "tableHead")}}
 
     {{#component tableHeaderRowPresenterComponent
@@ -50,9 +50,9 @@
       }}
         {{#if (eq row.section "start")}}
           <td class="column-trace-id">
-            {{#truncated-string}}
+            <TruncatedString>
               {{get itemIndexToTraceIdMap section.entry.index}}
-            {{/truncated-string}}
+            </TruncatedString>
           </td>
         {{/if}}
       {{/component}}
@@ -67,9 +67,9 @@
         onclick={{section.onRowClick}}
       >
         <td class="column-trace-id">
-          {{#truncated-string}}
+          <TruncatedString>
             {{get itemIndexToTraceIdMap section.entry.index}}
-          {{/truncated-string}}
+          </TruncatedString>
         </td>
         <td colspan={{tableColumnsCount}} class="truncate">
           {{evaluate-function createErrorMessage section.entry}}
@@ -79,19 +79,19 @@
 
   {{else if (eq section.sectionName "entryDetails")}}
 
-    {{modals/workflow-visualiser/store-modal/value-container-presenter
-      dataSpec=itemDataSpec
-      valueContainer=section.entry
-      context=context
-    }}
+    <Modals::WorkflowVisualiser::StoreModal::ValueContainerPresenter
+      @dataSpec={{itemDataSpec}}
+      @valueContainer={{section.entry}}
+      @context={{context}}
+    />
     <div class="trace-id-container">
-      {{one-clipboard-line
+      <OneClipboardLine
         class="trace-id-clipboard-line"
-        size="sm"
-        label=(concat (tt this "traceIdHeader") ":")
-        value=(get itemIndexToTraceIdMap section.entry.index)
-      }}
+        @size="sm"
+        @label={{concat (tt this "traceIdHeader") ":"}}
+        @value={{get itemIndexToTraceIdMap section.entry.index}}
+      />
     </div>
 
   {{/if}}
-{{/infinite-scroll-table}}
+</InfiniteScrollTable>

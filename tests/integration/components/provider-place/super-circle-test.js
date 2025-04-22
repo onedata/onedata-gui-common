@@ -8,7 +8,7 @@ describe('Integration | Component | provider-place/super-circle', function () {
   setupRenderingTest();
 
   it('renders with source and without desitnation animation class', async function () {
-    await render(hbs `{{provider-place/super-circle isSource=true}}`);
+    await render(hbs `<ProviderPlace::SuperCircle @isSource={{true}} />`);
 
     const superCircle = find('.super-circle');
 
@@ -17,7 +17,7 @@ describe('Integration | Component | provider-place/super-circle', function () {
   });
 
   it('renders with destination and without source animation class', async function () {
-    await render(hbs `{{provider-place/super-circle isDestination=true}}`);
+    await render(hbs `<ProviderPlace::SuperCircle @isDestination={{true}} />`);
 
     const superCircle = find('.super-circle');
 
@@ -27,7 +27,7 @@ describe('Integration | Component | provider-place/super-circle', function () {
 
   it('renders with source and destination animation classes', async function () {
     await render(hbs `
-      {{provider-place/super-circle isDestination=true isSource=true}}
+      <ProviderPlace::SuperCircle @isDestination={{true}} @isSource={{true}} />
     `);
 
     const superCircle = find('.super-circle');
@@ -38,7 +38,7 @@ describe('Integration | Component | provider-place/super-circle', function () {
 
   it('renders without source and destination animation classes', async function () {
     await render(hbs `
-      {{provider-place/super-circle isDestination=false isSource=false}}
+      <ProviderPlace::SuperCircle @isDestination={{false}} @isSource={{false}} />
     `);
 
     const superCircle = find('.super-circle');

@@ -11,7 +11,7 @@ describe('Integration | Component | workflow-visualiser/visualiser-space', funct
   setupRenderingTest();
 
   it('has classes "workflow-visualiser-space" and "workflow-visualiser-element"', async function () {
-    await render(hbs `{{workflow-visualiser/visualiser-space}}`);
+    await render(hbs `<WorkflowVisualiser::VisualiserSpace />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0])
@@ -29,7 +29,9 @@ describe('Integration | Component | workflow-visualiser/visualiser-space', funct
           [siblingName]: undefined,
         }));
 
-        await render(hbs `{{workflow-visualiser/visualiser-space elementModel=space}}`);
+        await render(hbs `<WorkflowVisualiser::VisualiserSpace
+          @elementModel={{space}}
+        />`);
 
         expect(find('.workflow-visualiser-space')).to.not.have.attr(htmlAttrForSibling);
       });
@@ -42,7 +44,7 @@ describe('Integration | Component | workflow-visualiser/visualiser-space', funct
         }),
       }));
 
-      await render(hbs `{{workflow-visualiser/visualiser-space elementModel=space}}`);
+      await render(hbs `<WorkflowVisualiser::VisualiserSpace @elementModel={{space}} />`);
 
       expect(find('.workflow-visualiser-space'))
         .to.have.attr(htmlAttrForSibling, elementId);

@@ -18,7 +18,7 @@ describe('Integration | Component | one-datetime-picker', function () {
   });
 
   it('has class "one-datetime-picker"', async function () {
-    await render(hbs `{{one-datetime-picker}}`);
+    await renderWithoutParams();
 
     expect(find('.one-datetime-picker')).to.exist;
   });
@@ -30,7 +30,7 @@ describe('Integration | Component | one-datetime-picker', function () {
     });
     this.set('clock', clock);
 
-    await render(hbs `{{one-datetime-picker}}`);
+    await renderWithoutParams();
 
     const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.waitForPickerInit(clock)
@@ -40,7 +40,7 @@ describe('Integration | Component | one-datetime-picker', function () {
   });
 
   it('does render datetime picker after input click', async function () {
-    await render(hbs `{{one-datetime-picker}}`);
+    await renderWithoutParams();
 
     const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.openPicker()
@@ -50,7 +50,7 @@ describe('Integration | Component | one-datetime-picker', function () {
   });
 
   it('adds "datetime-picker" class to datetime picker element', async function () {
-    await render(hbs `{{one-datetime-picker}}`);
+    await renderWithoutParams();
 
     const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.openPicker()
@@ -63,7 +63,7 @@ describe('Integration | Component | one-datetime-picker', function () {
     const changeSpy = sinon.spy();
     this.set('change', changeSpy);
 
-    await render(hbs `{{one-datetime-picker onChange=(action change)}}`);
+    await render(hbs `<OneDatetimePicker @onChange={{action change}} />`);
 
     const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.selectToday()
@@ -74,7 +74,7 @@ describe('Integration | Component | one-datetime-picker', function () {
   });
 
   it('can be disabled', async function () {
-    await render(hbs `{{one-datetime-picker disabled=true}}`);
+    await render(hbs `<OneDatetimePicker @disabled={{true}} />`);
 
     expect(find('input[disabled]')).to.exist;
     const pickerHelper = new OneDatetimePickerHelper(find('input'));
@@ -88,8 +88,12 @@ describe('Integration | Component | one-datetime-picker', function () {
     const placeholderText = 'sth';
     this.set('placeholderText', placeholderText);
 
-    await render(hbs `{{one-datetime-picker placeholder=placeholderText}}`);
+    await render(hbs `<OneDatetimePicker @placeholder={{placeholderText}} />`);
 
     expect(find('input').placeholder).to.equal(placeholderText);
   });
 });
+
+async function renderWithoutParams() {
+  await render(hbs `<OneDatetimePicker />`);
+}

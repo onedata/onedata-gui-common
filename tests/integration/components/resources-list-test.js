@@ -16,7 +16,7 @@ describe('Integration | Component | resources-list', function () {
   });
 
   it('has class "resources-list', async function () {
-    await render(hbs `{{resources-list}}`);
+    await render(hbs `<ResourcesList />`);
 
     expect(find('.resources-list')).to.exist;
   });
@@ -32,7 +32,7 @@ describe('Integration | Component | resources-list', function () {
         label: 'abc',
       })]);
 
-      await render(hbs `{{resources-list items=items}}`);
+      await render(hbs `<ResourcesList @items={{items}} />`);
 
       const itemElems = findAll('.resource-item');
       expect(itemElems).to.have.length(2);
@@ -55,7 +55,7 @@ describe('Integration | Component | resources-list', function () {
         label: 'label',
       })]);
 
-      await render(hbs `{{resources-list items=items}}`);
+      await render(hbs `<ResourcesList @items={{items}} />`);
 
       const itemElems = findAll('.resource-item');
       expect(itemElems).to.have.length(1);
@@ -74,7 +74,7 @@ describe('Integration | Component | resources-list', function () {
         label: 'abc',
       })]);
 
-      await render(hbs `{{resources-list items=items}}`);
+      await render(hbs `<ResourcesList @items={{items}} />`);
 
       expect(find('.resource-item .btn-menu-toggle')).to.not.exist;
     }
@@ -91,7 +91,7 @@ describe('Integration | Component | resources-list', function () {
         })],
       })]);
 
-      await render(hbs `{{resources-list items=items}}`);
+      await render(hbs `<ResourcesList @items={{items}} />`);
 
       expect(find('.resource-item .btn-menu-toggle')).to.exist;
       return click('.btn-menu-toggle')
@@ -116,7 +116,7 @@ describe('Integration | Component | resources-list', function () {
         actions: [action],
       })]);
 
-      await render(hbs `{{resources-list items=items}}`);
+      await render(hbs `<ResourcesList @items={{items}} />`);
 
       return click('.btn-menu-toggle')
         .then(() => click(

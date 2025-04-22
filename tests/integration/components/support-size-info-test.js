@@ -35,7 +35,7 @@ describe('Integration | Component | support-size-info', function () {
 
   it('renders total support size', async function () {
     await render(hbs `
-      {{support-size-info data=data}}
+      <SupportSizeInfo @data={{data}} />
     `);
 
     expect(find('.support-size').textContent).to.contain('2 MiB');
@@ -43,7 +43,7 @@ describe('Integration | Component | support-size-info', function () {
 
   it('renders support size chart', async function () {
     await render(hbs `
-      {{support-size-info data=data}}
+      <SupportSizeInfo @data={{data}} />
     `);
 
     await settled();
@@ -56,11 +56,11 @@ describe('Integration | Component | support-size-info', function () {
 
   it('renders support size table', async function () {
     await render(hbs `
-      {{support-size-info
-        data=data
-        supporterNameHeader="Provider"
-        supporterSizeHeader="Support size"
-      }}
+      <SupportSizeInfo
+        @data={{data}}
+        @supporterNameHeader="Provider"
+        @supporterSizeHeader="Support size"
+      />
     `);
     await click('.btn.table-mode');
 

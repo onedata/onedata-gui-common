@@ -26,7 +26,7 @@ describe('Integration | Component | form-component/loading-field', function () {
   it(
     'has class "loading-field"',
     async function () {
-      await render(hbs `{{form-component/loading-field field=field}}`);
+      await render(hbs `<FormComponent::LoadingField @field={{field}} />`);
 
       expect(find('.loading-field')).to.exist;
     }
@@ -39,7 +39,7 @@ describe('Integration | Component | form-component/loading-field', function () {
         promise: new Promise(() => {}),
       }));
 
-      await render(hbs `{{form-component/loading-field field=field}}`);
+      await render(hbs `<FormComponent::LoadingField @field={{field}} />`);
 
       expect(find('.spin-spinner')).to.exist;
       expect(find('.loading-text').textContent.trim()).to.equal('Loading...');
@@ -57,7 +57,7 @@ describe('Integration | Component | form-component/loading-field', function () {
         loadingText: undefined,
       });
 
-      await render(hbs `{{form-component/loading-field field=field}}`);
+      await render(hbs `<FormComponent::LoadingField @field={{field}} />`);
 
       expect(find('.spin-spinner')).to.exist;
       expect(find('.loading-text')).to.not.exist;
@@ -72,7 +72,7 @@ describe('Integration | Component | form-component/loading-field', function () {
         promise: reject('err'),
       }));
 
-      await render(hbs `{{form-component/loading-field field=field}}`);
+      await render(hbs `<FormComponent::LoadingField @field={{field}} />`);
 
       expect(find('.resource-load-error')).to.exist;
       expect(find('.resource-load-error .error-details').textContent.trim())
@@ -87,7 +87,7 @@ describe('Integration | Component | form-component/loading-field', function () {
         promise: resolve(),
       }));
 
-      await render(hbs `{{form-component/loading-field field=field}}`);
+      await render(hbs `<FormComponent::LoadingField @field={{field}} />`);
 
       expect(find('.loading-field *')).to.not.exist;
     }
@@ -105,7 +105,7 @@ describe('Integration | Component | form-component/loading-field', function () {
         size: size,
       });
 
-      await render(hbs `{{form-component/loading-field field=field}}`);
+      await render(hbs `<FormComponent::LoadingField @field={{field}} />`);
 
       expect(find('.spinner-container')).to.have.class(spinnerClass);
     });

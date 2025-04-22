@@ -58,10 +58,10 @@ describe('Integration | Component | query-builder/block-selector', function () {
     });
 
     it(`renders operators: ${operatorsList.join(', ')}`, async function () {
-      await render(hbs `{{query-builder/block-selector
-        mode="create"
-        valuesBuilder=valuesBuilder
-      }}`);
+      await render(hbs `<QueryBuilder::BlockSelector
+        @mode="create"
+        @valuesBuilder={{valuesBuilder}}
+      />`);
 
       const operators = findAll('.operator-selector .operator');
       expect(operators).to.have.length(operatorsList.length);
@@ -77,11 +77,11 @@ describe('Integration | Component | query-builder/block-selector', function () {
         async function () {
           const addSpy = this.set('addSpy', sinon.spy((block) => this.set('block', block)));
 
-          await render(hbs `{{query-builder/block-selector
-            mode="create"
-            onBlockAdd=addSpy
-            valuesBuilder=valuesBuilder
-          }}`);
+          await render(hbs `<QueryBuilder::BlockSelector
+            @mode="create"
+            @onBlockAdd={{addSpy}}
+            @valuesBuilder={{valuesBuilder}}
+          />`);
 
           expect(addSpy).to.not.be.called;
           await click(`.operator-${operatorName}`);
@@ -93,11 +93,11 @@ describe('Integration | Component | query-builder/block-selector', function () {
     });
 
     it('lists query properties in dropdown', async function () {
-      await render(hbs `{{query-builder/block-selector
-        mode="create"
-        queryProperties=queryProperties
-        valuesBuilder=valuesBuilder
-      }}`);
+      await render(hbs `<QueryBuilder::BlockSelector
+        @mode="create"
+        @queryProperties={{queryProperties}}
+        @valuesBuilder={{valuesBuilder}}
+      />`);
 
       await clickTrigger('.property-selector-container');
 
@@ -114,12 +114,12 @@ describe('Integration | Component | query-builder/block-selector', function () {
       async function () {
         const addSpy = this.set('addSpy', sinon.spy((block) => this.set('block', block)));
 
-        await render(hbs `{{query-builder/block-selector
-          mode="create"
-          onBlockAdd=addSpy
-          queryProperties=queryProperties
-          valuesBuilder=valuesBuilder
-        }}`);
+        await render(hbs `<QueryBuilder::BlockSelector
+          @mode="create"
+          @onBlockAdd={{addSpy}}
+          @queryProperties={{queryProperties}}
+          @valuesBuilder={{valuesBuilder}}
+        />`);
 
         await selectChoose('.property-selector-container', 'numProp');
         await fillIn('.comparator-value', '10');
@@ -135,10 +135,10 @@ describe('Integration | Component | query-builder/block-selector', function () {
     );
 
     it('does not render edit-specific sections', async function () {
-      await render(hbs `{{query-builder/block-selector
-        mode="create"
-        valuesBuilder=valuesBuilder
-      }}`);
+      await render(hbs `<QueryBuilder::BlockSelector
+        @mode="create"
+        @valuesBuilder={{valuesBuilder}}
+      />`);
 
       expect(find('.surround-section')).to.not.exist;
       expect(find('.change-to-section')).to.not.exist;
@@ -153,10 +153,10 @@ describe('Integration | Component | query-builder/block-selector', function () {
     it(
       `renders operators: ${operatorsList.join(', ')} in "surround" section`,
       async function () {
-        await render(hbs `{{query-builder/block-selector
-          mode="edit"
-          valuesBuilder=valuesBuilder
-        }}`);
+        await render(hbs `<QueryBuilder::BlockSelector
+          @mode="edit"
+          @valuesBuilder={{valuesBuilder}}
+        />`);
         const operators = findAll('.surround-section .operator-selector .operator');
         expect(operators).to.have.length(operatorsList.length);
         operatorsList.forEach((operatorName, index) => {
@@ -176,12 +176,12 @@ describe('Integration | Component | query-builder/block-selector', function () {
             sinon.spy((blocks) => this.set('block', blocks[0]))
           );
 
-          await render(hbs `{{query-builder/block-selector
-            mode="edit"
-            editBlock=editBlock
-            onBlockReplace=replaceSpy
-            valuesBuilder=valuesBuilder
-          }}`);
+          await render(hbs `<QueryBuilder::BlockSelector
+            @mode="edit"
+            @editBlock={{editBlock}}
+            @onBlockReplace={{replaceSpy}}
+            @valuesBuilder={{valuesBuilder}}
+          />`);
 
           expect(replaceSpy).to.not.be.called;
           await click(`.surround-section .operator-${operatorName}`);
@@ -199,11 +199,11 @@ describe('Integration | Component | query-builder/block-selector', function () {
     it(
       `renders operators: ${operatorsList.join(', ')} in "change to" section`,
       async function () {
-        await render(hbs `{{query-builder/block-selector
-          mode="edit"
-          editBlock=editBlock
-          valuesBuilder=valuesBuilder
-        }}`);
+        await render(hbs `<QueryBuilder::BlockSelector
+          @mode="edit"
+          @editBlock={{editBlock}}
+          @valuesBuilder={{valuesBuilder}}
+        />`);
 
         const operators = findAll('.change-to-section .operator-selector .operator');
         expect(operators).to.have.length(operatorsList.length);
@@ -220,11 +220,11 @@ describe('Integration | Component | query-builder/block-selector', function () {
         this.editBlock.destroy();
         this.set('editBlock', ConditionQueryBlock.create());
 
-        await render(hbs `{{query-builder/block-selector
-          mode="edit"
-          editBlock=editBlock
-          valuesBuilder=valuesBuilder
-        }}`);
+        await render(hbs `<QueryBuilder::BlockSelector
+          @mode="edit"
+          @editBlock={{editBlock}}
+          @valuesBuilder={{valuesBuilder}}
+        />`);
 
         expect(find('.change-to-section')).to.not.exist;
       }
@@ -252,11 +252,11 @@ describe('Integration | Component | query-builder/block-selector', function () {
             }));
             beforeFunc(this);
 
-            await render(hbs `{{query-builder/block-selector
-              mode="edit"
-              editBlock=editBlock
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::BlockSelector
+              @mode="edit"
+              @editBlock={{editBlock}}
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             expect(
               find(`.change-to-section .operator-${operatorName}`).disabled
@@ -285,11 +285,11 @@ describe('Integration | Component | query-builder/block-selector', function () {
           editBlock.addOperand(conditionBlock);
           editBlock.addOperand(conditionBlock);
 
-          await render(hbs `{{query-builder/block-selector
-            mode="edit"
-            editBlock=editBlock
-            valuesBuilder=valuesBuilder
-          }}`);
+          await render(hbs `<QueryBuilder::BlockSelector
+            @mode="edit"
+            @editBlock={{editBlock}}
+            @valuesBuilder={{valuesBuilder}}
+          />`);
 
           [
             operatorName,
@@ -325,12 +325,12 @@ describe('Integration | Component | query-builder/block-selector', function () {
               sinon.spy(([block]) => this.set('block', block))
             );
 
-            await render(hbs `{{query-builder/block-selector
-              mode="edit"
-              editBlock=editBlock
-              onBlockReplace=replaceSpy
-              valuesBuilder=valuesBuilder
-            }}`);
+            await render(hbs `<QueryBuilder::BlockSelector
+              @mode="edit"
+              @editBlock={{editBlock}}
+              @onBlockReplace={{replaceSpy}}
+              @valuesBuilder={{valuesBuilder}}
+            />`);
 
             await click(`.change-to-section .operator-${destinationOperatorName}`);
 
@@ -345,11 +345,11 @@ describe('Integration | Component | query-builder/block-selector', function () {
     });
 
     it('does not render create-specific sections', async function () {
-      await render(hbs `{{query-builder/block-selector
-        mode="edit"
-        editBlock=editBlock
-        valuesBuilder=valuesBuilder
-      }}`);
+      await render(hbs `<QueryBuilder::BlockSelector
+        @mode="edit"
+        @editBlock={{editBlock}}
+        @valuesBuilder={{valuesBuilder}}
+      />`);
 
       expect(find('.add-operator-section')).to.not.exist;
       expect(find('.condition-section')).to.not.exist;

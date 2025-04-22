@@ -1,16 +1,16 @@
-{{#perfect-scrollbar-element
+<PerfectScrollbarElement
   class="table-scrollable-container"
-  click=(action "mainContentClick")
-}}
+  @click={{action "mainContentClick"}}
+>
   {{#if title}}
     <div class="table-title">
       <span class="title-text">{{title}}</span>
       {{#if titleTip}}
-        {{one-label-tip
+        <OneLabelTip
           class="title-tip"
-          title=titleTip
-          tooltipClass=titleTipClassName
-        }}
+          @title={{titleTip}}
+          @tooltipClass={{titleTipClassName}}
+        />
       {{/if}}
     </div>
   {{/if}}
@@ -30,7 +30,7 @@
           <td class="table-is-empty-cell" colspan={{columnsCount}}>
             {{or noEntriesText (tt this "noEntries")}}
             {{#if noEntriesTip}}
-              {{one-label-tip class="no-entries-tip" title=noEntriesTip}}
+              <OneLabelTip class="no-entries-tip" @title={{noEntriesTip}} />
             {{/if}}
           </td>
         </tr>
@@ -41,10 +41,7 @@
         ))}}
           <tr class="loading-row">
             <td colspan={{columnsCount}} class="loading-row-cell">
-              {{spin-spinner-block
-                sizeClass="xs"
-                class="absolute-middle-centered"
-              }}
+              <SpinSpinnerBlock @sizeClass="xs" class="absolute-middle-centered" />
             </td>
           </tr>
         {{/if}}
@@ -68,10 +65,7 @@
               reloaded and some of the entries are marked as not up-to-date  --}}
               <tr class="table-entry data-row">
                 <td colspan={{columnsCount}} class="loading-row-cell">
-                  {{spin-spinner-block
-                    sizeClass="xs"
-                    class="absolute-middle-centered"
-                  }}
+                  <SpinSpinnerBlock @sizeClass="xs" class="absolute-middle-centered" />
                 </td>
               </tr>
             {{/if}}
@@ -84,27 +78,24 @@
         )}}
           <tr class="loading-row">
             <td colspan={{columnsCount}} class="loading-row-cell">
-              {{spin-spinner-block
-                sizeClass="xs"
-                class="absolute-middle-centered"
-              }}
+              <SpinSpinnerBlock @sizeClass="xs" class="absolute-middle-centered" />
             </td>
           </tr>
         {{/if}}
       {{/if}}
     </tbody>
   </table>
-{{/perfect-scrollbar-element}}
+</PerfectScrollbarElement>
 <div class="bottom-shadow-keeper"></div>
 {{#if doesOpenDetailsOnClick}}
-  {{#infinite-scroll-table/details-container
-    entry=selectedEntry
-    onClose=(action "closeDetails")
+  <InfiniteScrollTable::DetailsContainer
+    @entry={{selectedEntry}}
+    @onClose={{action "closeDetails"}}
     as |entry|
-  }}
+  >
     {{yield (hash
       sectionName="entryDetails"
       entry=entry
     )}}
-  {{/infinite-scroll-table/details-container}}
+  </InfiniteScrollTable::DetailsContainer>
 {{/if}}

@@ -53,7 +53,7 @@ describe('Integration | Component | revisions-table/create-revision-entry', func
 });
 
 async function renderComponent() {
-  await render(hbs `{{revisions-table/create-revision-entry
-    revisionActionsFactory=revisionActionsFactory
-  }}`);
+  await render(hbs `<RevisionsTable::CreateRevisionEntry
+    @revisionActionsFactory={{revisionActionsFactory}}
+  />`);
 }

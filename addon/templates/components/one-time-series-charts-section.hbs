@@ -1,20 +1,20 @@
 {{#if (or titleContent titleTip isSharedNavVisible)}}
   <div class="section-header">
     {{#if titleContent}}
-      {{#truncated-string tagName="h3" class="section-title"}}
+      <TruncatedString @tagName="h3" class="section-title">
         {{titleContent}}
-      {{/truncated-string}}
+      </TruncatedString>
     {{/if}}
     {{#if titleTip}}
-      {{#one-label-tip class="section-title-tip" tooltipClass="tooltip-lg"}}
+      <OneLabelTip class="section-title-tip" @tooltipClass="tooltip-lg">
         {{titleTip}}
-      {{/one-label-tip}}
+      </OneLabelTip>
     {{/if}}
     {{#if (and isSharedNavVisible chartModelsProxy.isFulfilled)}}
-      {{one-time-series-chart/toolbar
+      <OneTimeSeriesChart::Toolbar
         class="section-charts-shared-navigation"
-        models=chartModelsProxy.content
-      }}
+        @models={{chartModelsProxy.content}}
+      />
     {{/if}}
   </div>
 {{/if}}
@@ -26,20 +26,17 @@
 {{#if sectionSpec.charts.length}}
   <div class="section-charts">
     {{#if isSharedNavVisible}}
-      {{#promise-proxy-container proxy=chartModelsProxy}}
+      <PromiseProxyContainer @proxy={{chartModelsProxy}}>
         {{#each chartModelsProxy as |model|}}
-          {{one-time-series-chart/plot model=model class="section-chart"}}
+          <OneTimeSeriesChart::Plot @model={{model}} class="section-chart" />
         {{/each}}
-      {{/promise-proxy-container}}
+      </PromiseProxyContainer>
     {{else}}
-      {{#promise-proxy-container proxy=chartConfigurationsProxy}}
+      <PromiseProxyContainer @proxy={{chartConfigurationsProxy}}>
         {{#each chartConfigurationsProxy as |configuration|}}
-          {{one-time-series-chart
-            configuration=configuration
-            class="section-chart"
-          }}
+          <OneTimeSeriesChart @configuration={{configuration}} class="section-chart" />
         {{/each}}
-      {{/promise-proxy-container}}
+      </PromiseProxyContainer>
     {{/if}}
   </div>
 {{/if}}
@@ -47,13 +44,13 @@
 {{#if sectionSpec.sections.length}}
   <div class="section-subsections">
     {{#each sectionSpec.sections as |subsection|}}
-      {{one-time-series-charts-section
-        live=live
-        sectionSpec=subsection
-        onGetTimeSeriesSchemas=onGetTimeSeriesSchemas
-        externalDataSources=externalDataSources
-        queryBatchers=queryBatchers
-      }}
+      <OneTimeSeriesChartsSection
+        @live={{live}}
+        @sectionSpec={{subsection}}
+        @onGetTimeSeriesSchemas={{onGetTimeSeriesSchemas}}
+        @externalDataSources={{externalDataSources}}
+        @queryBatchers={{queryBatchers}}
+      />
     {{/each}}
   </div>
 {{/if}}

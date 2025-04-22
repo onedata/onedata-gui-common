@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/fallback/singl
   setupRenderingTest();
 
   it('has classes "single-line-presenter" and "fallback-single-line-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/fallback/single-line-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Fallback::SingleLinePresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('single-line-presenter')
@@ -17,9 +17,9 @@ describe('Integration | Component | atm-workflow/value-presenters/fallback/singl
 
   it('presents passed value as a stringified JSON', async function () {
     this.set('value', [{ a: 1 }, 3]);
-    await render(hbs`{{atm-workflow/value-presenters/fallback/single-line-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Fallback::SingleLinePresenter
+      @value={{value}}
+    />`);
 
     expect(find('.single-line-presenter')).to.have.trimmed.text('[{"a":1},3]');
   });

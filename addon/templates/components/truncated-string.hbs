@@ -1,9 +1,10 @@
-{{yield}}{{#unless isTooltipDisabled}}{{#render-later triggerRender=showTooltip as |renderLater|}}{{one-tooltip
-    class=tooltipClass
-    autoPlacement=true
-    placement=tooltipPlacement
-    title=(or customTooltipText tooltipText)
-    triggerEvents=""
-    visible=showTooltip
-    onHidden=renderLater.resetRenderTrigger
-    onShown=(action "handleTooltipShown")}}{{/render-later}}{{/unless}}
+{{yield}}{{#unless isTooltipDisabled}}<RenderLater @triggerRender={{showTooltip}} as |renderLater|><OneTooltip
+  class={{tooltipClass}}
+  @autoPlacement={{true}}
+  @placement={{tooltipPlacement}}
+  @title={{or customTooltipText tooltipText}}
+  @triggerEvents=""
+  @visible={{showTooltip}}
+  @onHidden={{renderLater.resetRenderTrigger}}
+  @onShown={{action "handleTooltipShown"}}
+/></RenderLater>{{/unless}}

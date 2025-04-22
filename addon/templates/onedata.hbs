@@ -1,19 +1,16 @@
 <OnedataBeforeComponent @controller={{this}} />
 
-{{#app-layout
-  appModel=model
-  as |section|
-}}
+<AppLayout @appModel={{model}} as |section|>
   {{#if (eq section "sidebar")}}
     {{outlet "sidebar"}}
   {{else if (eq section "content")}}
     {{outlet "content"}}
   {{/if}}
-{{/app-layout}}
+</AppLayout>
 
-{{authentication-error-modal
-  opened=authenticationErrorOpened
-  close=(action (mut authenticationErrorOpened) false)
-  authenticationErrorReason=authenticationErrorReason
-  authenticationErrorState=authenticationErrorState
-}}
+<AuthenticationErrorModal
+  @opened={{authenticationErrorOpened}}
+  @close={{action (mut authenticationErrorOpened) false}}
+  @authenticationErrorReason={{authenticationErrorReason}}
+  @authenticationErrorState={{authenticationErrorState}}
+/>

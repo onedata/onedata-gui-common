@@ -28,7 +28,7 @@ describe('Integration | Component | form-component/static-user-field', function 
   });
 
   it('has class "static-user-field"', async function () {
-    await render(hbs `{{form-component/static-user-field field=field}}`);
+    await render(hbs `<FormComponent::StaticUserField @field={{field}} />`);
 
     expect(find('.static-user-field')).to.exist;
   });
@@ -41,7 +41,7 @@ describe('Integration | Component | form-component/static-user-field', function 
     });
     this.set('field.user', noNameMockUser);
 
-    await render(hbs `{{form-component/static-user-field field=field}}`);
+    await render(hbs `<FormComponent::StaticUserField @field={{field}} />`);
 
     expect(this.element.querySelector('.oneicon-user')).to.exist;
     expect(this.element.textContent.trim()).to.equal('—');
@@ -50,7 +50,7 @@ describe('Integration | Component | form-component/static-user-field', function 
   it('renders user name from field.user property when field.value is empty', async function () {
     this.set('field.user', defaultMockUser);
 
-    await render(hbs `{{form-component/static-user-field field=field}}`);
+    await render(hbs `<FormComponent::StaticUserField @field={{field}} />`);
 
     expect(this.element.textContent.trim()).to.match(
       new RegExp(`${defaultMockUser.fullName}\\s+\\(${defaultMockUser.username}\\)`)
@@ -63,7 +63,7 @@ describe('Integration | Component | form-component/static-user-field', function 
       value: { ...defaultMockUser, fullName: 'Other User', name: 'Other User', username: 'george' },
     });
 
-    await render(hbs `{{form-component/static-user-field field=field}}`);
+    await render(hbs `<FormComponent::StaticUserField @field={{field}} />`);
 
     expect(this.element.textContent.trim()).to.match(
       new RegExp('Other User\\s+\\(george\\)')

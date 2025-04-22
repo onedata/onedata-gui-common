@@ -110,8 +110,10 @@ function createSection(testCase, props = {}) {
 }
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/sections-editor/section-details-editor
-    section=section
-    editorContext=editorContext
-  }}`);
+  await render(hbs`
+    <AtmWorkflow::ChartDashboardEditor::SectionsEditor::SectionDetailsEditor
+      @section={{section}}
+      @editorContext={{editorContext}}
+    />
+  `);
 }

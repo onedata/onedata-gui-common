@@ -7,29 +7,31 @@
       {{/if}}
     {{/unless}}
     {{#if field.tip}}
-      {{one-label-tip title=field.tip class="form-field-right-addon"}}
+      <OneLabelTip @title={{field.tip}} class="form-field-right-addon" />
     {{/if}}
   </label>
   <div class="form-control-column {{layoutConfig.formInputColumns}}">
     {{#if (eq field.type "datetime")}}
-      {{one-datetime-picker
-        value=value
-        id=inputId
-        class=inputClasses
-        onChange=(action "inputChanged" field.name)
-        disabled=disabled
-        placeholder=field.placeholder
-        focusOut=(action "onFocusOut")}}
+      <OneDatetimePicker
+        @value={{value}}
+        @id={{inputId}}
+        class={{inputClasses}}
+        @onChange={{action "inputChanged" field.name}}
+        @disabled={{disabled}}
+        @placeholder={{field.placeholder}}
+        @focusOut={{action "onFocusOut"}}
+      />
     {{else if (eq field.type "radio-group")}}
-      {{one-way-radio-group
-        class=inputClasses
-        inputId=inputId
-        value=value
-        fieldName=field.name
-        options=field.options
-        update=(action "inputChanged" field.name)
-        isReadOnly=disabled
-        onFocusOut=(action "onFocusOut")}}
+      <OneWayRadioGroup
+        class={{inputClasses}}
+        @inputId={{inputId}}
+        @value={{value}}
+        @fieldName={{field.name}}
+        @options={{field.options}}
+        @update={{action "inputChanged" field.name}}
+        @isReadOnly={{disabled}}
+        @onFocusOut={{action "onFocusOut"}}
+      />
     {{else if (eq field.type "dropdown")}}
       <PowerSelect
         @options={{map-by "value" field.options}}
@@ -43,31 +45,29 @@
         {{get (find-by "value" optionValue field.options) "label"}}
       </PowerSelect>
     {{else if (eq field.type "clipboard-line")}}
-      {{one-clipboard-line
-        class=inputClasses
-        value=value
-        showText=false}}
+      <OneClipboardLine class={{inputClasses}} @value={{value}} @showText={{false}} />
     {{else if (eq field.type "capacity")}}
-      {{one-way-capacity
-        class=inputClasses
-        value=value
-        inputId=inputId
-        disabled=disabled
-        onChange=(action "inputChanged" field.name)
-        onFocusOut=(action "onFocusOut")}}
+      <OneWayCapacity
+        class={{inputClasses}}
+        @value={{value}}
+        @inputId={{inputId}}
+        @disabled={{disabled}}
+        @onChange={{action "inputChanged" field.name}}
+        @onFocusOut={{action "onFocusOut"}}
+      />
     {{else}}
       <div class={{if field.rightText "input-group"}}>
         {{#if (eq field.type "radio-group")}}
-          {{one-way-radio-group
-            class=inputClasses
-            inputId=inputId
-            value=value
-            fieldName=field.name
-            options=field.options
-            update=(action "inputChanged" field.name)
-            isReadOnly=disabled
-            onFocusOut=(action "onFocusOut")
-          }}
+          <OneWayRadioGroup
+            class={{inputClasses}}
+            @inputId={{inputId}}
+            @value={{value}}
+            @fieldName={{field.name}}
+            @options={{field.options}}
+            @update={{action "inputChanged" field.name}}
+            @isReadOnly={{disabled}}
+            @onFocusOut={{action "onFocusOut"}}
+          />
         {{else}}
           {{!-- using input and change events to be compatible with one-way-input --}}
           <input
@@ -99,7 +99,9 @@
             }}
           >
           {{#if field.rightText}}
-            {{#truncated-string class="input-group-addon"}}{{field.rightText}}{{/truncated-string}}
+            <TruncatedString
+              class="input-group-addon"
+            >{{field.rightText}}</TruncatedString>
           {{/if}}
         {{/if}}
       </div>

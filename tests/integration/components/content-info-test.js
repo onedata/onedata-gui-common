@@ -11,11 +11,11 @@ describe('Integration | Component | content-info', function () {
   it('renders yielded content with buttonAction available for invoking', async function () {
     const actionSpy = sinon.stub().resolves();
     this.set('buttonAction', actionSpy);
-    await render(hbs `{{#content-info buttonAction=(action buttonAction) as |ci|}}
+    await render(hbs `<ContentInfo @buttonAction={{action buttonAction}} as |ci|>
       <button class="btn-action" onclick={{action ci.buttonAction}}>
         click me
       </button>
-    {{/content-info}}
+    </ContentInfo>
     `);
     return click('.btn-action').then(() => {
       expect(actionSpy).to.be.calledOnce;

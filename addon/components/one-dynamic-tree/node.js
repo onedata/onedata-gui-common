@@ -33,6 +33,13 @@ export default Component.extend(DisabledPaths, {
   parentTree: null,
 
   /**
+   * Parent BsForm component.
+   * To inject.
+   * @type {Ember.Component}
+   */
+  bsForm: null,
+
+  /**
    * Path to the parent item.
    * @type {string}
    */

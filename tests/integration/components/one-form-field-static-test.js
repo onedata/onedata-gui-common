@@ -14,7 +14,7 @@ describe('Integration | Component | one-form-field-static', function () {
     });
     this.set('value', 'hello');
     await render(hbs `
-      {{one-form-field-static field=field value=value}}
+      <OneFormFieldStatic @field={{field}} @value={{value}} />
     `);
 
     const fieldElem = find('.form-control-static');
@@ -28,7 +28,7 @@ describe('Integration | Component | one-form-field-static', function () {
       type: 'static',
     });
     await render(hbs `
-      {{one-form-field-static field=field}}
+      <OneFormFieldStatic @field={{field}} />
     `);
 
     expect(find('.form-control-static')).to.have.class('field-one');

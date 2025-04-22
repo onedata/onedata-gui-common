@@ -11,9 +11,7 @@ describe('Integration | Component | archive-dip-switch', function () {
   it('displays DIP as active if archiveDipMode is "dip"', async function () {
     this.set('archiveDipMode', 'dip');
 
-    await render(hbs `{{archive-dip-switch
-      archiveDipMode=archiveDipMode
-    }}`);
+    await render(hbs `<ArchiveDipSwitch @archiveDipMode={{archiveDipMode}} />`);
 
     expect(find('.select-archive-dip-btn'), 'dip btn').to.have.class('active');
   });
@@ -24,10 +22,10 @@ describe('Integration | Component | archive-dip-switch', function () {
       disabled: true,
     });
 
-    await render(hbs `{{archive-dip-switch
-      archiveDipMode=archiveDipMode
-      disabled=disabled
-    }}`);
+    await render(hbs `<ArchiveDipSwitch
+      @archiveDipMode={{archiveDipMode}}
+      @disabled={{disabled}}
+    />`);
 
     expect(find('.select-archive-aip-btn').disabled).to.be.true;
     expect(find('.select-archive-dip-btn').disabled).to.be.true;
@@ -40,10 +38,10 @@ describe('Integration | Component | archive-dip-switch', function () {
       onArchiveDipModeChange,
     });
 
-    await render(hbs `{{archive-dip-switch
-      archiveDipMode=archiveDipMode
-      onArchiveDipModeChange=onArchiveDipModeChange
-    }}`);
+    await render(hbs `<ArchiveDipSwitch
+      @archiveDipMode={{archiveDipMode}}
+      @onArchiveDipModeChange={{onArchiveDipModeChange}}
+    />`);
     await click('.select-archive-dip-btn');
 
     expect(onArchiveDipModeChange).to.be.calledOnce;

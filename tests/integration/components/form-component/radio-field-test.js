@@ -51,7 +51,7 @@ describe('Integration | Component | form-component/radio-field', function () {
   it(
     'has class "radio-field"',
     async function () {
-      await render(hbs `{{form-component/radio-field field=field}}`);
+      await render(hbs `<FormComponent::RadioField @field={{field}} />`);
 
       expect(find('.radio-field')).to.exist;
     }
@@ -60,7 +60,7 @@ describe('Integration | Component | form-component/radio-field', function () {
   it(
     'renders three radio inputs with labels',
     async function () {
-      await render(hbs `{{form-component/radio-field field=field}}`);
+      await render(hbs `<FormComponent::RadioField @field={{field}} />`);
 
       expect(findAll('input')).to.have.length(3);
       expect(find('.option-first .one-label').textContent.trim())
@@ -77,7 +77,7 @@ describe('Integration | Component | form-component/radio-field', function () {
     async function () {
       this.set('field.isEnabled', false);
 
-      await render(hbs `{{form-component/radio-field field=field}}`);
+      await render(hbs `<FormComponent::RadioField @field={{field}} />`);
 
       expect(find('.one-way-radio-group')).to.have.class('disabled');
     }
@@ -88,7 +88,7 @@ describe('Integration | Component | form-component/radio-field', function () {
     async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      await render(hbs `{{form-component/radio-field field=field}}`);
+      await render(hbs `<FormComponent::RadioField @field={{field}} />`);
 
       await focus('.option-first input');
       await blur('.option-first input');
@@ -102,7 +102,7 @@ describe('Integration | Component | form-component/radio-field', function () {
     async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      await render(hbs `{{form-component/radio-field field=field}}`);
+      await render(hbs `<FormComponent::RadioField @field={{field}} />`);
 
       await click('.option-first');
 
@@ -114,14 +114,14 @@ describe('Integration | Component | form-component/radio-field', function () {
   it('sets input value to value specified in field object', async function () {
     this.set('field.value', 2);
 
-    await render(hbs `{{form-component/radio-field field=field}}`);
+    await render(hbs `<FormComponent::RadioField @field={{field}} />`);
 
     expect(find('.option-second input').checked).to.equal(true);
   });
 
   it('sets input id according to "fieldId"', async function () {
     await render(hbs `
-      {{form-component/radio-field field=field fieldId="abc"}}
+      <FormComponent::RadioField @field={{field}} @fieldId="abc" />
     `);
 
     expect(find('input#abc')).to.exist;
@@ -132,7 +132,7 @@ describe('Integration | Component | form-component/radio-field', function () {
     set(field, 'value', 2);
     field.changeMode('view');
 
-    await render(hbs `{{form-component/radio-field field=field}}`);
+    await render(hbs `<FormComponent::RadioField @field={{field}} />`);
 
     expect(this.element.textContent.trim()).to.equal('Second');
     expect(find('input')).to.not.exist;

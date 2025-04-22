@@ -68,7 +68,7 @@ function createSeries(testCase, props = {}) {
 }
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/chart-editor/series-group-editor
-    chartElement=seriesGroup
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::ChartEditor::SeriesGroupEditor
+    @chartElement={{seriesGroup}}
+  />`);
 }

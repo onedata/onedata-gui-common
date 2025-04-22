@@ -10,16 +10,16 @@ describe('Integration | Component | one-collapsible-list', function () {
 
   it('renders items with headers', async function () {
     await render(hbs `
-      {{#one-collapsible-list class="some-list" as |list|}}
-        {{#list.item class="some-item" as |listItem|}}
-          {{#listItem.header class="some-header"}}
+      <OneCollapsibleList class="some-list" as |list|>
+        <list.item class="some-item" as |listItem|>
+          <listItem.header class="some-header">
             some header
-          {{/listItem.header}}
-          {{#listItem.content class="some-content"}}
+          </listItem.header>
+          <listItem.content class="some-content">
             some content
-          {{/listItem.content}}
-        {{/list.item}}
-      {{/one-collapsible-list}}
+          </listItem.content>
+        </list.item>
+      </OneCollapsibleList>
     `);
 
     expect(find('.some-list')).to.exist;
@@ -38,19 +38,20 @@ describe('Integration | Component | one-collapsible-list', function () {
     this.set('selectionChanged', selectionChangedSpy);
 
     await render(hbs `
-      {{#one-collapsible-list
-        hasCheckboxes=true
-        selectionChanged=(action selectionChanged)
-        as |list|}}
-        {{#list.item selectionValue=itemValue as |listItem|}}
-          {{#listItem.header class="first-item-header"}}
+      <OneCollapsibleList
+        @hasCheckboxes={{true}}
+        @selectionChanged={{action selectionChanged}}
+        as |list|
+      >
+        <list.item @selectionValue={{itemValue}} as |listItem|>
+          <listItem.header class="first-item-header">
             <h1>Some header</h1>
-          {{/listItem.header}}
-          {{#listItem.content}}
+          </listItem.header>
+          <listItem.content>
             some content
-          {{/listItem.content}}
-        {{/list.item}}
-      {{/one-collapsible-list}}
+          </listItem.content>
+        </list.item>
+      </OneCollapsibleList>
     `);
 
     await click('.first-item-header .one-checkbox');
@@ -72,19 +73,20 @@ describe('Integration | Component | one-collapsible-list', function () {
     this.set('selectionChanged', selectionChangedSpy);
 
     await render(hbs `
-      {{#one-collapsible-list
-        hasCheckboxes=true
-        selectionChanged=(action selectionChanged)
-        as |list|}}
-        {{#list.item selectionValue=itemValue as |listItem|}}
-          {{#listItem.header class="first-item-header"}}
+      <OneCollapsibleList
+        @hasCheckboxes={{true}}
+        @selectionChanged={{action selectionChanged}}
+        as |list|
+      >
+        <list.item @selectionValue={{itemValue}} as |listItem|>
+          <listItem.header class="first-item-header">
             <h1>Some header</h1>
-          {{/listItem.header}}
-          {{#listItem.content}}
+          </listItem.header>
+          <listItem.content>
             some content
-          {{/listItem.content}}
-        {{/list.item}}
-      {{/one-collapsible-list}}
+          </listItem.content>
+        </list.item>
+      </OneCollapsibleList>
     `);
 
     await click('.first-item-header .one-checkbox');
@@ -100,19 +102,20 @@ describe('Integration | Component | one-collapsible-list', function () {
     this.set('selectionChanged', selectionChangedSpy);
 
     await render(hbs `
-      {{#one-collapsible-list
-        hasCheckboxes=true
-        selectionChanged=(action selectionChanged)
-        as |list|}}
-        {{#list.item as |listItem|}}
-          {{#listItem.header class="first-item-header"}}
+      <OneCollapsibleList
+        @hasCheckboxes={{true}}
+        @selectionChanged={{action selectionChanged}}
+        as |list|
+      >
+        <list.item as |listItem|>
+          <listItem.header class="first-item-header">
             <h1>Some header</h1>
-          {{/listItem.header}}
-          {{#listItem.content}}
+          </listItem.header>
+          <listItem.content>
             some content
-          {{/listItem.content}}
-        {{/list.item}}
-      {{/one-collapsible-list}}
+          </listItem.content>
+        </list.item>
+      </OneCollapsibleList>
     `);
 
     await click('.first-item-header input');
@@ -126,22 +129,23 @@ describe('Integration | Component | one-collapsible-list', function () {
     this.set('selectionChanged', selectionChangedSpy);
 
     await render(hbs `
-      {{#one-collapsible-list
-        hasCheckboxes=true
-        selectionChanged=(action selectionChanged)
-        as |list|}}
-        {{list.header}}
-        {{#list.item selectionValue=1 as |listItem|}}
-          {{#listItem.header}}
+      <OneCollapsibleList
+        @hasCheckboxes={{true}}
+        @selectionChanged={{action selectionChanged}}
+        as |list|
+      >
+        <list.header />
+        <list.item @selectionValue={{1}} as |listItem|>
+          <listItem.header>
             <h1>Some header</h1>
-          {{/listItem.header}}
-        {{/list.item}}
-        {{#list.item selectionValue=2 as |listItem|}}
-          {{#listItem.header}}
+          </listItem.header>
+        </list.item>
+        <list.item @selectionValue={{2}} as |listItem|>
+          <listItem.header>
             <h1>Some header</h1>
-          {{/listItem.header}}
-        {{/list.item}}
-      {{/one-collapsible-list}}
+          </listItem.header>
+        </list.item>
+      </OneCollapsibleList>
     `);
 
     await click('.one-collapsible-list-header .one-checkbox');
@@ -154,19 +158,19 @@ describe('Integration | Component | one-collapsible-list', function () {
 
   it('can filter items', async function () {
     await render(hbs `
-      {{#one-collapsible-list as |list|}}
-        {{list.header}}
-        {{#list.item as |listItem|}}
-          {{#listItem.header}}
+      <OneCollapsibleList as |list|>
+        <list.header />
+        <list.item as |listItem|>
+          <listItem.header>
             <h1>item1</h1>
-          {{/listItem.header}}
-        {{/list.item}}
-        {{#list.item as |listItem|}}
-          {{#listItem.header}}
+          </listItem.header>
+        </list.item>
+        <list.item as |listItem|>
+          <listItem.header>
             <h1>item2</h1>
-          {{/listItem.header}}
-        {{/list.item}}
-      {{/one-collapsible-list}}
+          </listItem.header>
+        </list.item>
+      </OneCollapsibleList>
     `);
 
     await fillIn('.one-collapsible-list-header .search-bar', 'item1');
@@ -176,21 +180,19 @@ describe('Integration | Component | one-collapsible-list', function () {
 
   it('shows filtered out and checked items', async function () {
     await render(hbs `
-      {{#one-collapsible-list
-        hasCheckboxes=true
-        as |list|}}
-        {{list.header}}
-        {{#list.item class="item1" selectionValue=1 as |listItem|}}
-          {{#listItem.header}}
+      <OneCollapsibleList @hasCheckboxes={{true}} as |list|>
+        <list.header />
+        <list.item class="item1" @selectionValue={{1}} as |listItem|>
+          <listItem.header>
             <h1>item1</h1>
-          {{/listItem.header}}
-        {{/list.item}}
-        {{#list.item selectionValue=2 as |listItem|}}
-          {{#listItem.header}}
+          </listItem.header>
+        </list.item>
+        <list.item @selectionValue={{2}} as |listItem|>
+          <listItem.header>
             <h1>item2</h1>
-          {{/listItem.header}}
-        {{/list.item}}
-      {{/one-collapsible-list}}
+          </listItem.header>
+        </list.item>
+      </OneCollapsibleList>
     `);
 
     await click('.item1 .one-checkbox');

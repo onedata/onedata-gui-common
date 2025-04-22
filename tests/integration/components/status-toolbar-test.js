@@ -10,27 +10,27 @@ describe('Integration | Component | status-toolbar', function () {
 
   it('hides icon if icon `enabled` property is set to false', async function () {
     await render(hbs `
-      {{#status-toolbar as |toolbar|}}
-        {{toolbar.icon icon="space" enabled=false}}
-      {{/status-toolbar}}
+      <StatusToolbar as |toolbar|>
+        <toolbar.icon @icon="space" @enabled={{false}} />
+      </StatusToolbar>
     `);
     expect(dom.isHidden(find('.status-toolbar-icon'))).to.be.true;
   });
 
   it('adds a class to icon based on status property', async function () {
     await render(hbs `
-      {{#status-toolbar as |toolbar|}}
-        {{toolbar.icon icon="space" status="some"}}
-      {{/status-toolbar}}
+      <StatusToolbar as |toolbar|>
+        <toolbar.icon @icon="space" @status="some" />
+      </StatusToolbar>
     `);
     expect(find('.status-toolbar-icon')).to.have.class('some');
   });
 
   it('adds a subicon to status icon', async function () {
     await render(hbs `
-      {{#status-toolbar as |toolbar|}}
-        {{toolbar.icon icon="space" subIcon="checkbox-filled" subIconClass="subicon"}}
-      {{/status-toolbar}}
+      <StatusToolbar as |toolbar|>
+        <toolbar.icon @icon="space" @subIcon="checkbox-filled" @subIconClass="subicon" />
+      </StatusToolbar>
     `);
     expect(find('.oneicon-checkbox-filled')).to.exist;
     expect(find('.oneicon-checkbox-filled')).to.have.class('subicon');
@@ -40,9 +40,9 @@ describe('Integration | Component | status-toolbar', function () {
     let clickOccurred = false;
     this.set('iconClick', () => clickOccurred = true);
     await render(hbs `
-      {{#status-toolbar as |toolbar|}}
-        {{toolbar.icon icon="space" clickAction=(action iconClick)}}
-      {{/status-toolbar}}
+      <StatusToolbar as |toolbar|>
+        <toolbar.icon @icon="space" @clickAction={{action iconClick}} />
+      </StatusToolbar>
     `);
     click('.status-toolbar-icon').then(() => {
       expect(clickOccurred).to.be.true;

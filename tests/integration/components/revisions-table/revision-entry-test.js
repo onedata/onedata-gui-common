@@ -121,14 +121,14 @@ describe('Integration | Component | revisions-table/revision-entry', function ()
 });
 
 async function renderComponent() {
-  await render(hbs `{{#revisions-table/revision-entry
-    revisionNumber=revisionNumber
-    revision=revision
-    revisionActionsFactory=revisionActionsFactory
-    onClick=onClick
-    isReadOnly=isReadOnly
+  await render(hbs `<RevisionsTable::RevisionEntry
+    @revisionNumber={{revisionNumber}}
+    @revision={{revision}}
+    @revisionActionsFactory={{revisionActionsFactory}}
+    @onClick={{onClick}}
+    @isReadOnly={{isReadOnly}}
     as |revision revisionNumber|
-  }}
+  >
     <td class="description">{{revision.description}}</td>
-  {{/revisions-table/revision-entry}}`);
+  </RevisionsTable::RevisionEntry>`);
 }

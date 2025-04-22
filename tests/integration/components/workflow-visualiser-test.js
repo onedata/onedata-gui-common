@@ -880,13 +880,13 @@ async function renderWithRawData(testCase, rawData) {
     initialRawData: _.cloneDeep(rawData),
   });
   await render(hbs `
-    {{global-modal-mounter}}
-    {{workflow-visualiser
-      mode=mode
-      rawData=rawData
-      actionsFactory=actionsFactory
-      onChange=changeStub
-    }}
+    <GlobalModalMounter />
+    <WorkflowVisualiser
+      @mode={{mode}}
+      @rawData={{rawData}}
+      @actionsFactory={{actionsFactory}}
+      @onChange={{changeStub}}
+    />
   `);
 }
 
@@ -899,10 +899,7 @@ async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
 
   await render(hbs `
     <div style={{containerStyle}}>
-      {{workflow-visualiser
-        mode="view"
-        rawData=rawData
-      }}
+      <WorkflowVisualiser @mode="view" @rawData={{rawData}} />
     </div>
   `);
 }

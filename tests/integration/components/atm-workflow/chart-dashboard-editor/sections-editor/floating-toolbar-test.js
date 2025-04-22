@@ -78,10 +78,10 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections
 );
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/sections-editor/floating-toolbar
-    model=model
-    editorContext=editorContext
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::SectionsEditor::FloatingToolbar
+    @model={{model}}
+    @editorContext={{editorContext}}
+  />`);
 }
 
 function createSection(testCase, props = {}) {

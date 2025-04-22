@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/single
   setupRenderingTest();
 
   it('has classes "single-line-presenter" and "dataset-single-line-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/dataset/single-line-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::SingleLinePresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('single-line-presenter')
@@ -17,9 +17,9 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/single
 
   it('presents passed value as a dataset', async function () {
     this.set('value', { rootFilePath: '/spc1/abc' });
-    await render(hbs`{{atm-workflow/value-presenters/dataset/single-line-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::SingleLinePresenter
+      @value={{value}}
+    />`);
 
     expect(find('.single-line-presenter')).to.have.trimmed.text('[Dataset "abc"]');
   });

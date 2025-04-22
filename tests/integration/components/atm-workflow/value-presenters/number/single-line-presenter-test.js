@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/number/single-
   setupRenderingTest();
 
   it('has classes "single-line-presenter" and "number-single-line-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/number/single-line-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Number::SingleLinePresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('single-line-presenter')
@@ -16,9 +16,9 @@ describe('Integration | Component | atm-workflow/value-presenters/number/single-
   });
 
   it('presents passed value as a number', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/number/single-line-presenter
-      value=123
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Number::SingleLinePresenter
+      @value={{123}}
+    />`);
 
     expect(find('.single-line-presenter')).to.have.trimmed.text('123');
   });

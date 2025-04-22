@@ -1,25 +1,25 @@
-{{#one-button size="sm" class="visible-properties-btn clickable"}}
+<OneButton @size="sm" class="visible-properties-btn clickable">
   {{tt this "visibleProperties"
     total=availableProperties.length
     visible=visibleProperties.length
   }}
-{{/one-button}}
-{{#one-webui-popover
+</OneButton>
+<OneWebuiPopover
   class="store-presenter-properties-popover"
-  triggerSelector=(local-selector elementId ".visible-properties-btn")
-}}
-  {{#perfect-scrollbar-element class="properties-list-container"}}
+  @triggerSelector={{local-selector elementId ".visible-properties-btn"}}
+>
+  <PerfectScrollbarElement class="properties-list-container">
     <ul class="properties-list">
       {{#each availableProperties as |property|}}
         <li class="property">
-          {{one-checkbox
+          <OneCheckbox
             class="property-checkbox"
-            inputId=(concat elementId "-" property)
-            checked=(contains property visibleProperties)
-            update=(action onTogglePropertyVisibility property)
-          }}
+            @inputId={{concat elementId "-" property}}
+            @checked={{contains property visibleProperties}}
+            @update={{action onTogglePropertyVisibility property}}
+          />
           <label for={{concat elementId "-" property}}>
-            {{#truncated-string}}{{property}}{{/truncated-string}}
+            <TruncatedString>{{property}}</TruncatedString>
           </label>
         </li>
       {{else}}
@@ -31,5 +31,5 @@
         {{tt this "limitedProperties" count=availableProperties.length}}
       </small>
     {{/if}}
-  {{/perfect-scrollbar-element}}
-{{/one-webui-popover}}
+  </PerfectScrollbarElement>
+</OneWebuiPopover>

@@ -1,16 +1,16 @@
-{{#render-later triggerRender=isOpened}}
-  {{#one-webui-popover
-    popoverStyle="record-info"
-    open=isOpened
-    triggerSelector=triggerSelector
-    placement=(if (media "isMobile") "bottom" "auto")
+<RenderLater @triggerRender={{isOpened}}>
+  <OneWebuiPopover
+    @popoverStyle="record-info"
+    @open={{isOpened}}
+    @triggerSelector={{triggerSelector}}
+    @placement={{if (media "isMobile") "bottom" "auto"}}
     as |popover|
-  }}
-    {{#click-outside
-      onClickOutside=(action (mut isOpened) false)
-      exceptSelector=triggerSelector
-    }}
+  >
+    <ClickOutside
+      @onClickOutside={{action (mut isOpened) false}}
+      @exceptSelector={{triggerSelector}}
+    >
       {{yield}}
-    {{/click-outside}}
-  {{/one-webui-popover}}
-{{/render-later}}
+    </ClickOutside>
+  </OneWebuiPopover>
+</RenderLater>

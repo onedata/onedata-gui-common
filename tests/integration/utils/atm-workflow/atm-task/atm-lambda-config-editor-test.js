@@ -785,7 +785,7 @@ class Helper {
   }
 
   async render() {
-    await render(hbs`{{form-component/field-renderer field=rootGroup}}`);
+    await render(hbs`<FormComponent::FieldRenderer @field={{rootGroup}} />`);
   }
 
   getParameters() {

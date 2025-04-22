@@ -9,12 +9,12 @@ describe('Integration | Component | status toolbar/icon', function () {
   setupRenderingTest();
 
   it('is hidden if enabled is set to false', async function () {
-    await render(hbs `{{status-icon type="space" enabled=false}}`);
+    await render(hbs`<StatusIcon @type="space" @enabled={{false}} />`);
     expect(dom.isHidden(find('.status-icon'))).to.be.true;
   });
 
   it('adds a class based on status property', async function () {
-    await render(hbs `{{status-icon icon="space" status="some"}}`);
+    await render(hbs`<StatusIcon @icon="space" @status="some" />`);
     expect(find('.status-icon')).to.have.class('some');
   });
 });

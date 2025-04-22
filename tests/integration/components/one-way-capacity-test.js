@@ -20,7 +20,7 @@ describe('Integration | Component | one-way-capacity', function () {
     const capacity = 1024 * 1024;
     this.set('capacity', capacity);
 
-    await render(hbs `{{one-way-capacity value=capacity}}`);
+    await render(hbs `<OneWayCapacity @value={{capacity}} />`);
 
     expect(find('.size-number-input').value, 'capacity number')
       .to.equal('1');
@@ -36,7 +36,10 @@ describe('Integration | Component | one-way-capacity', function () {
     const changeSpy = sinon.spy();
 
     this.set('changed', changeSpy);
-    await render(hbs `{{one-way-capacity value=capacity onChange=(action changed)}}`);
+    await render(hbs `<OneWayCapacity
+      @value={{capacity}}
+      @onChange={{action changed}}
+    />`);
 
     await fillIn('.size-number-input', '2');
     expect(changeSpy).to.be.calledWith(String(2 * 1024 * 1024));
@@ -48,7 +51,10 @@ describe('Integration | Component | one-way-capacity', function () {
     const changeSpy = sinon.spy();
 
     this.set('changed', changeSpy);
-    await render(hbs `{{one-way-capacity value=capacity onChange=(action changed)}}`);
+    await render(hbs `<OneWayCapacity
+      @value={{capacity}}
+      @onChange={{action changed}}
+    />`);
 
     await selectChoose('.one-way-capacity', 'GiB');
     expect(changeSpy).to.be.calledWith(String(1024 * 1024 * 1024));
@@ -58,7 +64,7 @@ describe('Integration | Component | one-way-capacity', function () {
     const focusOutSpy = sinon.spy();
 
     this.set('focusedOut', focusOutSpy);
-    await render(hbs `{{one-way-capacity onFocusOut=(action focusedOut)}}`);
+    await render(hbs `<OneWayCapacity @onFocusOut={{action focusedOut}} />`);
 
     await focus('.size-number-input');
     await blur('.size-number-input');
@@ -69,7 +75,7 @@ describe('Integration | Component | one-way-capacity', function () {
     const keyUpSpy = sinon.spy();
 
     this.set('keyUp', keyUpSpy);
-    await render(hbs `{{one-way-capacity value=capacity onKeyUp=(action keyUp)}}`);
+    await render(hbs `<OneWayCapacity @value={{capacity}} @onKeyUp={{action keyUp}} />`);
 
     await triggerKeyEvent('.size-number-input', 'keyup', 'Enter');
     expect(keyUpSpy)

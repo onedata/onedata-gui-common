@@ -295,7 +295,7 @@ describe('Integration | Utility | atm-workflow/data-spec-editor/params-editors/t
   });
 
 async function renderForm() {
-  await render(hbs `{{form-component/field-renderer field=rootGroup}}`);
+  await render(hbs `<FormComponent::FieldRenderer @field={{rootGroup}} />`);
 }
 
 function getSpecFormValues(testCase) {

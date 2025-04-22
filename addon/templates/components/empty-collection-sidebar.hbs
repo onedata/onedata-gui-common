@@ -8,11 +8,13 @@
     {{#if showGetStarted}}
       <div class="row">
         <div class="col-xs-12">
-          {{#link-to "onedata.sidebar.content" resourceType "empty"
+          <LinkTo
+            @route="onedata.sidebar.content"
+            @models={{array resourceType "empty"}}
             class="btn btn-default hide-sm-active"
-          }}
+          >
             {{tt this "getStarted"}}
-          {{/link-to}}
+          </LinkTo>
         </div>
       </div>
     {{/if}}

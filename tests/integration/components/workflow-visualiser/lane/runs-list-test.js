@@ -293,14 +293,14 @@ async function renderComponent(testCase) {
     'selectionChangeSpy',
     sinon.spy((runNumber) => testCase.set('selectedRunNumber', runNumber))
   );
-  await render(hbs `{{workflow-visualiser/lane/runs-list
-    visibleRunsPosition=visibleRunsPosition
-    visibleRunsLimit=visibleRunsLimit
-    runsRegistry=runsRegistry
-    selectedRunNumber=selectedRunNumber
-    onSelectionChange=selectionChangeSpy
-    onVisibleRunsPositionChange=(action (mut visibleRunsPosition))
-  }}`);
+  await render(hbs `<WorkflowVisualiser::Lane::RunsList
+    @visibleRunsPosition={{visibleRunsPosition}}
+    @visibleRunsLimit={{visibleRunsLimit}}
+    @runsRegistry={{runsRegistry}}
+    @selectedRunNumber={{selectedRunNumber}}
+    @onSelectionChange={{selectionChangeSpy}}
+    @onVisibleRunsPositionChange={{action (mut visibleRunsPosition)}}
+  />`);
 }
 
 function getComponent() {

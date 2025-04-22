@@ -252,12 +252,12 @@ describe('Integration | Component | one-time-series-charts-section', function ()
 });
 
 async function renderComponent() {
-  await render(hbs `{{one-time-series-charts-section
-    sectionSpec=sectionSpec
-    onGetTimeSeriesSchemas=onGetTimeSeriesSchemas
-    externalDataSources=externalDataSources
-    onQueryBatcherFetchData=onQueryBatcherFetchDataCallback
-  }}`);
+  await render(hbs `<OneTimeSeriesChartsSection
+    @sectionSpec={{sectionSpec}}
+    @onGetTimeSeriesSchemas={{onGetTimeSeriesSchemas}}
+    @externalDataSources={{externalDataSources}}
+    @onQueryBatcherFetchData={{onQueryBatcherFetchDataCallback}}
+  />`);
   await settled();
 }
 

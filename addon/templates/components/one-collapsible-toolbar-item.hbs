@@ -5,17 +5,17 @@
 </a>
 {{else}}
   {{#if (eq buttonType "bs")}}
-    {{#one-button
-      class=(concat-classes
+    <OneButton
+      class={{concat-classes
         triggerClasses
         (concat " btn " buttonSizeClass)
         (if isDisabled "disabled")
-      )
-      type=buttonStyle
-      onClick=(action "runAction" true)
-      bubble=true
-    }}
+      }}
+      @type={{buttonStyle}}
+      @onClick={{action "runAction" true}}
+      @bubble={{true}}
+    >
       {{yield}}
-    {{/one-button}}
+    </OneButton>
   {{/if}}
 {{/if}}

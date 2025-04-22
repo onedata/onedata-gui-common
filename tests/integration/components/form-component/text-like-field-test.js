@@ -23,7 +23,7 @@ describe('Integration | Component | form-component/text-like-field', function ()
   it(
     'has class "text-like-field"',
     async function () {
-      await render(hbs `{{form-component/text-like-field field=textField}}`);
+      await render(hbs `<FormComponent::TextLikeField @field={{textField}} />`);
 
       expect(find('.text-like-field')).to.exist;
     }
@@ -32,7 +32,7 @@ describe('Integration | Component | form-component/text-like-field', function ()
   it(
     'renders text input',
     async function () {
-      await render(hbs `{{form-component/text-like-field field=textField}}`);
+      await render(hbs `<FormComponent::TextLikeField @field={{textField}} />`);
 
       expect(find('input[type="text"]')).to.exist;
     }
@@ -43,7 +43,7 @@ describe('Integration | Component | form-component/text-like-field', function ()
     async function () {
       this.set('textField.inputType', 'number');
 
-      await render(hbs `{{form-component/text-like-field field=textField}}`);
+      await render(hbs `<FormComponent::TextLikeField @field={{textField}} />`);
 
       expect(find('input[type="number"]')).to.exist;
     }
@@ -54,7 +54,7 @@ describe('Integration | Component | form-component/text-like-field', function ()
     async function () {
       this.set('textField.isEnabled', false);
 
-      await render(hbs `{{form-component/text-like-field field=textField}}`);
+      await render(hbs `<FormComponent::TextLikeField @field={{textField}} />`);
 
       expect(find('input[type="text"]').disabled).to.be.true;
     }
@@ -65,7 +65,7 @@ describe('Integration | Component | form-component/text-like-field', function ()
     async function () {
       const focusLostSpy = sinon.spy(this.get('textField'), 'focusLost');
 
-      await render(hbs `{{form-component/text-like-field field=textField}}`);
+      await render(hbs `<FormComponent::TextLikeField @field={{textField}} />`);
 
       return focus('input')
         .then(() => blur('input'))
@@ -78,7 +78,7 @@ describe('Integration | Component | form-component/text-like-field', function ()
     async function () {
       const valueChangedSpy = sinon.spy(this.get('textField'), 'valueChanged');
 
-      await render(hbs `{{form-component/text-like-field field=textField}}`);
+      await render(hbs `<FormComponent::TextLikeField @field={{textField}} />`);
 
       return fillIn('input', 'test')
         .then(() => {
@@ -91,14 +91,14 @@ describe('Integration | Component | form-component/text-like-field', function ()
   it('sets input value to string specified in field object', async function () {
     this.set('textField.value', 'test');
 
-    await render(hbs `{{form-component/text-like-field field=textField}}`);
+    await render(hbs `<FormComponent::TextLikeField @field={{textField}} />`);
 
     expect(find('input').value).to.equal('test');
   });
 
   it('sets input id according to "fieldId"', async function () {
     await render(hbs `
-      {{form-component/text-like-field field=textField fieldId="abc"}}
+      <FormComponent::TextLikeField @field={{textField}} @fieldId="abc" />
     `);
 
     expect(find('input#abc')).to.exist;
@@ -107,7 +107,7 @@ describe('Integration | Component | form-component/text-like-field', function ()
   it('sets placeholder according to "placeholder"', async function () {
     this.set('textField.placeholder', 'test');
 
-    await render(hbs `{{form-component/text-like-field field=textField}}`);
+    await render(hbs `<FormComponent::TextLikeField @field={{textField}} />`);
 
     expect(find('input').placeholder).to.equal('test');
   });
@@ -117,7 +117,7 @@ describe('Integration | Component | form-component/text-like-field', function ()
     set(textField, 'value', 'test value');
     textField.changeMode('view');
 
-    await render(hbs `{{form-component/text-like-field field=textField}}`);
+    await render(hbs `<FormComponent::TextLikeField @field={{textField}} />`);
 
     expect(this.element.textContent.trim()).to.equal('test value');
     expect(find('input')).to.not.exist;

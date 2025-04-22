@@ -39,8 +39,8 @@ describe('Integration | Component | revisions-table/revision-entries-expander',
 );
 
 async function renderComponent() {
-  await render(hbs `{{revisions-table/revision-entries-expander
-    entriesCount=entriesCount
-    onExpand=onExpand
-  }}`);
+  await render(hbs `<RevisionsTable::RevisionEntriesExpander
+    @entriesCount={{entriesCount}}
+    @onExpand={{onExpand}}
+  />`);
 }

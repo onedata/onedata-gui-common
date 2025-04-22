@@ -1,19 +1,19 @@
-{{#perfect-scrollbar-element class="form-column"}}
-  {{atm-workflow/chart-dashboard-editor/chart-editor/axis-editor-form
-    axis=chartElement
-    editorContext=editorContext
-  }}
-{{/perfect-scrollbar-element}}
+<PerfectScrollbarElement class="form-column">
+  <AtmWorkflow::ChartDashboardEditor::ChartEditor::AxisEditorForm
+    @axis={{chartElement}}
+    @editorContext={{editorContext}}
+  />
+</PerfectScrollbarElement>
 <div class="details-column">
-  {{#bs-tab
-    activeId=activeTabId
+  <BsTab
+    @activeId={{activeTabId}}
     class="only-tab-bar bs-tab-onedata"
-    fade=false
-    customTabs=true
+    @fade={{false}}
+    @customTabs={{true}}
     as |tab|
-  }}
-    {{#bs-nav type="tabs" as |nav|}}
-      {{#nav.item active=(eq activeTabId tabIds.attachedSeries)}}
+  >
+    <BsNav @type="tabs" as |nav|>
+      <nav.item @active={{eq activeTabId tabIds.attachedSeries}}>
         <a
           class={{concat-classes
             "nav-link"
@@ -24,8 +24,8 @@
         >
           {{tt this "detailsTabNames.attachedSeries"}}
         </a>
-      {{/nav.item}}
-      {{#nav.item active=(eq activeTabId tabIds.labelFormatting)}}
+      </nav.item>
+      <nav.item @active={{eq activeTabId tabIds.labelFormatting}}>
         <a
           class={{concat-classes
             "nav-link"
@@ -36,34 +36,34 @@
         >
           {{tt this "detailsTabNames.labelFormatting"}}
           {{#if labelFormattingValidationErrorsMessage}}
-            {{warning-icon tooltipText=labelFormattingValidationErrorsMessage}}
+            <WarningIcon @tooltipText={{labelFormattingValidationErrorsMessage}} />
           {{/if}}
         </a>
-      {{/nav.item}}
-    {{/bs-nav}}
+      </nav.item>
+    </BsNav>
     <div class="tab-content">
-      {{#tab.pane elementId=tabIds.attachedSeries}}
+      <tab.pane @elementId={{tabIds.attachedSeries}}>
         {{#if chartElement.series.length}}
-          {{atm-workflow/chart-dashboard-editor/chart-editor/series-list
-            chart=chart
-            seriesSource=chartElement
-            editorContext=editorContext
-          }}
+          <AtmWorkflow::ChartDashboardEditor::ChartEditor::SeriesList
+            @chart={{chart}}
+            @seriesSource={{chartElement}}
+            @editorContext={{editorContext}}
+          />
         {{else}}
           <p class="empty-details-info">{{tt this "noSeriesAttached"}}</p>
         {{/if}}
-      {{/tab.pane}}
-      {{#tab.pane elementId=tabIds.labelFormatting}}
-        {{#render-later triggerRender=(eq activeTabId tabIds.labelFormatting)}}
-          {{atm-workflow/chart-dashboard-editor/function-editor
-            outputFunction=chartElement.valueProvider
-            detachedFunctions=chartElement.detachedFunctions
-            executionContext="axis"
-            editorContext=editorContext
-            tip=(tt this "labelFormatterEditorTip")
-          }}
-        {{/render-later}}
-      {{/tab.pane}}
+      </tab.pane>
+      <tab.pane @elementId={{tabIds.labelFormatting}}>
+        <RenderLater @triggerRender={{eq activeTabId tabIds.labelFormatting}}>
+          <AtmWorkflow::ChartDashboardEditor::FunctionEditor
+            @outputFunction={{chartElement.valueProvider}}
+            @detachedFunctions={{chartElement.detachedFunctions}}
+            @executionContext="axis"
+            @editorContext={{editorContext}}
+            @tip={{tt this "labelFormatterEditorTip"}}
+          />
+        </RenderLater>
+      </tab.pane>
     </div>
-  {{/bs-tab}}
+  </BsTab>
 </div>

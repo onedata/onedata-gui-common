@@ -99,10 +99,10 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/sections-editor/chart
-    chart=chart
-    editorContext=editorContext
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::SectionsEditor::Chart
+    @chart={{chart}}
+    @editorContext={{editorContext}}
+  />`);
 }
 
 function createChart(testCase, props = {}) {

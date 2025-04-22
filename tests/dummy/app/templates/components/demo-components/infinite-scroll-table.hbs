@@ -1,15 +1,15 @@
 <h2>Infinite scroll table</h2>
 
 <div style="display: grid; height: 30em; width: 50em;">
-  {{#infinite-scroll-table
-    onFetchEntries=onFetchEntries
-    columnsCount=2
-    rowHeight=50
-    title="Some title"
-    titleTip="Some title tip"
-    doesOpenDetailsOnClick=true
+  <InfiniteScrollTable
+    @onFetchEntries={{onFetchEntries}}
+    @columnsCount={{2}}
+    @rowHeight={{50}}
+    @title="Some title"
+    @titleTip="Some title tip"
+    @doesOpenDetailsOnClick={{true}}
     as |section|
-  }}
+  >
     {{#if (eq section.sectionName "tableHead")}}
 
       <tr>
@@ -33,5 +33,5 @@
       <p>{{section.entry.field1}}, {{section.entry.field2}}</p>
 
     {{/if}}
-  {{/infinite-scroll-table}}
+  </InfiniteScrollTable>
 </div>

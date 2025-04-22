@@ -21,7 +21,7 @@ describe('Integration | Component | form-component/toggle-field', function () {
   it(
     'has class "toggle-field"',
     async function () {
-      await render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `<FormComponent::ToggleField @field={{field}} />`);
 
       expect(find('.toggle-field')).to.exist;
     }
@@ -30,7 +30,7 @@ describe('Integration | Component | form-component/toggle-field', function () {
   it(
     'renders toggle',
     async function () {
-      await render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `<FormComponent::ToggleField @field={{field}} />`);
 
       expect(find('.one-way-toggle')).to.exist;
     }
@@ -41,7 +41,7 @@ describe('Integration | Component | form-component/toggle-field', function () {
     async function () {
       this.set('field.isEnabled', false);
 
-      await render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `<FormComponent::ToggleField @field={{field}} />`);
 
       expect(find('.one-way-toggle')).to.have.class('disabled');
     }
@@ -52,7 +52,7 @@ describe('Integration | Component | form-component/toggle-field', function () {
     async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      await render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `<FormComponent::ToggleField @field={{field}} />`);
 
       return focus('input')
         .then(() => blur('input'))
@@ -65,7 +65,7 @@ describe('Integration | Component | form-component/toggle-field', function () {
     async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      await render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `<FormComponent::ToggleField @field={{field}} />`);
 
       return click('.one-way-toggle')
         .then(() => {
@@ -78,14 +78,14 @@ describe('Integration | Component | form-component/toggle-field', function () {
   it('sets input value to value specified in field object', async function () {
     this.set('field.value', true);
 
-    await render(hbs `{{form-component/toggle-field field=field}}`);
+    await render(hbs `<FormComponent::ToggleField @field={{field}} />`);
 
     expect(find('.one-way-toggle')).to.have.class('checked');
   });
 
   it('sets input id according to "fieldId"', async function () {
     await render(hbs `
-      {{form-component/toggle-field field=field fieldId="abc"}}
+      <FormComponent::ToggleField @field={{field}} @fieldId="abc" />
     `);
 
     expect(find('input#abc')).to.exist;
@@ -94,7 +94,7 @@ describe('Integration | Component | form-component/toggle-field', function () {
   it('renders blocked toggle when field is in "view" mode', async function () {
     this.get('field').changeMode('view');
 
-    await render(hbs `{{form-component/toggle-field field=field}}`);
+    await render(hbs `<FormComponent::ToggleField @field={{field}} />`);
 
     expect(find('.one-way-toggle')).to.have.class('disabled');
   });
@@ -103,7 +103,7 @@ describe('Integration | Component | form-component/toggle-field', function () {
     async function () {
       this.set('field.isEnabled', false);
 
-      await render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `<FormComponent::ToggleField @field={{field}} />`);
 
       expect(await getDisabledControlTip()).to.equal('Locked');
     });
@@ -113,7 +113,7 @@ describe('Integration | Component | form-component/toggle-field', function () {
       this.set('field.isEnabled', false);
       this.set('field.disabledControlTip', 'test');
 
-      await render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `<FormComponent::ToggleField @field={{field}} />`);
 
       expect(await getDisabledControlTip()).to.equal('test');
     });
@@ -123,7 +123,7 @@ describe('Integration | Component | form-component/toggle-field', function () {
       this.get('field').changeMode('view');
       this.set('field.disabledControlTip', 'test');
 
-      await render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `<FormComponent::ToggleField @field={{field}} />`);
 
       expect(await getDisabledControlTip()).to.equal('Locked');
     });

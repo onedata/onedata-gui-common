@@ -14,7 +14,7 @@ describe('Integration | Component | record name', function () {
     });
     this.set('user', mockedUser);
 
-    await render(hbs `{{record-name record=user}}`);
+    await render(hbs `<RecordName @record={{user}} />`);
 
     expect(find('.record-name')).to.have.trimmed.text('user_name');
   });
@@ -26,7 +26,7 @@ describe('Integration | Component | record name', function () {
     });
     this.set('user', mockedUserWithUsername);
 
-    await render(hbs `{{record-name record=user}}`);
+    await render(hbs `<RecordName @record={{user}} />`);
 
     expect(find('.record-name-general')).to.have.trimmed.text('user_name');
     expect(find('.record-username')).to.have.trimmed.text('(username)');

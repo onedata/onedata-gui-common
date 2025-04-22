@@ -21,7 +21,7 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/visual
   });
 
   it('has classes "visual-presenter" and "data-visual-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/dataset/visual-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::VisualPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('visual-presenter')
@@ -35,10 +35,10 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/visual
       rootFilePath: '/some/path/dataset',
       rootFileType: FileType.Regular,
     });
-    await render(hbs`{{atm-workflow/value-presenters/dataset/visual-presenter
-      context=context
-      value=dataset
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::VisualPresenter
+      @context={{context}}
+      @value={{dataset}}
+    />`);
 
     expect(find('.dataset-icon')).to.have.class('main-type-regular')
       .and.to.have.class('oneicon-browser-dataset-file');
@@ -57,10 +57,10 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/visual
       rootFilePath: '/some/path/dataset',
       rootFileType: FileType.Directory,
     });
-    await render(hbs`{{atm-workflow/value-presenters/dataset/visual-presenter
-      context=context
-      value=dataset
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::VisualPresenter
+      @context={{context}}
+      @value={{dataset}}
+    />`);
 
     expect(find('.dataset-icon')).to.have.class('main-type-directory')
       .and.to.have.class('oneicon-browser-dataset');
@@ -68,10 +68,10 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/visual
 
   it('handles case when all dataset properties are missing', async function () {
     this.set('dataset', null);
-    await render(hbs`{{atm-workflow/value-presenters/dataset/visual-presenter
-      context=context
-      value=dataset
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::VisualPresenter
+      @context={{context}}
+      @value={{dataset}}
+    />`);
 
     expect(find('.dataset-icon')).to.have.class('main-type-regular')
       .and.to.have.class('oneicon-browser-dataset-file');
@@ -87,10 +87,10 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/visual
     const dataset = this.set('dataset', {
       datasetId: 'some_id',
     });
-    await render(hbs`{{atm-workflow/value-presenters/dataset/visual-presenter
-      context=context
-      value=dataset
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::VisualPresenter
+      @context={{context}}
+      @value={{dataset}}
+    />`);
 
     expect(find('.dataset-icon')).to.have.class('main-type-regular')
       .and.to.have.class('oneicon-browser-dataset-file');
@@ -114,10 +114,10 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/visual
         fileUrl: () => null,
         datasetUrl: () => null,
       });
-      await render(hbs`{{atm-workflow/value-presenters/dataset/visual-presenter
-        context=context
-        value=dataset
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::VisualPresenter
+        @context={{context}}
+        @value={{dataset}}
+      />`);
 
       expect(find('.dataset-icon')).to.have.class('main-type-regular')
         .and.to.have.class('oneicon-browser-dataset-file');
@@ -142,10 +142,10 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/visual
         fileUrl: () => reject('someError1'),
         datasetUrl: () => reject('someError2'),
       });
-      await render(hbs`{{atm-workflow/value-presenters/dataset/visual-presenter
-        context=context
-        value=dataset
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::VisualPresenter
+        @context={{context}}
+        @value={{dataset}}
+      />`);
 
       expect(find('.dataset-icon')).to.have.class('main-type-regular')
         .and.to.have.class('oneicon-browser-dataset-file');
@@ -169,10 +169,10 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/visual
       fileUrl: () => new Promise(() => {}),
       datasetUrl: () => new Promise(() => {}),
     });
-    await render(hbs`{{atm-workflow/value-presenters/dataset/visual-presenter
-      context=context
-      value=dataset
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::VisualPresenter
+      @context={{context}}
+      @value={{dataset}}
+    />`);
 
     expect(find('.dataset-icon')).to.have.class('main-type-regular')
       .and.to.have.class('oneicon-browser-dataset-file');
@@ -194,9 +194,9 @@ describe('Integration | Component | atm-workflow/value-presenters/dataset/visual
           rootFileType: FileType.Regular,
         },
       });
-      await render(hbs`{{atm-workflow/value-presenters/dataset/visual-presenter
-        value=dataset
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::Dataset::VisualPresenter
+        @value={{dataset}}
+      />`);
 
       expect(find('.dataset-icon')).to.have.class('main-type-regular')
         .and.to.have.class('oneicon-browser-dataset-file');

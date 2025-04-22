@@ -33,9 +33,9 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/chart-editor
-    chart=model.rootSection.charts.[0]
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::ChartEditor
+    @chart={{model.rootSection.charts.[0]}}
+  />`);
 }
 
 function createModel(chartSpec = {}) {

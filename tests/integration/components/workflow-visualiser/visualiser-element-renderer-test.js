@@ -9,7 +9,7 @@ describe('Integration | Component | workflow-visualiser/visualiser-element-rende
   setupRenderingTest();
 
   it('renders nothing when lane element is not defined', async function () {
-    await render(hbs `{{workflow-visualiser/visualiser-element-renderer}}`);
+    await render(hbs `<WorkflowVisualiser::VisualiserElementRenderer />`);
 
     expect(this.element.children).to.have.length(0);
   });
@@ -17,9 +17,9 @@ describe('Integration | Component | workflow-visualiser/visualiser-element-rende
   it('renders lane element using component specified by element\'s "renderer" field', async function () {
     this.set('elementModel', { renderer: 'test-component' });
 
-    await render(hbs `{{workflow-visualiser/visualiser-element-renderer
-      elementModel=elementModel
-    }}`);
+    await render(hbs `<WorkflowVisualiser::VisualiserElementRenderer
+      @elementModel={{elementModel}}
+    />`);
 
     expect(findAll('.test-component')).to.have.length(1);
   });
@@ -27,9 +27,9 @@ describe('Integration | Component | workflow-visualiser/visualiser-element-rende
   it('passes lane element instance to the renderer lane element component', async function () {
     const elementModel = this.set('elementModel', { renderer: 'test-component' });
 
-    await render(hbs `{{workflow-visualiser/visualiser-element-renderer
-      elementModel=elementModel
-    }}`);
+    await render(hbs `<WorkflowVisualiser::VisualiserElementRenderer
+      @elementModel={{elementModel}}
+    />`);
 
     const renderedComponent = find('.test-component').componentInstance;
     expect(get(renderedComponent, 'elementModel')).to.equal(elementModel);

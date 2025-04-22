@@ -11,7 +11,7 @@ describe('Integration | Component | truncated-string', function () {
   it('does not show tooltip, when text is fully visible', async function () {
     await render(hbs `
       <div style="min-width: 500px">
-        {{#truncated-string}}short text{{/truncated-string}}
+        <TruncatedString>short text</TruncatedString>
       </div>
     `);
 
@@ -26,7 +26,7 @@ describe('Integration | Component | truncated-string', function () {
 
     await render(hbs `
       <div style="min-width: 50px; max-width: 50px;">
-        {{#truncated-string}}{{longText}}{{/truncated-string}}
+        <TruncatedString>{{longText}}</TruncatedString>
       </div>
     `);
 

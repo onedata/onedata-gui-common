@@ -156,7 +156,7 @@ async function showModal(testCase) {
     modalOptions,
   } = testCase.getProperties('modalManager', 'modalOptions');
 
-  await render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `<GlobalModalMounter />`);
 
   return await modalManager
     .show('unsaved-changes-question-modal', modalOptions)

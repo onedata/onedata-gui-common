@@ -15,7 +15,7 @@ describe(
     it(
       `renders four operators: ${allowedOperatorsList.map(s => s.toUpperCase()).join(', ')} by default`,
       async function () {
-        await render(hbs `{{query-builder/block-selector/operator-selector}}`);
+        await render(hbs `<QueryBuilder::BlockSelector::OperatorSelector />`);
 
         const operators = findAll('.operator-selector .operator');
         expect(operators).to.have.length(4);
@@ -31,9 +31,9 @@ describe(
         async function () {
           const addSpy = this.set('addSpy', sinon.spy());
 
-          await render(hbs `{{query-builder/block-selector/operator-selector
-            onOperatorSelected=addSpy
-          }}`);
+          await render(hbs `<QueryBuilder::BlockSelector::OperatorSelector
+            @onOperatorSelected={{addSpy}}
+          />`);
 
           expect(addSpy).to.not.be.called;
           await click(`.operator-${operatorName}`);
@@ -46,9 +46,9 @@ describe(
       'renders only specified subset of operators',
       async function () {
 
-        await render(hbs `{{query-builder/block-selector/operator-selector
-          operators=(array "and" "or")
-        }}`);
+        await render(hbs `<QueryBuilder::BlockSelector::OperatorSelector
+          @operators={{array "and" "or"}}
+        />`);
 
         const operators = findAll('.operator-selector .operator');
         expect(operators).to.have.length(2);
@@ -62,9 +62,9 @@ describe(
       'does not render incorrect operators',
       async function () {
 
-        await render(hbs `{{query-builder/block-selector/operator-selector
-          operators=(array "and" "xor")
-        }}`);
+        await render(hbs `<QueryBuilder::BlockSelector::OperatorSelector
+          @operators={{array "and" "xor"}}
+        />`);
 
         const operators = findAll('.operator-selector .operator');
         expect(operators).to.have.length(1);
@@ -75,7 +75,7 @@ describe(
     it(
       'does not disable any operator by default',
       async function () {
-        await render(hbs `{{query-builder/block-selector/operator-selector}}`);
+        await render(hbs `<QueryBuilder::BlockSelector::OperatorSelector />`);
 
         expect(find('.operator-selector .operator[disabled]')).to.not.exist;
       }
@@ -84,9 +84,9 @@ describe(
     it(
       'disables specified operators',
       async function () {
-        await render(hbs `{{query-builder/block-selector/operator-selector
-          disabledOperators=(array "and" "or")
-        }}`);
+        await render(hbs `<QueryBuilder::BlockSelector::OperatorSelector
+          @disabledOperators={{array "and" "or"}}
+        />`);
 
         expect(findAll('.operator-selector .operator[disabled]'))
           .to.have.length(2);

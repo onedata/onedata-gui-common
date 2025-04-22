@@ -20,11 +20,11 @@ describe('Integration | Component | query-builder/block-settings', function () {
   it('does not show block selector when "open" is false', async function () {
     this.set('queryBlock', NotOperatorQueryBlock.create());
 
-    await render(hbs `<div id="x">{{query-builder/block-settings
-      queryBlock=queryBlock
-      open=false
-      triggerSelector="#x"
-    }}</div>`);
+    await render(hbs `<div id="x"><QueryBuilder::BlockSettings
+      @queryBlock={{queryBlock}}
+      @open={{false}}
+      @triggerSelector="#x"
+    /></div>`);
 
     expect(globals.document.querySelector('.webui-popover')).to.not.exist;
   });
@@ -32,11 +32,11 @@ describe('Integration | Component | query-builder/block-settings', function () {
   it('shows block selector when "open" is true', async function () {
     this.set('queryBlock', NotOperatorQueryBlock.create());
 
-    await render(hbs `<div id="x">{{query-builder/block-settings
-      queryBlock=queryBlock
-      open=true
-      triggerSelector="#x"
-    }}</div>`);
+    await render(hbs `<div id="x"><QueryBuilder::BlockSettings
+      @queryBlock={{queryBlock}}
+      @open={{true}}
+      @triggerSelector="#x"
+    /></div>`);
 
     expect(globals.document.querySelector('.webui-popover'))
       .to.exist.and.have.class('in');
@@ -49,11 +49,11 @@ describe('Integration | Component | query-builder/block-settings', function () {
   it('shows block selector (operator block variant)', async function () {
     this.set('queryBlock', NotOperatorQueryBlock.create());
 
-    await render(hbs `<div id="x">{{query-builder/block-settings
-      queryBlock=queryBlock
-      open=true
-      triggerSelector="#x"
-    }}</div>`);
+    await render(hbs `<div id="x"><QueryBuilder::BlockSettings
+      @queryBlock={{queryBlock}}
+      @open={{true}}
+      @triggerSelector="#x"
+    /></div>`);
 
     const blockSelector = globals.document.querySelector('.query-builder-block-selector');
     expect(globals.document.querySelector('.webui-popover')).to.exist.and.have.class('in');
@@ -65,11 +65,11 @@ describe('Integration | Component | query-builder/block-settings', function () {
   it('shows block selector (condition block variant)', async function () {
     this.set('queryBlock', ConditionQueryBlock.create());
 
-    await render(hbs `<div id="x">{{query-builder/block-settings
-      queryBlock=queryBlock
-      open=true
-      triggerSelector="#x"
-    }}</div>`);
+    await render(hbs `<div id="x"><QueryBuilder::BlockSettings
+      @queryBlock={{queryBlock}}
+      @open={{true}}
+      @triggerSelector="#x"
+    /></div>`);
 
     const blockSelector = globals.document.querySelector('.query-builder-block-selector');
     expect(globals.document.querySelector('.webui-popover'))
@@ -93,13 +93,13 @@ describe('Integration | Component | query-builder/block-settings', function () {
         open: true,
       });
 
-      await render(hbs `<div id="x">{{query-builder/block-settings
-        queryBlock=queryBlock
-        open=true
-        triggerSelector="#x"
-        onBlockReplace=replaceSpy
-        onSettingsClose=closeSpy
-      }}</div>`);
+      await render(hbs `<div id="x"><QueryBuilder::BlockSettings
+        @queryBlock={{queryBlock}}
+        @open={{true}}
+        @triggerSelector="#x"
+        @onBlockReplace={{replaceSpy}}
+        @onSettingsClose={{closeSpy}}
+      /></div>`);
 
       await click('.surround-section .operator-and');
       await waitUntil(() =>
@@ -132,13 +132,13 @@ describe('Integration | Component | query-builder/block-settings', function () {
       const condition = ConditionQueryBlock.create();
       queryBlock.addOperand(condition);
 
-      await render(hbs `<div id="x">{{query-builder/block-settings
-        queryBlock=queryBlock
-        open=true
-        triggerSelector="#x"
-        onBlockReplace=replaceSpy
-        onSettingsClose=closeSpy
-      }}</div>`);
+      await render(hbs `<div id="x"><QueryBuilder::BlockSettings
+        @queryBlock={{queryBlock}}
+        @open={{true}}
+        @triggerSelector="#x"
+        @onBlockReplace={{replaceSpy}}
+        @onSettingsClose={{closeSpy}}
+      /></div>`);
 
       await click('.change-to-section .operator-and');
       await waitUntil(() =>

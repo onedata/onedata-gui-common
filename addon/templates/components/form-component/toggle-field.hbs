@@ -1,10 +1,10 @@
-{{one-way-toggle
+<OneWayToggle
   class="form-control"
-  inputId=fieldId
-  isReadOnly=(or (not isEffectivelyEnabled) isInViewMode)
-  checked=value
-  update=(action "valueChanged")
-  onFocusOut=(action "focusLost")
-  lockHint=(if (and isInEditMode (not isEffectivelyEnabled)) disabledControlTip null)
-}}
+  @inputId={{fieldId}}
+  @isReadOnly={{or (not isEffectivelyEnabled) isInViewMode}}
+  @checked={{value}}
+  @update={{action "valueChanged"}}
+  @onFocusOut={{action "focusLost"}}
+  @lockHint={{if (and isInEditMode (not isEffectivelyEnabled)) disabledControlTip null}}
+/>
 {{yield}}

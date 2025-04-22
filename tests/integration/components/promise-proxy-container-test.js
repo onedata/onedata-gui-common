@@ -20,7 +20,9 @@ describe('Integration | Component | promise-proxy-container', function () {
 
     this.set('proxy', fakeProxy);
 
-    await render(hbs `{{#promise-proxy-container proxy=proxy}}some content{{/promise-proxy-container}}`);
+    await render(hbs `<PromiseProxyContainer
+      @proxy={{proxy}}
+    >some content</PromiseProxyContainer>`);
 
     expect(findAll('.alert-promise-error')).to.have.length(1);
   });
@@ -37,7 +39,9 @@ describe('Integration | Component | promise-proxy-container', function () {
 
     this.set('proxy', fakeProxy);
 
-    await render(hbs `{{#promise-proxy-container proxy=proxy}}some content{{/promise-proxy-container}}`);
+    await render(hbs `<PromiseProxyContainer
+      @proxy={{proxy}}
+    >some content</PromiseProxyContainer>`);
 
     expect(
       findAll('a.promise-error-show-details'),

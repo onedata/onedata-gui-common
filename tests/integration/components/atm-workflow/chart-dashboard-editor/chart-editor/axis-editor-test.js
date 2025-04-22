@@ -87,7 +87,7 @@ function createSeries(testCase, props = {}) {
 }
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/chart-editor/axis-editor
-    chartElement=axis
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::ChartEditor::AxisEditor
+    @chartElement={{axis}}
+  />`);
 }

@@ -1,20 +1,20 @@
 {{#if (eq itemDataSpec.type "object")}}
-  {{modals/workflow-visualiser/store-modal/visible-properties-selector
-    availableProperties=availableColumns
-    visibleProperties=visibleColumns
-    isMaxPropertiesCountReached=(gte availableColumns.length maxAvailableColumnsCount)
-    onTogglePropertyVisibility=(action "toggleColumnVisibility")
-  }}
+  <Modals::WorkflowVisualiser::StoreModal::VisiblePropertiesSelector
+    @availableProperties={{availableColumns}}
+    @visibleProperties={{visibleColumns}}
+    @isMaxPropertiesCountReached={{gte availableColumns.length maxAvailableColumnsCount}}
+    @onTogglePropertyVisibility={{action "toggleColumnVisibility"}}
+  />
 {{/if}}
 
-{{#infinite-scroll-table
-  onFetchEntries=fetchEntriesCallback
-  columnsCount=tableColumnsCount
-  updateStrategy="always"
-  rowHeight=45
-  doesOpenDetailsOnClick=true
+<InfiniteScrollTable
+  @onFetchEntries={{fetchEntriesCallback}}
+  @columnsCount={{tableColumnsCount}}
+  @updateStrategy="always"
+  @rowHeight={{45}}
+  @doesOpenDetailsOnClick={{true}}
   as |section|
-}}
+>
   {{#if (eq section.sectionName "tableHead")}}
 
     {{component tableHeaderRowPresenterComponent
@@ -47,11 +47,11 @@
 
   {{else if (eq section.sectionName "entryDetails")}}
 
-    {{modals/workflow-visualiser/store-modal/value-container-presenter
-      dataSpec=itemDataSpec
-      valueContainer=section.entry
-      context=context
-    }}
+    <Modals::WorkflowVisualiser::StoreModal::ValueContainerPresenter
+      @dataSpec={{itemDataSpec}}
+      @valueContainer={{section.entry}}
+      @context={{context}}
+    />
 
   {{/if}}
-{{/infinite-scroll-table}}
+</InfiniteScrollTable>

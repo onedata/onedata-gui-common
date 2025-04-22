@@ -2,22 +2,27 @@
 <div class="container">
   <div class="row content-row">
     <h3>Large</h3>
-    {{one-size-edit value=size onSave=(action "saveReject")}}
+    <OneSizeEdit @value={{size}} @onSave={{action "saveReject"}} />
   </div>
   <div class="row content-row">
     <h3>Large edit</h3>
-    {{one-size-edit value=size forceStartEdit=true onSave=(action "saveReject")}}
+    <OneSizeEdit
+      @value={{size}}
+      @forceStartEdit={{true}}
+      @onSave={{action "saveReject"}}
+    />
   </div>
   <div class="row content-row">
     <h3>Small</h3>
-    {{one-size-edit value=size size="small" onSave=(action "saveReject")}}
+    <OneSizeEdit @value={{size}} @size="small" @onSave={{action "saveReject"}} />
   </div>
   <div class="row content-row">
     <h3>Small edit</h3>
-    {{one-size-edit
-      value=size size="small"
-      forceStartEdit=true
-      onSave=(action "saveReject")
-    }}
+    <OneSizeEdit
+      @value={{size}}
+      @size="small"
+      @forceStartEdit={{true}}
+      @onSave={{action "saveReject"}}
+    />
   </div>
 </div>

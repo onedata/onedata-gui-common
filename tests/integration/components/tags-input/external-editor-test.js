@@ -23,7 +23,7 @@ describe('Integration | Component | tags-input/external-editor', function () {
   });
 
   it('has class "tags-input-external-editor"', async function () {
-    await render(hbs `{{tags-input/external-editor}}`);
+    await render(hbs `<TagsInput::ExternalEditor />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('tags-input-external-editor');
@@ -113,13 +113,13 @@ describe('Integration | Component | tags-input/external-editor', function () {
 });
 
 async function renderTagInput() {
-  await render(hbs `{{tags-input
-    tags=tags
-    tagsLimit=tagsLimit
-    tagEditorComponentName="tags-input/external-editor"
-    tagEditorSettings=tagEditorSettings
-    onChange=onChange
-  }}`);
+  await render(hbs `<TagsInput
+    @tags={{tags}}
+    @tagsLimit={{tagsLimit}}
+    @tagEditorComponentName="tags-input/external-editor"
+    @tagEditorSettings={{tagEditorSettings}}
+    @onChange={{onChange}}
+  />`);
 }
 
 async function startCreation() {

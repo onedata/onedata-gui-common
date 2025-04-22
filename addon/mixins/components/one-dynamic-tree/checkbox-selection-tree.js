@@ -123,8 +123,10 @@ export default Mixin.create({
   _changeCheckboxesState(node, value) {
     const values = this.get('values');
     if (node.get('_isField')) {
-      if (node.get('type') === 'checkbox' &&
-        !this.isPathDisabled(node.get('name'))) {
+      if (
+        node.get('type') === 'checkbox' &&
+        !this.isPathDisabled(node.get('name'))
+      ) {
         const name = node.get('name');
         values.set(name, value);
         this._markFieldAsModified(name);

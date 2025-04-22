@@ -17,9 +17,7 @@ describe('Integration | Component | one-input-tokenizer', function () {
     const inputText = 'hello world';
     this.set('inputText', inputText);
 
-    await render(hbs `{{one-input-tokenizer
-      inputValue=inputText
-    }}`);
+    await render(hbs `<OneInputTokenizer @inputValue={{inputText}} />`);
 
     const oneInputTokenizer = find('.one-input-tokenizer');
     expect(oneInputTokenizer).to.exist;
@@ -31,11 +29,11 @@ describe('Integration | Component | one-input-tokenizer', function () {
     const tokensChanged = sinon.spy();
     this.set('tokensChanged', tokensChanged);
 
-    await render(hbs `{{one-input-tokenizer
-      tokensChanged=(action tokensChanged)
-      inputValue=inputValue
-      inputValueChanged=(action (mut inputValue))
-    }}`);
+    await render(hbs `<OneInputTokenizer
+      @tokensChanged={{action tokensChanged}}
+      @inputValue={{inputValue}}
+      @inputValueChanged={{action (mut inputValue)}}
+    />`);
 
     const oneInputTokenizer = find('.one-input-tokenizer .tknz-input');
     await fillIn(oneInputTokenizer, 'hello');

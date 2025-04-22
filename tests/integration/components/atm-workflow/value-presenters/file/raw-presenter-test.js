@@ -13,7 +13,7 @@ describe('Integration | Component | atm-workflow/value-presenters/file/raw-prese
   });
 
   it('has classes "raw-presenter" and "file-raw-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/file/raw-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::RawPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('raw-presenter')
@@ -22,9 +22,9 @@ describe('Integration | Component | atm-workflow/value-presenters/file/raw-prese
 
   it('presents passed value', async function () {
     this.set('value', { fileId: 'abc', name: 'file1.txt' });
-    await render(hbs`{{atm-workflow/value-presenters/file/raw-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::File::RawPresenter
+      @value={{value}}
+    />`);
 
     const expectedValue = `{
   "fileId": "abc",

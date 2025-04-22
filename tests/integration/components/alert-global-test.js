@@ -19,7 +19,7 @@ describe('Integration | Component | alert-global', function () {
   it('is opened when alert.opened is true', async function () {
     this.set('alert.opened', true);
 
-    await render(hbs `{{alert-global}}`);
+    await render(hbs `<AlertGlobal />`);
 
     expect(getModal()).to.exist;
   });
@@ -27,7 +27,7 @@ describe('Integration | Component | alert-global', function () {
   it('is closed when alert.opened is false', async function () {
     this.set('alert.opened', false);
 
-    await render(hbs `{{alert-global}}`);
+    await render(hbs `<AlertGlobal />`);
 
     expect(getModal()).to.not.exist;
   });
@@ -35,7 +35,7 @@ describe('Integration | Component | alert-global', function () {
   it('can be closed using "Close" button', async function () {
     this.set('alert.opened', true);
 
-    await render(hbs `{{alert-global}}`);
+    await render(hbs `<AlertGlobal />`);
     await click(getModal().querySelector('.close-alert-modal'));
 
     expect(this.get('alert.opened')).to.be.false;
@@ -53,7 +53,7 @@ describe('Integration | Component | alert-global', function () {
         type,
       });
 
-      await render(hbs `{{alert-global}}`);
+      await render(hbs `<AlertGlobal />`);
 
       const modalElement = getModal();
       expect(modalElement.querySelector('.header-icon')).to.have.class(`oneicon-${icon}`);
@@ -72,7 +72,7 @@ describe('Integration | Component | alert-global', function () {
         type,
       });
 
-      await render(hbs `{{alert-global}}`);
+      await render(hbs `<AlertGlobal />`);
 
       expect(getModal().querySelector('.close-alert-modal')).to.have.class(btnClass);
     });
@@ -90,7 +90,7 @@ describe('Integration | Component | alert-global', function () {
         type,
       });
 
-      await render(hbs `{{alert-global}}`);
+      await render(hbs `<AlertGlobal />`);
 
       expect(getModal().querySelector('h1').textContent).to.contain(header);
     });
@@ -103,7 +103,7 @@ describe('Integration | Component | alert-global', function () {
       text,
     });
 
-    await render(hbs `{{alert-global}}`);
+    await render(hbs `<AlertGlobal />`);
 
     expect(getModal().querySelector('.modal-body').textContent).to.contain(text);
   });
@@ -114,7 +114,7 @@ describe('Integration | Component | alert-global', function () {
       detailsText: 'asdf',
     });
 
-    await render(hbs `{{alert-global}}`);
+    await render(hbs `<AlertGlobal />`);
 
     expect(getModal().querySelector('.toggle-details-link')).to.exist;
   });
@@ -122,7 +122,7 @@ describe('Integration | Component | alert-global', function () {
   it('does not show details expanding link, when details are not available', async function () {
     this.set('alert.opened', true);
 
-    await render(hbs `{{alert-global}}`);
+    await render(hbs `<AlertGlobal />`);
 
     expect(getModal().querySelector('.toggle-details-link')).to.not.exist;
   });
@@ -140,7 +140,7 @@ describe('Integration | Component | alert-global', function () {
           detailsText: 'asdf',
         });
 
-        await render(hbs `{{alert-global}}`);
+        await render(hbs `<AlertGlobal />`);
 
         expect(getModal().querySelector('.toggle-details-link')).to.have.class(textClass);
       }
@@ -155,7 +155,7 @@ describe('Integration | Component | alert-global', function () {
         detailsText: 'asdf',
       });
 
-      await render(hbs `{{alert-global}}`);
+      await render(hbs `<AlertGlobal />`);
 
       expect(getModal().querySelector('.toggle-details-link').textContent)
         .to.contain('Show details');
@@ -171,7 +171,7 @@ describe('Integration | Component | alert-global', function () {
         detailsText: 'asdf',
       });
 
-      await render(hbs `{{alert-global}}`);
+      await render(hbs `<AlertGlobal />`);
       await click(getModal().querySelector('.toggle-details-link'));
 
       expect(getModal().querySelector('.toggle-details-link').textContent)
@@ -186,7 +186,7 @@ describe('Integration | Component | alert-global', function () {
       detailsText: 'asdf',
     });
 
-    await render(hbs `{{alert-global}}`);
+    await render(hbs `<AlertGlobal />`);
     await click(getModal().querySelector('.toggle-details-link'));
 
     expect(getModal().querySelector('.details-collapse')).to.have.class('in');
@@ -198,7 +198,7 @@ describe('Integration | Component | alert-global', function () {
       detailsText: 'asdf',
     });
 
-    await render(hbs `{{alert-global}}`);
+    await render(hbs `<AlertGlobal />`);
     await click(getModal().querySelector('.toggle-details-link'));
     await click(getModal().querySelector('.toggle-details-link'));
 
@@ -212,7 +212,7 @@ describe('Integration | Component | alert-global', function () {
       alwaysShowDetails: true,
     });
 
-    await render(hbs `{{alert-global}}`);
+    await render(hbs `<AlertGlobal />`);
 
     expect(getModal().querySelector('.toggle-details-link')).to.not.exist;
     expect(getModal().querySelector('.details-collapse')).to.have.class('in');

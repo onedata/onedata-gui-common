@@ -1,26 +1,26 @@
 <div class="row row-content" style="padding-bottom: 20px;">
   <h3>tab-bar with few items</h3>
-  {{one-tab-bar items=fewItems}}
+  <OneTabBar @items={{fewItems}} />
 </div>
 
 <div class="row row-content" style="padding-bottom: 20px;">
   <h3>tab-bar with few items with long names</h3>
-  {{one-tab-bar items=fewItemsLong}}
+  <OneTabBar @items={{fewItemsLong}} />
 </div>
 
 <div class="row row-content" style="padding-bottom: 20px;">
   <h3>tab-bar with few items with long long names</h3>
-  {{one-tab-bar items=fewItemsLongLong}}
+  <OneTabBar @items={{fewItemsLongLong}} />
 </div>
 
 <div class="row row-content">
   <h3>tab-bar with scrollers</h3>
-  {{one-tab-bar items=items tabsRenderMode="always" dropdownRenderMode="never"}}
+  <OneTabBar @items={{items}} @tabsRenderMode="always" @dropdownRenderMode="never" />
 </div>
 
 <div class="row row-content">
   <h3>tab-bar with scrollers and dropdown</h3>
-  {{one-tab-bar items=items}}
+  <OneTabBar @items={{items}} />
 </div>
 
 <div class="row row-content">
@@ -33,10 +33,10 @@
       oninput={{action (mut selectedItemIndex) value="target.value"}}
     >
   </div>
-  {{one-tab-bar
-    items=manyShortItems
-    tabsRenderMode="always"
-    dropdownRenderMode="never"
-    selectedItem=(get items selectedItemIndex)
-  }}
+  <OneTabBar
+    @items={{manyShortItems}}
+    @tabsRenderMode="always"
+    @dropdownRenderMode="never"
+    @selectedItem={{get items selectedItemIndex}}
+  />
 </div>

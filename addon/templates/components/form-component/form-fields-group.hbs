@@ -1,4 +1,7 @@
-{{#one-collapse class=(concat-classes "fields-group-collapse" (concat name "-collapse")) collapsed=(not isExpanded)}}
+<OneCollapse
+  class={{concat-classes "fields-group-collapse" (concat name "-collapse")}}
+  @collapsed={{not isExpanded}}
+>
   <div class="fields-group-children {{concat name "-children"}}">
     {{#each nestedFields as |nestedField|}}
       {{#if (and
@@ -6,8 +9,8 @@
         nestedField.fieldComponentName
         (or (not nestedField.isInViewMode) (not-eq nestedField.isExpanded false))
       )}}
-        {{form-component/field-renderer field=nestedField}}
+        <FormComponent::FieldRenderer @field={{nestedField}} />
       {{/if}}
     {{/each}}
   </div>
-{{/one-collapse}}
+</OneCollapse>
