@@ -9,12 +9,30 @@
         {{#let (component this.bsForm.group) as |bsFormGroup|}}
           <bsFormGroup
             @validation={{if (not-eq field.type "radio-group") (if field.isInvalid "error" (if field.isValid "success"))}}
-            class={{concat-classes "col-xs-12" (concat field.type "-input") (if disabled "disabled") (if field.tip "group-with-tip") field.cssClass (if (eq field.type "static") "form-group-static" "form-group-editable") (if field.rightText "has-right-text") (if field.message "has-message") (if (or (eq field.type "radio-group") (eq field.type "capacity")) "no-feedback")}}
+            class={{concat-classes
+              "col-xs-12"
+              (concat field.type "-input")
+              (if disabled "disabled")
+              (if field.tip "group-with-tip")
+              field.cssClass
+              (if (eq field.type "static") "form-group-static" "form-group-editable")
+              (if field.rightText "has-right-text")
+              (if field.message "has-message")
+              (if (or (eq field.type "radio-group") (eq field.type "capacity"))
+                "no-feedback"
+              )
+            }}
           >
             {{#if (eq field.type "checkbox")}}
               <div class="row toggle-form-row">
                 {{#if (not field.nolabel)}}
-                  <label for={{concat parentView.elementId (concat "-" field.name)}} class={{concat "control-label label-column " layoutConfig.formToggleLabelColumns}}>
+                  <label
+                    for={{concat parentView.elementId (concat "-" field.name)}}
+                    class={{concat-classes
+                      "control-label label-column"
+                      layoutConfig.formToggleLabelColumns
+                    }}
+                  >
                     {{field.label}}:
                     {{#if field.tip}}
                       <OneLabelTip class="form-field-right-addon" @title={{field.tip}} />
