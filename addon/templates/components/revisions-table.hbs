@@ -14,10 +14,10 @@
 </thead>
 <tbody>
   {{#unless isReadOnly}}
-    {{revisions-table/create-revision-entry
-      columnsCount=columnsCount
-      revisionActionsFactory=revisionActionsFactory
-    }}
+    <RevisionsTable::CreateRevisionEntry
+      @columnsCount={{columnsCount}}
+      @revisionActionsFactory={{revisionActionsFactory}}
+    />
   {{/unless}}
   {{#if (eq latestRevNum null)}}
     <tr class="revisions-table-empty-entry">
@@ -29,34 +29,34 @@
       </td>
     </tr>
   {{else}}
-    {{#revisions-table/entries-section
-      mainRevisionNumber=latestRevNum
-      collapsedRevisionNumbers=revNumsBetweenStableAndLatest
-      revisionRegistry=revisionRegistry
-      revisionActionsFactory=revisionActionsFactory
-      onRevisionClick=onRevisionClick
-      isReadOnly=isReadOnly
-      columnsCount=columnsCount
-      expanderClass="between-revisions-expander"
+    <RevisionsTable::EntriesSection
+      @mainRevisionNumber={{latestRevNum}}
+      @collapsedRevisionNumbers={{revNumsBetweenStableAndLatest}}
+      @revisionRegistry={{revisionRegistry}}
+      @revisionActionsFactory={{revisionActionsFactory}}
+      @onRevisionClick={{onRevisionClick}}
+      @isReadOnly={{isReadOnly}}
+      @columnsCount={{columnsCount}}
+      @expanderClass="between-revisions-expander"
       as |section data|
-    }}
+    >
       {{yield section data}}
-    {{/revisions-table/entries-section}}
-    {{#revisions-table/entries-section
-      mainRevisionNumber=(if
+    </RevisionsTable::EntriesSection>
+    <RevisionsTable::EntriesSection
+      @mainRevisionNumber={{if
         (and (not-eq latestStableRevNum null) (not-eq latestStableRevNum latestRevNum))
         latestStableRevNum
-      )
-      collapsedRevisionNumbers=revNumsBeforeStable
-      revisionRegistry=revisionRegistry
-      revisionActionsFactory=revisionActionsFactory
-      onRevisionClick=onRevisionClick
-      isReadOnly=isReadOnly
-      columnsCount=columnsCount
-      expanderClass="older-revisions-expander"
+      }}
+      @collapsedRevisionNumbers={{revNumsBeforeStable}}
+      @revisionRegistry={{revisionRegistry}}
+      @revisionActionsFactory={{revisionActionsFactory}}
+      @onRevisionClick={{onRevisionClick}}
+      @isReadOnly={{isReadOnly}}
+      @columnsCount={{columnsCount}}
+      @expanderClass="older-revisions-expander"
       as |section data|
-    }}
+    >
       {{yield section data}}
-    {{/revisions-table/entries-section}}
+    </RevisionsTable::EntriesSection>
   {{/if}}
 </tbody>

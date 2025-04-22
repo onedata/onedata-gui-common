@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/range/visual-p
   setupRenderingTest();
 
   it('has classes "visual-presenter" and "range-visual-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/range/visual-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Range::VisualPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('visual-presenter')
@@ -17,9 +17,9 @@ describe('Integration | Component | atm-workflow/value-presenters/range/visual-p
 
   it('presents passed value', async function () {
     this.set('value', { start: 2, end: 10, step: 3 });
-    await render(hbs`{{atm-workflow/value-presenters/range/visual-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Range::VisualPresenter
+      @value={{value}}
+    />`);
 
     expect(find('.start-property .property-label')).to.have.trimmed.text('Start:');
     expect(find('.start-property .property-value')).to.have.trimmed.text('2');

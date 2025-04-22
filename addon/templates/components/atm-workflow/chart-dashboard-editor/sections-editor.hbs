@@ -1,19 +1,16 @@
-{{#perfect-scrollbar-element
-  class="dashboard-visualiser"
-  click=(action "workspaceClick")
-}}
+<PerfectScrollbarElement class="dashboard-visualiser" @click={{action "workspaceClick"}}>
   <div class="dashboard-visualiser-info">
     <span class="one-label">{{tt this "preview"}}</span>
-    {{one-label-tip title=(tt this "previewTooltip")}}
+    <OneLabelTip @title={{tt this "previewTooltip"}} />
   </div>
-  {{atm-workflow/chart-dashboard-editor/sections-editor/section
-    section=rootSection
-    editorContext=editorContext
-  }}
-{{/perfect-scrollbar-element}}
-{{atm-workflow/chart-dashboard-editor/sections-editor/sidebar
+  <AtmWorkflow::ChartDashboardEditor::SectionsEditor::Section
+    @section={{rootSection}}
+    @editorContext={{editorContext}}
+  />
+</PerfectScrollbarElement>
+<AtmWorkflow::ChartDashboardEditor::SectionsEditor::Sidebar
   class="editor-sidebar"
-  selectedElement=selectedElement
-  hasValidationErrors=(bool rootSection.validationErrors.length)
-  editorContext=editorContext
-}}
+  @selectedElement={{selectedElement}}
+  @hasValidationErrors={{bool rootSection.validationErrors.length}}
+  @editorContext={{editorContext}}
+/>

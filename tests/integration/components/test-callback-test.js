@@ -15,7 +15,7 @@ describe('Integration | Component | test-callback', function () {
     };
     this.set('callback', callback);
     await render(hbs `
-      {{test-callback callback=callback x=1 y=2}}
+      <TestCallback @callback={{callback}} @x={{1}} @y={{2}} />
     `);
     expect(spy).to.be.calledOnce;
     expect(spy).to.be.calledWith(1, 2);

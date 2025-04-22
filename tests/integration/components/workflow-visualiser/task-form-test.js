@@ -1580,16 +1580,16 @@ describe('Integration | Component | workflow-visualiser/task-form', function () 
 });
 
 async function renderComponent() {
-  await render(hbs `{{workflow-visualiser/task-form
-    mode=mode
-    task=task
-    atmLambda=atmLambda
-    atmLambdaRevisionNumber=atmLambdaRevisionNumber
-    definedStores=definedStores
-    isDisabled=isDisabled
-    actionsFactory=actionsFactory
-    onChange=changeSpy
-  }}`);
+  await render(hbs `<WorkflowVisualiser::TaskForm
+    @mode={{mode}}
+    @task={{this.task}}
+    @atmLambda={{atmLambda}}
+    @atmLambdaRevisionNumber={{atmLambdaRevisionNumber}}
+    @definedStores={{definedStores}}
+    @isDisabled={{isDisabled}}
+    @actionsFactory={{actionsFactory}}
+    @onChange={{changeSpy}}
+  />`);
 }
 
 async function toggleOverrideResources(value) {

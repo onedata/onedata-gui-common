@@ -360,7 +360,7 @@ describe('Integration | Utility | atm-workflow/store-config-editors/time-series'
 });
 
 async function renderForm() {
-  await render(hbs `{{form-component/field-renderer field=rootGroup}}`);
+  await render(hbs `<FormComponent::FieldRenderer @field={{rootGroup}} />`);
 }
 
 function getSeriesFormValues(testCase) {

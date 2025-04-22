@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/string/table-b
   setupRenderingTest();
 
   it('has classes "table-body-row-presenter" and "string-table-body-row-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/string/table-body-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::String::TableBodyRowPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('table-body-row-presenter')
@@ -16,9 +16,9 @@ describe('Integration | Component | atm-workflow/value-presenters/string/table-b
   });
 
   it('shows single column - value', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/string/table-body-row-presenter
-      value="abcd"
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::String::TableBodyRowPresenter
+      @value="abcd"
+    />`);
 
     const tds = findAll('.table-body-row-presenter td');
     expect(tds).to.have.length(1);

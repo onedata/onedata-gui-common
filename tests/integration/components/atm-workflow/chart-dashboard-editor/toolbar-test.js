@@ -198,10 +198,10 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/toolbar'
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/toolbar
-    undoManager=undoManager
-    editorContext=editorContext
-    editedChart=editedChart
-    onRemoveDashboard=onRemoveDashboard
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::Toolbar
+    @undoManager={{undoManager}}
+    @editorContext={{editorContext}}
+    @editedChart={{editedChart}}
+    @onRemoveDashboard={{onRemoveDashboard}}
+  />`);
 }

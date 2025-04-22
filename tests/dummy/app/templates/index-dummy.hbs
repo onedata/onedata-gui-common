@@ -4,7 +4,10 @@
       <ul>
         {{#each model.components as |componentName|}}
           <li>
-            {{#link-to "index-dummy.component" componentName}}{{componentName}}{{/link-to}}
+            <LinkTo
+              @route="index-dummy.component"
+              @model={{componentName}}
+            >{{componentName}}</LinkTo>
           </li>
         {{/each}}
       </ul>

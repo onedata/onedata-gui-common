@@ -8,7 +8,7 @@ describe('Integration | Component | one-tile', function () {
   setupRenderingTest();
 
   it('renders tile title', async function () {
-    await render(hbs `{{one-tile title="hello"}}`);
+    await render(hbs `<OneTile @title="hello" />`);
     expect(this.element.textContent).to.match(/.*hello.*/);
   });
 });

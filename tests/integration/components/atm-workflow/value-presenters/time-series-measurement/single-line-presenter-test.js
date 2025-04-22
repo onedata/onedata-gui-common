@@ -10,7 +10,9 @@ describe('Integration | Component | atm-workflow/value-presenters/time-series-me
     setupRenderingTest();
 
     it('has classes "single-line-presenter" and "time-series-measurement-single-line-presenter"', async function () {
-      await render(hbs`{{atm-workflow/value-presenters/time-series-measurement/single-line-presenter}}`);
+      await render(hbs`
+        <AtmWorkflow::ValuePresenters::TimeSeriesMeasurement::SingleLinePresenter />
+      `);
 
       expect(this.element.children).to.have.length(1);
       expect(this.element.children[0]).to.have.class('single-line-presenter')
@@ -23,9 +25,9 @@ describe('Integration | Component | atm-workflow/value-presenters/time-series-me
         timestamp: 1659533491,
         value: 30,
       });
-      await render(hbs`{{atm-workflow/value-presenters/time-series-measurement/single-line-presenter
-        value=value
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::TimeSeriesMeasurement::SingleLinePresenter
+        @value={{value}}
+      />`);
 
       const formattedTime = dateFormat([timestamp], { format: 'report' });
 

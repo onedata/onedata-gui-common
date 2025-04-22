@@ -109,7 +109,7 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
   });
 
   it(`has class "${componentClass}"`, async function () {
-    await render(hbs `{{modals/workflow-visualiser/store-modal/store-form}}`);
+    await render(hbs `<Modals::WorkflowVisualiser::StoreModal::StoreForm />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class(componentClass);
@@ -640,12 +640,12 @@ describe('Integration | Component | modals/workflow-visualiser/store-modal/store
 });
 
 async function renderComponent() {
-  await render(hbs `{{modals/workflow-visualiser/store-modal/store-form
-    mode=mode
-    store=store
-    isDisabled=isDisabled
-    onChange=changeSpy
-  }}`);
+  await render(hbs `<Modals::WorkflowVisualiser::StoreModal::StoreForm
+    @mode={{mode}}
+    @store={{store}}
+    @isDisabled={{isDisabled}}
+    @onChange={{changeSpy}}
+  />`);
 }
 
 function itHasAllFieldsEnabledByDefault() {

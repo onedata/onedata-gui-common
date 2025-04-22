@@ -263,11 +263,11 @@ describe('Integration | Component | atm-workflow/value-editors/dataset/editor', 
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-editors/dataset/editor
-    stateManager=stateManager
-    editorId=stateManager.rootValueEditorStateId
-    onRemove=onRemove
-  }}`);
+  await render(hbs`<AtmWorkflow::ValueEditors::Dataset::Editor
+    @stateManager={{stateManager}}
+    @editorId={{stateManager.rootValueEditorStateId}}
+    @onRemove={{onRemove}}
+  />`);
 }
 
 async function expectShowingExampleDataset(testCase) {

@@ -20,7 +20,7 @@ describe('Integration | Component | form-component/clipboard-field', function ()
   it(
     'has class "clipboard-field"',
     async function () {
-      await render(hbs `{{form-component/clipboard-field field=field}}`);
+      await render(hbs `<FormComponent::ClipboardField @field={{field}} />`);
 
       expect(find('.clipboard-field')).to.exist;
     }
@@ -29,7 +29,7 @@ describe('Integration | Component | form-component/clipboard-field', function ()
   it(
     'renders no content when both "text" and "value" field properties are empty',
     async function () {
-      await render(hbs `{{form-component/clipboard-field field=field}}`);
+      await render(hbs `<FormComponent::ClipboardField @field={{field}} />`);
 
       expect(find('input').value).to.be.empty;
     }
@@ -40,7 +40,7 @@ describe('Integration | Component | form-component/clipboard-field', function ()
     async function () {
       this.set('field.text', 'abc');
 
-      await render(hbs `{{form-component/clipboard-field field=field}}`);
+      await render(hbs `<FormComponent::ClipboardField @field={{field}} />`);
 
       expect(find('input').value).to.equal('abc');
     }
@@ -54,7 +54,7 @@ describe('Integration | Component | form-component/clipboard-field', function ()
         value: 'def',
       });
 
-      await render(hbs `{{form-component/clipboard-field field=field}}`);
+      await render(hbs `<FormComponent::ClipboardField @field={{field}} />`);
 
       expect(find('input').value).to.equal('def');
     }
@@ -68,7 +68,7 @@ describe('Integration | Component | form-component/clipboard-field', function ()
         type: 'textarea',
       });
 
-      await render(hbs `{{form-component/clipboard-field field=field}}`);
+      await render(hbs `<FormComponent::ClipboardField @field={{field}} />`);
 
       expect(find('textarea').value).to.equal('abc');
     }
@@ -82,7 +82,7 @@ describe('Integration | Component | form-component/clipboard-field', function ()
         textareaRows: 7,
       });
 
-      await render(hbs `{{form-component/clipboard-field field=field}}`);
+      await render(hbs `<FormComponent::ClipboardField @field={{field}} />`);
 
       expect(find('textarea').rows).to.equal(7);
     }
@@ -93,7 +93,7 @@ describe('Integration | Component | form-component/clipboard-field', function ()
     async function () {
       this.set('field.fieldStyle', 'monospace');
 
-      await render(hbs `{{form-component/clipboard-field field=field}}`);
+      await render(hbs `<FormComponent::ClipboardField @field={{field}} />`);
 
       expect(find('.clipboard-field .clipboard-line'))
         .to.have.class('monospace-font');

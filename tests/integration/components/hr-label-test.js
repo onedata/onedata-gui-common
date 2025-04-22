@@ -8,7 +8,7 @@ describe('Integration | Component | hr-label', function () {
   setupRenderingTest();
 
   it('renders provided text', async function () {
-    await render(hbs `{{#hr-label}}some text{{/hr-label}}`);
+    await render(hbs `<HrLabel>some text</HrLabel>`);
 
     expect(find('.hr-label')).to.exist;
     expect(find('.hr-label').textContent).to.contain('some text');

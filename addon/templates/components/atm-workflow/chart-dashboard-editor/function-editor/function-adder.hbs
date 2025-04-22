@@ -1,16 +1,16 @@
-{{#render-later triggerRender=isOpened}}
-  {{#one-webui-popover
+<RenderLater @triggerRender={{isOpened}}>
+  <OneWebuiPopover
     class="chart-function-selector"
-    open=isOpened
-    padding=false
-    triggerSelector=triggerSelector
+    @open={{isOpened}}
+    @padding={{false}}
+    @triggerSelector={{triggerSelector}}
     as |popover|
-  }}
-    {{#click-outside
+  >
+    <ClickOutside
       class="chart-function-selector-content"
-      onClickOutside=(if isOpened onClose noAction)
-      exceptSelector=triggerSelector
-    }}
+      @onClickOutside={{if isOpened onClose noAction}}
+      @exceptSelector={{triggerSelector}}
+    >
       <h3 class="header">{{tt this "header"}}</h3>
       <input
         type="text"
@@ -19,7 +19,7 @@
         value={{filterString}}
         oninput={{action (mut filterString) value="target.value"}}
       />
-      {{#perfect-scrollbar-element}}
+      <PerfectScrollbarElement>
         <ul class="functions-list">
           {{#each filteredFunctions as |func|}}
             <li
@@ -27,13 +27,13 @@
               onclick={{action "addFunction" func.name}}
             >
               {{func.translatedName}}
-              {{one-label-tip title=func.tip}}
+              <OneLabelTip @title={{func.tip}} />
             </li>
           {{else}}
             <li class="nothing-to-show-info">{{tt this "nothingToShow"}}</li>
           {{/each}}
         </ul>
-      {{/perfect-scrollbar-element}}
-    {{/click-outside}}
-  {{/one-webui-popover}}
-{{/render-later}}
+      </PerfectScrollbarElement>
+    </ClickOutside>
+  </OneWebuiPopover>
+</RenderLater>

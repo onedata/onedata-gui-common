@@ -9,7 +9,9 @@ describe('Integration | Component | atm-workflow/value-presenters/object/table-h
 
   it('has classes "table-header-row-presenter" and "object-table-header-row-presenter"',
     async function () {
-      await render(hbs`{{atm-workflow/value-presenters/object/table-header-row-presenter}}`);
+      await render(hbs`
+        <AtmWorkflow::ValuePresenters::Object::TableHeaderRowPresenter />
+      `);
 
       expect(this.element.children).to.have.length(1);
       expect(this.element.children[0]).to.have.class('table-header-row-presenter')
@@ -18,7 +20,7 @@ describe('Integration | Component | atm-workflow/value-presenters/object/table-h
   );
 
   it('shows single column header - value - when columns are not specified', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/object/table-header-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Object::TableHeaderRowPresenter />`);
 
     const ths = findAll('.table-header-row-presenter th');
     expect(ths).to.have.length(1);
@@ -28,9 +30,9 @@ describe('Integration | Component | atm-workflow/value-presenters/object/table-h
 
   it('shows single column header - value - when columns are an empty array', async function () {
     this.set('columns', []);
-    await render(hbs`{{atm-workflow/value-presenters/object/table-header-row-presenter
-      columns=columns
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Object::TableHeaderRowPresenter
+      @columns={{columns}}
+    />`);
 
     const ths = findAll('.table-header-row-presenter th');
     expect(ths).to.have.length(1);
@@ -40,9 +42,9 @@ describe('Integration | Component | atm-workflow/value-presenters/object/table-h
 
   it('shows column headers based on non-empty columns array', async function () {
     const columns = this.set('columns', ['a', 'b', 'c']);
-    await render(hbs`{{atm-workflow/value-presenters/object/table-header-row-presenter
-      columns=columns
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Object::TableHeaderRowPresenter
+      @columns={{columns}}
+    />`);
 
     const ths = findAll('.table-header-row-presenter th');
     expect(ths).to.have.length(3);

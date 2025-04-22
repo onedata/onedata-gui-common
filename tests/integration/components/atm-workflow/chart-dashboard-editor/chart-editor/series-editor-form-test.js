@@ -177,9 +177,9 @@ function createSeries(testCase, props = {}) {
 }
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/chart-editor/series-editor-form
-    series=series
-    chart=chart
-    editorContext=editorContext
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::ChartEditor::SeriesEditorForm
+    @series={{series}}
+    @chart={{chart}}
+    @editorContext={{editorContext}}
+  />`);
 }

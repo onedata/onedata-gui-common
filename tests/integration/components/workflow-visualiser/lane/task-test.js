@@ -287,8 +287,8 @@ function itShowsStatus(status, statusTranslation) {
 
 async function renderComponent() {
   await render(hbs `
-    {{global-modal-mounter}}
-    {{workflow-visualiser/lane/task elementModel=task}}
+    <GlobalModalMounter />
+    <WorkflowVisualiser::Lane::Task @elementModel={{this.task}} />
   `);
 }
 

@@ -65,9 +65,9 @@ describe('Integration | Component | atm-workflow/value-editors/boolean/editor', 
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-editors/boolean/editor
-    stateManager=stateManager
-    editorId=stateManager.rootValueEditorStateId
-    onRemove=onRemove
-  }}`);
+  await render(hbs`<AtmWorkflow::ValueEditors::Boolean::Editor
+    @stateManager={{stateManager}}
+    @editorId={{stateManager.rootValueEditorStateId}}
+    @onRemove={{onRemove}}
+  />`);
 }

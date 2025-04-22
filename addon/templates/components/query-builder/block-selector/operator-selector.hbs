@@ -1,16 +1,16 @@
 {{#each operatorsSpec as |operator|}}
   <li>
-    {{#one-button
-      class=(concat "operator operator-" operator.name)
-      disabled=(or selectionDone operator.disabled)
-      type="outline-default"
-      size="sm"
-      onClick=(action "onOperatorSelected" operator.name)
-    }}
+    <OneButton
+      class={{concat "operator operator-" operator.name}}
+      @disabled={{or selectionDone operator.disabled}}
+      @type="outline-default"
+      @size="sm"
+      @onClick={{action "onOperatorSelected" operator.name}}
+    >
       {{tt this (concat "operators." operator.name)}}
       {{#if (and (not operator.disabled) operator.tip)}}
-        {{one-tooltip title=operator.tip}}
+        <OneTooltip @title={{operator.tip}} />
       {{/if}}
-    {{/one-button}}
+    </OneButton>
   </li>
 {{/each}}

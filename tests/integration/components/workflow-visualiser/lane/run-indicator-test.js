@@ -262,14 +262,14 @@ describe('Integration | Component | workflow-visualiser/lane/run-indicator', fun
 });
 
 async function renderComponent() {
-  await render(hbs `{{workflow-visualiser/lane/run-indicator
-    status=status
-    runNumber=runNumber
-    originRunNumber=originRunNumber
-    runType=runType
-    isSelected=isSelected
-    onClick=onClick
-  }}`);
+  await render(hbs `<WorkflowVisualiser::Lane::RunIndicator
+    @status={{status}}
+    @runNumber={{runNumber}}
+    @originRunNumber={{originRunNumber}}
+    @runType={{runType}}
+    @isSelected={{isSelected}}
+    @onClick={{onClick}}
+  />`);
 }
 
 function getComponent() {

@@ -1,9 +1,9 @@
 <form class="form form-horizontal form-component">
-  {{form-component/field-renderer field=rootFieldsGroup}}
+  <FormComponent::FieldRenderer @field={{rootFieldsGroup}} />
 
   {{#if isDuplicatedFieldShown}}
     <p>Duplicated second field separated from the rest:</p>
-    {{form-component/field-renderer field=rootFieldsGroup.fields.[1]}}
+    <FormComponent::FieldRenderer @field={{rootFieldsGroup.fields.[1]}} />
   {{/if}}
 </form>
 {{#if isFormInfoShown}}
@@ -13,7 +13,7 @@
     lastChangedValue: {{lastChangedValue}}<br/>
     values:<br/>
     <ul>
-      {{#each-in values as |key value|}}
+      {{#each-in this.values as |key value|}}
         <li>{{key}}:  {{value}}</li>
       {{/each-in}}
     </ul>

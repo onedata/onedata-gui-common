@@ -10,7 +10,9 @@ describe('Integration | Component | atm-workflow/value-presenters/time-series-me
 
     it('has classes "table-header-row-presenter" and "time-series-measurement-table-header-row-presenter"',
       async function () {
-        await render(hbs`{{atm-workflow/value-presenters/time-series-measurement/table-header-row-presenter}}`);
+        await render(hbs`
+          <AtmWorkflow::ValuePresenters::TimeSeriesMeasurement::TableHeaderRowPresenter />
+        `);
 
         expect(this.element.children).to.have.length(1);
         expect(this.element.children[0]).to.have.class('table-header-row-presenter')
@@ -19,7 +21,9 @@ describe('Integration | Component | atm-workflow/value-presenters/time-series-me
     );
 
     it('shows three column headers - time, time series name and value', async function () {
-      await render(hbs`{{atm-workflow/value-presenters/time-series-measurement/table-header-row-presenter}}`);
+      await render(hbs`
+        <AtmWorkflow::ValuePresenters::TimeSeriesMeasurement::TableHeaderRowPresenter />
+      `);
 
       const ths = findAll('.table-header-row-presenter th');
       expect(ths).to.have.length(3);

@@ -1,7 +1,7 @@
 {{yield (hash section="start")}}
 {{#each (array "start" "end" "step") as |colName|}}
   <td class="column-{{dasherize colName}}">
-    {{#truncated-string}}{{get value colName}}{{/truncated-string}}
+    <TruncatedString>{{get value colName}}</TruncatedString>
   </td>
 {{/each}}
 {{yield (hash section="end")}}

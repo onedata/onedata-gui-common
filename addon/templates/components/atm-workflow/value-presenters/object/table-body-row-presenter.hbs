@@ -2,18 +2,16 @@
 {{#if columns.length}}
   {{#each columns as |column|}}
     <td class="column-object-property">
-      {{#truncated-string}}
+      <TruncatedString>
         {{evaluate-function stringifyObjectProperty column}}
-      {{/truncated-string}}
+      </TruncatedString>
     </td>
   {{/each}}
 {{else}}
   <td class="column-value">
-    {{#truncated-string}}
-      {{atm-workflow/value-presenters/object/single-line-presenter
-        value=value
-      }}
-    {{/truncated-string}}
+    <TruncatedString>
+      <AtmWorkflow::ValuePresenters::Object::SingleLinePresenter @value={{value}} />
+    </TruncatedString>
   </td>
 {{/if}}
 {{yield (hash section="end")}}

@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/range/single-l
   setupRenderingTest();
 
   it('has classes "single-line-presenter" and "range-single-line-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/range/single-line-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Range::SingleLinePresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('single-line-presenter')
@@ -17,9 +17,9 @@ describe('Integration | Component | atm-workflow/value-presenters/range/single-l
 
   it('presents passed value as a range', async function () {
     this.set('value', { start: 2, end: 10, step: 3 });
-    await render(hbs`{{atm-workflow/value-presenters/range/single-line-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Range::SingleLinePresenter
+      @value={{value}}
+    />`);
 
     expect(find('.single-line-presenter')).to.have.trimmed.text('[Range 2:10:3]');
   });

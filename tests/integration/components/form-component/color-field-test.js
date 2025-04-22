@@ -18,13 +18,13 @@ describe('Integration | Component | form-component/color-field', function () {
   });
 
   it('has class "color-field"', async function () {
-    await render(hbs `{{form-component/color-field field=field}}`);
+    await render(hbs `<FormComponent::ColorField @field={{field}} />`);
 
     expect(find('.color-field')).to.exist;
   });
 
   it('renders color input', async function () {
-    await render(hbs `{{form-component/color-field field=field}}`);
+    await render(hbs `<FormComponent::ColorField @field={{field}} />`);
 
     expect(find('input[type="color"]')).to.exist;
   });
@@ -32,14 +32,14 @@ describe('Integration | Component | form-component/color-field', function () {
   it('can be disabled', async function () {
     this.set('field.isEnabled', false);
 
-    await render(hbs `{{form-component/color-field field=field}}`);
+    await render(hbs `<FormComponent::ColorField @field={{field}} />`);
 
     expect(find('input')).to.have.attr('disabled');
   });
 
   it('notifies field object about lost focus', async function () {
     const focusLostSpy = sinon.spy(this.field, 'focusLost');
-    await render(hbs `{{form-component/color-field field=field}}`);
+    await render(hbs `<FormComponent::ColorField @field={{field}} />`);
 
     await focus('input');
     await blur('input');
@@ -49,7 +49,7 @@ describe('Integration | Component | form-component/color-field', function () {
 
   it('notifies field object about changed value', async function () {
     const valueChangedSpy = sinon.spy(this.field, 'valueChanged');
-    await render(hbs `{{form-component/color-field field=field}}`);
+    await render(hbs `<FormComponent::ColorField @field={{field}} />`);
 
     const input = find('input');
     input.value = '#ff0000';
@@ -62,14 +62,14 @@ describe('Integration | Component | form-component/color-field', function () {
   it('sets input value to value specified in field object', async function () {
     this.set('field.value', '#ff0000');
 
-    await render(hbs `{{form-component/color-field field=field}}`);
+    await render(hbs `<FormComponent::ColorField @field={{field}} />`);
 
     expect(find('input')).to.have.value('#ff0000');
   });
 
   it('sets input id according to "fieldId"', async function () {
     await render(hbs `
-      {{form-component/color-field field=field fieldId="abc"}}
+      <FormComponent::ColorField @field={{field}} @fieldId="abc" />
     `);
 
     expect(find('input#abc')).to.exist;
@@ -78,7 +78,7 @@ describe('Integration | Component | form-component/color-field', function () {
   it('renders blocked toggle when field is in "view" mode', async function () {
     this.field.changeMode('view');
 
-    await render(hbs `{{form-component/color-field field=field}}`);
+    await render(hbs `<FormComponent::ColorField @field={{field}} />`);
 
     expect(find('input')).to.have.attr('disabled');
   });

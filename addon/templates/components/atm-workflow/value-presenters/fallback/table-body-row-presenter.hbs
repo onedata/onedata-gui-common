@@ -1,9 +1,7 @@
 {{yield (hash section="start")}}
 <td class="column-value">
-  {{#truncated-string}}
-    {{atm-workflow/value-presenters/fallback/single-line-presenter
-      value=value
-    }}
-  {{/truncated-string}}
+  <TruncatedString>
+    <AtmWorkflow::ValuePresenters::Fallback::SingleLinePresenter @value={{value}} />
+  </TruncatedString>
 </td>
 {{yield (hash section="end")}}

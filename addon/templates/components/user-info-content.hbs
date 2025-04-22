@@ -4,7 +4,7 @@
   </span>
 </h1>
 {{#if errorReason}}
-  {{resource-load-error reason=errorReason}}
+  <ResourceLoadError @reason={{errorReason}} />
 {{else}}
   <table class="table table-condensed table-info">
     <tbody>
@@ -19,11 +19,7 @@
       <tr class="row-with-text">
         <td class="property-name">{{tt this "userId"}}</td>
         <td class="property-value">
-          {{one-clipboard-line
-            size="sm"
-            value=record.entityId
-            type="text"
-          }}
+          <OneClipboardLine @size="sm" @value={{record.entityId}} @type="text" />
         </td>
       </tr>
     </tbody>

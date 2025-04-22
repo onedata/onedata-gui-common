@@ -100,8 +100,8 @@ function createChart(testCase, props = {}) {
 }
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/sections-editor/chart-details-editor
-    editorContext=editorContext
-    chart=chart
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::SectionsEditor::ChartDetailsEditor
+    @editorContext={{editorContext}}
+    @chart={{chart}}
+  />`);
 }

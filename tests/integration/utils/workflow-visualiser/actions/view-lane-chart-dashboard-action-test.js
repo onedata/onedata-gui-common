@@ -56,7 +56,7 @@ describe('Integration | Utility | workflow-visualiser/actions/view-lane-chart-da
 });
 
 async function executeAction(testCase) {
-  await render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `<GlobalModalMounter />`);
   testCase.action.execute();
   await settled();
 }

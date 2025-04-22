@@ -1,31 +1,33 @@
-{{#oneprovider-map-circle
-  oneproviders=providersArray
-  scale=circleSizeScale
-  color=circleColor
-  mapSize=atlasWidth
-}}
+<OneproviderMapCircle
+  @oneproviders={{providersArray}}
+  @scale={{circleSizeScale}}
+  @color={{circleColor}}
+  @mapSize={{atlasWidth}}
+>
   {{yield}}
-{{/oneprovider-map-circle}}
+</OneproviderMapCircle>
 {{#if renderDrop}}
-  {{#one-switchable-popover-modal
-    activeTriggerSelector=(concat (concat "#" elementId) " .circle")
-    triggersConfiguration=(concat (concat (concat "#" elementId) " .circle") ":popover")
-    popoverPlacement=popoverPlacement
-    popoverPadding=false
-    popoverStyle="provider-place"
-    popoverClass="popover-provider-place"
-    componentClass=(concat-classes "provider-place-drop-container" status mode)
-    open=active
-    popoverWindowEvent="providerPlaceRefresh"
-    as |ospm|}}
+  <OneSwitchablePopoverModal
+    @activeTriggerSelector={{concat (concat "#" elementId) " .circle"}}
+    @triggersConfiguration={{concat (concat (concat "#" elementId) " .circle") ":popover"}}
+    @popoverPlacement={{popoverPlacement}}
+    @popoverPadding={{false}}
+    @popoverStyle="provider-place"
+    @popoverClass="popover-provider-place"
+    @componentClass={{concat-classes "provider-place-drop-container" status mode}}
+    @open={{active}}
+    @popoverWindowEvent="providerPlaceRefresh"
+    as |ospm|
+  >
     {{#if (eq mode "multi")}}
-      {{oneproviders-selector-popover-content
-        oneproviders=providersArray
-        selectedOneprovider=selectedProvider
-        onOneproviderSelected=(action "selectProvider")}}
-      {{provider-place/drop provider=selectedProvider class="outside-content"}}
+      <OneprovidersSelectorPopoverContent
+        @oneproviders={{providersArray}}
+        @selectedOneprovider={{selectedProvider}}
+        @onOneproviderSelected={{action "selectProvider"}}
+      />
+      <ProviderPlace::Drop @provider={{selectedProvider}} class="outside-content" />
     {{else}}
-      {{provider-place/drop provider=providersArray.[0] class="outside-content"}}
+      <ProviderPlace::Drop @provider={{providersArray.[0]}} class="outside-content" />
     {{/if}}
-  {{/one-switchable-popover-modal}}
+  </OneSwitchablePopoverModal>
 {{/if}}

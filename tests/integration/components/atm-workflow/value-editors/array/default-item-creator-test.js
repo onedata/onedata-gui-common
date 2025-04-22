@@ -47,9 +47,9 @@ describe('Integration | Component | atm-workflow/value-editors/array/default-ite
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-editors/array/default-item-creator
-    stateManager=stateManager
-    itemAtmDataSpec=itemAtmDataSpec
-    onItemsCreated=onItemsCreated
-  }}`);
+  await render(hbs`<AtmWorkflow::ValueEditors::Array::DefaultItemCreator
+    @stateManager={{stateManager}}
+    @itemAtmDataSpec={{itemAtmDataSpec}}
+    @onItemsCreated={{onItemsCreated}}
+  />`);
 }

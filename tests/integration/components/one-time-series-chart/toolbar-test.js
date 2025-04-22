@@ -331,7 +331,7 @@ describe('Integration | Component | one-time-series-chart/toolbar', function () 
 });
 
 async function renderComponent() {
-  await render(hbs `{{one-time-series-chart/toolbar models=models}}`);
+  await render(hbs `<OneTimeSeriesChart::Toolbar @models={{models}} />`);
 }
 
 function setupModels(testCase, configInitOptionsArr) {

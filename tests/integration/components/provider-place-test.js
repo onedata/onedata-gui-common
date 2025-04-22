@@ -107,7 +107,7 @@ describe('Integration | Component | provider-place', function () {
   });
 
   it('shows provider status', async function () {
-    await render(hbs `{{provider-place provider=provider}}`);
+    await render(hbs `<ProviderPlace @provider={{provider}} />`);
     const providerPlace = find('.provider-place');
     expect(providerPlace).to.exist;
     expect(providerPlace).to.have.class('online');
@@ -116,9 +116,7 @@ describe('Integration | Component | provider-place', function () {
   it('resizes with parent one-atlas component', async function () {
     this.set('atlasWidth', 5000);
     await render(hbs `
-      {{provider-place
-        provider=provider
-        atlasWidth=atlasWidth}}`);
+      <ProviderPlace @provider={{provider}} @atlasWidth={{atlasWidth}} />`);
     const prevWidth = parseFloat(find('.circle').style.width);
     this.set('atlasWidth', 2500);
     expect(parseFloat(find('.circle').style.width))
@@ -127,8 +125,7 @@ describe('Integration | Component | provider-place', function () {
 
   it('notifies about hostname copy to clipboard success', async function () {
     await render(hbs `
-      {{provider-place
-        provider=provider}}`);
+      <ProviderPlace @provider={{provider}} />`);
     await click('.circle');
     triggerCopyClick();
     expect(this.get('globalNotify.infoMessages')).to.have.length(1);
@@ -137,8 +134,7 @@ describe('Integration | Component | provider-place', function () {
 
   it('notifies about hostname copy to clipboard error', async function () {
     await render(hbs `
-      {{provider-place
-        provider=provider}}`);
+      <ProviderPlace @provider={{provider}} />`);
     await click('.circle');
     triggerCopyClick(false);
     expect(this.get('globalNotify.infoMessages')).to.have.length(1);
@@ -147,8 +143,7 @@ describe('Integration | Component | provider-place', function () {
 
   it('shows list of supported spaces', async function () {
     await render(hbs `
-      {{provider-place
-        provider=provider}}`);
+      <ProviderPlace @provider={{provider}} />`);
 
     const spaces = this.get('spaces');
     await click('.circle');
@@ -163,8 +158,7 @@ describe('Integration | Component | provider-place', function () {
 
   it('shows multiple providers if necessary', async function () {
     await render(hbs `
-      {{provider-place
-        provider=providers}}`);
+      <ProviderPlace @provider={{providers}} />`);
 
     await click('.circle');
     const dropContainer = globals.document.querySelector('.provider-place-drop-container');

@@ -13,7 +13,9 @@ describe('Integration | Component | atm-workflow/value-presenters/time-series-me
   });
 
   it('has classes "raw-presenter" and "time-series-measurement-raw-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/time-series-measurement/raw-presenter}}`);
+    await render(hbs`
+      <AtmWorkflow::ValuePresenters::TimeSeriesMeasurement::RawPresenter />
+    `);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('raw-presenter')
@@ -26,9 +28,9 @@ describe('Integration | Component | atm-workflow/value-presenters/time-series-me
       timestamp: 1659533491,
       value: 30,
     });
-    await render(hbs`{{atm-workflow/value-presenters/time-series-measurement/raw-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::TimeSeriesMeasurement::RawPresenter
+      @value={{value}}
+    />`);
 
     const expectedValue = `{
   "tsName": "series1",

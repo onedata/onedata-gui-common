@@ -159,7 +159,7 @@ async function showModal(testCase) {
     modalOptions,
   } = testCase.getProperties('modalManager', 'modalOptions');
 
-  await render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `<GlobalModalMounter />`);
 
   await modalManager
     .show('workflow-visualiser/chart-dashboard-editor-modal', modalOptions)

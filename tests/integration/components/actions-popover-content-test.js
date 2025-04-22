@@ -24,7 +24,7 @@ describe('Integration | Component | actions-popover-content', function () {
     const actions = this.get('acts');
     const action = actions[0];
     action.action = sinon.spy();
-    await render(hbs `{{actions-popover-content actionsArray=acts}}`);
+    await render(hbs `<ActionsPopoverContent @actionsArray={{acts}} />`);
 
     const actionItem = find('li:first-child');
     expect(actionItem).to.exist;
@@ -39,7 +39,7 @@ describe('Integration | Component | actions-popover-content', function () {
   it('renders header', async function () {
     const actions = this.get('acts');
     const header = actions[1];
-    await render(hbs `{{actions-popover-content actionsArray=acts}}`);
+    await render(hbs `<ActionsPopoverContent @actionsArray={{acts}} />`);
 
     const actionItem = find('li:last-child');
     expect(actionItem).to.exist;
@@ -51,9 +51,10 @@ describe('Integration | Component | actions-popover-content', function () {
   it('calls actionClicked after action click', async function () {
     const clickSpy = sinon.spy();
     this.set('actionClicked', clickSpy);
-    await render(hbs `{{actions-popover-content
-      actionsArray=acts
-      actionClicked=(action actionClicked)}}
+    await render(hbs `<ActionsPopoverContent
+      @actionsArray={{acts}}
+      @actionClicked={{action actionClicked}}
+    />
     `);
 
     await click('.actions-popover-content li:first-child a');

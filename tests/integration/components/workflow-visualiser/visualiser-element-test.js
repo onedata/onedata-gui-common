@@ -9,7 +9,7 @@ describe('Integration | Component | workflow-visualiser/visualiser-element', fun
   setupRenderingTest();
 
   it('has class "workflow-visualiser-element', async function () {
-    await render(hbs `{{workflow-visualiser/visualiser-element}}`);
+    await render(hbs `<WorkflowVisualiser::VisualiserElement />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('workflow-visualiser-element');
@@ -17,7 +17,7 @@ describe('Integration | Component | workflow-visualiser/visualiser-element', fun
 
   it('has not specified "data-visualiser-element-id" attribute when "visualiserElement" is undefined',
     async function () {
-      await render(hbs `{{workflow-visualiser/visualiser-element}}`);
+      await render(hbs `<WorkflowVisualiser::VisualiserElement />`);
 
       expect(find('.workflow-visualiser-element'))
         .to.not.have.attr('data-visualiser-element-id');
@@ -30,7 +30,9 @@ describe('Integration | Component | workflow-visualiser/visualiser-element', fun
         id: elementId,
       }));
 
-      await render(hbs `{{workflow-visualiser/visualiser-element elementModel=visualiserElement}}`);
+      await render(hbs `<WorkflowVisualiser::VisualiserElement
+        @elementModel={{visualiserElement}}
+      />`);
 
       expect(find('.workflow-visualiser-element'))
         .to.have.attr('data-visualiser-element-id', elementId);
@@ -44,7 +46,9 @@ describe('Integration | Component | workflow-visualiser/visualiser-element', fun
         mode,
       }));
 
-      await render(hbs `{{workflow-visualiser/visualiser-element elementModel=visualiserElement}}`);
+      await render(hbs `<WorkflowVisualiser::VisualiserElement
+        @elementModel={{visualiserElement}}
+      />`);
 
       expect(find('.workflow-visualiser-element')).to.have.class(modeClass);
     });

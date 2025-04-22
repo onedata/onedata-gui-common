@@ -20,7 +20,7 @@ describe('Integration | Component | atm-workflow/value-presenters/full-value-pre
     });
 
     it('has class "full-value-presenter"', async function () {
-      await render(hbs`{{atm-workflow/value-presenters/full-value-presenter}}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::FullValuePresenter />`);
 
       expect(this.element.children).to.have.length(1);
       expect(this.element.children[0]).to.have.class('full-value-presenter');
@@ -114,9 +114,9 @@ describe('Integration | Component | atm-workflow/value-presenters/full-value-pre
 );
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-presenters/full-value-presenter
-    value=value
-    dataSpec=dataSpec
-    context=context
-  }}`);
+  await render(hbs`<AtmWorkflow::ValuePresenters::FullValuePresenter
+    @value={{value}}
+    @dataSpec={{dataSpec}}
+    @context={{context}}
+  />`);
 }

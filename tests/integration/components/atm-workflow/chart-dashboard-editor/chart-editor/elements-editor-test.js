@@ -200,9 +200,9 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/chart-ed
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/chart-editor/elements-editor
-    chart=chart
-    selectedElement=selectedElement
-    editorContext=editorContext
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::ChartEditor::ElementsEditor
+    @chart={{this.chart}}
+    @selectedElement={{this.selectedElement}}
+    @editorContext={{this.editorContext}}
+  />`);
 }

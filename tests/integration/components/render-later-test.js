@@ -9,18 +9,18 @@ describe('Integration | Component | render-later', function () {
 
   it('does not render content for falsy trigger value', async function () {
     await render(hbs `
-      {{#render-later triggerRender=false}}
+      <RenderLater @triggerRender={{false}}>
         <div class="test"></div>
-      {{/render-later}}
+      </RenderLater>
     `);
     expect(find('.test')).to.not.exist;
   });
 
   it('renders content for truthy trigger value', async function () {
     await render(hbs `
-      {{#render-later triggerRender=true}}
+      <RenderLater @triggerRender={{true}}>
         <div class="test"></div>
-      {{/render-later}}
+      </RenderLater>
     `);
     expect(find('.test')).to.exist;
   });
@@ -28,9 +28,9 @@ describe('Integration | Component | render-later', function () {
   it('renders content after trigger set to truthy value', async function () {
     this.set('trigger', false);
     await render(hbs `
-      {{#render-later triggerRender=trigger}}
+      <RenderLater @triggerRender={{trigger}}>
         <div class="test"></div>
-      {{/render-later}}
+      </RenderLater>
     `);
 
     this.set('trigger', true);
@@ -42,9 +42,9 @@ describe('Integration | Component | render-later', function () {
   it('does not change render state after trigger set to falsy value', async function () {
     this.set('trigger', true);
     await render(hbs `
-      {{#render-later triggerRender=trigger}}
+      <RenderLater @triggerRender={{trigger}}>
         <div class="test"></div>
-      {{/render-later}}
+      </RenderLater>
     `);
 
     this.set('trigger', false);
@@ -59,9 +59,9 @@ describe('Integration | Component | render-later', function () {
       resetTrigger: 'whatever2',
     });
     await render(hbs `
-      {{#render-later triggerRender=trigger resetRender=resetTrigger}}
+      <RenderLater @triggerRender={{trigger}} @resetRender={{resetTrigger}}>
         <div class="test"></div>
-      {{/render-later}}
+      </RenderLater>
     `);
 
     this.setProperties({
@@ -77,9 +77,9 @@ describe('Integration | Component | render-later', function () {
   it('resets render state through yielded action "resetRenderTrigger"', async function () {
     this.set('trigger', true);
     await render(hbs `
-      {{#render-later triggerRender=trigger as |renderLater|}}
+      <RenderLater @triggerRender={{trigger}} as |renderLater|>
         <div class="test" {{action renderLater.resetRenderTrigger}}></div>
-      {{/render-later}}
+      </RenderLater>
     `);
 
     this.set('trigger', false);

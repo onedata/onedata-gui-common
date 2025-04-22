@@ -34,9 +34,9 @@ describe('Integration | Component | workflow-visualiser/lane/interblock-space', 
   it(
     'has classes "workflow-visualiser-interblock-space", "workflow-visualiser-space" and "workflow-visualiser-element"',
     async function () {
-      await render(hbs `{{workflow-visualiser/lane/interblock-space
-        elementModel=blockSpace
-      }}`);
+      await render(hbs `<WorkflowVisualiser::Lane::InterblockSpace
+        @elementModel={{blockSpace}}
+      />`);
 
       expect(this.element.children).to.have.length(1);
       expect(this.element.children[0])
@@ -49,9 +49,9 @@ describe('Integration | Component | workflow-visualiser/lane/interblock-space', 
   it('has class "between-parallel-box-space" when "parent" is of type Lane', async function () {
     this.set('blockSpace.parent', Lane.create());
 
-    await render(hbs `{{workflow-visualiser/lane/interblock-space
-      elementModel=blockSpace
-    }}`);
+    await render(hbs `<WorkflowVisualiser::Lane::InterblockSpace
+      @elementModel={{blockSpace}}
+    />`);
 
     expect(find('.workflow-visualiser-interblock-space'))
       .to.have.class('between-parallel-box-space');
@@ -60,9 +60,9 @@ describe('Integration | Component | workflow-visualiser/lane/interblock-space', 
   it('has class "between-task-space" when "parent" is of type ParallelBox', async function () {
     this.set('blockSpace.parent', ParallelBox.create());
 
-    await render(hbs `{{workflow-visualiser/lane/interblock-space
-      elementModel=blockSpace
-    }}`);
+    await render(hbs `<WorkflowVisualiser::Lane::InterblockSpace
+      @elementModel={{blockSpace}}
+    />`);
 
     expect(find('.workflow-visualiser-interblock-space'))
       .to.have.class('between-task-space');
@@ -139,9 +139,9 @@ function itIsOfType(type, parent, [elementBefore, elementAfter]) {
         elementAfter,
       });
 
-      await render(hbs `{{workflow-visualiser/lane/interblock-space
-        elementModel=blockSpace
-      }}`);
+      await render(hbs `<WorkflowVisualiser::Lane::InterblockSpace
+        @elementModel={{blockSpace}}
+      />`);
 
       expect(find('.workflow-visualiser-interblock-space')).to.have.class(className);
     });
@@ -164,9 +164,9 @@ function itAllowsToAddElement(
         parent,
         onAddElement,
       });
-      await render(hbs `{{workflow-visualiser/lane/interblock-space
-        elementModel=blockSpace
-      }}`);
+      await render(hbs `<WorkflowVisualiser::Lane::InterblockSpace
+        @elementModel={{blockSpace}}
+      />`);
 
       await click(`.create-${dasherize(newElementType)}-action-trigger`);
 
@@ -195,9 +195,9 @@ function itDoesNotAllowToAddElement(
         parent,
       });
 
-      await render(hbs `{{workflow-visualiser/lane/interblock-space
-        elementModel=blockSpace
-      }}`);
+      await render(hbs `<WorkflowVisualiser::Lane::InterblockSpace
+        @elementModel={{blockSpace}}
+      />`);
 
       expect(find(`.create-${dasherize(newElementType)}-action-trigger`)).to.not.exist;
     }
@@ -215,9 +215,9 @@ function itHasArrow(hasArrow, parent, [elementBefore, elementAfter], mode) {
         parent,
       });
 
-      await render(hbs `{{workflow-visualiser/lane/interblock-space
-        elementModel=blockSpace
-      }}`);
+      await render(hbs `<WorkflowVisualiser::Lane::InterblockSpace
+        @elementModel={{blockSpace}}
+      />`);
 
       const arrow = find('.arrow');
       if (hasArrow) {

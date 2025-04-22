@@ -21,14 +21,14 @@ describe('Integration | Component | form-component/form-fields-group', function 
       ],
     }));
 
-    await render(hbs `{{form-component/form-fields-group field=fields}}`);
+    await render(hbs `<FormComponent::FormFieldsGroup @field={{fields}} />`);
 
     expect(findAll('.text-like-field')).to.have.length(2);
   });
 
   it('renders expanded fields group, when field.isExpanded is true', async function () {
     this.set('fields', FormFieldsGroup.create());
-    await render(hbs `{{form-component/form-fields-group field=fields}}`);
+    await render(hbs `<FormComponent::FormFieldsGroup @field={{fields}} />`);
 
     expect(find('.fields-group-collapse')).to.have.class('in');
   });
@@ -37,7 +37,7 @@ describe('Integration | Component | form-component/form-fields-group', function 
     this.set('fields', FormFieldsGroup.create({
       isExpanded: false,
     }));
-    await render(hbs `{{form-component/form-fields-group field=fields}}`);
+    await render(hbs `<FormComponent::FormFieldsGroup @field={{fields}} />`);
 
     expect(find('.fields-group-collapse')).to.not.have.class('in');
   });

@@ -1,6 +1,6 @@
-{{#perfect-scrollbar-element
+<PerfectScrollbarElement
   class="relative bs-modal-body-scroll"
-  onScroll=(action "scrollOccurred")
-}}
+  @onScroll={{action "scrollOccurred"}}
+>
   {{yield}}
-{{/perfect-scrollbar-element}}
+</PerfectScrollbarElement>

@@ -1,11 +1,11 @@
-{{privileges-tree-editor
-  privilegesGroups=privilegesGroups
-  privilegeGroupsTranslationsPath=privilegeGroupsTranslationsPath
-  privilegesTranslationsPath=privilegesTranslationsPath
-  overridePrivileges=treeValue
-  comparePrivileges=(if isInEditMode compareTreeValue treeValue)
-  editionEnabled=(and isEffectivelyEnabled isInEditMode)
-  allowThreeStateToggles=false
-  onChange=(action "valueChanged")
-}}
+<PrivilegesTreeEditor
+  @privilegesGroups={{privilegesGroups}}
+  @privilegeGroupsTranslationsPath={{privilegeGroupsTranslationsPath}}
+  @privilegesTranslationsPath={{privilegesTranslationsPath}}
+  @overridePrivileges={{treeValue}}
+  @comparePrivileges={{if isInEditMode compareTreeValue treeValue}}
+  @editionEnabled={{and isEffectivelyEnabled isInEditMode}}
+  @allowThreeStateToggles={{false}}
+  @onChange={{action "valueChanged"}}
+/>
 {{yield}}

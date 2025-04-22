@@ -54,7 +54,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
   it(
     'has class "dropdown-field"',
     async function () {
-      await render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
       expect(find('.dropdown-field')).to.exist;
     }
@@ -63,7 +63,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
   it(
     'renders three dropdown options',
     async function () {
-      await render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
       await clickTrigger('.dropdown-field');
 
@@ -90,7 +90,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     async function () {
       this.set('field.isEnabled', false);
 
-      await render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
       expect(find('.ember-basic-dropdown-trigger'))
         .to.have.attr('aria-disabled', 'true');
@@ -102,7 +102,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      await render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
       const dropdownTrigger = find('.ember-basic-dropdown-trigger');
       await focus(dropdownTrigger);
@@ -117,7 +117,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      await render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
       await selectChoose('.dropdown-field', 'Second');
 
@@ -129,7 +129,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
   it('sets dropdown value to value specified in field object', async function () {
     this.set('field.value', 2);
 
-    await render(hbs `{{form-component/dropdown-field field=field}}`);
+    await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
     const dropdownTrigger = find('.ember-basic-dropdown-trigger');
     expect(dropdownTrigger).to.have.trimmed.text('Second');
@@ -137,7 +137,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
 
   it('sets input id according to "fieldId"', async function () {
     await render(hbs `
-      {{form-component/dropdown-field field=field fieldId="abc"}}
+      <FormComponent::DropdownField @field={{field}} @fieldId="abc" />
     `);
 
     const dropdownTrigger = find('.ember-basic-dropdown-trigger');
@@ -151,7 +151,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
         .withArgs('somePrefix.field1.placeholder')
         .returns('Select option...');
 
-      await render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
       const dropdownTrigger = find('.ember-basic-dropdown-trigger');
       expect(dropdownTrigger).to.have.trimmed.text('Select option...');
@@ -161,7 +161,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
   it(
     'shows search input by default',
     async function () {
-      await render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
       await clickTrigger('.dropdown-field');
 
@@ -170,7 +170,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
   );
 
   it('filters available options according to query in search input', async function () {
-    await render(hbs `{{form-component/dropdown-field field=field}}`);
+    await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
     await clickTrigger('.dropdown-field');
     await typeInSearch(' Eco');
@@ -184,7 +184,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     'does not show search input if field "showSearch" is false',
     async function () {
       this.set('field.showSearch', false);
-      await render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
       await clickTrigger('.dropdown-field');
 
@@ -197,7 +197,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     set(field, 'value', 1);
     field.changeMode('view');
 
-    await render(hbs `{{form-component/dropdown-field field=field}}`);
+    await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
     expect(find('.text')).to.have.trimmed.text('First');
     expect(find('.one-icon')).to.have.class('oneicon-space');
@@ -207,7 +207,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
   it('does not apply "small" class to trigger and dropdown when "size" is "md"', async function () {
     this.set('field.size', 'md');
 
-    await render(hbs `{{form-component/dropdown-field field=field}}`);
+    await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
     await clickTrigger('.dropdown-field');
     expect(find('.ember-basic-dropdown-trigger')).to.not.have.class('small');
@@ -218,7 +218,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
   it('applies "small" class to trigger and dropdown when "size" is "sm"', async function () {
     this.set('field.size', 'sm');
 
-    await render(hbs `{{form-component/dropdown-field field=field}}`);
+    await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
     await clickTrigger('.dropdown-field');
     expect(find('.ember-basic-dropdown-trigger')).to.have.class('small');

@@ -1731,9 +1731,9 @@ class Helper {
   }
 
   async render() {
-    await render(hbs`{{atm-workflow/chart-dashboard-editor
-      dashboardSpec=dashboardSpec
-    }}`);
+    await render(hbs`<AtmWorkflow::ChartDashboardEditor
+      @dashboardSpec={{dashboardSpec}}
+    />`);
   }
 }
 

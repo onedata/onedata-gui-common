@@ -9,7 +9,7 @@ describe('Integration | Component | one-file-icon', function () {
   setupRenderingTest();
 
   it('has class "one-file-icon"', async function () {
-    await render(hbs`{{one-file-icon}}`);
+    await render(hbs`<OneFileIcon />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('one-file-icon');
@@ -17,7 +17,7 @@ describe('Integration | Component | one-file-icon', function () {
 
   it('shows regular file icon and has "main-type-regular" class for regular file type', async function () {
     this.set('fileType', FileType.Regular);
-    await render(hbs`{{one-file-icon fileType=fileType}}`);
+    await render(hbs`<OneFileIcon @fileType={{fileType}} />`);
 
     expect(find('.one-file-icon')).to.have.class('main-type-regular');
     expect(find('.one-icon-tagged-main')).to.have.class('oneicon-browser-file');
@@ -26,7 +26,7 @@ describe('Integration | Component | one-file-icon', function () {
 
   it('shows directory file icon and has "main-type-directory" class for directory file type', async function () {
     this.set('fileType', FileType.Directory);
-    await render(hbs`{{one-file-icon fileType=fileType}}`);
+    await render(hbs`<OneFileIcon @fileType={{fileType}} />`);
 
     expect(find('.one-file-icon')).to.have.class('main-type-directory');
     expect(find('.one-icon-tagged-main')).to.have.class('oneicon-browser-directory');
@@ -36,7 +36,7 @@ describe('Integration | Component | one-file-icon', function () {
   it('shows regular file icon and has "main-type-symbolic-link effective-type-regular" classes for symbolic link file type and not defined target type',
     async function () {
       this.set('fileType', FileType.SymbolicLink);
-      await render(hbs`{{one-file-icon fileType=fileType}}`);
+      await render(hbs`<OneFileIcon @fileType={{fileType}} />`);
 
       expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')
@@ -52,10 +52,10 @@ describe('Integration | Component | one-file-icon', function () {
         fileType: FileType.SymbolicLink,
         symbolicLinkTargetType: SymbolicLinkTargetType.Regular,
       });
-      await render(hbs`{{one-file-icon
-        fileType=fileType
-        symbolicLinkTargetType=symbolicLinkTargetType
-      }}`);
+      await render(hbs`<OneFileIcon
+        @fileType={{fileType}}
+        @symbolicLinkTargetType={{symbolicLinkTargetType}}
+      />`);
 
       expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular');
@@ -70,10 +70,10 @@ describe('Integration | Component | one-file-icon', function () {
         fileType: FileType.SymbolicLink,
         symbolicLinkTargetType: SymbolicLinkTargetType.Directory,
       });
-      await render(hbs`{{one-file-icon
-        fileType=fileType
-        symbolicLinkTargetType=symbolicLinkTargetType
-      }}`);
+      await render(hbs`<OneFileIcon
+        @fileType={{fileType}}
+        @symbolicLinkTargetType={{symbolicLinkTargetType}}
+      />`);
 
       expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-directory');
@@ -88,10 +88,10 @@ describe('Integration | Component | one-file-icon', function () {
         fileType: FileType.SymbolicLink,
         symbolicLinkTargetType: SymbolicLinkTargetType.Broken,
       });
-      await render(hbs`{{one-file-icon
-        fileType=fileType
-        symbolicLinkTargetType=symbolicLinkTargetType
-      }}`);
+      await render(hbs`<OneFileIcon
+        @fileType={{fileType}}
+        @symbolicLinkTargetType={{symbolicLinkTargetType}}
+      />`);
 
       expect(find('.one-file-icon')).to.have.class('main-type-symbolic-link')
         .and.to.have.class('effective-type-regular')

@@ -156,10 +156,10 @@ describe('Integration | Component | atm-workflow/chart-dashboard-editor/sections
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/chart-dashboard-editor/sections-editor
-    rootSection=rootSection
-    editorContext=editorContext
-  }}`);
+  await render(hbs`<AtmWorkflow::ChartDashboardEditor::SectionsEditor
+    @rootSection={{rootSection}}
+    @editorContext={{editorContext}}
+  />`);
 }
 
 export function getElementsStructure(sectionElement) {

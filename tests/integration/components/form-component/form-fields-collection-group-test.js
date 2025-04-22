@@ -35,7 +35,7 @@ describe(
       }));
 
       await render(hbs`
-        {{form-component/form-fields-collection-group field=collectionGroup}}
+        <FormComponent::FormFieldsCollectionGroup @field={{collectionGroup}} />
       `);
 
       const button = find('.add-field-button');
@@ -69,7 +69,7 @@ describe(
       this.set('collectionGroup', collectionGroup);
 
       await render(hbs`
-        {{form-component/form-fields-collection-group field=collectionGroup}}
+        <FormComponent::FormFieldsCollectionGroup @field={{collectionGroup}} />
       `);
 
       await click('.add-field-button');
@@ -106,7 +106,7 @@ describe(
       this.set('collectionGroup', collectionGroup);
 
       await render(hbs`
-        {{form-component/form-fields-collection-group field=collectionGroup}}
+        <FormComponent::FormFieldsCollectionGroup @field={{collectionGroup}} />
       `);
 
       await click('.add-field-button');
@@ -144,7 +144,7 @@ describe(
       this.set('collectionGroup', collectionGroup);
 
       await render(hbs`
-        {{form-component/form-fields-collection-group field=collectionGroup}}
+        <FormComponent::FormFieldsCollectionGroup @field={{collectionGroup}} />
       `);
 
       await click('.add-field-button');
@@ -179,7 +179,7 @@ describe(
       });
       this.set('collectionGroup', collectionGroup);
       await render(hbs`
-        {{form-component/form-fields-collection-group field=collectionGroup}}
+        <FormComponent::FormFieldsCollectionGroup @field={{collectionGroup}} />
       `);
 
       await click('.add-field-button');
@@ -216,7 +216,7 @@ describe(
         this.set('collectionGroup', collectionGroup);
 
         await render(hbs`
-          {{form-component/form-fields-collection-group field=collectionGroup}}
+          <FormComponent::FormFieldsCollectionGroup @field={{collectionGroup}} />
         `);
 
         await click('.add-field-button');
@@ -244,7 +244,7 @@ describe(
         collectionGroup.changeMode('view');
 
         await render(hbs`
-          {{form-component/form-fields-collection-group field=collectionGroup}}
+          <FormComponent::FormFieldsCollectionGroup @field={{collectionGroup}} />
         `);
 
         expect(find('.empty-collection-text')).to.have.trimmed.text('empty');
@@ -265,7 +265,7 @@ describe(
         collectionGroup.changeMode('view');
 
         await render(hbs`
-          {{form-component/form-fields-collection-group field=collectionGroup}}
+          <FormComponent::FormFieldsCollectionGroup @field={{collectionGroup}} />
         `);
 
         expect(find('.empty-collection-text')).to.not.exist;
@@ -301,7 +301,7 @@ describe(
         this.set('collectionGroup', collectionGroup);
 
         await render(hbs`
-          {{form-component/form-fields-collection-group field=collectionGroup}}
+          <FormComponent::FormFieldsCollectionGroup @field={{collectionGroup}} />
         `);
         await click('.add-field-button');
         collectionGroup.changeMode('view');
@@ -327,7 +327,7 @@ describe(
         this.set('collectionGroup', collectionGroup);
 
         await render(hbs`
-          {{form-component/form-fields-collection-group field=collectionGroup}}
+          <FormComponent::FormFieldsCollectionGroup @field={{collectionGroup}} />
         `);
 
         expect(find('.empty-collection-text')).to.not.exist;

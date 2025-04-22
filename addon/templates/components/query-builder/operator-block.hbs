@@ -3,62 +3,62 @@
     <div class="block-label block-prefix-label">{{tt this (concat "operators." queryBlock.operator)}}</div>
   {{/if}}
   {{#if firstOperand}}
-    {{query-builder/block-visualiser
-      parentQueryBlock=queryBlock
-      operators=operators
-      queryBlock=firstOperand
-      queryProperties=queryProperties
-      valuesBuilder=valuesBuilder
-      isReadOnly=isReadOnly
-      level=(sub level 1)
-      onBlockReplace=(action "replaceBlock" firstOperand)
-      onBlockRemove=(action "removeBlock" firstOperand)
-      refreshQueryProperties=(action refreshQueryProperties)
-      onConditionEditionStart=onConditionEditionStart
-      onConditionEditionEnd=onConditionEditionEnd
-      onConditionEditionValidityChange=onConditionEditionValidityChange
-      onBlockRemoved=onBlockRemoved
-    }}
+    <QueryBuilder::BlockVisualiser
+      @parentQueryBlock={{queryBlock}}
+      @operators={{operators}}
+      @queryBlock={{firstOperand}}
+      @queryProperties={{queryProperties}}
+      @valuesBuilder={{valuesBuilder}}
+      @isReadOnly={{isReadOnly}}
+      @level={{sub level 1}}
+      @onBlockReplace={{action "replaceBlock" firstOperand}}
+      @onBlockRemove={{action "removeBlock" firstOperand}}
+      @refreshQueryProperties={{action refreshQueryProperties}}
+      @onConditionEditionStart={{onConditionEditionStart}}
+      @onConditionEditionEnd={{onConditionEditionEnd}}
+      @onConditionEditionValidityChange={{onConditionEditionValidityChange}}
+      @onBlockRemoved={{onBlockRemoved}}
+    />
     {{#if (and (not isReadOnly) (eq queryBlock.operator "root"))}}
-      {{query-builder/block-adder
-        btnClass="surround-root"
-        operators=operators
-        valuesBuilder=valuesBuilder
-        popoverPlacement=popoverPlacement
-        hideConditionCreation=true
-        refreshQueryProperties=(action refreshQueryProperties)
-        onBlockAdd=(action "addBlock")
-      }}
+      <QueryBuilder::BlockAdder
+        @btnClass="surround-root"
+        @operators={{operators}}
+        @valuesBuilder={{valuesBuilder}}
+        @popoverPlacement={{popoverPlacement}}
+        @hideConditionCreation={{true}}
+        @refreshQueryProperties={{action refreshQueryProperties}}
+        @onBlockAdd={{action "addBlock"}}
+      />
     {{/if}}
   {{else if (not isReadOnly)}}
-    {{query-builder/block-adder
-      refreshQueryProperties=(action refreshQueryProperties)
-      operators=operators
-      valuesBuilder=valuesBuilder
-      popoverPlacement=popoverPlacement
-      onBlockAdd=(action "addBlock")
-      queryProperties=queryProperties
-    }}
+    <QueryBuilder::BlockAdder
+      @refreshQueryProperties={{action refreshQueryProperties}}
+      @operators={{operators}}
+      @valuesBuilder={{valuesBuilder}}
+      @popoverPlacement={{popoverPlacement}}
+      @onBlockAdd={{action "addBlock"}}
+      @queryProperties={{queryProperties}}
+    />
   {{/if}}
 {{else}}
   {{#each queryBlock.operands as |operandBlock index|}}
-    {{query-builder/block-visualiser
-      parentQueryBlock=queryBlock
-      level=(sub level 1)
-      isReadOnly=isReadOnly
-      operators=operators
-      queryBlock=operandBlock
-      queryProperties=queryProperties
-      valuesBuilder=valuesBuilder
-      popoverPlacement=popoverPlacement
-      refreshQueryProperties=(action refreshQueryProperties)
-      onBlockReplace=(action "replaceBlock" operandBlock)
-      onBlockRemove=(action "removeBlock" operandBlock)
-      onConditionEditionStart=onConditionEditionStart
-      onConditionEditionEnd=onConditionEditionEnd
-      onConditionEditionValidityChange=onConditionEditionValidityChange
-      onBlockRemoved=onBlockRemoved
-    }}
+    <QueryBuilder::BlockVisualiser
+      @parentQueryBlock={{queryBlock}}
+      @level={{sub level 1}}
+      @isReadOnly={{isReadOnly}}
+      @operators={{operators}}
+      @queryBlock={{operandBlock}}
+      @queryProperties={{queryProperties}}
+      @valuesBuilder={{valuesBuilder}}
+      @popoverPlacement={{popoverPlacement}}
+      @refreshQueryProperties={{action refreshQueryProperties}}
+      @onBlockReplace={{action "replaceBlock" operandBlock}}
+      @onBlockRemove={{action "removeBlock" operandBlock}}
+      @onConditionEditionStart={{onConditionEditionStart}}
+      @onConditionEditionEnd={{onConditionEditionEnd}}
+      @onConditionEditionValidityChange={{onConditionEditionValidityChange}}
+      @onBlockRemoved={{onBlockRemoved}}
+    />
     {{#if (and
       queryBlock.operator
       (or
@@ -72,14 +72,14 @@
     {{/if}}
   {{else}}
     {{#unless isReadOnly}}
-      {{query-builder/block-adder
-        operators=operators
-        valuesBuilder=valuesBuilder
-        queryProperties=queryProperties
-        popoverPlacement=popoverPlacement
-        refreshQueryProperties=(action refreshQueryProperties)
-        onBlockAdd=(action "addBlock")
-      }}
+      <QueryBuilder::BlockAdder
+        @operators={{operators}}
+        @valuesBuilder={{valuesBuilder}}
+        @queryProperties={{queryProperties}}
+        @popoverPlacement={{popoverPlacement}}
+        @refreshQueryProperties={{action refreshQueryProperties}}
+        @onBlockAdd={{action "addBlock"}}
+      />
       {{#if queryBlock.operator}}
         <div class="block-label block-infix-label block-infix-label-last">
           {{tt this (concat "operators." queryBlock.operator)}}
@@ -88,15 +88,15 @@
     {{/unless}}
   {{/each}}
   {{#unless isReadOnly}}
-    {{query-builder/block-adder
-      operators=operators
-      valuesBuilder=valuesBuilder
-      queryProperties=queryProperties
-      popoverPlacement=popoverPlacement
-      disabled=(eq queryBlock.operands.length 0)
-      refreshQueryProperties=(action refreshQueryProperties)
-      onBlockAdd=(action "addBlock")
-    }}
+    <QueryBuilder::BlockAdder
+      @operators={{operators}}
+      @valuesBuilder={{valuesBuilder}}
+      @queryProperties={{queryProperties}}
+      @popoverPlacement={{popoverPlacement}}
+      @disabled={{eq queryBlock.operands.length 0}}
+      @refreshQueryProperties={{action refreshQueryProperties}}
+      @onBlockAdd={{action "addBlock"}}
+    />
   {{/unless}}
 {{/if}}
 {{yield}}

@@ -13,7 +13,7 @@ describe('Integration | Component | atm-workflow/value-presenters/range/raw-pres
   });
 
   it('has classes "raw-presenter" and "range-raw-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/range/raw-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Range::RawPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('raw-presenter')
@@ -22,9 +22,9 @@ describe('Integration | Component | atm-workflow/value-presenters/range/raw-pres
 
   it('presents passed value', async function () {
     this.set('value', { start: 2, end: 10, step: 3 });
-    await render(hbs`{{atm-workflow/value-presenters/range/raw-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Range::RawPresenter
+      @value={{value}}
+    />`);
 
     const expectedValue = `{
   "start": 2,

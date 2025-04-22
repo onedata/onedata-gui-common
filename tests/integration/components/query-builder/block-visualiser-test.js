@@ -31,10 +31,10 @@ describe('Integration | Component | query-builder/block-visualiser', function ()
       async function () {
         this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-        await render(hbs `{{query-builder/block-visualiser
-          queryBlock=queryBlock
-          valuesBuilder=valuesBuilder
-        }}`);
+        await render(hbs `<QueryBuilder::BlockVisualiser
+          @queryBlock={{queryBlock}}
+          @valuesBuilder={{valuesBuilder}}
+        />`);
 
         expect(
           find(`.query-builder-operator-block.${operatorName}-operator-block`),
@@ -57,10 +57,10 @@ describe('Integration | Component | query-builder/block-visualiser', function ()
         comparatorValues: 'world',
       }));
 
-      await render(hbs `{{query-builder/block-visualiser
-        queryBlock=queryBlock
-        valuesBuilder=valuesBuilder
-      }}`);
+      await render(hbs `<QueryBuilder::BlockVisualiser
+        @queryBlock={{queryBlock}}
+        @valuesBuilder={{valuesBuilder}}
+      />`);
 
       expect(find('.query-builder-condition-block')).to.exist;
     }

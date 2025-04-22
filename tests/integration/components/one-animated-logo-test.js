@@ -9,7 +9,7 @@ describe('Integration | Component | one-animated-logo', function () {
 
   it('expands and collapses', async function () {
     this.set('opened', false);
-    await render(hbs `{{one-animated-logo opened=opened}}`);
+    await render(hbs `<OneAnimatedLogo @opened={{opened}} />`);
 
     expect(find('.one-animated-logo')).not.to.have.class('opened');
 

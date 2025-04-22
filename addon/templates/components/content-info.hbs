@@ -18,11 +18,11 @@
       </div>
     </div>
     {{#if imagePath}}
-      {{one-image
-        imagePath=imagePath
-        imageTextClass=imageTextClass
-        imageText=imageText
-      }}
+      <OneImage
+        @imagePath={{imagePath}}
+        @imageTextClass={{imageTextClass}}
+        @imageText={{imageText}}
+      />
     {{/if}}
     {{#if hasBlock}}
       <div class="row row-yield">
@@ -36,18 +36,18 @@
       <div class="row text-center {{unless (or text imagePath hasBlock) "row-button-margin-top"}}">
         <div class="col-xs-12">
           <div class="btn-tooltip-container">
-            {{#one-button
-              type="primary"
-              buttonType="submit"
-              class=(concat "btn-content-info " buttonClass)
-              onClick=(action _buttonAction)
-              isPending=_actionInProgress
-              disabled=buttonDisabled
-            }}
+            <OneButton
+              @type="primary"
+              @buttonType="submit"
+              class={{concat "btn-content-info " buttonClass}}
+              @onClick={{action _buttonAction}}
+              @isPending={{_actionInProgress}}
+              @disabled={{buttonDisabled}}
+            >
               {{buttonLabel}}
-            {{/one-button}}
+            </OneButton>
             {{#if buttonTip}}
-              {{one-tooltip title=buttonTip}}
+              <OneTooltip @title={{buttonTip}} />
             {{/if}}
           </div>
         </div>

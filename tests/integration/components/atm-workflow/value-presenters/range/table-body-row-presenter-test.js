@@ -8,7 +8,7 @@ describe('Integration | Component | atm-workflow/value-presenters/range/table-bo
   setupRenderingTest();
 
   it('has classes "table-body-row-presenter" and "range-table-body-row-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/range/table-body-row-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Range::TableBodyRowPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('table-body-row-presenter')
@@ -17,9 +17,9 @@ describe('Integration | Component | atm-workflow/value-presenters/range/table-bo
 
   it('shows three columns - start, end and step', async function () {
     this.set('value', { start: 2, end: 10, step: 3 });
-    await render(hbs`{{atm-workflow/value-presenters/range/table-body-row-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Range::TableBodyRowPresenter
+      @value={{value}}
+    />`);
 
     const tds = findAll('.table-body-row-presenter td');
     expect(tds).to.have.length(3);

@@ -12,7 +12,7 @@ describe('Integration | Component | one-sidebar-toolbar', function () {
     this.set('buttons', [{
       icon: 'space',
     }]);
-    await render(hbs `{{one-sidebar-toolbar buttons=buttons}}
+    await render(hbs `<OneSidebarToolbar @buttons={{buttons}} />
     <div class="collapsible-toolbar-global-toggle"></div>`);
     expect(findAll('.oneicon-space')).to.have.length(1);
   });
@@ -25,7 +25,7 @@ describe('Integration | Component | one-sidebar-toolbar', function () {
       class: 'test-button',
     }]);
     await render(hbs `
-      {{one-sidebar-toolbar buttons=buttons}}
+      <OneSidebarToolbar @buttons={{buttons}} />
       <div class="collapsible-toolbar-global-toggle"></div>
     `);
     await click('.test-button');

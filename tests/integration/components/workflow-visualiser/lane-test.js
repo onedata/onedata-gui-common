@@ -89,7 +89,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
   });
 
   it('has class "workflow-visualiser-lane"', async function () {
-    await render(hbs `{{workflow-visualiser/lane}}`);
+    await render(hbs `<WorkflowVisualiser::Lane />`);
     expect(find('.workflow-visualiser-lane')).to.exist;
   });
 
@@ -103,7 +103,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
     itRendersActions(viewLaneActionsSpec);
 
     it('does not allow to modify lane name', async function () {
-      await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+      await render(hbs `<WorkflowVisualiser::Lane @elementModel={{lane}} />`);
 
       // .one-label is a trigger for one-inline-editor
       expect(find('.lane-name .one-label')).to.not.exist;
@@ -111,8 +111,8 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
 
     it('allows to show lane details', async function () {
       await render(hbs `
-        {{global-modal-mounter}}
-        {{workflow-visualiser/lane elementModel=lane}}
+        <GlobalModalMounter />
+        <WorkflowVisualiser::Lane @elementModel={{lane}} />
       `);
 
       await click('.lane-actions-trigger');
@@ -146,7 +146,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
         },
       });
 
-      await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+      await render(hbs `<WorkflowVisualiser::Lane @elementModel={{lane}} />`);
       await click('.lane-name .one-label');
       await fillIn('.lane-name input', 'new-name');
       await click('.lane-name .save-icon');
@@ -158,8 +158,8 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
       const onModifySpy = sinon.stub().resolves();
       this.set('lane.onModify', onModifySpy);
       await render(hbs `
-        {{global-modal-mounter}}
-        {{workflow-visualiser/lane elementModel=lane}}
+        <GlobalModalMounter />
+        <WorkflowVisualiser::Lane @elementModel={{lane}} />
       `);
 
       await click('.lane-actions-trigger');
@@ -184,7 +184,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
         const onMoveSpy = sinon.stub().resolves();
         this.set('lane.onMove', onMoveSpy);
 
-        await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+        await render(hbs `<WorkflowVisualiser::Lane @elementModel={{lane}} />`);
 
         await click('.lane-actions-trigger');
         await click(globals.document.querySelector(
@@ -197,7 +197,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
 
       it(`disables moving ${direction} the lane when "${disablingProp}" is true`, async function () {
         this.set(`lane.${disablingProp}`, true);
-        await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+        await render(hbs `<WorkflowVisualiser::Lane @elementModel={{lane}} />`);
 
         await click('.lane-actions-trigger');
 
@@ -222,8 +222,8 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
         ],
       });
       await render(hbs `
-        {{global-modal-mounter}}
-        {{workflow-visualiser/lane elementModel=lane}}
+        <GlobalModalMounter />
+        <WorkflowVisualiser::Lane @elementModel={{lane}} />
       `);
 
       await click('.lane-actions-trigger');
@@ -238,7 +238,7 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
     it('does not allow to clear lane, when it is empty', async function () {
       const actionsFactory = this.get('lane.actionsFactory');
       this.set('lane.elements', [InterblockSpace.create({ actionsFactory })]);
-      await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+      await render(hbs `<WorkflowVisualiser::Lane @elementModel={{lane}} />`);
 
       await click('.lane-actions-trigger');
 
@@ -252,8 +252,8 @@ describe('Integration | Component | workflow-visualiser/lane', function () {
       const onRemoveSpy = sinon.stub().resolves();
       this.set('lane.onRemove', onRemoveSpy);
       await render(hbs `
-        {{global-modal-mounter}}
-        {{workflow-visualiser/lane elementModel=lane}}
+        <GlobalModalMounter />
+        <WorkflowVisualiser::Lane @elementModel={{lane}} />
       `);
 
       await click('.lane-actions-trigger');
@@ -272,7 +272,7 @@ function itShowsName() {
     const laneName = 'my-lane';
     this.set('lane.name', laneName);
 
-    await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+    await render(hbs `<WorkflowVisualiser::Lane @elementModel={{lane}} />`);
 
     expect(find('.lane-name').textContent.trim()).to.equal(laneName);
   });
@@ -295,7 +295,7 @@ function itRendersLaneElements() {
       InterblockSpace.create({ elementBefore: block2, actionsFactory }),
     ]);
 
-    await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+    await render(hbs `<WorkflowVisualiser::Lane @elementModel={{lane}} />`);
 
     const elements = findAll('.workflow-visualiser-lane .workflow-visualiser-element');
     const space1Element = elements[0];
@@ -322,7 +322,7 @@ function itRendersLaneElements() {
 
 function itRendersActions(actionsSpec) {
   it('renders actions', async function () {
-    await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+    await render(hbs `<WorkflowVisualiser::Lane @elementModel={{lane}} />`);
 
     await click('.lane-actions-trigger');
 

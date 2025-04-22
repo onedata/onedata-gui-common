@@ -15,7 +15,7 @@ describe('Integration | Component | user-credentials-form', function () {
   setupRenderingTest();
 
   it('shows secret password field by default', async function () {
-    await render(hbs `{{user-credentials-form}}`);
+    await render(hbs `<UserCredentialsForm />`);
 
     const form = new UserCredentialsFormHelper(this.element);
 
@@ -26,7 +26,7 @@ describe('Integration | Component | user-credentials-form', function () {
   it(
     'shows old password, new password and retype new password fields in change password mode',
     async function () {
-      await render(hbs `{{user-credentials-form changingPassword=true}}`);
+      await render(hbs `<UserCredentialsForm @changingPassword={{true}} />`);
 
       const form = new UserCredentialsFormHelper(this.element);
 
@@ -53,10 +53,7 @@ describe('Integration | Component | user-credentials-form', function () {
     });
 
     await render(hbs `
-      {{user-credentials-form
-        changingPassword=true
-        submit=(action submit)
-      }}
+      <UserCredentialsForm @changingPassword={{true}} @submit={{action submit}} />
     `);
 
     const form = new UserCredentialsFormHelper(this.element);
@@ -73,7 +70,7 @@ describe('Integration | Component | user-credentials-form', function () {
     const OLD_PASSWORD = 'one123456789';
     const NEW_PASSWORD = 'one987654321';
 
-    await render(hbs `{{user-credentials-form changingPassword=true}}`);
+    await render(hbs `<UserCredentialsForm @changingPassword={{true}} />`);
 
     const form = new UserCredentialsFormHelper(this.element);
 

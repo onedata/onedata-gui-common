@@ -1,10 +1,7 @@
-{{#promise-proxy-container proxy=stateProxy sizeClass="sm"}}
+<PromiseProxyContainer @proxy={{stateProxy}} @sizeClass="sm">
   <div class="canvas-area">
     {{#if hasDataToShow}}
-      {{one-echart
-        option=echartState
-        registerApi=(action "registerApi")
-      }}
+      <OneEchart @option={{echartState}} @registerApi={{action "registerApi"}} />
     {{else}}
       <div class="no-data-message">
         <div class="no-data-img"></div>
@@ -14,13 +11,13 @@
   </div>
   {{#if title}}
     <div class="title-area">
-      {{#truncated-string tagName="span" class="title-content"}}
+      <TruncatedString @tagName="span" class="title-content">
         {{title}}
-      {{/truncated-string}}
+      </TruncatedString>
       {{#if titleTip}}
         <span class="space"></span>
-        {{one-label-tip class="title-tip" title=titleTip}}
+        <OneLabelTip class="title-tip" @title={{titleTip}} />
       {{/if}}
     </div>
   {{/if}}
-{{/promise-proxy-container}}
+</PromiseProxyContainer>

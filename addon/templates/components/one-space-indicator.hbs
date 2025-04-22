@@ -15,5 +15,5 @@
     {{bytes-to-string occupiedSize}}
   </span>
 {{else}}
-  {{resource-load-error reason=incorrectDataMessage}}
+  <ResourceLoadError @reason={{incorrectDataMessage}} />
 {{/if}}

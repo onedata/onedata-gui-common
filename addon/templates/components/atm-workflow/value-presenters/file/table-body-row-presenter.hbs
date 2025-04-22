@@ -1,11 +1,11 @@
 {{yield (hash section="start")}}
 <td class="column-name">
-  {{#truncated-string}}
-    {{one-file-icon
+  <TruncatedString>
+    <OneFileIcon
       class="file-icon"
-      fileType=type
-      symbolicLinkTargetType=symbolicLinkTargetType
-    }}
+      @fileType={{type}}
+      @symbolicLinkTargetType={{symbolicLinkTargetType}}
+    />
     {{#if urlProxy.content}}
       <a
         class="file-name details-title clickable navy"
@@ -19,10 +19,10 @@
         {{#if name}}{{name}}{{else}}<em>{{tt this "unknown"}}</em>{{/if}}
       </span>
     {{/if}}
-  {{/truncated-string}}
+  </TruncatedString>
 </td>
 <td class="column-path">
-  {{#truncated-string class=(if pathProxy.isFulfilled "truncate-from-left")}}
+  <TruncatedString class={{if pathProxy.isFulfilled "truncate-from-left"}}>
     {{#if pathProxy.isPending}}
       <em>{{tt this "loading"}}</em>
     {{else if (eq pathProxy.content null)}}
@@ -30,10 +30,10 @@
     {{else}}
       <span class="value-container">{{pathProxy.content}}</span>
     {{/if}}
-  {{/truncated-string}}
+  </TruncatedString>
 </td>
 <td class="column-size">
-  {{#truncated-string}}
+  <TruncatedString>
     {{#if sizeProxy.isPending}}
       <em>{{tt this "loading"}}</em>
     {{else if (eq sizeProxy.content null)}}
@@ -41,6 +41,6 @@
     {{else}}
       {{sizeProxy.content}}
     {{/if}}
-  {{/truncated-string}}
+  </TruncatedString>
 </td>
 {{yield (hash section="end")}}

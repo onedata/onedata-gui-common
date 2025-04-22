@@ -36,7 +36,7 @@ describe('Integration | Component | one-map', function () {
   it('shows whole world map by default', async function () {
     await render(hbs `
       <div style="width: 1400px; height: 700px">
-        {{one-map}}
+        <OneMap />
       </div>
     `);
     [
@@ -53,7 +53,7 @@ describe('Integration | Component | one-map', function () {
     this.set('spy', spy);
     await render(hbs `
       <div style="width: 1400px; height: 700px">
-        {{one-map onViewportChange=(action spy)}}
+        <OneMap @onViewportChange={{action spy}} />
       </div>
     `);
     const mapObject = getMapObject();
@@ -79,7 +79,7 @@ describe('Integration | Component | one-map', function () {
       });
       await render(hbs `
         <div style="width: 1400px; height: 700px">
-          {{one-map triggerWindowEventName="mapTestResize"}}
+          <OneMap @triggerWindowEventName="mapTestResize" />
         </div>
       `);
       expect(eventSpy.lastCall.args[0].type).to.be.equal('mapTestResize');
@@ -94,7 +94,7 @@ describe('Integration | Component | one-map', function () {
     });
     await render(hbs `
       <div style="width: 1400px; height: 700px">
-        {{one-map initialState=initialState}}
+        <OneMap @initialState={{initialState}} />
       </div>
     `);
     expect(isElementVisible(find('[data-code="PL"]'))).to.be.true;
@@ -106,11 +106,11 @@ describe('Integration | Component | one-map', function () {
   it('positions content using position component', async function () {
     await render(hbs `
       <div style="width: 1400px; height: 700px">
-        {{#one-map as |map|}}
-          {{#map.position latitude=50 longitude=20}}
+        <OneMap as |map|>
+          <map.position @latitude={{50}} @longitude={{20}}>
             test
-          {{/map.position}}
-        {{/one-map}}
+          </map.position>
+        </OneMap>
       </div>
     `);
 

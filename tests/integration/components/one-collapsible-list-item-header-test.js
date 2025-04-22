@@ -14,21 +14,21 @@ describe('Integration | Component | one-collapsible-list-item-header', function 
     });
 
     await render(hbs `
-      {{#one-collapsible-list as |list|}}
-        {{#list.item as |listItem|}}
-          {{#listItem.header}}
+      <OneCollapsibleList as |list|>
+        <list.item as |listItem|>
+          <listItem.header>
             <h1>Some header</h1>
             <div class="btn-toolbar">
               <button class="btn btn-default btn-one" {{action actionOne}}>
                 One
               </button>
             </div>
-          {{/listItem.header}}
-          {{#listItem.content}}
+          </listItem.header>
+          <listItem.content>
             hidden content
-          {{/listItem.content}}
-        {{/list.item}}
-      {{/one-collapsible-list}}
+          </listItem.content>
+        </list.item>
+      </OneCollapsibleList>
     `);
 
     await click('.btn-one');
@@ -43,19 +43,19 @@ describe('Integration | Component | one-collapsible-list-item-header', function 
     });
 
     await render(hbs `
-      {{#one-collapsible-list as |list|}}
-        {{#list.item toggle=(action actionOne) as |listItem|}}
-          {{#listItem.header}}
+      <OneCollapsibleList as |list|>
+        <list.item @toggle={{action actionOne}} as |listItem|>
+          <listItem.header>
             <h1>Some header</h1>
             <button class="btn btn-default btn-one">
               One
             </button>
-          {{/listItem.header}}
-          {{#listItem.content}}
+          </listItem.header>
+          <listItem.content>
             hidden content
-          {{/listItem.content}}
-        {{/list.item}}
-      {{/one-collapsible-list}}
+          </listItem.content>
+        </list.item>
+      </OneCollapsibleList>
     `);
 
     await click('.btn-one');

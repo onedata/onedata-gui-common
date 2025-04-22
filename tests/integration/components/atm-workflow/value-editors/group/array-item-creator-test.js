@@ -147,9 +147,9 @@ describe('Integration | Component | atm-workflow/value-editors/group/array-item-
 });
 
 async function renderComponent() {
-  await render(hbs`{{atm-workflow/value-editors/group/array-item-creator
-    stateManager=stateManager
-    itemAtmDataSpec=itemAtmDataSpec
-    onItemsCreated=onItemsCreated
-  }}`);
+  await render(hbs`<AtmWorkflow::ValueEditors::Group::ArrayItemCreator
+    @stateManager={{stateManager}}
+    @itemAtmDataSpec={{itemAtmDataSpec}}
+    @onItemsCreated={{onItemsCreated}}
+  />`);
 }

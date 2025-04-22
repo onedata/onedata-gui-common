@@ -40,11 +40,12 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
   it('renders content', async function () {
     await render(hbs `
       <button class="trigger">Trigger</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        triggersConfiguration=".trigger"}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @triggersConfiguration=".trigger"
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     expect(globals.document.querySelector('body').textContent)
@@ -57,13 +58,14 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
   it('reacts to window resize', async function () {
     await render(hbs `
       <button class="trigger">Trigger</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        popoverClass="popover-element"
-        modalClass="modal-element"
-        triggersConfiguration=".trigger"}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @popoverClass="popover-element"
+        @modalClass="modal-element"
+        @triggersConfiguration=".trigger"
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger');
@@ -94,13 +96,14 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
     });
     await render(hbs `
       <button class="trigger">Trigger</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        triggersConfiguration=".trigger"
-        onShow=(action onShow)
-        onShown=(action onShown)}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @triggersConfiguration=".trigger"
+        @onShow={{action onShow}}
+        @onShown={{action onShown}}
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger');
@@ -120,13 +123,14 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
     });
     await render(hbs `
       <button class="trigger">Trigger</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        triggersConfiguration=".trigger"
-        onHide=(action onHide)
-        onHidden=(action onHidden)}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @triggersConfiguration=".trigger"
+        @onHide={{action onHide}}
+        @onHidden={{action onHidden}}
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger');
@@ -139,12 +143,13 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
   it('shows and hides popover on trigger click', async function () {
     await render(hbs `
       <button class="trigger">Trigger</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        popoverClass="popover-element"
-        triggersConfiguration=".trigger:popover"}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @popoverClass="popover-element"
+        @triggersConfiguration=".trigger:popover"
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger');
@@ -159,12 +164,13 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
     await render(hbs `
       <div class="container">
         <button class="trigger">Trigger</button>
-        {{#one-switchable-popover-modal
-          modalTransitionDuration=0
-          popoverClass="popover-element"
-          triggersConfiguration=".trigger:popover"}}
+        <OneSwitchablePopoverModal
+          @modalTransitionDuration={{0}}
+          @popoverClass="popover-element"
+          @triggersConfiguration=".trigger:popover"
+        >
           {{contentText}}
-        {{/one-switchable-popover-modal}}
+        </OneSwitchablePopoverModal>
       </div>
     `);
 
@@ -178,12 +184,13 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
     await render(hbs `
       <div class="container">
         <button class="trigger">Trigger</button>
-        {{#one-switchable-popover-modal
-          modalTransitionDuration=0
-          popoverClass="popover-element"
-          triggersConfiguration=".trigger:popover"}}
+        <OneSwitchablePopoverModal
+          @modalTransitionDuration={{0}}
+          @popoverClass="popover-element"
+          @triggersConfiguration=".trigger:popover"
+        >
           <button class="content-button">Click me</button>
-        {{/one-switchable-popover-modal}}
+        </OneSwitchablePopoverModal>
       </div>
     `);
 
@@ -196,12 +203,13 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
   it('shows and hides modal', async function () {
     await render(hbs `
       <button class="trigger">Trigger</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        modalClass="modal-element"
-        triggersConfiguration=".trigger:modal"}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @modalClass="modal-element"
+        @triggersConfiguration=".trigger:modal"
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger');
@@ -215,12 +223,13 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
   it('does not hide modal on content click', async function () {
     await render(hbs `
       <button class="trigger">Trigger</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        modalClass="modal-element"
-        triggersConfiguration=".trigger:modal"}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @modalClass="modal-element"
+        @triggersConfiguration=".trigger:modal"
+      >
         <button class="content-button">Click me</button>
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger');
@@ -233,13 +242,14 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
     await render(hbs `
       <button class="trigger-popover">Trigger1</button>
       <button class="trigger-modal">Trigger2</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        popoverClass="popover-element"
-        modalClass="modal-element"
-        triggersConfiguration=".trigger-modal:modal;.trigger-popover:popover"}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @popoverClass="popover-element"
+        @modalClass="modal-element"
+        @triggersConfiguration=".trigger-modal:modal;.trigger-popover:popover"
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger-popover');
@@ -254,14 +264,15 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
     await render(hbs `
       <button class="trigger-popover">Trigger1</button>
       <button class="trigger-modal">Trigger2</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        popoverClass="popover-element"
-        modalClass="modal-element"
-        componentClass="component-element"
-        triggersConfiguration=".trigger-modal:modal;.trigger-popover:popover"}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @popoverClass="popover-element"
+        @modalClass="modal-element"
+        @componentClass="component-element"
+        @triggersConfiguration=".trigger-modal:modal;.trigger-popover:popover"
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger-popover');
@@ -275,14 +286,15 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
     this.set('open', false);
     await render(hbs `
       <button class="trigger">Trigger</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        popoverClass="popover-element"
-        triggersConfiguration=".trigger:popover"
-        open=open
-        activeTriggerSelector=".trigger"}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @popoverClass="popover-element"
+        @triggersConfiguration=".trigger:popover"
+        @open={{open}}
+        @activeTriggerSelector=".trigger"
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     expect(globals.document.querySelector('.in .popover-element')).to.not.exist;
@@ -302,13 +314,14 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
     });
     await render(hbs `
       <button class="trigger">Trigger</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        popoverClass="popover-element"
-        triggersConfiguration=".trigger:popover"
-        onHide=(action onHide)}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @popoverClass="popover-element"
+        @triggersConfiguration=".trigger:popover"
+        @onHide={{action onHide}}
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger');
@@ -320,13 +333,14 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
     this.set('onShow', () => false);
     await render(hbs `
       <button class="trigger">Trigger</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        popoverClass="popover-element"
-        triggersConfiguration=".trigger:popover"
-        onShow=(action onShow)}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @popoverClass="popover-element"
+        @triggersConfiguration=".trigger:popover"
+        @onShow={{action onShow}}
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger');
@@ -342,15 +356,16 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
       await render(hbs `
         <button class="trigger-popover">Trigger1</button>
         <button class="trigger-modal">Trigger2</button>
-        {{#one-switchable-popover-modal
-          modalTransitionDuration=0
-          popoverClass="popover-element"
-          modalClass="modal-element"
-          triggersConfiguration=".trigger-modal:modal;.trigger-popover:popover"
-          open=open
-          activeTriggerSelector=activeTriggerSelector}}
+        <OneSwitchablePopoverModal
+          @modalTransitionDuration={{0}}
+          @popoverClass="popover-element"
+          @modalClass="modal-element"
+          @triggersConfiguration=".trigger-modal:modal;.trigger-popover:popover"
+          @open={{open}}
+          @activeTriggerSelector={{activeTriggerSelector}}
+        >
           {{contentText}}
-        {{/one-switchable-popover-modal}}
+        </OneSwitchablePopoverModal>
       `);
 
       expect(globals.document.querySelector('.modal-element.in')).to.exist;
@@ -367,13 +382,14 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
     await render(hbs `
       <button class="trigger-popover">Trigger1</button>
       <button class="trigger-modal">Trigger2</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        popoverClass="popover-element"
-        modalClass="modal-element"
-        triggersConfiguration=triggersConfiguration}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @popoverClass="popover-element"
+        @modalClass="modal-element"
+        @triggersConfiguration={{triggersConfiguration}}
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger-modal');
@@ -394,12 +410,13 @@ describe('Integration | Component | one-switchable-popover-modal', function () {
     });
     await render(hbs `
       <button class="trigger">Trigger</button>
-      {{#one-switchable-popover-modal
-        modalTransitionDuration=0
-        triggersConfiguration=".trigger"
-        onShow=(action onShow)}}
+      <OneSwitchablePopoverModal
+        @modalTransitionDuration={{0}}
+        @triggersConfiguration=".trigger"
+        @onShow={{action onShow}}
+      >
         {{contentText}}
-      {{/one-switchable-popover-modal}}
+      </OneSwitchablePopoverModal>
     `);
 
     await click('.trigger');

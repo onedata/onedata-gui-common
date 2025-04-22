@@ -17,9 +17,9 @@ describe('Integration | Component | one-form-fields', function () {
     this.set('formValues', EmberObject.create({}));
 
     await render(hbs `
-    {{#bs-form as |form|}}
-      {{one-form-fields bsForm=form fields=fields}}
-    {{/bs-form}}
+    <BsForm as |form|>
+      <OneFormFields @bsForm={{form}} @fields={{fields}} />
+    </BsForm>
     `);
 
     const formId = find('form').id;
@@ -37,9 +37,9 @@ describe('Integration | Component | one-form-fields', function () {
     this.set('formValues', EmberObject.create({}));
 
     await render(hbs `
-    {{#bs-form as |form|}}
-      {{one-form-fields bsForm=form fields=fields}}
-    {{/bs-form}}
+    <BsForm as |form|>
+      <OneFormFields @bsForm={{form}} @fields={{fields}} />
+    </BsForm>
     `);
 
     const formId = find('form').id;
@@ -61,9 +61,9 @@ describe('Integration | Component | one-form-fields', function () {
     }));
 
     await render(hbs `
-    {{#bs-form as |form|}}
-      {{one-form-fields bsForm=form fields=fields formValues=formValues}}
-    {{/bs-form}}
+    <BsForm as |form|>
+      <OneFormFields @bsForm={{form}} @fields={{fields}} @formValues={{formValues}} />
+    </BsForm>
     `);
 
     expect(find('input')).to.exist;
@@ -83,9 +83,9 @@ describe('Integration | Component | one-form-fields', function () {
     }));
 
     await render(hbs `
-    {{#bs-form as |form|}}
-      {{one-form-fields bsForm=form fields=fields formValues=formValues}}
-    {{/bs-form}}
+    <BsForm as |form|>
+      <OneFormFields @bsForm={{form}} @fields={{fields}} @formValues={{formValues}} />
+    </BsForm>
     `);
 
     expect(find('.form-control-static'), 'render form-control-static').to.exist;

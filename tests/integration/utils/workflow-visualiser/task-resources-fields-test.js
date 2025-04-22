@@ -254,7 +254,7 @@ describe('Integration | Utility | workflow-visualiser/task-resources-fields', fu
 });
 
 async function renderComponent() {
-  await render(hbs `{{form-component/field-renderer field=rootGroup}}`);
+  await render(hbs `<FormComponent::FieldRenderer @field={{rootGroup}} />`);
 }
 
 function getResourceFieldSelector(resourceName, resourceBoundary) {

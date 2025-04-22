@@ -98,8 +98,8 @@
           @sidebarModelLoader={{this.sidebarModelLoader}}
           as |sidebarModel|
         >
-          {{#let (component sidenavContentComponent) as |SidenavContent|}}
-            <SidenavContent
+          {{#let (component sidenavContentComponent) as |sidenavContent|}}
+            <sidenavContent
               @model={{sidebarModel}}
               @inSidenav={{true}}
             />

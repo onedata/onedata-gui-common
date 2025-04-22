@@ -12,11 +12,11 @@ describe('Integration | Component | one-collapsible-toolbar', function () {
   it('renders in full version in large container', async function () {
     await render(hbs `
       <div class="bla" style="width: 1000px">
-        {{#one-collapsible-toolbar minimumFullWindowSize=0 as |toolbar|}}
-          {{#toolbar.item}}
+        <OneCollapsibleToolbar @minimumFullWindowSize={{0}} as |toolbar|>
+          <toolbar.item>
             Button
-          {{/toolbar.item}}
-        {{/one-collapsible-toolbar}}
+          </toolbar.item>
+        </OneCollapsibleToolbar>
       </div>
     `);
 
@@ -29,11 +29,11 @@ describe('Integration | Component | one-collapsible-toolbar', function () {
   it('renders in minimized version in small container', async function () {
     await render(hbs `
       <div style="width: 10px">
-        {{#one-collapsible-toolbar minimumFullWindowSize=0 as |toolbar|}}
-          {{#toolbar.item}}
+        <OneCollapsibleToolbar @minimumFullWindowSize={{0}} as |toolbar|>
+          <toolbar.item>
             Button
-          {{/toolbar.item}}
-        {{/one-collapsible-toolbar}}
+          </toolbar.item>
+        </OneCollapsibleToolbar>
       </div>
     `);
 
@@ -49,12 +49,16 @@ describe('Integration | Component | one-collapsible-toolbar', function () {
       actionOccurred = true;
     });
     await render(hbs `
-      {{#one-collapsible-toolbar minimumFullWindowSize=0 as |toolbar|}}
-        {{#toolbar.item buttonStyle="danger" triggerClasses="trigger-class"
-          buttonSize="xs" itemAction=(action itemAction)}}
+      <OneCollapsibleToolbar @minimumFullWindowSize={{0}} as |toolbar|>
+        <toolbar.item
+          @buttonStyle="danger"
+          @triggerClasses="trigger-class"
+          @buttonSize="xs"
+          @itemAction={{action itemAction}}
+        >
           Button
-        {{/toolbar.item}}
-      {{/one-collapsible-toolbar}}
+        </toolbar.item>
+      </OneCollapsibleToolbar>
     `);
 
     const button = find('button');
@@ -74,11 +78,11 @@ describe('Integration | Component | one-collapsible-toolbar', function () {
     });
     await render(hbs `
       <div style="width: 20px;">
-        {{#one-collapsible-toolbar minimumFullWindowSize=0 as |toolbar|}}
-          {{#toolbar.item triggerClasses="trigger-class" itemAction=(action itemAction)}}
+        <OneCollapsibleToolbar @minimumFullWindowSize={{0}} as |toolbar|>
+          <toolbar.item @triggerClasses="trigger-class" @itemAction={{action itemAction}}>
             Button
-          {{/toolbar.item}}
-        {{/one-collapsible-toolbar}}
+          </toolbar.item>
+        </OneCollapsibleToolbar>
       </div>
     `);
 

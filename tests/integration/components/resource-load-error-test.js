@@ -8,26 +8,26 @@ describe('Integration | Component | resource-load-error', function () {
   setupRenderingTest();
 
   it('renders show details button if reason is provided', async function () {
-    await render(hbs `{{resource-load-error reason="some reason"}}`);
+    await render(hbs `<ResourceLoadError @reason="some reason" />`);
     expect(findAll('.promise-error-show-details')).to.have.length(1);
   });
 
   it('does not renders show details button if reason is not provided', async function () {
-    await render(hbs `{{resource-load-error}}`);
+    await render(hbs `<ResourceLoadError />`);
     expect(find('.promise-error-show-details')).to.not.exist;
   });
 
   it('renders custom message if provided', async function () {
     const message = 'some message';
     this.set('message', message);
-    await render(hbs `{{resource-load-error message=message}}`);
+    await render(hbs `<ResourceLoadError @message={{message}} />`);
     expect(this.element.textContent).to.match(new RegExp(message));
   });
 
   it('displays error string if an error is plain string', async function () {
     const reason = 'some reason';
     this.set('reason', reason);
-    await render(hbs `{{resource-load-error reason=reason}}`);
+    await render(hbs `<ResourceLoadError @reason={{reason}} />`);
     expect(this.element.textContent).to.match(new RegExp(reason));
   });
 
@@ -41,7 +41,7 @@ describe('Integration | Component | resource-load-error', function () {
       },
     };
     this.set('reason', reason);
-    await render(hbs `{{resource-load-error reason=reason}}`);
+    await render(hbs `<ResourceLoadError @reason={{reason}} />`);
     expect(this.element.textContent).to.match(new RegExp(description));
   });
 });

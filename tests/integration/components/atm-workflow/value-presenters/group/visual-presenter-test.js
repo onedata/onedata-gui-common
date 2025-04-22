@@ -19,7 +19,7 @@ describe('Integration | Component | atm-workflow/value-presenters/group/visual-p
   });
 
   it('has classes "visual-presenter" and "group-visual-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/group/visual-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Group::VisualPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('visual-presenter')
@@ -32,10 +32,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/visual-p
       name: 'group1',
       type: GroupType.Organization,
     });
-    await render(hbs`{{atm-workflow/value-presenters/group/visual-presenter
-      context=context
-      value=group
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Group::VisualPresenter
+      @context={{context}}
+      @value={{group}}
+    />`);
 
     expect(find('.group-icon')).to.have.class('oneicon-organization');
     expect(find('.group-name')).to.have.trimmed.text('group1')
@@ -47,10 +47,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/visual-p
 
   it('handles case when all group properties are missing', async function () {
     this.set('group', null);
-    await render(hbs`{{atm-workflow/value-presenters/group/visual-presenter
-      context=context
-      value=group
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Group::VisualPresenter
+      @context={{context}}
+      @value={{group}}
+    />`);
 
     expect(find('.group-icon')).to.have.class('oneicon-group');
     expect(find('.group-name')).to.have.trimmed.text('Unknown')
@@ -63,10 +63,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/visual-p
     const group = this.set('group', {
       groupId: 'some_id',
     });
-    await render(hbs`{{atm-workflow/value-presenters/group/visual-presenter
-      context=context
-      value=group
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Group::VisualPresenter
+      @context={{context}}
+      @value={{group}}
+    />`);
 
     expect(find('.group-icon')).to.have.class('oneicon-group');
     expect(find('.group-name')).to.have.trimmed.text('Unknown')
@@ -85,10 +85,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/visual-p
         },
         groupUrl: () => null,
       });
-      await render(hbs`{{atm-workflow/value-presenters/group/visual-presenter
-        context=context
-        value=group
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::Group::VisualPresenter
+        @context={{context}}
+        @value={{group}}
+      />`);
 
       expect(find('.group-icon')).to.have.class('oneicon-organization');
       expect(find('.group-name')).to.have.trimmed.text('group1')
@@ -109,10 +109,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/visual-p
         },
         groupUrl: () => reject('someError1'),
       });
-      await render(hbs`{{atm-workflow/value-presenters/group/visual-presenter
-        context=context
-        value=group
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::Group::VisualPresenter
+        @context={{context}}
+        @value={{group}}
+      />`);
 
       expect(find('.group-icon')).to.have.class('oneicon-organization');
       expect(find('.group-name')).to.have.trimmed.text('group1')
@@ -132,10 +132,10 @@ describe('Integration | Component | atm-workflow/value-presenters/group/visual-p
       },
       groupUrl: () => new Promise(() => {}),
     });
-    await render(hbs`{{atm-workflow/value-presenters/group/visual-presenter
-      context=context
-      value=group
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Group::VisualPresenter
+      @context={{context}}
+      @value={{group}}
+    />`);
 
     expect(find('.group-icon')).to.have.class('oneicon-organization');
     expect(find('.group-name')).to.have.trimmed.text('group1')
@@ -154,9 +154,9 @@ describe('Integration | Component | atm-workflow/value-presenters/group/visual-p
           type: GroupType.Organization,
         },
       });
-      await render(hbs`{{atm-workflow/value-presenters/group/visual-presenter
-        value=group
-      }}`);
+      await render(hbs`<AtmWorkflow::ValuePresenters::Group::VisualPresenter
+        @value={{group}}
+      />`);
 
       expect(find('.group-icon')).to.have.class('oneicon-organization');
       expect(find('.group-name')).to.have.trimmed.text('group1')

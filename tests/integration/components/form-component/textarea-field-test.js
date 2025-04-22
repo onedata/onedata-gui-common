@@ -23,7 +23,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
   it(
     'has class "textarea-field"',
     async function () {
-      await render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `<FormComponent::TextareaField @field={{field}} />`);
 
       expect(find('.textarea-field')).to.exist;
     }
@@ -32,7 +32,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
   it(
     'renders textarea',
     async function () {
-      await render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `<FormComponent::TextareaField @field={{field}} />`);
 
       expect(find('textarea')).to.exist;
     }
@@ -43,7 +43,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
     async function () {
       this.set('field.isEnabled', false);
 
-      await render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `<FormComponent::TextareaField @field={{field}} />`);
 
       expect(find('textarea').disabled).to.be.true;
     }
@@ -54,7 +54,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
     async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      await render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `<FormComponent::TextareaField @field={{field}} />`);
 
       return focus('textarea')
         .then(() => blur('textarea'))
@@ -67,7 +67,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
     async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      await render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `<FormComponent::TextareaField @field={{field}} />`);
 
       return fillIn('textarea', 'test')
         .then(() => {
@@ -82,7 +82,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
     async function () {
       this.set('field.value', 'test');
 
-      await render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `<FormComponent::TextareaField @field={{field}} />`);
 
       expect(find('textarea').value).to.equal('test');
     }
@@ -90,7 +90,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
 
   it('sets input id according to "fieldId"', async function () {
     await render(hbs `
-      {{form-component/textarea-field field=field fieldId="abc"}}
+      <FormComponent::TextareaField @field={{field}} @fieldId="abc" />
     `);
 
     expect(find('textarea#abc')).to.exist;
@@ -101,7 +101,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
     async function () {
       this.set('field.placeholder', 'test');
 
-      await render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `<FormComponent::TextareaField @field={{field}} />`);
 
       expect(find('textarea').placeholder).to.equal('test');
     }
@@ -114,7 +114,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
       set(field, 'value', 'test value');
       field.changeMode('view');
 
-      await render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `<FormComponent::TextareaField @field={{field}} />`);
 
       expect(find('textarea').readOnly).to.be.true;
     }
@@ -130,7 +130,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
       });
       field.changeMode('view');
 
-      await render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `<FormComponent::TextareaField @field={{field}} />`);
 
       expect(find('textarea')).to.not.exist;
       expect(this.element.textContent.trim()).to.equal('test value');
@@ -139,7 +139,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
 
   it('does not add "rows" and "cols" attributes when those have default value',
     async function () {
-      await render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `<FormComponent::TextareaField @field={{field}} />`);
 
       const textarea = find('textarea');
       expect(textarea.hasAttribute('rows')).to.false;
@@ -153,7 +153,7 @@ describe('Integration | Component | form-component/textarea-field', function () 
         rows: 3,
         cols: 9,
       });
-      await render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `<FormComponent::TextareaField @field={{field}} />`);
 
       const textarea = find('textarea');
       expect(textarea.getAttribute('rows')).to.equal('3');

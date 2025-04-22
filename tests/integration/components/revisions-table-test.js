@@ -294,19 +294,19 @@ describe('Integration | Component | revisions-table', function () {
 });
 
 async function renderComponent() {
-  await render(hbs `{{#revisions-table
-    revisionRegistry=revisionRegistry
-    revisionActionsFactory=revisionActionsFactory
-    onRevisionClick=onRevisionClick
-    isReadOnly=isReadOnly
+  await render(hbs `<RevisionsTable
+    @revisionRegistry={{revisionRegistry}}
+    @revisionActionsFactory={{revisionActionsFactory}}
+    @onRevisionClick={{onRevisionClick}}
+    @isReadOnly={{isReadOnly}}
     as |section data|
-  }}
+  >
     {{#if (eq section "header")}}
       <th class="description-column">Description</th>
     {{else}}
       <td class="description">{{data.revision.description}}</td>
     {{/if}}
-  {{/revisions-table}}`);
+  </RevisionsTable>`);
 }
 
 function generateRevisionRegistry(revisionsSpec) {

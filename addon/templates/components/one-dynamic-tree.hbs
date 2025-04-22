@@ -1,20 +1,21 @@
 {{#if definition.length}}
-  {{#bs-form submitOnEnter=false as |form|}}
-    {{#one-tree searchQuery=searchQuery as |tree|}}
+  <BsForm @submitOnEnter={{false}} as |form|>
+    <OneTree @searchQuery={{searchQuery}} as |tree|>
       {{#each definition as |nodeDefinition|}}
-        {{one-dynamic-tree/node
-          definition=nodeDefinition
-          bsForm=form
-          parentTree=tree
-          values=values
-          fields=_fieldsTree
-          modificationState=(get (get _modificationTree "nodes") nodeDefinition.name)
-          checkboxSelection=_checkboxSelectionTree
-          disabledFieldsPaths=disabledFieldsPaths
-          inputValueChanged=(action "inputValueChanged")
-          inputFocusedOut=(action "inputFocusedOut")
-          selectNestedCheckboxes=(action "selectNestedCheckboxes")}}
+        <OneDynamicTree::Node
+          @definition={{nodeDefinition}}
+          @bsForm={{form}}
+          @parentTree={{tree}}
+          @values={{this.values}}
+          @fields={{_fieldsTree}}
+          @modificationState={{get (get _modificationTree "nodes") nodeDefinition.name}}
+          @checkboxSelection={{_checkboxSelectionTree}}
+          @disabledFieldsPaths={{disabledFieldsPaths}}
+          @inputValueChanged={{action "inputValueChanged"}}
+          @inputFocusedOut={{action "inputFocusedOut"}}
+          @selectNestedCheckboxes={{action "selectNestedCheckboxes"}}
+        />
       {{/each}}
-    {{/one-tree}}
-  {{/bs-form}}
+    </OneTree>
+  </BsForm>
 {{/if}}

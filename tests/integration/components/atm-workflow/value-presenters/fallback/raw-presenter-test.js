@@ -13,7 +13,7 @@ describe('Integration | Component | atm-workflow/value-presenters/fallback/raw-p
   });
 
   it('has classes "raw-presenter" and "fallback-raw-presenter"', async function () {
-    await render(hbs`{{atm-workflow/value-presenters/fallback/raw-presenter}}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Fallback::RawPresenter />`);
 
     expect(this.element.children).to.have.length(1);
     expect(this.element.children[0]).to.have.class('raw-presenter')
@@ -22,9 +22,9 @@ describe('Integration | Component | atm-workflow/value-presenters/fallback/raw-p
 
   it('presents passed value', async function () {
     this.set('value', [{ a: 1 }, 3]);
-    await render(hbs`{{atm-workflow/value-presenters/fallback/raw-presenter
-      value=value
-    }}`);
+    await render(hbs`<AtmWorkflow::ValuePresenters::Fallback::RawPresenter
+      @value={{value}}
+    />`);
 
     const expectedValue = `[
   {

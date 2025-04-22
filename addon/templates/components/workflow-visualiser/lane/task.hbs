@@ -1,31 +1,28 @@
-{{!--
-  TODO: VFS-12694 Turning one-draggable-object into curly component causes crash when rendering. First try to update ember-drag-drop to latest version.
---}}
-{{#one-draggable-object
-  content=task
-  dragHandle=".task-drag-handle"
-  isDraggable=(eq mode "edit")
+<OneDraggableObject
+  @content={{this.task}}
+  @dragHandle=".task-drag-handle"
+  @isDraggable={{eq this.mode "edit"}}
   class="draggable-task"
-  click=(action "headerClick")
-}}
+  @click={{action "headerClick"}}
+>
   <div class="task-drag-handle"><RecordIcon @modelName="atmLambda" /></div>
   {{#if (eq mode "edit")}}
-    {{one-inline-editor
+    <OneInlineEditor
       class="task-name"
-      value=name
-      hideViewIcons=true
-      onSave=(action "changeName")
-    }}
-    {{#if task.validationErrors.length}}
+      @value={{this.name}}
+      @hideViewIcons={{true}}
+      @onSave={{action "changeName"}}
+    />
+    {{#if this.task.validationErrors.length}}
       <div class="validation-error-indicator">
         <img
           class="warning-icon"
           src={{root-url "assets/images/sign-warning-large.svg"}}
         />
-        {{one-tooltip
-          triggerElement=(local-selector elementId ".warning-icon")
-          title=task.validationErrors.0.errorMessage
-        }}
+        <OneTooltip
+          @triggerElement={{local-selector elementId ".warning-icon"}}
+          @title={{this.task.validationErrors.[0].errorMessage}}
+        />
       </div>
     {{/if}}
     <OneIcon
@@ -35,84 +32,81 @@
         (concat "actions-trigger-" elementId)
         (if areActionsOpened "active")
       }}
-      onclick={{action "toggleActionsOpen" (not areActionsOpened)}}
+      onclick={{action "toggleActionsOpen" (not this.areActionsOpened)}}
     />
-    {{#render-later triggerRender=areActionsOpened}}
-      {{#one-webui-popover
+    <RenderLater @triggerRender={{this.areActionsOpened}}>
+      <OneWebuiPopover
         class="task-actions"
-        padding=false
-        popoverStyle="with-dropdown"
-        triggerSelector=(concat ".actions-trigger-" elementId)
-        open=areActionsOpened
-        onToggle=(action "toggleActionsOpen")
+        @padding={{false}}
+        @popoverStyle="with-dropdown"
+        @triggerSelector={{concat ".actions-trigger-" this.elementId}}
+        @open={{this.areActionsOpened}}
+        @onToggle={{action "toggleActionsOpen"}}
         as |popover|
-      }}
-        {{#click-outside
-          onClickOutside=(action "toggleActionsOpen" false)
-          exceptSelector=(concat ".actions-trigger-" elementId)
-        }}
-          {{actions-popover-content
-            actionsArray=editTaskActions
-            actionClicked=(action (mut areActionsOpened) false)
-          }}
-        {{/click-outside}}
-      {{/one-webui-popover}}
-    {{/render-later}}
+      >
+        <ClickOutside
+          @onClickOutside={{action "toggleActionsOpen" false}}
+          @exceptSelector={{concat ".actions-trigger-" this.elementId}}
+        >
+          <ActionsPopoverContent
+            @actionsArray={{this.editTaskActions}}
+            @actionClicked={{action (mut this.areActionsOpened) false}}
+          />
+        </ClickOutside>
+      </OneWebuiPopover>
+    </RenderLater>
   {{else}}
-    {{#truncated-string class="task-name"}}{{name}}{{/truncated-string}}
+    <TruncatedString class="task-name">{{this.name}}</TruncatedString>
   {{/if}}
-{{/one-draggable-object}}
+</OneDraggableObject>
 {{#if (eq mode "view")}}
-  {{#one-collapse
-    class="task-details-collapse"
-    collapsed=(not areDetailsExpanded)
-  }}
+  <OneCollapse class="task-details-collapse" @collapsed={{not this.areDetailsExpanded}}>
     <div class="task-details">
       <div class="detail-entries">
-        {{#if task.instanceId}}
+        {{#if this.task.instanceId}}
           <div class="detail-entry instance-id-detail">
             <div class="detail-label">{{tt this "details.instanceId"}}:</div>
             <div class="detail-value">
-              {{#truncated-string}}{{task.instanceId}}{{/truncated-string}}
+              <TruncatedString>{{this.task.instanceId}}</TruncatedString>
               <OneIcon
-                @icon={{copyInstanceIdAction.icon}}
-                class={{copyInstanceIdAction.className}}
-                onclick={{copyInstanceIdAction.executeCallback}}
+                @icon={{this.copyInstanceIdAction.icon}}
+                class={{this.copyInstanceIdAction.className}}
+                onclick={{this.copyInstanceIdAction.executeCallback}}
               />
             </div>
           </div>
         {{/if}}
         <div class="detail-entry status-detail">
           <div class="detail-label">{{tt this "details.status"}}:</div>
-          <div class="detail-value">{{statusTranslation}}</div>
+          <div class="detail-value">{{this.statusTranslation}}</div>
         </div>
         <div class="detail-entry items-in-processing-detail">
           <div class="detail-label">{{tt this "details.itemsInProcessing"}}:</div>
-          <div class="detail-value">{{format-number itemsInProcessing}}</div>
+          <div class="detail-value">{{format-number this.itemsInProcessing}}</div>
         </div>
         <div class="detail-entry items-processed-detail">
           <div class="detail-label">{{tt this "details.itemsProcessed"}}:</div>
-          <div class="detail-value">{{format-number itemsProcessed}}</div>
+          <div class="detail-value">{{format-number this.itemsProcessed}}</div>
         </div>
         <div class="detail-entry items-failed-detail">
           <div class="detail-label">{{tt this "details.itemsFailed"}}:</div>
-          <div class="detail-value">{{format-number itemsFailed}}</div>
+          <div class="detail-value">{{format-number this.itemsFailed}}</div>
         </div>
-        {{#if viewTaskActions.length}}
+        {{#if this.viewTaskActions.length}}
           <div class="detail-entry actions-detail">
-            {{#each viewTaskActions as |taskAction idx|}}
+            {{#each this.viewTaskActions as |taskAction idx|}}
               <a
                 class="clickable {{taskAction.className}}"
                 {{action taskAction.executeCallback}}
               >
                 {{taskAction.title}}
               </a>
-              {{#if (lt idx (sub viewTaskActions.length 1))}}|{{/if}}
+              {{#if (lt idx (sub this.viewTaskActions.length 1))}}|{{/if}}
             {{/each}}
           </div>
         {{/if}}
       </div>
     </div>
-  {{/one-collapse}}
+  </OneCollapse>
 {{/if}}
 {{yield}}

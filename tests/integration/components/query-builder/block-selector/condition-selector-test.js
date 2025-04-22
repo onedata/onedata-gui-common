@@ -70,10 +70,10 @@ describe('Integration | Component | query-builder/block-selector/condition-selec
   });
 
   it('lists query properties in dropdown', async function () {
-    await render(hbs `{{query-builder/block-selector/condition-selector
-      queryProperties=queryProperties
-      valuesBuilder=valuesBuilder
-    }}`);
+    await render(hbs `<QueryBuilder::BlockSelector::ConditionSelector
+      @queryProperties={{queryProperties}}
+      @valuesBuilder={{valuesBuilder}}
+    />`);
 
     await clickTrigger('.property-selector-container');
 
@@ -86,10 +86,10 @@ describe('Integration | Component | query-builder/block-selector/condition-selec
   });
 
   it('filters query properties in dropdown', async function () {
-    await render(hbs `{{query-builder/block-selector/condition-selector
-      queryProperties=queryProperties
-      valuesBuilder=valuesBuilder
-    }}`);
+    await render(hbs `<QueryBuilder::BlockSelector::ConditionSelector
+      @queryProperties={{queryProperties}}
+      @valuesBuilder={{valuesBuilder}}
+    />`);
 
     await clickTrigger('.property-selector-container');
     await typeInSearch('string');
@@ -100,21 +100,21 @@ describe('Integration | Component | query-builder/block-selector/condition-selec
   });
 
   it('blocks "Add" button when no property is selected', async function () {
-    await render(hbs `{{query-builder/block-selector/condition-selector
-      queryProperties=queryProperties
-      valuesBuilder=valuesBuilder
-    }}`);
+    await render(hbs `<QueryBuilder::BlockSelector::ConditionSelector
+      @queryProperties={{queryProperties}}
+      @valuesBuilder={{valuesBuilder}}
+    />`);
 
     expect(find('.accept-condition').disabled).to.be.true;
   });
 
   it('does not block "Add" button when property and number values are selected from dropdown', async function () {
-    await render(hbs `{{query-builder/block-selector/condition-selector
-      queryProperties=queryProperties
-      selectedConditionProperty=numberOptionsProp
-      selectedConditionComparator="numberOptions.lt"
-      valuesBuilder=valuesBuilder
-    }}`);
+    await render(hbs `<QueryBuilder::BlockSelector::ConditionSelector
+      @queryProperties={{queryProperties}}
+      @selectedConditionProperty={{numberOptionsProp}}
+      @selectedConditionComparator="numberOptions.lt"
+      @valuesBuilder={{valuesBuilder}}
+    />`);
 
     await selectChoose('.comparator-value-editor', '1');
 
@@ -122,19 +122,19 @@ describe('Integration | Component | query-builder/block-selector/condition-selec
   });
 
   it('does not show comparator selector on init', async function () {
-    await render(hbs `{{query-builder/block-selector/condition-selector
-      queryProperties=queryProperties
-      valuesBuilder=valuesBuilder
-    }}`);
+    await render(hbs `<QueryBuilder::BlockSelector::ConditionSelector
+      @queryProperties={{queryProperties}}
+      @valuesBuilder={{valuesBuilder}}
+    />`);
 
     expect(find('.comparator-selector')).to.not.exist;
   });
 
   it('shows comparator selector when multi-comparator property is selected', async function () {
-    await render(hbs `{{query-builder/block-selector/condition-selector
-      queryProperties=queryProperties
-      valuesBuilder=valuesBuilder
-    }}`);
+    await render(hbs `<QueryBuilder::BlockSelector::ConditionSelector
+      @queryProperties={{queryProperties}}
+      @valuesBuilder={{valuesBuilder}}
+    />`);
 
     await selectChoose('.property-selector-container', 'numberProp');
 
@@ -170,10 +170,10 @@ describe('Integration | Component | query-builder/block-selector/condition-selec
     defaultComparator,
   }) => {
     it(`shows comparators for ${propertyType} property`, async function () {
-      await render(hbs `{{query-builder/block-selector/condition-selector
-        queryProperties=queryProperties
-        valuesBuilder=valuesBuilder
-      }}`);
+      await render(hbs `<QueryBuilder::BlockSelector::ConditionSelector
+        @queryProperties={{queryProperties}}
+        @valuesBuilder={{valuesBuilder}}
+      />`);
 
       await selectChoose('.property-selector-container', propertyName);
 
@@ -207,11 +207,11 @@ describe('Integration | Component | query-builder/block-selector/condition-selec
         `calls "onConditionSelected" callback, when ${propertyType} property "${comparatorName}" condition has been accepted`,
         async function () {
           const selectedSpy = this.set('selectedSpy', sinon.spy());
-          await render(hbs `{{query-builder/block-selector/condition-selector
-            queryProperties=queryProperties
-            onConditionSelected=selectedSpy
-            valuesBuilder=valuesBuilder
-          }}`);
+          await render(hbs `<QueryBuilder::BlockSelector::ConditionSelector
+            @queryProperties={{queryProperties}}
+            @onConditionSelected={{selectedSpy}}
+            @valuesBuilder={{valuesBuilder}}
+          />`);
           await selectChoose('.property-selector-container', propertyName);
           if (comparators.length > 1) {
             await selectChoose(
@@ -233,10 +233,10 @@ describe('Integration | Component | query-builder/block-selector/condition-selec
       it(
         `sets default comparator value for "${comparatorName}" comparator for ${propertyType} property`,
         async function () {
-          await render(hbs `{{query-builder/block-selector/condition-selector
-            queryProperties=queryProperties
-            valuesBuilder=valuesBuilder
-          }}`);
+          await render(hbs `<QueryBuilder::BlockSelector::ConditionSelector
+            @queryProperties={{queryProperties}}
+            @valuesBuilder={{valuesBuilder}}
+          />`);
           await selectChoose('.property-selector-container', propertyName);
 
           const comparatorValueNode = find('.comparator-value');
@@ -249,10 +249,10 @@ describe('Integration | Component | query-builder/block-selector/condition-selec
       it(
         `blocks "Add" button when ${propertyType} property "${comparatorName}" condition has default comparator value`,
         async function () {
-          await render(hbs `{{query-builder/block-selector/condition-selector
-            queryProperties=queryProperties
-            valuesBuilder=valuesBuilder
-          }}`);
+          await render(hbs `<QueryBuilder::BlockSelector::ConditionSelector
+            @queryProperties={{queryProperties}}
+            @valuesBuilder={{valuesBuilder}}
+          />`);
           await selectChoose('.property-selector-container', propertyName);
 
           const addBtn = find('.accept-condition');
@@ -266,10 +266,10 @@ describe('Integration | Component | query-builder/block-selector/condition-selec
     it(
       `blocks "Add" button when number property "${operator}" condition has a non-number condition value`,
       async function () {
-        await render(hbs `{{query-builder/block-selector/condition-selector
-          queryProperties=queryProperties
-          valuesBuilder=valuesBuilder
-        }}`);
+        await render(hbs `<QueryBuilder::BlockSelector::ConditionSelector
+          @queryProperties={{queryProperties}}
+          @valuesBuilder={{valuesBuilder}}
+        />`);
         await selectChoose('.property-selector-container', 'numberProp');
         await selectChoose('.comparator-selector-container', symbol);
         await fillIn('.comparator-value', 'xyz');

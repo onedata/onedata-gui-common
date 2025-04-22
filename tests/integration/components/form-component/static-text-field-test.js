@@ -20,7 +20,7 @@ describe('Integration | Component | form-component/static-text-field', function 
   it(
     'has class "static-text-field"',
     async function () {
-      await render(hbs `{{form-component/static-text-field field=field}}`);
+      await render(hbs `<FormComponent::StaticTextField @field={{field}} />`);
 
       expect(find('.static-text-field')).to.exist;
     }
@@ -29,7 +29,7 @@ describe('Integration | Component | form-component/static-text-field', function 
   it(
     'renders no content when both "text" and "value" field properties are empty',
     async function () {
-      await render(hbs `{{form-component/static-text-field field=field}}`);
+      await render(hbs `<FormComponent::StaticTextField @field={{field}} />`);
 
       expect(this.element.textContent.trim()).to.be.empty;
     }
@@ -40,7 +40,7 @@ describe('Integration | Component | form-component/static-text-field', function 
     async function () {
       this.set('field.text', 'abc');
 
-      await render(hbs `{{form-component/static-text-field field=field}}`);
+      await render(hbs `<FormComponent::StaticTextField @field={{field}} />`);
 
       expect(this.element.textContent.trim()).to.equal('abc');
     }
@@ -54,7 +54,7 @@ describe('Integration | Component | form-component/static-text-field', function 
         value: 'def',
       });
 
-      await render(hbs `{{form-component/static-text-field field=field}}`);
+      await render(hbs `<FormComponent::StaticTextField @field={{field}} />`);
 
       expect(this.element.textContent.trim()).to.equal('def');
     }
