@@ -46,9 +46,48 @@ export default Component.extend(I18n, {
   onPageChange: undefined,
 
   /**
+   * @virtual optional
+   * @type {string}
+   */
+  customPerPageText: undefined,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isPerPageDropdownVisible: false,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isFiltered: false,
+
+  /**
+   * @virtual optional
+   * @type {string}
+   */
+  customFilteredText: undefined,
+
+  /**
+   * @virtual optional
    * @type {number}
    */
   hasPageNumberInput: true,
+
+  filteredText: computed('customFilteredText', function filteredText() {
+    if (this.customFilteredText) {
+      return this.customFilteredText;
+    }
+    return this.t('filtered');
+  }),
+
+  perPageText: computed('customPerPageText', function perPageText() {
+    if (this.customPerPageText) {
+      return this.customPerPageText;
+    }
+    return this.t('perPage');
+  }),
 
   disabledButtons: computed(
     'pagesCount',
@@ -97,6 +136,11 @@ export default Component.extend(I18n, {
       } catch {
         // ignore wrong numbers
       }
+    },
+    changePerPage(value) {
+      this.changePerPage(value);
+      this.set('pageSize', value);
+      this.changePage(1);
     },
   },
 });

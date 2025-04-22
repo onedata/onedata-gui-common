@@ -26,6 +26,9 @@
 <div class="pages-control-pages-count">
   {{tt this "of"}}
   <span class="pages-control-pages-count-number">{{pagesCount}}</span>
+  {{#if isFiltered}}
+    ({{filteredText}})
+  {{/if}}
 </div>
 <button
   class="pages-control-btn pages-control-next-page-btn"
@@ -41,8 +44,24 @@
 >
   <OneIcon @icon="navigate-last" />
 </button>
-<div class="pages-control-page-size">
-  <span class="pages-control-page-size-number">{{pageSize}}</span>
-  {{tt this "perPage"}}
+<div class={{concat-classes
+  "pages-control-page-size"
+  (if isPerPageDropdownVisible "with-dropdown")
+}}>
+  {{#if isPerPageDropdownVisible}}
+    <OneDropdown
+      @triggerClass="small pages-control-page-size-dropdown"
+      @dropdownClass="small"
+      @options={{array 10 20 50 100}}
+      @selected={{pageSize}}
+      @onChange={{action "changePerPage"}}
+      as |value|
+    >
+      {{value}}
+    </OneDropdown>
+  {{else}}
+    <span class="pages-control-page-size-number">{{pageSize}}</span>
+  {{/if}}
+  {{perPageText}}
 </div>
 {{yield}}
