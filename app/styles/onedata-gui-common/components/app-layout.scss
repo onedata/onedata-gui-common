@@ -427,7 +427,7 @@ $brand-info-height: $one-list-item-line-height;
     border-right: 1px solid $color-one-list-item-separator;
     transition: transition-linear(left);
 
-    // Special style for loader label on tablet screens - in stadard styles
+    // Special style for loader label on tablet screens - in standard styles
     // the text margins are causing text to overflow the narrow sidebar.
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
       .loading-container-label.loading-container-label-lg {
