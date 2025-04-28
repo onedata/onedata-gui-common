@@ -494,9 +494,12 @@ $form-component-view-margin: $padding-base-vertical;
   }
 
   .ember-power-select-option {
+    padding-left: $padding-large-horizontal;
+  }
+
+  .custom-option {
     display: flex;
     justify-content: space-between;
-    padding-left: $padding-large-horizontal;
 
     .custom-option-text {
       opacity: $disabled-opacity;
