@@ -8,6 +8,7 @@
 
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
+import Locale from 'onedata-gui-common/utils/locale';
 
 interface SearchBarSignature {
   Args: {
@@ -17,6 +18,8 @@ interface SearchBarSignature {
 }
 
 export default class SearchBar extends Component<SearchBarSignature> {
+  locale = new Locale('components.searchBar');
+
   @action
   handleInput(event: InputEvent) {
     if (!(event?.target instanceof HTMLInputElement)) {

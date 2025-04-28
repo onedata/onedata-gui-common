@@ -65,6 +65,7 @@ import octaneExample from './onedata-gui-common/components/examples/octane-examp
 import octaneExampleChild from './onedata-gui-common/components/examples/octane-example-child';
 import classicExample from './onedata-gui-common/components/examples/classic-example';
 import sidebarLoadingContainer from './onedata-gui-common/components/sidebar-loading-container';
+import searchBar from './onedata-gui-common/components/search-bar';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -175,6 +176,7 @@ const translations = {
     pagesControl,
     websocketReconnectionModal,
     sidebarLoadingContainer,
+    searchBar,
     alerts: {
       endpointError,
     },
