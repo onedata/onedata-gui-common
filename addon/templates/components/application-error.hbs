@@ -18,7 +18,7 @@
   {{component (concat "errors/" error.type) error=error}}
 {{else}}
   <div class="row absolute-align-middle-center error-row">
-    <OneIcon @tagName="div" @icon="sign-warning-rounded" class="application-error-icon" />
+    <OneIcon @icon="sign-warning-rounded" class="application-error-icon" />
     <div class="application-error-message">
       {{message}}
     </div>

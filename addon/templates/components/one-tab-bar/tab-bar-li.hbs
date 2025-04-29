@@ -1,13 +1,13 @@
-<TruncatedString
-  @tagName="a"
-  class={{concat "nav-link truncate " (if isActive "active")}}
-  @click={{action "anchorClicked"}}
-  @ignoreTouchAction={{true}}
+<a
+  class={{concat-classes "nav-link" (if isActive "active")}}
+  onclick={{action "anchorClicked"}}
 >
-  {{#if item.icon}}
-    <div class="inline-icon-container">
-      <OneIcon @icon={{item.icon}} />
-    </div>
-  {{/if}}
-  <span class="tab-name">{{item.name}}</span>
-</TruncatedString>
+  <TruncatedString>
+    {{#if item.icon}}
+      <div class="inline-icon-container">
+        <OneIcon @icon={{item.icon}} />
+      </div>
+    {{/if}}
+    <span class="tab-name">{{item.name}}</span>
+  </TruncatedString>
+</a>

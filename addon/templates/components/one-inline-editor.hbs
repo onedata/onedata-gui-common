@@ -62,7 +62,7 @@
       </div>
     {{/if}}
   {{else}}
-    <TruncatedString @tagName="span" class="one-label" @click={{action "startEdition"}}>
+    <TruncatedString class="one-label" onclick={{action "startEdition"}}>
       {{#if (and isValueEmpty showEmptyInfo)}}
         <span class="empty-value">{{staticPlaceholder}}</span>
       {{else}}

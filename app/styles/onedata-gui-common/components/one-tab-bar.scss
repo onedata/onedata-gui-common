@@ -111,7 +111,6 @@ $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
     }
     .nav-link {
       padding: $nav-link-padding;
-
       transition: transition-linear(max-width);
     }
     &.apply-truncate {
