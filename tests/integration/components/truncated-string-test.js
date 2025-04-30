@@ -38,6 +38,17 @@ describe('Integration | Component | truncated-string', function () {
     expect(tooltip.textContent.trim()).to.equal(longText);
   });
 
+  it('shows updated tooltip text, when custom tooltip text is updated', async function () {
+    await renderComponent(this, { textContent: longText, customTooltipText: 'foo' });
+    await hoverTruncatedString();
+    const tooltip = find('.tooltip.in');
+    expect(tooltip.textContent.trim()).to.equal('foo');
+
+    this.set('customTooltipText', 'bar');
+
+    expect(tooltip.textContent.trim()).to.equal('bar');
+  });
+
   it('does not show tooltip, when text isTooltipDisabled is true', async function () {
     await renderComponent(this, { textContent: longText, isTooltipDisabled: true });
     await hoverTruncatedString();

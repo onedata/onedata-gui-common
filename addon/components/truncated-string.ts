@@ -62,10 +62,6 @@ export default class TruncatedStringComponent
     return this.args.customTooltipText ?? this.tooltipText;
   }
 
-  updateTooltipText(text: string) {
-    this.tooltipText = text;
-  }
-
   @action
   onMouseEnter(event: Event) {
     const element = event.target;
