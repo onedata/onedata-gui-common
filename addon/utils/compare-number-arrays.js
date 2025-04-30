@@ -36,7 +36,7 @@ export default function compareNumberArrays(a, b) {
     return 0;
   }
   if (a.length > i) {
-    // B is longer
+    // A is longer
     return 1;
   } else {
     return -1;
