@@ -81,11 +81,10 @@ export default class Locale {
     placeholders: Record<string, string | SafeString> = {},
     { usePrefix, defaultValue } = { usePrefix: true, defaultValue: undefined }
   ): SafeString {
-    const translation =
-      this.i18n.t(
-        (usePrefix !== false ? this.tPrefix : '') + translationKey,
-        placeholders
-      );
+    const translation = this.i18n.t(
+      (usePrefix !== false ? this.tPrefix : '') + translationKey,
+      placeholders
+    );
     if (defaultValue !== undefined && isMissingMessage(translation)) {
       return defaultValue;
     } else {

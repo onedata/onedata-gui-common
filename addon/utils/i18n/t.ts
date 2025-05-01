@@ -24,7 +24,7 @@ export function t(
 ): SafeString | null {
   const i18n = getI18nService();
   const translation = i18n?.t(translationPath, placeholders);
-  return (!translation || isMissingMessage(translation)) ? null : translation;
+  return !translation || isMissingMessage(translation) ? null : translation;
 }
 
 export function isI18nAvailable(): boolean {

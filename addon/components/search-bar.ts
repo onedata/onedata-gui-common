@@ -2,7 +2,7 @@
  * Input for search.
  *
  * @author Jakub Liput
- * @copyright (C) 2024 ACK CYFRONET AGH
+ * @copyright (C) 2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -12,7 +12,7 @@ import Locale from 'onedata-gui-common/utils/locale';
 
 interface SearchBarSignature {
   Args: {
-    search: (expression: string) => void,
+    search: (expression: string) => void;
   };
   Element: HTMLInputElement;
 }

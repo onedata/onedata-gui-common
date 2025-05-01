@@ -56,11 +56,8 @@ export enum GroupType {
   RoleHolders = 'role_holders',
 }
 
-export const groupTypesArray: ReadonlyArray<GroupType> =
-  Object.values(GroupType).sort();
+export const groupTypesArray: ReadonlyArray<GroupType> = Object.values(GroupType).sort();
 
-export function translateGroupType(
-  groupType: GroupType
-): SafeString | null {
+export function translateGroupType(groupType: GroupType): SafeString | null {
   return t(`${i18nPrefix}.types.${groupType}`);
 }

@@ -14,14 +14,14 @@ import { action } from '@ember/object';
 import Component from '@glimmer/component';
 
 type OneLabelTipSignagure = {
-  Element: HTMLSpanElement,
+  Element: HTMLSpanElement;
   Args: {
-    title: string,
-    tooltipClass: string | undefined,
-    icon: string | undefined,
-    placement: string | undefined,
-    triggerEvents: string | undefined,
-  },
+    title: string;
+    tooltipClass: string | undefined;
+    icon: string | undefined;
+    placement: string | undefined;
+    triggerEvents: string | undefined;
+  };
 };
 
 export default class OneLabelTip extends Component<OneLabelTipSignagure> {

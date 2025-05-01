@@ -15,22 +15,22 @@ import { tracked } from '@glimmer/tracking';
 
 interface TruncatedStringSignature {
   Args: {
-    isTooltipDisabled: boolean | undefined,
-    customTooltipText: string | SafeString | undefined,
+    isTooltipDisabled: boolean | undefined;
+    customTooltipText: string | SafeString | undefined;
     /**
      * Placement of popover with full text.
      * See Bootstrap 3 docs for available values.
      */
-    tooltipPlacement: string,
-    tooltipOnShown: () => void | undefined,
-    tooltipClass: string | undefined,
+    tooltipPlacement: string;
+    tooltipOnShown: () => void | undefined;
+    tooltipClass: string | undefined;
   };
   Element: HTMLDivElement;
 }
 
-export default class TruncatedStringComponent
-  extends Component<TruncatedStringSignature> {
-
+export default class TruncatedStringComponent //
+  extends Component<TruncatedStringSignature>
+{
   /**
    * If true, tooltip is visible
    */
