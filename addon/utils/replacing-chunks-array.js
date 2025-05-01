@@ -95,6 +95,12 @@ export default ArraySlice.extend(Evented, {
   chunkSize: 24,
 
   /**
+   * Size of fetch used when the jump is done.
+   * @type {number}
+   */
+  jumpChunkSize: 50,
+
+  /**
    * Minimum size of query when doing reload. It it set to the `chunksSize` by default
    * if not specified.
    * @type {number}
@@ -585,7 +591,7 @@ export default ArraySlice.extend(Evented, {
    * index.
    * @returns {Promise}
    */
-  _jump(index, size = 50) {
+  _jump(index, size = this.jumpChunkSize) {
     const {
       sourceArray,
       indexMargin,
