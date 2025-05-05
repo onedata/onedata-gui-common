@@ -20,6 +20,12 @@ import ChunkableListModelReloader from './chunkable-list-model-reloader';
 import _ from 'lodash';
 
 export class ChunkableListModel {
+  /**
+   * Maximum initial size of created chunks array.
+   * @type {number}
+   */
+  initialArraySize = 50;
+
   /** @type {typeof ChunkableListModelFetcher} */
   get ChunkableListModelFetcherClass() {
     return ChunkableListModelFetcher;
@@ -67,7 +73,7 @@ export class ChunkableListModel {
         return this.chunkableListModelFetcher.fetch(index, limit, offset);
       },
       startIndex: 0,
-      endIndex: 50,
+      endIndex: this.initialArraySize,
       indexMargin: 10,
       // TODO: VFS-12726 Remove chunkSize hack that fixes sidebar jump
       chunkSize: 10,
@@ -79,6 +85,7 @@ export class ChunkableListModel {
     this.chunkableListModelReloader = ChunkableListModelReloader.create({
       listModel,
       chunksArray: this.chunksArray,
+      initialArraySize: this.initialArraySize,
     });
   }
 
@@ -95,7 +102,7 @@ export class ChunkableListModel {
       return;
     }
     this.chunkableListModelFetcher.setFilter({ expression, advanced });
-    this.chunkableListModelReloader.handleListChange();
+    this.chunkableListModelReloader.handleListChange({ reset: true });
   }
 }
 
