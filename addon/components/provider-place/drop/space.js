@@ -3,73 +3,69 @@
  * in provider-place/drop component.
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Component from '@ember/component';
-import layout from 'onedata-gui-common/templates/components/provider-place/drop/space';
-import ProviderSpace from 'onedata-gui-common/mixins/components/provider-space';
+import Component from '@glimmer/component';
 import getVisitOneproviderUrl from 'onedata-gui-common/utils/get-visit-oneprovider-url';
-import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { or } from 'ember-awesome-macros';
 
-export default Component.extend(ProviderSpace, {
-  layout,
-  tagName: 'li',
-  classNames: ['provider-place-drop-space'],
+/**
+ * @typedef {Object} ProviderPlaceDropSpaceSignature
+ * @property {HTMLLIElement} Element
+ * @property {ProviderPlaceDropSpaceArgs} Args
+ */
 
-  router: service(),
-  guiUtils: service(),
+/**
+ * @typedef {Object} ProviderPlaceDropSpaceArgs
+ * @property {Models.Provider} provider
+ * @property {Model.Space} space
+ * @property {string} providerVersion
+ */
 
-  /**
-   * @virtual
-   * @type {Models.Provider}
-   */
-  provider: undefined,
+/**
+ * @type {Component<ProviderPlaceDropSpaceSignature>}
+ */
+export default class ProviderPlaceDropSpaceComponent extends Component {
+  @service guiUtils;
+  @service router;
 
-  /**
-   * @virtual
-   * @type {models.Space}
-   */
-  space: undefined,
+  get space() {
+    return this.args.space;
+  }
 
-  /**
-   * @virtual
-   * @type {String}
-   */
-  providerVersion: undefined,
+  get provider() {
+    return this.args.provider;
+  }
 
-  providerId: or('provider.entityId', 'provider.id'),
+  get providerVersion() {
+    return this.args.providerVersion;
+  }
 
-  visitProviderUrl: computed(
-    'provider',
-    'space',
-    'providerVersion',
-    function visitProviderUrl() {
-      const {
-        guiUtils,
-        provider,
-        space,
-        router,
-        providerVersion,
-      } = this.getProperties(
-        'guiUtils',
-        'provider',
-        'space',
-        'router',
-        'providerVersion'
-      );
-      if (providerVersion) {
-        return getVisitOneproviderUrl({
-          guiUtils,
-          router,
-          provider,
-          providerVersion,
-          space,
-        });
-      }
+  get providerId() {
+    return this.provider.entityId || this.provider.id;
+  }
+
+  get supportSize() {
+    if (!this.providerId) {
+      return null;
     }
-  ),
-});
+    return this.space.supportSizes?.[this.providerId] ?? null;
+  }
+
+  get visitProviderUrl() {
+    const { guiUtils, provider, space, router, providerVersion } = this;
+    if (providerVersion) {
+      return getVisitOneproviderUrl({
+        guiUtils,
+        router,
+        provider,
+        providerVersion,
+        space,
+      });
+    } else {
+      return undefined;
+    }
+  }
+}

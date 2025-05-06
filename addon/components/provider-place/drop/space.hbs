@@ -1,0 +1,17 @@
+<li class="provider-place-drop-space">
+  <div class="space-icon item-icon-container">
+    <OneIcon @icon="space" class="item-icon" />
+  </div>
+  <TruncatedString class="space-label">
+    {{#if this.provider.online}}
+      <a href={{this.visitProviderUrl}} class="space-redirect-link">
+        <NameConflict @item={{this.space}} />
+      </a>
+    {{else}}
+      <span class="space-redirect-link">
+        <NameConflict @item={{this.space}} />
+      </span>
+    {{/if}}
+  </TruncatedString>
+  <div class="space-size">{{bytes-to-string this.supportSize}}</div>
+</li>
