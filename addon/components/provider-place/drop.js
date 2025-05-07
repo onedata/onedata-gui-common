@@ -3,20 +3,20 @@
  * visible when clicked. Contains information about provider and its spaces.
  *
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2023 ACK CYFRONET AGH
+ * @copyright (C) 2017-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 
 import { sort, reads } from '@ember/object/computed';
-import { computed, get } from '@ember/object';
+import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import { conditional, raw } from 'ember-awesome-macros';
 import getVisitOneproviderUrl from 'onedata-gui-common/utils/get-visit-oneprovider-url';
-import { promise } from 'ember-awesome-macros';
+import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 
 export default Component.extend(I18n, {
   layout,
@@ -27,6 +27,7 @@ export default Component.extend(I18n, {
   i18n: service(),
   guiUtils: service(),
   router: service(),
+  providerResources: service(),
 
   /**
    * @virtual
@@ -39,6 +40,12 @@ export default Component.extend(I18n, {
    */
   i18nPrefix: 'components.providerPlace.drop',
 
+  /**
+   * Spaces list sort order
+   * @type {Array<string>}
+   */
+  spacesSorting: Object.freeze(['name']),
+
   providerVersion: reads('provider.version'),
 
   oneproviderStatusClass: conditional(
@@ -48,51 +55,21 @@ export default Component.extend(I18n, {
   ),
 
   /**
-   * Spaces list sort order
-   * @type {Array<string>}
-   */
-  _spacesSorting: Object.freeze(['name']),
-
-  /**
-   * PromiseObject proxy to the list of spaces.
-   * @type {Ember.ComputedProperty<PromiseObject<Array<Space>>>}
-   */
-  _spaceListProxy: promise.object(computed('provider.spaceList',
-    function _spaceListProxy() {
-      return this.get('provider.spaceList').then(spaceList =>
-        get(spaceList, 'list')
-      );
-    }
-  )),
-
-  /**
-   * Error occurred while loading list of spaces.
-   * @type {*}
-   */
-  _spaceListError: reads('_spaceListProxy.reason'),
-
-  /**
    * True if data for each space of provider is loaded (eg. support info)
    * @type {Ember.ComputedProperty<boolean>}
    */
-  _spacesLoading: reads('_spaceListProxy.isPending'),
-
-  /**
-   * One-way alias to space list record
-   * @type {Ember.ComputedProperty<Array<models/Space><}
-   */
-  _spaceList: reads('_spaceListProxy.content'),
+  isListLoading: reads('listProxy.isPending'),
 
   /**
    * Sorted array of spaces
-   * @type {Ember.ComputedProperty<Array<models/Space>>}
+   * @type {Ember.ComputedProperty<Array<Models.Space>>}
    */
-  _spacesSorted: sort('_spaceList', '_spacesSorting'),
+  spacesSorted: sort('spaces', 'spacesSorting'),
 
   /**
    * @type {ComputedProperty<Models.Space>}
    */
-  firstSpace: reads('_spacesSorted.firstObject'),
+  firstSpace: reads('spacesSorted.firstObject'),
 
   visitProviderUrl: computed(
     'provider',
@@ -105,14 +82,8 @@ export default Component.extend(I18n, {
         firstSpace,
         router,
         providerVersion,
-      } = this.getProperties(
-        'guiUtils',
-        'provider',
-        'firstSpace',
-        'router',
-        'providerVersion'
-      );
-      if (providerVersion) {
+      } = this;
+      if (firstSpace && providerVersion) {
         return getVisitOneproviderUrl({
           guiUtils,
           router,
@@ -124,13 +95,55 @@ export default Component.extend(I18n, {
     }
   ),
 
+  chunkableListModelProxy: computed('provider', function chunkableListModelProxy() {
+    return promiseObject(
+      this.providerResources.resolveChunkableSpaceListModel(this.provider)
+    );
+  }),
+
+  chunkableListModel: reads('chunkableListModelProxy.content'),
+
+  spaceListLoadingLabel: computed(
+    'chunkableListModel.progressTracker.progress',
+    function spaceListLoadingLabel() {
+      if (!this.chunkableListModel?.progressTracker) {
+        return this.t('loadingSpaces');
+      }
+      const percentage = Math.floor(
+        (this.chunkableListModel.progressTracker.progress || 0) * 100
+      );
+      return this.t('loadingSpacesPercentage', {
+        percentage: percentage,
+      });
+    }
+  ),
+
+  isVisitProviderButtonShown: computed(
+    'isListLoading',
+    function isVisitProviderButtonShown() {
+      return !this.isListLoading;
+    }
+  ),
+
+  listProxy: computed('chunkableListModelProxy', function listProxy() {
+    const promise = (async () => {
+      const chunkableListModel = await this.chunkableListModelProxy;
+      await chunkableListModel.chunksArray.initialLoad;
+      // FIXME: używać chunks arraya do infinite scroll
+      return chunkableListModel.listModel.list.toArray();
+    })();
+    return promiseObject(promise);
+  }),
+
+  spaces: reads('listProxy.content'),
+
   actions: {
     copySuccess() {
-      this.get('globalNotify').info(this.t('hostnameCopySuccess'));
+      this.globalNotify.info(this.t('hostnameCopySuccess'));
     },
 
     copyError() {
-      this.get('globalNotify').info(this.t('hostnameCopyError'));
+      this.globalNotify.info(this.t('hostnameCopyError'));
     },
   },
 });
