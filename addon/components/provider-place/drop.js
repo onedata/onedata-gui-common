@@ -18,6 +18,7 @@ import { conditional, raw } from 'ember-awesome-macros';
 import getVisitOneproviderUrl from 'onedata-gui-common/utils/get-visit-oneprovider-url';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
+import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 export default Component.extend(I18n, {
   layout,
@@ -146,6 +147,7 @@ export default Component.extend(I18n, {
     this._super(...arguments);
     (async () => {
       const chunksArray = await this.listProxy;
+      await waitForRender();
       const infiniteScroll = InfiniteScroll.create({
         entries: chunksArray,
         // Should be the same as .provider-place-drop-space height style.
