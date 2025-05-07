@@ -17,6 +17,7 @@ import I18n from 'onedata-gui-common/mixins/i18n';
 import { conditional, raw } from 'ember-awesome-macros';
 import getVisitOneproviderUrl from 'onedata-gui-common/utils/get-visit-oneprovider-url';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
+import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
 
 export default Component.extend(I18n, {
   layout,
@@ -45,6 +46,11 @@ export default Component.extend(I18n, {
    * @type {Array<string>}
    */
   spacesSorting: Object.freeze(['name']),
+
+  /**
+   * @type {Utils.InfiniteScroll}
+   */
+  infiniteScroll: undefined,
 
   providerVersion: reads('provider.version'),
 
@@ -129,13 +135,37 @@ export default Component.extend(I18n, {
     const promise = (async () => {
       const chunkableListModel = await this.chunkableListModelProxy;
       await chunkableListModel.chunksArray.initialLoad;
-      // FIXME: używać chunks arraya do infinite scroll
-      return chunkableListModel.listModel.list.toArray();
+      return chunkableListModel.chunksArray;
     })();
     return promiseObject(promise);
   }),
 
   spaces: reads('listProxy.content'),
+
+  didInsertElement() {
+    this._super(...arguments);
+    (async () => {
+      const chunksArray = await this.listProxy;
+      const infiniteScroll = InfiniteScroll.create({
+        entries: chunksArray,
+        // Should be the same as .provider-place-drop-space height style.
+        singleRowHeight: 28,
+      });
+      this.set('infiniteScroll', infiniteScroll);
+      infiniteScroll.mount(this.element.querySelector('.space-list-scroll-container'));
+    })();
+  },
+
+  /**
+   * @override
+   */
+  willDestroy() {
+    try {
+      this.infiniteScroll?.destroy();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   actions: {
     copySuccess() {

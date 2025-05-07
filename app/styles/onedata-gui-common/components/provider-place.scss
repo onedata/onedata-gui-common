@@ -306,6 +306,8 @@ $super-circle-animation-duration: 2s;
         }
         .provider-place-drop-space {
           position: relative;
+          // Should be the same as <ProviderPlace::Drop> singleRowHeight for
+          // InfiniteScroll.
           height: 28px;
           padding-top: 0;
           padding-bottom: 0;

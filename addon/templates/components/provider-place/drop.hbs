@@ -42,13 +42,15 @@
     {{provider.location}}
   </div> --}}
   <div class="loadable-row sm spaces-list">
-    <PerfectScrollbarElement class="full-height relative">
+    <PerfectScrollbarElement class="full-height relative space-list-scroll-container">
       <PromiseProxyContainer
         @proxy={{this.listProxy}}
         @loadingLabel={{this.spaceListLoadingLabel}}
         @sizeClass="sm"
       >
         <ul class="spaces-items">
+          <li class="table-start-row"></li>
+          <li class="first-row" style={{this.infiniteScroll.firstRowModel.style}}></li>
           {{#each this.spacesSorted as |space|}}
             <ProviderPlace::Drop::Space
               @space={{space}}
