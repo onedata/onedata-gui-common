@@ -306,23 +306,23 @@ $super-circle-animation-duration: 2s;
         }
         .provider-place-drop-space {
           position: relative;
-          padding: 1.2 * $padding-small-vertical 4.5em 1.2 * $padding-small-vertical 2.5em;
+          height: 28px;
+          padding-top: 0;
+          padding-bottom: 0;
+          display: flex;
+          align-items: center;
           .space-icon {
-            position: absolute;
-            left: 0;
-            top: 4px;
             .oneicon {
               font-size: 170%;
             }
           }
           .space-size {
-            position: absolute;
-            top: 6px;
-            right: 0;
+            flex-grow: 1;
+            flex-shrink: 0;
+            padding-left: 0.5em;
             overflow: hidden;
             text-align: right;
             text-overflow: clip;
-            vertical-align: inherit;
             white-space: nowrap;
             color: $color-one-light-gray;
             font-size: 80%;
