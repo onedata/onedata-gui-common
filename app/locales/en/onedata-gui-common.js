@@ -130,7 +130,6 @@ const translations = {
     authenticationErrorModal,
     sidebarClusters,
     clipboardLine,
-    providersMapTile,
     userAccountButtonBase,
     brandInfo,
     jsonEditor,
