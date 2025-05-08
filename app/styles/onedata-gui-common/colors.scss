@@ -51,3 +51,7 @@ $color-file: #596E99;
 $color-symlink: darken($color-one-azure, 10%);
 $color-file-selected: lighten(#E5E9F1, 3%);
 $color-file-highlighted: $color-highlight;
+
+$color-provider-online: $color-one-mint;
+$color-provider-offline: $color-one-red;
+$color-provider-mixed: $color-one-yellow;

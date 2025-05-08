@@ -46,7 +46,6 @@ export default [
   'proceed-process-modal',
   'promise-proxy-container',
   'provider-spaces-support-chart',
-  'providers-map-tile',
   'query-builder',
   'remove-icon',
   'resource-load-error',
