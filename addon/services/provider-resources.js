@@ -8,6 +8,7 @@
 
 import Service, { inject as service } from '@ember/service';
 import ChunkableListModel from 'onedata-gui-common/utils/chunkable-list-model';
+import { Mutex } from 'async-mutex';
 
 export default class ProviderResourcesService extends Service {
   @service batchRequestRegistry;
@@ -19,6 +20,8 @@ export default class ProviderResourcesService extends Service {
    */
   chunkableSpaceListsCache = new Map();
 
+  spaceListResolverMutex = new Mutex();
+
   /**
    * @param {Models.Provider} provider
    * @returns {Promise<ChunkableListModel>}
@@ -29,14 +32,19 @@ export default class ProviderResourcesService extends Service {
         'ProviderResources.resolveChunkableSpaceListModel: provider argument is mandatory'
       );
     }
-    if (!this.chunkableSpaceListsCache.has(provider)) {
-      const spaceList = await provider.spaceList;
-      const chunkableListModel = new ChunkableListModel({
-        listModel: spaceList,
-        batchRequestRegistry: this.batchRequestRegistry,
-      });
-      this.chunkableSpaceListsCache.set(provider, chunkableListModel);
+    await this.spaceListResolverMutex.acquire();
+    try {
+      if (!this.chunkableSpaceListsCache.has(provider)) {
+        const spaceList = await provider.spaceList;
+        const chunkableListModel = new ChunkableListModel({
+          listModel: spaceList,
+          batchRequestRegistry: this.batchRequestRegistry,
+        });
+        this.chunkableSpaceListsCache.set(provider, chunkableListModel);
+      }
+      return this.chunkableSpaceListsCache.get(provider);
+    } finally {
+      this.spaceListResolverMutex.release();
     }
-    return this.chunkableSpaceListsCache.get(provider);
   }
 }
