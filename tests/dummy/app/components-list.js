@@ -45,7 +45,6 @@ export default [
   'perfect-scrollbar-element',
   'proceed-process-modal',
   'promise-proxy-container',
-  'provider-place',
   'provider-spaces-support-chart',
   'providers-map-tile',
   'query-builder',
