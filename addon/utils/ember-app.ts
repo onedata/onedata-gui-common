@@ -25,5 +25,5 @@ export function lookupInEmberApp<T>(lookupString: `${string}:${string}`): T | nu
     return null;
   }
 
-  return (app.lookup(lookupString) ?? null) as (T | null);
+  return (app.lookup(lookupString) ?? null) as T | null;
 }

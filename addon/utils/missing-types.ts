@@ -15,6 +15,6 @@ export type SafeString = ReturnType<typeof htmlSafe>;
 export type I18nService = {
   t(
     translationPath: string,
-    placeholders?: Record<string, string | SafeString>,
+    placeholders?: Record<string, string | SafeString>
   ): SafeString;
 };

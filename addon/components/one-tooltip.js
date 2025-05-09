@@ -3,7 +3,7 @@
  *
  * Typical usage:
  * ```
- * {{one-tooltip title="tooltip text" placement="top"}}
+ * <OneTooltip @title="tooltip text" @placement="top" />
  * ```
  *
  * @author Michał Borzęcki

@@ -4,36 +4,44 @@ import { describe, it } from 'mocha';
 import globals, { GlobalName } from 'onedata-gui-common/utils/globals';
 import _ from 'lodash';
 
-const nativeGlobals = [{
-  name: GlobalName.Window,
-  global: window,
-  exampleProperty: 'document',
-}, {
-  name: GlobalName.Document,
-  global: document,
-  exampleProperty: 'body',
-}, {
-  name: GlobalName.Location,
-  global: location,
-  exampleProperty: 'hostname',
-}, {
-  name: GlobalName.LocalStorage,
-  global: localStorage,
-  exampleProperty: 'length',
-}, {
-  name: GlobalName.SessionStorage,
-  global: sessionStorage,
-  exampleProperty: 'length',
-}, {
-  name: GlobalName.Fetch,
-  global: fetch,
-  exampleProperty: undefined,
-}] as const;
+const nativeGlobals = [
+  {
+    name: GlobalName.Window,
+    global: window,
+    exampleProperty: 'document',
+  },
+  {
+    name: GlobalName.Document,
+    global: document,
+    exampleProperty: 'body',
+  },
+  {
+    name: GlobalName.Location,
+    global: location,
+    exampleProperty: 'hostname',
+  },
+  {
+    name: GlobalName.LocalStorage,
+    global: localStorage,
+    exampleProperty: 'length',
+  },
+  {
+    name: GlobalName.SessionStorage,
+    global: sessionStorage,
+    exampleProperty: 'length',
+  },
+  {
+    name: GlobalName.Fetch,
+    global: fetch,
+    exampleProperty: undefined,
+  },
+] as const;
 
 describe('Unit | Utility | globals', function () {
   nativeGlobals.forEach(({ name, global, exampleProperty }, idx) => {
-    const otherNativeGlobals = nativeGlobals
-      .filter((elem) => elem !== nativeGlobals[idx]);
+    const otherNativeGlobals = nativeGlobals.filter(
+      (elem) => elem !== nativeGlobals[idx]
+    );
 
     it(`provides ${name} global`, function () {
       expectIsNative(name, globals[name]);
@@ -48,14 +56,16 @@ describe('Unit | Utility | globals', function () {
         const globalToCheck = globals[name];
         const nativeGlobalToCheck = globals[
           `native${_.upperFirst(name)}` as keyof typeof globals
-        ] as typeof window[GlobalName];
-        expect(globalToCheck[propName as keyof typeof globalToCheck])
-          .to.equal(mock[propName as keyof typeof mock]);
-        expect(nativeGlobalToCheck[propName as keyof typeof nativeGlobalToCheck])
-          .to.be.undefined;
+        ] as (typeof window)[GlobalName];
+        expect(globalToCheck[propName as keyof typeof globalToCheck]).to.equal(
+          mock[propName as keyof typeof mock]
+        );
+        expect(nativeGlobalToCheck[propName as keyof typeof nativeGlobalToCheck]).to.be
+          .undefined;
         if (exampleProperty) {
-          expect(globalToCheck[exampleProperty as keyof typeof globalToCheck])
-            .to.equal(global[exampleProperty as keyof typeof global]);
+          expect(globalToCheck[exampleProperty as keyof typeof globalToCheck]).to.equal(
+            global[exampleProperty as keyof typeof global]
+          );
         }
       });
       otherNativeGlobals.forEach(({ name: otherName }) => {

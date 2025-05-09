@@ -1,0 +1,21 @@
+<div
+  {{did-insert this.didInsertNode}}
+  class="truncated-string truncate"
+  ...attributes
+>
+  {{yield}}
+  {{#unless this.isTooltipDisabled}}
+    <RenderLater @triggerRender={{this.isTooltipShown}} as |renderLater|>
+      <OneTooltip
+        class={{this.tooltipClass}}
+        @autoPlacement={{true}}
+        @placement={{this.tooltipPlacement}}
+        @title={{this.tooltipTitle}}
+        @triggerEvents=""
+        @visible={{this.isTooltipShown}}
+        @onHidden={{renderLater.resetRenderTrigger}}
+        @onShown={{this.handleTooltipShown}}
+      />
+    </RenderLater>
+  {{/unless}}
+</div>

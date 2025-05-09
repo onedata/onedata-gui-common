@@ -2,8 +2,11 @@ import { expect } from 'chai';
 import { describe, it, context } from 'mocha';
 import State from 'onedata-gui-common/utils/one-time-series-chart/state';
 import Point from 'onedata-gui-common/utils/one-time-series-chart/point';
+import { setupTest } from 'ember-mocha';
 
-describe('Unit | Utility | one-time-series-chart/state', function () {
+describe('Integration | Utility | one-time-series-chart/state', function () {
+  setupTest();
+
   testStateContainsCopiedProperty({
     propName: 'title',
     value: {
