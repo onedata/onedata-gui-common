@@ -6,11 +6,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-const urlRegexp: RegExp = /((http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-]))/g;
+const urlRegexp: RegExp =
+  /((http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-]))/g;
 
 type AnchorizeTextOptions = {
-  class: string,
-  target: '_blank'|'_self'|'_parent'|'_top',
+  class: string;
+  target: '_blank' | '_self' | '_parent' | '_top';
 };
 
 export function anchorizeText(text: string, options: AnchorizeTextOptions): string {

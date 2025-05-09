@@ -8,9 +8,9 @@
 {{#if (or section.title section.titleTip isChartNavigationShared)}}
   <div class="section-header">
     {{#if section.title}}
-      <TruncatedString @tagName="h3" class="section-title">
-        {{section.title}}
-      </TruncatedString>
+      <h3 class="section-title">
+        <TruncatedString>{{section.title}}</TruncatedString>
+      </h3>
     {{/if}}
     {{#if section.titleTip}}
       <OneLabelTip class="section-title-tip" @tooltipClass="tooltip-lg">

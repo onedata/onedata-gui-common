@@ -55,6 +55,7 @@ export default [
   'status-toolbar',
   'support-size-info',
   'tags-input',
+  'truncated-string',
   'workflow-visualiser',
   'workflow-visualiser/lane/run-indicator',
   'workflow-visualiser/lane/runs-list',

@@ -35,11 +35,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { I18nService, SafeString } from 'onedata-gui-common/utils/missing-types';
 import { getI18nService } from 'onedata-gui-common/utils/i18n/t';
 import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
 
 export default class Locale {
-  static createPrefix(i18nPrefix) {
+  static createPrefix(i18nPrefix: string) {
     if (i18nPrefix) {
       return i18nPrefix.endsWith('.') ? i18nPrefix : i18nPrefix + '.';
     } else {
@@ -47,14 +48,11 @@ export default class Locale {
     }
   }
 
-  /** @type {Ember.Service} */
-  #i18n;
+  #i18n: I18nService;
 
-  /** @type {string} */
-  #i18nPrefix;
+  #i18nPrefix: string;
 
-  /** @type {string} */
-  #tPrefix;
+  #tPrefix: string;
 
   get i18nPrefix() {
     return this.#i18nPrefix;
@@ -68,7 +66,7 @@ export default class Locale {
     return this.#i18n;
   }
 
-  constructor(i18nPrefix) {
+  constructor(i18nPrefix: string) {
     this.#i18n = getI18nService();
     this.#i18nPrefix = i18nPrefix;
     this.#tPrefix = Locale.createPrefix(i18nPrefix);
@@ -76,24 +74,17 @@ export default class Locale {
 
   /**
    * Translate text using i18n service, using optional i18nPrefix
-   * @param {string} translationKey
-   * @param {object} placeholders
-   * @param {boolean} options.usePrefix
-   * @param {any} options.defaultValue
-   * @returns {SafeString} string translated by 18n service
+   * @returns string translated by 18n service
    */
   t(
-    translationKey,
-    placeholders = {}, { usePrefix, defaultValue } = {
-      usePrefix: true,
-      defaultValue: undefined,
-    }
-  ) {
-    const translation =
-      this.i18n.t(
-        (usePrefix !== false ? this.tPrefix : '') + translationKey,
-        placeholders
-      );
+    translationKey: string,
+    placeholders: Record<string, string | SafeString> = {},
+    { usePrefix, defaultValue } = { usePrefix: true, defaultValue: undefined }
+  ): SafeString {
+    const translation = this.i18n.t(
+      (usePrefix !== false ? this.tPrefix : '') + translationKey,
+      placeholders
+    );
     if (defaultValue !== undefined && isMissingMessage(translation)) {
       return defaultValue;
     } else {

@@ -510,6 +510,10 @@ a,
   resize: none;
 }
 
+.inline-code-like {
+  @extend code;
+}
+
 textarea.no-resize  {
   resize: none;
 }
