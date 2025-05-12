@@ -56,7 +56,12 @@
       </OneWebuiPopover>
     </RenderLater>
   {{else}}
-    <TruncatedString class="task-name">{{this.name}}</TruncatedString>
+    <TruncatedString
+      id={{this.taskNameElementId}}
+      class="task-name"
+    >
+      {{this.name}}
+    </TruncatedString>
   {{/if}}
 </OneDraggableObject>
 {{#if (eq mode "view")}}

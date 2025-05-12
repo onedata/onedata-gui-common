@@ -1,7 +1,3 @@
-$color-oneprovider-online: $color-one-mint;
-$color-oneprovider-offline: $color-one-red;
-$color-oneprovider-mixed: $color-one-yellow;
-
 .oneprovider-map-circle {
   position: relative;
   border-radius: 50%;
@@ -18,18 +14,18 @@ $color-oneprovider-mixed: $color-one-yellow;
   }
 
   &.offline {
-    border-color: $color-oneprovider-offline;
-    color: $color-oneprovider-offline;
+    border-color: $color-provider-offline;
+    color: $color-provider-offline;
     &.selected {
-      background-color: $color-oneprovider-offline;
+      background-color: $color-provider-offline;
     }
   }
 
   &.mixed {
-    border-color: $color-oneprovider-mixed;
-    color: $color-oneprovider-mixed;
+    border-color: $color-provider-mixed;
+    color: $color-provider-mixed;
     &.selected {
-      background-color: $color-oneprovider-mixed;
+      background-color: $color-provider-mixed;
     }
   }
 

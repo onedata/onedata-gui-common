@@ -198,6 +198,10 @@ export default VisualiserElement.extend({
     }
   ),
 
+  taskNameElementId: computed('elementId', function taskNameElementId() {
+    return `${this.elementId}-task-name`;
+  }),
+
   /**
    * @override
    */

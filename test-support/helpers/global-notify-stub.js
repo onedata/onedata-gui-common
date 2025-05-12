@@ -12,5 +12,20 @@ export default Service.extend({
   warning: aliasToShow('warning'),
   error: aliasToShow('error'),
 
-  show() {},
+  show(type, message) {
+    const property = `${type}Messages`;
+    if (!this[property]) {
+      this.set(property, []);
+    }
+    this[property].push(message);
+  },
+
+  _clearMessages() {
+    for (const type of ['info', 'success', 'warning', 'error']) {
+      const property = `${type}Messages`;
+      if (this[property]) {
+        this.set(property, []);
+      }
+    }
+  },
 });
