@@ -51,8 +51,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     this.field.destroy();
   });
 
-  it(
-    'has class "dropdown-field"',
+  it('has class "dropdown-field"',
     async function () {
       await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
@@ -60,8 +59,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     }
   );
 
-  it(
-    'renders three dropdown options',
+  it('renders three dropdown options',
     async function () {
       await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
@@ -85,8 +83,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     }
   );
 
-  it(
-    'can be disabled',
+  it('can be disabled',
     async function () {
       this.set('field.isEnabled', false);
 
@@ -97,8 +94,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     }
   );
 
-  it(
-    'notifies field object about lost focus',
+  it('notifies field object about lost focus',
     async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
@@ -112,8 +108,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     }
   );
 
-  it(
-    'notifies field object about changed value',
+  it('notifies field object about changed value',
     async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
@@ -144,8 +139,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     expect(dropdownTrigger).to.have.attr('id', 'abc');
   });
 
-  it(
-    'shows placeholder specified in field',
+  it('shows placeholder specified in field',
     async function () {
       this.get('i18nStub')
         .withArgs('somePrefix.field1.placeholder')
@@ -158,8 +152,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     }
   );
 
-  it(
-    'shows search input by default',
+  it('shows search input by default',
     async function () {
       await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
 
@@ -180,8 +173,7 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     expect(options[0].querySelector('.text')).to.have.trimmed.text('Second');
   });
 
-  it(
-    'does not show search input if field "showSearch" is false',
+  it('does not show search input if field "showSearch" is false',
     async function () {
       this.set('field.showSearch', false);
       await render(hbs `<FormComponent::DropdownField @field={{field}} />`);
@@ -224,5 +216,58 @@ describe('Integration | Component | form-component/dropdown-field', function () 
     expect(find('.ember-basic-dropdown-trigger')).to.have.class('small');
     expect(find('.ember-basic-dropdown-content'))
       .to.have.class('small');
+  });
+
+  it('renders record name with conflict if useRecordLabel option is true', async function () {
+    // given
+    const field = this.get('field');
+    field.options[0].value = { name: 'n-1', conflictLabel: 'aaa' };
+    field.options[1].value = { name: 'n-1', conflictLabel: 'bbb' };
+    field.options[2].value = { name: 'n-1', conflictLabel: 'ccc' };
+
+    // when
+    await render(hbs`<FormComponent::DropdownField
+      @field={{this.field}}
+      @useRecordLabel={{true}}
+    />`);
+    await clickTrigger('.dropdown-field');
+    const options = findAll('.ember-power-select-option');
+    [{
+      label: 'n-1@aaa',
+      icon: 'space',
+    }, {
+      label: 'n-1@bbb',
+    }, {
+      label: 'n-1@ccc',
+    }].forEach(({ label, icon }, index) => {
+      const option = options[index];
+      expect(option.querySelector('.text')).to.have.trimmed.text(label);
+      if (icon) {
+        expect(option.querySelector('.one-icon')).to.have.class(`oneicon-${icon}`);
+      }
+    });
+  });
+
+  it('does not render record name with conflict by default', async function () {
+    // given
+    const field = this.get('field');
+    field.options[0].value = { name: 'n-1', conflictLabel: 'aaa' };
+    field.options[1].value = { name: 'n-1', conflictLabel: 'bbb' };
+    field.options[2].value = { name: 'n-1', conflictLabel: 'ccc' };
+
+    // when
+    await render(hbs`<FormComponent::DropdownField @field={{this.field}} />`);
+    await clickTrigger('.dropdown-field');
+    const options = findAll('.ember-power-select-option');
+    [{
+      label: 'First',
+    }, {
+      label: 'Second',
+    }, {
+      label: 'Third',
+    }].forEach(({ label }, index) => {
+      const option = options[index];
+      expect(option.querySelector('.text')).to.have.trimmed.text(label);
+    });
   });
 });

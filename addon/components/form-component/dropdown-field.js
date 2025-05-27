@@ -31,6 +31,11 @@ export default FieldComponentBase.extend({
   placeholder: reads('field.placeholder'),
 
   /**
+   * @type {ComputedProperty<boolean>}
+   */
+  useRecordLabel: reads('field.useRecordLabel'),
+
+  /**
    * @type {ComputedProperty<FieldOption>}
    */
   selectedOption: computed(
