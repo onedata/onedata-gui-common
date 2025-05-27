@@ -34,10 +34,12 @@
               class="advanced-filters-collapse"
               @collapsed={{not areAdvancedFiltersVisible}}
             >
-              {{component advancedFiltersComponent
-                collection=sortedCollection
-                onChange=(action "setAdvancedFilter")
-              }}
+              {{#let (component advancedFiltersComponent) as |advancedFiltersComponent|}}
+                <advancedFiltersComponent
+                  @collection={{this.sortedCollection}}
+                  @onChange={{action "setAdvancedFilter"}}
+                />
+              {{/let}}
             </OneCollapse>
           {{/if}}
         </div>
