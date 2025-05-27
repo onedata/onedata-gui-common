@@ -32,7 +32,11 @@
         <OneIcon @icon={{option.icon}} />
       {{/if}}
       <TruncatedString class="text">
+      {{#if option.value.conflictLabel}}
+        <NameConflict @item={{option.value}} />
+      {{else}}
         {{option.label}}
+      {{/if}}
       </TruncatedString>
     </div>
   </OneDropdown>
