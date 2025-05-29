@@ -18,14 +18,16 @@
 {{/each}}
 {{#if isCreatingTag}}
   <li class="tag-creator">
-    {{component tagEditorComponentName
-      class="input-element"
-      settings=tagEditorSettings
-      selectedTags=tags
-      tagsLimit=tagsLimitForEditor
-      onEndTagCreation=(action "endTagCreation")
-      onTagsAdded=(action "newTagsAdded")
-    }}
+    {{#let (component this.tagEditorComponentName) as |tagEditorComponent|}}
+      <tagEditorComponent
+        class="input-element"
+        @settings={{this.tagEditorSettings}}
+        @selectedTags={{this.tags}}
+        @tagsLimit={{this.tagsLimitForEditor}}
+        @onEndTagCreation={{action "endTagCreation"}}
+        @onTagsAdded={{action "newTagsAdded"}}
+      />
+    {{/let}}
   </li>
 {{/if}}
 {{#if allowModification}}

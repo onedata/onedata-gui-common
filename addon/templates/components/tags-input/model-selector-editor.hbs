@@ -53,7 +53,11 @@
     </BsButtonGroup>
     <hr class="content-separator">
     {{#if (eq selectedView "list")}}
-      <PromiseProxyContainer @proxy={{recordsProxy}} @sizeClass="sm">
+      <PromiseProxyContainer
+        @proxy={{this.recordsProxy}}
+        @sizeClass="sm"
+        @loadingLabel={{this.modelListLoadingLabel}}
+      >
         {{#if isAllRecordsSelectedDescriptionVisible}}
           <p class="all-records-added-description">
             {{tt this (concat "allRecordsAdded." selectedModelName)}}

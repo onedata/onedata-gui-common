@@ -3,8 +3,8 @@
  * model records. Available models are: user, group, oneprovider, service (op and oz),
  * serviceOnepanel (opp and ozp).
  *
- * @author Michał Borzęcki
- * @copyright (C) 2020-2024 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2020-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -25,13 +25,36 @@ import { resolve } from 'rsvp';
 import { promise, array, raw, isEmpty } from 'ember-awesome-macros';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 
-const supportedModels = [
+/**
+ * @typedef {'user'|'group'|'provider'|'service'|'serviceOnepanel'} ModelSelectorEditorModelName
+ */
+
+/**
+ * @type {Array<ModelSelectorEditorModelName>}
+ */
+const supportedModels = Object.freeze([
   'user',
   'group',
   'provider',
   'service',
   'serviceOnepanel',
-];
+]);
+
+/**
+ * @typedef {Object} ModelSelectorEditorSettings
+ * @property {Array<ModelSelectorEditorModelSpec>} models Array of models specifications,
+ *   which should be used to construct list of record. Order of models in dropdown model
+ *   selector will be the same as in this array.
+ * @property {string|SafeString} [modelListLoadingLabel] Custom text that will be rendered
+ *   under loading spinner. If undefined, a standard text from i18n will be rendered.
+ */
+
+/**
+ * @typedef {Object} ModelSelectorEditorModelSpec
+ * @property {ModelSelectorEditorModelName} name
+ * @property {() => Promise<Array<DS.Model>>} getRecords Returns a Promise which should
+ *   resolve to an array of model records.
+ */
 
 /**
  * Removes tags, which are redundant due to existence of "all records" tags.
@@ -146,18 +169,7 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Object}
-   *
-   * Supported settings: {
-   *   models: Array<Object> - array of models specifications, which should be used
-   *     to construct list of record. Order of models in dropdown model selector
-   *     will be the same as in this array.
-   * }
-   * Each model specification is an object: {
-   *   name: String, - one of: user, group, provider, service, serviceOnepanel
-   *   getRecords: Function - returns a Promise which should resolve to
-   *     an array of model records
-   * }
+   * @type {ModelSelectorEditorSettings}
    */
   settings: undefined,
 
@@ -385,6 +397,13 @@ export default Component.extend(I18n, {
       return tagsToRender.filter(tag =>
         String(get(tag, 'label')).trim().toLocaleLowerCase().includes(filter)
       );
+    }
+  ),
+
+  modelListLoadingLabel: computed(
+    'settings.modelListLoadingLabel',
+    function modelListLoadingLabel() {
+      return this.settings?.modelListLoadingLabel ?? this.t('gatheringEntities');
     }
   ),
 

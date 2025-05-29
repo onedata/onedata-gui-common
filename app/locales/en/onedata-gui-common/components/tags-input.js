@@ -43,6 +43,7 @@ export default {
       serviceOnepanel: 'Oneprovider ID',
     },
     addId: 'Add ID',
+    gatheringEntities: 'Gathering available entities...',
   },
   timeSeriesMetricEditor: {
     tag: {
