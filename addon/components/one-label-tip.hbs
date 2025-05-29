@@ -1,0 +1,20 @@
+<span class="one-label-tip" ...attributes>
+  <OneIcon @icon={{this.icon}}>
+    {{#if hasBlock}}
+      <OneTooltip
+        class={{this.tooltipClassInternal}}
+        @placement={{this.placement}}
+        @triggerEvents={{this.triggerEvents}}
+      >
+        {{yield}}
+      </OneTooltip>
+    {{else}}
+      <OneTooltip
+        class={{this.tooltipClassInternal}}
+        @title={{this.title}}
+        @placement={{this.placement}}
+        @triggerEvents={{this.triggerEvents}}
+      />
+    {{/if}}
+  </OneIcon>
+</span>

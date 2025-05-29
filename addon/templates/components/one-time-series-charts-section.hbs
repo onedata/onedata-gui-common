@@ -1,9 +1,9 @@
 {{#if (or titleContent titleTip isSharedNavVisible)}}
   <div class="section-header">
     {{#if titleContent}}
-      <TruncatedString @tagName="h3" class="section-title">
-        {{titleContent}}
-      </TruncatedString>
+      <h3 class="section-title">
+        <TruncatedString>{{titleContent}}</TruncatedString>
+      </h3>
     {{/if}}
     {{#if titleTip}}
       <OneLabelTip class="section-title-tip" @tooltipClass="tooltip-lg">

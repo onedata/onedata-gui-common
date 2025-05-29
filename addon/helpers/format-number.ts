@@ -17,8 +17,8 @@ import numberFormatter from 'number-formatter';
 import { SafeString } from 'onedata-gui-common/utils/missing-types';
 
 type FormatNumberOptions = {
-  format?: string,
-  allowHtml?: boolean,
+  format?: string;
+  allowHtml?: boolean;
 };
 
 // Many `#` for fractional part to handle any meaningful fraction length.
@@ -28,10 +28,7 @@ export function formatNumber(
   number: number,
   options: FormatNumberOptions & { allowHtml: false }
 ): string;
-export function formatNumber(
-  number: number,
-  options?: FormatNumberOptions
-): SafeString;
+export function formatNumber(number: number, options?: FormatNumberOptions): SafeString;
 export function formatNumber(
   number: number,
   options?: FormatNumberOptions

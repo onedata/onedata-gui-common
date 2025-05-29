@@ -10,8 +10,12 @@ import { lookupInEmberApp } from 'onedata-gui-common/utils/ember-app';
 import { isMissingMessage } from './missing-message';
 import { I18nService, SafeString } from 'onedata-gui-common/utils/missing-types';
 
-export function getI18nService(): I18nService | null {
-  return lookupInEmberApp<I18nService>('service:i18n');
+export function getI18nService(): I18nService {
+  const i18n = lookupInEmberApp<I18nService>('service:i18n');
+  if (!i18n) {
+    throw new Error('utils.18n.t: cannot resolve global i18n service');
+  }
+  return i18n;
 }
 
 export function t(
@@ -20,7 +24,7 @@ export function t(
 ): SafeString | null {
   const i18n = getI18nService();
   const translation = i18n?.t(translationPath, placeholders);
-  return (!translation || isMissingMessage(translation)) ? null : translation;
+  return !translation || isMissingMessage(translation) ? null : translation;
 }
 
 export function isI18nAvailable(): boolean {

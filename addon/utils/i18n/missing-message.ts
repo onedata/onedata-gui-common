@@ -24,6 +24,6 @@ export function isMissingMessage(message: SafeString | string): boolean {
   }
 }
 
-export default function (locale: string, key: string /*, context*/ ): string {
+export default function (locale: string, key: string /*, context */): string {
   return `<missing-${locale}: ${key}>`;
 }

@@ -4,7 +4,6 @@ import loginBox from './onedata-gui-common/components/login-box';
 import oneFormFields from './onedata-gui-common/components/one-form-fields';
 import oneFormField from './onedata-gui-common/components/one-form-field';
 import applicationError from './onedata-gui-common/components/application-error';
-import providerPlace from './onedata-gui-common/components/provider-place';
 import supportSizeInfo from './onedata-gui-common/components/support-size-info';
 import resourceLoadError from './onedata-gui-common/components/resource-load-error';
 import oneInlineEditor from './onedata-gui-common/components/one-inline-editor';
@@ -18,7 +17,6 @@ import oneSizeEdit from './onedata-gui-common/components/one-size-edit';
 import clipboardLine from './onedata-gui-common/components/clipboard-line';
 import authenticationErrorModal from './onedata-gui-common/components/authentication-error-modal';
 import sidebarClusters from './onedata-gui-common/components/sidebar-clusters';
-import providersMapTile from './onedata-gui-common/components/providers-map-tile';
 import userAccountButtonBase from './onedata-gui-common/components/user-account-button-base';
 import jsonEditor from './onedata-gui-common/components/json-editor';
 import endpointError from './onedata-gui-common/components/alerts/endpoint-error';
@@ -65,6 +63,7 @@ import octaneExample from './onedata-gui-common/components/examples/octane-examp
 import octaneExampleChild from './onedata-gui-common/components/examples/octane-example-child';
 import classicExample from './onedata-gui-common/components/examples/classic-example';
 import sidebarLoadingContainer from './onedata-gui-common/components/sidebar-loading-container';
+import searchBar from './onedata-gui-common/components/search-bar';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -118,7 +117,6 @@ const translations = {
     oneFormFields,
     oneFormField,
     applicationError,
-    providerPlace,
     supportSizeInfo,
     resourceLoadError,
     oneInlineEditor,
@@ -132,7 +130,6 @@ const translations = {
     authenticationErrorModal,
     sidebarClusters,
     clipboardLine,
-    providersMapTile,
     userAccountButtonBase,
     brandInfo,
     jsonEditor,
@@ -175,6 +172,7 @@ const translations = {
     pagesControl,
     websocketReconnectionModal,
     sidebarLoadingContainer,
+    searchBar,
     alerts: {
       endpointError,
     },
