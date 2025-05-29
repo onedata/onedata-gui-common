@@ -9,32 +9,23 @@
 
 import { helper } from '@ember/component/helper';
 import { htmlSafe } from '@ember/string';
+import _ from 'lodash';
 
 export function boldSubstring(params /*, hash*/ ) {
   if (!params[1]) {
     return params[0];
   }
 
-  const escapedQuery = params[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const regex = new RegExp(escapedQuery, 'i');
-  const match = regex.exec(params[0]);
-
-  if (!match) {
+  const index = params[0].indexOf(params[1]);
+  if (index === -1) {
     return params[0];
   }
 
-  const beforeText = escapeHtml(params[0].slice(0, match.index));
-  const boldText = `<b>${escapeHtml(match[0])}</b>`;
-  const afterText = escapeHtml(params[0].slice(match.index + match[0].length));
+  const beforeText = _.escape(params[0].slice(0, index));
+  const boldText = `<b>${_.escape(params[1])}</b>`;
+  const afterText = _.escape(params[0].slice(index + params[1].length));
 
   return htmlSafe(beforeText + boldText + afterText);
-}
-
-function escapeHtml(text) {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
 }
 
 export default helper(boldSubstring);
