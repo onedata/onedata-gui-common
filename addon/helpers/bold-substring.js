@@ -11,19 +11,19 @@ import { helper } from '@ember/component/helper';
 import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
 
-export function boldSubstring(params /*, hash*/ ) {
-  if (!params[1]) {
-    return params[0];
+export function boldSubstring([fullText, substring] /*, hash*/ ) {
+  if (!substring) {
+    return fullText;
   }
 
-  const index = params[0].indexOf(params[1]);
-  if (index === -1) {
-    return params[0];
+  const substringIndex = fullText.indexOf(substring);
+  if (substringIndex === -1) {
+    return fullText;
   }
 
-  const beforeText = _.escape(params[0].slice(0, index));
-  const boldText = `<b>${_.escape(params[1])}</b>`;
-  const afterText = _.escape(params[0].slice(index + params[1].length));
+  const beforeText = _.escape(fullText.slice(0, substringIndex));
+  const boldText = `<b>${_.escape(substring)}</b>`;
+  const afterText = _.escape(fullText.slice(substringIndex + substring.length));
 
   return htmlSafe(beforeText + boldText + afterText);
 }

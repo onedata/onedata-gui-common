@@ -26,7 +26,7 @@ describe('Integration | Helper | bold-substring', function () {
     expect(result.toString()).to.be.equal('hello world');
   });
 
-  it('does not highlight matches inside HTML entities', async function () {
+  it('does not match inside HTML entities after escaping', async function () {
     const result = boldSubstring(['<div>', 'lt']);
     expect(result.toString()).to.be.equal('<div>');
   });
@@ -41,8 +41,13 @@ describe('Integration | Helper | bold-substring', function () {
     expect(result.toString()).to.be.equal('');
   });
 
-  it('renders highlights "<"', async function () {
+  it('renders highlighted "<"', async function () {
     const result = boldSubstring(['<div>', '<']);
     expect(result.toString()).to.be.equal('<b>&lt;</b>div&gt;');
+  });
+
+  it('renders highlighted substring inside html tags', async function () {
+    const result = boldSubstring(['<strong>Czesław</strong>', 'es']);
+    expect(result.toString()).to.be.equal('&lt;strong&gt;Cz<b>es</b>ław&lt;/strong&gt;');
   });
 });
