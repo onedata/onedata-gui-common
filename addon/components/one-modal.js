@@ -1,18 +1,21 @@
 /**
- * Custom extension of ember-bootstrap bs-modal
+ * Custom extension of ember-bootstrap `<BsModal>`
  *
- * @author Michał Borzęcki
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2018-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import BsModal from 'ember-bootstrap/components/bs-modal';
 import config from 'ember-get-config';
-import { guidFor } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
+import { action, computed } from '@ember/object';
 import { scheduleOnce, next } from '@ember/runloop';
 import _ from 'lodash';
+import Component from '@ember/component';
+import { guidFor } from '@ember/object/internals';
+import globals from 'onedata-gui-common/utils/globals';
+import { layout, tagName } from '@ember-decorators/component';
+import template from 'onedata-gui-common/templates/components/one-modal';
 
 /**
  * @typedef {Object} RouterTransitionInfo
@@ -30,7 +33,9 @@ import _ from 'lodash';
  * @typedef {RouterTransitionInfo | AppProxyTransitionInfo} TransitionInfo
  */
 
-export default class OneModal extends BsModal {
+@tagName('')
+@layout(template)
+export default class OneModal extends Component {
   @service router;
   @service appProxy;
 
@@ -41,17 +46,17 @@ export default class OneModal extends BsModal {
   shouldCloseOnTransition = true;
 
   /**
+   * @type {string}
+   */
+  prevSize = undefined;
+
+  /**
    * @override
    */
   @computed
   get modalId() {
     return this.id ?? `${guidFor(this)}-modal`;
   }
-
-  /**
-   * @type {string}
-   */
-  prevSize = undefined;
 
   /**
    * @type {function}
@@ -77,19 +82,21 @@ export default class OneModal extends BsModal {
     return (event) => this.handleAppProxyPropertyChange(event);
   }
 
+  get effTransitionDuration() {
+    return config.environment === 'test' ? 1 : this.transitionDuration;
+  }
+
+  get effBackdropTransitionDuration() {
+    return config.environment === 'test' ? 1 : this.backdropTransitionDuration;
+  }
+
+  get modalElement() {
+    return globals.document.getElementById(this.modalId);
+  }
+
   init() {
     super.init(...arguments);
-
-    this.set('prevSize', this.size);
-
-    if (config.environment === 'test') {
-      // 1ms (not 0) for animation to prevent from firing shown and hidden events
-      // in the same runloop frame as its' trigger events.
-      this.setProperties({
-        transitionDuration: 1,
-        backdropTransitionDuration: 1,
-      });
-    }
+    this.prevSize = this.size;
     this.registerRouteChangeHandler();
     this.registerAppProxyPropertyChangeHandler();
   }
@@ -107,17 +114,18 @@ export default class OneModal extends BsModal {
     }
   }
 
+  // FIXME: sprawdzić w starej wersji kiedy faktycznie odpalało się to didRender
+  // spróbować wymyślić jak można się podpiąć pod te zdarzenia
+
   /**
    * @override
    */
   didRender() {
-    super.didRender(...arguments);
-
+    const element = globals.document.getElementById(this.modalId);
     // Modals make some magic with positioning which does not fire perfect-scrollbars
     // overflow detection on render. We need to notify perfect-scrollbar about change
-    const modalElement = this.get('modalElement');
-    if (modalElement) {
-      const scrollableArea = modalElement.querySelector('.bs-modal-body-scroll');
+    if (element) {
+      const scrollableArea = element.querySelector('.bs-modal-body-scroll');
       if (scrollableArea) {
         scrollableArea.dispatchEvent(new Event('parentrender'));
       }
@@ -128,32 +136,12 @@ export default class OneModal extends BsModal {
    * @override
    */
   willDestroyElement() {
-    try {
-      this.unregisterRouteChangeHandler();
-      this.unregisterAppProxyPropertyChangeHandler();
-    } finally {
-      super.willDestroyElement(...arguments);
-    }
-  }
-
-  /**
-   * @override
-   */
-  show() {
-    super.show(...arguments);
-    scheduleOnce('afterRender', this, 'toggleListeners', true);
-  }
-
-  /**
-   * @override
-   */
-  hide() {
-    super.hide(...arguments);
-    this.toggleListeners(false);
+    this.unregisterRouteChangeHandler();
+    this.unregisterAppProxyPropertyChangeHandler();
   }
 
   recomputeScrollShadow() {
-    const modalElement = this.get('modalElement');
+    const { modalElement } = this;
     if (modalElement) {
       const area = modalElement.querySelector('.bs-modal-body-scroll');
       const modalDialog = modalElement.querySelector('.modal-dialog');
@@ -174,7 +162,7 @@ export default class OneModal extends BsModal {
     const {
       modalElement,
       recomputeScrollShadowFunction,
-    } = this.getProperties('modalElement', 'recomputeScrollShadowFunction');
+    } = this;
 
     if (modalElement) {
       const area = modalElement.querySelector('.bs-modal-body-scroll');
@@ -216,7 +204,13 @@ export default class OneModal extends BsModal {
 
     const transitionInfo = { type: 'transition', data: transition };
     if (this.calculateShouldCloseOnTransition(transitionInfo)) {
-      this.send('close');
+      this.close();
+    }
+  }
+
+  close() {
+    if (this.onHide?.() !== false) {
+      this.set('isOpen', false);
     }
   }
 
@@ -238,7 +232,7 @@ export default class OneModal extends BsModal {
 
     const transitionInfo = { type: 'appProxy', data: cleanedEvent };
     if (this.calculateShouldCloseOnTransition(transitionInfo)) {
-      this.send('close');
+      this.close();
     }
   }
 
@@ -266,5 +260,17 @@ export default class OneModal extends BsModal {
   calculateShouldCloseOnTransition(transitionInfo) {
     return typeof this.shouldCloseOnTransition === 'function' ?
       this.shouldCloseOnTransition(transitionInfo) : this.shouldCloseOnTransition;
+  }
+
+  @action
+  show() {
+    this.onShow?.();
+    scheduleOnce('afterRender', this, 'toggleListeners', true);
+  }
+
+  @action
+  hide() {
+    this.onHide?.();
+    this.toggleListeners(false);
   }
 }

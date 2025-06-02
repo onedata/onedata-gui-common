@@ -1,0 +1,17 @@
+<BsCollapse
+  @collapsed={{@collapsed}}
+  @collapsedSize={{@collapsedSize}}
+  @expandedSize={{@expandedSize}}
+  @collapseDimension={{@collapseDimension}}
+  @transitionDuration={{this.transitionDuration}}
+  @onShow={{@onShow}}
+  @onShown={{@onShown}}
+  @onHide={{@onHide}}
+  @onHidden={{@onHidden}}
+  ...attributes
+>
+  {{yield}}
+</BsCollapse>
+<div>
+  {{this.transitionDuration}}
+</div>

@@ -1,20 +1,16 @@
 /**
- * Custom extension of ember-bootstrap bs-collapse
+ * Custom extension of ember-bootstrap `<BsCollapse>`
  *
- * @author Michał Borzęcki
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2018-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import BsCollapse from 'ember-bootstrap/components/bs-collapse';
 import config from 'ember-get-config';
+import Component from '@glimmer/component';
 
-export default class OneCollapse extends BsCollapse {
-  init() {
-    super.init(...arguments);
-
-    if (config.environment === 'test') {
-      this.set('transitionDuration', 0);
-    }
+export default class OneCollapse extends Component {
+  get transitionDuration() {
+    return config.environment === 'test' ? 0 : this.args.transitionDuration;
   }
 }

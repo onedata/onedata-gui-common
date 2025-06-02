@@ -22,6 +22,7 @@ export default [
   'one-atlas',
   'one-button',
   'one-clipboard-line',
+  'one-collapse',
   'one-datetime-picker',
   'one-dropdown',
   'one-dynamic-tree',

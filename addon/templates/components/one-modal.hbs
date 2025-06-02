@@ -1,0 +1,24 @@
+<BsModal
+  @fade={{@fade}}
+  @open={{@open}}
+  @backdrop={{@backdrop}}
+  @keyboard={{@keyboard}}
+  @position={{@position}}
+  @scrollable={{@scrollable}}
+  @backdropClose={{@backdropClose}}
+  @renderInPlace={{@renderInPlace}}
+  @transitionDuration={{this.effTransitionDuration}}
+  @backdropTransitionDuration={{this.effBackdropTransitionDuration}}
+  @onHide={{this.hide}}
+  @onSubmit={{@onSubmit}}
+  @onShow={{this.show}}
+  @onShown={{@onShown}}
+  @onHidden={{@onHidden}}
+  @size={{@size}}
+  @bodyComponent={{component "one-modal/body"}}
+  class={{this.modalClass}}
+  id={{this.modalId}}
+  as |modal|
+>
+  {{yield modal}}
+</BsModal>
