@@ -11,18 +11,28 @@ import { helper } from '@ember/component/helper';
 import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
 
-export function boldSubstring([fullText, substring] /*, hash*/ ) {
+export function boldSubstring(
+  [fullText, substring, isCaseSensitive = false] /*, hash*/
+) {
   if (!substring) {
     return fullText;
   }
 
-  const substringIndex = fullText.indexOf(substring);
+  let substringIndex;
+  if (isCaseSensitive) {
+    substringIndex = fullText.indexOf(substring);
+  } else {
+    substringIndex = fullText.toLowerCase().indexOf(substring.toLowerCase());
+  }
+
   if (substringIndex === -1) {
     return fullText;
   }
 
   const beforeText = _.escape(fullText.slice(0, substringIndex));
-  const boldText = `<b>${_.escape(substring)}</b>`;
+  const boldText = `<b>${_.escape(fullText.slice(
+    substringIndex, substringIndex + substring.length
+  ))}</b>`;
   const afterText = _.escape(fullText.slice(substringIndex + substring.length));
 
   return htmlSafe(beforeText + boldText + afterText);

@@ -16,13 +16,18 @@ describe('Integration | Helper | bold-substring', function () {
     expect(result.toString()).to.be.equal('hello <b>world</b> world');
   });
 
-  it('renders unchanged text when no match is found', async function () {
-    const result = boldSubstring(['hello world', 'hhh']);
-    expect(result.toString()).to.be.equal('hello world');
+  it('matches are case-sensitive by default', async function () {
+    const result = boldSubstring(['hello World world', 'worlD']);
+    expect(result.toString()).to.be.equal('hello <b>World</b> world');
   });
 
-  it('renders unchanged text when no case-sensitive match is found', async function () {
-    const result = boldSubstring(['hello world', 'World']);
+  it('does not highlight when case differs and isCaseSensitive is true', async function () {
+    const result = boldSubstring(['hello World world', 'worlD', true]);
+    expect(result.toString()).to.be.equal('hello World world');
+  });
+
+  it('renders unchanged text when no match is found', async function () {
+    const result = boldSubstring(['hello world', 'hhh']);
     expect(result.toString()).to.be.equal('hello world');
   });
 
