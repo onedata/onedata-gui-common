@@ -16,7 +16,7 @@ describe('Integration | Helper | bold-substring', function () {
     expect(result.toString()).to.be.equal('hello <b>world</b> world');
   });
 
-  it('matches are case-sensitive by default', async function () {
+  it('matches are case-insensitive by default', async function () {
     const result = boldSubstring(['hello World world', 'worlD']);
     expect(result.toString()).to.be.equal('hello <b>World</b> world');
   });
@@ -31,7 +31,7 @@ describe('Integration | Helper | bold-substring', function () {
     expect(result.toString()).to.be.equal('hello world');
   });
 
-  it('does not match inside HTML entities after escaping', async function () {
+  it('does not match HTML entities after escaping', async function () {
     const result = boldSubstring(['<div>', 'lt']);
     expect(result.toString()).to.be.equal('<div>');
   });
@@ -51,8 +51,15 @@ describe('Integration | Helper | bold-substring', function () {
     expect(result.toString()).to.be.equal('<b>&lt;</b>div&gt;');
   });
 
-  it('renders highlighted substring inside html tags', async function () {
+  it('returns safe string with original HTML escaped', async function () {
     const result = boldSubstring(['<strong>Czesław</strong>', 'es']);
     expect(result.toString()).to.be.equal('&lt;strong&gt;Cz<b>es</b>ław&lt;/strong&gt;');
   });
+
+  it('highlights Unicode substring with mixed scripts and accents case-insensitively',
+    async function () {
+      const result = boldSubstring(['FRANÇżółНИ', 'nçŻÓŁни']);
+      expect(result.toString()).to.be.equal('FRA<b>NÇżółНИ</b>');
+    }
+  );
 });

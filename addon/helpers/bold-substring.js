@@ -11,6 +11,12 @@ import { helper } from '@ember/component/helper';
 import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
 
+/**
+ * @param {string} fullText
+ * @param {string} substring
+ * @param {boolean} isCaseSensitive
+ * @returns {SafeString|string}
+ */
 export function boldSubstring(
   [fullText, substring, isCaseSensitive = false] /*, hash*/
 ) {
@@ -31,7 +37,8 @@ export function boldSubstring(
 
   const beforeText = _.escape(fullText.slice(0, substringIndex));
   const boldText = `<b>${_.escape(fullText.slice(
-    substringIndex, substringIndex + substring.length
+    substringIndex,
+    substringIndex + substring.length,
   ))}</b>`;
   const afterText = _.escape(fullText.slice(substringIndex + substring.length));
 
