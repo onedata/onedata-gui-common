@@ -12,9 +12,7 @@ import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
 
 /**
- * @param {string} fullText
- * @param {string} substring
- * @param {boolean} isCaseSensitive
+ * @param {[string, string, boolean]} params
  * @returns {SafeString|string}
  */
 export function boldSubstring(
