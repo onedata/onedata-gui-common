@@ -32,13 +32,17 @@
     @beforeOptionsComponent={{null}}
     @searchField="name"
     @noMatchesMessage={{noMatchesMessage}}
-    as |option|
+    as |option select|
   >
     {{#if option.isCustom}}
-      <TruncatedString class="custom-option">{{option.label}}</TruncatedString>
+      <div class="custom-option">
+        <TruncatedString class="custom-option-value">
+          {{bold-substring option.label select.lastSearchedText}}
+        </TruncatedString>
       <span class="custom-option-text">{{customValueOptionText}}</span>
+      </div>
     {{else}}
-      {{option.label}}
+      {{bold-substring option.label select.lastSearchedText}}
     {{/if}}
   </OneDropdown>
 {{/if}}
