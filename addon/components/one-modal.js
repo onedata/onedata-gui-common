@@ -33,8 +33,46 @@ import template from 'onedata-gui-common/templates/components/one-modal';
  * @typedef {RouterTransitionInfo | AppProxyTransitionInfo} TransitionInfo
  */
 
+/**
+ * @typedef {Object} OneModalSignature
+ * @property {null} Element
+ * @property {OneModalArgs} Args
+ */
+
+/**
+ * Undocumented properites are directly passed to `BsModal` - see its documentation for
+ * reference. Remember to use documentation for proper ember-boostrap version (see in
+ * package.json).
+ *
+ * Note, that Ember Boostrap's properties for Boostrap 4 are not supported.
+ *
+ * @typedef {Object} OneModalArgs
+ * @property {boolean} [fade]
+ * @property {any} open If truish - opens the modal. If falsy - closes the modal.
+ * @property {boolean} [backdrop]
+ * @property {boolean} [keyboard]
+ * @property {boolean} [backdropClose]
+ * @property {boolean} [renderInPlace]
+ * @property {number} [transitionDuration] The same as in BsModal, except for test
+ *   environment, where it is always set to 1.
+ * @property {number} [backdropTransitionDuration] The same as in BsModal, except for test
+ *   environment, where it is always set to 1.
+ * @property {() => undefined|false} [onHide] The same as in BsModal, but we pass extra
+ *   code after it to BsModal.
+ * @property {() => void} [onSubmit]
+ * @property {() => void} [onShow] The same as in BsModal, but we pass extra
+ *   code after it to BsModal.
+ * @property {() => void} [onShown]
+ * @property {() => void} [onHidden]
+ * @property {null|'sm'|'lg'} [size]
+ * @property {string} [modalClass] Classname added to `.modal` element.
+ */
+
 const isTest = config.environment === 'test';
 
+/**
+ * @extends {Component<OneModalSignature>}
+ */
 @tagName('')
 @layout(template)
 export default class OneModal extends Component {
@@ -84,12 +122,12 @@ export default class OneModal extends Component {
     return (event) => this.handleAppProxyPropertyChange(event);
   }
 
-  get effTransitionDuration() {
-    return isTest ? 1 : this.transitionDuration;
+  get transitionDuration() {
+    return isTest ? 1 : this.args.transitionDuration;
   }
 
-  get effBackdropTransitionDuration() {
-    return isTest ? 1 : this.backdropTransitionDuration;
+  get backdropTransitionDuration() {
+    return isTest ? 1 : this.args.backdropTransitionDuration;
   }
 
   get modalElement() {

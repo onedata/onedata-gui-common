@@ -1,14 +1,13 @@
 <BsModal
   @fade={{@fade}}
-  @open={{@open}}
+  @open={{bool @open}}
   @backdrop={{@backdrop}}
   @keyboard={{@keyboard}}
-  @position={{@position}}
   @scrollable={{@scrollable}}
   @backdropClose={{@backdropClose}}
   @renderInPlace={{@renderInPlace}}
-  @transitionDuration={{this.effTransitionDuration}}
-  @backdropTransitionDuration={{this.effBackdropTransitionDuration}}
+  @transitionDuration={{this.transitionDuration}}
+  @backdropTransitionDuration={{this.backdropTransitionDuration}}
   @onHide={{this.hide}}
   @onSubmit={{@onSubmit}}
   @onShow={{this.show}}
@@ -16,7 +15,7 @@
   @onHidden={{@onHidden}}
   @size={{@size}}
   @bodyComponent={{component "one-modal/body"}}
-  class={{this.modalClass}}
+  class={{@modalClass}}
   id={{this.modalId}}
   as |modal|
 >
