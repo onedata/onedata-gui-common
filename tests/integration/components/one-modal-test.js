@@ -76,7 +76,10 @@ describe('Integration | Component | one-modal', function () {
       const hideSpy = sinon.spy();
       this.set('hide', hideSpy);
 
-      await render(hbs `<OneModal @modalClass="my-modal" />`);
+      await render(hbs`<OneModal
+        @modalClass="my-modal"
+        @open={{true}}
+      />`);
 
       expect(find('.my-modal').id).to.match(/.*-modal/);
     }
@@ -87,7 +90,11 @@ describe('Integration | Component | one-modal', function () {
       const hideSpy = sinon.spy();
       this.set('hide', hideSpy);
 
-      await render(hbs `<OneModal @modalId="some-id" @modalClass="my-modal" />`);
+      await render(hbs`<OneModal
+        @open={{true}}
+        @modalId="some-id"
+        @modalClass="my-modal"
+      />`);
 
       expect(find('.my-modal').id).to.equal('some-id');
     }
