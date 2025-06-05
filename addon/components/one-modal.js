@@ -60,18 +60,21 @@ import template from 'onedata-gui-common/templates/components/one-modal';
  * @property {() => undefined|false} [onHide] The same as in BsModal, but we pass extra
  *   code after it to BsModal.
  * @property {() => void} [onSubmit]
- * @property {() => void} [onShow] The same as in BsModal, but we pass extra
- *   code after it to BsModal.
+ * @property {() => void} [onShow] The same as in BsModal, but we pass extra code after it
+ *   to BsModal.
  * @property {() => void} [onShown]
  * @property {() => void} [onHidden]
  * @property {null|'sm'|'lg'} [size]
  * @property {string} [modalClass] Classname added to `.modal` element.
+ * @property {string} [modalId] Use custom `.modal` element ID.
+ * @property {boolean|(transitionInfo: TransitionInfo) => boolean} [shouldCloseOnTransition]
+ *    If true, closes this modal on transition.
  */
 
 const isTest = config.environment === 'test';
 
 /**
- * @extends {Component<OneModalSignature>}
+ * @implements {OneModalArgs}
  */
 @tagName('')
 @layout(template)
@@ -87,6 +90,7 @@ export default class OneModal extends Component {
 
   /**
    * @type {string}
+   * @private
    */
   prevSize = undefined;
 
@@ -94,8 +98,8 @@ export default class OneModal extends Component {
    * @override
    */
   @computed
-  get modalId() {
-    return this.id ?? `${guidFor(this)}-modal`;
+  get effModalId() {
+    return this.modalId ?? `${guidFor(this)}-modal`;
   }
 
   /**
@@ -122,12 +126,12 @@ export default class OneModal extends Component {
     return (event) => this.handleAppProxyPropertyChange(event);
   }
 
-  get transitionDuration() {
-    return isTest ? 1 : this.args.transitionDuration;
+  get effTransitionDuration() {
+    return isTest ? 1 : this.transitionDuration;
   }
 
-  get backdropTransitionDuration() {
-    return isTest ? 1 : this.args.backdropTransitionDuration;
+  get effBackdropTransitionDuration() {
+    return isTest ? 1 : this.backdropTransitionDuration;
   }
 
   get modalElement() {
@@ -153,9 +157,6 @@ export default class OneModal extends Component {
       scheduleOnce('afterRender', this, 'recomputeScrollShadow');
     }
   }
-
-  // FIXME: sprawdzić w starej wersji kiedy faktycznie odpalało się to didRender
-  // spróbować wymyślić jak można się podpiąć pod te zdarzenia
 
   /**
    * @override

@@ -3,11 +3,10 @@
   @open={{bool @open}}
   @backdrop={{@backdrop}}
   @keyboard={{@keyboard}}
-  @scrollable={{@scrollable}}
   @backdropClose={{@backdropClose}}
   @renderInPlace={{@renderInPlace}}
-  @transitionDuration={{this.transitionDuration}}
-  @backdropTransitionDuration={{this.backdropTransitionDuration}}
+  @transitionDuration={{this.effTransitionDuration}}
+  @backdropTransitionDuration={{this.effBackdropTransitionDuration}}
   @onHide={{this.hide}}
   @onSubmit={{@onSubmit}}
   @onShow={{this.show}}
@@ -16,7 +15,7 @@
   @size={{@size}}
   @bodyComponent={{component "one-modal/body"}}
   class={{@modalClass}}
-  id={{this.modalId}}
+  id={{this.effModalId}}
   as |modal|
 >
   {{yield modal}}
