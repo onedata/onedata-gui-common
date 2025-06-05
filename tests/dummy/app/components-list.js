@@ -39,6 +39,7 @@ export default [
   'one-space-indicator',
   'one-tab-bar',
   'one-time-series-chart',
+  'one-tooltip',
   'one-tree',
   'one-way-capacity',
   'one-way-toggle',

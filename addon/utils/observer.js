@@ -3,11 +3,11 @@
  * function.
  *
  * @author Jakub Liput
- * @copyright (C) 2024 ACK CYFRONET AGH
+ * @copyright (C) 2024-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { observer } from '@ember/object';
+import EmberObject, { observer } from '@ember/object';
 
 /**
  * Create **asynchronous** Ember Observer.
@@ -27,6 +27,48 @@ export function asyncObserver() {
  */
 export function syncObserver() {
   return createObserver(true, ...arguments);
+}
+
+// FIXME: native syntax
+export class PropertyAsyncObserver extends EmberObject {
+  /**
+   * A local path to observed property. On change of the value, the `onChange` callback
+   * will be executed.
+   * @virtual
+   * @type {string}
+   */
+  path;
+
+  /**
+   * Callback executed asynchronously when value in the `path` in this object is changed.
+   * @virtual
+   * @type {() => void}
+   */
+  onChange;
+
+  /**
+   * @type {Ember.Observer}
+   */
+  pathObserver;
+
+  init() {
+    super.init(...arguments);
+    if (typeof this.path !== 'string') {
+      throw new Error('PropertyAsyncObserver: path is not a string');
+    }
+    if (typeof this.onChange !== 'function') {
+      throw new Error('PropertyAsyncObserver: onChange callback is not a function');
+    }
+    this.addObserver(this.path, this, 'handleChange', false);
+  }
+
+  willDestroy() {
+    this.removeObserver(this.path, this, 'handleChange', false);
+  }
+
+  handleChange() {
+    return this.onChange(this.get(this.path));
+  }
 }
 
 /**

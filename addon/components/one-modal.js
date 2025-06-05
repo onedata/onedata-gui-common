@@ -33,6 +33,8 @@ import template from 'onedata-gui-common/templates/components/one-modal';
  * @typedef {RouterTransitionInfo | AppProxyTransitionInfo} TransitionInfo
  */
 
+const isTest = config.environment === 'test';
+
 @tagName('')
 @layout(template)
 export default class OneModal extends Component {
@@ -83,11 +85,11 @@ export default class OneModal extends Component {
   }
 
   get effTransitionDuration() {
-    return config.environment === 'test' ? 1 : this.transitionDuration;
+    return isTest ? 1 : this.transitionDuration;
   }
 
   get effBackdropTransitionDuration() {
-    return config.environment === 'test' ? 1 : this.backdropTransitionDuration;
+    return isTest ? 1 : this.backdropTransitionDuration;
   }
 
   get modalElement() {

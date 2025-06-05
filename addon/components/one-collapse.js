@@ -9,8 +9,10 @@
 import config from 'ember-get-config';
 import Component from '@glimmer/component';
 
+const isTest = config.environment === 'test';
+
 export default class OneCollapse extends Component {
   get transitionDuration() {
-    return config.environment === 'test' ? 0 : this.args.transitionDuration;
+    return isTest ? 0 : this.args.transitionDuration;
   }
 }

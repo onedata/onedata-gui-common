@@ -24,6 +24,14 @@ export default class OneTooltipHelper {
   }
 
   /**
+   * @param {string} eventName
+   * @returns {Promise<void>}
+   */
+  triggerEvent(eventName) {
+    return triggerEvent(this.trigger, eventName);
+  }
+
+  /**
    * @returns {HTMLElement}
    */
   getTooltip() {
