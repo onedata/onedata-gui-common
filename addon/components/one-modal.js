@@ -311,7 +311,8 @@ export default class OneModal extends Component {
 
   @action
   hide() {
-    this.onHide?.();
+    const onHideResult = this.onHide?.();
     this.toggleListeners(false);
+    return onHideResult;
   }
 }

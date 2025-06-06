@@ -99,4 +99,31 @@ describe('Integration | Component | one-modal', function () {
       expect(find('.my-modal').id).to.equal('some-id');
     }
   );
+
+  it('does not hide modal when onHide returns false', async function () {
+    // given
+    // this.set('open', true);
+    this.set('onHide', () => {
+      return false;
+    });
+    await render(hbs `
+      <OneModal
+        @open={{true}}
+        @modalClass="my-modal"
+        @onHide={{this.onHide}}
+        as |modal|
+      >
+        <modal.body>
+          <button class="close-button" onclick={{modal.close}}></button>
+        </modal.body>
+      </OneModal>
+    `);
+
+    // when
+    await find('.close-button').click();
+    await settled();
+
+    // then
+    expect(find('.my-modal')).to.exist;
+  });
 });
