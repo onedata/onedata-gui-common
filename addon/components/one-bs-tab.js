@@ -20,6 +20,7 @@ export default class OneBsTab extends BsTab {
   /**
    * @override
    * Fixes changing URL hash (bug in Ember Bootstrap version 4.x).
+   * https://github.com/ember-bootstrap/ember-bootstrap/issues/1673
    */
   @action
   select(id, event) {

@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, find, triggerEvent, settled } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import OneTooltipHelper from '../../helpers/one-tooltip';
-import sleep from 'onedata-gui-common/utils/sleep';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import { lookupService } from '../../helpers/stub-service';
 

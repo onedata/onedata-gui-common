@@ -29,7 +29,6 @@ export function syncObserver() {
   return createObserver(true, ...arguments);
 }
 
-// FIXME: native syntax
 export class PropertyAsyncObserver extends EmberObject {
   /**
    * A local path to observed property. On change of the value, the `onChange` callback
