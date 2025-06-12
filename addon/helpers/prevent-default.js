@@ -3,20 +3,22 @@
  * form element, but want to disable submit.
  *
  * @author Jakub Liput
- * @copyright (C) 2023 ACK CYFRONET AGH
+ * @copyright (C) 2023-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import { helper } from '@ember/component/helper';
 
+const handler = (event) => {
+  event.preventDefault();
+};
+
 /**
  * @param {Event} event
- * @returns {void}
+ * @returns {(event: Event) => void}
  */
 export function preventDefault() {
-  return (event) => {
-    event.preventDefault();
-  };
+  return handler;
 }
 
 export default helper(preventDefault);
