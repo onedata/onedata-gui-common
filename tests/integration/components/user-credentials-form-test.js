@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, fillIn, click, find } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import FormHelper from 'dummy/tests/helpers/form';
-import Sinon from 'sinon';
 
 class UserCredentialsFormHelper extends FormHelper {
   constructor(template) {
@@ -46,8 +45,6 @@ describe('Integration | Component | user-credentials-form', function () {
     const NEW_PASSWORD = 'one987654321';
 
     let submitted = false;
-
-    const submitSpy = Sinon.spy();
 
     this.set('submit', function ({ currentPassword, newPassword }) {
       expect(currentPassword).to.be.equal(OLD_PASSWORD);
