@@ -135,7 +135,7 @@ export default class OneModal extends Component {
   }
 
   get modalElement() {
-    return globals.document.getElementById(this.modalId);
+    return globals.document.getElementById(this.effModalId);
   }
 
   init() {
