@@ -176,6 +176,17 @@ export default Component.extend({
   }),
 
   /**
+   * Child classes of OneForm have often `form` tag - a HTML form element makes
+   * redirection by default on submit event. We want to prevent it, because it changes
+   * URL.
+   * @override
+   * @param {SubmitEvent} event
+   */
+  submit(event) {
+    event.preventDefault();
+  },
+
+  /**
    * Sets all fields to its initial state
    */
   prepareFields() {
