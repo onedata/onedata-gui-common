@@ -10,13 +10,13 @@
  * - add ``Validations`` mixin to enable validations
  * - set ``submitButton`` to true/false and ``submitText`` to configure submit button
  *   (by default the button is present)
- * - inject ``submit`` action to handle submit action that sends an object with
+ * - inject `onSubmit` action to handle submit action that sends an object with
  *   field values
  * - inject ``allValidChanged`` action handle validation state changes (whole form
  *   validation)
  *
  * @author Jakub Liput
- * @copyright (C) 2017-2020 ACK CYFRONET AGH
+ * @copyright (C) 2017-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -33,19 +33,24 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default OneForm.extend({
   layout,
+
   /**
-   * To inject.
-   * @abstract
+   * @virtual
    * @type {Array.FieldType}
    */
   fields: null,
 
   /**
-   * To inject.
-   * @abstract
+   * @virtual
    * @type {Ember.Object}
    */
   values: EmberObject.create(),
+
+  /**
+   * @virtual
+   * @type {Function}
+   */
+  onSubmit: undefined,
 
   currentFieldsPrefix: Object.freeze(['main']),
 
@@ -134,13 +139,13 @@ export default OneForm.extend({
     const {
       submitButton,
       fields,
-      submit,
-    } = this.getProperties('submitButton', 'fields', 'submit');
+      onSubmit,
+    } = this;
 
     assert('fields property should be defined', fields != null);
     assert(
-      'submit action should be passed if submit button is enabled', !submitButton ||
-      submitButton && submit != null
+      'submit action should be passed if submit button is enabled',
+      !submitButton || submitButton && onSubmit != null
     );
   },
 
@@ -166,11 +171,11 @@ export default OneForm.extend({
      */
     submit() {
       const {
-        submit,
+        onSubmit,
         _submitEnabled,
-      } = this.getProperties('submit', '_submitEnabled');
+      } = this;
       const submitting = _submitEnabled ?
-        resolve(submit && submit(this.get('allFieldsValues.main'))) :
+        resolve(onSubmit?.(this.get('allFieldsValues.main'))) :
         new Promise((resolve, reject) => reject());
       this.set('_disabled', true);
       submitting.finally(() => {

@@ -78,6 +78,11 @@ export default OneForm.extend(Validations, I18n, {
   i18n: service(),
 
   /**
+   * @type {({ currentPassword: string, newPassword: string }) => Promise<void>|void}
+   */
+  onSubmit: undefined,
+
+  /**
    * One of `password`, `passphrase`
    * @type {string}
    */
@@ -228,23 +233,18 @@ export default OneForm.extend(Validations, I18n, {
 
   actions: {
     submit() {
-      const {
-        isValid,
-        verifyCurrentPassword,
-        submit,
-      } = this.getProperties('isValid', 'verifyCurrentPassword', 'submit');
-      if (isValid) {
+      if (this.isValid) {
         const values = {
           newPassword: this.get('formValues.change.newPassword'),
         };
-        if (verifyCurrentPassword) {
+        if (this.verifyCurrentPassword) {
           set(
             values,
             'currentPassword',
             this.get('formValues.verify.currentPassword')
           );
         }
-        return submit(values);
+        return this.onSubmit?.(values);
       }
     },
 
