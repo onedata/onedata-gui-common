@@ -4,7 +4,7 @@
   as |editorBox|
 >
   {{#if (eq editorBox.section "content")}}
-    <form @onsubmit={{prevent-default}} class="form form-horizontal form-component">
+    <form onsubmit={{prevent-default}} class="form form-horizontal form-component">
       <FormComponent::FieldRenderer @field={{formRootGroup}} />
     </form>
   {{/if}}

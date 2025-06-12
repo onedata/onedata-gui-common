@@ -1,5 +1,5 @@
 {{#if form}}
-  <form @onsubmit={{prevent-default}} class="form form-horizontal form-component">
+  <form onsubmit={{prevent-default}} class="form form-horizontal form-component">
     <FormComponent::FieldRenderer @field={{form}} />
   </form>
 {{/if}}
