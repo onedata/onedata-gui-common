@@ -120,22 +120,18 @@ export default class OneTooltip extends BsTooltip {
     if (this.visibleObserver) {
       // Bugfix: fast changing `visible` property does not close tooltip.
       //
-      // Note: This might be outdated fix, but in theory, the we still use observer and
-      // invoking show/hide when `visible` changes. So it is left out for potential, rare
-      // cases.
-      //
       // Bug description: when changing a tooltip visibility manually via `visible`
-      // property, there were cases when tooltip stayed open even when `visible` was false.
-      // It was caused by `_watchVisible` observer calling `show()` which then schedules
-      // running `_show()`. That scheduling runs `_show()` asynchronously and it was
-      // possible to change `visible` value to `false` between scheduling and running
-      // `_show()`. `_show()` does not have any checks regarding current value of `visible`
-      // hence it opens tooltip regardless `visible === false`.
-      //
-      // Additional `!hoverState` is needed to be sure, that showing tooltip was triggered
+      // property, there were cases when tooltip stayed open even when `visible` was
+      // false. It was caused by calling `show()` which then schedules running `_show()`.
+      // That scheduling runs `_show()` asynchronously and it was possible to change
+      // `visible` value to `false` between scheduling and running `_show()`. `_show()`
+      // does not have any checks regarding current value of `visible` hence it opens
+      // tooltip regardless `visible === false`.
+
+      // Additional check for `hoverState` is needed to be sure, that showing tooltip was triggered
       // manually (via `visible` change) and not by an event. When showing tooltip via event
-      // (mouse hover etc.) `visible` property can be `false` and that's correct.
-      if (!this.visible && !this.hoverState) {
+      // (mouse hover etc.) `visible` property is not "none" and that's correct.
+      if (!this.visible && this.hoverState === 'none') {
         // Only `return` is not enough here - it leaves rendered (but transparent)
         // tooltip, which overlays page content.
         this.hide();
