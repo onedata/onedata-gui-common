@@ -95,6 +95,13 @@ export default class OneModal extends Component {
   prevSize = undefined;
 
   /**
+   * Controls shadows displayed below header and above footer to body scroll state.
+   * @type {string}
+   * @private
+   */
+  scrollStateClassname = 'scroll-on-top scroll-on-bottom';
+
+  /**
    * @override
    */
   @computed
@@ -138,6 +145,11 @@ export default class OneModal extends Component {
     return globals.document.getElementById(this.effModalId);
   }
 
+  @computed('modalClass', 'scrollStateClassname')
+  get effModalClass() {
+    return `${this.modalClass} ${this.scrollStateClassname}`.trim();
+  }
+
   init() {
     super.init(...arguments);
     this.prevSize = this.size;
@@ -162,58 +174,56 @@ export default class OneModal extends Component {
    * @override
    */
   didRender() {
-    const element = globals.document.getElementById(this.modalId);
-    // Modals make some magic with positioning which does not fire perfect-scrollbars
-    // overflow detection on render. We need to notify perfect-scrollbar about change
-    if (element) {
-      const scrollableArea = element.querySelector('.bs-modal-body-scroll');
-      if (scrollableArea) {
-        scrollableArea.dispatchEvent(new Event('parentrender'));
-      }
-    }
+    super.didRender(...arguments);
+    this.notifyScrollbar();
   }
 
   /**
    * @override
    */
   willDestroyElement() {
+    super.willDestroyElement(...arguments);
     this.unregisterRouteChangeHandler();
     this.unregisterAppProxyPropertyChangeHandler();
   }
 
-  recomputeScrollShadow() {
-    const { modalElement } = this;
-    if (modalElement) {
-      const area = modalElement.querySelector('.bs-modal-body-scroll');
-      const modalDialog = modalElement.querySelector('.modal-dialog');
-      if (modalDialog && area) {
-        const scrolledTop = area.classList.contains('on-top');
-        const scrolledBottom = area.classList.contains('on-bottom');
+  getScrollableArea() {
+    return this.modalElement?.querySelector('.bs-modal-body-scroll');
+  }
 
-        // We do not add classes to the modalElement, because its classes are changing too
-        // frequently,so it would clear scroll classes added below. On the other hand the
-        // class list of modalDialog is pretty constant (except modal size change)
-        modalDialog.classList[scrolledTop ? 'add' : 'remove']('scroll-on-top');
-        modalDialog.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-bottom');
-      }
+  notifyScrollbar() {
+    // Modals make some magic with positioning which does not fire perfect-scrollbars
+    // overflow detection on render. We need to notify perfect-scrollbar about change
+    const scrollableArea = this.getScrollableArea();
+    if (scrollableArea) {
+      scrollableArea.dispatchEvent(new Event('parentrender'));
     }
   }
 
+  recomputeScrollShadow() {
+    const area = this.getScrollableArea();
+    let classes = '';
+    if (area) {
+      const scrolledTop = area.classList.contains('on-top');
+      const scrolledBottom = area.classList.contains('on-bottom');
+      if (scrolledTop) {
+        classes += 'scroll-on-top ';
+      }
+      if (scrolledBottom) {
+        classes += 'scroll-on-bottom';
+      }
+    }
+    this.set('scrollStateClassname', classes);
+  }
+
   toggleListeners(enabled) {
-    const {
-      modalElement,
-      recomputeScrollShadowFunction,
-    } = this;
+    const area = this.getScrollableArea();
+    if (area) {
+      const methodName = `${enabled ? 'add' : 'remove'}EventListener`;
+      area[methodName]('edge-scroll-change', this.recomputeScrollShadowFunction);
 
-    if (modalElement) {
-      const area = modalElement.querySelector('.bs-modal-body-scroll');
-      if (area) {
-        const methodName = `${enabled ? 'add' : 'remove'}EventListener`;
-        area[methodName]('edge-scroll-change', recomputeScrollShadowFunction);
-
-        if (enabled) {
-          next(() => this.recomputeScrollShadow());
-        }
+      if (enabled) {
+        next(() => this.recomputeScrollShadow());
       }
     }
   }
