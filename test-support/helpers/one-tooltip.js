@@ -13,14 +13,14 @@ export default class OneTooltipHelper {
    * @returns {Promise}
    */
   open() {
-    return triggerEvent(this.trigger, 'mouseenter');
+    return this.triggerEvent('mouseenter');
   }
 
   /**
    * @returns {Promise}
    */
   close() {
-    return triggerEvent(this.trigger, 'mouseleave');
+    return this.triggerEvent('mouseleave');
   }
 
   /**
