@@ -1,28 +1,56 @@
 import Component from '@ember/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
-export default Component.extend({
-  lipsum: 'lorem ipsum dolor sit amet',
-  lipsumCount: 100,
+export default class OneModalComponent extends Component {
+  @tracked lipsumText = 'lorem ipsum dolor sit amet';
+  @tracked lipsumCount = 100;
+  @tracked lipsumOpened = false;
+  @tracked basicOpened = false;
 
-  opened: true,
+  lipsumIncrementTimer = null;
 
-  incrementTimer: undefined,
+  startLipsumTimer() {
+    if (this.lipsumIncrementTimer) {
+      return;
+    }
+    this.lipsumIncrementTimer = setInterval(() => {
+      this.lipsumCount += 10;
+    }, 1000);
+  }
 
-  didInsertElement() {
-    this._super(...arguments);
-    this.set('incrementTimer', setInterval(() => {
-      this.incrementProperty('lipsumCount', 10);
-    }, 1000));
-  },
+  stopLipsumTimer() {
+    clearInterval(this.lipsumIncrementTimer);
+    this.lipsumIncrementTimer = null;
+  }
 
-  willDestroyElement() {
-    this._super(...arguments);
-    clearInterval(this.get('incrementTimer'));
-  },
+  @action
+  openModal(modalName) {
+    switch (modalName) {
+      case 'basic':
+        this.basicOpened = true;
+        break;
+      case 'lipsum':
+        this.lipsumOpened = true;
+        this.startLipsumTimer();
+        break;
+      default:
+        break;
+    }
+  }
 
-  actions: {
-    onHide() {
-      this.set('opened', false);
-    },
-  },
-});
+  @action
+  hideModal(modalName) {
+    switch (modalName) {
+      case 'basic':
+        this.basicOpened = false;
+        break;
+      case 'lipsum':
+        this.lipsumOpened = false;
+        this.stopLipsumTimer();
+        break;
+      default:
+        break;
+    }
+  }
+}

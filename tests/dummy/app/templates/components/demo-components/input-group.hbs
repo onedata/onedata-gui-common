@@ -6,7 +6,7 @@
       <span class="input-group-addon"><OneIcon @icon="space" /></span>
     </div>
   </div>
-  
+
   <div class="row row-content">
     <h3>Input group with icon (small)</h3>
     <div class="input-group input-group-sm with-icon-addon">
@@ -14,7 +14,7 @@
       <span class="input-group-addon"><OneIcon @icon="space" /></span>
     </div>
   </div>
-  
+
   <div class="row row-content">
     <h3>Input group with button (large)</h3>
     <div class="input-group input-group">
@@ -26,7 +26,7 @@
       </span>
     </div>
   </div>
-  
+
   <div class="row row-content">
     <h3>Input group with buttons (small)</h3>
     <div class="input-group input-group-sm">
@@ -43,10 +43,10 @@
       </span>
     </div>
   </div>
-  
+
   <div class="row row-content">
     <h3>Input group with addon</h3>
-    <form class="form-inline">
+    <form onsubmit={{prevent-default}} class="form-inline">
       <div class="form-group">
         <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
         <div class="input-group">
@@ -62,10 +62,10 @@
       </div>
     </form>
   </div>
-  
+
   <div class="row row-content">
     <h3>Input group with addon (small)</h3>
-    <form class="form-inline">
+    <form onsubmit={{prevent-default}} class="form-inline">
       <div class="form-group">
         <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
         <div class="input-group input-group-sm">
@@ -81,6 +81,6 @@
       </div>
     </form>
   </div>
-  
-  
+
+
 </div>

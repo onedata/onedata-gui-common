@@ -1,0 +1,80 @@
+<div class="dummy-one-tooltip">
+  <h1>&lt;OneTooltip&gt;</h1>
+  <div class="row">
+    <h2>Already hovered trigger test</h2>
+    <p>
+      Original BsTooltip does not show tooltip when tooltip component is inserted while
+      mouse cursor is hovering the trigger, despite of having "hover" as a trigger event.
+    </p>
+    <p>
+      Hover the box for {{hoverTime}} seconds — it should show the tooltip automatically.
+      Then it should show tooltip only on element hover.
+    </p>
+    <div class="row">
+      <div
+        onmouseenter={{this.onAlreadyHoveredStart}}
+        class="dummy-tooltip-container already-hovered-container"
+      >
+        {{this.alreadyHoveredContainerText}}
+        {{#if this.alreadyHoveredFinished}}
+          <OneTooltip @title="hello world" @triggerEvents="hover" />
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <h2>Placement</h2>
+    <div class="row flex-row">
+      {{#each (array "top" "bottom" "left" "right") as |placement|}}
+        <div class="dummy-tooltip-container placement-container">
+          {{placement}}
+          <OneTooltip @title="hello world" @placement={{placement}} />
+        </div>
+      {{/each}}
+    </div>
+  </div>
+  <div class="row">
+    <h2>Manual @visible</h2>
+    <div class="row flex-row">
+      <OneWayToggle
+        @checked={{this.manualTooltipVisible}}
+        @update={{action (mut this.manualTooltipVisible)}}
+      />
+      <div class="dummy-tooltip-container">
+        <OneTooltip
+          @title="hello world"
+          @visible={{this.manualTooltipVisible}}
+          @triggerEvents=""
+        />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <h2>Fast @visible changes</h2>
+    <div class="row flex-row">
+      <OneButton
+        @onClick={{action this.runSingleFastTest 10}}
+        class="manual-visible-single-btn"
+      >
+        Single run (10ms)
+      </OneButton>
+      <OneButton
+        @onClick={{action this.runSingleFastTest 100}}
+        class="manual-visible-single-btn"
+      >
+        Single run (100ms)
+      </OneButton>
+    </div>
+    <div class="row flex-row">
+      <OneWayToggle @checked={{this.isFastTest}} @update={{this.toggleFastTest}} />
+      <div class="dummy-tooltip-container">
+        <OneTooltip
+          @title="hello world"
+          @visible={{this.fastTestTooltipVisible}}
+          @triggerEvents=""
+          @placement="right"
+        />
+      </div>
+    </div>
+  </div>
+</div>

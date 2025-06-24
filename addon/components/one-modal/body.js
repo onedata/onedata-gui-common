@@ -6,14 +6,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Body from 'ember-bootstrap/components/bs-modal/body';
-import layout from 'onedata-gui-common/templates/components/one-modal/body';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import Component from '@glimmer/component';
 
-export default class OneModalBody extends Body {
-  layout = layout;
-
+export default class OneModalBody extends Component {
   @service scrollState;
 
   @action

@@ -9,15 +9,11 @@
 
 import EmberAce from 'onedata-gui-common/components/ember-ace';
 import ChartistChart from 'onedata-gui-common/components/chartist-chart';
-import OneModalBody from 'onedata-gui-common/components/one-modal/body';
-import OneModal from 'onedata-gui-common/components/one-modal';
 
 /**
  * Maps: fullName -> factory (Ember class) of component to be overriden
  */
 const overrides = {
-  'component:bs-modal/body': OneModalBody,
-  'component:bs-modal': OneModal,
   'component:chartist-chart': ChartistChart,
   'component:ember-ace': EmberAce,
 };

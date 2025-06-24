@@ -129,7 +129,7 @@ describe('Integration | Component | one-form-simple', function () {
     <OneFormSimple
       @validations={{fakeValidations}}
       @fields={{fields}}
-      @submit={{action submitAction}}
+      @onSubmit={{action submitAction}}
     />
       `);
 

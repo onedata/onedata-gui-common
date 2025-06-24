@@ -97,8 +97,7 @@ describe('Integration | Component | global-modal', function () {
     );
   });
 
-  it(
-    'notifies about onShown event through resolve of modalManager.show().shownPromise promise',
+  it('notifies about onShown event through resolve of modalManager.show().shownPromise promise',
     async function () {
       await render(hbs `<GlobalModal
         @modalId={{modalManager.modalInstances.lastObject.id}}
@@ -109,8 +108,7 @@ describe('Integration | Component | global-modal', function () {
     }
   );
 
-  it(
-    'notifies about onHidden event through resolve of modalManager.show().hiddenPromise promise',
+  it('notifies about onHidden event through resolve of modalManager.show().hiddenPromise promise',
     async function () {
       const hiddenSpy = sinon.spy();
 
@@ -138,8 +136,7 @@ describe('Integration | Component | global-modal', function () {
     }
   );
 
-  it(
-    'notifies about onHidden event through resolve of modalManager.hide() promise',
+  it('notifies about onHidden event through resolve of modalManager.hide() promise',
     async function () {
       await render(hbs `<GlobalModal
         @modalId={{modalManager.modalInstances.lastObject.id}}
@@ -153,8 +150,7 @@ describe('Integration | Component | global-modal', function () {
     }
   );
 
-  it(
-    'returns the same promise for two consecutive modalManager.hide() calls',
+  it('returns the same promise for two consecutive modalManager.hide() calls',
     async function () {
       await render(hbs `<GlobalModal
         @modalId={{modalManager.modalInstances.lastObject.id}}
@@ -185,8 +181,7 @@ describe('Integration | Component | global-modal', function () {
     expect(isGlobalModalOpened()).to.be.false;
   });
 
-  it(
-    'calls onHide callback passed via component property on modal.close action',
+  it('calls onHide callback passed via component property on modal.close action',
     async function () {
       const hideSpy = sinon.spy();
       this.set('hide', hideSpy);
@@ -211,8 +206,7 @@ describe('Integration | Component | global-modal', function () {
     }
   );
 
-  it(
-    'calls onHide callback passed via modalManager.show() on modal.close action',
+  it('calls onHide callback passed via modalManager.show() on modal.close action',
     async function () {
       const hideSpy = sinon.spy();
 
@@ -233,8 +227,7 @@ describe('Integration | Component | global-modal', function () {
     }
   );
 
-  it(
-    'does not close modal if onHide passed via property returns false',
+  it('does not close modal if onHide passed via property returns false',
     async function () {
       const hideSpyViaShow = sinon.spy();
       const hideStubViaProp = sinon.stub().returns(false);
@@ -262,8 +255,7 @@ describe('Integration | Component | global-modal', function () {
     }
   );
 
-  it(
-    'does not close modal if onHide passed via show() returns false',
+  it('does not close modal if onHide passed via show() returns false',
     async function () {
       const hideStubViaShow = sinon.stub().returns(false);
       const hideSpyViaProp = sinon.spy();
@@ -290,8 +282,7 @@ describe('Integration | Component | global-modal', function () {
     }
   );
 
-  it(
-    'calls onSubmit callback passed via component property on modal.submit action',
+  it('calls onSubmit callback passed via component property on modal.submit action',
     async function () {
       const submitSpy = sinon.spy();
       this.set('submit', submitSpy);
@@ -316,8 +307,7 @@ describe('Integration | Component | global-modal', function () {
     }
   );
 
-  it(
-    'calls onSubmit callback passed via show() on modal.submit action',
+  it('calls onSubmit callback passed via show() on modal.submit action',
     async function () {
       const submitSpy = sinon.spy();
 
@@ -338,8 +328,7 @@ describe('Integration | Component | global-modal', function () {
     }
   );
 
-  it(
-    'calls onSubmit promise callback passed via property and then via show() on modal.submit action',
+  it('calls onSubmit promise callback passed via property and then via show() on modal.submit action',
     async function () {
       let resolveSpyViaProp;
       let resolveSpyViaShow;
@@ -393,8 +382,7 @@ describe('Integration | Component | global-modal', function () {
     }
   );
 
-  it(
-    'does not call onSubmit callback passed via show() when onSubmit passed via property rejects on modal.submit action',
+  it('does not call onSubmit callback passed via show() when onSubmit passed via property rejects on modal.submit action',
     async function () {
       const submitStubViaProp = sinon.stub().rejects();
       const submitSpyViaShow = sinon.spy();
@@ -437,8 +425,7 @@ describe('Integration | Component | global-modal', function () {
     expect(isGlobalModalOpened()).to.be.false;
   });
 
-  it(
-    'does not close modal on modal.submit when hideAfterSubmit show() option is false',
+  it('does not close modal on modal.submit when hideAfterSubmit show() option is false',
     async function () {
       await render(hbs `
         <GlobalModal @modalId={{modalManager.modalInstances.lastObject.id}} as |modal|>

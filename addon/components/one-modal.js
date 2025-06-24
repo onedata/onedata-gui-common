@@ -1,18 +1,21 @@
 /**
- * Custom extension of ember-bootstrap bs-modal
+ * Custom extension of ember-bootstrap `<BsModal>`
  *
- * @author Michał Borzęcki
- * @copyright (C) 2018-2020 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2018-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import BsModal from 'ember-bootstrap/components/bs-modal';
 import config from 'ember-get-config';
-import { guidFor } from '@ember/object/internals';
 import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
+import { action, computed } from '@ember/object';
 import { scheduleOnce, next } from '@ember/runloop';
 import _ from 'lodash';
+import Component from '@ember/component';
+import { guidFor } from '@ember/object/internals';
+import globals from 'onedata-gui-common/utils/globals';
+import { layout, tagName } from '@ember-decorators/component';
+import template from 'onedata-gui-common/templates/components/one-modal';
 
 /**
  * @typedef {Object} RouterTransitionInfo
@@ -30,7 +33,52 @@ import _ from 'lodash';
  * @typedef {RouterTransitionInfo | AppProxyTransitionInfo} TransitionInfo
  */
 
-export default class OneModal extends BsModal {
+/**
+ * @typedef {Object} OneModalSignature
+ * @property {null} Element
+ * @property {OneModalArgs} Args
+ */
+
+/**
+ * Undocumented properites are directly passed to `BsModal` - see its documentation for
+ * reference. Remember to use documentation for proper ember-boostrap version (see in
+ * package.json).
+ *
+ * Note, that Ember Boostrap's properties for Boostrap 4 are not supported.
+ *
+ * @typedef {Object} OneModalArgs
+ * @property {boolean} [fade]
+ * @property {any} open If truish - opens the modal. If falsy - closes the modal.
+ * @property {boolean} [backdrop]
+ * @property {boolean} [keyboard]
+ * @property {boolean} [backdropClose]
+ * @property {boolean} [renderInPlace]
+ * @property {number} [transitionDuration] The same as in BsModal, except for test
+ *   environment, where it is always set to 1.
+ * @property {number} [backdropTransitionDuration] The same as in BsModal, except for test
+ *   environment, where it is always set to 1.
+ * @property {() => undefined|false} [onHide] The same as in BsModal, but we pass extra
+ *   code after it to BsModal.
+ * @property {() => void} [onSubmit]
+ * @property {() => void} [onShow] The same as in BsModal, but we pass extra code after it
+ *   to BsModal.
+ * @property {() => void} [onShown]
+ * @property {() => void} [onHidden]
+ * @property {null|'sm'|'lg'} [size]
+ * @property {string} [modalClass] Classname added to `.modal` element.
+ * @property {string} [modalId] Use custom `.modal` element ID.
+ * @property {boolean|(transitionInfo: TransitionInfo) => boolean} [shouldCloseOnTransition]
+ *    If true, closes this modal on transition.
+ */
+
+const isTest = config.environment === 'test';
+
+/**
+ * @implements {OneModalArgs}
+ */
+@tagName('')
+@layout(template)
+export default class OneModal extends Component {
   @service router;
   @service appProxy;
 
@@ -41,17 +89,25 @@ export default class OneModal extends BsModal {
   shouldCloseOnTransition = true;
 
   /**
+   * @type {string}
+   * @private
+   */
+  prevSize = undefined;
+
+  /**
+   * Controls shadows displayed below header and above footer to body scroll state.
+   * @type {string}
+   * @private
+   */
+  scrollStateClassname = 'scroll-on-top scroll-on-bottom';
+
+  /**
    * @override
    */
   @computed
-  get modalId() {
-    return this.id ?? `${guidFor(this)}-modal`;
+  get effModalId() {
+    return this.modalId ?? `${guidFor(this)}-modal`;
   }
-
-  /**
-   * @type {string}
-   */
-  prevSize = undefined;
 
   /**
    * @type {function}
@@ -77,19 +133,26 @@ export default class OneModal extends BsModal {
     return (event) => this.handleAppProxyPropertyChange(event);
   }
 
+  get effTransitionDuration() {
+    return isTest ? 1 : this.transitionDuration;
+  }
+
+  get effBackdropTransitionDuration() {
+    return isTest ? 1 : this.backdropTransitionDuration;
+  }
+
+  get modalElement() {
+    return globals.document.getElementById(this.effModalId);
+  }
+
+  @computed('modalClass', 'scrollStateClassname')
+  get effModalClass() {
+    return `${this.modalClass} ${this.scrollStateClassname}`.trim();
+  }
+
   init() {
     super.init(...arguments);
-
-    this.set('prevSize', this.size);
-
-    if (config.environment === 'test') {
-      // 1ms (not 0) for animation to prevent from firing shown and hidden events
-      // in the same runloop frame as its' trigger events.
-      this.setProperties({
-        transitionDuration: 1,
-        backdropTransitionDuration: 1,
-      });
-    }
+    this.prevSize = this.size;
     this.registerRouteChangeHandler();
     this.registerAppProxyPropertyChangeHandler();
   }
@@ -112,79 +175,55 @@ export default class OneModal extends BsModal {
    */
   didRender() {
     super.didRender(...arguments);
-
-    // Modals make some magic with positioning which does not fire perfect-scrollbars
-    // overflow detection on render. We need to notify perfect-scrollbar about change
-    const modalElement = this.get('modalElement');
-    if (modalElement) {
-      const scrollableArea = modalElement.querySelector('.bs-modal-body-scroll');
-      if (scrollableArea) {
-        scrollableArea.dispatchEvent(new Event('parentrender'));
-      }
-    }
+    this.notifyScrollbar();
   }
 
   /**
    * @override
    */
   willDestroyElement() {
-    try {
-      this.unregisterRouteChangeHandler();
-      this.unregisterAppProxyPropertyChangeHandler();
-    } finally {
-      super.willDestroyElement(...arguments);
+    super.willDestroyElement(...arguments);
+    this.unregisterRouteChangeHandler();
+    this.unregisterAppProxyPropertyChangeHandler();
+  }
+
+  getScrollableArea() {
+    return this.modalElement?.querySelector('.bs-modal-body-scroll');
+  }
+
+  notifyScrollbar() {
+    // Modals make some magic with positioning which does not fire perfect-scrollbars
+    // overflow detection on render. We need to notify perfect-scrollbar about change
+    const scrollableArea = this.getScrollableArea();
+    if (scrollableArea) {
+      scrollableArea.dispatchEvent(new Event('parentrender'));
     }
-  }
-
-  /**
-   * @override
-   */
-  show() {
-    super.show(...arguments);
-    scheduleOnce('afterRender', this, 'toggleListeners', true);
-  }
-
-  /**
-   * @override
-   */
-  hide() {
-    super.hide(...arguments);
-    this.toggleListeners(false);
   }
 
   recomputeScrollShadow() {
-    const modalElement = this.get('modalElement');
-    if (modalElement) {
-      const area = modalElement.querySelector('.bs-modal-body-scroll');
-      const modalDialog = modalElement.querySelector('.modal-dialog');
-      if (modalDialog && area) {
-        const scrolledTop = area.classList.contains('on-top');
-        const scrolledBottom = area.classList.contains('on-bottom');
-
-        // We do not add classes to the modalElement, because its classes are changing too
-        // frequently,so it would clear scroll classes added below. On the other hand the
-        // class list of modalDialog is pretty constant (except modal size change)
-        modalDialog.classList[scrolledTop ? 'add' : 'remove']('scroll-on-top');
-        modalDialog.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-bottom');
+    const area = this.getScrollableArea();
+    let classes = '';
+    if (area) {
+      const scrolledTop = area.classList.contains('on-top');
+      const scrolledBottom = area.classList.contains('on-bottom');
+      if (scrolledTop) {
+        classes += 'scroll-on-top ';
+      }
+      if (scrolledBottom) {
+        classes += 'scroll-on-bottom';
       }
     }
+    this.set('scrollStateClassname', classes);
   }
 
   toggleListeners(enabled) {
-    const {
-      modalElement,
-      recomputeScrollShadowFunction,
-    } = this.getProperties('modalElement', 'recomputeScrollShadowFunction');
+    const area = this.getScrollableArea();
+    if (area) {
+      const methodName = `${enabled ? 'add' : 'remove'}EventListener`;
+      area[methodName]('edge-scroll-change', this.recomputeScrollShadowFunction);
 
-    if (modalElement) {
-      const area = modalElement.querySelector('.bs-modal-body-scroll');
-      if (area) {
-        const methodName = `${enabled ? 'add' : 'remove'}EventListener`;
-        area[methodName]('edge-scroll-change', recomputeScrollShadowFunction);
-
-        if (enabled) {
-          next(() => this.recomputeScrollShadow());
-        }
+      if (enabled) {
+        next(() => this.recomputeScrollShadow());
       }
     }
   }
@@ -216,7 +255,13 @@ export default class OneModal extends BsModal {
 
     const transitionInfo = { type: 'transition', data: transition };
     if (this.calculateShouldCloseOnTransition(transitionInfo)) {
-      this.send('close');
+      this.close();
+    }
+  }
+
+  close() {
+    if (this.onHide?.() !== false) {
+      this.set('isOpen', false);
     }
   }
 
@@ -238,7 +283,7 @@ export default class OneModal extends BsModal {
 
     const transitionInfo = { type: 'appProxy', data: cleanedEvent };
     if (this.calculateShouldCloseOnTransition(transitionInfo)) {
-      this.send('close');
+      this.close();
     }
   }
 
@@ -266,5 +311,18 @@ export default class OneModal extends BsModal {
   calculateShouldCloseOnTransition(transitionInfo) {
     return typeof this.shouldCloseOnTransition === 'function' ?
       this.shouldCloseOnTransition(transitionInfo) : this.shouldCloseOnTransition;
+  }
+
+  @action
+  show() {
+    this.onShow?.();
+    scheduleOnce('afterRender', this, 'toggleListeners', true);
+  }
+
+  @action
+  hide() {
+    const onHideResult = this.onHide?.();
+    this.toggleListeners(false);
+    return onHideResult;
   }
 }

@@ -1,10 +1,35 @@
+<div class="row">
+  <OneButton @onClick={{action this.openModal "lipsum"}}>Open Lorem Ipsum</OneButton>
+  <OneButton @onClick={{action this.openModal "basic"}}>Open basic</OneButton>
+</div>
+
 <OneModal
-  class="dummy-one-modal"
-  @open={{opened}}
+  @modalClass="dummy-one-modal"
+  @open={{this.basicOpened}}
+  @size="sm"
+  @backdropClose={{true}}
+  @keyboard={{true}}
+  @onHide={{action this.hideModal "basic"}}
+  as |modal|
+>
+  <modal.header>
+    <h1>The Header</h1>
+  </modal.header>
+  <modal.body>
+    The Body
+  </modal.body>
+  <modal.footer>
+    The Footer
+  </modal.footer>
+</OneModal>
+
+<OneModal
+  @modalClass="dummy-one-modal"
+  @open={{this.lipsumOpened}}
   @size="lg"
   @backdropClose={{true}}
   @keyboard={{true}}
-  @onHide={{action "onHide"}}
+  @onHide={{action this.hideModal "lipsum"}}
   as |modal|
 >
   <modal.header>
@@ -12,8 +37,8 @@
   </modal.header>
   <modal.body>
     <div class="row">
-      {{#each (repeat lipsumCount)}}
-        {{lipsum}}
+      {{#each (repeat this.lipsumCount)}}
+        {{this.lipsumText}}
       {{/each}}
     </div>
   </modal.body>

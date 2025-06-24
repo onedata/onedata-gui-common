@@ -28,7 +28,7 @@
 
   <modal.body>
     {{#if areTabsVisible}}
-      <BsTab
+      <OneBsTab
         class="bs-tab-onedata bs-tab-modern"
         @activeId={{activeTab}}
         @customTabs={{true}}
@@ -48,7 +48,7 @@
             </nav.item>
           {{/each}}
         </BsNav>
-      </BsTab>
+      </OneBsTab>
     {{/if}}
     {{#if (eq activeTab "details")}}
       <Modals::WorkflowVisualiser::StoreModal::StoreForm

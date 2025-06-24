@@ -1,5 +1,5 @@
 <h2>{{tt this "header"}}</h2>
-<BsTab
+<OneBsTab
   class="only-tab-bar bs-tab-onedata"
   @activeId={{selectedTab.id}}
   @fade={{false}}
@@ -61,7 +61,7 @@
       </div>
     {{/if}}
     {{#each tabs as |tabSpec|}}
-      <tab.pane class="element-editor-tab-pane" @elementId={{tabSpec.id}}>
+      <tab.pane class="element-editor-tab-pane" @id={{tabSpec.id}}>
         {{component
           (concat
             "atm-workflow/chart-dashboard-editor/chart-editor/"
@@ -74,4 +74,4 @@
       </tab.pane>
     {{/each}}
   </div>
-</BsTab>
+</OneBsTab>
