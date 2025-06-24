@@ -81,6 +81,15 @@ export default Component.extend(I18n, {
   },
 
   /**
+   * Should not occur, as there are more than one input, but just in case.
+   * @override
+   * @param {SubmitEvent} event
+   */
+  submit(event) {
+    event.preventDefault();
+  },
+
+  /**
    * @param {string} fieldName
    * @param {string} value
    * @returns {void}

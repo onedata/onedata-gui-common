@@ -872,12 +872,6 @@ export default Component.extend(I18n, {
 
     setProperties(currentRevValues, propsToUpdateInCurrentRevision);
   },
-
-  actions: {
-    formNativeSubmit(event) {
-      event.preventDefault();
-    },
-  },
 });
 
 function taskToFormData(task, atmLambda, atmLambdaRevisionNumber) {

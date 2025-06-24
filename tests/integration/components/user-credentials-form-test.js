@@ -23,8 +23,7 @@ describe('Integration | Component | user-credentials-form', function () {
       .to.exist;
   });
 
-  it(
-    'shows old password, new password and retype new password fields in change password mode',
+  it('shows old password, new password and retype new password fields in change password mode',
     async function () {
       await render(hbs `<UserCredentialsForm @changingPassword={{true}} />`);
 
@@ -46,6 +45,7 @@ describe('Integration | Component | user-credentials-form', function () {
     const NEW_PASSWORD = 'one987654321';
 
     let submitted = false;
+
     this.set('submit', function ({ currentPassword, newPassword }) {
       expect(currentPassword).to.be.equal(OLD_PASSWORD);
       expect(newPassword).to.be.equal(NEW_PASSWORD);
@@ -53,7 +53,7 @@ describe('Integration | Component | user-credentials-form', function () {
     });
 
     await render(hbs `
-      <UserCredentialsForm @changingPassword={{true}} @submit={{action submit}} />
+      <UserCredentialsForm @changingPassword={{true}} @onSubmit={{action submit}} />
     `);
 
     const form = new UserCredentialsFormHelper(this.element);

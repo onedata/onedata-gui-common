@@ -8,6 +8,9 @@
 
 import { Promise } from 'rsvp';
 
-export default async function sleep(timeout) {
-  await new Promise(resolve => setTimeout(resolve, timeout));
+/**
+ * @param timeout Time in milliseconds for resolve.
+ */
+export default async function sleep(timeout: number) {
+  await new Promise((resolve) => setTimeout(resolve, timeout));
 }

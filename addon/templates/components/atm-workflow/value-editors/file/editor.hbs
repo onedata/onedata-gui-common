@@ -28,7 +28,7 @@
         {{tt this "selectFile"}}
       </AtmWorkflow::ValueEditors::File::Selector>
     {{else if (eq mode "idForm")}}
-      <form class="form form-horizontal form-component">
+      <form onsubmit={{prevent-default}} class="form form-horizontal form-component">
         <FormComponent::FieldRenderer @field={{idFormRootGroup}} />
         <div class="id-form-buttons">
           <OneButton

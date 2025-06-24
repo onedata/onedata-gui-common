@@ -15,8 +15,7 @@ describe('Integration | Component | one-modal', function () {
     overrideComponents(this.owner);
   });
 
-  it(
-    'calls onShown and onHidden when modal is closed before it was fully shown',
+  it('calls onShown and onHidden when modal is closed before it was fully shown',
     async function () {
       const shownSpy = sinon.spy();
       const hiddenSpy = sinon.spy();
@@ -50,8 +49,7 @@ describe('Integration | Component | one-modal', function () {
     }
   );
 
-  it(
-    'does not call "onHide", when closed using "open" property',
+  it('does not call "onHide", when closed using "open" property',
     async function () {
       const hideSpy = sinon.spy();
       this.set('hide', hideSpy);
@@ -73,27 +71,58 @@ describe('Integration | Component | one-modal', function () {
     }
   );
 
-  it(
-    'have auto-generated element id when id is not provided',
+  it('have auto-generated element id when id is not provided',
     async function () {
       const hideSpy = sinon.spy();
       this.set('hide', hideSpy);
 
-      await render(hbs `<OneModal class="my-modal" />`);
+      await render(hbs`<OneModal
+        @modalClass="my-modal"
+        @open={{true}}
+      />`);
 
       expect(find('.my-modal').id).to.match(/.*-modal/);
     }
   );
 
-  it(
-    'uses id property as modal id when provided',
+  it('uses @modalId property as modal id when provided',
     async function () {
       const hideSpy = sinon.spy();
       this.set('hide', hideSpy);
 
-      await render(hbs `<OneModal @id="some-id" class="my-modal" />`);
+      await render(hbs`<OneModal
+        @open={{true}}
+        @modalId="some-id"
+        @modalClass="my-modal"
+      />`);
 
       expect(find('.my-modal').id).to.equal('some-id');
     }
   );
+
+  it('does not hide modal when onHide returns false', async function () {
+    // given
+    this.set('onHide', () => {
+      return false;
+    });
+    await render(hbs `
+      <OneModal
+        @open={{true}}
+        @modalClass="my-modal"
+        @onHide={{this.onHide}}
+        as |modal|
+      >
+        <modal.body>
+          <button class="close-button" onclick={{modal.close}}></button>
+        </modal.body>
+      </OneModal>
+    `);
+
+    // when
+    await find('.close-button').click();
+    await settled();
+
+    // then
+    expect(find('.my-modal')).to.exist;
+  });
 });

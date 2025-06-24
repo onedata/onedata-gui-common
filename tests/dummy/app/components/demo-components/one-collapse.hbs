@@ -1,0 +1,16 @@
+<div class="row">
+  <OneButton @onClick={{this.toggleOpened}} @size="sm">Toggle</OneButton>
+</div>
+<div class="row">
+  <OneCollapse
+    @collapsed={{not this.isOpened}}
+    @transitionDuration={{this.transitionDuration}}
+  >
+    <p>
+      Sit incididunt incididunt proident cupidatat pariatur consectetur.
+      Culpa do anim magna duis ullamco reprehenderit ametLorem
+      cillum labore. Nisi aliqua eiusmod nisi culpa proident est occaecat commodo minim.
+      Occaecat aliquip tempor excepteur aliqua anim nulla sunt aliquip irure.
+    </p>
+  </OneCollapse>
+</div>

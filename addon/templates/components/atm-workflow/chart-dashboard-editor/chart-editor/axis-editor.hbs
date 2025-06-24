@@ -5,7 +5,7 @@
   />
 </PerfectScrollbarElement>
 <div class="details-column">
-  <BsTab
+  <OneBsTab
     @activeId={{activeTabId}}
     class="only-tab-bar bs-tab-onedata"
     @fade={{false}}
@@ -42,7 +42,7 @@
       </nav.item>
     </BsNav>
     <div class="tab-content">
-      <tab.pane @elementId={{tabIds.attachedSeries}}>
+      <tab.pane @id={{tabIds.attachedSeries}}>
         {{#if chartElement.series.length}}
           <AtmWorkflow::ChartDashboardEditor::ChartEditor::SeriesList
             @chart={{chart}}
@@ -53,7 +53,7 @@
           <p class="empty-details-info">{{tt this "noSeriesAttached"}}</p>
         {{/if}}
       </tab.pane>
-      <tab.pane @elementId={{tabIds.labelFormatting}}>
+      <tab.pane @id={{tabIds.labelFormatting}}>
         <RenderLater @triggerRender={{eq activeTabId tabIds.labelFormatting}}>
           <AtmWorkflow::ChartDashboardEditor::FunctionEditor
             @outputFunction={{chartElement.valueProvider}}
@@ -65,5 +65,5 @@
         </RenderLater>
       </tab.pane>
     </div>
-  </BsTab>
+  </OneBsTab>
 </div>

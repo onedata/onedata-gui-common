@@ -27,16 +27,14 @@ $modal-scroll-margin: 14px;
       @include hide-before-shadow;
     }
   }
-  .modal-dialog {
-    &.scroll-on-top {
-      .modal-header {
-        @include hide-before-shadow;
-      }
+  &.scroll-on-top {
+    .modal-header {
+      @include hide-before-shadow;
     }
-    &.scroll-on-bottom {
-      .modal-footer {
-        @include hide-before-shadow;
-      }
+  }
+  &.scroll-on-bottom {
+    .modal-footer {
+      @include hide-before-shadow;
     }
   }
   &.full-vertical {

@@ -1,4 +1,4 @@
-<form class="form form-component form-horizontal">
+<form onsubmit={{prevent-default}} class="form form-component form-horizontal">
   <FormComponent::FieldRenderer @field={{rootGroup}} />
 </form>
 <textarea rows="10" cols="40" disabled>{{formattedLatestUserValue}}</textarea>

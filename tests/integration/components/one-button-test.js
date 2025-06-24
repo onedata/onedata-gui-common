@@ -40,6 +40,7 @@ describe('Integration | Component | one-button', function () {
 
     expect(find('.spin-spinner')).to.exist;
     expect(find('.one-button').disabled).to.be.true;
+    expect(find('.one-button')).to.has.class('pending');
 
     resolvePromise();
     await settled();

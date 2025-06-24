@@ -1,0 +1,23 @@
+<BsModal
+  @fade={{@fade}}
+  @open={{bool @open}}
+  @backdrop={{@backdrop}}
+  @keyboard={{@keyboard}}
+  @backdropClose={{@backdropClose}}
+  @renderInPlace={{@renderInPlace}}
+  @transitionDuration={{this.effTransitionDuration}}
+  @backdropTransitionDuration={{this.effBackdropTransitionDuration}}
+  @onHide={{this.hide}}
+  @onSubmit={{@onSubmit}}
+  @onShow={{this.show}}
+  @onShown={{@onShown}}
+  @onHidden={{@onHidden}}
+  @size={{@size}}
+  @bodyComponent={{component "one-modal/body"}}
+  @footerComponent={{component "one-modal/footer"}}
+  class={{this.effModalClass}}
+  id={{this.effModalId}}
+  as |modal|
+>
+  {{yield modal}}
+</BsModal>

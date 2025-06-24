@@ -1,13 +1,15 @@
-{{#each modalInstances key="id" as |modalInstance|}}
+{{#each this.modalInstances key="id" as |modalInstance|}}
   {{#if modalInstance.fullComponentName}}
-    {{#if testMode}}
+    {{#if this.testMode}}
       <div class="rendered-component">{{modalInstance.fullComponentName}}</div>
     {{else}}
-      {{component modalInstance.fullComponentName
-        modalId=modalInstance.id
-        modalOptions=modalInstance.options
-        modalApi=modalInstance.api
-      }}
+      {{#let (component modalInstance.fullComponentName) as |modal|}}
+        <modal
+          @modalId={{modalInstance.id}}
+          @modalOptions={{modalInstance.options}}
+          @modalApi={{modalInstance.api}}
+        />
+      {{/let}}
     {{/if}}
   {{/if}}
 {{/each}}
