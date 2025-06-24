@@ -29,6 +29,30 @@ export function syncObserver() {
   return createObserver(true, ...arguments);
 }
 
+/**
+ * Asynchronously calls `onChange` when property in its path changes. It is a replacement
+ * for registering observers in EmberObjects as want to limit usages of EmberObject-based
+ * classes as possible. Using observers are not recommended at all though, so use it only
+ * if there is not other option.
+ *
+ * Example usage:
+ * ```js
+ * class Komponent extends Component {
+ *   @tracked czesiek;
+ *   init() {
+ *     // ...
+ *     this.asyncObserver = PropertyAsyncObserver.create({
+ *       source: this,
+ *       path: 'source.czesiek',
+ *       onChange: (newValue) => this.onCzesiekChange(newValue),
+ *     });
+ *   }
+ *   onCzesiekChange(newValue) {
+ *     console.log(`New value of czesiek is ${newValue}`);
+ *   }
+ * }
+ * ```
+ */
 export class PropertyAsyncObserver extends EmberObject {
   /**
    * A local path to observed property. On change of the value, the `onChange` callback
@@ -41,7 +65,7 @@ export class PropertyAsyncObserver extends EmberObject {
   /**
    * Callback executed asynchronously when value in the `path` in this object is changed.
    * @virtual
-   * @type {() => void}
+   * @type {(newValue: any) => void}
    */
   onChange;
 

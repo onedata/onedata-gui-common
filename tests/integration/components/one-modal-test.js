@@ -102,7 +102,6 @@ describe('Integration | Component | one-modal', function () {
 
   it('does not hide modal when onHide returns false', async function () {
     // given
-    // this.set('open', true);
     this.set('onHide', () => {
       return false;
     });

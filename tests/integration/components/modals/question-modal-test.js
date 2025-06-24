@@ -157,7 +157,7 @@ describe('Integration | Component | modals/question-modal', function () {
       await showModal(this);
       await click(getModalBody().querySelector('.text-understand'));
 
-      return expect(getModalBody().querySelector('.one-checkbox'))
+      expect(getModalBody().querySelector('.one-checkbox'))
         .to.have.class('checked');
     }
   );
