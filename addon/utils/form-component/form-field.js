@@ -13,7 +13,6 @@ import { computed, defineProperty } from '@ember/object';
 import { union } from '@ember/object/computed';
 import { A } from '@ember/array';
 import { buildValidations } from 'ember-cp-validations';
-import { conditional, or, not } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';
 
 export default FormElement.extend({
@@ -119,16 +118,22 @@ export default FormElement.extend({
   /**
    * @override
    */
-  invalidFields: conditional(
-    or('isValid', not('isEffectivelyEnabled'), not('isVisible')),
-    [],
-    computed(function () { return [this]; }),
+  invalidFields: computed(
+    'isValid',
+    'isEffectivelyEnabled',
+    'isVisible',
+    function invalidFields() {
+      const effValid = this.isValid || !this.isEffectivelyEnabled || !this.isVisible;
+      return effValid ? [] : [this];
+    }
   ),
 
   /**
    * @type {ComputedProperty<Array<any>>}
    */
-  errors: conditional('isValueless', [], 'fieldValidationChecker.errors'),
+  errors: computed('isValueless', 'fieldValidationChecker.errors', function errors() {
+    return this.isValueless ? [] : this.fieldValidationChecker.errors;
+  }),
 
   /**
    * @type {ComputedProperty<Object>}
