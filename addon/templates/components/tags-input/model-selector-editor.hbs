@@ -77,7 +77,13 @@
                   {{#if tag.icon}}
                     <OneIcon @icon={{tag.icon}} class="tag-icon" />
                   {{/if}}
-                  <TruncatedString class="tag-label">{{tag.label}}</TruncatedString>
+                  <TruncatedString class="tag-label">
+                    {{#if tag.value.record.conflictLabel}}
+                      <NameConflict @item={{tag.value.record}} />
+                    {{else}}
+                      {{tag.label}}
+                    {{/if}}
+                  </TruncatedString>
                   {{#if tag.tip}}
                     <OneTooltip @title={{tag.tip}} />
                   {{/if}}
