@@ -12,6 +12,7 @@ export default [
   'global-alert',
   'global-modal',
   'hr-label',
+  'infinite-scroll',
   'infinite-scroll-table',
   'input-group',
   'json-editor',

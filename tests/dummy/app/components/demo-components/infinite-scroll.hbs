@@ -1,0 +1,13 @@
+<div class="infinite-scroll-demo" {{did-insert this.didInsert}}>
+  <PerfectScrollbarElement class="infinite-scroll-demo-container">
+    <ul class="list">
+      <li class="table-start-row"></li>
+      <li class="first-row" style={{this.infiniteScroll.firstRowModel.style}}></li>
+      {{#each this.chunkable.chunksArray as |indexedItem|}}
+        <li class="item data-row" data-row-id={{indexedItem.index}}>
+          {{indexedItem.item.name}}
+        </li>
+      {{/each}}
+    </ul>
+  </PerfectScrollbarElement>
+</div>

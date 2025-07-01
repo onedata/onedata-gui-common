@@ -1,0 +1,19 @@
+.infinite-scroll-demo {
+  .infinite-scroll-demo-container {
+    height: 800px;
+    width: 400px;
+    border: 1px solid black;
+    ul {
+      margin: 0;
+      padding: 0;
+    }
+  }
+  .item {
+    height: 25px;
+    list-style: none;
+    border-bottom: 1px solid green;
+  }
+  .table-start-row {
+    height: 0;
+  }
+}

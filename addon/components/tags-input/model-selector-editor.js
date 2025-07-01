@@ -24,6 +24,9 @@ import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
 import { promise, array, raw, isEmpty } from 'ember-awesome-macros';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
+import ChunkablePlainArray from 'onedata-gui-common/utils/chunkable-plain-array';
+import { tracked } from '@glimmer/tracking';
 
 /**
  * @typedef {'user'|'group'|'provider'|'service'|'serviceOnepanel'} ModelSelectorEditorModelName
@@ -193,6 +196,11 @@ export default Component.extend(I18n, {
    * @returns {any}
    */
   onEndTagCreation: notImplementedIgnore,
+
+  /**
+   * @type {Utils.InfiniteScroll}
+   */
+  infiniteScroll: undefined,
 
   /**
    * @type {String}
@@ -391,11 +399,11 @@ export default Component.extend(I18n, {
       const {
         tagsToRender,
         recordsFilter,
-      } = this.getProperties('tagsToRender', 'recordsFilter');
+      } = this;
 
       const filter = recordsFilter.trim().toLocaleLowerCase();
       return tagsToRender.filter(tag =>
-        String(get(tag, 'label')).trim().toLocaleLowerCase().includes(filter)
+        String(tag.label).trim().toLocaleLowerCase().includes(filter)
       );
     }
   ),
@@ -422,6 +430,19 @@ export default Component.extend(I18n, {
     if (!this.selectedTags) {
       this.set('selectedTags', []);
     }
+    this.set('chunkableArray', new ModelSelectorChunkableList(this));
+    const infiniteScroll = InfiniteScroll
+      .extend({
+        entries: reads('modelSelectorEditor.chunkableArray.chunksArray'),
+      })
+      .create({
+        modelSelectorEditor: this,
+        itemIdProperty: 'index',
+        // Should be the same as .one-webui-popover.tags-selector .selector-item height
+        // style.
+        singleRowHeight: 25,
+      });
+    this.set('infiniteScroll', infiniteScroll);
   },
 
   didInsertElement() {
@@ -434,11 +455,19 @@ export default Component.extend(I18n, {
   },
 
   /**
+   * @param {HTMLElement} selectorListScrollContainer
+   */
+  onContainerInsert(selectorListScrollContainer) {
+    this.infiniteScroll.mount(selectorListScrollContainer);
+  },
+
+  /**
    * @override
    */
   willDestroyElement() {
     try {
       this.destroyDanglingTags();
+      this.infiniteScroll?.destroy();
     } finally {
       this._super(...arguments);
     }
@@ -480,3 +509,23 @@ export default Component.extend(I18n, {
     },
   },
 });
+
+class ModelSelectorChunkableList extends ChunkablePlainArray {
+  /** @type {Components.ModelSelectorEditor} */
+  @tracked
+  modelSelectorEditor;
+
+  /** @override */
+  @reads('modelSelectorEditor.filteredTagsToRender')
+  sourceArray;
+
+  constructor(modelSelectorEditor, chunksArrayOptions) {
+    super(null, chunksArrayOptions);
+    if (!modelSelectorEditor) {
+      throw new Error(
+        'ModelSelectorChunkableList: no modelSelectorEditor provided in constructor'
+      );
+    }
+    this.modelSelectorEditor = modelSelectorEditor;
+  }
+}

@@ -62,7 +62,7 @@
           <p class="all-records-added-description">
             {{tt this (concat "allRecordsAdded." selectedModelName)}}
           </p>
-        {{else}}
+        {{else if this.infiniteScroll}}
           <input
             type="text"
             class="records-filter form-control input-sm"
@@ -70,24 +70,42 @@
             oninput={{action (mut recordsFilter) value="target.value"}}
             placeholder={{tt this "recordsFilterPlaceholder"}}
           >
-          <PerfectScrollbarElement>
+          <PerfectScrollbarElement
+            class="selector-list-scroll-container"
+            {{did-insert (action this.onContainerInsert)}}
+          >
             <ul class="selector-list">
-              {{#each filteredTagsToRender key="label" as |tag|}}
-                <li class="selector-item {{if tag.value.record.representsAll "all-item" "record-item"}}" {{action "tagSelected" tag}}>
-                  {{#if tag.icon}}
-                    <OneIcon @icon={{tag.icon}} class="tag-icon" />
-                  {{/if}}
-                  <TruncatedString class="tag-label">
-                    {{#if tag.value.record.conflictLabel}}
-                      <NameConflict @item={{tag.value.record}} />
-                    {{else}}
-                      {{tag.label}}
+              <li class="table-start-row"></li>
+              <li
+                class="first-row"
+                style={{this.infiniteScroll.firstRowModel.style}}
+              ></li>
+              {{#each chunkableArray.chunksArray key="label" as |tagItem|}}
+                {{#let tagItem.item as |tag|}}
+                  <li
+                    class={{concat-classes
+                      "data-row"
+                      "selector-item"
+                      (if tag.value.record.representsAll "all-item" "record-item")
+                    }}
+                    data-row-id={{tagItem.index}}
+                    {{action "tagSelected" tag}}
+                  >
+                    {{#if tag.icon}}
+                      <OneIcon @icon={{tag.icon}} class="tag-icon" />
                     {{/if}}
-                  </TruncatedString>
-                  {{#if tag.tip}}
-                    <OneTooltip @title={{tag.tip}} />
-                  {{/if}}
-                </li>
+                    <TruncatedString class="tag-label">
+                      {{#if tag.value.record.conflictLabel}}
+                        <NameConflict @item={{tag.value.record}} />
+                      {{else}}
+                        {{tag.label}}
+                      {{/if}}
+                    </TruncatedString>
+                    {{#if tag.tip}}
+                      <OneTooltip @title={{tag.tip}} />
+                    {{/if}}
+                  </li>
+                {{/let}}
               {{/each}}
             </ul>
           </PerfectScrollbarElement>

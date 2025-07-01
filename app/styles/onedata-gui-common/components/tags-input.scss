@@ -222,6 +222,8 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   .selector-item {
     display: flex;
     padding: $padding-small-vertical;
+    // Synchronize height changes with infinite scroll item height in ModelSelectorEditor
+    // component.
     height: 25px;
     border-radius: $border-radius-base;
     cursor: pointer;
