@@ -468,6 +468,7 @@ export default Component.extend(I18n, {
     try {
       this.destroyDanglingTags();
       this.infiniteScroll?.destroy();
+      this.chunkableArray?.destroy();
     } finally {
       this._super(...arguments);
     }
