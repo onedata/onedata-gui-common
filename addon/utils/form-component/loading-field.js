@@ -1,16 +1,13 @@
 /**
  * A loading form field.
  *
- * @author Michał Borzęcki
- * @copyright (C) 2020-2024 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2020-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { computed } from '@ember/object';
-import { reads } from '@ember/object/computed';
-import { resolve } from 'rsvp';
-import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 
 export default FormField.extend({
   /**
@@ -48,27 +45,35 @@ export default FormField.extend({
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isPending: reads('loadingProxy.isPending'),
+  isPending: computed('loadingProxy.isPending', function isPending() {
+    if (!this.loadingProxy) {
+      return false;
+    }
+    return this.loadingProxy.isPending;
+  }),
 
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isFulfilled: reads('loadingProxy.isFulfilled'),
+  isFulfilled: computed('loadingProxy.isFulfilled', function isFulfilled() {
+    if (!this.loadingProxy) {
+      return true;
+    }
+    return this.loadingProxy.isFulfilled;
+  }),
 
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isRejected: reads('loadingProxy.isRejected'),
+  isRejected: computed('loadingProxy.isRejected', function isRejected() {
+    if (!this.loadingProxy) {
+      return false;
+    }
+    return this.loadingProxy.isRejected;
+  }),
 
   /**
    * @override
    */
   isValueless: true,
-
-  init() {
-    this._super(...arguments);
-    if (!this.loadingProxy) {
-      this.set('loadingProxy', PromiseObject.create({ promise: resolve() }));
-    }
-  },
 });

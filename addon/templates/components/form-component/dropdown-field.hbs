@@ -1,29 +1,29 @@
-{{#if isInViewMode}}
-  {{#if selectedOption.icon}}<OneIcon
-    @icon={{selectedOption.icon}}
-  />{{/if}}<span class="text">{{selectedOption.label}}</span>
+{{#if this.isInViewMode}}
+  {{#if this.selectedOption.icon}}<OneIcon
+    @icon={{this.selectedOption.icon}}
+  />{{/if}}<span class="text">{{this.selectedOption.label}}</span>
 {{else}}
   <OneDropdown
     @tagName="div"
-    @disabled={{not isEffectivelyEnabled}}
-    @options={{preparedOptions}}
+    @disabled={{not this.isEffectivelyEnabled}}
+    @options={{this.preparedOptions}}
     @onChange={{action "valueChanged"}}
-    @selected={{selectedOption}}
-    @placeholder={{placeholder}}
+    @selected={{this.selectedOption}}
+    @placeholder={{this.placeholder}}
     @renderInPlace={{false}}
     @onBlur={{action "triggerFocusLost"}}
     @onClose={{action "focusLost"}}
-    @triggerId={{fieldId}}
-    @searchEnabled={{showSearch}}
-    @matcher={{matchDropdownOption}}
+    @triggerId={{this.fieldId}}
+    @searchEnabled={{this.showSearch}}
+    @matcher={{this.matchDropdownOption}}
     @triggerClass={{concat-classes
       "dropdown-field-trigger"
-      (if (eq size "sm") "small")
+      (if (eq this.size "sm") "small")
     }}
     @dropdownClass={{concat-classes
       "dropdown-field-dropdown"
-      (concat field.name "-field-dropdown")
-      (if (eq size "sm") "small")
+      (concat this.field.name "-field-dropdown")
+      (if (eq this.size "sm") "small")
     }}
     as |option|
   >
@@ -32,7 +32,11 @@
         <OneIcon @icon={{option.icon}} />
       {{/if}}
       <TruncatedString class="text">
-        {{option.label}}
+        {{#if this.useRecordLabel}}
+          <NameConflict @item={{option.value}} />
+        {{else}}
+          {{option.label}}
+        {{/if}}
       </TruncatedString>
     </div>
   </OneDropdown>

@@ -22,6 +22,16 @@ export default OptionsField.extend({
   showSearch: true,
 
   /**
+   * If true, ignores provided `option.label` and uses `<NameConflict>` component to
+   * render option label, which uses `name` and (optional) `conflictLabel` of record hold
+   * on `option.value`. Only for option values that are records or objects with `name` or
+   * `conflictLabel`.
+   * @virtual optional
+   * @type {boolean}
+   */
+  useRecordLabel: false,
+
+  /**
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */

@@ -12,8 +12,11 @@ export default function clearStore() {
   }
 }
 
-export function clearStoreAfterEach() {
-  afterEach(function () {
+/**
+ * @param {() => void} afterEachFun
+ */
+export function clearStoreAfterEach(afterEachFun = afterEach) {
+  afterEachFun(function () {
     clearStore();
   });
 }

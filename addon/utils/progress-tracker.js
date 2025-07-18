@@ -84,6 +84,15 @@ export default class ProgressTracker {
   }
 
   /**
+   * Progress in form of integer string from 0% to 100%.
+   * @type {string}
+   */
+  @computed('progress')
+  get progressText() {
+    return `${Math.floor((this.progress || 0) * 100)}%`;
+  }
+
+  /**
    * @param {number|undefined} totalCount If positive number is provided then initialize
    *   valid progress and reset done counter. When no `totalCount` is provided, then the
    *   object will be invalid - it should be initialized to be used.

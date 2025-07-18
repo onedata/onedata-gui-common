@@ -3,8 +3,8 @@
  * model records. Available models are: user, group, oneprovider, service (op and oz),
  * serviceOnepanel (opp and ozp).
  *
- * @author Michał Borzęcki
- * @copyright (C) 2020-2024 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2020-2025 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -24,14 +24,40 @@ import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
 import { promise, array, raw, isEmpty } from 'ember-awesome-macros';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
+import ChunkablePlainArray from 'onedata-gui-common/utils/chunkable-plain-array';
+import { tracked } from '@glimmer/tracking';
 
-const supportedModels = [
+/**
+ * @typedef {'user'|'group'|'provider'|'service'|'serviceOnepanel'} ModelSelectorEditorModelName
+ */
+
+/**
+ * @type {Array<ModelSelectorEditorModelName>}
+ */
+const supportedModels = Object.freeze([
   'user',
   'group',
   'provider',
   'service',
   'serviceOnepanel',
-];
+]);
+
+/**
+ * @typedef {Object} ModelSelectorEditorSettings
+ * @property {Array<ModelSelectorEditorModelSpec>} models Array of models specifications,
+ *   which should be used to construct list of record. Order of models in dropdown model
+ *   selector will be the same as in this array.
+ * @property {string|SafeString} [modelListLoadingLabel] Custom text that will be rendered
+ *   under loading spinner. If undefined, a standard text from i18n will be rendered.
+ */
+
+/**
+ * @typedef {Object} ModelSelectorEditorModelSpec
+ * @property {ModelSelectorEditorModelName} name
+ * @property {() => Promise<Array<DS.Model>>} getRecords Returns a Promise which should
+ *   resolve to an array of model records.
+ */
 
 /**
  * Removes tags, which are redundant due to existence of "all records" tags.
@@ -146,18 +172,7 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Object}
-   *
-   * Supported settings: {
-   *   models: Array<Object> - array of models specifications, which should be used
-   *     to construct list of record. Order of models in dropdown model selector
-   *     will be the same as in this array.
-   * }
-   * Each model specification is an object: {
-   *   name: String, - one of: user, group, provider, service, serviceOnepanel
-   *   getRecords: Function - returns a Promise which should resolve to
-   *     an array of model records
-   * }
+   * @type {ModelSelectorEditorSettings}
    */
   settings: undefined,
 
@@ -181,6 +196,11 @@ export default Component.extend(I18n, {
    * @returns {any}
    */
   onEndTagCreation: notImplementedIgnore,
+
+  /**
+   * @type {Utils.InfiniteScroll}
+   */
+  infiniteScroll: undefined,
 
   /**
    * @type {String}
@@ -379,12 +399,19 @@ export default Component.extend(I18n, {
       const {
         tagsToRender,
         recordsFilter,
-      } = this.getProperties('tagsToRender', 'recordsFilter');
+      } = this;
 
       const filter = recordsFilter.trim().toLocaleLowerCase();
       return tagsToRender.filter(tag =>
-        String(get(tag, 'label')).trim().toLocaleLowerCase().includes(filter)
+        String(tag.label).trim().toLocaleLowerCase().includes(filter)
       );
+    }
+  ),
+
+  modelListLoadingLabel: computed(
+    'settings.modelListLoadingLabel',
+    function modelListLoadingLabel() {
+      return this.settings?.modelListLoadingLabel ?? this.t('gatheringEntities');
     }
   ),
 
@@ -403,6 +430,19 @@ export default Component.extend(I18n, {
     if (!this.selectedTags) {
       this.set('selectedTags', []);
     }
+    this.set('chunkableArray', new ModelSelectorChunkableList(this));
+    const infiniteScroll = InfiniteScroll
+      .extend({
+        entries: reads('modelSelectorEditor.chunkableArray.chunksArray'),
+      })
+      .create({
+        modelSelectorEditor: this,
+        itemIdProperty: 'index',
+        // Should be the same as .one-webui-popover.tags-selector .selector-item height
+        // style.
+        singleRowHeight: 25,
+      });
+    this.set('infiniteScroll', infiniteScroll);
   },
 
   didInsertElement() {
@@ -415,11 +455,20 @@ export default Component.extend(I18n, {
   },
 
   /**
+   * @param {HTMLElement} selectorListScrollContainer
+   */
+  onContainerInsert(selectorListScrollContainer) {
+    this.infiniteScroll.mount(selectorListScrollContainer);
+  },
+
+  /**
    * @override
    */
   willDestroyElement() {
     try {
       this.destroyDanglingTags();
+      this.infiniteScroll?.destroy();
+      this.chunkableArray?.destroy();
     } finally {
       this._super(...arguments);
     }
@@ -461,3 +510,23 @@ export default Component.extend(I18n, {
     },
   },
 });
+
+class ModelSelectorChunkableList extends ChunkablePlainArray {
+  /** @type {Components.ModelSelectorEditor} */
+  @tracked
+  modelSelectorEditor;
+
+  /** @override */
+  @reads('modelSelectorEditor.filteredTagsToRender')
+  sourceArray;
+
+  constructor(modelSelectorEditor, chunksArrayOptions) {
+    super(null, chunksArrayOptions);
+    if (!modelSelectorEditor) {
+      throw new Error(
+        'ModelSelectorChunkableList: no modelSelectorEditor provided in constructor'
+      );
+    }
+    this.modelSelectorEditor = modelSelectorEditor;
+  }
+}

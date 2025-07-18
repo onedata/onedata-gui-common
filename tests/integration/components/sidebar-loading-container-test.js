@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import { find } from 'ember-test-helpers';
+import { find } from '@ember/test-helpers';
 import SidebarModelLoader from 'onedata-gui-common/utils/sidebar-model-loader';
 import ProgressTracker from 'onedata-gui-common/utils/progress-tracker';
 import { Promise } from 'rsvp';
