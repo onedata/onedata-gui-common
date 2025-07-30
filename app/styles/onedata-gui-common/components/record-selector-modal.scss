@@ -1,0 +1,13 @@
+.record-selector-modal {
+  .dropdown-container {
+    position: relative;
+    min-height: 50px;
+  }
+  .ember-basic-dropdown {
+    margin-top: $padding-large-vertical;
+    text-align: left;
+  }
+  .ember-power-select-options[role="listbox"] {
+    max-height: 200px;
+  }
+}
