@@ -7,6 +7,7 @@
  * - selectorPlaceholderText - (optional) selector placeholder
  * - loadingText - (optional) label for loading spinner
  * - submitText - submit button text
+ * - modalClass - (optional) classname added to modal
  *
  * @author Michał Borzęcki
  * @copyright (C) 2020-2024 ACK CYFRONET AGH
@@ -18,7 +19,7 @@ import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import { promise } from 'ember-awesome-macros';
 import { computed, observer, get } from '@ember/object';
-import { reads } from '@ember/object/computed';
+import ComputedProperty, { reads } from '@ember/object/computed';
 import RecordOptionsArrayProxy from 'onedata-gui-common/utils/record-options-array-proxy';
 import { resolve } from 'rsvp';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -86,6 +87,11 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Promise<Array<GraphSingleModel>>>}
    */
   recordsPromise: reads('modalOptions.recordsPromise'),
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  modalClass: reads('modalOptions.modalClass'),
 
   /**
    * @type {ComputedProperty<PromiseArray<RecordOptionsArrayProxy<FieldOption>>>}
