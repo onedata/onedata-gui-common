@@ -1,32 +1,42 @@
 <GlobalModal
   @classNames="record-selector-modal"
-  @allowClose={{not isSubmitting}}
-  @modalId={{modalId}} as |modal|
+  @allowClose={{not this.isSubmitting}}
+  @modalId={{this.modalId}} as |modal|
 >
 
   <modal.header>
-    <h1>{{headerText}}</h1>
+    <h1>{{this.headerText}}</h1>
   </modal.header>
 
   <modal.body>
-    <p class="description">{{descriptionText}}</p>
-    <PromiseProxyContainer @proxy={{recordOptionsProxy}}>
-      <OneDropdown
-        @options={{recordOptionsProxy.content.content}}
-        @onChange={{action (mut selectedRecordOption)}}
-        @selected={{selectedRecordOption}}
-        @placeholder={{selectorPlaceholderText}}
-        @searchEnabled={{true}}
-        as |recordOption|
+    <p class="description">{{this.descriptionText}}</p>
+    <div class={{concat-classes
+      "dropdown-container"
+      (if this.recordOptionsProxy.isPending "loading")
+      (if this.loadingText "with-loading-label")
+    }}>
+      <PromiseProxyContainer
+        @proxy={{this.recordOptionsProxy}}
+        @sizeClass="sm"
+        @loadingLabel={{this.loadingText}}
       >
-        <div class="option-container">
-          <OneIcon @icon={{recordOption.icon}} />
-          <TruncatedString class="text">
-            {{recordOption.label}}
-          </TruncatedString>
-        </div>
-      </OneDropdown>
-    </PromiseProxyContainer>
+        <OneDropdown
+          @options={{this.recordOptionsProxy.content.content}}
+          @onChange={{action (mut this.selectedRecordOption)}}
+          @selected={{this.selectedRecordOption}}
+          @placeholder={{this.selectorPlaceholderText}}
+          @searchEnabled={{true}}
+          as |recordOption|
+        >
+          <div class="option-container">
+            <OneIcon @icon={{recordOption.icon}} />
+            <TruncatedString class="text">
+              {{recordOption.label}}
+            </TruncatedString>
+          </div>
+        </OneDropdown>
+      </PromiseProxyContainer>
+    </div>
   </modal.body>
 
   <modal.footer class="btn-toolbar">
@@ -34,7 +44,7 @@
       @type="default"
       class="record-selector-cancel"
       @onClick={{modal.close}}
-      @disabled={{isSubmitting}}
+      @disabled={{this.isSubmitting}}
     >
       {{tt this "cancel"}}
     </OneButton>
@@ -43,9 +53,9 @@
       @buttonType="submit"
       class="record-selector-submit"
       @onClick={{action "submit" modal.submit}}
-      @disabled={{not selectedRecordOption}}
+      @disabled={{not this.selectedRecordOption}}
     >
-      {{submitText}}
+      {{this.submitText}}
     </OneButton>
   </modal.footer>
 

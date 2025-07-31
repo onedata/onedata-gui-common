@@ -5,6 +5,7 @@
  * - headerText - modal header text
  * - descriptionText - (optional) description rendered above the selector
  * - selectorPlaceholderText - (optional) selector placeholder
+ * - loadingText - (optional) label for loading spinner
  * - submitText - submit button text
  *
  * @author Michał Borzęcki
@@ -75,6 +76,11 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<String>}
    */
   submitText: reads('modalOptions.submitText'),
+
+  /**
+   * @type {ComputedProperty<string|SafeString>}
+   */
+  loadingText: reads('modalOptions.loadingText'),
 
   /**
    * @type {ComputedProperty<Promise<Array<GraphSingleModel>>>}

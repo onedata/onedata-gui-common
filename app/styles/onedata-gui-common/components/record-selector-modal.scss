@@ -1,7 +1,20 @@
 .record-selector-modal {
   .dropdown-container {
-    position: relative;
-    min-height: 50px;
+    &.loading {
+      $loading-label-space: 1.4em;
+      $spinner-space: 70px;
+      position: relative;
+      min-height: $spinner-space;
+      &.with-loading-label {
+        min-height: calc(#{$spinner-space} + #{$loading-label-space});
+        .spin-spinner-block {
+          margin-top: -$loading-label-space;
+        }
+      }
+      .loading-container-label {
+        --loading-container-label-additional-space: 15em;
+      }
+    }
   }
   .ember-basic-dropdown {
     margin-top: $padding-large-vertical;
