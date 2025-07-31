@@ -19,7 +19,7 @@ import I18n from 'onedata-gui-common/mixins/i18n';
 import { inject as service } from '@ember/service';
 import { promise } from 'ember-awesome-macros';
 import { computed, observer, get } from '@ember/object';
-import ComputedProperty, { reads } from '@ember/object/computed';
+import { reads } from '@ember/object/computed';
 import RecordOptionsArrayProxy from 'onedata-gui-common/utils/record-options-array-proxy';
 import { resolve } from 'rsvp';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
