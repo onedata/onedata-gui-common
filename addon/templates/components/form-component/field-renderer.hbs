@@ -5,6 +5,9 @@
       @tooltipClass={{tooltipClass}}
       @title={{tip}}
     />{{/if}}
+    {{#if (and (and addOptionalTextToLabel isOptional) optionalTextToLabel)}}
+      <div class="form-optional-text">({{optionalTextToLabel}})</div>
+    {{/if}}
   </label>
 {{/if}}
 {{#component fieldComponentName field=field fieldId=fieldId}}

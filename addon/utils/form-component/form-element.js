@@ -266,6 +266,13 @@ export default EmberObject.extend(DynamicOwnerInjector, I18n, {
   fieldComponentName: undefined,
 
   /**
+   * If false and value will be empty, then presence validator will notify an error
+   * @virtual
+   * @type {boolean}
+   */
+  isOptional: false,
+
+  /**
    * @virtual optional
    * @type {Array<Utils.FormComponent.FormElement>}
    */
@@ -281,6 +288,12 @@ export default EmberObject.extend(DynamicOwnerInjector, I18n, {
     },
     set(key, value) {
       return this.customLabel = value;
+    },
+  }),
+
+  optionalTextToLabel: computed('i18nPrefix', 'translationPath', {
+    get() {
+      return this.t('optional', '');
     },
   }),
 
@@ -382,6 +395,13 @@ export default EmberObject.extend(DynamicOwnerInjector, I18n, {
    * @type {boolean}
    */
   addColonToLabel: true,
+
+  /**
+   * If true, and isOptional .
+   * @virtual optional
+   * @type {boolean}
+   */
+  addOptionalTextToLabel: false,
 
   /**
    * Classname internally used by `one-label-tip` to style tooltip.
