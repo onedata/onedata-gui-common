@@ -5,7 +5,9 @@
  * - headerText - modal header text
  * - descriptionText - (optional) description rendered above the selector
  * - selectorPlaceholderText - (optional) selector placeholder
+ * - loadingText - (optional) label for loading spinner
  * - submitText - submit button text
+ * - modalClass - (optional) classname added to modal
  *
  * @author Michał Borzęcki
  * @copyright (C) 2020-2024 ACK CYFRONET AGH
@@ -77,9 +79,19 @@ export default Component.extend(I18n, {
   submitText: reads('modalOptions.submitText'),
 
   /**
+   * @type {ComputedProperty<string|SafeString>}
+   */
+  loadingText: reads('modalOptions.loadingText'),
+
+  /**
    * @type {ComputedProperty<Promise<Array<GraphSingleModel>>>}
    */
   recordsPromise: reads('modalOptions.recordsPromise'),
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  modalClass: reads('modalOptions.modalClass'),
 
   /**
    * @type {ComputedProperty<PromiseArray<RecordOptionsArrayProxy<FieldOption>>>}
