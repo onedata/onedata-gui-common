@@ -8,6 +8,7 @@ import {
   Record,
 } from '../../helpers/replacing-chunks-array';
 import { settled } from '@ember/test-helpers';
+import sinon from 'sinon';
 
 describe('Unit | Utility | merged-chunks-array', function () {
   afterEach(function () {
@@ -159,6 +160,51 @@ describe('Unit | Utility | merged-chunks-array', function () {
     expect(this.array.toArray()).to.deep.equal(
       _.range(0, 10).map(i => new Record(i))
     );
+  });
+
+  it('ignores single fetch error by default', async function () {
+    const arrayLength = 10;
+    const mockData = generateMockArrays(arrayLength);
+    const fetchers = mockData.fetchers;
+    fetchers[0] = sinon.stub().rejects();
+    this.array = MergedChunksArray.create({
+      fetchers: mockData.fetchers,
+      chunkSize: arrayLength,
+    });
+
+    let isErrorThrown;
+    try {
+      await this.array.initialLoad;
+    } catch (error) {
+      isErrorThrown = true;
+    }
+
+    expect(isErrorThrown).to.be.undefined;
+    expect(this.array.toArray(), this.array.toArray()).to.deep.equal(
+      // 1/3 of items should not not fetched because of simulated error fetchers[0] error
+      [1, 2, 4, 5, 7, 8].map(i => new Record(i))
+    );
+  });
+
+  it('throws error if single fetch fails when ignoreFetcherErrors = false', async function () {
+    const arrayLength = 10;
+    const mockData = generateMockArrays(arrayLength);
+    const fetchers = mockData.fetchers;
+    fetchers[0] = sinon.stub().rejects();
+    this.array = MergedChunksArray.create({
+      ignoreFetcherErrors: false,
+      fetchers: mockData.fetchers,
+      chunkSize: arrayLength,
+    });
+
+    let isErrorThrown;
+    try {
+      await this.array.initialLoad;
+    } catch (error) {
+      isErrorThrown = true;
+    }
+
+    expect(isErrorThrown).to.be.ok;
   });
 });
 
