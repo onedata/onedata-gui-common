@@ -11,9 +11,14 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
     border-bottom: $sidebar-separator-border;
 
     .col-title {
-      flex-grow: 1;
       @include font-semibold();
       white-space: nowrap;
+    }
+    .sidebar-header-loader {
+      $size: 32px;
+      height: $size;
+      width: $size;
+      position: relative;
     }
     @media (max-width: $screen-sm-max) {
       display: none;

@@ -69,6 +69,12 @@ export default Component.extend(I18n, {
   isFilteringEnabled: true,
 
   /**
+   * If true, the spinner will be rendered at the top of the list.
+   * @type {boolean}
+   */
+  isPrevSpinnerShown: false,
+
+  /**
    * If true, the spinner will be rendered at the bottom of the list.
    * @type {boolean}
    */

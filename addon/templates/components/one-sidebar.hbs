@@ -1,6 +1,14 @@
 <div class="container-fluid">
   <div class="row-heading row">
     <div class="col-title">{{title}}</div>
+    {{#if isPrevSpinnerShown}}
+      <div class="sidebar-header-loader">
+        <SpinSpinnerBlock
+          @sizeClass="xs"
+          class="absolute-middle-centered"
+        />
+      </div>
+    {{/if}}
     <OneSidebarToolbar @buttons={{buttons}} />
   </div>
   <div class="row-body row">
