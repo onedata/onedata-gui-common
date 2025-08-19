@@ -13,12 +13,20 @@
 import ReplacingChunksArray from './replacing-chunks-array';
 import { all as allFulfilled } from 'rsvp';
 import _ from 'lodash';
+import onlyFulfilledValues from './only-fulfilled-values';
 
 /**
  * @typedef {(index: InfiniteScrollIndex, size: InfiniteScrollSize, offset: InfiniteScrollOffset) => Promise<InfiniteScrollPage>} MergedChunksArrayFetcher
  */
 
 export default class MergedChunksArray extends ReplacingChunksArray {
+  /**
+   * If true, single fetcher's error will not throw error for the whole fetch (which is a
+   * default). Set to false to not tolerate single fetchers errors.
+   * @type {boolean}
+   */
+  ignoreFetcherErrors = true;
+
   /**
    * Collection of fetch functions, whose results will be merged and sorted when using
    * this chunks array main fetch method. It could be used when result list must be
@@ -58,7 +66,8 @@ export default class MergedChunksArray extends ReplacingChunksArray {
    * @returns {Promise<Array<InfiniteScrollPage>>}
    */
   async executeAllFetchers(index, size, offset) {
-    return await allFulfilled(
+    const allResolver = this.ignoreFetcherErrors ? onlyFulfilledValues : allFulfilled;
+    return await allResolver(
       this.fetchers.map(fetcher => fetcher(index, size, offset))
     );
   }
