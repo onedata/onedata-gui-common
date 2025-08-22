@@ -291,7 +291,7 @@ export default EmberObject.extend(DynamicOwnerInjector, I18n, {
     },
   }),
 
-  optionalTextToLabel: computed('i18nPrefix', 'translationPath', {
+  optionalTextForLabel: computed('i18nPrefix', 'translationPath', {
     get() {
       if (this.mode === 'show') {
         return null;

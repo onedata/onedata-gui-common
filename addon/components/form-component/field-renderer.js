@@ -68,7 +68,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<string>}
    */
-  optionalTextToLabel: reads('field.optionalTextToLabel'),
+  optionalTextForLabel: reads('field.optionalTextForLabel'),
 
   /**
    * @type {ComputedProperty<boolean>}
