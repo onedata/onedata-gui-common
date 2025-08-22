@@ -66,11 +66,6 @@ export default Component.extend({
   addColonToLabel: reads('field.addColonToLabel'),
 
   /**
-   * @type {ComputedProperty<boolean>}
-   */
-  addOptionalTextToLabel: reads('field.addOptionalTextToLabel'),
-
-  /**
    * @type {ComputedProperty<string>}
    */
   optionalTextToLabel: reads('field.optionalTextToLabel'),

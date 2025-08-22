@@ -5,7 +5,7 @@
       @tooltipClass={{tooltipClass}}
       @title={{tip}}
     />{{/if}}
-    {{#if (and (and addOptionalTextToLabel isOptional) optionalTextToLabel)}}
+    {{#if (and isOptional optionalTextToLabel)}}
       <div class="form-optional-text">({{optionalTextToLabel}})</div>
     {{/if}}
   </label>

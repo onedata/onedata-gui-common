@@ -293,7 +293,10 @@ export default EmberObject.extend(DynamicOwnerInjector, I18n, {
 
   optionalTextToLabel: computed('i18nPrefix', 'translationPath', {
     get() {
-      return this.t('optional', '');
+      if (this.mode === 'show') {
+        return null;
+      }
+      return this.t('optional', {}, { defaultValue: '' });
     },
   }),
 
@@ -395,13 +398,6 @@ export default EmberObject.extend(DynamicOwnerInjector, I18n, {
    * @type {boolean}
    */
   addColonToLabel: true,
-
-  /**
-   * If true, and isOptional .
-   * @virtual optional
-   * @type {boolean}
-   */
-  addOptionalTextToLabel: false,
 
   /**
    * Classname internally used by `one-label-tip` to style tooltip.
