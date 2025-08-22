@@ -438,8 +438,8 @@ $brand-info-height: $one-list-item-line-height;
   .row-heading .col-title {
     // TODO: similar to one-list-item
     text-transform: uppercase;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: $one-list-item-padding;
+    padding-right: 0.5em;
     letter-spacing: $letter-spacing-base;
     font-size: $content-header-font-size;
   }

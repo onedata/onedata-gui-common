@@ -62,6 +62,20 @@ export default class InfiniteScrollSidebar extends OneSidebar {
    * @override
    */
   @computed(
+    'chunksArray.{isReloading,initialLoad.isPending}',
+    'infiniteScroll.fetchingStatus.isFetchingPrev'
+  )
+  get isPrevSpinnerShown() {
+    return !this.chunksArray?.isReloading && (
+      this.chunksArray.initialLoad.isPending ||
+      this.infiniteScroll?.fetchingStatus.isFetchingPrev
+    );
+  }
+
+  /**
+   * @override
+   */
+  @computed(
     'chunksArray.initialLoad.isSettled',
     'infiniteScroll.fetchingStatus.isFetchingNext',
   )
