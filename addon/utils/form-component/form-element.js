@@ -306,7 +306,7 @@ export default EmberObject.extend(DynamicOwnerInjector, I18n, {
 
   optionalTextForLabel: computed('i18nPrefix', 'mode', {
     get() {
-      if (this.mode === 'show') {
+      if (this.mode === 'view') {
         return null;
       }
       return this.t('optional', {}, { defaultValue: '' });
