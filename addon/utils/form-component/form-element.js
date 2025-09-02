@@ -291,15 +291,6 @@ export default EmberObject.extend(DynamicOwnerInjector, I18n, {
     },
   }),
 
-  optionalTextForLabel: computed('i18nPrefix', 'translationPath', {
-    get() {
-      if (this.mode === 'show') {
-        return null;
-      }
-      return this.t('optional', {}, { defaultValue: '' });
-    },
-  }),
-
   /**
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
@@ -310,6 +301,15 @@ export default EmberObject.extend(DynamicOwnerInjector, I18n, {
     },
     set(key, value) {
       return this.customTip = value;
+    },
+  }),
+
+  optionalTextForLabel: computed('i18nPrefix', 'mode', {
+    get() {
+      if (this.mode === 'show') {
+        return null;
+      }
+      return this.t('optional', {}, { defaultValue: '' });
     },
   }),
 
