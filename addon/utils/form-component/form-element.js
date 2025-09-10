@@ -266,6 +266,13 @@ export default EmberObject.extend(DynamicOwnerInjector, I18n, {
   fieldComponentName: undefined,
 
   /**
+   * If false and value will be empty, then presence validator will notify an error
+   * @virtual
+   * @type {boolean}
+   */
+  isOptional: false,
+
+  /**
    * @virtual optional
    * @type {Array<Utils.FormComponent.FormElement>}
    */
@@ -294,6 +301,15 @@ export default EmberObject.extend(DynamicOwnerInjector, I18n, {
     },
     set(key, value) {
       return this.customTip = value;
+    },
+  }),
+
+  optionalTextForLabel: computed('i18nPrefix', 'mode', {
+    get() {
+      if (this.mode === 'view') {
+        return null;
+      }
+      return this.t('optional', {}, { defaultValue: '' });
     },
   }),
 

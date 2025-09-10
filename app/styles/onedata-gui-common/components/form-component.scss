@@ -22,6 +22,12 @@ $form-component-view-margin: $padding-base-vertical;
     min-width: 100px;
   }
 
+  .form-optional-text {
+    opacity: $disabled-opacity;
+    font-size: 80%;
+    font-weight: normal;
+  }
+
   .one-label-tip {
     margin-left: $padding-xs-horizontal;
   }

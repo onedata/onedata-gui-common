@@ -17,13 +17,6 @@ import { validator } from 'ember-cp-validations';
 
 export default FormElement.extend({
   /**
-   * If false and value will be empty, then presence validator will notify an error
-   * @virtual
-   * @type {boolean}
-   */
-  isOptional: false,
-
-  /**
    * If true then value of this form field is ignored. Changes will not propagate,
    * (default)value dumps will always return undefined and field cannot be set as
    * modified. Valueless fields may be used as a graphical elements of the form

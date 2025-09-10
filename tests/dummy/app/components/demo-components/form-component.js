@@ -106,6 +106,8 @@ export default Component.extend({
       ownerSource: this,
       name: 'surname',
       label: 'Surname',
+      isOptional: true,
+      optionalTextForLabel: 'optional',
     });
   }),
 

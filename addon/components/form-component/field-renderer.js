@@ -66,6 +66,16 @@ export default Component.extend({
   addColonToLabel: reads('field.addColonToLabel'),
 
   /**
+   * @type {ComputedProperty<string>}
+   */
+  optionalTextForLabel: reads('field.optionalTextForLabel'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isOptional: reads('field.isOptional'),
+
+  /**
    * @type {ComputedProperty<String>}
    */
   afterComponentName: reads('field.afterComponentName'),

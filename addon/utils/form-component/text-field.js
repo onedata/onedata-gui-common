@@ -58,11 +58,24 @@ export default FormField.extend({
    */
   regexValidator: computed('regex', function regexValidator() {
     const regex = this.get('regex');
-    return !regex ? undefined : validator('format', {
-      regex,
-      // Always allow blank in regex, because empty strings are checked by presence validator
-      allowBlank: true,
-    });
+    const message = this.getTranslation('regexMessage', {}, { defaultValue: '' });
+    if (!regex) {
+      return undefined;
+    } else if (message) {
+      return validator('format', {
+        regex,
+        // Always allow blank in regex, because empty strings are checked by presence validator
+        allowBlank: true,
+        message,
+      });
+    } else {
+      return validator('format', {
+        regex,
+        // Always allow blank in regex, because empty strings are checked by presence validator
+        allowBlank: true,
+      });
+    }
+
   }),
 
   init() {
