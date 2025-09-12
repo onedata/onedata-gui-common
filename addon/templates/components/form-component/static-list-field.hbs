@@ -1,7 +1,7 @@
 <ul class="static-list-field-ul">
   {{#each items as |item|}}
     {{#if item.componentPath}}
-      {{component item.componentPath field=field}}
+      {{component item.componentPath field=field options=item.componentOptions}}
     {{else}}
       <li class="static-list-field-item">{{item}}</li>
     {{/if}}
