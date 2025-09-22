@@ -1,5 +1,5 @@
 <div class="one-dropdown-demo-component container">
-    <div class="row row-content">
+  <div class="row row-content">
     <h3>OneDropdown</h3>
     <div class="row">
       <OneDropdown
@@ -23,6 +23,21 @@
         @selected={{valueSmall}}
         @searchEnabled={{true}}
         @onChange={{action (mut valueSmall)}}
+        as |value|
+      >
+        {{value}}
+      </OneDropdown>
+    </div>
+  </div>
+  <div class="row row-content">
+    <h3>OneDropdown disabled</h3>
+    <div class="row">
+      <OneDropdown
+        @options={{array "one" "two" "three"}}
+        @selected={{value}}
+        @searchEnabled={{true}}
+        @onChange={{action (mut value)}}
+        @disabled={{true}}
         as |value|
       >
         {{value}}
@@ -95,6 +110,20 @@
         </div>
       </div>
       <p>Foo bar</p>
+    </div>
+  </div>
+  <div class="row row-content">
+    <h3>OneDropdown many items</h3>
+    <div class="row">
+      <OneDropdown
+        @options={{manyOptions}}
+        @selected={{value}}
+        @searchEnabled={{true}}
+        @onChange={{action (mut value)}}
+        as |value|
+      >
+        {{value}}
+      </OneDropdown>
     </div>
   </div>
 </div>

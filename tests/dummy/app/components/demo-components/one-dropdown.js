@@ -34,4 +34,9 @@ export default class OneDropdownDemo extends Component {
       };
     });
   }
+
+  @computed()
+  get manyOptions() {
+    return _.range(0, 1000);
+  }
 }
