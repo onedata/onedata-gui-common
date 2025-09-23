@@ -36,22 +36,50 @@ function isTest(config) {
   return config.environment === 'test';
 }
 
-export const mockGuiContext = {
+/**
+ * Global variable to mock guiContext. Set with setMockGuiContext and get with
+ * getMockGuiContext. If this value is not set, the default mock GUI context (Oneprovider)
+ * is used.
+ * @type {Object}
+ */
+let mockGuiContext = null;
+
+const mockGuiContextBase = Object.freeze({
   guiMode: 'unified',
   serviceType: 'worker',
-  clusterType: 'oneprovider',
-  clusterId: 'oneprovider1',
   browserDebugLogs: true,
   apiOrigin: globals.location.origin,
-};
+});
+
+export const providerMockGuiContext = Object.freeze({
+  clusterType: 'oneprovider',
+  clusterId: 'oneprovider1',
+  ...mockGuiContextBase,
+});
+
+export const zoneMockGuiContext = Object.freeze({
+  clusterType: 'onezone',
+  clusterId: 'onezone',
+  ...mockGuiContextBase,
+});
+
+const defaultMockGuiContext = providerMockGuiContext;
+
+export function setMockGuiContext(data) {
+  mockGuiContext = data;
+}
+
+export function getMockGuiContext() {
+  return mockGuiContext ?? defaultMockGuiContext;
+}
 
 export function initialize(application) {
   application.guiContextProxy = PromiseObject.create({
     promise: isTest(config) ?
-      resolve(mockGuiContext) : resolve($.ajax('./gui-context'))
+      resolve(getMockGuiContext()) : resolve($.ajax('./gui-context'))
       .catch(error => {
         if (isDevelopment(config)) {
-          return mockGuiContext;
+          return getMockGuiContext();
         } else {
           throw error;
         }
