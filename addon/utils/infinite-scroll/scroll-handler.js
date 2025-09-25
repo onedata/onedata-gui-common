@@ -167,9 +167,8 @@ export default EmberObject.extend({
   },
 
   createListWatcher() {
-    const listContainerElement = this.get('listContainerElement');
     return new ListWatcher(
-      $(listContainerElement.closest('.ps')),
+      $(this.scrollableContainerElement),
       '.data-row',
       (items, headerVisible) => {
         return safeExec(this, 'onTableScroll', items, headerVisible);

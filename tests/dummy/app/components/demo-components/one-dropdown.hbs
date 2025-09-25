@@ -1,0 +1,191 @@
+<div class="one-dropdown-demo-component container">
+  {{!-- plain --}}
+  <div class="row row-content">
+    <h3>OneDropdown</h3>
+    <div class="row">
+      <OneDropdown
+        @options={{array "one" "two" "three"}}
+        @selected={{this.value}}
+        @searchEnabled={{true}}
+        @onChange={{fn (mut this.value)}}
+        as |value|
+      >
+        {{value}}
+      </OneDropdown>
+    </div>
+  </div>
+  {{!-- small --}}
+  <div class="row row-content">
+    <h3>OneDropdown small</h3>
+    <div class="row">
+      <OneDropdown
+        @triggerClass="small"
+        @dropdownClass="small"
+        @options={{array "one" "two" "three"}}
+        @selected={{this.valueSmall}}
+        @searchEnabled={{true}}
+        @onChange={{fn (mut this.valueSmall)}}
+        as |value|
+      >
+        {{value}}
+      </OneDropdown>
+    </div>
+  </div>
+  {{!-- disabled --}}
+  <div class="row row-content">
+    <h3>OneDropdown disabled</h3>
+    <div class="row">
+      <OneDropdown
+        @options={{array "one" "two" "three"}}
+        @selected={{this.value}}
+        @searchEnabled={{true}}
+        @onChange={{fn (mut this.value)}}
+        @disabled={{true}}
+        as |value|
+      >
+        {{value}}
+      </OneDropdown>
+    </div>
+  </div>
+  {{!-- groups --}}
+  <div class="row row-content">
+    <h3>OneDropdown with groups</h3>
+    <div class="row toggle-row">
+      <OneWayToggle
+        @checked={{this.areGroupsCollapsible}}
+        @update={{fn (mut this.areGroupsCollapsible)}}
+        id="collapsible-groups-toggle"
+      />
+      <label for="collapsible-groups-toggle">Collapsible groups</label>
+    </div>
+    {{!-- groups normal --}}
+    <div class="row">
+      <h4>Normal size</h4>
+      <OneDropdown
+        @triggerClass="some-trigger-class"
+        @dropdownClass="some-dropdown-class"
+        @areGroupsCollapsible={{this.areGroupsCollapsible}}
+        @options={{this.optionsWithGroups}}
+        @selected={{this.valueWithGroups}}
+        @searchEnabled={{true}}
+        @onChange={{fn (mut this.valueWithGroups)}}
+        as |value|
+      >
+        {{value}}
+      </OneDropdown>
+    </div>
+    {{!-- groups small --}}
+    <div class="row">
+      <h4>Small</h4>
+      <OneDropdown
+        @triggerClass="small"
+        @dropdownClass="small"
+        @areGroupsCollapsible={{this.areGroupsCollapsible}}
+        @options={{this.optionsWithGroups}}
+        @selected={{this.valueWithGroupsSmall}}
+        @searchEnabled={{true}}
+        @onChange={{fn (mut this.valueWithGroupsSmall)}}
+        as |value|
+      >
+        {{value}}
+      </OneDropdown>
+    </div>
+  </div>
+  {{!-- pseudo-text --}}
+  <div class="row row-content">
+    <h3>OneDropdown pseudo-text</h3>
+    <div class="row">
+      <p>Hello world</p>
+      <div class="row">
+        <div class="col-xs-4 text-with-power-select text-right">
+          Text on left
+        </div>
+        <div class="col-xs-4">
+          <OneDropdown
+            @triggerClass="small text-like"
+            @dropdownClass="small"
+            @options={{array "very long text very" "two" "three"}}
+            @selected={{this.valueSmallText}}
+            @onChange={{fn (mut this.valueSmallText)}}
+            as |value|
+          >
+            {{value}}
+          </OneDropdown>
+        </div>
+        <div class="col-xs-4 text-with-power-select">
+          Some text on right
+        </div>
+      </div>
+      <p>Foo bar</p>
+    </div>
+  </div>
+  {{!-- infinite scroll component vs plain scroll --}}
+  <div class="row row-content">
+    <h3>
+      InfiniteScrollDropdown vs OneDropdown with {{this.manyInfiniteOptions.length}} items
+    </h3>
+
+    <div class="row toggle-row">
+      <label for={{this.infiniteScrollToggleId}} class="inline-label">
+        InfiniteScrollDropdown
+      </label>
+      <OneWayToggle
+        @inputId={{this.infiniteScrollToggleId}}
+        @checked={{this.isInfiniteScrollComponent}}
+        @update={{fn (mut this.isInfiniteScrollComponent)}}
+      />
+    </div>
+    <div class="row toggle-row">
+      <label for={{this.infiniteScrollToggleId}} class="inline-label">
+        Small
+      </label>
+      <OneWayToggle
+        @inputId={{this.manyItemsSizeToggleId}}
+        @checked={{this.isManyItemsComponentSmall}}
+        @update={{fn (mut this.isManyItemsComponentSmall)}}
+      />
+    </div>
+
+    <div class="row">
+      {{#let (component this.manyItemsComponent) as |dropdown|}}
+        <dropdown
+          @options={{this.manyInfiniteOptions}}
+          @selected={{this.valueManyInfinite}}
+          @searchEnabled={{true}}
+          @triggerClass={{this.manyItemsSize}}
+          @dropdownClass={{this.manyItemsSize}}
+          @onChange={{fn (mut this.valueManyInfinite)}}
+          as |option|
+        >
+          {{option}}
+        </dropdown>
+      {{/let}}
+    </div>
+  </div>
+
+  {{!-- adaptive dropdown --}}
+  <div class="row row-content">
+    <h3>AdaptiveDropdown</h3>
+    <div class="row toggle-row">
+      <label for={{this.infiniteScrollToggleId}} class="inline-label">
+        Items count
+      </label>
+      <input
+        class="form-control"
+        value={{this.adaptiveOptionsCount}}
+        {{on "change" (fn this.updateAdaptiveOptionsCount)}}
+      >
+    </div>
+    <div class="row">
+      <AdaptiveDropdown
+        @options={{this.adaptiveOptions}}
+        @selected={{this.valueAdaptive}}
+        @searchEnabled={{true}}
+        @onChange={{fn (mut this.valueAdaptive)}}
+        as |option|
+      >
+        {{option}}
+      </AdaptiveDropdown>
+    </div>
+  </div>
+</div>

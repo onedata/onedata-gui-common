@@ -1,0 +1,21 @@
+{{!--
+  Based on ember-power-select 3.0.6.
+
+  This is mostly a copy of the options component template with support for
+  InfiniteScrollDropdown item format, which is object with index and item properites.
+
+  This code may break, if ember-power-select is updated!
+--}}
+{{#if @select.selected}}
+  {{#if @selectedItemComponent}}
+    {{component @selectedItemComponent extra=(readonly @extra) option=(readonly @select.selected.item) select=(readonly @select)}}
+  {{else}}
+    <span class="ember-power-select-selected-item">{{yield @select.selected.item select}}</span>
+  {{/if}}
+  {{#if (and @allowClear (not @select.disabled))}}
+    <span class="ember-power-select-clear-btn" {{on "mousedown" this.clear}} {{on "touchstart" this.clear}}>&times;</span>
+  {{/if}}
+{{else}}
+  {{component @placeholderComponent placeholder=@placeholder}}
+{{/if}}
+<span class="ember-power-select-status-icon"></span>

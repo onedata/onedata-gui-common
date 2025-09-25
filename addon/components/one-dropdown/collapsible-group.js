@@ -14,7 +14,7 @@ import PowerSelectGroup from 'ember-power-select/components/power-select/power-s
 import { computed } from '@ember/object';
 import { bool, reads } from '@ember/object/computed';
 import { tracked } from '@glimmer/tracking';
-import layout from 'onedata-gui-common/templates/components/one-dropdown/one-dropdown-collapsible-group';
+import layout from 'onedata-gui-common/templates/components/one-dropdown/collapsible-group';
 
 export default class OneDropdownCollapsibleGroup extends PowerSelectGroup {
   tagName = 'li';
