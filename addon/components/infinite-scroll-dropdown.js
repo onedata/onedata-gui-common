@@ -56,12 +56,12 @@ export default class InfiniteScrollDropdownComponent extends Component {
     }
   }
 
-  // /** @override */
-  // willDestroy() {
-  //   try {
-  //     this.chunksArray?.destroy();
-  //   } finally {
-  //     super.willDestroy(...arguments);
-  //   }
-  // }
+  /** @override */
+  willDestroy() {
+    try {
+      this.chunksArray?.destroy();
+    } finally {
+      super.willDestroy(...arguments);
+    }
+  }
 }
