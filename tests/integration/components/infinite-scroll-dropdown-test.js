@@ -72,14 +72,56 @@ describe('Integration | Component | infinite-scroll-dropdown', function () {
     await dropdown.selectOptionByText('99');
     expect(dropdown.getSelectedOptionText()).to.equal('99');
   });
+
+  // FIXME: customowy searchField, customowy matcher
+
+  it('filters the long scrollable list if search term is provided', async function () {
+    const options = _.range(100).map(String);
+    this.helper = new Helper(this);
+    this.helper.renderContext.searchEnabled = true;
+    this.helper.renderContext.options = options;
+    await this.helper.render();
+
+    const dropdown = this.helper.getDropdownHelper();
+    await dropdown.fillInSearchInput('1');
+
+    const expectedOptions = options.filter(it => it.includes('1'));
+    await this.helper.compareAllOptions(expectedOptions);
+  });
+
+  it('shows all options again after search term is cleared using input', async function () {
+    const options = _.range(100).map(String);
+    this.helper = new Helper(this);
+    this.helper.renderContext.searchEnabled = true;
+    this.helper.renderContext.options = options;
+    await this.helper.render();
+
+    const dropdown = this.helper.getDropdownHelper();
+    await dropdown.fillInSearchInput('1');
+    await dropdown.fillInSearchInput('');
+
+    await this.helper.compareAllOptions(options);
+  });
+
+  it('shows all options again after search term is cleared on close', async function () {
+    const options = _.range(100).map(String);
+    this.helper = new Helper(this);
+    this.helper.renderContext.searchEnabled = true;
+    this.helper.renderContext.options = options;
+    await this.helper.render();
+
+    const dropdown = this.helper.getDropdownHelper();
+    await dropdown.fillInSearchInput('1');
+    await dropdown.close();
+
+    await this.helper.compareAllOptions(options);
+  });
 });
 
 class RenderContext {
-  @tracked
-  selected;
-
-  @tracked
-  options = [];
+  @tracked selected;
+  @tracked searchEnabled;
+  @tracked options = [];
 
   onChange(option) {
     this.selected = option;
@@ -98,18 +140,49 @@ class Helper {
   }
 
   getDropdownHelper() {
-    return new OneDropdownHelper(this.mochaContext.element);
+    if (!this.mochaContext.element) {
+      throw new Error('element is not rendered');
+    }
+    if (!this.dropdownHelper) {
+      this.dropdownHelper = new OneDropdownHelper(this.mochaContext.element);
+    }
+    return this.dropdownHelper;
+  }
+
+  /** @type {HTMLUListElement} */
+  async getOptionsContainer() {
+    const dropdown = this.getDropdownHelper();
+    return (await dropdown.getOptionsContainer()).querySelector('ul');
+  }
+
+  async scrollDown() {
+    (await this.getOptionsContainer()).scrollBy({ top: 1000 });
   }
 
   async scrollToBottom() {
-    const dropdown = this.getDropdownHelper();
-    /** @type {HTMLUListElement} */
-    const optionsContainer = (await dropdown.getOptionsContainer()).querySelector('ul');
+    const optionsContainer = await this.getOptionsContainer();
     let lastScrollTop;
     while (lastScrollTop !== optionsContainer.scrollTop) {
       lastScrollTop = optionsContainer.scrollTop;
-      optionsContainer.scrollBy({ top: 1000 });
+      await this.scrollDown();
       await sleep(100);
+    }
+  }
+
+  /**
+   * @param {Array<string>} expectedOptions
+   */
+  async compareAllOptions(expectedOptions) {
+    const dropdown = this.getDropdownHelper();
+    let actualOptions = await dropdown.getOptionsText();
+    for (let i = 0; i < expectedOptions.length; ++i) {
+      if (actualOptions[i] === undefined) {
+        await this.scrollDown();
+        await sleep(100);
+        actualOptions.push(...await dropdown.getOptionsText());
+        actualOptions = _.uniq(actualOptions);
+      }
+      expect(actualOptions[i]).to.equal(expectedOptions[i]);
     }
   }
 
@@ -117,6 +190,7 @@ class Helper {
     await render(hbs`
       <InfiniteScrollDropdown
         @renderInPlace={{true}}
+        @searchEnabled={{this.renderContext.searchEnabled}}
         @options={{this.renderContext.options}}
         @selected={{this.renderContext.selected}}
         @onChange={{this.renderContext.onChange}}

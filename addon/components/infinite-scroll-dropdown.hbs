@@ -8,27 +8,25 @@
   @beforeOptionsComponent={{@beforeOptionsComponent}}
   @buildSelection={{@buildSelection}}
   @calculatePosition={{@calculatePosition}}
+  {{!-- FIXME: czy przekazywać to? --}}
   @class={{@class}}
   @closeOnSelect={{@closeOnSelect}}
   @defaultHighlighted={{@defaultHighlighted}}
   @destination={{@destination}}
   @disabled={{@disabled}}
-  @dropdownClass={{@dropdownClass}}
+  {{!-- FIXME: wyłączyć groupComponent? --}}
   @groupComponent={{@groupComponent}}
   @highlightOnHover={{@highlightOnHover}}
   @horizontalPosition={{@horizontalPosition}}
   @initiallyOpened={{@initiallyOpened}}
   @loadingMessage={{@loadingMessage}}
   @eventType={{@eventType}}
-  @matcher={{@matcher}}
   @matchTriggerWidth={{@matchTriggerWidth}}
   @noMatchesMessage={{@noMatchesMessage}}
   @noMatchesMessageComponent={{@noMatchesMessageComponent}}
   @onBlur={{@onBlur}}
   @onChange={{@onChange}}
-  @onClose={{@onClose}}
   @onFocus={{@onFocus}}
-  @onInput={{@onInput}}
   @onKeydown={{@onKeydown}}
   @onOpen={{@onOpen}}
   @registerAPI={{@registerAPI}}
@@ -38,7 +36,6 @@
   @renderInPlace={{@renderInPlace}}
   @required={{@required}}
   @scrollTo={{@scrollTo}}
-  @search={{@search}}
   @searchEnabled={{@searchEnabled}}
   @searchField={{@searchField}}
   @searchMessage={{@searchMessage}}
@@ -46,18 +43,27 @@
   @selected={{@selected}}
   @selectedItemComponent={{@selectedItemComponent}}
   @tabindex={{@tabindex}}
-  @triggerClass={{@triggerClass}}
   @triggerId={{@triggerId}}
   @triggerRole={{@triggerRole}}
+  {{!-- FIXME: wyłączyć typeAheadMatcher? --}}
   @typeAheadMatcher={{@typeAheadMatcher}}
   @verticalPosition={{@verticalPosition}}
   {{!-- custom values --}}
+  {{!-- FIXME: matcher and searchField should be handled internally --}}
+  {{!-- @matcher={{and @matcher this.matcher}} --}}
+  {{!-- @searchField={{this.searchField}} --}}
+  @onClose={{this.handleClose}}
+  @dropdownClass={{this.dropdownClass}}
+  @triggerClass={{this.triggerClass}}
+  @onInput={{this.handleInput}}
+  @search={{this.search}}
   @triggerComponent="one-dropdown/infinite-scroll-trigger"
   @optionsComponent="one-dropdown/infinite-scroll-options"
   @options={{this.oneDropdownOptions}}
   @extra={{this.oneDropdownExtra}}
+  class="infinite-scroll-dropdown"
   ...attributes
-  as |option|
+  as |option select|
 >
-  {{yield option}}
+  {{yield option select}}
 </OneDropdown>

@@ -1,6 +1,9 @@
-import { computed } from '@ember/object';
+import { action, computed } from '@ember/object';
 import Component from '@glimmer/component';
 import ChunkablePlainArray from 'onedata-gui-common/utils/chunkable-plain-array';
+import { defaultMatcher } from 'ember-power-select/utils/group-utils';
+import { tracked } from '@glimmer/tracking';
+import { isBlank } from '@ember/utils';
 
 export default class InfiniteScrollDropdownComponent extends Component {
   /**
@@ -11,13 +14,38 @@ export default class InfiniteScrollDropdownComponent extends Component {
    */
   customOptionRowHeight;
 
-  // FIXME: test zmiany options
+  @tracked
+  searchTerm = '';
+
+  get allOptions() {
+    return this.args.options;
+  }
+
+  // FIXME: test zmiany całego parametru options - czy wtedy się przeładuje lista?
   // FIXME: destroy
   // FIXME: można robić nową klasę, która będzie mieć zależność od args.options
-  @computed('args.options')
+  @computed('chunkablePlainArray.chunksArray')
   get chunksArray() {
     console.warn('recompute chunksArray');
-    return new ChunkablePlainArray(this.args.options).chunksArray;
+    return this.chunkablePlainArray.chunksArray;
+  }
+
+  @computed('allOptions', 'searchTerm', 'matcher')
+  get filteredOptions() {
+    console.warn('recompute filteredOptions');
+    if (this.searchTerm) {
+      return this.allOptions.filter(option =>
+        this.matcher(option, this.searchTerm) !== -1
+      );
+    } else {
+      return this.allOptions;
+    }
+
+  }
+
+  @computed()
+  get chunkablePlainArray() {
+    return new DropdownChunkablePlainArray(this);
   }
 
   @computed('chunksArray.[]')
@@ -41,6 +69,19 @@ export default class InfiniteScrollDropdownComponent extends Component {
       (this.args.dropdownClass === 'small' ? 31 : 45);
   }
 
+  // FIXME: to nie może iść bezpośrednio - trzeba to obsłużyć ręcznie w implementacji
+  get searchField() {
+    return this.args.searchField ? `item.${this.args.searchField}` : 'item';
+  }
+
+  get triggerClass() {
+    return `${this.args.triggerClass} infinite-scroll-dropdown-trigger`;
+  }
+
+  get dropdownClass() {
+    return `${this.args.dropdownClass} infinite-scroll-dropdown`;
+  }
+
   /** @override */
   constructor() {
     super(...arguments);
@@ -56,12 +97,61 @@ export default class InfiniteScrollDropdownComponent extends Component {
     }
   }
 
+  matcher(option, searchTerm) {
+    return (this.args.matcher ?? defaultMatcher)(option, searchTerm);
+  }
+
+  @action
+  async search(searchTerm) {
+    this.searchTerm = searchTerm;
+    await this.chunkablePlainArray.chunksArray.scheduleReload({ head: true });
+    return this.oneDropdownOptions;
+  }
+
+  // FIXME: test: custom onInput
+  @action
+  handleInput(term, publicAPI, event) {
+    if (isBlank(term)) {
+      this.search('');
+    }
+    return this.args.onInput?.(term, publicAPI, event);
+  }
+
+  @action
+  handleClose(publicAPI, event) {
+    const closeResult = this.args.onClose?.(publicAPI, event);
+    if (closeResult === false) {
+      return false;
+    } else {
+      // let the original code execute first
+      (async () => {
+        this.search('');
+      })();
+    }
+  }
+
   /** @override */
   willDestroy() {
     try {
-      this.chunksArray?.destroy();
+      this.chunkablePlainArray?.destroy();
     } finally {
       super.willDestroy(...arguments);
     }
+  }
+}
+
+class DropdownChunkablePlainArray extends ChunkablePlainArray {
+  /** @type {InfiniteScrollDropdownComponent} */
+  infiniteScrollDropdown;
+
+  constructor(infiniteScrollDropdown) {
+    super(null);
+    this.infiniteScrollDropdown = infiniteScrollDropdown;
+  }
+
+  /** @override */
+  @computed('infiniteScrollDropdown.filteredOptions')
+  get sourceArray() {
+    return this.infiniteScrollDropdown.filteredOptions;
   }
 }
