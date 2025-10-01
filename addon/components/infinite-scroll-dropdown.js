@@ -122,7 +122,7 @@ export default class InfiniteScrollDropdownComponent extends Component {
     const closeResult = this.args.onClose?.(publicAPI, event);
     if (closeResult === false) {
       return false;
-    } else {
+    } else if (!isBlank(this.searchTerm)) {
       // let the original code execute first
       (async () => {
         this.search('');
