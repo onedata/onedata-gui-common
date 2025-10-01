@@ -16,9 +16,6 @@ export default class OneDropdown extends PowerSelect {
   @service scrollState;
   @service media;
 
-  // FIXME: dekorator destroyableComputed?
-  // FIXME: zabronić zawijania wierszy w przypadku infinite scroll
-
   /**
    * @type {ScrollListener}
    */

@@ -1,3 +1,11 @@
+/**
+ * Dropdown that renders infinite-scrollable list from options provided with static array.
+ *
+ * @author Jakub Liput
+ * @copyright (C) 2025 Onedata (onedata.org)
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { action, computed } from '@ember/object';
 import Component from '@glimmer/component';
 import ChunkablePlainArray from 'onedata-gui-common/utils/chunkable-plain-array';
@@ -48,7 +56,7 @@ import { isBlank } from '@ember/utils';
  * @property {Function} onInput
  * @property {Function} onKeydown
  * @property {Function} onOpen
- * @property {Array<string>} options
+ * @property {Array<any>} options
  * @property {string} optionsComponent Not recommended to use, because
  *   InfiniteScrollDropdown uses its own options component handling indexed entries,
  *   created for the chunks array.
@@ -59,7 +67,8 @@ import { isBlank } from '@ember/utils';
  * @property {boolean} renderInPlace
  * @property {boolean} required
  * @property {Function} scrollTo Not recommended to use - not tested with infinite scroll.
- * @property {Function} search FIXME: obsłużyć?
+ * @property {Function} search Not supported - may be implemented in future versions or in
+ *   derivied class.
  * @property {boolean} searchEnabled
  * @property {string} searchField
  * @property {string} searchMessage
@@ -137,10 +146,11 @@ export default class InfiniteScrollDropdownComponent extends Component {
     };
   }
 
+  @computed('args.{customOptionRowHeight,dropdownClass}')
   get optionRowHeight() {
     console.warn('recompute optionRowHeight');
     return this.args.customOptionRowHeight ??
-      (this.args.dropdownClass === 'small' ? 31 : 45);
+      (this.args.dropdownClass.split(/\s+/).includes('small') ? 31 : 45);
   }
 
   get triggerClass() {
@@ -165,6 +175,13 @@ export default class InfiniteScrollDropdownComponent extends Component {
     return this.chunkablePlainArray.indexedArray.find(indexedItem =>
       indexedItem.item === selectedItem
     );
+  }
+
+  constructor() {
+    super(...arguments);
+    if (this.args.search) {
+      throw new Error('InfiniteScrollDropdown: custom @search is not supported');
+    }
   }
 
   matcher(option, searchTerm) {

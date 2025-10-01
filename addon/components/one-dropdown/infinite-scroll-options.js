@@ -5,12 +5,27 @@ import InfiniteScroll from 'onedata-gui-common/utils/infinite-scroll';
 import template from 'onedata-gui-common/templates/components/one-dropdown/infinite-scroll-options';
 import { layout } from '@ember-decorators/component';
 import globals from 'onedata-gui-common/utils/globals';
+import { htmlSafe } from '@ember/template';
 
 @layout(template)
 export default class InfiniteScrollOptionsComponent extends Options {
   @computed()
   get infiniteScroll() {
     return DropdownOptionsInfiniteScroll.create({ dropdownOptionsComponent: this });
+  }
+
+  @computed('singleRowHeight')
+  get liStyle() {
+    if (typeof this.singleRowHeight === 'number') {
+      return htmlSafe(`max-height: ${this.singleRowHeight}px;`);
+    } else {
+      return undefined;
+    }
+  }
+
+  @computed('extra.optionRowHeight')
+  get singleRowHeight() {
+    return this.extra?.optionRowHeight ?? 45;
   }
 
   /** @override */
@@ -44,9 +59,9 @@ class DropdownOptionsInfiniteScroll extends InfiniteScroll {
   entries;
 
   /** @override */
-  @computed('dropdownOptionsComponent.extra.optionRowHeight')
+  @computed('dropdownOptionsComponent.singleRowHeight')
   get singleRowHeight() {
-    return this.dropdownOptionsComponent.extra?.optionRowHeight ?? 45;
+    return this.dropdownOptionsComponent.singleRowHeight;
   }
 
   /** @override */

@@ -157,7 +157,7 @@
           @onChange={{fn (mut this.valueManyInfinite)}}
           as |option|
         >
-          {{option}}
+          <TruncatedString>{{option}}</TruncatedString>
         </dropdown>
       {{/let}}
     </div>
@@ -184,7 +184,7 @@
         @onChange={{fn (mut this.valueAdaptive)}}
         as |option|
       >
-        {{option}}
+        <TruncatedString>{{option}}</TruncatedString>
       </AdaptiveDropdown>
     </div>
   </div>

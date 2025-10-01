@@ -15,13 +15,13 @@
   @dropdownClass={{this.dropdownClass}}
   @eventType={{@eventType}}
   @extra={{this.oneDropdownExtra}}
-  @groupComponent={{@groupComponent}} {{!-- FIXME: wyłączyć groupComponent? --}}
+  @groupComponent={{@groupComponent}}
   @highlightOnHover={{@highlightOnHover}}
   @horizontalPosition={{@horizontalPosition}}
   @initiallyOpened={{@initiallyOpened}}
   @loadingMessage={{@loadingMessage}}
   @matchTriggerWidth={{@matchTriggerWidth}}
-  @matcher={{and @matcher this.matcher}} {{!-- FIXME: matcher and searchField should be handled internally --}}
+  @matcher={{and @matcher this.matcher}}
   @noMatchesMessage={{@noMatchesMessage}}
   @noMatchesMessageComponent={{@noMatchesMessageComponent}}
   @onBlur={{@onBlur}}
@@ -42,8 +42,7 @@
   @scrollTo={{@scrollTo}}
   @search={{this.search}}
   @searchEnabled={{@searchEnabled}}
-  @searchField={{@searchField}}
-  @searchField={{this.searchField}} {{!-- FIXME: matcher and searchField should be handled internally --}}
+  @searchField={{this.searchField}}
   @searchMessage={{@searchMessage}}
   @searchPlaceholder={{@searchPlaceholder}}
   @selected={{this.selected}}
@@ -53,7 +52,7 @@
   @triggerComponent={{or @triggerComponent "one-dropdown/infinite-scroll-trigger"}}
   @triggerId={{@triggerId}}
   @triggerRole={{@triggerRole}}
-  @typeAheadMatcher={{@typeAheadMatcher}} {{!-- FIXME: wyłączyć typeAheadMatcher? --}}
+  @typeAheadMatcher={{@typeAheadMatcher}}
   @verticalPosition={{@verticalPosition}}
   class="infinite-scroll-dropdown"
   ...attributes
