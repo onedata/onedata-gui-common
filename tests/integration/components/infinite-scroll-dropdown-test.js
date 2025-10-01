@@ -8,6 +8,7 @@ import OneDropdownHelper from '../../helpers/one-dropdown';
 import _ from 'lodash';
 import sleep from 'onedata-gui-common/utils/sleep';
 import { action } from '@ember/object';
+import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 
 describe('Integration | Component | infinite-scroll-dropdown', function () {
   setupRenderingTest();
@@ -130,6 +131,44 @@ describe('Integration | Component | infinite-scroll-dropdown', function () {
     await dropdown.selectOptionByIndex(1);
 
     expect(this.helper.renderContext.selected).to.equal(i1);
+  });
+
+  it('updates list when changing @options', async function () {
+    this.helper = new Helper(this);
+    this.helper.renderContext.options = ['a', 'b', 'c'];
+
+    await this.helper.render();
+    this.helper.renderContext.options = ['d', 'e', 'f'];
+    await waitForRender();
+
+    const dropdown = this.helper.getDropdownHelper();
+    expect(await dropdown.getOptionsText()).to.deep.equal(['d', 'e', 'f']);
+  });
+
+  it('preserves selected item when changing @options and item is still present', async function () {
+    this.helper = new Helper(this);
+    this.helper.renderContext.options = ['a', 'b', 'c'];
+
+    await this.helper.render();
+    const dropdown = this.helper.getDropdownHelper();
+    await dropdown.selectOptionByText('a');
+    this.helper.renderContext.options = ['d', 'a', 'e', 'f'];
+    await waitForRender();
+
+    expect(dropdown.getSelectedOptionText()).to.equal('a');
+  });
+
+  it('does not preserve selected item when changing @options and item is not present', async function () {
+    this.helper = new Helper(this);
+    this.helper.renderContext.options = ['a', 'b', 'c'];
+
+    await this.helper.render();
+    const dropdown = this.helper.getDropdownHelper();
+    await dropdown.selectOptionByText('a');
+    this.helper.renderContext.options = ['d', 'e', 'f'];
+    await waitForRender();
+
+    expect(dropdown.getSelectedOptionText()).to.equal(null);
   });
 });
 

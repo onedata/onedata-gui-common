@@ -17,13 +17,12 @@ export default class InfiniteScrollDropdownComponent extends Component {
   @tracked
   searchTerm = '';
 
+  @computed('args.options')
   get allOptions() {
     return this.args.options;
   }
 
   // FIXME: test zmiany całego parametru options - czy wtedy się przeładuje lista?
-  // FIXME: destroy
-  // FIXME: można robić nową klasę, która będzie mieć zależność od args.options
   @computed('chunkablePlainArray.chunksArray')
   get chunksArray() {
     console.warn('recompute chunksArray');
@@ -75,11 +74,19 @@ export default class InfiniteScrollDropdownComponent extends Component {
   }
 
   get triggerClass() {
-    return `${this.args.triggerClass} infinite-scroll-dropdown-trigger`;
+    let resultClass = 'infinite-scroll-dropdown-trigger';
+    if (this.args.triggerClass) {
+      resultClass += ` ${this.args.triggerClass}`;
+    }
+    return resultClass;
   }
 
   get dropdownClass() {
-    return `${this.args.dropdownClass} infinite-scroll-dropdown`;
+    let resultClass = 'infinite-scroll-dropdown';
+    if (this.args.dropdownClass) {
+      resultClass += ` ${this.args.dropdownClass}`;
+    }
+    return resultClass;
   }
 
   get selected() {

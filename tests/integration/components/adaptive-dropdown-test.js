@@ -85,12 +85,39 @@ describe('Integration | Component | adaptive-dropdown', function () {
       await this.helper.infiniteToolbox.getDropdownHelper().getSelectedOptionText();
     expect(selectedOption).to.equal('12');
   });
+
+  it('adds custom triggerClass to InfiniteScroll component', async function () {
+    this.helper = new Helper(this);
+    this.helper.renderContext.options = _.range(60).map(String);
+    this.helper.renderContext.triggerClass = 'hello-world';
+
+    await this.helper.render();
+
+    const trigger = this.helper.infiniteToolbox.getDropdownHelper().getTrigger();
+    expect(trigger).to.have.class('infinite-scroll-dropdown-trigger');
+    expect(trigger).to.have.class('hello-world');
+  });
+
+  it('adds custom dropdownClass to InfiniteScroll component', async function () {
+    this.helper = new Helper(this);
+    this.helper.renderContext.options = _.range(60).map(String);
+    this.helper.renderContext.dropdownClass = 'hello-world';
+
+    await this.helper.render();
+
+    const optionsContainer =
+      await this.helper.infiniteToolbox.getDropdownHelper().getOptionsContainer();
+    expect(optionsContainer).to.have.class('infinite-scroll-dropdown');
+    expect(optionsContainer).to.have.class('hello-world');
+  });
 });
 
 class RenderContext {
   @tracked selected;
   @tracked searchEnabled;
   @tracked options = [];
+  @tracked triggerClass;
+  @tracked dropdownClass;
 
   @action
   onChange(option) {
@@ -126,6 +153,8 @@ class Helper {
         @searchEnabled={{this.renderContext.searchEnabled}}
         @options={{this.renderContext.options}}
         @selected={{this.renderContext.selected}}
+        @triggerClass={{this.renderContext.triggerClass}}
+        @dropdownClass={{this.renderContext.dropdownClass}}
         @onChange={{this.renderContext.onChange}}
         as |option|
       >

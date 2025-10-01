@@ -40,6 +40,7 @@ export default class ChunkablePlainArray {
     return this.sourceArray.map((item, index) => new IndexedItem(item, String(index)));
   }
 
+  @computed('indexedArray')
   get chunksArray() {
     if (!this.#chunksArray) {
       this.#chunksArray = this.#createChunksArray(this.#chunksArrayOptions);

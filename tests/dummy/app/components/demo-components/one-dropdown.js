@@ -53,7 +53,7 @@ export default class OneDropdownDemo extends Component {
   }
 
   get adaptiveOptions() {
-    return _.range(0, this.adaptiveOptionsCount);
+    return _.range(0, this.adaptiveOptionsCount).map(String);
   }
 
   @action
