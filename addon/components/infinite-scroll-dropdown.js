@@ -5,6 +5,82 @@ import { defaultMatcher } from 'ember-power-select/utils/group-utils';
 import { tracked } from '@glimmer/tracking';
 import { isBlank } from '@ember/utils';
 
+/**
+ * @typedef {Object} InfiniteScrollDropdownSignature
+ * @property {InfiniteScrollDropdownArgs} Args
+ */
+
+/**
+ * If not described, most of these properties are passed directly to OneDropdown
+ * component. See API reference of ember-power-select for details.
+ * @typedef {Object} InfiniteScrollDropdownArgs
+ * @property {string} afterOptionsComponent
+ * @property {boolean} animationEnabled
+ * @property {string} ariaDescribedBy
+ * @property {string} ariaInvalid
+ * @property {string} ariaLabel
+ * @property {string} ariaLabelledBy
+ * @property {string} beforeOptionsComponent
+ * @property {Function} buildSelection
+ * @property {Function} calculatePosition
+ * @property {boolean} closeOnSelect
+ * @property {any|Function} defaultHighlighted
+ * @property {string} destination
+ * @property {boolean} disabled
+ * @property {string} dropdownClass
+ * @property {string} eventType
+ * @property {object} extra
+ * @property {string} groupComponent Not recommended to use, because
+ *   InfiniteScrollDropdown does not support groups. If any group will be passed to the
+ *   options, the dropdown will be malfunctioning.
+ * @property {boolean} highlightOnHover
+ * @property {string} horizontalPosition
+ * @property {boolean} initiallyOpened
+ * @property {string} loadingMessage
+ * @property {boolean} matchTriggerWidth
+ * @property {Function} matcher
+ * @property {string} noMatchesMessage
+ * @property {string} noMatchesMessageComponent
+ * @property {Function} onBlur
+ * @property {Function} onChange
+ * @property {Function} onClose
+ * @property {Function} onFocus
+ * @property {Function} onInput
+ * @property {Function} onKeydown
+ * @property {Function} onOpen
+ * @property {Array<string>} options
+ * @property {string} optionsComponent Not recommended to use, because
+ *   InfiniteScrollDropdown uses its own options component handling indexed entries,
+ *   created for the chunks array.
+ * @property {string} placeholder
+ * @property {string} placeholderComponent
+ * @property {boolean} preventScroll
+ * @property {Function} registerAPI
+ * @property {boolean} renderInPlace
+ * @property {boolean} required
+ * @property {Function} scrollTo Not recommended to use - not tested with infinite scroll.
+ * @property {Function} search FIXME: obsłużyć?
+ * @property {boolean} searchEnabled
+ * @property {string} searchField
+ * @property {string} searchMessage
+ * @property {string} searchPlaceholder
+ * @property {any} selected The InfiniteScrollDropdown component does not support array of
+ *   selected items.
+ * @property {string} selectedItemComponent
+ * @property {string} tabindex
+ * @property {string} triggerClass
+ * @property {string} triggerComponent Not recommended to use, because
+ *   InfiniteScrollDropdown uses its own trigger component handling indexed entries,
+ *   created for the chunks array.
+ * @property {string} triggerId
+ * @property {string} triggerRole
+ * @property {Function} typeAheadMatcher Not recommended to use - not tested.
+ * @property {string} verticalPosition
+ */
+
+/**
+ * @extends {Component<InfiniteScrollDropdownSignature>}
+ */
 export default class InfiniteScrollDropdownComponent extends Component {
   /**
    * Set the height of the option element if it is other than standard styles.
@@ -22,7 +98,6 @@ export default class InfiniteScrollDropdownComponent extends Component {
     return this.args.options;
   }
 
-  // FIXME: test zmiany całego parametru options - czy wtedy się przeładuje lista?
   @computed('chunkablePlainArray.chunksArray')
   get chunksArray() {
     console.warn('recompute chunksArray');
@@ -68,11 +143,6 @@ export default class InfiniteScrollDropdownComponent extends Component {
       (this.args.dropdownClass === 'small' ? 31 : 45);
   }
 
-  // FIXME: to nie może iść bezpośrednio - trzeba to obsłużyć ręcznie w implementacji
-  get searchField() {
-    return this.args.searchField ? `item.${this.args.searchField}` : 'item';
-  }
-
   get triggerClass() {
     let resultClass = 'infinite-scroll-dropdown-trigger';
     if (this.args.triggerClass) {
@@ -97,23 +167,13 @@ export default class InfiniteScrollDropdownComponent extends Component {
     );
   }
 
-  /** @override */
-  constructor() {
-    super(...arguments);
-    if (this.args.triggerComponent) {
-      console.warn(
-        'InfiniteScrollDropdown: settings custom triggerComponent is not supported'
-      );
-    }
-    if (this.args.optionsComponent) {
-      console.warn(
-        'InfiniteScrollDropdown: settings custom optionsComponent is not supported'
-      );
-    }
-  }
-
   matcher(option, searchTerm) {
-    return (this.args.matcher ?? defaultMatcher)(option, searchTerm);
+    if (this.args.matcher) {
+      return this.args.matcher(option, searchTerm);
+    } else {
+      const value = this.args.searchField ? option[this.args.searchField] : option;
+      return defaultMatcher(value, searchTerm);
+    }
   }
 
   @action
@@ -123,13 +183,17 @@ export default class InfiniteScrollDropdownComponent extends Component {
     return this.oneDropdownOptions;
   }
 
-  // FIXME: test: custom onInput
   @action
   handleInput(term, publicAPI, event) {
-    if (isBlank(term)) {
-      this.search('');
+    const onInputResult = this.args.onInput?.(term, publicAPI, event);
+    if (onInputResult === false) {
+      return false;
+    } else if (isBlank(term)) {
+      // let the original code execute first
+      (async () => {
+        this.search('');
+      })();
     }
-    return this.args.onInput?.(term, publicAPI, event);
   }
 
   @action

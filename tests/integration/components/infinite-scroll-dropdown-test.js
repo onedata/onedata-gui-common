@@ -170,12 +170,66 @@ describe('Integration | Component | infinite-scroll-dropdown', function () {
 
     expect(dropdown.getSelectedOptionText()).to.equal(null);
   });
+
+  it('shows no results for filtering complex options without custom search matcher or searchField',
+    async function () {
+      const options = _.range(100).map(i => new ObjectOption(i, String(i * 2)));
+      this.helper = new Helper(this);
+      this.helper.renderContext.searchEnabled = true;
+      this.helper.renderContext.options = options;
+      await this.helper.renderObjectOptions();
+
+      const dropdown = this.helper.getDropdownHelper();
+      await dropdown.fillInSearchInput('2');
+
+      expect((await dropdown.getOptions()).length).to.equal(0);
+    }
+  );
+
+  it('filters the long scrollable list using provided matcher', async function () {
+    const options = _.range(100).map(i => new ObjectOption(i, String(i * 2)));
+    this.helper = new Helper(this);
+    this.helper.renderContext.searchEnabled = true;
+    this.helper.renderContext.options = options;
+    this.helper.renderContext.matcher = (option, searchTerm) => {
+      return option.value.indexOf(searchTerm);
+    };
+    await this.helper.renderObjectOptions();
+
+    const dropdown = this.helper.getDropdownHelper();
+    await dropdown.fillInSearchInput('2');
+
+    const expectedOptions = options
+      .filter(option => option.value.includes('2'))
+      .map(option => option.label);
+
+    await this.helper.compareAllOptions(expectedOptions);
+  });
+
+  it('filters the long scrollable list using provided searchField', async function () {
+    const options = _.range(100).map(i => new ObjectOption(i, String(i * 2)));
+    this.helper = new Helper(this);
+    this.helper.renderContext.searchEnabled = true;
+    this.helper.renderContext.options = options;
+    this.helper.renderContext.searchField = 'value';
+    await this.helper.renderObjectOptions();
+
+    const dropdown = this.helper.getDropdownHelper();
+    await dropdown.fillInSearchInput('2');
+
+    const expectedOptions = options
+      .filter(option => option.value.includes('2'))
+      .map(option => option.label);
+
+    await this.helper.compareAllOptions(expectedOptions);
+  });
 });
 
 class RenderContext {
   @tracked selected;
   @tracked searchEnabled;
   @tracked options = [];
+  @tracked matcher;
 
   @action
   onChange(option) {
@@ -222,12 +276,38 @@ class Helper {
         @searchEnabled={{this.renderContext.searchEnabled}}
         @options={{this.renderContext.options}}
         @selected={{this.renderContext.selected}}
+        @matcher={{this.renderContext.matcher}}
+        @searchField={{this.renderContext.searchField}}
         @onChange={{this.renderContext.onChange}}
         as |option|
       >
         {{option}}
       </InfiniteScrollDropdown>
     `);
+  }
+
+  async renderObjectOptions() {
+    await render(hbs`
+      <InfiniteScrollDropdown
+        @renderInPlace={{true}}
+        @searchEnabled={{this.renderContext.searchEnabled}}
+        @options={{this.renderContext.options}}
+        @selected={{this.renderContext.selected}}
+        @matcher={{this.renderContext.matcher}}
+        @searchField={{this.renderContext.searchField}}
+        @onChange={{this.renderContext.onChange}}
+        as |option|
+      >
+        {{option.label}}
+      </InfiniteScrollDropdown>
+    `);
+  }
+}
+
+class ObjectOption {
+  constructor(label, value) {
+    this.label = String(label);
+    this.value = value;
   }
 }
 
