@@ -25,7 +25,6 @@
   @noMatchesMessage={{@noMatchesMessage}}
   @noMatchesMessageComponent={{@noMatchesMessageComponent}}
   @onBlur={{@onBlur}}
-  @onChange={{@onChange}}
   @onFocus={{@onFocus}}
   @onKeydown={{@onKeydown}}
   @onOpen={{@onOpen}}
@@ -40,7 +39,6 @@
   @searchField={{@searchField}}
   @searchMessage={{@searchMessage}}
   @searchPlaceholder={{@searchPlaceholder}}
-  @selected={{@selected}}
   @selectedItemComponent={{@selectedItemComponent}}
   @tabindex={{@tabindex}}
   @triggerId={{@triggerId}}
@@ -52,6 +50,8 @@
   {{!-- FIXME: matcher and searchField should be handled internally --}}
   {{!-- @matcher={{and @matcher this.matcher}} --}}
   {{!-- @searchField={{this.searchField}} --}}
+  @selected={{this.selected}}
+  @onChange={{this.handleChange}}
   @onClose={{this.handleClose}}
   @dropdownClass={{this.dropdownClass}}
   @triggerClass={{this.triggerClass}}

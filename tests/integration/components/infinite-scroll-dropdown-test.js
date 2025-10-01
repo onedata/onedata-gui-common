@@ -7,6 +7,7 @@ import { tracked } from '@glimmer/tracking';
 import OneDropdownHelper from '../../helpers/one-dropdown';
 import _ from 'lodash';
 import sleep from 'onedata-gui-common/utils/sleep';
+import { action } from '@ember/object';
 
 describe('Integration | Component | infinite-scroll-dropdown', function () {
   setupRenderingTest();
@@ -116,6 +117,20 @@ describe('Integration | Component | infinite-scroll-dropdown', function () {
 
     await this.helper.compareAllOptions(options);
   });
+
+  it('item selected onChange is an object from options array', async function () {
+    this.helper = new Helper(this);
+    const i0 = { val: 0 };
+    const i1 = { val: 1 };
+    const i2 = { val: 2 };
+    this.helper.renderContext.options = [i0, i1, i2];
+
+    await this.helper.render();
+    const dropdown = this.helper.getDropdownHelper();
+    await dropdown.selectOptionByIndex(1);
+
+    expect(this.helper.renderContext.selected).to.equal(i1);
+  });
 });
 
 class RenderContext {
@@ -123,6 +138,7 @@ class RenderContext {
   @tracked searchEnabled;
   @tracked options = [];
 
+  @action
   onChange(option) {
     this.selected = option;
   }
@@ -137,6 +153,55 @@ class Helper {
   constructor(mochaContext) {
     this.mochaContext = mochaContext;
     this.mochaContext.renderContext = this.renderContext;
+    this.infiniteToolbox = new InfiniteScrollDropdownTestToolbox(mochaContext);
+  }
+
+  getDropdownHelper() {
+    return this.infiniteToolbox.getDropdownHelper(...arguments);
+  }
+
+  getOptionsContainer() {
+    return this.infiniteToolbox.getOptionsContainer(...arguments);
+  }
+
+  scrollDown() {
+    return this.infiniteToolbox.scrollDown(...arguments);
+  }
+
+  scrollToBottom() {
+    return this.infiniteToolbox.scrollToBottom(...arguments);
+  }
+
+  compareAllOptions() {
+    return this.infiniteToolbox.compareAllOptions(...arguments);
+  }
+
+  async render() {
+    await render(hbs`
+      <InfiniteScrollDropdown
+        @renderInPlace={{true}}
+        @searchEnabled={{this.renderContext.searchEnabled}}
+        @options={{this.renderContext.options}}
+        @selected={{this.renderContext.selected}}
+        @onChange={{this.renderContext.onChange}}
+        as |option|
+      >
+        {{option}}
+      </InfiniteScrollDropdown>
+    `);
+  }
+}
+
+export class InfiniteScrollDropdownTestToolbox {
+  /**
+   * @param {Mocha.Context} mochaContext
+   */
+  constructor(mochaContext) {
+    this.mochaContext = mochaContext;
+  }
+
+  initDropdownHelper() {
+    this.dropdownHelper = new OneDropdownHelper(this.mochaContext.element);
   }
 
   getDropdownHelper() {
@@ -144,7 +209,7 @@ class Helper {
       throw new Error('element is not rendered');
     }
     if (!this.dropdownHelper) {
-      this.dropdownHelper = new OneDropdownHelper(this.mochaContext.element);
+      this.initDropdownHelper();
     }
     return this.dropdownHelper;
   }
@@ -184,20 +249,5 @@ class Helper {
       }
       expect(actualOptions[i]).to.equal(expectedOptions[i]);
     }
-  }
-
-  async render() {
-    await render(hbs`
-      <InfiniteScrollDropdown
-        @renderInPlace={{true}}
-        @searchEnabled={{this.renderContext.searchEnabled}}
-        @options={{this.renderContext.options}}
-        @selected={{this.renderContext.selected}}
-        @onChange={{this.renderContext.onChange}}
-        as |option|
-      >
-        {{option}}
-      </InfiniteScrollDropdown>
-    `);
   }
 }

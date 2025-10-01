@@ -82,6 +82,14 @@ export default class InfiniteScrollDropdownComponent extends Component {
     return `${this.args.dropdownClass} infinite-scroll-dropdown`;
   }
 
+  get selected() {
+    console.warn('recompute InfiniteScrollDropdown.selected');
+    const selectedItem = this.args.selected;
+    return this.chunkablePlainArray.indexedArray.find(indexedItem =>
+      indexedItem.item === selectedItem
+    );
+  }
+
   /** @override */
   constructor() {
     super(...arguments);
@@ -128,6 +136,11 @@ export default class InfiniteScrollDropdownComponent extends Component {
         this.search('');
       })();
     }
+  }
+
+  @action
+  handleChange(selected, publicAPI, event) {
+    return this.args.onChange?.(selected.item, publicAPI, event);
   }
 
   /** @override */
