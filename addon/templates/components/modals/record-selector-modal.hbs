@@ -20,21 +20,22 @@
         @sizeClass="sm"
         @loadingLabel={{this.loadingText}}
       >
-        <OneDropdown
+        <AdaptiveDropdown
           @options={{this.recordOptionsProxy.content.content}}
           @onChange={{action (mut this.selectedRecordOption)}}
           @selected={{this.selectedRecordOption}}
           @placeholder={{this.selectorPlaceholderText}}
+          @searchField="searchableName"
           @searchEnabled={{true}}
           as |recordOption|
         >
           <div class="option-container">
             <OneIcon @icon={{recordOption.icon}} />
             <TruncatedString class="text">
-              {{recordOption.label}}
+              <NameConflict @item={{recordOption.value}} />
             </TruncatedString>
           </div>
-        </OneDropdown>
+        </AdaptiveDropdown>
       </PromiseProxyContainer>
     </div>
   </modal.body>

@@ -13,6 +13,8 @@ import { defaultMatcher } from 'ember-power-select/utils/group-utils';
 import { tracked } from '@glimmer/tracking';
 import { isBlank } from '@ember/utils';
 
+/** @import { IndexedItem } from '../utils/chunkable-plain-array.js' */
+
 /**
  * @typedef {Object} InfiniteScrollDropdownSignature
  * @property {InfiniteScrollDropdownArgs} Args
@@ -99,6 +101,14 @@ export default class InfiniteScrollDropdownComponent extends Component {
    */
   customOptionRowHeight;
 
+  /**
+   * Cache of last `selected` getter result to be able to show last selected item when
+   * using search that filters indexed array. If the selected item is gone from that
+   * array, the selected getter would return null.
+   * @type {IndexedItem}
+   */
+  #lastIndexedSelected;
+
   @tracked
   searchTerm = '';
 
@@ -109,6 +119,7 @@ export default class InfiniteScrollDropdownComponent extends Component {
 
   @computed('chunkablePlainArray.chunksArray')
   get chunksArray() {
+    // FIXME: usunąć logowanie recompute na końcu
     console.warn('recompute chunksArray');
     return this.chunkablePlainArray.chunksArray;
   }
@@ -150,7 +161,7 @@ export default class InfiniteScrollDropdownComponent extends Component {
   get optionRowHeight() {
     console.warn('recompute optionRowHeight');
     return this.args.customOptionRowHeight ??
-      (this.args.dropdownClass.split(/\s+/).includes('small') ? 31 : 45);
+      (this.args.dropdownClass?.split(/\s+/).includes('small') ? 31 : 45);
   }
 
   get triggerClass() {
@@ -172,9 +183,19 @@ export default class InfiniteScrollDropdownComponent extends Component {
   get selected() {
     console.warn('recompute InfiniteScrollDropdown.selected');
     const selectedItem = this.args.selected;
-    return this.chunkablePlainArray.indexedArray.find(indexedItem =>
+    if (
+      this.searchTerm &&
+      this.#lastIndexedSelected &&
+      selectedItem === this.#lastIndexedSelected.item
+    ) {
+      return this.#lastIndexedSelected;
+    }
+
+    const indexedSelected = this.chunkablePlainArray.indexedArray.find(indexedItem =>
       indexedItem.item === selectedItem
     );
+    this.#lastIndexedSelected = indexedSelected;
+    return indexedSelected;
   }
 
   constructor() {

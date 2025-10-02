@@ -9,7 +9,7 @@
   @disabled={{eq timeResolutionOptions.length 0}}
   as |option|
 >
-  {{option.label}}
+  <TruncatedString>{{option.label}}</TruncatedString>
 </OneDropdown>
 <div class="btn-group navigation-buttons">
   <OneButton

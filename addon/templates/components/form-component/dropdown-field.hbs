@@ -3,7 +3,7 @@
     @icon={{this.selectedOption.icon}}
   />{{/if}}<span class="text">{{this.selectedOption.label}}</span>
 {{else}}
-  <OneDropdown
+  <AdaptiveDropdown
     @tagName="div"
     @disabled={{not this.isEffectivelyEnabled}}
     @options={{this.preparedOptions}}
@@ -39,6 +39,6 @@
         {{/if}}
       </TruncatedString>
     </div>
-  </OneDropdown>
+  </AdaptiveDropdown>
 {{/if}}
 {{yield}}

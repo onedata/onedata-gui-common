@@ -1,4 +1,4 @@
-<OneDropdown
+<AdaptiveDropdown
   @triggerClass={{concat-classes "small comparator-value truncate dropdown-editor-trigger" guid}}
   @dropdownClass="small ember-basic-dropdown-content-comparator-value over-popover-over-modals dropdown-editor-options"
   @options={{options}}
@@ -11,5 +11,7 @@
   @onBlur={{action "onSelectorBlur"}}
   as |itemValue|
 >
-  {{if (eq (typeof itemValue) "number") (format-number itemValue) itemValue}}
-</OneDropdown>
+  <TruncatedString>
+    {{if (eq (typeof itemValue) "number") (format-number itemValue) itemValue}}
+  </TruncatedString>
+</AdaptiveDropdown>

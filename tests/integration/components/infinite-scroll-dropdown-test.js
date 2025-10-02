@@ -221,6 +221,19 @@ describe('Integration | Component | infinite-scroll-dropdown', function () {
 
     await this.helper.compareAllOptions(expectedOptions);
   });
+
+  it('shows selected item in the trigger when current filtered list does not include it', async function () {
+    this.helper = new Helper(this);
+    this.helper.renderContext.searchEnabled = true;
+    this.helper.renderContext.options = ['a', 'b', 'c'];
+
+    await this.helper.render();
+    const dropdown = this.helper.getDropdownHelper();
+    await dropdown.selectOptionByText('a');
+    await dropdown.fillInSearchInput('b');
+
+    expect(dropdown.getSelectedOptionText()).to.equal('a');
+  });
 });
 
 class RenderContext {
