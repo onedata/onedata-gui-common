@@ -1,3 +1,13 @@
+/**
+ * Options component to use with InfiniteScrollDropdown.
+ *
+ * Adds support for infinite scroll list, handles indexed options, limits height of items.
+ *
+ * @author Jakub Liput
+ * @copyright (C) 2025 Onedata (onedata.org)
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import Options from 'ember-power-select/components/power-select/options';

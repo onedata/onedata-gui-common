@@ -75,8 +75,6 @@ describe('Integration | Component | infinite-scroll-dropdown', function () {
     expect(dropdown.getSelectedOptionText()).to.equal('99');
   });
 
-  // FIXME: customowy searchField, customowy matcher
-
   it('filters the long scrollable list if search term is provided', async function () {
     const options = _.range(100).map(String);
     this.helper = new Helper(this);
