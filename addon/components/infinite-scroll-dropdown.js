@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { action, computed } from '@ember/object';
+import { action, computed, get } from '@ember/object';
 import Component from '@glimmer/component';
 import ChunkablePlainArray from 'onedata-gui-common/utils/chunkable-plain-array';
 import { defaultMatcher } from 'ember-power-select/utils/group-utils';
@@ -112,9 +112,14 @@ export default class InfiniteScrollDropdownComponent extends Component {
   @tracked
   searchTerm = '';
 
-  @computed('args.options')
+  @computed('args.options.content')
   get allOptions() {
-    return this.args.options;
+    if (this.args.options?.then && !this.args.options.promise) {
+      throw new Error(
+        'InfiniteScrollDropdown: promise options are not supported - use PromiseObject instead'
+      );
+    }
+    return this.args.options?.content ?? this.args.options ?? [];
   }
 
   @computed('chunkablePlainArray.chunksArray')
@@ -209,7 +214,7 @@ export default class InfiniteScrollDropdownComponent extends Component {
     if (this.args.matcher) {
       return this.args.matcher(option, searchTerm);
     } else {
-      const value = this.args.searchField ? option[this.args.searchField] : option;
+      const value = this.args.searchField ? get(option, this.args.searchField) : option;
       return defaultMatcher(value, searchTerm);
     }
   }

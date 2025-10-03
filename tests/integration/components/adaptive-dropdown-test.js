@@ -1,13 +1,14 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, find } from '@ember/test-helpers';
+import { render, find, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { tracked } from '@glimmer/tracking';
 import _ from 'lodash';
 import { InfiniteScrollDropdownTestToolbox } from './infinite-scroll-dropdown-test';
 import waitForRender from 'onedata-gui-common/utils/wait-for-render';
 import { action } from '@ember/object';
+import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 
 describe('Integration | Component | adaptive-dropdown', function () {
   setupRenderingTest();
@@ -29,6 +30,20 @@ describe('Integration | Component | adaptive-dropdown', function () {
 
     this.helper.expectInfiniteScrollDropdown();
   });
+
+  it('renders InfiniteScrollDropdown when @options is a thenable which resolves to list with length at least 50',
+    async function () {
+      this.helper = new Helper(this);
+      this.helper.renderContext.options = promiseObject(
+        (async () => _.range(50).map(String))()
+      );
+
+      await this.helper.render();
+      await settled();
+
+      this.helper.expectInfiniteScrollDropdown();
+    }
+  );
 
   it('changes type of dropdown to InfiniteScroll if number of options increases', async function () {
     this.helper = new Helper(this);
