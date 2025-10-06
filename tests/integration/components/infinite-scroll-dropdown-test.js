@@ -374,8 +374,11 @@ export class InfiniteScrollDropdownTestToolbox {
       if (actualOptions[i] === undefined) {
         await this.scrollDown();
         await sleep(100);
-        actualOptions.push(...await dropdown.getOptionsText());
-        actualOptions = _.uniq(actualOptions);
+        const optionsTextList = await dropdown.getOptionsText();
+        if (!_.isEmpty(optionsTextList)) {
+          actualOptions.push(...optionsTextList);
+          actualOptions = _.uniq(actualOptions);
+        }
       }
       expect(actualOptions[i]).to.equal(expectedOptions[i]);
     }
