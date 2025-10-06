@@ -124,14 +124,11 @@ export default class InfiniteScrollDropdownComponent extends Component {
 
   @computed('chunkablePlainArray.chunksArray')
   get chunksArray() {
-    // FIXME: usunąć logowanie recompute na końcu
-    console.warn('recompute chunksArray');
     return this.chunkablePlainArray.chunksArray;
   }
 
   @computed('allOptions', 'searchTerm', 'matcher')
   get filteredOptions() {
-    console.warn('recompute filteredOptions');
     if (this.searchTerm) {
       return this.allOptions.filter(option =>
         this.matcher(option, this.searchTerm) !== -1
@@ -154,7 +151,6 @@ export default class InfiniteScrollDropdownComponent extends Component {
 
   @computed('chunksArray', 'optionRowHeight', 'args.extra')
   get oneDropdownExtra() {
-    console.warn('recompute oneDropdownExtra');
     return {
       chunksArray: this.chunksArray,
       optionRowHeight: this.optionRowHeight,
@@ -164,7 +160,6 @@ export default class InfiniteScrollDropdownComponent extends Component {
 
   @computed('args.{customOptionRowHeight,dropdownClass}')
   get optionRowHeight() {
-    console.warn('recompute optionRowHeight');
     return this.args.customOptionRowHeight ??
       (this.args.dropdownClass?.split(/\s+/).includes('small') ? 31 : 45);
   }
@@ -186,7 +181,6 @@ export default class InfiniteScrollDropdownComponent extends Component {
   }
 
   get selected() {
-    console.warn('recompute InfiniteScrollDropdown.selected');
     const selectedItem = this.args.selected;
     if (
       this.searchTerm &&
