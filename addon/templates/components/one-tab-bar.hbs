@@ -19,7 +19,7 @@
 {{/unless}}
 {{#if isDropdownRendered}}
   <div class="tab-bar-selector">
-    <PowerSelect
+    <AdaptiveDropdown
       @triggerClass="small"
       @dropdownClass="small"
       @disabled={{disabled}}
@@ -39,7 +39,7 @@
         </div>
         <span class="oneprovider-name">{{item.name}}</span>
       </TruncatedString>
-    </PowerSelect>
+    </AdaptiveDropdown>
   </div>
 {{/if}}
 {{yield}}

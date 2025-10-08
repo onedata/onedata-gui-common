@@ -1,0 +1,43 @@
+{{!--
+  Based on ember-power-select 3.0.6.
+
+  This is mostly a copy of the options component template with additional infinite-scroll
+  code - it couldn't be extended in other way, because we want to add additional <li>
+  items into <ul>.
+
+  This code may break, if ember-power-select is updated!
+--}}
+<ul role="listbox" aria-controls="ember-power-select-trigger-{{@select.uniqueId}}" {{did-insert this.addHandlers}} class="infinite-scroll-options" ...attributes>
+  {{! template-lint-disable no-unnecessary-concat }}
+  {{#if @select.loading}}
+    {{#if @loadingMessage}}
+      <li class="ember-power-select-option ember-power-select-option--loading-message" role="option">{{@loadingMessage}}</li>
+    {{/if}}
+  {{/if}}
+  {{#let (component @optionsComponent) as |Options|}}
+    <li class="infinite-scroll-util-item table-start-row"></li>
+    <li
+      class="infinite-scroll-util-item first-row"
+      style={{this.infiniteScroll.firstRowModel.style}}
+    >
+    </li>
+    {{#each @options as |opt index|}}
+      {{!--
+        The original code for handling groups is removed, because infinite scroll dropdown
+        does not support groups.
+      --}}
+      <li
+        class="ember-power-select-option data-row"
+        aria-selected="{{ember-power-select-is-selected opt @select.selected}}"
+        aria-disabled={{if opt.item.disabled "true"}}
+        aria-current="{{eq opt @select.highlighted}}"
+        data-option-index="{{@groupIndex}}{{index}}"
+        role="option"
+        data-row-id={{opt.index}}
+        style={{this.liStyle}}
+      >
+        {{yield opt.item @select}}
+      </li>
+    {{/each}}
+  {{/let}}
+</ul>

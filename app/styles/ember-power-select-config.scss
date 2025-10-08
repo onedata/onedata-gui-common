@@ -68,6 +68,10 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
   }
 }
 
+.ember-power-select-group-name {
+  display: block;
+}
+
 .ember-power-select-trigger {
   .ember-power-select-selected-item {
     display: block;
@@ -231,13 +235,28 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
   }
 }
 
+.ember-power-select-group-name {
+  background-color: $color-one-semiwhite;
+}
+
 .ember-power-select-dropdown {
   box-shadow: none;
 
   &.small, .form-group-sm & {
+    .ember-power-select-option,
+    .ember-power-select-group .ember-power-select-group-name {
+      min-height: 31px;
+    }
     .ember-power-select-option {
       padding: $ember-power-select-option-small-padding;
-      min-height: 31px;
+    }
+    .ember-power-select-group {
+      .ember-power-select-option {
+        padding-left: 2 * $ember-power-select-option-small-padding-horizontal;
+      }
+      .ember-power-select-group-name {
+        padding: $ember-power-select-option-small-padding;
+      }
     }
   }
 
@@ -249,7 +268,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
     max-height: 250px;
   }
 
-  .ember-power-select-option {
+  .ember-power-select-option, .ember-power-select-group .ember-power-select-group-name {
     border-bottom: $ember-power-select-border-width solid $input-border;
     padding: $padding-base-vertical;
     min-height: $line-height-computed + 2 * $padding-base-vertical;
@@ -264,6 +283,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
       border-bottom: 0;
     }
   }
+
   .ember-power-select-search-input {
     padding: 6px;
   }
@@ -279,6 +299,10 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
 
 .dropdown-input .form-control-feedback {
   display: none;
+}
+
+.ember-power-select-options[role="listbox"] {
+  max-height: 300px;
 }
 
 .form-group {

@@ -106,9 +106,11 @@ class CommonNavigationTabsConfiguration extends Service {
     // the URL to the Onezone domain in the first web browser tab, they should see Space1.
     // Without the following code, the user would see Space2, because the default resource
     // is read from LocalStorage, which is set by second web browser tab.
-    globals.window.addEventListener('beforeunload', () =>
-      this.setSessionLastUsedResource(this.lastSidebarModel, this.lastContentModel)
-    );
+    globals.window.addEventListener('beforeunload', () => {
+      if (this.lastSidebarModel && this.lastContentModel) {
+        this.setSessionLastUsedResource(this.lastSidebarModel, this.lastContentModel);
+      }
+    });
   }
 
   /**

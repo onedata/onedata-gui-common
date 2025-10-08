@@ -1,49 +1,50 @@
 {{#if isInViewMode}}
   <span class="text">{{selectedOption.label}}</span>
 {{else}}
-  <OneDropdown
-    @tagName="div"
-    @triggerClass={{concat-classes
-      "dropdown-field-trigger"
-      (if (eq size "sm") "small")
-      "autocomplete-dropdown-field-trigger"
-      (if isCustomInputFocused "ember-power-select-trigger--active")
-    }}
-    @dropdownClass={{concat-classes
-      "dropdown-field-dropdown"
-      (concat field.name "-field-dropdown")
-      (if (eq size "sm") "small")
-      "autocomplete-dropdown-field-dropdown"
-    }}
-    @disabled={{not isEffectivelyEnabled}}
-    @options={{preparedOptions}}
-    @selected={{selectedOption}}
-    @placeholder={{customValueInputPlaceholder}}
-    @renderInPlace={{false}}
-    @triggerId={{fieldId}}
-    @searchEnabled={{true}}
-    @matcher={{matchDropdownOption}}
-    @onChange={{action "valueChanged"}}
-    @onInput={{action "onInput"}}
-    @onOpen={{action "open"}}
-    @onFocus={{action "onInputFocus"}}
-    @onBlur={{action "onInputBlur"}}
-    @triggerComponent="form-component/autocomplete-dropdown/trigger"
-    @beforeOptionsComponent={{null}}
-    @searchField="name"
-    @noMatchesMessage={{noMatchesMessage}}
-    as |option select|
-  >
-    {{#if option.isCustom}}
-      <div class="custom-option">
-        <TruncatedString class="custom-option-value">
-          {{bold-substring option.label select.lastSearchedText}}
-        </TruncatedString>
-      <span class="custom-option-text">{{customValueOptionText}}</span>
-      </div>
-    {{else}}
-      {{bold-substring option.label select.lastSearchedText}}
-    {{/if}}
-  </OneDropdown>
+  <div>
+    <OneDropdown
+      @triggerClass={{concat-classes
+        "dropdown-field-trigger"
+        (if (eq size "sm") "small")
+        "autocomplete-dropdown-field-trigger"
+        (if isCustomInputFocused "ember-power-select-trigger--active")
+      }}
+      @dropdownClass={{concat-classes
+        "dropdown-field-dropdown"
+        (concat field.name "-field-dropdown")
+        (if (eq size "sm") "small")
+        "autocomplete-dropdown-field-dropdown"
+      }}
+      @disabled={{not isEffectivelyEnabled}}
+      @options={{preparedOptions}}
+      @selected={{selectedOption}}
+      @placeholder={{customValueInputPlaceholder}}
+      @renderInPlace={{false}}
+      @triggerId={{fieldId}}
+      @searchEnabled={{true}}
+      @matcher={{matchDropdownOption}}
+      @onChange={{action "valueChanged"}}
+      @onInput={{action "onInput"}}
+      @onOpen={{action "open"}}
+      @onFocus={{action "onInputFocus"}}
+      @onBlur={{action "onInputBlur"}}
+      @triggerComponent="form-component/autocomplete-dropdown/trigger"
+      @beforeOptionsComponent={{null}}
+      @searchField="name"
+      @noMatchesMessage={{noMatchesMessage}}
+      as |option select|
+    >
+      {{#if option.isCustom}}
+        <div class="custom-option">
+          <TruncatedString class="custom-option-value">
+            {{bold-substring option.label select.lastSearchedText}}
+          </TruncatedString>
+        <span class="custom-option-text">{{customValueOptionText}}</span>
+        </div>
+      {{else}}
+        {{bold-substring option.label select.lastSearchedText}}
+      {{/if}}
+    </OneDropdown>
+  </div>
 {{/if}}
 {{yield}}

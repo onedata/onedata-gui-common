@@ -1,5 +1,5 @@
 <div class="form-group property-selector-container">
-  <OneDropdown
+  <AdaptiveDropdown
     @options={{queryPropertiesForSelector}}
     @selected={{selectedConditionProperty}}
     @onChange={{action "conditionPropertyChanged"}}
@@ -15,15 +15,15 @@
     <span
       class="parameter-suggestion-name {{if queryProperty.isSpecialKey "is-special-key"}}"
     >
-      {{queryProperty.displayedKey}}
+      <TruncatedString>{{queryProperty.displayedKey}}</TruncatedString>
     </span>
-  </OneDropdown>
+  </AdaptiveDropdown>
 </div>
 <div class="comparator-main-container">
   {{#if comparators.length}}
     <div class="form-group form-group-no-shrink comparator-selector-container">
       {{#if (gt comparators.length 1)}}
-        <OneDropdown
+        <AdaptiveDropdown
           @options={{comparators}}
           @selected={{selectedConditionComparator}}
           @onChange={{action "conditionComparatorChanged"}}
@@ -34,7 +34,7 @@
           as |comparator|
         >
           {{tt this (concat "comparators." comparator)}}
-        </OneDropdown>
+        </AdaptiveDropdown>
       {{else}}
         <span class="comparator-selector">
           {{tt this (concat "comparators." comparators.firstObject)}}

@@ -33,7 +33,7 @@
         @onFocusOut={{action "onFocusOut"}}
       />
     {{else if (eq field.type "dropdown")}}
-      <PowerSelect
+      <AdaptiveDropdown
         @options={{map-by "value" field.options}}
         @selected={{value}}
         @onChange={{action "inputChanged" field.name}}
@@ -43,7 +43,7 @@
         as |optionValue|
       >
         {{get (find-by "value" optionValue field.options) "label"}}
-      </PowerSelect>
+      </AdaptiveDropdown>
     {{else if (eq field.type "clipboard-line")}}
       <OneClipboardLine class={{inputClasses}} @value={{value}} @showText={{false}} />
     {{else if (eq field.type "capacity")}}

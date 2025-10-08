@@ -1,0 +1,62 @@
+<OneDropdown
+  @afterOptionsComponent={{@afterOptionsComponent}}
+  @animationEnabled={{@animationEnabled}}
+  @ariaDescribedBy={{@ariaDescribedBy}}
+  @ariaInvalid={{@ariaInvalid}}
+  @ariaLabel={{@ariaLabel}}
+  @ariaLabelledBy={{@ariaLabelledBy}}
+  @beforeOptionsComponent={{@beforeOptionsComponent}}
+  @buildSelection={{@buildSelection}}
+  @calculatePosition={{@calculatePosition}}
+  @closeOnSelect={{@closeOnSelect}}
+  @defaultHighlighted={{@defaultHighlighted}}
+  @destination={{@destination}}
+  @disabled={{@disabled}}
+  @dropdownClass={{this.dropdownClass}}
+  @eventType={{@eventType}}
+  @extra={{this.oneDropdownExtra}}
+  @groupComponent={{@groupComponent}}
+  @highlightOnHover={{@highlightOnHover}}
+  @horizontalPosition={{@horizontalPosition}}
+  @initiallyOpened={{@initiallyOpened}}
+  @loadingMessage={{@loadingMessage}}
+  @matchTriggerWidth={{@matchTriggerWidth}}
+  @matcher={{and @matcher this.matcher}}
+  @noMatchesMessage={{@noMatchesMessage}}
+  @noMatchesMessageComponent={{@noMatchesMessageComponent}}
+  @onBlur={{@onBlur}}
+  @onChange={{this.handleChange}}
+  @onClose={{this.handleClose}}
+  @onFocus={{@onFocus}}
+  @onInput={{this.handleInput}}
+  @onKeydown={{@onKeydown}}
+  @onOpen={{@onOpen}}
+  @options={{this.oneDropdownOptions}}
+  @optionsComponent={{or @optionsComponent "one-dropdown/infinite-scroll-options"}}
+  @placeholder={{@placeholder}}
+  @placeholderComponent={{@placeholderComponent}}
+  @preventScroll={{@preventScroll}}
+  @registerAPI={{@registerAPI}}
+  @renderInPlace={{@renderInPlace}}
+  @required={{@required}}
+  @scrollTo={{@scrollTo}}
+  @search={{this.search}}
+  @searchEnabled={{@searchEnabled}}
+  @searchField={{this.searchField}}
+  @searchMessage={{@searchMessage}}
+  @searchPlaceholder={{@searchPlaceholder}}
+  @selected={{this.selected}}
+  @selectedItemComponent={{@selectedItemComponent}}
+  @tabindex={{@tabindex}}
+  @triggerClass={{this.triggerClass}}
+  @triggerComponent={{or @triggerComponent "one-dropdown/infinite-scroll-trigger"}}
+  @triggerId={{@triggerId}}
+  @triggerRole={{@triggerRole}}
+  @typeAheadMatcher={{@typeAheadMatcher}}
+  @verticalPosition={{@verticalPosition}}
+  class="infinite-scroll-dropdown"
+  ...attributes
+  as |option select|
+>
+  {{yield option select}}
+</OneDropdown>
