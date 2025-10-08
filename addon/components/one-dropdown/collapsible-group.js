@@ -6,7 +6,7 @@
  * It can be set in the `<OneDropdown>` using the `groupComponent` property.
  *
  * @author Jakub Liput
- * @copyright (C) 2024 ACK CYFRONET AGH
+ * @copyright (C) 2025 Onedata (onedata.org)
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -29,14 +29,9 @@ export default class OneDropdownCollapsibleGroup extends PowerSelectGroup {
 
   role = 'option';
 
-  @tracked isCollapsed = true;
+  clickHandler = this.handleClick.bind(this);
 
-  init() {
-    super.init(...arguments);
-    if (this.group.options.includes(this.select.selected)) {
-      this.set('isCollapsed', false);
-    }
-  }
+  @tracked isCollapsed = true;
 
   @computed('group.disabled')
   get ariaDisabled() {
@@ -55,12 +50,31 @@ export default class OneDropdownCollapsibleGroup extends PowerSelectGroup {
     return (!this.isCollapsed || this.allGroupsOpened) ? 'group-opened' : '';
   }
 
+  init() {
+    super.init(...arguments);
+    if (this.group.options.includes(this.select.selected)) {
+      this.set('isCollapsed', false);
+    }
+  }
+
   /** @override */
   didInsertElement() {
-    this.element.addEventListener('click', () => {
-      if (!this.isSearchActive) {
-        this.toggleProperty('isCollapsed');
-      }
-    });
+    super.didInsertElement(...arguments);
+    this.element.addEventListener('click', this.clickHandler);
+  }
+
+  /** @override */
+  willDestroyElement() {
+    try {
+      this.element.removeEventListener('click', this.clickHandler);
+    } finally {
+      super.willDestroyElement(...arguments);
+    }
+  }
+
+  handleClick() {
+    if (!this.isSearchActive) {
+      this.toggleProperty('isCollapsed');
+    }
   }
 }
