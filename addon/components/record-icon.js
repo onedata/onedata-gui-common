@@ -51,7 +51,8 @@ export default class RecordIconComponent extends Component {
    */
   @computed(
     'useSubtypeIcon',
-    'record',
+    // observe record properties used by recordIcon util
+    'record.{type,fileType,typeName}',
     'modelName',
   )
   get icon() {
