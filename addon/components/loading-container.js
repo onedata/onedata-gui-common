@@ -5,9 +5,9 @@
  *
  * An example:
  * ```
- * {{#loading-container isLoading=loadingState errorReason=backendError}}
- *   {{some-component}}
- * {{/loading-container}}
+ * <LoadingContainer @isLoading={{loadingState}} @errorReason={{backendError}}>
+ *   <SomeComponent />
+ * </LoadingContainer>
  * ```
  *
  * It will render loader (eg. spinner) if `loadingState` is true.
@@ -16,6 +16,7 @@
  *
  * @author Jakub Liput
  * @copyright (C) 2017-2023 ACK CYFRONET AGH
+ * @copyright (C) 2025 Onedata (onedata.org)
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -57,11 +58,22 @@ export default Component.extend({
   /**
    * If true, spinner will be absolutely centered, otherwise it will fill
    * the parent block to centerize itself
+   * @virtual optional
    * @type {boolean}
    */
   absoluteCentered: true,
 
+  /**
+   * @virtual optional
+   * @type {'xxs'|'xs'|'sm'|'md'|'lg'}
+   */
   sizeClass: 'md',
+
+  /**
+   * Classname added to internally rendered `<SpinSpinnerBlock>`.
+   * @type {string}
+   */
+  spinnerBlockClass: undefined,
 
   isLoaded: computed('isLoading', 'isError', function () {
     return !this.get('isLoading') && !this.get('isError');
