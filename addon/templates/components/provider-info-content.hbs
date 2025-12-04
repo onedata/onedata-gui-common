@@ -25,10 +25,17 @@
         <OneClipboardLine @size="sm" @value={{record.entityId}} @type="text" />
       </td>
     </tr>
-    {{#if record.version}}
+    {{#if this.record.releaseVersion}}
       <tr class="row-with-text">
         <td class="property-name">{{tt this "version"}}</td>
-        <td class="property-value">{{record.version}}</td>
+        <td class="property-value">
+          <span class="provider-release-version">{{this.record.releaseVersion}}</span>
+          {{#if this.record.buildVersion}}
+            <span class="provider-build-version">
+              {{tt this "build" buildVersion=this.record.buildVersion}}
+            </span>
+          {{/if}}
+        </td>
       </tr>
     {{/if}}
   </tbody>
