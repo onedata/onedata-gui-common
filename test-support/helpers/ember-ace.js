@@ -1,12 +1,16 @@
 import { hbs } from 'ember-cli-htmlbars';
 import TestComponent from 'onedata-gui-common/components/test-component';
 
-export function replaceEmberAceWithTextarea(context) {
+export function replaceEmberAceWithTextarea(context, { classname } = {}) {
+  const aceTextareaArgs = {
+    classname,
+  };
   context.owner.register('component:ember-ace', TestComponent.extend({
     layout: hbs`<textarea
-      value={{value}}
-      oninput={{action (or update (no-action)) value="target.value"}}
-      disabled={{readOnly}}
+      class={{this.aceTextareaArgs.classname}}
+      value={{this.value}}
+      oninput={{action (or this.update (no-action)) value="target.value"}}
+      disabled={{this.readOnly}}
       onblur={{action "blur"}}
     ></textarea>`,
 
@@ -15,6 +19,11 @@ export function replaceEmberAceWithTextarea(context) {
      * @type {((component: Ember.Component) => void) | null}
      */
     ready: null,
+
+    /**
+     * @type {{ classname: string}}
+     */
+    aceTextareaArgs,
 
     /**
      * @type {Object<string, Array<() => void)>}

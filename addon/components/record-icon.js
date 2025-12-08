@@ -15,14 +15,20 @@ import recordIcon from 'onedata-gui-common/utils/record-icon';
 import Component from '@glimmer/component';
 
 /**
- * @typedef {Object} RecordIconArgs
- * @param {boolean} [useSubtypeIcon=false]
- * @param {Object} [record]
- * @param {string} [modelName]
+ * @typedef {Object} RecordIconSignature
+ * @property {HTMLSpanElement} Element
+ * @property {RecordIconArgs} Args
  */
 
 /**
- * @type {Component<RecordIconArgs>}
+ * @typedef {Object} RecordIconArgs
+ * @property {boolean} [useSubtypeIcon=false]
+ * @property {Object} [record]
+ * @property {string} [modelName]
+ */
+
+/**
+ * @extends {Component<RecordIconSignature>}
  */
 export default class RecordIconComponent extends Component {
   /**

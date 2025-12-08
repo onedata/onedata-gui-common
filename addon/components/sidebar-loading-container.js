@@ -22,7 +22,7 @@ import { htmlSafe } from '@ember/template';
  */
 
 /**
- * @type {Component<SidebarLoadingContainerSignature>}
+ * @extends {Component<SidebarLoadingContainerSignature>}
  */
 export default class SidebarLoadingContainerComponent extends Component {
   loadingContainerSizeClass = 'lg';

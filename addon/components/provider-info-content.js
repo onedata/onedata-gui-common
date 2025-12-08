@@ -21,7 +21,7 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Models.Provider}
+   * @type {Models.Provider|OneproviderTabItem}
    */
   record: undefined,
 });
