@@ -30,6 +30,7 @@
     "babel-plugin-ember-modules-api-polyfill": "3.5.0",
     "basictable": "git+https://github.com/kliput/basictable.git#b00a7e52512e43a526e8f5b0ae8b3063efbe0bf5",
     "color": "4.2.3",
+    "compare-versions": "6.1.1",
     "contrast": "1.0.1",
     "dompurify": "2.4.3",
     "ember-auto-import": "2.6.1",
