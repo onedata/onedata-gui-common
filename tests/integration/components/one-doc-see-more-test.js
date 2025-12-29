@@ -18,19 +18,6 @@ describe('Integration | Component | one-doc-see-more', function () {
     expect(this.element.textContent).to.match(/See the\s+foo bar\s+documentation\s+for more\./);
   });
 
-  it('renders anchor with documentation href', async function () {
-    lookupService(this, 'guiUtils').set('softwareVersionDetails', {
-      serviceVersion: '21.02.3',
-      serviceBuildVersion: 'aabbcc',
-    });
-
-    await render(hbs `<OneDocSeeMore @docPath="hello/world.html" />`);
-
-    expect(find('.documentation-link').href).to.equal(
-      'https://onedata.org/#/home/documentation/21.02/hello/world.html'
-    );
-  });
-
   it('renders see more text with provided yielded block inside link', async function () {
     await render(hbs `
       <OneDocSeeMore @docPath="hello/world.html">
@@ -61,29 +48,61 @@ describe('Integration | Component | one-doc-see-more', function () {
     );
   });
 
-  it('renders link with topic href if topic is provided', async function () {
-    lookupService(this, 'guiUtils').set('softwareVersionDetails', {
-      serviceVersion: '21.02.3',
-      serviceBuildVersion: 'aabbcc',
+  const versionMapping = [{
+      full: '21.02.3',
+      docs: '21.02',
+    },
+    {
+      full: '25.0',
+      docs: '25',
+    },
+    {
+      full: '25.1.3',
+      docs: '25',
+    },
+  ];
+
+  for (const version of versionMapping) {
+    it(`renders anchor with documentation href (version: ${version.full})`, async function () {
+      lookupService(this, 'guiUtils').set('softwareVersionDetails', {
+        serviceVersion: version.full,
+        serviceBuildVersion: 'aabbcc',
+      });
+
+      await render(hbs `<OneDocSeeMore @docPath="hello/world.html" />`);
+
+      expect(find('.documentation-link').href).to.equal(
+        `https://onedata.org/#/home/documentation/${version.docs}/hello/world.html`
+      );
     });
 
-    await render(hbs `
-      <OneDocSeeMore @linkName="hello" @topic="tokens" />
-    `);
+    it(`renders link with topic href if topic is provided (version: ${version.full})`, async function () {
+      lookupService(this, 'guiUtils').set('softwareVersionDetails', {
+        serviceVersion: version.full,
+        serviceBuildVersion: 'aabbcc',
+      });
 
-    expect(find('.documentation-link'))
-      .to.have.attr('href', 'https://onedata.org/#/home/documentation/topic/21.02/tokens');
-  });
+      await render(hbs `
+        <OneDocSeeMore @linkName="hello" @topic="tokens" />
+      `);
+
+      expect(find('.documentation-link')).to.have.attr(
+        'href',
+        `https://onedata.org/#/home/documentation/topic/${version.docs}/tokens`
+      );
+    });
+  }
 
   it('renders link with "stable" version string if guiUtils softwareVersionDetails are unavailable',
     async function () {
       lookupService(this, 'guiUtils').set('softwareVersionDetails', undefined);
 
       await render(hbs `
-      <OneDocSeeMore @linkName="hello" @topic="tokens" />
-    `);
+        <OneDocSeeMore @linkName="hello" @topic="tokens" />
+      `);
 
       expect(find('.documentation-link'))
         .to.have.attr('href', 'https://onedata.org/#/home/documentation/topic/stable/tokens');
-    });
+    }
+  );
 });

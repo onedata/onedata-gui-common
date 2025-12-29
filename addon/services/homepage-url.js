@@ -3,10 +3,12 @@
  *
  * @author Jakub Liput
  * @copyright (C) 2024 ACK CYFRONET AGH
+ * @copyright (C) 2025 Onedata (onedata.org)
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Service, { inject as service } from '@ember/service';
+import Version from 'onedata-gui-common/utils/version';
 
 export const documentationUrlPrefix = 'https://onedata.org/#/home/documentation';
 
@@ -15,12 +17,22 @@ const fallbackDocsVersion = 'stable';
 /**
  * Simplifies version numer to the one that is used in onedata.org homepage for
  * documentation.
- * @param {string} version For example: '21.02.3'
- * @returns {string|undefined} For example: '21.02'. Returns undefined if version is in
- *   unknown format (also applies for special 'stable' version).
+ * @param {string} version For example: '21.02.3' (legacy), '25.0', '25.1.4'
+ * @returns {string|undefined} For example: '21.02' (legacy), '25' (for CalVer). Returns
+ *   undefined if version is in unknown format (also applies for special 'stable'
+ *   version).
  */
-function simplifyVersion(version) {
-  return version.match(/(\d+\.\d+)\.\d+/)?.[1];
+export function simplifyVersion(version) {
+  const semver = Version.semversionize(version);
+  const majorString = semver?.match(/^\d+/)[0];
+  if (!majorString) {
+    return undefined;
+  }
+  if (Number(majorString) > 21) {
+    return majorString;
+  } else {
+    return version.match(/(\d+\.\d+)\.\d+/)?.[1];
+  }
 }
 
 export default Service.extend({
