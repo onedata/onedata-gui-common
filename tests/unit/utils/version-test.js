@@ -6,15 +6,15 @@ describe('Unit | Utility | version', function () {
   it('returns true if a version conforms stable version requirement', function () {
     const requiredVersion = '20.02.2';
     const testedVersions = [
-      // '20.02.2',
-      // '20.02.3',
-      // '20.02.11',
-      // '21.02.1',
-      // '21.02.0-alpha1',
+      '20.02.2',
+      '20.02.3',
+      '20.02.11',
+      '21.02.1',
+      '21.02.0-alpha1',
       '25.0',
-      // '25.0.1',
-      // '25.1',
-      // '27.3',
+      '25.0.1',
+      '25.1',
+      '27.3',
     ];
     for (const checkedVersion of testedVersions) {
       expect(
