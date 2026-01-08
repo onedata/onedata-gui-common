@@ -31,7 +31,7 @@ export default OneCollapsibleListItemHeader.extend({
    * @virtual
    * @type {string}
    */
-  tooltipText: '',
+  subtitleTip: '',
 
   /**
    * To inject.
