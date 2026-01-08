@@ -16,7 +16,7 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
     padding-right: 2 * $padding-large-horizontal;
     padding-bottom: $padding-large-horizontal;
     padding-left: $padding-large-horizontal;
-    
+
     &.without-menu {
       padding-right: $padding-large-horizontal;
     }
@@ -37,6 +37,12 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
     .list-title {
       @include font-bold();
       text-transform: uppercase;
+    }
+
+    .list-subtitle {
+      margin-left: 0.8em;
+      font-size: 90%;
+      opacity: $disabled-opacity;
     }
 
     &.align-to-icon .list-title {
@@ -86,7 +92,7 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
         margin-bottom: 0;
         margin-top: $padding-base-vertical;
         margin-right: -$padding-large-horizontal;
-        .input-group { 
+        .input-group {
           z-index: 0;
         }
       }

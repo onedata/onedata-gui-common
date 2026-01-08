@@ -7,6 +7,14 @@
   />
 {{/if}}
 <span class="list-title">{{title}}</span>
+{{#if subtitle}}
+  <span class="list-subtitle">
+    {{subtitle}}
+    {{#if tooltipText}}
+      <OneTooltip @title={{tooltipText}} />
+    {{/if}}
+  </span>
+{{/if}}
 {{#if (and isCollapsible (not disableToggleIcon))}}
   <OneIcon class="toggle-icon" @icon="arrow-down" />
 {{/if}}
