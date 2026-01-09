@@ -172,9 +172,16 @@ describe('Unit | Utility | version', function () {
       '26.1': '26.1.0',
       '26.0-rc.1': '26.0.0-rc.1',
       '26.1.2-alpha.1': '26.1.2-alpha.1',
+      '26.1.0-beta.3': '26.1.0-beta.3',
     };
     for (const [sourceVersion, targetVersion] of Object.entries(versionsMapping)) {
       expect(Version.semversionize(sourceVersion)).to.equal(targetVersion);
     }
+  });
+
+  it('[semversionize] returns null for version with more components than expected', function () {
+    expect(Version.semversionize('25.1.2.3')).to.be.null;
+    expect(Version.semversionize('25.0-rc.1.2')).to.be.null;
+    expect(Version.semversionize('25.1.0-rc.1.2')).to.be.null;
   });
 });

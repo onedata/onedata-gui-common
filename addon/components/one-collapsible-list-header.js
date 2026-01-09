@@ -20,6 +20,20 @@ export default OneCollapsibleListItemHeader.extend({
   classNameBindings: ['_isListCollapsed:collapsed:opened', 'withPlaceForDots'],
 
   /**
+   * Subtitle for list.
+   * @virtual
+   * @type {string}
+   */
+  subtitle: '',
+
+  /**
+   * Tooltip text for subtitle.
+   * @virtual
+   * @type {string}
+   */
+  subtitleTip: '',
+
+  /**
    * To inject.
    * Title for list.
    * @type {string}

@@ -3,7 +3,7 @@
  *
  * @author Jakub Liput
  * @copyright (C) 2023 ACK CYFRONET AGH
- * @copyright (C) 2025 Onedata (onedata.org)
+ * @copyright (C) 2025-2026 Onedata (onedata.org)
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -46,7 +46,7 @@ export function semversionize(version) {
 
 /**
  * @param {string} version
- * @returns {string}
+ * @returns {string|null}
  */
 function semversionizeCalVer(version) {
   // Two-positional, e.g., 25.1
@@ -58,7 +58,7 @@ function semversionizeCalVer(version) {
   }
 
   // Three-positional, e.g., 25.1.2
-  // It may contain string with tag on second or third position, e.g., 25.0-rc.1
+  // It may contain string with tag on second position, e.g., 25.0-rc.1
   const threeMatch = version.match(/^(\d+)\.([^.]+?)\.(\d+)$/);
   if (threeMatch) {
     const major = threeMatch[1];
@@ -85,7 +85,7 @@ function semversionizeCalVer(version) {
   }
 
   // Full semver with version tag, e.g., 25.1.2-rc.3
-  const fourMatch = version.match(/^(\d+)\.(\d+)\.(.+?)\.(\d+)$/);
+  const fourMatch = version.match(/^(\d+)\.(\d+)\.(\d+-(?:alpha|beta|rc))\.(\d+)$/);
   if (fourMatch) {
     return compileVersionString(
       fourMatch[1],
