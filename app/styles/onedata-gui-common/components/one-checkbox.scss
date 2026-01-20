@@ -1,10 +1,10 @@
-.one-checkbox {
-  $checkbox-size: 16px;
+$one-checkbox-size: 16px;
 
+.one-checkbox {
   display: inline-block;
   position: relative;
-  width: $checkbox-size;
-  height: $checkbox-size;
+  width: $one-checkbox-size;
+  height: $one-checkbox-size;
   border-radius: $border-radius-small;
   border: 1px solid $main-text-color;
   background-color: $color-one-white;
@@ -21,9 +21,9 @@
       height: 100%;
       margin-left: -1px;
       margin-top: -1px;
-      line-height: $checkbox-size;
+      line-height: $one-checkbox-size;
       color: $color-one-mint;
-      font-size: $checkbox-size;
+      font-size: $one-checkbox-size;
       text-align: center;
     }
   }
@@ -35,8 +35,8 @@
       @include absolute-align-middle-center();
       content: '';
       display: block;
-      width: $checkbox-size - 8px;
-      height: $checkbox-size - 8px;
+      width: $one-checkbox-size - 8px;
+      height: $one-checkbox-size - 8px;
       background-color: $color-one-mint;
       border-radius: $border-radius-small;
     }
