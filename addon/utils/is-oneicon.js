@@ -46,6 +46,7 @@ export const knownOneicons = new Set([
   'browser-permission',
   'browser-permissions',
   'browser-rename',
+  'browser-replace-data',
   'browser-share',
   'browser-upload',
   'cancelled',
