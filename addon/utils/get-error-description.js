@@ -27,7 +27,6 @@ const detailsTranslateFunctions = {
   notAnInviteToken: notAnXTokenDetailsTranslator,
   tokenServiceForbidden: tokenServiceForbiddenDetailsError,
   inviteTokenConsumerInvalid: inviteTokenConsumerInvalidDetailsError,
-  storageTestFailed: storageTestFailedDetailsTranslator,
   fileAccess: posixDetailsTranslator,
   noServiceNodes: noServiceNodesDetailsTranslator,
   fileAllocation: fileAllocationDetailsTranslator,
@@ -307,15 +306,6 @@ function inviteTokenConsumerInvalidDetailsError(i18n, errorDetails) {
 
 function resourceTypeAndIdToString(resource) {
   return `${resource.type}:${resource.id}`;
-}
-
-function storageTestFailedDetailsTranslator(i18n, errorDetails) {
-  const operationTranslation =
-    findTranslation(i18n,
-      `${i18nPrefix}translationParts.storageTestOperations.${errorDetails.operation}`);
-  return Object.assign({}, errorDetails, {
-    operation: operationTranslation || errorDetails.operation,
-  });
 }
 
 function noServiceNodesDetailsTranslator(i18n, errorDetails) {

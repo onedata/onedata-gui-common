@@ -127,7 +127,7 @@ export default {
   notALocalStorageSupportingSpace: 'Storage backend (ID: {{storageId}}) does not belong to this Oneprovider (ID: {{providerId}}) and/or does not support the space (ID: {{spaceId}}).',
   storageInUse: 'Specified storage backend already supports another space.',
   requiresAutoStorageImportMode: 'Operation requires space with auto storage import mode.',
-  storageTestFailed: 'Failed to {{operation}} test file on storage backend.',
+  storageTestFailed: 'Storage accessibility test failed. Consult Onepanel logs for details.',
   requiresNonImportedStorage: 'Cannot apply for storage backend (ID: {{storageId}}) – this operation requires a non-imported storage backend.',
   requiresImportedStorage: 'Cannot apply for storage backend (ID: {{storageId}}) – this operation requires a non-imported storage backend.',
   requiresReadonlyStorage: 'Cannot apply for storage backend {{storageIdOrType}} – this operation requires a readonly storage backend.',
@@ -209,11 +209,6 @@ export default {
     inviteToken: 'invite token',
     accessToken: 'access token',
     identityToken: 'identity token',
-    storageTestOperations: {
-      read: 'read',
-      write: 'write',
-      remove: 'remove',
-    },
     nodeServices: {
       couchbase: 'Database',
       cluster_manager: 'Cluster Manager',
