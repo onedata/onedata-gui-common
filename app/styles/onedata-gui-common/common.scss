@@ -1,6 +1,9 @@
 $table-item-border: 1px solid $main-border-color;
 $table-info-cell-padding: $table-condensed-cell-padding * 2;
 
+// See details-with-icon class
+$details-with-icon-spacing: 0.4em;
+
 h5 {
   @include font-bold();
 }
@@ -959,14 +962,14 @@ p.text-separated {
   }
 
   .details-content {
-    padding: 0 0.4em;
+    padding: 0 $details-with-icon-spacing;
     min-width: 0;
   }
 
   .details-title {
     @include font-semibold();
     display: block;
-    margin-bottom: 0.4em;
+    margin-bottom: $details-with-icon-spacing;
     word-break: break-word;
   }
 
