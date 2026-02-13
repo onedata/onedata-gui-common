@@ -3,14 +3,14 @@
  *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020-2024 ACK CYFRONET AGH
- * @copyright (C) 2025 Onedata (onedata.org)
+ * @copyright (C) 2025-2026 Onedata (onedata.org)
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import PowerSelect from 'ember-power-select/components/power-select';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { inject as service } from '@ember/service';
-import { computed, defineProperty } from '@ember/object';
+import { computed } from '@ember/object';
 
 export default class OneDropdown extends PowerSelect {
   @service scrollState;
@@ -24,22 +24,25 @@ export default class OneDropdown extends PowerSelect {
   /** @type {string} */
   customGroupComponent;
 
+  /** @type {boolean} */
+  areGroupsCollapsible = false;
+
+  @computed('customGroupComponent', 'areGroupsCollapsible')
+  get groupComponent() {
+    return this.customGroupComponent ?? (
+      this.areGroupsCollapsible ?
+      'one-dropdown/collapsible-group' : 'power-select/power-select-group'
+    );
+  }
+
+  set groupComponent(value) {
+    this.set('customGroupComponent', value);
+  }
+
   init() {
     super.init(...arguments);
     this.set('scrollListener', () => this.handlePageScroll());
     this.scrollState.addScrollListener(this.scrollListener);
-
-    defineProperty(this, 'groupComponent', computed('areGroupsCollapsible', {
-      get() {
-        return this.customGroupComponent ?? (
-          this.areGroupsCollapsible ?
-          'one-dropdown/collapsible-group' : 'power-select/power-select-group'
-        );
-      },
-      set(value) {
-        this.set('customGroupComponent', value);
-      },
-    }));
   }
 
   willDestroy() {
