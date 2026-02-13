@@ -23,6 +23,9 @@ import layout from 'onedata-gui-common/templates/components/support-size-info/ta
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import Bootstrap3Theme from 'ember-models-table/themes/bootstrap3';
 import { conditional, raw, eq } from 'ember-awesome-macros';
+import ArrayPaginator from 'onedata-gui-common/utils/array-paginator';
+import { reads } from '@ember/object/computed';
+import addConflictLabels from 'onedata-gui-common/utils/add-conflict-labels';
 
 export default Component.extend({
   layout,
@@ -81,6 +84,15 @@ export default Component.extend({
     },
   }),
 
+  perPageLabel: computed(function () {
+    return this.get('i18n').t('components.supportSizeInfo.table.perPage');
+  }),
+
+  /**
+   * @type {Utils.ArrayPaginator}
+   */
+  paginator: undefined,
+
   /**
    * @type {string | null}
    */
@@ -90,6 +102,11 @@ export default Component.extend({
    * @type {string | null}
    */
   customSupporterSizeHeader: null,
+
+  isSortedByNameAsc: false,
+  isSortedByNameDesc: false,
+  isSortedBySizeAsc: false,
+  isSortedBySizeDesc: false,
 
   /**
    * @type {computed.string}
@@ -106,6 +123,7 @@ export default Component.extend({
    */
   _processedData: computed('data.[]', function () {
     const data = this.get('data');
+    addConflictLabels(data, 'supporterName', 'supporterId');
     const processedData = A();
     data.forEach((entry) => {
       processedData.pushObject(EmberObject.create({
@@ -113,10 +131,36 @@ export default Component.extend({
         supportSize: entry.get('supportSize'),
         supporterId: entry.get('supporterId'),
         supportSizeStr: bytesToString(entry.get('supportSize'), { iecFormat: true }),
+        supporter: {
+          name: entry.get('supporterName'),
+          entityId: entry.get('supporterId'),
+          owner: null,
+          conflictLabel: entry.get('conflictLabel'),
+        },
       }));
     });
     return processedData;
   }),
+
+  sortedData: computed(
+    'data.[]',
+    'isSortedByNameAsc',
+    'isSortedByNameDesc',
+    'isSortedBySizeAsc',
+    'isSortedBySizeDesc',
+    function sortedData() {
+      const processedData = this._processedData.slice();
+
+      if (this.isSortedByNameAsc) {
+        return processedData.sortBy('supporterName');
+      } else if (this.isSortedByNameDesc) {
+        return processedData.sortBy('supporterName').reverse();
+      } else if (this.isSortedBySizeDesc) {
+        return processedData.sortBy('supportSize').reverse();
+      } else {
+        return processedData.sortBy('supportSize');
+      }
+    }),
 
   /**
    * Columns definition for table.
@@ -157,4 +201,35 @@ export default Component.extend({
     setProperties(theme, getOwner(this).ownerInjection());
     return theme;
   }),
+
+  init() {
+    this._super(...arguments);
+    this.set('paginator', ArrayPaginator.extend({
+      array: reads('parent.sortedData'),
+      pageSize: 10,
+    }).create({
+      parent: this,
+    }));
+  },
+  actions: {
+    changePerPage(number) {
+      this.set('pageSize', number);
+    },
+    sortByName() {
+      this.setProperties({
+        isSortedByNameAsc: !this.isSortedByNameAsc,
+        isSortedByNameDesc: this.isSortedByNameAsc,
+        isSortedBySizeAsc: false,
+        isSortedBySizeDesc: false,
+      });
+    },
+    sortBySize() {
+      this.setProperties({
+        isSortedByNameAsc: false,
+        isSortedByNameDesc: false,
+        isSortedBySizeAsc: !this.isSortedBySizeAsc,
+        isSortedBySizeDesc: this.isSortedBySizeAsc,
+      });
+    },
+  },
 });

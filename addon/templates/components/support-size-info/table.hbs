@@ -1,12 +1,54 @@
-<ModelsTable
-  @data={{_processedData}}
-  @columns={{_columns}}
-  @selectRowOnClick={{false}}
-  @themeInstance={{themeInstance}}
-  @showColumnsDropdown={{false}}
-  @showGlobalFilter={{false}}
-  @useFilteringByColumns={{false}}
-  @showComponentFooter={{false}}
-  @pageSize={{1000000}}
-  @multipleColumnsSorting={{false}}
-/>
+<table class="table table-condensed table-hover">
+  <thead>
+    <tr>
+      <th class="supporter-name-column" onclick={{action "sortByName"}} style="cursor: pointer;">
+        {{supporterNameHeader}}
+        {{#if isSortedByNameAsc}}
+          <OneIcon @icon="arrow-up" />
+        {{else if isSortedByNameDesc}}
+          <OneIcon @icon="arrow-down" />
+        {{/if}}
+      </th>
+      <th class="support-size-column" onclick={{action "sortBySize"}} style="cursor: pointer;">
+        {{supporterSizeHeader}}
+        {{#if isSortedBySizeAsc}}
+          <OneIcon @icon="arrow-up" />
+        {{else if isSortedBySizeDesc}}
+          <OneIcon @icon="arrow-down" />
+        {{/if}}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#if data.length}}
+      {{#each paginator.activePageArray as |item|}}
+        <tr>
+          <td class="supporter-name-column">
+            <RecordInfoWithIcon
+              @record={{item.supporter}}
+              @recordType="space"
+            />
+          </td>
+          <td class="support-size-column">{{item.supportSizeStr}}</td>
+        </tr>
+      {{/each}}
+    {{else}}
+      <tr>
+        <td colspan="2" class="no-data-to-show">{{noDataToShowMessage}}</td>
+      </tr>
+    {{/if}}
+  </tbody>
+</table>
+{{#if (gt data.length 10)}}
+  <PagesControl
+    @activePageNumber={{paginator.activePageNumber}}
+    @pagesCount={{paginator.pagesCount}}
+    @pageSize={{paginator.pageSize}}
+    @hasPageNumberInput={{not (or (media "isTablet") (media "isMobile"))}}
+    @onPageChange={{paginator.changeActivePageNumber}}
+    @customPerPageText={{perPageLabel}}
+    @isFiltered={{false}}
+    @changePerPage={{action "changePerPage"}}
+    @isPerPageDropdownVisible={{false}}
+  />
+{{/if}}
