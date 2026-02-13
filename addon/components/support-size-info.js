@@ -6,6 +6,13 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+/**
+ * @typedef {Ember.Object} SupportSizeEntry An entry with support size info
+ * @property {string} supporterName A supporter name.
+ * @property {number} supportSize A support size (in bytes).
+ * @property {string} supporterId A supporter id.
+ */
+
 import Component from '@ember/component';
 
 import EmberObject, { computed } from '@ember/object';

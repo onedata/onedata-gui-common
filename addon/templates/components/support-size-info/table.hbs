@@ -1,42 +1,48 @@
-<table class="table table-condensed table-hover">
-  <thead>
-    <tr>
-      <th class="supporter-name-column" onclick={{action "sortByName"}} style="cursor: pointer;">
-        {{supporterNameHeader}}
-        {{#if isSortedByNameAsc}}
-          <OneIcon @icon="arrow-up" />
-        {{else if isSortedByNameDesc}}
-          <OneIcon @icon="arrow-down" />
-        {{/if}}
-      </th>
-      <th class="support-size-column" onclick={{action "sortBySize"}} style="cursor: pointer;">
-        {{supporterSizeHeader}}
-        {{#if isSortedBySizeAsc}}
-          <OneIcon @icon="arrow-up" />
-        {{else if isSortedBySizeDesc}}
-          <OneIcon @icon="arrow-down" />
-        {{/if}}
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each paginator.activePageArray as |item|}}
+{{#if data.length}}
+  <table class="table table-condensed table-hover">
+    <thead>
       <tr>
-        <td class="supporter-name-column">
-          {{#if (eq type "space")}}
-            <RecordInfoWithIcon
-              @record={{item.supporter}}
-              @recordType={{this.type}}
-            />
-          {{else}}
-            <TruncatedString>{{item.supporterName}}</TruncatedString>
+        <th class="supporter-name-column" onclick={{action "sortByName"}} style="cursor: pointer;">
+          {{supporterNameHeader}}
+          {{#if isSortedByNameAsc}}
+            <OneIcon @icon="arrow-up" />
+          {{else if isSortedByNameDesc}}
+            <OneIcon @icon="arrow-down" />
           {{/if}}
-        </td>
-        <td class="support-size-column">{{item.supportSizeStr}}</td>
+        </th>
+        <th class="support-size-column" onclick={{action "sortBySize"}} style="cursor: pointer;">
+          {{supporterSizeHeader}}
+          {{#if isSortedBySizeAsc}}
+            <OneIcon @icon="arrow-up" />
+          {{else if isSortedBySizeDesc}}
+            <OneIcon @icon="arrow-down" />
+          {{/if}}
+        </th>
       </tr>
-    {{/each}}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {{#each paginator.activePageArray as |item|}}
+        <tr>
+          <td class="supporter-name-column">
+            {{#if (eq this.type "space")}}
+              <RecordInfoWithIcon
+                @record={{item}}
+                @recordType={{this.type}}
+              />
+            {{else}}
+              <TruncatedString>{{item.name}}</TruncatedString>
+            {{/if}}
+          </td>
+          <td class="support-size-column">{{item.sizeStr}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <div class="no-data-to-show">
+    {{noDataToShowMessage}}
+  </div>
+{{/if}}
 {{#if isPageControlsVisible}}
   <PagesControl
     @activePageNumber={{paginator.activePageNumber}}
