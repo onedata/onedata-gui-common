@@ -27,6 +27,8 @@ import ArrayPaginator from 'onedata-gui-common/utils/array-paginator';
 import { reads } from '@ember/object/computed';
 import addConflictLabels from 'onedata-gui-common/utils/add-conflict-labels';
 
+const DEFAULT_PAGE_SIZE = 10;
+
 export default Component.extend({
   layout,
   classNames: ['support-size-table'],
@@ -84,8 +86,17 @@ export default Component.extend({
     },
   }),
 
-  perPageLabel: computed(function () {
-    return this.get('i18n').t('components.supportSizeInfo.table.perPage');
+  perPageLabel: computed(function perPageLabel() {
+    return this.get('i18n').t(
+      'components.supportSizeInfo.table.perPage', { type: this.type }
+    );
+  }),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isPageControlsVisible: computed('data.length', function isPageControlsVisible() {
+    return this.get('data.length') > DEFAULT_PAGE_SIZE;
   }),
 
   /**
@@ -206,7 +217,7 @@ export default Component.extend({
     this._super(...arguments);
     this.set('paginator', ArrayPaginator.extend({
       array: reads('parent.sortedData'),
-      pageSize: 10,
+      pageSize: DEFAULT_PAGE_SIZE,
     }).create({
       parent: this,
     }));

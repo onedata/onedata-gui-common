@@ -20,26 +20,24 @@
     </tr>
   </thead>
   <tbody>
-    {{#if data.length}}
-      {{#each paginator.activePageArray as |item|}}
-        <tr>
-          <td class="supporter-name-column">
+    {{#each paginator.activePageArray as |item|}}
+      <tr>
+        <td class="supporter-name-column">
+          {{#if (eq type "space")}}
             <RecordInfoWithIcon
               @record={{item.supporter}}
-              @recordType="space"
+              @recordType={{this.type}}
             />
-          </td>
-          <td class="support-size-column">{{item.supportSizeStr}}</td>
-        </tr>
-      {{/each}}
-    {{else}}
-      <tr>
-        <td colspan="2" class="no-data-to-show">{{noDataToShowMessage}}</td>
+          {{else}}
+            <TruncatedString>{{item.supporterName}}</TruncatedString>
+          {{/if}}
+        </td>
+        <td class="support-size-column">{{item.supportSizeStr}}</td>
       </tr>
-    {{/if}}
+    {{/each}}
   </tbody>
 </table>
-{{#if (gt data.length 10)}}
+{{#if isPageControlsVisible}}
   <PagesControl
     @activePageNumber={{paginator.activePageNumber}}
     @pagesCount={{paginator.pagesCount}}
