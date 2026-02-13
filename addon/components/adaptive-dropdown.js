@@ -18,6 +18,7 @@ import Component from '@glimmer/component';
 
 /**
  * @typedef {import('./infinite-scroll-dropdown').InfiniteScrollDropdownArgs & {
+ *   areGroupsCollapsible: boolean,
  *   minOptionsForInfiniteScroll: number
  * }} AdaptiveDropdownArgs
  */
