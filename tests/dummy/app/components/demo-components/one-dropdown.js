@@ -4,59 +4,65 @@ import { action } from '@ember/object';
 import _ from 'lodash';
 import { guidFor } from '@ember/object/internals';
 
-export default Component.extend({
-      /**
-       * OneDropdown small value
-       * @type {String}
-       */
-      valueSmall: undefined,
+export default class OneDropdownDemo extends Component {
+  @tracked value = undefined;
+  @tracked valueSmall = undefined;
+  @tracked valueWithGroups = undefined;
+  @tracked valueWithGroupsSmall = undefined;
+  @tracked valueManyInfinite = undefined;
+  @tracked valueChunked = undefined;
+  @tracked areGroupsCollapsible = false;
+  @tracked isInfiniteScrollComponent = true;
+  @tracked isManyItemsComponentSmall = false;
+  @tracked adaptiveOptionsCount = 10;
+  @tracked valueAdaptive = undefined;
 
-      /**
-       * OneDropdown pseudo-text
-       * @type {String}
-       */
-      valueSmallText = 'very long text very';
+  /**
+   * OneDropdown pseudo-text
+   * @type {String}
+   */
+  valueSmallText = 'very long text very';
 
-      get optionsWithGroups() {
-        return ['hello', 'world', 'foo', 'bar'].map(groupName => {
-          return {
-            groupName,
-            options: _.range(0, 5).map(i => `${groupName}-${i}`),
-          };
-        });
-      }
+  get optionsWithGroups() {
+    return ['hello', 'world', 'foo', 'bar'].map(groupName => {
+      return {
+        groupName,
+        options: _.range(0, 5).map(i => `${groupName}-${i}`),
+      };
+    });
+  }
 
-      get manyInfiniteOptions() {
-        return _.range(0, 10000);
-      }
+  get manyInfiniteOptions() {
+    return _.range(0, 10000);
+  }
 
-      get infiniteScrollToggleId() {
-        return `use-infinite-scroll-${guidFor(this)}`;
-      }
+  get infiniteScrollToggleId() {
+    return `use-infinite-scroll-${guidFor(this)}`;
+  }
 
-      get manyItemsComponent() {
-        return this.isInfiniteScrollComponent ? 'infinite-scroll-dropdown' : 'one-dropdown';
-      }
+  get manyItemsComponent() {
+    return this.isInfiniteScrollComponent ? 'infinite-scroll-dropdown' : 'one-dropdown';
+  }
 
-      get manyItemsSizeToggleId() {
-        return `many-items-size-${guidFor(this)}`;
-      }
+  get manyItemsSizeToggleId() {
+    return `many-items-size-${guidFor(this)}`;
+  }
 
-      get manyItemsSize() {
-        return this.isManyItemsComponentSmall ? 'small' : '';
-      }
+  get manyItemsSize() {
+    return this.isManyItemsComponentSmall ? 'small' : '';
+  }
 
-      get adaptiveOptions() {
-        return _.range(0, this.adaptiveOptionsCount).map(String);
-      }
+  get adaptiveOptions() {
+    return _.range(0, this.adaptiveOptionsCount).map(String);
+  }
 
-      @action
-      updateValue(newValue) {
-        this.value = newValue;
-      }
+  @action
+  updateValue(newValue) {
+    this.value = newValue;
+  }
 
-      @action
-      updateAdaptiveOptionsCount(event) {
-        this.adaptiveOptionsCount = event.target.value;
-      }
-    }
+  @action
+  updateAdaptiveOptionsCount(event) {
+    this.adaptiveOptionsCount = event.target.value;
+  }
+}
