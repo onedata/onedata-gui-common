@@ -27,6 +27,7 @@ import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import ArrayPaginator from 'onedata-gui-common/utils/array-paginator';
 import { reads } from '@ember/object/computed';
 import addConflictLabels from 'onedata-gui-common/utils/add-conflict-labels';
+import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -64,7 +65,7 @@ export default Component.extend({
    */
   supporterNameHeader: computed({
     get() {
-      return this.customSupporterNameHeader ?? this.get('i18n')
+      return this.customSupporterNameHeader ?? this.i18n
         .t('components.supportSizeInfo.table.supporterNameHeader');
     },
     set(key, value) {
@@ -80,7 +81,7 @@ export default Component.extend({
   supporterSizeHeader: computed({
     get() {
       return this.customSupporterSizeHeader ??
-        this.get('i18n').t('components.supportSizeInfo.table.supportSizeHeader');
+        this.i18n.t('components.supportSizeInfo.table.supportSizeHeader');
     },
     set(key, value) {
       return this.customSupporterSizeHeader = value;
@@ -118,7 +119,7 @@ export default Component.extend({
    * @type {ComputedProperty<string>}
    */
   perPageLabel: computed(function perPageLabel() {
-    return this.get('i18n').t(
+    return this.i18n.t(
       'components.supportSizeInfo.table.perPage', { type: this.type }
     );
   }),
@@ -127,7 +128,7 @@ export default Component.extend({
    * @type {ComputedProperty<boolean>}
    */
   isPageControlsVisible: computed('data.length', function isPageControlsVisible() {
-    return this.get('data.length') > DEFAULT_PAGE_SIZE;
+    return this.data.length > DEFAULT_PAGE_SIZE;
   }),
 
   /**
@@ -135,19 +136,19 @@ export default Component.extend({
    * @type {computed.Ember.Array.SupportSizeDisplayEntry}
    */
   _processedData: computed('data.[]', function () {
-    const data = this.get('data');
+    const data = this.data;
     const processedData = A();
 
     addConflictLabels(data, 'supporterName', 'supporterId');
 
     data.forEach((entry) => {
       processedData.pushObject(EmberObject.create({
-        name: entry.get('supporterName'),
-        size: entry.get('supportSize'),
-        entityId: entry.get('supporterId'),
-        sizeStr: bytesToString(entry.get('supportSize'), { iecFormat: true }),
+        name: entry.supporterName,
+        size: entry.supportSize,
+        entityId: entry.supporterId,
+        sizeStr: bytesToString(entry.supportSize, { iecFormat: true }),
         owner: null,
-        conflictLabel: entry.get('conflictLabel'),
+        conflictLabel: entry.conflictLabel,
       }));
     });
 
@@ -168,13 +169,13 @@ export default Component.extend({
       const processedData = this._processedData.slice();
 
       if (this.isSortedByNameAsc) {
-        return processedData.sortBy('name');
+        return sortByProperties(processedData, ['name:asc']);
       } else if (this.isSortedByNameDesc) {
-        return processedData.sortBy('name').reverse();
+        return sortByProperties(processedData, ['name:desc']);
       } else if (this.isSortedBySizeDesc) {
-        return processedData.sortBy('size').reverse();
+        return sortByProperties(processedData, ['size:desc']);
       } else {
-        return processedData.sortBy('size');
+        return sortByProperties(processedData, ['size:asc']);
       }
     }),
 
