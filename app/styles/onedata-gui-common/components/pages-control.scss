@@ -6,6 +6,9 @@
       margin-right: 0.3em;
     }
   }
+  &.invalid-page-number .form-control{
+    border-color: $color-one-danger;
+  }
   > * {
     &:not(:last-child) {
       margin-right: 10px;
