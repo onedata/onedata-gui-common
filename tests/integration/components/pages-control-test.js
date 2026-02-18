@@ -5,19 +5,14 @@ import { render, find, fillIn } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import _ from 'lodash';
 import ArrayPaginator from 'onedata-gui-common/utils/array-paginator';
-import { reads } from '@ember/object/computed';
 
 describe('Integration | Component | pages-control', function () {
   setupRenderingTest();
 
   beforeEach(function () {
-    this.set('array', _.range(0, 128));
-    this.set('pageSize', 10);
-    this.set('paginator', ArrayPaginator.extend({
-      array: reads('demoComponent.array'),
-      pageSize: reads('demoComponent.pageSize'),
-    }).create({
-      demoComponent: this,
+    this.set('paginator', ArrayPaginator.create({
+      array: _.range(0, 128),
+      pageSize: 10,
     }));
   });
 
