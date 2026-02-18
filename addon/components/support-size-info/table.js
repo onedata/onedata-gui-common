@@ -190,9 +190,6 @@ export default Component.extend({
   },
 
   actions: {
-    changePerPage(number) {
-      this.set('pageSize', number);
-    },
     sortByName() {
       this.setProperties({
         isSortedByNameAsc: !this.isSortedByNameAsc,
