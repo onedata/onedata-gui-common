@@ -113,12 +113,8 @@ export default Component.extend(I18n, {
   ),
 
   changePage(newPageNumber) {
-    if (!this.isPageOutOfRange(newPageNumber)) {
-      this.set('invalidPageNumber', false);
-      this.onPageChange(newPageNumber);
-    } else {
-      this.set('invalidPageNumber', true);
-    }
+    this.set('invalidPageNumber', false);
+    this.onPageChange(newPageNumber);
   },
 
   isPageOutOfRange(page) {
@@ -140,12 +136,17 @@ export default Component.extend(I18n, {
     },
     changePage(numberString) {
       try {
-        const newPageNumber = parseInt(numberString);
-        if (!Number.isNaN(newPageNumber)) {
+        const newPageNumber = Number(numberString);
+        if (
+          !this.isPageOutOfRange(newPageNumber) &&
+          Number.isInteger(newPageNumber)
+        ) {
           this.changePage(newPageNumber);
+        } else {
+          this.set('invalidPageNumber', true);
         }
       } catch {
-        // ignore wrong numbers
+        this.set('invalidPageNumber', true);
       }
     },
     changePerPage(value) {
