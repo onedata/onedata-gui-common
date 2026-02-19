@@ -1,12 +1,57 @@
-<ModelsTable
-  @data={{_processedData}}
-  @columns={{_columns}}
-  @selectRowOnClick={{false}}
-  @themeInstance={{themeInstance}}
-  @showColumnsDropdown={{false}}
-  @showGlobalFilter={{false}}
-  @useFilteringByColumns={{false}}
-  @showComponentFooter={{false}}
-  @pageSize={{1000000}}
-  @multipleColumnsSorting={{false}}
-/>
+{{#if data.length}}
+  <table class="table table-condensed table-hover">
+    <thead>
+      <tr>
+        <th class="supporter-name-column" onclick={{action "sortByName"}} style="cursor: pointer;">
+          {{supporterNameHeader}}
+          {{#if isSortedByNameAsc}}
+            <OneIcon @icon="arrow-up" />
+          {{else if isSortedByNameDesc}}
+            <OneIcon @icon="arrow-down" />
+          {{/if}}
+        </th>
+        <th class="support-size-column" onclick={{action "sortBySize"}} style="cursor: pointer;">
+          {{supporterSizeHeader}}
+          {{#if isSortedBySizeAsc}}
+            <OneIcon @icon="arrow-up" />
+          {{else if isSortedBySizeDesc}}
+            <OneIcon @icon="arrow-down" />
+          {{/if}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each paginator.activePageArray as |item|}}
+        <tr>
+          <td class="supporter-name-column">
+            {{#if (eq this.type "space")}}
+              <RecordInfoWithIcon
+                @record={{item}}
+                @recordType={{this.type}}
+              />
+            {{else}}
+              <TruncatedString>{{item.name}}</TruncatedString>
+            {{/if}}
+          </td>
+          <td class="support-size-column">{{item.sizeStr}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <div class="no-data-to-show">
+    {{noDataToShowMessage}}
+  </div>
+{{/if}}
+{{#if isPageControlsVisible}}
+  <PagesControl
+    @activePageNumber={{paginator.activePageNumber}}
+    @pagesCount={{paginator.pagesCount}}
+    @pageSize={{paginator.pageSize}}
+    @hasPageNumberInput={{not (or (media "isTablet") (media "isMobile"))}}
+    @onPageChange={{paginator.changeActivePageNumber}}
+    @customPerPageText={{perPageLabel}}
+    @isFiltered={{false}}
+    @isPerPageDropdownVisible={{false}}
+  />
+{{/if}}
