@@ -112,9 +112,21 @@ export default Component.extend(I18n, {
     }
   ),
 
-  changePage(newPageNumber) {
-    this.set('invalidPageNumber', false);
-    this.onPageChange(newPageNumber);
+  changePage(numberString) {
+    try {
+      const newPageNumber = Number(numberString);
+      if (
+        !this.isPageOutOfRange(newPageNumber) &&
+        Number.isInteger(newPageNumber)
+      ) {
+        this.set('invalidPageNumber', false);
+        this.onPageChange(newPageNumber);
+      } else {
+        this.set('invalidPageNumber', true);
+      }
+    } catch {
+      this.set('invalidPageNumber', true);
+    }
   },
 
   isPageOutOfRange(page) {
@@ -135,19 +147,7 @@ export default Component.extend(I18n, {
       this.changePage(this.activePageNumber - 1);
     },
     changePage(numberString) {
-      try {
-        const newPageNumber = Number(numberString);
-        if (
-          !this.isPageOutOfRange(newPageNumber) &&
-          Number.isInteger(newPageNumber)
-        ) {
-          this.changePage(newPageNumber);
-        } else {
-          this.set('invalidPageNumber', true);
-        }
-      } catch {
-        this.set('invalidPageNumber', true);
-      }
+      this.changePage(numberString);
     },
     changePerPage(value) {
       this.changePerPage(value);
