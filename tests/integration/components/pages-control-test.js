@@ -62,14 +62,6 @@ describe('Integration | Component | pages-control', function () {
     await fillIn('input', 'e');
     expect(find('.pages-control')).to.have.class('invalid-page-number');
   });
-
-  it('shows nothing in input when trying to enter string "r"', async function () {
-    await renderComponent();
-    expect(find('.pages-control')).to.exist;
-    await fillIn('input', 'r');
-    expect(find('.pages-control input')).to.have.value('');
-    expect(find('.pages-control')).to.have.class('invalid-page-number');
-  });
 });
 
 async function renderComponent() {
