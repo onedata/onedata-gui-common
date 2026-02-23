@@ -14,7 +14,10 @@ import I18n from 'onedata-gui-common/mixins/i18n';
 export default Component.extend(I18n, {
   layout,
   classNames: ['pages-control'],
-  classNameBindings: ['hasPageNumberInput::without-page-number-input'],
+  classNameBindings: [
+    'hasPageNumberInput::without-page-number-input',
+    'invalidPageNumber:invalid-page-number',
+  ],
 
   /**
    * @override
@@ -75,6 +78,11 @@ export default Component.extend(I18n, {
    */
   hasPageNumberInput: true,
 
+  /**
+   * @type {boolean}
+   */
+  invalidPageNumber: false,
+
   filteredText: computed('customFilteredText', function filteredText() {
     if (this.customFilteredText) {
       return this.customFilteredText;
@@ -104,9 +112,20 @@ export default Component.extend(I18n, {
     }
   ),
 
-  changePage(newPageNumber) {
-    if (!this.isPageOutOfRange(newPageNumber)) {
-      this.onPageChange(newPageNumber);
+  changePage(numberString) {
+    try {
+      const newPageNumber = Number(numberString);
+      if (
+        !this.isPageOutOfRange(newPageNumber) &&
+        Number.isInteger(newPageNumber)
+      ) {
+        this.set('invalidPageNumber', false);
+        this.onPageChange(newPageNumber);
+      } else {
+        this.set('invalidPageNumber', true);
+      }
+    } catch {
+      this.set('invalidPageNumber', true);
     }
   },
 
@@ -128,14 +147,7 @@ export default Component.extend(I18n, {
       this.changePage(this.activePageNumber - 1);
     },
     changePage(numberString) {
-      try {
-        const newPageNumber = parseInt(numberString);
-        if (!Number.isNaN(newPageNumber)) {
-          this.changePage(newPageNumber);
-        }
-      } catch {
-        // ignore wrong numbers
-      }
+      this.changePage(numberString);
     },
     changePerPage(value) {
       this.changePerPage(value);
