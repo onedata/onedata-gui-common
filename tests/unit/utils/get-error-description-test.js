@@ -569,12 +569,8 @@ describe('Unit | Utility | get-error-description', function () {
     'handles errors in form { id, details } with id == "storageTestFailed"',
     function () {
       sinon.stub(this.i18n, 't')
-        .withArgs('errors.backendErrors.storageTestFailed', {
-          operation: 'write translation',
-        })
-        .returns(correctTranslation)
-        .withArgs('errors.backendErrors.translationParts.storageTestOperations.write')
-        .returns('write translation');
+        .withArgs('errors.backendErrors.storageTestFailed')
+        .returns(correctTranslation);
       const error = {
         id: 'storageTestFailed',
         details: {
@@ -583,7 +579,6 @@ describe('Unit | Utility | get-error-description', function () {
       };
 
       const result = getErrorDescription(error, this.i18n);
-
       expect(result).to.deep.equal({
         message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
