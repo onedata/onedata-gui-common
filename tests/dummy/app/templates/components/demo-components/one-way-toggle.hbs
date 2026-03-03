@@ -69,4 +69,15 @@
   />
     Value: {{iconToggle}}
 </p>
-
+<p>
+  <label for="toggle-danger">Three-state danger toggle:</label>
+  <OneWayToggle
+    @inputId="toggle-danger"
+    @checked={{this.threeStateDangerToggle}}
+    @threeState={{true}}
+    @allowThreeStateToggle={{true}}
+    @update={{action (mut this.threeStateDangerToggle)}}
+    class="danger"
+  />
+    Value: {{this.threeStateDangerToggle}}
+</p>

@@ -17,6 +17,7 @@ export default Component.extend({
   delayedToggle2: false,
   tooltipToggle: false,
   iconToggle: false,
+  threeStateDangerToggle: false,
 
   actions: {
     toggle1FocusOut() {
