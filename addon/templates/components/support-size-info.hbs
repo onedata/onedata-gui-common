@@ -48,12 +48,18 @@
       </div>
     </div>
     <div class="row content-row">
-      <SupportSizeInfo::Table
-        @data={{filteredSupportTableData}}
-        @supporterNameHeader={{supporterNameHeader}}
-        @noDataToShowMessage={{noDataToShowMessage}}
-        @type={{type}}
-      />
+      {{#if (and (gt data.length 0) (eq filteredSupportTableData.length 0))}}
+        <div class="no-results-to-show">
+          {{tt this "noResultsFound"}}
+        </div>
+      {{else}}
+        <SupportSizeInfo::Table
+          @data={{filteredSupportTableData}}
+          @supporterNameHeader={{supporterNameHeader}}
+          @noDataToShowMessage={{noDataToShowMessage}}
+          @type={{type}}
+        />
+      {{/if}}
     </div>
   {{else}}
     <div class="row chart-row content-row">

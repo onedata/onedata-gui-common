@@ -12,7 +12,7 @@ import ArrayProxy from '@ember/array/proxy';
 import { computed, get } from '@ember/object';
 import { array } from 'ember-awesome-macros';
 import recordIcon from 'onedata-gui-common/utils/record-icon';
-import { defaultSeparator } from 'onedata-gui-common/components/name-conflict';
+import { getNameWithConflictLabel } from '../components/name-conflict';
 
 export default ArrayProxy.extend({
   /**
@@ -31,9 +31,10 @@ export default ArrayProxy.extend({
    */
   content: computed('sortedRecords.@each.{name,conflictLabel}', function content() {
     return this.sortedRecords.map(record => {
-      const searchableName = record.conflictLabel ?
-        `${record.name}${defaultSeparator}${record.conflictLabel}` :
-        record.name;
+      const searchableName = getNameWithConflictLabel(
+        record.name,
+        record.conflictLabel
+      );
       return {
         value: record,
         label: get(record, 'name'),

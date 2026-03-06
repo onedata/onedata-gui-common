@@ -21,6 +21,7 @@ import _ from 'lodash';
 import layout from 'onedata-gui-common/templates/components/support-size-info';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import addConflictLabels from 'onedata-gui-common/utils/add-conflict-labels';
+import { getNameWithConflictLabel } from './name-conflict';
 
 export default Component.extend(I18n, {
   layout,
@@ -126,7 +127,7 @@ export default Component.extend(I18n, {
     return A(data.map((series) => EmberObject.create({
       supporterName: series.get('label'),
       supportSize: series.get('value'),
-      supporterId: series.get('spaceId'),
+      supporterId: series.get('spaceId') || series.get('providerId'),
     })));
   }),
 
@@ -145,10 +146,10 @@ export default Component.extend(I18n, {
         return supportTableData;
       }
       return supportTableData.filter((entry) => {
-        let searchableName = entry.supporterName;
-        if (entry.conflictLabel) {
-          searchableName += `@${entry.conflictLabel}`;
-        }
+        const searchableName = getNameWithConflictLabel(
+          entry.supporterName,
+          entry.conflictLabel
+        );
         return searchableName.toLowerCase().includes(searchString.toLowerCase());
       });
     }
