@@ -21,7 +21,7 @@ import _ from 'lodash';
 import layout from 'onedata-gui-common/templates/components/support-size-info';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import addConflictLabels from 'onedata-gui-common/utils/add-conflict-labels';
-import { getNameWithConflictLabel } from './name-conflict';
+import { getNameWithConflictLabel } from 'onedata-gui-common/components/name-conflict';
 
 export default Component.extend(I18n, {
   layout,

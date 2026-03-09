@@ -12,7 +12,7 @@ import ArrayProxy from '@ember/array/proxy';
 import { computed, get } from '@ember/object';
 import { array } from 'ember-awesome-macros';
 import recordIcon from 'onedata-gui-common/utils/record-icon';
-import { getNameWithConflictLabel } from '../components/name-conflict';
+import { getNameWithConflictLabel } from 'onedata-gui-common/components/name-conflict';
 
 export default ArrayProxy.extend({
   /**
