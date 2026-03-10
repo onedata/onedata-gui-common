@@ -37,13 +37,29 @@
 </div>
 {{#if (not dataError)}}
   {{#if (or (eq mode "table") (eq data.length 0))}}
+    <div
+      class="form-group form-group-sm form-group-light search-group"
+    >
+      <div class="input-group with-icon-addon">
+        <SearchBar @search={{action (mut searchString)}} class="form-control" />
+        <div class="input-group-addon">
+          <OneIcon @icon="search" />
+        </div>
+      </div>
+    </div>
     <div class="row content-row">
-      <SupportSizeInfo::Table
-        @data={{supportTableData}}
-        @supporterNameHeader={{supporterNameHeader}}
-        @noDataToShowMessage={{noDataToShowMessage}}
-        @type={{type}}
-      />
+      {{#if (and (gt data.length 0) (eq filteredSupportTableData.length 0))}}
+        <div class="no-results-to-show">
+          {{tt this "noResultsFound"}}
+        </div>
+      {{else}}
+        <SupportSizeInfo::Table
+          @data={{filteredSupportTableData}}
+          @supporterNameHeader={{supporterNameHeader}}
+          @noDataToShowMessage={{noDataToShowMessage}}
+          @type={{type}}
+        />
+      {{/if}}
     </div>
   {{else}}
     <div class="row chart-row content-row">

@@ -26,7 +26,6 @@ import layout from 'onedata-gui-common/templates/components/support-size-info/ta
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import ArrayPaginator from 'onedata-gui-common/utils/array-paginator';
 import { reads } from '@ember/object/computed';
-import addConflictLabels from 'onedata-gui-common/utils/add-conflict-labels';
 import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
 
 const DEFAULT_PAGE_SIZE = 10;
@@ -138,8 +137,6 @@ export default Component.extend({
   _processedData: computed('data.[]', function () {
     const data = this.data;
     const processedData = A();
-
-    addConflictLabels(data, 'supporterName', 'supporterId');
 
     data.forEach((entry) => {
       processedData.pushObject(EmberObject.create({

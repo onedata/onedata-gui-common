@@ -53,3 +53,14 @@ export default Component.extend({
     this.conflictLabelSetter();
   },
 });
+
+export function getNameWithConflictLabel(
+  name,
+  conflictLabel,
+  separator = defaultSeparator
+) {
+  if (conflictLabel) {
+    return `${name}${separator}${conflictLabel}`;
+  }
+  return name;
+}

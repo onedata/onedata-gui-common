@@ -30,7 +30,7 @@
                 @recordType={{this.type}}
               />
             {{else}}
-              <TruncatedString>{{item.name}}</TruncatedString>
+              <TruncatedString><RecordName @record={{item}} /></TruncatedString>
             {{/if}}
           </td>
           <td class="support-size-column">{{item.sizeStr}}</td>

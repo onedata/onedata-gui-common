@@ -2,6 +2,7 @@ $collapsible-list-item-padding: $padding-large-horizontal;
 $collapsible-list-item-btn-toggle-padding: 12px;
 $collapsible-list-item-header-opened: darken($main-content-hover-background, 5%);
 $collapsible-list-item-header-opened-hover: darken($main-content-hover-background, 9%);
+$search-box-width: 200px;
 
 .one-collapsible-list {
   list-style-type: none;
@@ -31,7 +32,6 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
   }
 
   .one-collapsible-list-header {
-    $search-box-width: 200px;
     $mobile-view-breakpoint: $screen-sm-min + 100px;
 
     .list-title {

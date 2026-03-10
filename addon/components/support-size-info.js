@@ -20,6 +20,8 @@ import { A } from '@ember/array';
 import _ from 'lodash';
 import layout from 'onedata-gui-common/templates/components/support-size-info';
 import I18n from 'onedata-gui-common/mixins/i18n';
+import addConflictLabels from 'onedata-gui-common/utils/add-conflict-labels';
+import { getNameWithConflictLabel } from 'onedata-gui-common/components/name-conflict';
 
 export default Component.extend(I18n, {
   layout,
@@ -88,6 +90,11 @@ export default Component.extend(I18n, {
   mode: 'chart',
 
   /**
+   * @type {string}
+   */
+  searchString: '',
+
+  /**
    * @type {boolean}
    */
   disabledChartMode: computed(
@@ -120,9 +127,33 @@ export default Component.extend(I18n, {
     return A(data.map((series) => EmberObject.create({
       supporterName: series.get('label'),
       supportSize: series.get('value'),
-      supporterId: series.get('spaceId'),
+      supporterId: series.get('spaceId') || series.get('providerId'),
     })));
   }),
+
+  /**
+   * Filtered support table data based on search string.
+   * @type {computed.Ember.Array.SupportSizeEntry}
+   */
+  filteredSupportTableData: computed(
+    'supportTableData',
+    'searchString',
+    function filteredSupportTableData() {
+      const supportTableData = this.supportTableData;
+      const searchString = this.searchString;
+      addConflictLabels(supportTableData, 'supporterName', 'supporterId');
+      if (!searchString) {
+        return supportTableData;
+      }
+      return supportTableData.filter((entry) => {
+        const searchableName = getNameWithConflictLabel(
+          entry.supporterName,
+          entry.conflictLabel
+        );
+        return searchableName.toLowerCase().includes(searchString.toLowerCase());
+      });
+    }
+  ),
 
   /**
    * Total size

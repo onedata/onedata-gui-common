@@ -68,4 +68,9 @@
       display: inline-block;
     }
   }
+  .search-group {
+    width: $search-box-width;
+    margin-left: $padding-large-horizontal;
+    margin-bottom: 0;
+  }
 }
