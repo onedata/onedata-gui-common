@@ -9,12 +9,25 @@ $var-color-inactive-amount: 15%;
   @return lighten($color, $var-color-inactive-amount);
 }
 
+@function inactive-color-custom($color-name) {
+  @return lighten-custom($color-name, var(--var-color-inactive-amount-custom));
+}
+
+@function lighten-custom($color-name, $lightness) {
+  @return hsl(var(--#{$color-name}-h) var(--#{$color-name}-s) calc(var(--#{$color-name}-l) + $lightness));
+}
+
+@function darken-custom($color-name, $darken) {
+  @return hsl(var(--#{$color-name}-h) var(--#{$color-name}-s) calc(var(--#{$color-name}-l) - $darken));
+}
+
 $color-one-white: #fff;
 $color-one-semiwhite: #EFEFEF;
 $color-one-semiblack: #363636;
 $color-one-dark-gray: #555555;
 $color-one-red: #EE3F3F;
 $color-one-mint: #4BD187;
+
 $color-one-light-gray: #BEBEBE;
 $color-one-blue-gray: #4A6089;
 $color-one-gray-sand: #E2E1E0;
@@ -24,7 +37,6 @@ $color-one-azure: color-one-azure();
 $color-one-yellow: color-one-yellow();
 $color-one-orange: #ffac30;
 
-$color-one-main: $color-one-red;
 $color-one-default: $color-one-blue-gray;
 $color-one-info: $color-one-blue-gray;
 $color-one-success: $color-one-mint;
@@ -55,3 +67,39 @@ $color-file-highlighted: $color-highlight;
 $color-provider-online: $color-one-mint;
 $color-provider-offline: $color-one-red;
 $color-provider-mixed: $color-one-yellow;
+
+
+:root {
+  --color-one-mint-h: 147;
+  --color-one-mint-s: 59%;
+  --color-one-mint-l: 56%;
+
+  --var-color-inactive-amount-custom: 40%;
+  --var-color-disabled-amount-custom: 35%;
+
+  --primary-sidebar-color-h: 0;
+  --primary-sidebar-color-s: 84%;
+  --primary-sidebar-color-l: 59%;
+  --primary-sidebar-color: #EE3F3F;
+
+  --onedata-link-color: $color-one-mint;
+  --onedata-link-color-h: var(--color-one-mint-h);
+  --onedata-link-color-s: var(--color-one-mint-s);
+  --onedata-link-color-l: var(--color-one-mint-l);
+
+  // -----------------------------------------------
+
+  // --primary-sidebar-color: hsl(186, 84%, 35%);
+  // --primary-sidebar-color-h: 186;
+  // --primary-sidebar-color-s: 84%;
+  // --primary-sidebar-color-l: 35%;
+
+  // -----------------------------------------------
+
+
+  // -----------------------------------------------
+
+  --color-one-main: var(--primary-sidebar-color);
+
+  --primary-sidebar-color: hsl(var(--primary-sidebar-color-h) var(--primary-sidebar-color-s) var(--primary-sidebar-color-l));
+}

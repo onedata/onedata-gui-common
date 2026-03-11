@@ -8,12 +8,12 @@
 
   &.active {
     &::before {
-      @include left-line($one-list-item-active-left-border-width solid $color-one-main);
+      @include left-line($one-list-item-active-left-border-width solid var(--color-one-main));
       display: block;
     }
 
     > .item-header {
-      color: $color-one-main;
+      color: var(--color-one-main);
     }
   }
 
