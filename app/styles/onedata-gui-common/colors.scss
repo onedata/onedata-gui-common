@@ -25,8 +25,8 @@ $color-one-white: #fff;
 $color-one-semiwhite: #EFEFEF;
 $color-one-semiblack: #363636;
 $color-one-dark-gray: #555555;
-$color-one-red: #EE3F3F;
-$color-one-mint: #4BD187;
+$color-one-red: hsl(0, 84%, 59%);
+$color-one-mint: hsl(147, 59%, 56%);
 
 $color-one-light-gray: #BEBEBE;
 $color-one-blue-gray: #4A6089;
@@ -86,6 +86,9 @@ $color-provider-mixed: $color-one-yellow;
   --onedata-link-color-h: var(--color-one-mint-h);
   --onedata-link-color-s: var(--color-one-mint-s);
   --onedata-link-color-l: var(--color-one-mint-l);
+
+  --selected-light-background: $color-one-light-blue;
+  --selected-light-background-disabled: $color-one-light-gray;
 
   // -----------------------------------------------
 

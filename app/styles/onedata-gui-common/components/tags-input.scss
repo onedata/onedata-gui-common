@@ -58,7 +58,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     padding: $tags-input-tag-vertical-padding $padding-small-vertical;
     border: $tags-input-tag-border;
     border-radius: $border-radius-base;
-    background-color: $color-one-light-blue;
+    background-color: var(--selected-light-background);
     min-width: 0;
 
     &.tag-item-plaintext {
@@ -101,7 +101,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     margin-left: 3px;
     font-weight: bold;
     font-size: 85%;
-    color: $color-one-blue-gray;
+    color: $color-one-default;
 
     &:hover {
       color: $color-one-danger;
@@ -111,7 +111,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   .tag-creator-trigger {
     align-self: center;
     color: $color-one-white;
-    background-color: $color-one-blue-gray;
+    background-color: $color-one-default;
     border-radius: 2px;
     line-height: 0.8;
     padding: $padding-xs-vertical;
@@ -119,7 +119,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     cursor: pointer;
 
     &:hover {
-      background-color: lighten($color-one-blue-gray, 10%);
+      background-color: lighten($color-one-default, 10%);
     }
 
     &.disabled {
@@ -206,7 +206,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
 @include tag-type(danger, $brand-danger);
 
 .one-webui-popover.tags-selector {
-  background-color: $color-one-light-blue;
+  background-color: var(--selected-light-background);
   width: 150px;
   height: 150px;
   padding: $padding-small-vertical;
@@ -229,7 +229,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     cursor: pointer;
 
     &:hover {
-      background-color: darken($color-one-light-blue, 5%);
+      background-color: darken-custom(selected-light-background, 5%);
     }
 
     &.disabled {

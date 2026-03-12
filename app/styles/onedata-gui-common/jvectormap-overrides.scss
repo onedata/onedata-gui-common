@@ -1,10 +1,12 @@
+$jvectormap-main-color: $color-one-dark-blue;
+
 .jvectormap-zoomin, .jvectormap-zoomout, .jvectormap-goback {
   left: initial;
   top: initial;
   right: 15px;
   font-size: 2em;
   line-height: 20px;
-  background: $color-one-dark-blue;
+  background: $jvectormap-main-color;
   border: 1px solid $color-one-white;
 }
 
@@ -22,16 +24,16 @@
 }
 
 .jvectormap-region {
-  fill: $color-one-dark-blue;
+  fill: $jvectormap-main-color;
   fill-opacity: 1;
-  stroke: $color-one-dark-blue;
+  stroke: $jvectormap-main-color;
   stroke-width: 0.2;
   cursor: initial;
 }
 
 .jvectormap-region:hover {
-  fill: lighten($color-one-dark-blue, 10%);
-  stroke: lighten($color-one-dark-blue, 10%);
+  fill: lighten($jvectormap-main-color, 10%);
+  stroke: lighten($jvectormap-main-color, 10%);
 }
 
 .jvectormap-tip {

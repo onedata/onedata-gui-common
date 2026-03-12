@@ -537,7 +537,7 @@ $first-table-column-padding-left: 16px;
         &,
         &:hover,
         &:focus {
-          border-top-color: $color-one-blue-gray;
+          border-top-color: $color-one-default;
         }
       }
     }
@@ -568,13 +568,13 @@ $first-table-column-padding-left: 16px;
           color: $main-text-color-inactive;
         }
         &:hover {
-          border-bottom-color: lighten($color-one-blue-gray, 25);
+          border-bottom-color: lighten($color-one-default, 25);
         }
       }
     }
     li.active, .tab-bar-li.active {
       > a, .nav-link {
-        border-bottom-color: $color-one-blue-gray;
+        border-bottom-color: $color-one-default;
         color: $main-text-color;
       }
     }
