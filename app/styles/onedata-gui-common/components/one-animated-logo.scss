@@ -1,34 +1,35 @@
 .one-animated-logo {
-  $size: 25px;
+  --logo-size: 25px;
   white-space: nowrap;
   font-size: 0;
   .logo-container {
     position: relative;
     display: inline-block;
-    height: $size;
+    height: var(--logo-size);
     background-image: url($root-url + 'images/logo.svg');
     background-size: auto 100%;
   }
   .left {
-    width: $size * 0.9;
+    width: calc(var(--logo-size) * 0.9);
     transition: transition-linear(width, 'short', 'short');
     background-repeat: no-repeat;
     .shadow {
-      left: $size * 0.9;
-      width: $size * 1.9;
+      left: calc(var(--logo-size) * 0.9);
+      width: calc(var(--logo-size) * 1.9);
       transition: transition-linear(opacity, 'short', 'short');
     }
   }
   .right {
-    width: $size * 0.53;
+    width: calc(var(--logo-size) * 0.53);
     transition: transition-linear(width, 'short');
     background-image: url($root-url + 'images/logo.svg');
-    background-position: -$size * 2.8 0;
+    background-position-x: calc(var(--logo-size) * (-2.8));
+    background-position-y: 0;
     background-repeat: no-repeat;
     .shadow {
       transition: transition-linear(opacity, 'short');
-      left: $size * 0.55;
-      width: $size * 2.35;
+      left: calc(var(--logo-size) * 0.55);
+      width: calc(var(--logo-size) * 2.35);
     }
   }
   .shadow {
@@ -40,14 +41,14 @@
   }
   &.opened {
     .left {
-      width: $size * 2.8;
+      width: calc(var(--logo-size) * 2.8);
       transition: transition-linear(width, 'short');
       .shadow {
         transition: transition-linear(opacity, 'short');
       }
     }
     .right {
-      width: $size * 2.85;
+      width: calc(var(--logo-size) * 2.85);
       transition: transition-linear(width, 'short', 'short');
       .shadow {
         transition: transition-linear(opacity, 'short', 'short');

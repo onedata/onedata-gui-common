@@ -230,6 +230,7 @@ $brand-info-height: $one-list-item-line-height;
       height: $sidemenu-header-height;
       .row-onedata-logo {
         .onedata-logo {
+          display: block;
           margin-left: $one-list-item-padding;
           margin-top: $one-list-item-padding;
         }

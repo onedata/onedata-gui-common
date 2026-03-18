@@ -5,7 +5,9 @@
   @suppressScrollX={{true}}
 >
   <div class="row row-onedata-logo full-width">
-    <div class="onedata-logo"><OneAnimatedLogo @opened={{isExpanded}} /></div>
+    <a class="onedata-logo" href="https://eosc.pl" target="_blank">
+      <OneAnimatedLogo @opened={{isExpanded}} />
+    </a>
   </div>
   <div class="row row-main-menu full-width">
     <MainMenu
@@ -17,13 +19,13 @@
 <div class="row row-account-button">
   <div class="powered-by-container">
     <div class="powered-by-inner">
-      Powered by
+      {{tt this "poweredBy"}}
       <a
         class="powered-by-onedata-link white"
         href="https://onedata.org"
         target="_blank"
       >
-        Onedata
+        {{tt this "onedata"}}
       </a>
     </div>
   </div>
