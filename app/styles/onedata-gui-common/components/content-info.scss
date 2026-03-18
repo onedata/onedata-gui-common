@@ -36,7 +36,7 @@
   }
   &.preserve-header {
     .world-map {
-      top: $content-header-row-height + $content-col-padding;
+      top: calc(var(--content-header-row-height) + $content-col-padding);
       @media (max-width: $screen-xs-max) {
         top: 0;
       }

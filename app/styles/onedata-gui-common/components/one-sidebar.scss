@@ -75,14 +75,14 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
   }
 
   .btn-default, .btn-group .btn.btn-default.active {
-    background-color: var(--primary-sidebar-color);
-    border-color: var(--primary-sidebar-color);
+    background-color: var(--secondary-sidebar-color);
+    border-color: var(--secondary-sidebar-color);
     &:focus,
     &.focus,
     &:hover,
     &:active {
-      background-color: darken-custom(primary-sidebar-color, 7%);
-      border-color: darken-custom(primary-sidebar-color, 7%);
+      background-color: darken-custom(secondary-sidebar-color, 7%);
+      border-color: darken-custom(secondary-sidebar-color, 7%);
     }
   }
 

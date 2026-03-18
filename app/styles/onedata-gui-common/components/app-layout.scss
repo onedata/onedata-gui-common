@@ -50,7 +50,7 @@ $brand-info-height: $one-list-item-line-height;
 
 .onedata-logo {
   width: $onedata-logo-width;
-  height: $onedata-logo-height;
+  height: var(--onedata-logo-height);
   background-image: url($root-url + 'images/logo.svg');
   background-position: center center;
   background-repeat: no-repeat;
@@ -337,7 +337,7 @@ $brand-info-height: $one-list-item-line-height;
     .row-onedata-logo {
       position: relative;
       padding-top: $onedata-logo-margin-top;
-      padding-bottom: $onedata-logo-margin-bottom;
+      padding-bottom: var(--onedata-logo-margin-bottom);
       background-color: inherit;
       z-index: 10;
     }

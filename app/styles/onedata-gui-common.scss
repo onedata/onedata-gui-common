@@ -74,9 +74,7 @@ $sidemenu-header-height: 90px;
 $content-col-padding: 30px;
 $content-col-padding-tablet: $padding-large-horizontal;
 $content-header-font-size: 1.25em;
-$onedata-logo-height: 35px;
 $onedata-logo-margin-top: $content-col-padding;
-$onedata-logo-margin-bottom: $onedata-logo-margin-top + $one-list-item-padding;
 
 $main-content-hover-background: lighten($color-one-semiwhite, 3%);
 $main-content-light-background: lighten($color-one-semiwhite, 5%);
@@ -86,6 +84,11 @@ $height-collapse-transition: transition-linear(max-height);
 $width-collapse-transition: transition-linear(max-width);
 $collapse-transition: $height-collapse-transition, transition-linear(padding), transition-linear(opacity);
 $collapse-transition-vertical: $width-collapse-transition, transition-linear(padding), transition-linear(opacity), transition-linear(margin);
+
+:root {
+  --onedata-logo-height: 35px;
+  --onedata-logo-margin-bottom: calc($onedata-logo-margin-top + $one-list-item-padding);
+}
 
 @import 'onedata-gui-common/animate';
 @import 'onedata-gui-common/custom-animations';
