@@ -312,12 +312,7 @@ $dropdown-header-color:          $gray-light !default;
 $dropdown-caret-color:           #000 !default;
 
 :root {
-  // not work
   $dropdown-link-hover-color: var(--primary-sidebar-color);
-
-  .dropdown-menu > li > a:hover {
-    color: var(--primary-sidebar-color);
-  }
 }
 
 //-- Z-index master list
