@@ -115,8 +115,12 @@ export default Component.extend({
     const promise = (async () => {
       let response;
       try {
-        response = await globals.fetch('custom/frontpage/logo-link.txt');
-        return response.ok ? await response.text() : '';
+        response = await globals.fetch('custom/frontpage/config.json');
+        if (response.ok) {
+          const config = await response.json();
+          return config.logoUrl || '';
+        }
+        return '';
       } catch {
         return '';
       }
