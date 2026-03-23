@@ -16,8 +16,6 @@ import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
 import { dasherize } from '@ember/string';
-import globals from 'onedata-gui-common/utils/globals';
-import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 
 export default Component.extend({
   layout,
@@ -31,6 +29,7 @@ export default Component.extend({
   navigationState: service(),
   guiUtils: service(),
   pointerEvents: service(),
+  logoUrl: service(),
 
   globalMenuOpened: false,
 
@@ -111,22 +110,7 @@ export default Component.extend({
     }
   ),
 
-  logoLink: computed(function logoLink() {
-    const promise = (async () => {
-      let response;
-      try {
-        response = await globals.fetch('custom/frontpage/config.json');
-        if (response.ok) {
-          const config = await response.json();
-          return config.logoUrl || '';
-        }
-        return '';
-      } catch {
-        return '';
-      }
-    })();
-    return promiseObject(promise);
-  }),
+  logoLink: reads('logoUrl.logoLink.content'),
 
   /**
    * Using this as a workaround to bug in perfect-scrollbar-element

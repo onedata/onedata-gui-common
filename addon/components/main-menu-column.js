@@ -14,9 +14,6 @@ import layout from '../templates/components/main-menu-column';
 import $ from 'jquery';
 import { dasherize } from '@ember/string';
 import I18n from 'onedata-gui-common/mixins/i18n';
-import { computed } from '@ember/object';
-import globals from 'onedata-gui-common/utils/globals';
-import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 
 export default Component.extend(I18n, {
   layout,
@@ -37,6 +34,7 @@ export default Component.extend(I18n, {
   scrollState: service(),
   navigationState: service(),
   router: service(),
+  logoUrl: service(),
 
   /**
    * @override
@@ -73,22 +71,7 @@ export default Component.extend(I18n, {
    */
   mouseLeaveHandler: null,
 
-  logoLink: computed(function logoLink() {
-    const promise = (async () => {
-      let response;
-      try {
-        response = await globals.fetch('custom/frontpage/config.json');
-        if (response.ok) {
-          const config = await response.json();
-          return config.logoUrl || '';
-        }
-        return '';
-      } catch {
-        return '';
-      }
-    })();
-    return promiseObject(promise);
-  }),
+  logoLink: reads('logoUrl.logoLink.content'),
 
   /**
    * @type {Ember.ComputedProperty<boolean>}

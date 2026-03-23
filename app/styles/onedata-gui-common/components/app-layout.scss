@@ -57,6 +57,10 @@ $brand-info-height: $one-list-item-line-height;
   background-size: contain;
   margin-left: auto;
   margin-right: auto;
+
+  &.without-link {
+    cursor: initial;
+  }
 }
 
 // needs: $mobile-top-height
