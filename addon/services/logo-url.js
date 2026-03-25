@@ -12,7 +12,7 @@ import globals from 'onedata-gui-common/utils/globals';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 
 export default Service.extend({
-  logoLink: computed(function logoLink() {
+  logoLinkProxy: computed(function logoLinkProxy() {
     const promise = (async () => {
       let response;
       try {

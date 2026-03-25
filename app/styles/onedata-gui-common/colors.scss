@@ -81,17 +81,17 @@ $color-provider-mixed: $color-one-yellow;
   --var-color-inactive-amount-custom: 40%;
   --var-color-disabled-amount-custom: 35%;
 
-  --primary-sidebar-color-h: #{$color-one-red-h};
-  --primary-sidebar-color-s: #{$color-one-red-s};
-  --primary-sidebar-color-l: #{$color-one-red-l};
+  --sidebar-primary-color-h: #{$color-one-red-h};
+  --sidebar-primary-color-s: #{$color-one-red-s};
+  --sidebar-primary-color-l: #{$color-one-red-l};
 
-  --secondary-sidebar-color-h: 219;
-  --secondary-sidebar-color-s: 30%;
-  --secondary-sidebar-color-l: 41%;
+  --sidebar-secondary-color-h: 219;
+  --sidebar-secondary-color-s: 30%;
+  --sidebar-secondary-color-l: 41%;
 
-  --upload-sidebar-color-h: #{$color-one-mint-h};
-  --upload-sidebar-color-s: #{$color-one-mint-s};
-  --upload-sidebar-color-l: #{$color-one-mint-l};
+  --sidebar-upload-color-h: #{$color-one-mint-h};
+  --sidebar-upload-color-s: #{$color-one-mint-s};
+  --sidebar-upload-color-l: #{$color-one-mint-l};
 
   --onedata-link-color: #{$color-one-mint};
   --onedata-link-color-h: #{$color-one-mint-h};
@@ -101,9 +101,9 @@ $color-provider-mixed: $color-one-yellow;
   --selected-light-background: #{$color-one-light-blue};
   --selected-light-background-disabled: #{$color-one-light-gray};
 
-  --color-one-main: var(--primary-sidebar-color);
+  --color-one-main: var(--sidebar-primary-color);
 
-  --primary-sidebar-color: hsl(var(--primary-sidebar-color-h), var(--primary-sidebar-color-s), var(--primary-sidebar-color-l));
-  --upload-sidebar-color: hsl(var(--upload-sidebar-color-h), var(--upload-sidebar-color-s), var(--upload-sidebar-color-l));
-  --secondary-sidebar-color: hsl(var(--secondary-sidebar-color-h), var(--secondary-sidebar-color-s), var(--secondary-sidebar-color-l));
+  --sidebar-primary-color: hsl(var(--sidebar-primary-color-h), var(--sidebar-primary-color-s), var(--sidebar-primary-color-l));
+  --sidebar-upload-color: hsl(var(--sidebar-upload-color-h), var(--sidebar-upload-color-s), var(--sidebar-upload-color-l));
+  --sidebar-secondary-color: hsl(var(--sidebar-secondary-color-h), var(--sidebar-secondary-color-s), var(--sidebar-secondary-color-l));
 }

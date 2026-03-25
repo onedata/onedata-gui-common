@@ -71,7 +71,7 @@ export default Component.extend(I18n, {
    */
   mouseLeaveHandler: null,
 
-  logoLink: reads('logoUrl.logoLink.content'),
+  logoLink: reads('logoUrl.logoLinkProxy.content'),
 
   /**
    * @type {Ember.ComputedProperty<boolean>}

@@ -110,7 +110,7 @@ export default Component.extend({
     }
   ),
 
-  logoLink: reads('logoUrl.logoLink.content'),
+  logoLink: reads('logoUrl.logoLinkProxy.content'),
 
   /**
    * Using this as a workaround to bug in perfect-scrollbar-element

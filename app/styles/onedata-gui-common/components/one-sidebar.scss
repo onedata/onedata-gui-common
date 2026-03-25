@@ -75,14 +75,14 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
   }
 
   .btn-default, .btn-group .btn.btn-default.active {
-    background-color: var(--secondary-sidebar-color);
-    border-color: var(--secondary-sidebar-color);
+    background-color: var(--sidebar-secondary-color);
+    border-color: var(--sidebar-secondary-color);
     &:focus,
     &.focus,
     &:hover,
     &:active {
-      background-color: darken-custom(secondary-sidebar-color, 7%);
-      border-color: darken-custom(secondary-sidebar-color, 7%);
+      background-color: darken-custom(sidebar-secondary-color, 7%);
+      border-color: darken-custom(sidebar-secondary-color, 7%);
     }
   }
 
@@ -240,7 +240,7 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
       background-color: $color-sidebar-item-bg;
 
       > .item-header {
-        @include item-header-elements-color-custom(var(--primary-sidebar-color));
+        @include item-header-elements-color-custom(var(--sidebar-primary-color));
 
         .sidebar-item-title-lower {
           color: $main-text-color;
@@ -248,7 +248,7 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
       }
 
       &.disabled > .item-header {
-        @include item-header-elements-color-custom(inactive-color-custom(primary-sidebar-color));
+        @include item-header-elements-color-custom(inactive-color-custom(sidebar-primary-color));
 
         .sidebar-item-title-lower {
           color: disabled-color($main-text-color);

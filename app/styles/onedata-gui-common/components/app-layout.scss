@@ -483,11 +483,11 @@ $brand-info-height: $one-list-item-line-height;
     &.enabled {
       &.active,
       &.selected {
-        background-color: var(--primary-sidebar-color);
+        background-color: var(--sidebar-primary-color);
         color: $color-main-menu-fg-active;
         @include box-shadow(inset 0px 0px 10px rgba(0, 0, 0, 0.5));
         &:hover {
-          background-color: darken-custom(primary-sidebar-color, 10%);
+          background-color: darken-custom(sidebar-primary-color, 10%);
         }
         &::before {
           display: none;
