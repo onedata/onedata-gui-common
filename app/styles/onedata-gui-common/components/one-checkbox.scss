@@ -66,14 +66,14 @@ $one-checkbox-size: 16px;
 
   &.danger {
     &.checked {
-      border-color: $color-one-red;
+      border-color: $color-one-danger;
       &::after {
-        color: $color-one-red;
+        color: $color-one-danger;
       }
     }
     &:not(.disabled) {
       &.checked:hover {
-        background-color: lighten($color-one-red, 40%);
+        background-color: lighten($color-one-danger, 40%);
       }
     }
   }

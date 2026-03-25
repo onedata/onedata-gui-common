@@ -29,6 +29,7 @@ export default Component.extend({
   navigationState: service(),
   guiUtils: service(),
   pointerEvents: service(),
+  logoUrl: service(),
 
   globalMenuOpened: false,
 
@@ -108,6 +109,8 @@ export default Component.extend({
       return base;
     }
   ),
+
+  logoLink: reads('logoUrl.logoLinkProxy.content'),
 
   /**
    * Using this as a workaround to bug in perfect-scrollbar-element

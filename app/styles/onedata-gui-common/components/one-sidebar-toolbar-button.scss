@@ -5,12 +5,12 @@
   font-size: 13px;
 
   &:hover {
-    color: $color-one-red;
+    color: var(--sidebar-primary-color);
   }
 
   &.disabled {
     color: $main-text-color-disabled;
-    
+
     &:hover {
       color: $main-text-color-disabled;
     }
@@ -25,13 +25,13 @@
     font-size: 80%;
 
     &:hover {
-      background-color: $color-one-red;
+      background-color: var(--sidebar-primary-color);
       color: $color-sidebar-background;
     }
 
     &.disabled {
       background-color: $main-text-color-disabled;
-      
+
       &:hover {
         background-color: $main-text-color-disabled;
       }

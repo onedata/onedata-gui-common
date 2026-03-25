@@ -50,13 +50,17 @@ $brand-info-height: $one-list-item-line-height;
 
 .onedata-logo {
   width: $onedata-logo-width;
-  height: $onedata-logo-height;
+  height: var(--onedata-logo-height);
   background-image: url($root-url + 'images/logo.svg');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
   margin-left: auto;
   margin-right: auto;
+
+  &.without-link {
+    cursor: initial;
+  }
 }
 
 // needs: $mobile-top-height
@@ -230,6 +234,7 @@ $brand-info-height: $one-list-item-line-height;
       height: $sidemenu-header-height;
       .row-onedata-logo {
         .onedata-logo {
+          display: block;
           margin-left: $one-list-item-padding;
           margin-top: $one-list-item-padding;
         }
@@ -337,7 +342,7 @@ $brand-info-height: $one-list-item-line-height;
     .row-onedata-logo {
       position: relative;
       padding-top: $onedata-logo-margin-top;
-      padding-bottom: $onedata-logo-margin-bottom;
+      padding-bottom: var(--onedata-logo-margin-bottom);
       background-color: inherit;
       z-index: 10;
     }
@@ -478,11 +483,11 @@ $brand-info-height: $one-list-item-line-height;
     &.enabled {
       &.active,
       &.selected {
-        background-color: $color-one-main;
+        background-color: var(--sidebar-primary-color);
         color: $color-main-menu-fg-active;
         @include box-shadow(inset 0px 0px 10px rgba(0, 0, 0, 0.5));
         &:hover {
-          background-color: darken($color-one-main, 10%);
+          background-color: darken-custom(sidebar-primary-color, 10%);
         }
         &::before {
           display: none;

@@ -48,8 +48,8 @@
 
 @include animation-bg-color-change(
   pulse-bg-one-main,
-  $color-one-main,
-  darken($color-one-main, 30%)
+  var(--color-one-main),
+  darken-custom(color-one-main, 30%)
 );
 
 @include animation-bg-color-change(

@@ -13,8 +13,9 @@ import { reads } from '@ember/object/computed';
 import layout from '../templates/components/main-menu-column';
 import $ from 'jquery';
 import { dasherize } from '@ember/string';
+import I18n from 'onedata-gui-common/mixins/i18n';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: [
     'main-menu-column',
@@ -33,6 +34,12 @@ export default Component.extend({
   scrollState: service(),
   navigationState: service(),
   router: service(),
+  logoUrl: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.mainMenuColumn',
 
   /**
    * @type {Array<object>}
@@ -63,6 +70,8 @@ export default Component.extend({
    * @type {(() => void) | null}
    */
   mouseLeaveHandler: null,
+
+  logoLink: reads('logoUrl.logoLinkProxy.content'),
 
   /**
    * @type {Ember.ComputedProperty<boolean>}

@@ -5,7 +5,13 @@
   @suppressScrollX={{true}}
 >
   <div class="row row-onedata-logo full-width">
-    <div class="onedata-logo"><OneAnimatedLogo @opened={{isExpanded}} /></div>
+    <a
+      class={{concat-classes "onedata-logo" (if (not this.logoLink) "without-link")}}
+      href={{this.logoLink}}
+      target="_blank"
+    >
+      <OneAnimatedLogo @opened={{isExpanded}} />
+    </a>
   </div>
   <div class="row row-main-menu full-width">
     <MainMenu
@@ -15,6 +21,20 @@
   </div>
 </PerfectScrollbarElement>
 <div class="row row-account-button">
+  {{#if this.logoLink}}
+    <div class="powered-by-container">
+      <div class="powered-by-inner">
+        {{tt this "poweredBy"}}
+        <a
+          class="powered-by-onedata-link white"
+          href="https://onedata.org"
+          target="_blank"
+        >
+          {{tt this "onedata"}}
+        </a>
+      </div>
+    </div>
+  {{/if}}
   <div class="groove-border"></div>
   <MainMenu
     @items={{filter-by "stickyBottom" mainMenuItems}}

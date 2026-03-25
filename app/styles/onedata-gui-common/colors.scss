@@ -9,12 +9,33 @@ $var-color-inactive-amount: 15%;
   @return lighten($color, $var-color-inactive-amount);
 }
 
+@function inactive-color-custom($color-name) {
+  @return lighten-custom($color-name, var(--var-color-inactive-amount-custom));
+}
+
+@function lighten-custom($color-name, $lightness) {
+  @return hsl(var(--#{$color-name}-h), var(--#{$color-name}-s), calc(var(--#{$color-name}-l) + $lightness));
+}
+
+@function darken-custom($color-name, $darken) {
+  @return hsl(var(--#{$color-name}-h), var(--#{$color-name}-s), calc(var(--#{$color-name}-l) - $darken));
+}
+
 $color-one-white: #fff;
 $color-one-semiwhite: #EFEFEF;
 $color-one-semiblack: #363636;
 $color-one-dark-gray: #555555;
-$color-one-red: #EE3F3F;
-$color-one-mint: #4BD187;
+
+$color-one-red-h: 0;
+$color-one-red-s: 84%;
+$color-one-red-l: 59%;
+$color-one-red: hsl($color-one-red-h, $color-one-red-s, $color-one-red-l);
+
+$color-one-mint-h: 147;
+$color-one-mint-s: 59%;
+$color-one-mint-l: 56%;
+$color-one-mint: hsl($color-one-mint-h, $color-one-mint-s, $color-one-mint-l);
+
 $color-one-light-gray: #BEBEBE;
 $color-one-blue-gray: #4A6089;
 $color-one-gray-sand: #E2E1E0;
@@ -24,7 +45,6 @@ $color-one-azure: color-one-azure();
 $color-one-yellow: color-one-yellow();
 $color-one-orange: #ffac30;
 
-$color-one-main: $color-one-red;
 $color-one-default: $color-one-blue-gray;
 $color-one-info: $color-one-blue-gray;
 $color-one-success: $color-one-mint;
@@ -55,3 +75,35 @@ $color-file-highlighted: $color-highlight;
 $color-provider-online: $color-one-mint;
 $color-provider-offline: $color-one-red;
 $color-provider-mixed: $color-one-yellow;
+
+
+:root {
+  --var-color-inactive-amount-custom: 40%;
+  --var-color-disabled-amount-custom: 35%;
+
+  --sidebar-primary-color-h: #{$color-one-red-h};
+  --sidebar-primary-color-s: #{$color-one-red-s};
+  --sidebar-primary-color-l: #{$color-one-red-l};
+
+  --sidebar-secondary-color-h: 219;
+  --sidebar-secondary-color-s: 30%;
+  --sidebar-secondary-color-l: 41%;
+
+  --sidebar-upload-color-h: #{$color-one-mint-h};
+  --sidebar-upload-color-s: #{$color-one-mint-s};
+  --sidebar-upload-color-l: #{$color-one-mint-l};
+
+  --onedata-link-color: #{$color-one-mint};
+  --onedata-link-color-h: #{$color-one-mint-h};
+  --onedata-link-color-s: #{$color-one-mint-s};
+  --onedata-link-color-l: #{$color-one-mint-l};
+
+  --selected-light-background: #{$color-one-light-blue};
+  --selected-light-background-disabled: #{$color-one-light-gray};
+
+  --color-one-main: var(--sidebar-primary-color);
+
+  --sidebar-primary-color: hsl(var(--sidebar-primary-color-h), var(--sidebar-primary-color-s), var(--sidebar-primary-color-l));
+  --sidebar-upload-color: hsl(var(--sidebar-upload-color-h), var(--sidebar-upload-color-s), var(--sidebar-upload-color-l));
+  --sidebar-secondary-color: hsl(var(--sidebar-secondary-color-h), var(--sidebar-secondary-color-s), var(--sidebar-secondary-color-l));
+}

@@ -2,10 +2,10 @@
 
 $mobile-horizontal-content-padding: $padding-large-horizontal;
 $content-row-vertical-padding: $padding-base-vertical;
-$content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height - $content-col-padding;
-$content-header-row-mobile-height: $content-header-row-height - 9px;
 
 .main-content {
+  --content-header-row-height: calc($onedata-logo-margin-top * 2 + var(--onedata-logo-height) - $content-col-padding);
+  --content-header-row-mobile-height: calc(var(--content-header-row-height) - 9px);
   color: $main-text-color;
 
   .content-row.chart-row {
@@ -60,14 +60,14 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
     padding: $content-row-vertical-padding 0;
 
     &.header-row {
-      height: $content-header-row-mobile-height;
-      min-height: $content-header-row-mobile-height;
+      height: var(--content-header-row-mobile-height);
+      min-height: var(--content-header-row-mobile-height);
       @media (min-width: $screen-sm-min) {
         padding-top: 0;
         h1 {
           font-size: $content-header-font-size;
           @include font-semibold();
-          line-height: $onedata-logo-height;
+          line-height: var(--onedata-logo-height);
           font-weight: normal;
           .btn-toolbar button {
             // resets font size to its default for normal content.
@@ -77,8 +77,8 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
         }
       }
       @media (min-width: $screen-md-min) {
-        height: $content-header-row-height;
-        min-height: $content-header-row-height;
+        height: var(--content-header-row-height);
+        min-height: var(--content-header-row-height);
       }
     }
 

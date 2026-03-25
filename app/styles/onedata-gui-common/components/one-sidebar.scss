@@ -65,6 +65,27 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
     }
   }
 
+  @mixin item-header-elements-color-custom($color) {
+    .sidebar-item-icon,
+    .truncated-string,
+    .status-toolbar,
+    .one-label {
+      color: $color;
+    }
+  }
+
+  .btn-default, .btn-group .btn.btn-default.active {
+    background-color: var(--sidebar-secondary-color);
+    border-color: var(--sidebar-secondary-color);
+    &:focus,
+    &.focus,
+    &:hover,
+    &:active {
+      background-color: darken-custom(sidebar-secondary-color, 7%);
+      border-color: darken-custom(sidebar-secondary-color, 7%);
+    }
+  }
+
   font-size: 13px;
   @include font-semibold();
   padding-bottom: 20px;
@@ -219,7 +240,7 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
       background-color: $color-sidebar-item-bg;
 
       > .item-header {
-        @include item-header-elements-color($color-one-red);
+        @include item-header-elements-color-custom(var(--sidebar-primary-color));
 
         .sidebar-item-title-lower {
           color: $main-text-color;
@@ -227,7 +248,7 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
       }
 
       &.disabled > .item-header {
-        @include item-header-elements-color(inactive-color($color-one-red));
+        @include item-header-elements-color-custom(inactive-color-custom(sidebar-primary-color));
 
         .sidebar-item-title-lower {
           color: disabled-color($main-text-color);
