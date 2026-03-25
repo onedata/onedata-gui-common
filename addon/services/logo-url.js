@@ -16,7 +16,7 @@ export default Service.extend({
     const promise = (async () => {
       let response;
       try {
-        response = await globals.fetch('custom/frontpage/config.json');
+        response = await globals.fetch('/ozw/onezone/custom/frontpage/config.json');
         if (response.ok) {
           const config = await response.json();
           return config.logoUrl || '';
