@@ -4,7 +4,7 @@ $mobile-horizontal-content-padding: $padding-large-horizontal;
 $content-row-vertical-padding: $padding-base-vertical;
 
 .main-content {
-  --content-header-row-height: calc($onedata-logo-margin-top * 2 + var(--onedata-logo-height) - $content-col-padding);
+  --content-header-row-height: calc(#{$onedata-logo-margin-top} * 2 + var(--onedata-logo-height) - #{$content-col-padding});
   --content-header-row-mobile-height: calc(var(--content-header-row-height) - 9px);
   color: $main-text-color;
 
