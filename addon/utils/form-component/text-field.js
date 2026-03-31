@@ -49,6 +49,12 @@ export default FormField.extend({
   customPlaceholder: null,
 
   /**
+   * @virtual optional
+   * @type {string}
+   */
+  lockHint: undefined,
+
+  /**
    * @type {ComputedProperty<SafeString | string>}
    */
   valueForViewMode: reads('value'),
