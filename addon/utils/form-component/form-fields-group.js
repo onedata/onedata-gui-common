@@ -61,6 +61,12 @@ export default FormElement.extend({
   isDefaultValueIgnored: true,
 
   /**
+   * @virtual optional
+   * @type {string}
+   */
+  title: undefined,
+
+  /**
    * Set by `fieldsModeObserver`
    * @type {String}
    */

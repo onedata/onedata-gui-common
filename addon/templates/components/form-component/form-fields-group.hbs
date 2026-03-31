@@ -1,3 +1,10 @@
+{{#if title}}
+  {{#if isInViewMode}}
+    <div class="form-view-section-title">{{title}}:</div>
+  {{else}}
+    <h2 class="form-section-title">{{title}}</h2>
+  {{/if}}
+{{/if}}
 <OneCollapse
   class={{concat-classes "fields-group-collapse" (concat name "-collapse")}}
   @collapsed={{not isExpanded}}

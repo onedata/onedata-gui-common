@@ -23,4 +23,9 @@ export default FieldComponentBase.extend({
    * @type {ComputedProperty<boolean>}
    */
   isExpanded: reads('field.isExpanded'),
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  title: reads('field.title'),
 });
