@@ -1,8 +1,8 @@
-{{#if title}}
-  {{#if isInViewMode}}
-    <div class="form-view-section-title">{{title}}:</div>
+{{#if this.title}}
+  {{#if this.isInViewMode}}
+    <div class="form-view-section-title">{{this.title}}:</div>
   {{else}}
-    <h2 class="form-section-title">{{title}}</h2>
+    <h2 class="form-section-title">{{this.title}}</h2>
   {{/if}}
 {{/if}}
 <OneCollapse
