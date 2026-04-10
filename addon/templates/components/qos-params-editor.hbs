@@ -14,7 +14,9 @@
   {{/if}}
 {{else}}
   {{#if showHeader}}
-    <h2 class="form-section-title">{{tt this "header"}}</h2>
+    <div class="form-section-title-header">
+      <div class="section-title-text">{{tt this "header"}}</div>
+    </div>
   {{/if}}
   {{#each paramEditRecords as |editRecord|}}
     <div class={{concat-classes

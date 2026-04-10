@@ -2,7 +2,9 @@
   {{#if this.isInViewMode}}
     <div class="form-view-section-title">{{this.title}}:</div>
   {{else}}
-    <h2 class="form-section-title">{{this.title}}</h2>
+    <div class="form-section-title-header">
+      <div class="section-title-text">{{this.title}}</div>
+    </div>
   {{/if}}
 {{/if}}
 <OneCollapse
