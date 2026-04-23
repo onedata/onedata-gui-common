@@ -15,8 +15,8 @@ import _ from 'lodash';
  * @param {[string, string, boolean]} params
  * @returns {SafeString|string}
  */
-export function boldSubstring(
-  [fullText, substring, isCaseSensitive = false] /*, hash*/
+export function emphasizeSubstring(
+  [fullText, substring, isCaseSensitive = false, htmlTag = 'b'] /*, hash*/
 ) {
   if (!substring) {
     return fullText;
@@ -34,13 +34,13 @@ export function boldSubstring(
   }
 
   const beforeText = _.escape(fullText.slice(0, substringIndex));
-  const boldText = `<b>${_.escape(fullText.slice(
+  const boldText = `<${htmlTag}>${_.escape(fullText.slice(
     substringIndex,
     substringIndex + substring.length,
-  ))}</b>`;
+  ))}</${htmlTag}>`;
   const afterText = _.escape(fullText.slice(substringIndex + substring.length));
 
   return htmlSafe(beforeText + boldText + afterText);
 }
 
-export default helper(boldSubstring);
+export default helper(emphasizeSubstring);
