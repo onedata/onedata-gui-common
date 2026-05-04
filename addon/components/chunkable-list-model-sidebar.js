@@ -85,6 +85,7 @@ export default class ChunkableListModelSidebar extends InfiniteScrollSidebar {
     this.model.collection.setFilter({
       expression: this.filter,
       advanced: this.advancedFilters,
+      isSearchById: this.isSearchById,
     });
   }
 }

@@ -174,6 +174,11 @@ export default Component.extend(I18n, {
   filter: '',
 
   /**
+   * @type {boolean}
+   */
+  isSearchById: false,
+
+  /**
    * @type {string}
    * @virtual optional
    */
