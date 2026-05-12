@@ -72,7 +72,7 @@ describe('Integration | Component | one-doc-see-more', function () {
       await render(hbs `<OneDocSeeMore @docPath="hello/world.html" />`);
 
       expect(find('.documentation-link').href).to.equal(
-        `https://onedata.org/#/home/documentation/${version.docs}/hello/world.html`
+        `https://onedata.org/docs/${version.docs}/hello/world.html`
       );
     });
 
@@ -88,12 +88,12 @@ describe('Integration | Component | one-doc-see-more', function () {
 
       expect(find('.documentation-link')).to.have.attr(
         'href',
-        `https://onedata.org/#/home/documentation/topic/${version.docs}/tokens`
+        `https://onedata.org/docs/topic/${version.docs}/tokens`
       );
     });
   }
 
-  it('renders link with "stable" version string if guiUtils softwareVersionDetails are unavailable',
+  it('renders topic link with version string omitted if guiUtils.softwareVersionDetails are unavailable',
     async function () {
       lookupService(this, 'guiUtils').set('softwareVersionDetails', undefined);
 
@@ -102,7 +102,7 @@ describe('Integration | Component | one-doc-see-more', function () {
       `);
 
       expect(find('.documentation-link'))
-        .to.have.attr('href', 'https://onedata.org/#/home/documentation/topic/stable/tokens');
+        .to.have.attr('href', 'https://onedata.org/docs/topic/tokens');
     }
   );
 });

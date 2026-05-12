@@ -3,14 +3,14 @@
  *
  * @author Jakub Liput
  * @copyright (C) 2024 ACK CYFRONET AGH
- * @copyright (C) 2025 Onedata (onedata.org)
+ * @copyright (C) 2025-2026 Onedata (onedata.org)
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Service, { inject as service } from '@ember/service';
 import Version from 'onedata-gui-common/utils/version';
 
-export const documentationUrlPrefix = 'https://onedata.org/#/home/documentation';
+export const documentationUrlPrefix = 'https://onedata.org/docs';
 
 const fallbackDocsVersion = 'stable';
 
@@ -41,12 +41,12 @@ export default Service.extend({
   /**
    * @param {Object} options
    * @param { string } [options.topic] Example generated URL for topic:
-   *   https://onedata.org/#/home/documentation/topic/21.02/qos
+   *   https://onedata.org/docs/topic/21.02/qos
    * @param {string} [options.version]
    * @param {string} [options.path] Provide path to documentation page suitable for the
-   *   selected version.Typically you should not use this argument - use `topic` instead.
+   *   selected version. Typically you should not use this argument - use `topic` instead.
    *   If there is no topic for your page, consider adding it to homepage URL handler.
-   *   If you use `path` the `topic` is ignored.
+   *   If you use `path`, the `topic` is ignored.
    * @returns {string}
    */
   generateDocumentationUrl({ topic, version, path }) {
@@ -55,7 +55,13 @@ export default Service.extend({
       return `${documentationUrlPrefix}/${effVersion}/${path}`;
     }
     if (topic) {
-      return `${documentationUrlPrefix}/topic/${effVersion}/${topic}`;
+      if (effVersion === 'stable' || effVersion === 'latest') {
+        // New homepage does not support stable and latest for topics i it omits them
+        // completely.
+        return `${documentationUrlPrefix}/topic/${topic}`;
+      } else {
+        return `${documentationUrlPrefix}/topic/${effVersion}/${topic}`;
+      }
     }
   },
 
