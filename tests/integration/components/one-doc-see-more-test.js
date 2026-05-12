@@ -102,7 +102,7 @@ describe('Integration | Component | one-doc-see-more', function () {
       `);
 
       expect(find('.documentation-link'))
-        .to.have.attr('href', 'https://onedata.org/docs/topic/tokens');
+        .to.have.attr('href', 'https://onedata.org/docs/topic/stable/tokens');
     }
   );
 });
