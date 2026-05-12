@@ -55,13 +55,7 @@ export default Service.extend({
       return `${documentationUrlPrefix}/${effVersion}/${path}`;
     }
     if (topic) {
-      if (effVersion === 'stable' || effVersion === 'latest') {
-        // New homepage does not support stable and latest for topics i it omits them
-        // completely.
-        return `${documentationUrlPrefix}/topic/${topic}`;
-      } else {
-        return `${documentationUrlPrefix}/topic/${effVersion}/${topic}`;
-      }
+      return `${documentationUrlPrefix}/topic/${effVersion}/${topic}`;
     }
   },
 
