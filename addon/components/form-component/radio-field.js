@@ -20,7 +20,7 @@ export default FieldComponentBase.extend({
   preparedOptions: reads('field.preparedOptions'),
 
   /**
-   * @type { ComputedProperty<SafeString>}
+   * @type {ComputedProperty<SafeString>}
    */
   lockHint: reads('field.lockHint'),
 });

@@ -367,6 +367,45 @@ $form-component-view-margin: $padding-base-vertical;
       }
     }
   }
+
+  .form-section-title-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: $padding-base-vertical;
+    margin-bottom: 2 * $padding-base-vertical;
+    text-transform: uppercase;
+
+    .section-title-text {
+      display: flex;
+      align-items: center;
+      padding: $padding-small-vertical $padding-base-horizontal;
+    }
+    &::before, &::after {
+      flex-grow: 1;
+      content: ' ';
+      height: 1px;
+      @include shadow-transition(all);
+      border-bottom: 1px solid transparent;
+      border-bottom-color: $color-one-gray-sand;
+    }
+    &::before {
+      margin-right: 3em;
+      @media (max-width: $screen-xs-max) {
+        margin-right: 1.5em;
+      }
+    }
+    &::after {
+      margin-left: 3em;
+      @media (max-width: $screen-xs-max) {
+        margin-left: 1.5em;
+      }
+    }
+  }
+  .field-view-mode .form-view-section-title {
+    @include font-semibold();
+    padding-top: 1em;
+  }
 }
 
 .custom-value-dropdown-field-dropdown {
