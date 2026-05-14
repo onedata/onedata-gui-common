@@ -16,7 +16,7 @@ import _ from 'lodash';
  * @returns {SafeString|string}
  */
 export function emphasizeSubstring(
-  [fullText, substring, isCaseSensitive = false, htmlTag = 'b'] /*, hash*/
+  [fullText, substring], { isCaseSensitive = false, htmlTag = 'b' }
 ) {
   if (!substring) {
     return fullText;

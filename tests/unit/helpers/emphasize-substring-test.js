@@ -11,9 +11,17 @@ describe('Integration | Helper | emphasize-substring', function () {
     expect(result.toString()).to.be.equal('hello <b>world</b>');
   });
 
-  it('emphasizes only first matching substring in text', async function () {
-    const result = emphasizeSubstring(['hello world world', 'world', false, 'mark']);
-    expect(result.toString()).to.be.equal('hello <mark>world</mark> world');
+  it('highlights only first matching substring in text', async function () {
+    const result = emphasizeSubstring(['hello world world', 'world']);
+    expect(result.toString()).to.be.equal('hello <b>world</b> world');
+  });
+
+  it('emphasizes only first matching substring in text with custom tag', async function () {
+    const result = emphasizeSubstring(
+      ['hello world world', 'world'], { isCaseSensitive: false, htmlTag: 'mark' }
+    );
+    expect(result.toString())
+      .to.be.equal('hello <mark>world</mark> world');
   });
 
   it('matches are case-insensitive by default', async function () {
@@ -22,7 +30,9 @@ describe('Integration | Helper | emphasize-substring', function () {
   });
 
   it('does not highlight when case differs and isCaseSensitive is true', async function () {
-    const result = emphasizeSubstring(['hello World world', 'worlD', true]);
+    const result = emphasizeSubstring(
+      ['hello World world', 'worlD'], { isCaseSensitive: true }
+    );
     expect(result.toString()).to.be.equal('hello World world');
   });
 
