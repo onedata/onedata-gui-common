@@ -15,15 +15,15 @@ import _ from 'lodash';
  * @param {[string, string, boolean]} params
  * @returns {SafeString|string}
  */
-export function emphasizeSubstring(
-  [fullText, substring], { isCaseSensitive = false, htmlTag = 'b' }
-) {
+export function emphasizeSubstring([fullText, substring], { isCaseSensitive, htmlTag }) {
+  const normalizedIsCaseSensitive = isCaseSensitive || false;
+  const normalizedHtmlTag = htmlTag || 'b';
   if (!substring) {
     return fullText;
   }
 
   let substringIndex;
-  if (isCaseSensitive) {
+  if (normalizedIsCaseSensitive) {
     substringIndex = fullText.indexOf(substring);
   } else {
     substringIndex = fullText.toLowerCase().indexOf(substring.toLowerCase());
@@ -34,10 +34,10 @@ export function emphasizeSubstring(
   }
 
   const beforeText = _.escape(fullText.slice(0, substringIndex));
-  const boldText = `<${htmlTag}>${_.escape(fullText.slice(
+  const boldText = `<${normalizedHtmlTag}>${_.escape(fullText.slice(
     substringIndex,
     substringIndex + substring.length,
-  ))}</${htmlTag}>`;
+  ))}</${normalizedHtmlTag}>`;
   const afterText = _.escape(fullText.slice(substringIndex + substring.length));
 
   return htmlSafe(beforeText + boldText + afterText);

@@ -13,17 +13,12 @@ import Locale from 'onedata-gui-common/utils/locale';
 interface SearchBarSignature {
   Args: {
     search: (expression: string) => void;
-    customPlaceholder: string | undefined;
   };
   Element: HTMLInputElement;
 }
 
 export default class SearchBar extends Component<SearchBarSignature> {
   locale = new Locale('components.searchBar');
-
-  get placeholder() {
-    return this.args.customPlaceholder || this.locale.t('searchPlaceholder');
-  }
 
   @action
   handleInput(event: InputEvent) {
