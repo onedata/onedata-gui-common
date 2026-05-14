@@ -12,10 +12,15 @@ import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
 
 /**
- * @param {[string, string, boolean]} params
+ * @param {[string, string]} params
+ * @param {object} options
+ * @param {boolean} [options.isCaseSensitive=false]
+ * @param {string} [options.htmlTag='b']
  * @returns {SafeString|string}
  */
-export function emphasizeSubstring([fullText, substring], { isCaseSensitive, htmlTag }) {
+export function emphasizeSubstring(
+  [fullText, substring], { isCaseSensitive, htmlTag } = {}
+) {
   const normalizedIsCaseSensitive = isCaseSensitive || false;
   const normalizedHtmlTag = htmlTag || 'b';
   if (!substring) {
