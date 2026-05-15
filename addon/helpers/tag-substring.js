@@ -18,17 +18,15 @@ import _ from 'lodash';
  * @param {string} [options.htmlTag='b']
  * @returns {SafeString|string}
  */
-export function emphasizeSubstring(
-  [fullText, substring], { isCaseSensitive, htmlTag } = {}
+export function tagSubstring(
+  [fullText, substring], { isCaseSensitive = false, htmlTag = 'b' } = {}
 ) {
-  const normalizedIsCaseSensitive = isCaseSensitive || false;
-  const normalizedHtmlTag = htmlTag || 'b';
   if (!substring) {
     return fullText;
   }
 
   let substringIndex;
-  if (normalizedIsCaseSensitive) {
+  if (isCaseSensitive) {
     substringIndex = fullText.indexOf(substring);
   } else {
     substringIndex = fullText.toLowerCase().indexOf(substring.toLowerCase());
@@ -39,13 +37,13 @@ export function emphasizeSubstring(
   }
 
   const beforeText = _.escape(fullText.slice(0, substringIndex));
-  const boldText = `<${normalizedHtmlTag}>${_.escape(fullText.slice(
+  const boldText = `<${htmlTag}>${_.escape(fullText.slice(
     substringIndex,
     substringIndex + substring.length,
-  ))}</${normalizedHtmlTag}>`;
+  ))}</${htmlTag}>`;
   const afterText = _.escape(fullText.slice(substringIndex + substring.length));
 
   return htmlSafe(beforeText + boldText + afterText);
 }
 
-export default helper(emphasizeSubstring);
+export default helper(tagSubstring);
