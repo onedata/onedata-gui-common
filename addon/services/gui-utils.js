@@ -20,6 +20,10 @@ import globals from 'onedata-gui-common/utils/globals';
  * @property {string} serviceBuildVersion
  */
 
+/**
+ * @typedef {'onezone'|'oneprovider'|'onepanel'} ProductType
+ */
+
 export default Service.extend(I18n, {
   i18n: service(),
   globalNotify: service(),
@@ -29,6 +33,12 @@ export default Service.extend(I18n, {
    * @override
    */
   i18nPrefix: 'services.guiUtils',
+
+  /**
+   * @virtual
+   * @type {ProductType}
+   */
+  productTypeId: undefined,
 
   /**
    * E.g. Onezone or Onepanel
