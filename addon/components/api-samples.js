@@ -39,12 +39,6 @@ export default Component.extend(I18n, {
   apiSubject: undefined,
 
   /**
-   * This should be fill in child component, with one of: 'onezone', 'oneprovider'
-   * @type {String}
-   */
-  product: undefined,
-
-  /**
    * @type {Object}
    */
   selectedApiCommand: null,
