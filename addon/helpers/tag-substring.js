@@ -12,11 +12,14 @@ import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
 
 /**
- * @param {[string, string, boolean]} params
+ * @param {[string, string]} params
+ * @param {object} options
+ * @param {boolean} [options.isCaseSensitive=false]
+ * @param {string} [options.htmlTag='b']
  * @returns {SafeString|string}
  */
-export function boldSubstring(
-  [fullText, substring, isCaseSensitive = false] /*, hash*/
+export function tagSubstring(
+  [fullText, substring], { isCaseSensitive = false, htmlTag = 'b' } = {}
 ) {
   if (!substring) {
     return fullText;
@@ -34,13 +37,13 @@ export function boldSubstring(
   }
 
   const beforeText = _.escape(fullText.slice(0, substringIndex));
-  const boldText = `<b>${_.escape(fullText.slice(
+  const boldText = `<${htmlTag}>${_.escape(fullText.slice(
     substringIndex,
     substringIndex + substring.length,
-  ))}</b>`;
+  ))}</${htmlTag}>`;
   const afterText = _.escape(fullText.slice(substringIndex + substring.length));
 
   return htmlSafe(beforeText + boldText + afterText);
 }
 
-export default helper(boldSubstring);
+export default helper(tagSubstring);

@@ -22,7 +22,11 @@
         <div class="sidebar-filters-container">
           <div class="form-group form-group-sm form-group-light search-bar-form-group">
             <div class="input-group with-icon-addon">
-              <SearchBar @search={{action "setFilter"}} class="form-control" />
+              <SearchBar
+                class="form-control"
+                @search={{action "setFilter"}}
+                placeholder={{searchPlaceholder}}
+              />
               <div class="input-group-addon">
                 <OneIcon @icon="search" />
               </div>
