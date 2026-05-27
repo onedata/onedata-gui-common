@@ -406,6 +406,11 @@ $form-component-view-margin: $padding-base-vertical;
     @include font-semibold();
     padding-top: 1em;
   }
+
+  .field-mixed-mode .form-section-title-header {
+    margin-top: 1.8em;
+    margin-bottom: 1.2em;
+  }
 }
 
 .custom-value-dropdown-field-dropdown {

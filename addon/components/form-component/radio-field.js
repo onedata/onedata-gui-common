@@ -23,4 +23,34 @@ export default FieldComponentBase.extend({
    * @type {ComputedProperty<SafeString>}
    */
   lockHint: reads('field.lockHint'),
+
+  /**
+   * @type {boolean}
+   */
+  hasAdditionalButton: reads('field.hasAdditionalButton'),
+
+  /**
+   * @type {SafeString}
+   */
+  additionalButtonName: reads('field.additionalButtonConfig.name'),
+
+  /**
+   * @type {SafeString}
+   */
+  additionalButtonTooltip: reads('field.additionalButtonConfig.tooltip'),
+
+  /**
+   * @type {string}
+   */
+  additionalButtonIcon: reads('field.additionalButtonConfig.icon'),
+
+  additionalButtonAction: reads('field.additionalButtonConfig.buttonAction'),
+
+  actions: {
+    additionalButtonAction() {
+      if (this.additionalButtonAction) {
+        this.additionalButtonAction();
+      }
+    },
+  },
 });

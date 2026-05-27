@@ -11,5 +11,18 @@
     @onFocusOut={{action "focusLost"}}
     @lockHint={{lockHint}}
   />
+  {{#if this.hasAdditionalButton}}
+    <OneButton
+      @type="warning"
+      @size="sm"
+      @onClick={{action "additionalButtonAction"}}
+    >
+      <OneIcon @icon={{this.additionalButtonIcon}} />
+      {{this.additionalButtonName}}
+      {{#if this.additionalButtonTooltip}}
+         <OneTooltip @title={{this.additionalButtonTooltip}} />
+      {{/if}}
+    </OneButton>
+  {{/if}}
 {{/if}}
 {{yield}}
