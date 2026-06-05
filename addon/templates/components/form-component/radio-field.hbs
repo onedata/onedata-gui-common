@@ -20,7 +20,7 @@
       <OneIcon @icon={{this.additionalButtonIcon}} />
       {{this.additionalButtonName}}
       {{#if this.additionalButtonTooltip}}
-         <OneTooltip @title={{this.additionalButtonTooltip}} />
+         <OneTooltip @title={{this.additionalButtonTooltip}} @triggerEvents="hover"/>
       {{/if}}
     </OneButton>
   {{/if}}
