@@ -385,7 +385,6 @@ $form-component-view-margin: $padding-base-vertical;
       flex-grow: 1;
       content: ' ';
       height: 1px;
-      @include shadow-transition(all);
       border-bottom: 1px solid transparent;
       border-bottom-color: $color-one-gray-sand;
     }

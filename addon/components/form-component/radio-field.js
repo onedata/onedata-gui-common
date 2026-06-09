@@ -1,5 +1,7 @@
 /**
  * A component responsible for rendering radio field.
+ * It also supports an optional custom button.
+ *
  *
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH

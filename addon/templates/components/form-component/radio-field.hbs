@@ -17,7 +17,9 @@
       @size="sm"
       @onClick={{action "additionalButtonAction"}}
     >
-      <OneIcon @icon={{this.additionalButtonIcon}} />
+      {{#if this.additionalButtonIcon}}
+        <OneIcon @icon={{this.additionalButtonIcon}} />
+      {{/if}}
       {{this.additionalButtonName}}
       {{#if this.additionalButtonTooltip}}
          <OneTooltip @title={{this.additionalButtonTooltip}} @triggerEvents="hover"/>
