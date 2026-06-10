@@ -128,6 +128,15 @@ export default Component.extend(I18n, {
   }),
 
   /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  searchPlaceholder: computed('model.resourceType', function searchPlaceholder() {
+    const resourcesType = this.model?.resourceType;
+    return resourcesType ?
+      this.i18n.t(`tabs.${camelize(resourcesType)}.searchPlaceholder`) : '';
+  }),
+
+  /**
    * Name of custom component used to render first level items.
    * If equals `undefined`, then default item layout is used.
    * @type {string}
@@ -163,6 +172,11 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   filter: '',
+
+  /**
+   * @type {boolean}
+   */
+  isSearchById: false,
 
   /**
    * @type {string}

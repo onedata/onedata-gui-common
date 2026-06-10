@@ -37,12 +37,12 @@
       {{#if option.isCustom}}
         <div class="custom-option">
           <TruncatedString class="custom-option-value">
-            {{bold-substring option.label select.lastSearchedText}}
+            {{tag-substring option.label select.lastSearchedText}}
           </TruncatedString>
         <span class="custom-option-text">{{customValueOptionText}}</span>
         </div>
       {{else}}
-        {{bold-substring option.label select.lastSearchedText}}
+        {{tag-substring option.label select.lastSearchedText}}
       {{/if}}
     </OneDropdown>
   </div>
