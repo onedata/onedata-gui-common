@@ -1,11 +1,7 @@
 {{#if this.title}}
-  {{#if this.isInViewMode}}
-    <div class="form-view-section-title">{{this.title}}:</div>
-  {{else}}
     <div class="form-section-title-header">
       <div class="section-title-text">{{this.title}}</div>
     </div>
-  {{/if}}
 {{/if}}
 <OneCollapse
   class={{concat-classes "fields-group-collapse" (concat name "-collapse")}}
