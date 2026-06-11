@@ -177,13 +177,15 @@ export default Mixin.create({
       elementSize = sizeFunction(overflowElement, dom.LayoutBox.MarginBox);
       overflowElement.setAttribute('style', previousCss ? previousCss : '');
     }
-    const parentSize = sizeFunction(overflowParentElement, dom.LayoutBox.ContentBox);
-    const siblingsSize = overflowSiblingsElements
-      .map(sibling => sizeFunction(sibling, dom.LayoutBox.MarginBox))
-      .reduce((prev, curr) => prev + curr, 0);
-    const newHasOverflow =
-      parentSize - siblingsSize < elementSize + additionalOverflowMargin;
-    this.changeHasOverflow(newHasOverflow);
+    if (overflowSiblingsElements) {
+      const parentSize = sizeFunction(overflowParentElement, dom.LayoutBox.ContentBox);
+      const siblingsSize = overflowSiblingsElements
+        .map(sibling => sizeFunction(sibling, dom.LayoutBox.MarginBox))
+        .reduce((prev, curr) => prev + curr, 0);
+      const newHasOverflow =
+        parentSize - siblingsSize < elementSize + additionalOverflowMargin;
+      this.changeHasOverflow(newHasOverflow);
+    }
   },
 
   /**
