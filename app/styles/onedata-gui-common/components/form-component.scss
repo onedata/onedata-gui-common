@@ -401,9 +401,9 @@ $form-component-view-margin: $padding-base-vertical;
       }
     }
   }
-  .field-view-mode .form-view-section-title {
+  .field-view-mode .form-section-title-header {
     @include font-semibold();
-    padding-top: 1em;
+    margin-top: 2 * $padding-base-vertical;
   }
 
   .field-mixed-mode .form-section-title-header {
