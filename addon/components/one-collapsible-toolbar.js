@@ -85,7 +85,7 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
   /**
    * @type {boolean}
    */
-  isMinimizedDetectFromSiblings: true,
+  shouldDetectOverflowFromSiblings: true,
 
   /**
    * @type {boolean}
@@ -163,8 +163,10 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       overflowElement: this.element.querySelector('.collapsible-toolbar-buttons'),
       overflowParentElement: this.element.parentElement,
     });
-    if (this.isMinimizedDetectFromSiblings) {
+    if (this.shouldDetectOverflowFromSiblings) {
       this.set('overflowSiblingsElements', dom.siblings(this.element));
+    } else {
+      this.set('shouldDetectFromSiblings', false);
     }
     this.overflowDetectorMounter();
     this.eventsBus.on(

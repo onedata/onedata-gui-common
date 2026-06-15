@@ -38,7 +38,7 @@ export default Component.extend({
   /**
    * @type {boolean}
    */
-  isMinimizedDetectFromSiblings: true,
+  shouldDetectOverflowFromSiblings: true,
 
   /**
    * @type {boolean}
