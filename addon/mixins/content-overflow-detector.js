@@ -92,6 +92,12 @@ export default Mixin.create({
    */
   isOverflowDetectionAttached: false,
 
+  /**
+   * Whether to calculate overflow by considering sibling elements
+   * @type {boolean}
+   */
+  shouldDetectFromSiblings: true,
+
   _overflowDetectionListener: null,
 
   addOverflowDetectionListener() {
@@ -177,13 +183,15 @@ export default Mixin.create({
       elementSize = sizeFunction(overflowElement, dom.LayoutBox.MarginBox);
       overflowElement.setAttribute('style', previousCss ? previousCss : '');
     }
-    const parentSize = sizeFunction(overflowParentElement, dom.LayoutBox.ContentBox);
-    const siblingsSize = overflowSiblingsElements
-      .map(sibling => sizeFunction(sibling, dom.LayoutBox.MarginBox))
-      .reduce((prev, curr) => prev + curr, 0);
-    const newHasOverflow =
-      parentSize - siblingsSize < elementSize + additionalOverflowMargin;
-    this.changeHasOverflow(newHasOverflow);
+    if (this.shouldDetectFromSiblings) {
+      const parentSize = sizeFunction(overflowParentElement, dom.LayoutBox.ContentBox);
+      const siblingsSize = overflowSiblingsElements
+        .map(sibling => sizeFunction(sibling, dom.LayoutBox.MarginBox))
+        .reduce((prev, curr) => prev + curr, 0);
+      const newHasOverflow =
+        parentSize - siblingsSize < elementSize + additionalOverflowMargin;
+      this.changeHasOverflow(newHasOverflow);
+    }
   },
 
   /**
