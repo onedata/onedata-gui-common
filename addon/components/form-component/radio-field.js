@@ -1,5 +1,7 @@
 /**
  * A component responsible for rendering radio field.
+ * It also supports an optional custom button.
+ *
  *
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -18,4 +20,39 @@ export default FieldComponentBase.extend({
    * @type {ComputedProperty<Array<FieldOption>>}
    */
   preparedOptions: reads('field.preparedOptions'),
+
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  lockHint: reads('field.lockHint'),
+
+  /**
+   * @type {boolean}
+   */
+  hasAdditionalButton: reads('field.hasAdditionalButton'),
+
+  /**
+   * @type {SafeString}
+   */
+  additionalButtonName: reads('field.additionalButtonConfig.name'),
+
+  /**
+   * @type {SafeString}
+   */
+  additionalButtonTooltip: reads('field.additionalButtonConfig.tooltip'),
+
+  /**
+   * @type {string}
+   */
+  additionalButtonIcon: reads('field.additionalButtonConfig.icon'),
+
+  additionalButtonAction: reads('field.additionalButtonConfig.buttonAction'),
+
+  actions: {
+    additionalButtonAction() {
+      if (this.additionalButtonAction) {
+        this.additionalButtonAction();
+      }
+    },
+  },
 });

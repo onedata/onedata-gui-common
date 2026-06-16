@@ -85,6 +85,11 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
   /**
    * @type {boolean}
    */
+  shouldDetectOverflowFromSiblings: true,
+
+  /**
+   * @type {boolean}
+   */
   dropdownOpened: false,
 
   /**
@@ -157,8 +162,12 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
     this.setProperties({
       overflowElement: this.element.querySelector('.collapsible-toolbar-buttons'),
       overflowParentElement: this.element.parentElement,
-      overflowSiblingsElements: dom.siblings(this.element),
     });
+    if (this.shouldDetectOverflowFromSiblings) {
+      this.set('overflowSiblingsElements', dom.siblings(this.element));
+    } else {
+      this.set('shouldDetectFromSiblings', false);
+    }
     this.overflowDetectorMounter();
     this.eventsBus.on(
       'one-inline-editor:resize',

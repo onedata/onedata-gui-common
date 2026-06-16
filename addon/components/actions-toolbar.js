@@ -38,6 +38,11 @@ export default Component.extend({
   /**
    * @type {boolean}
    */
+  shouldDetectOverflowFromSiblings: true,
+
+  /**
+   * @type {boolean}
+   */
   dropdownPlacement: 'bottom-left',
 
   /**

@@ -12,5 +12,8 @@
     value={{value}}
     step={{step}}
   />
+  {{#if (and (not isEffectivelyEnabled) lockHint)}}
+    <OneTooltip @title={{lockHint}} />
+  {{/if}}
 {{/if}}
 {{yield}}

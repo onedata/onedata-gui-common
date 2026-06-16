@@ -52,6 +52,11 @@ export default Component.extend({
    */
   radioInline: true,
 
+  /**
+   * @type {string}
+   */
+  lockHint: '',
+
   actions: {
     updateHandler(value) {
       if (value !== this.value) {

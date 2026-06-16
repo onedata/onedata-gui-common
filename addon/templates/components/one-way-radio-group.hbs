@@ -16,6 +16,12 @@
     />
     <div class="one-way-radio-control"></div>
     <span class="one-label">{{option.label}}</span>
+    {{#if option.tip}}
+      <OneLabelTip @title={{option.tip}} />
+    {{/if}}
+    {{#if (and (and (or isReadOnly option.disabled) lockHint) (not-eq value option.value))}}
+      <OneTooltip @title={{lockHint}} />
+    {{/if}}
   </label>
   {{yield option}}
 {{/each}}
