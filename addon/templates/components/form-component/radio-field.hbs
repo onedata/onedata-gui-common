@@ -9,6 +9,22 @@
     @options={{preparedOptions}}
     @update={{action "valueChanged"}}
     @onFocusOut={{action "focusLost"}}
+    @lockHint={{lockHint}}
   />
+  {{#if this.hasAdditionalButton}}
+    <OneButton
+      @type="warning"
+      @size="sm"
+      @onClick={{action "additionalButtonAction"}}
+    >
+      {{#if this.additionalButtonIcon}}
+        <OneIcon @icon={{this.additionalButtonIcon}} />
+      {{/if}}
+      {{this.additionalButtonName}}
+      {{#if this.additionalButtonTooltip}}
+         <OneTooltip @title={{this.additionalButtonTooltip}} @triggerEvents="hover"/>
+      {{/if}}
+    </OneButton>
+  {{/if}}
 {{/if}}
 {{yield}}

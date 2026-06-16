@@ -39,4 +39,9 @@ export default FieldComponentBase.extend({
     const fieldStep = this.get('field.step');
     return (fieldStep === null || fieldStep === undefined) ? 'any' : String(fieldStep);
   }),
+
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  lockHint: reads('field.lockHint'),
 });

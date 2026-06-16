@@ -1,3 +1,8 @@
+{{#if this.title}}
+    <div class="form-section-title-header">
+      <div class="section-title-text">{{this.title}}</div>
+    </div>
+{{/if}}
 <OneCollapse
   class={{concat-classes "fields-group-collapse" (concat name "-collapse")}}
   @collapsed={{not isExpanded}}

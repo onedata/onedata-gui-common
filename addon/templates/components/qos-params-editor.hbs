@@ -2,7 +2,7 @@
   {{#if paramRecords.length}}
     <div class="row content-row">
       {{#if showHeader}}
-        <strong class="property-label">{{tt this "header"}}:</strong>
+        <strong class="property-label">{{tt this "header"}}</strong>
       {{/if}}
       {{#each paramRecords as |qosParam|}}
         <div class="row content-row nested-row">
@@ -14,7 +14,9 @@
   {{/if}}
 {{else}}
   {{#if showHeader}}
-    <h2 class="form-section-title">{{tt this "header"}}</h2>
+    <div class="form-section-title-header">
+      <div class="section-title-text">{{tt this "header"}}</div>
+    </div>
   {{/if}}
   {{#each paramEditRecords as |editRecord|}}
     <div class={{concat-classes
@@ -77,7 +79,7 @@
               </div>
             {{/if}}
           </div>
-          <div class="form-control-column {{layoutConfig.formInputColumns}}">
+          <div class="form-control-column">
             {{#if (eq entryType "readonly")}}
               <ClipboardLine
                 @value={{editRecord.value}}

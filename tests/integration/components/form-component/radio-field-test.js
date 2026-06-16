@@ -137,4 +137,34 @@ describe('Integration | Component | form-component/radio-field', function () {
     expect(this.element.textContent.trim()).to.equal('Second');
     expect(find('input')).to.not.exist;
   });
+
+  it('renders additional button', async function () {
+    const additionalButtonAction = sinon.spy();
+    this.set('field.hasAdditionalButton', true);
+    this.set('field.additionalButtonConfig', {
+      name: 'Additional button',
+      buttonAction: additionalButtonAction,
+    });
+
+    await render(hbs `<FormComponent::RadioField @field={{field}} />`);
+
+    const additionalButton = find('.one-button');
+    expect(additionalButton).to.exist;
+    expect(additionalButton.textContent.trim()).to.include('Additional button');
+  });
+
+  it('triggers additional button action on click', async function () {
+    const additionalButtonAction = sinon.spy();
+    this.set('field.hasAdditionalButton', true);
+    this.set('field.additionalButtonConfig', {
+      name: 'Additional button',
+      buttonAction: additionalButtonAction,
+    });
+
+    await render(hbs `<FormComponent::RadioField @field={{field}} />`);
+
+    await click('.one-button');
+
+    expect(additionalButtonAction).to.be.calledOnce;
+  });
 });
