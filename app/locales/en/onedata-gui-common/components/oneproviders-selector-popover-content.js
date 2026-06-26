@@ -1,3 +1,3 @@
 export default {
-  oneproviders: 'Oneproviders',
+  oneproviders: 'Providers',
 };
