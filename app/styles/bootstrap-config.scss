@@ -151,11 +151,20 @@ label {
     @include btn-sm;
   }
   // special style for btn-primary, as it is "filled"
+  &.btn-default {
+    @include button-variant($btn-default-color, btn-default-bg, btn-default-border);
+  }
   &.btn-primary {
     @include button-variant($btn-primary-color, btn-primary-bg, btn-primary-border);
   }
+  &.btn-success {
+    @include button-variant($btn-success-color, btn-success-bg, btn-success-border);
+  }
   &.btn-info {
     @include button-variant($btn-info-color, btn-info-bg, btn-info-border);
+  }
+  &.btn-warning {
+    @include button-variant($btn-warning-color, btn-warning-bg, btn-warning-border);
   }
   &.btn-danger {
     @include button-variant($btn-danger-color, btn-danger-bg, btn-danger-border);
@@ -166,8 +175,14 @@ label {
   &.btn-outline-primary {
     @include button-outline-variant($text-color, btn-primary-border);
   }
+  &.btn-outline-success {
+    @include button-outline-variant($text-color, btn-success-border);
+  }
   &.btn-outline-info {
     @include button-outline-variant($text-color, btn-info-border);
+  }
+  &.btn-outline-warning {
+    @include button-outline-variant($text-color, btn-warning-border);
   }
   &.btn-outline-danger {
     @include button-outline-variant($text-color, btn-danger-border);

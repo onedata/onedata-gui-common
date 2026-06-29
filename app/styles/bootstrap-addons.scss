@@ -272,7 +272,7 @@ $first-table-column-padding-left: 16px;
       @include input-btn-variant(btn-danger-border);
     }
     &.btn-warning {
-      @include input-btn-variant(brand-warning-color);
+      @include input-btn-variant(btn-warning-border);
     }
   }
   &.input-group-sm .input-group-btn .btn {
