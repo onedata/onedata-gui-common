@@ -2,7 +2,7 @@ $one-pill-button-line-height: 24px;
 $one-pill-button-border-width: 2px;
 $one-pill-button-height: $one-pill-button-line-height + 2 * $one-pill-button-border-width;
 
-.one-pill-button {  
+.one-pill-button {
   display: inline-block;
   overflow: hidden;
   transition: $collapse-transition-vertical;
@@ -47,7 +47,7 @@ $one-pill-button-height: $one-pill-button-line-height + 2 * $one-pill-button-bor
       width: 3px;
       margin-bottom: 2px;
       border-radius: 100%;
-  
+
       &:last-child {
         margin-bottom: 0;
       }
@@ -69,7 +69,7 @@ $one-pill-button-height: $one-pill-button-line-height + 2 * $one-pill-button-bor
     }
 
     .one-pill-button-actions-trigger {
-      @include button-variant($btn-info-color, $btn-info-bg, $btn-info-border);
+      @include button-variant($btn-info-color, btn-info-bg, btn-info-border);
 
       .icon-dot {
         background-color: $color-one-white;

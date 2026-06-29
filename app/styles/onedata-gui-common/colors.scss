@@ -21,7 +21,11 @@ $var-color-inactive-amount: 15%;
   @return hsl(var(--#{$color-name}-h), var(--#{$color-name}-s), calc(var(--#{$color-name}-l) - $darken));
 }
 
-$color-one-white: #fff;
+$color-one-white-h: 0;
+$color-one-white-s: 0%;
+$color-one-white-l: 100%;
+$color-one-white: hsl($color-one-white-h, $color-one-white-s, $color-one-white-l);
+
 $color-one-semiwhite: #EFEFEF;
 $color-one-semiblack: #363636;
 $color-one-dark-gray: #555555;
@@ -37,13 +41,22 @@ $color-one-mint-l: 56%;
 $color-one-mint: hsl($color-one-mint-h, $color-one-mint-s, $color-one-mint-l);
 
 $color-one-light-gray: #BEBEBE;
-$color-one-blue-gray: #4A6089;
+
+$color-one-blue-gray-h: 219;
+$color-one-blue-gray-s: 30%;
+$color-one-blue-gray-l: 41%;
+$color-one-blue-gray: hsl($color-one-blue-gray-h, $color-one-blue-gray-s, $color-one-blue-gray-l);
+
 $color-one-gray-sand: #E2E1E0;
 $color-one-dark-blue: #555d72;
 $color-one-light-blue: #F2F4FA;
 $color-one-azure: color-one-azure();
 $color-one-yellow: color-one-yellow();
-$color-one-orange: #ffac30;
+
+$color-one-orange-h: 36;
+$color-one-orange-s: 100%;
+$color-one-orange-l: 59%;
+$color-one-orange: hsl($color-one-orange-h, $color-one-orange-s, $color-one-orange-l);
 
 $color-one-default: $color-one-blue-gray;
 $color-one-info: $color-one-blue-gray;
