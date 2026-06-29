@@ -12,7 +12,6 @@ $btn-active-boxshadow-size: 0 0 7px;
     color: $color;
     background-color: darken-custom($background, 7%);
         border-color: darken-custom($border, 7%);
-    @include box-shadow($btn-active-boxshadow-size lighten($color-one-semiblack, 10%));
   }
   &:hover {
     color: $color;
@@ -25,7 +24,6 @@ $btn-active-boxshadow-size: 0 0 7px;
     color: $color;
     background-color: darken-custom($background, 10%);
         border-color: darken-custom($border, 10%);
-    @include box-shadow($btn-active-boxshadow-size lighten($color-one-semiblack, 10%));
 
     &:hover,
     &:focus,
@@ -37,7 +35,6 @@ $btn-active-boxshadow-size: 0 0 7px;
   }
 
   &[disabled] {
-    @include box-shadow(none);
     &,
     &:focus,
     &.focus,
@@ -49,6 +46,22 @@ $btn-active-boxshadow-size: 0 0 7px;
       border-color: $color-one-light-gray;
       color: $color-one-white;
     }
+  }
+}
+
+@mixin button-box-shadow() {
+  &:focus,
+  &.focus {
+    @include box-shadow($btn-active-boxshadow-size lighten($color-one-semiblack, 10%));
+  }
+  &:active,
+  &.active,
+  .open > &.dropdown-toggle {
+    @include box-shadow($btn-active-boxshadow-size lighten($color-one-semiblack, 10%));
+  }
+
+  &[disabled] {
+    @include box-shadow(none);
   }
 }
 

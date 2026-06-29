@@ -156,18 +156,21 @@ label {
   }
   &.btn-primary {
     @include button-variant($btn-primary-color, btn-primary-bg, btn-primary-border);
+    @include button-box-shadow();
   }
   &.btn-success {
     @include button-variant($btn-success-color, btn-success-bg, btn-success-border);
   }
   &.btn-info {
     @include button-variant($btn-info-color, btn-info-bg, btn-info-border);
+    @include button-box-shadow();
   }
   &.btn-warning {
     @include button-variant($btn-warning-color, btn-warning-bg, btn-warning-border);
   }
   &.btn-danger {
     @include button-variant($btn-danger-color, btn-danger-bg, btn-danger-border);
+    @include button-box-shadow();
   }
   &.btn-outline-default {
     @include button-outline-variant($text-color, btn-default-border);
