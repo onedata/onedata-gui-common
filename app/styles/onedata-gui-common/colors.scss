@@ -9,16 +9,16 @@ $var-color-inactive-amount: 15%;
   @return lighten($color, $var-color-inactive-amount);
 }
 
-@function inactive-color-custom($color-name) {
-  @return lighten-custom($color-name, var(--var-color-inactive-amount-custom));
+@function inactive-color-custom($color-var-name) {
+  @return lighten-custom($color-var-name, var(--var-color-inactive-amount-custom));
 }
 
-@function lighten-custom($color-name, $lightness) {
-  @return hsl(var(--#{$color-name}-h), var(--#{$color-name}-s), calc(var(--#{$color-name}-l) + $lightness));
+@function lighten-custom($color-var-name, $lightness) {
+  @return hsl(var(--#{$color-var-name}-h), var(--#{$color-var-name}-s), calc(var(--#{$color-var-name}-l) + $lightness));
 }
 
-@function darken-custom($color-name, $darken) {
-  @return hsl(var(--#{$color-name}-h), var(--#{$color-name}-s), calc(var(--#{$color-name}-l) - $darken));
+@function darken-custom($color-var-name, $darken) {
+  @return hsl(var(--#{$color-var-name}-h), var(--#{$color-var-name}-s), calc(var(--#{$color-var-name}-l) - $darken));
 }
 
 $color-one-white-h: 0;

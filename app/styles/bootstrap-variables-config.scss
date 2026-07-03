@@ -169,54 +169,29 @@ $table-border-color:            #ddd !default;
 
 $btn-font-weight:                normal !default;
 
-$btn-default-color:              #333 !default;
-$btn-default-color:              $color-one-white;
-$btn-default-color:              var(--btn-default-color);
-$btn-default-bg:                 #fff !default;
-$btn-default-bg:                 $color-one-default;
-$btn-default-bg:                 var(--btn-default-bg);
-$btn-default-border:             #ccc !default;
-$btn-default-border:             $color-one-default;
-$btn-default-border:             var(--btn-default-border);
+$btn-default-color:              var(--btn-default-fg, #{$color-one-white});
+$btn-default-bg:                 var(--btn-default-bg, #{$color-one-default});
+$btn-default-border:             var(--btn-default-border, #{$color-one-default});
 
-$btn-primary-color:              #fff !default;
-$btn-primary-color:              $color-one-white;
-$btn-primary-color:              var(--btn-primary-color);
-$btn-primary-bg:                 $brand-primary !default;
-$btn-primary-bg:                 $brand-primary;
-$btn-primary-bg:                 var(--btn-primary-bg);
-$btn-primary-border:             $brand-primary;
-$btn-primary-border:             var(--btn-primary-border);
+$btn-primary-color:              var(--btn-primary-fg, #{$color-one-white});
+$btn-primary-bg:                 var(--btn-primary-bg, #{$brand-primary});
+$btn-primary-border:             var(--btn-primary-border, #{$brand-primary});
 
-$btn-success-color:              #fff !default;
-$btn-success-color:              var(--btn-success-color);
-$btn-success-bg:                 $brand-success !default;
-$btn-success-bg:                 var(--btn-success-bg);
-$btn-success-border:             $btn-success-bg;
-$btn-success-border:             var(--btn-success-border);
+$btn-success-color:              var(--btn-success-fg, #fff);
+$btn-success-bg:                 var(--btn-success-bg, #{$brand-success});
+$btn-success-border:             var(--btn-success-border, #{$btn-success-bg});
 
-$btn-info-color:                 #fff !default;
-$btn-info-color:                 $color-one-white;
-$btn-info-color:                 var(--btn-info-color);
-$btn-info-bg:                    $brand-info !default;
-$btn-info-bg:                    $color-one-info;
-$btn-info-bg:                    var(--btn-info-bg);
-$btn-info-border:                $color-one-info;
-$btn-info-border:                var(--btn-info-border);
+$btn-info-color:                 var(--btn-info-fg, #{$color-one-white});
+$btn-info-bg:                    var(--btn-info-bg, #{$color-one-info});
+$btn-info-border:                var(--btn-info-border, #{$color-one-info});
 
-$btn-warning-color:              #fff !default;
-$btn-warning-color:              var(--btn-warning-color);
-$btn-warning-bg:                 $brand-warning !default;
-$btn-warning-bg:                 var(--btn-warning-bg);
-$btn-warning-border:             $btn-warning-bg;
-$btn-warning-border:             var(--btn-warning-border);
+$btn-warning-color:              var(--btn-warning-fg, #fff);
+$btn-warning-bg:                 var(--btn-warning-bg, #{$brand-warning});
+$btn-warning-border:             var(--btn-warning-border, #{$btn-warning-bg});
 
-$btn-danger-color:               #fff !default;
-$btn-danger-color:               var(--btn-danger-color);
-$btn-danger-bg:                  $brand-danger !default;
-$btn-danger-bg:                  var(--btn-danger-bg);
-$btn-danger-border:              $btn-danger-bg;
-$btn-danger-border:              var(--btn-danger-border);
+$btn-danger-color:               var(--btn-danger-fg, #fff);
+$btn-danger-bg:                  var(--btn-danger-bg, #{$brand-danger});
+$btn-danger-border:              var(--btn-danger-border, #{$btn-danger-bg});
 
 $btn-link-disabled-color:        $gray-light !default;
 
@@ -972,10 +947,10 @@ $hr-border:                   $gray-lighter !default;
 
 :root {
     // default color
-  --btn-default-color-h: #{$color-one-white-h};
-  --btn-default-color-s: #{$color-one-white-s};
-  --btn-default-color-l: #{$color-one-white-l};
-  --btn-default-color: hsl(var(--btn-default-color-h), var(--btn-default-color-s), var(--btn-default-color-l));
+  --btn-default-fg-h: #{$color-one-white-h};
+  --btn-default-fg-s: #{$color-one-white-s};
+  --btn-default-fg-l: #{$color-one-white-l};
+  --btn-default-fg: hsl(var(--btn-default-fg-h), var(--btn-default-fg-s), var(--btn-default-fg-l));
 
   --btn-default-bg-h: #{$color-one-blue-gray-h};
   --btn-default-bg-s: #{$color-one-blue-gray-s};
@@ -1004,10 +979,10 @@ $hr-border:                   $gray-lighter !default;
   --btn-secondary-border: hsl(var(--btn-secondary-border-h), var(--btn-secondary-border-s), var(--btn-secondary-border-l));
 
   // primary color
-  --btn-primary-color-h: #{$color-one-white-h};
-  --btn-primary-color-s: #{$color-one-white-s};
-  --btn-primary-color-l: #{$color-one-white-l};
-  --btn-primary-color: hsl(var(--btn-primary-color-h), var(--btn-primary-color-s), var(--btn-primary-color-l));
+  --btn-primary-fg-h: #{$color-one-white-h};
+  --btn-primary-fg-s: #{$color-one-white-s};
+  --btn-primary-fg-l: #{$color-one-white-l};
+  --btn-primary-fg: hsl(var(--btn-primary-fg-h), var(--btn-primary-fg-s), var(--btn-primary-fg-l));
 
   --btn-primary-bg-h: #{$color-one-mint-h};
   --btn-primary-bg-s: #{$color-one-mint-s};
@@ -1020,10 +995,10 @@ $hr-border:                   $gray-lighter !default;
   --btn-primary-border: hsl(var(--btn-primary-border-h), var(--btn-primary-border-s), var(--btn-primary-border-l));
 
     // success color
-  --btn-success-color-h: #{$color-one-white-h};
-  --btn-success-color-s: #{$color-one-white-s};
-  --btn-success-color-l: #{$color-one-white-l};
-  --btn-success-color: hsl(var(--btn-success-color-h), var(--btn-success-color-s), var(--btn-success-color-l));
+  --btn-success-fg-h: #{$color-one-white-h};
+  --btn-success-fg-s: #{$color-one-white-s};
+  --btn-success-fg-l: #{$color-one-white-l};
+  --btn-success-fg: hsl(var(--btn-success-fg-h), var(--btn-success-fg-s), var(--btn-success-fg-l));
 
   --btn-success-bg-h: #{$color-one-mint-h};
   --btn-success-bg-s: #{$color-one-mint-s};
@@ -1036,10 +1011,10 @@ $hr-border:                   $gray-lighter !default;
   --btn-success-border: hsl(var(--btn-success-border-h), var(--btn-success-border-s), var(--btn-success-border-l));
 
     // info color
-  --btn-info-color-h: #{$color-one-white-h};
-  --btn-info-color-s: #{$color-one-white-s};
-  --btn-info-color-l: #{$color-one-white-l};
-  --btn-info-color: hsl(var(--btn-info-color-h), var(--btn-info-color-s), var(--btn-info-color-l));
+  --btn-info-fg-h: #{$color-one-white-h};
+  --btn-info-fg-s: #{$color-one-white-s};
+  --btn-info-fg-l: #{$color-one-white-l};
+  --btn-info-fg: hsl(var(--btn-info-fg-h), var(--btn-info-fg-s), var(--btn-info-fg-l));
 
   --btn-info-bg-h: #{$color-one-blue-gray-h};
   --btn-info-bg-s: #{$color-one-blue-gray-s};
@@ -1052,10 +1027,10 @@ $hr-border:                   $gray-lighter !default;
   --btn-info-border: hsl(var(--btn-info-border-h), var(--btn-info-border-s), var(--btn-info-border-l));
 
   // warning color
-  --btn-warning-color-h: #{$color-one-white-h};
-  --btn-warning-color-s: #{$color-one-white-s};
-  --btn-warning-color-l: #{$color-one-white-l};
-  --btn-warning-color: hsl(var(--btn-warning-color-h), var(--btn-warning-color-s), var(--btn-warning-color-l));
+  --btn-warning-fg-h: #{$color-one-white-h};
+  --btn-warning-fg-s: #{$color-one-white-s};
+  --btn-warning-fg-l: #{$color-one-white-l};
+  --btn-warning-fg: hsl(var(--btn-warning-fg-h), var(--btn-warning-fg-s), var(--btn-warning-fg-l));
 
   --btn-warning-bg-h: #{$color-one-orange-h};
   --btn-warning-bg-s: #{$color-one-orange-s};
@@ -1068,10 +1043,10 @@ $hr-border:                   $gray-lighter !default;
   --btn-warning-border: hsl(var(--btn-warning-border-h), var(--btn-warning-border-s), var(--btn-warning-border-l));
 
   // danger color
-  --btn-danger-color-h: #{$color-one-white-h};
-  --btn-danger-color-s: #{$color-one-white-s};
-  --btn-danger-color-l: #{$color-one-white-l};
-  --btn-danger-color: hsl(var(--btn-danger-color-h), var(--btn-danger-color-s), var(--btn-danger-color-l));
+  --btn-danger-fg-h: #{$color-one-white-h};
+  --btn-danger-fg-s: #{$color-one-white-s};
+  --btn-danger-fg-l: #{$color-one-white-l};
+  --btn-danger-fg: hsl(var(--btn-danger-fg-h), var(--btn-danger-fg-s), var(--btn-danger-fg-l));
 
   --btn-danger-bg-h: #{$color-one-red-h};
   --btn-danger-bg-s: #{$color-one-red-s};
