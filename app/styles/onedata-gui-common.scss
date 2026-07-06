@@ -88,6 +88,11 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 :root {
   --onedata-logo-height: 35px;
   --onedata-logo-margin-bottom: 39px;
+
+  // Pill button
+  --one-pill-button-border-width: 2px;
+  --one-pill-button-line-height: 24px;
+  --one-pill-button-height: calc(var(--one-pill-button-line-height) + 2 * var(--one-pill-button-border-width));
 }
 
 @import 'onedata-gui-common/animate';
