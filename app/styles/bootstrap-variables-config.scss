@@ -171,27 +171,27 @@ $btn-font-weight:                normal !default;
 
 $btn-default-color:              var(--btn-default-fg, #{$color-one-white});
 $btn-default-bg:                 var(--btn-default-bg, #{$color-one-default});
-$btn-default-border:             var(--btn-default-border, #{$color-one-default});
+$btn-default-border:             var(--btn-default-border-color, #{$color-one-default});
 
 $btn-primary-color:              var(--btn-primary-fg, #{$color-one-white});
 $btn-primary-bg:                 var(--btn-primary-bg, #{$brand-primary});
-$btn-primary-border:             var(--btn-primary-border, #{$brand-primary});
+$btn-primary-border:             var(--btn-primary-border-color, #{$brand-primary});
 
 $btn-success-color:              var(--btn-success-fg, #fff);
 $btn-success-bg:                 var(--btn-success-bg, #{$brand-success});
-$btn-success-border:             var(--btn-success-border, #{$btn-success-bg});
+$btn-success-border:             var(--btn-success-border-color, #{$btn-success-bg});
 
 $btn-info-color:                 var(--btn-info-fg, #{$color-one-white});
 $btn-info-bg:                    var(--btn-info-bg, #{$color-one-info});
-$btn-info-border:                var(--btn-info-border, #{$color-one-info});
+$btn-info-border:                var(--btn-info-border-color, #{$color-one-info});
 
 $btn-warning-color:              var(--btn-warning-fg, #fff);
 $btn-warning-bg:                 var(--btn-warning-bg, #{$brand-warning});
-$btn-warning-border:             var(--btn-warning-border, #{$btn-warning-bg});
+$btn-warning-border:             var(--btn-warning-border-color, #{$btn-warning-bg});
 
 $btn-danger-color:               var(--btn-danger-fg, #fff);
 $btn-danger-bg:                  var(--btn-danger-bg, #{$brand-danger});
-$btn-danger-border:              var(--btn-danger-border, #{$btn-danger-bg});
+$btn-danger-border:              var(--btn-danger-border-color, #{$btn-danger-bg});
 
 $btn-link-disabled-color:        $gray-light !default;
 
@@ -946,7 +946,7 @@ $hr-border:                   $gray-lighter !default;
 
 
 :root {
-    // default color
+  // default color
   --btn-default-fg-h: #{$color-one-white-h};
   --btn-default-fg-s: #{$color-one-white-s};
   --btn-default-fg-l: #{$color-one-white-l};
@@ -957,26 +957,10 @@ $hr-border:                   $gray-lighter !default;
   --btn-default-bg-l: #{$color-one-blue-gray-l};
   --btn-default-bg: hsl(var(--btn-default-bg-h), var(--btn-default-bg-s), var(--btn-default-bg-l));
 
-  --btn-default-border-h: var(--btn-default-bg-h);
-  --btn-default-border-s: var(--btn-default-bg-s);
-  --btn-default-border-l: var(--btn-default-bg-l);
-  --btn-default-border: hsl(var(--btn-default-border-h), var(--btn-default-border-s), var(--btn-default-border-l));
-
-    // secondary color
-  --btn-secondary-color-h: #{$color-one-white-h};
-  --btn-secondary-color-s: #{$color-one-white-s};
-  --btn-secondary-color-l: #{$color-one-white-l};
-  --btn-secondary-color: hsl(var(--btn-secondary-color-h), var(--btn-secondary-color-s), var(--btn-secondary-color-l));
-
-  --btn-secondary-bg-h: #{$color-one-mint-h};
-  --btn-secondary-bg-s: #{$color-one-mint-s};
-  --btn-secondary-bg-l: #{$color-one-mint-l};
-  --btn-secondary-bg: hsl(var(--btn-secondary-bg-h), var(--btn-secondary-bg-s), var(--btn-secondary-bg-l));
-
-  --btn-secondary-border-h: var(--btn-secondary-bg-h);
-  --btn-secondary-border-s: var(--btn-secondary-bg-s);
-  --btn-secondary-border-l: var(--btn-secondary-bg-l);
-  --btn-secondary-border: hsl(var(--btn-secondary-border-h), var(--btn-secondary-border-s), var(--btn-secondary-border-l));
+  --btn-default-border-color-h: var(--btn-default-bg-h);
+  --btn-default-border-color-s: var(--btn-default-bg-s);
+  --btn-default-border-color-l: var(--btn-default-bg-l);
+  --btn-default-border-color: hsl(var(--btn-default-border-color-h), var(--btn-default-border-color-s), var(--btn-default-border-color-l));
 
   // primary color
   --btn-primary-fg-h: #{$color-one-white-h};
@@ -989,12 +973,12 @@ $hr-border:                   $gray-lighter !default;
   --btn-primary-bg-l: #{$color-one-mint-l};
   --btn-primary-bg: hsl(var(--btn-primary-bg-h), var(--btn-primary-bg-s), var(--btn-primary-bg-l));
 
-  --btn-primary-border-h: var(--btn-primary-bg-h);
-  --btn-primary-border-s: var(--btn-primary-bg-s);
-  --btn-primary-border-l: var(--btn-primary-bg-l);
-  --btn-primary-border: hsl(var(--btn-primary-border-h), var(--btn-primary-border-s), var(--btn-primary-border-l));
+  --btn-primary-border-color-h: var(--btn-primary-bg-h);
+  --btn-primary-border-color-s: var(--btn-primary-bg-s);
+  --btn-primary-border-color-l: var(--btn-primary-bg-l);
+  --btn-primary-border-color: hsl(var(--btn-primary-border-color-h), var(--btn-primary-border-color-s), var(--btn-primary-border-color-l));
 
-    // success color
+  // success color
   --btn-success-fg-h: #{$color-one-white-h};
   --btn-success-fg-s: #{$color-one-white-s};
   --btn-success-fg-l: #{$color-one-white-l};
@@ -1005,12 +989,12 @@ $hr-border:                   $gray-lighter !default;
   --btn-success-bg-l: #{$color-one-mint-l};
   --btn-success-bg: hsl(var(--btn-success-bg-h), var(--btn-success-bg-s), var(--btn-success-bg-l));
 
-  --btn-success-border-h: var(--btn-success-bg-h);
-  --btn-success-border-s: var(--btn-success-bg-s);
-  --btn-success-border-l: var(--btn-success-bg-l);
-  --btn-success-border: hsl(var(--btn-success-border-h), var(--btn-success-border-s), var(--btn-success-border-l));
+  --btn-success-border-color-h: var(--btn-success-bg-h);
+  --btn-success-border-color-s: var(--btn-success-bg-s);
+  --btn-success-border-color-l: var(--btn-success-bg-l);
+  --btn-success-border-color: hsl(var(--btn-success-border-color-h), var(--btn-success-border-color-s), var(--btn-success-border-color-l));
 
-    // info color
+  // info color
   --btn-info-fg-h: #{$color-one-white-h};
   --btn-info-fg-s: #{$color-one-white-s};
   --btn-info-fg-l: #{$color-one-white-l};
@@ -1021,10 +1005,10 @@ $hr-border:                   $gray-lighter !default;
   --btn-info-bg-l: #{$color-one-blue-gray-l};
   --btn-info-bg: hsl(var(--btn-info-bg-h), var(--btn-info-bg-s), var(--btn-info-bg-l));
 
-  --btn-info-border-h: var(--btn-border-bg-h);
-  --btn-info-border-s: var(--btn-border-bg-s);
-  --btn-info-border-l: var(--btn-border-bg-l);
-  --btn-info-border: hsl(var(--btn-info-border-h), var(--btn-info-border-s), var(--btn-info-border-l));
+  --btn-info-border-color-h: var(--btn-info-bg-h);
+  --btn-info-border-color-s: var(--btn-info-bg-s);
+  --btn-info-border-color-l: var(--btn-info-bg-l);
+  --btn-info-border-color: hsl(var(--btn-info-border-color-h), var(--btn-info-border-color-s), var(--btn-info-border-color-l));
 
   // warning color
   --btn-warning-fg-h: #{$color-one-white-h};
@@ -1037,10 +1021,10 @@ $hr-border:                   $gray-lighter !default;
   --btn-warning-bg-l: #{$color-one-orange-l};
   --btn-warning-bg: hsl(var(--btn-warning-bg-h), var(--btn-warning-bg-s), var(--btn-warning-bg-l));
 
-  --btn-warning-border-h: var(--btn-warning-bg-h);
-  --btn-warning-border-s: var(--btn-warning-bg-s);
-  --btn-warning-border-l: var(--btn-warning-bg-l);
-  --btn-warning-border: hsl(var(--btn-warning-border-h), var(--btn-warning-border-s), var(--btn-warning-border-l));
+  --btn-warning-border-color-h: var(--btn-warning-bg-h);
+  --btn-warning-border-color-s: var(--btn-warning-bg-s);
+  --btn-warning-border-color-l: var(--btn-warning-bg-l);
+  --btn-warning-border-color: hsl(var(--btn-warning-border-color-h), var(--btn-warning-border-color-s), var(--btn-warning-border-color-l));
 
   // danger color
   --btn-danger-fg-h: #{$color-one-white-h};
@@ -1053,8 +1037,8 @@ $hr-border:                   $gray-lighter !default;
   --btn-danger-bg-l: #{$color-one-red-l};
   --btn-danger-bg: hsl(var(--btn-danger-bg-h), var(--btn-danger-bg-s), var(--btn-danger-bg-l));
 
-  --btn-danger-border-h: var(--btn-danger-bg-h);
-  --btn-danger-border-s: var(--btn-danger-bg-s);
-  --btn-danger-border-l: var(--btn-danger-bg-l);
-  --btn-danger-border: hsl(var(--btn-danger-border-h), var(--btn-danger-border-s), var(--btn-danger-border-l));
+  --btn-danger-border-color-h: var(--btn-danger-bg-h);
+  --btn-danger-border-color-s: var(--btn-danger-bg-s);
+  --btn-danger-border-color-l: var(--btn-danger-bg-l);
+  --btn-danger-border-color: hsl(var(--btn-danger-border-color-h), var(--btn-danger-border-color-s), var(--btn-danger-border-color-l));
 }

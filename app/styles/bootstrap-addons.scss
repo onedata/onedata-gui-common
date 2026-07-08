@@ -260,19 +260,19 @@ $first-table-column-padding-left: 16px;
     border-left: none;
 
     &.btn-primary {
-      @include input-btn-variant(btn-primary-border);
+      @include input-btn-variant(btn-primary-border-color);
     }
     &.btn-info {
-      @include input-btn-variant(btn-info-border);
+      @include input-btn-variant(btn-info-border-color);
     }
     &.btn-default {
-      @include input-btn-variant(btn-default-border);
+      @include input-btn-variant(btn-default-border-color);
     }
     &.btn-danger {
-      @include input-btn-variant(btn-danger-border);
+      @include input-btn-variant(btn-danger-border-color);
     }
     &.btn-warning {
-      @include input-btn-variant(btn-warning-border);
+      @include input-btn-variant(btn-warning-border-color);
     }
   }
   &.input-group-sm .input-group-btn .btn {

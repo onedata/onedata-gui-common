@@ -65,7 +65,7 @@
     }
 
     .one-pill-button-actions-trigger {
-      @include button-variant($btn-default-color, btn-default-bg, btn-default-border);
+      @include button-variant($btn-default-color, btn-default-bg, btn-default-border-color);
 
       .icon-dot {
         background-color: $color-one-white;
