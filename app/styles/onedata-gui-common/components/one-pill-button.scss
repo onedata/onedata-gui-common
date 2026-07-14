@@ -61,11 +61,11 @@
 
   &.default {
     .one-pill-button-inner {
-      border: var(--one-pill-button-border-width) $btn-default-bg solid;
+      border: var(--one-pill-button-border-width) var(--one-pill-button-default-border-color) solid;
     }
 
     .one-pill-button-actions-trigger {
-      @include button-variant($btn-default-color, btn-default-bg, btn-default-border-color);
+      @include button-variant(var(--one-pill-button-default-fg), one-pill-button-default-bg, one-pill-button-default-border-color);
 
       .icon-dot {
         background-color: $color-one-white;

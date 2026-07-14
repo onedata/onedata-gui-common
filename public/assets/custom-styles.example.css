@@ -111,6 +111,21 @@
 
 
   --one-pill-button-border-width: 1px;
+
+  --one-pill-button-default-border-color-h: var(--btn-primary-border-color-h);
+  --one-pill-button-default-border-color-s: var(--btn-primary-border-color-s);
+  --one-pill-button-default-border-color-l: var(--btn-primary-border-color-l);
+  --one-pill-button-default-border-color: var(--btn-primary-border-color);
+
+  --one-pill-button-default-bg-h: var(--btn-primary-bg-h);
+  --one-pill-button-default-bg-s: var(--btn-primary-bg-s);
+  --one-pill-button-default-bg-l: var(--btn-primary-bg-l);
+  --one-pill-button-default-bg: var(--btn-primary-bg);
+
+  --one-pill-button-default-fg-h: var(--btn-primary-color-h);
+  --one-pill-button-default-fg-s: var(--btn-primary-color-s);
+  --one-pill-button-default-fg-l: var(--btn-primary-color-l);
+  --one-pill-button-default-fg: var(--btn-primary-fg);
 }
 
 .one-animated-logo {
