@@ -25,7 +25,7 @@
   --onedata-logo-margin-bottom: 24px;
 
   /* Buttons */
-  /* default colors */
+  /* primary colors */
   --btn-primary-fg-h: var(--color-eosc-white-h);
   --btn-primary-fg-s: var(--color-eosc-white-s);
   --btn-primary-fg-l: var(--color-eosc-white-l);
@@ -41,23 +41,7 @@
   --btn-primary-border-color-l: var(--btn-primary-bg-l);
   --btn-primary-border-color: hsl(var(--btn-primary-border-color-h), var(--btn-primary-border-color-s), var(--btn-primary-border-color-l));
 
-  /* secondary colors */
-  --btn-secondary-color-h: var(--color-eosc-white-h);
-  --btn-secondary-color-s: var(--color-eosc-white-s);
-  --btn-secondary-color-l: var(--color-eosc-white-l);
-  --btn-secondary-color: hsl(var(--btn-secondary-color-h), var(--btn-secondary-color-s), var(--btn-secondary-color-l));
-
-  --btn-secondary-bg-h: 345;
-  --btn-secondary-bg-s: 78%;
-  --btn-secondary-bg-l: 63%;
-  --btn-secondary-bg: hsl(var(--btn-secondary-bg-h), var(--btn-secondary-bg-s), var(--btn-secondary-bg-l));
-
-  --btn-secondary-border-color-h: var(--btn-secondary-bg-h);
-  --btn-secondary-border-color-s: var(--btn-secondary-bg-s);
-  --btn-secondary-border-color-l: var(--btn-secondary-bg-l);
-  --btn-secondary-border-color: hsl(var(--btn-secondary-border-color-h), var(--btn-secondary-border-color-s), var(--btn-secondary-border-color-l));
-
-  /* primary colors */
+  /* default colors */
   --btn-default-fg-h: 186;
   --btn-default-fg-s: 56%;
   --btn-default-fg-l: 33%;
@@ -73,69 +57,21 @@
   --btn-default-border-color-l: var(--btn-default-fg-l);
   --btn-default-border-color: hsl(var(--btn-default-border-color-h), var(--btn-default-border-color-s), var(--btn-default-border-color-l));
 
-  /* success colors */
-  --btn-success-fg-h: 133;
-  --btn-success-fg-s: 100%;
-  --btn-success-fg-l: 12%;
-  --btn-success-fg: hsl(var(--btn-success-fg-h), var(--btn-success-fg-s), var(--btn-success-fg-l));
-
-  --btn-success-bg-h: 131;
-  --btn-success-bg-s: 59%;
-  --btn-success-bg-l: 82%;
-  --btn-success-bg: hsl(var(--btn-success-bg-h), var(--btn-success-bg-s), var(--btn-success-bg-l));
-
-  --btn-success-border-color-h: 133;
-  --btn-success-border-color-s: 100%;
-  --btn-success-border-color-l: 82%;
-  --btn-success-border-color: hsl(var(--btn-success-border-color-h), var(--btn-success-border-color-s), var(--btn-success-border-color-l));
-
   /* info colors */
-  --btn-info-fg-h: 220;
-  --btn-info-fg-s: 6%;
-  --btn-info-fg-l: 10%;
+  --btn-info-fg-h: var(--btn-default-fg-h);
+  --btn-info-fg-s: var(--btn-default-fg-s);
+  --btn-info-fg-l: var(--btn-default-fg-l);
   --btn-info-fg: hsl(var(--btn-info-fg-h), var(--btn-info-fg-s), var(--btn-info-fg-l));
 
-  --btn-info-bg-h: 240;
-  --btn-info-bg-s: 3%;
-  --btn-info-bg-l: 93%;
+  --btn-info-bg-h: var(--btn-default-bg-h);
+  --btn-info-bg-s: var(--btn-default-bg-s);
+  --btn-info-bg-l: var(--btn-default-bg-l);
   --btn-info-bg: hsl(var(--btn-info-bg-h), var(--btn-info-bg-s), var(--btn-info-bg-l));
 
-  --btn-info-border-color-h: 207;
-  --btn-info-border-color-s: 5%;
-  --btn-info-border-color-l: 53%;
+  --btn-info-border-color-h: var(--btn-info-fg-h);
+  --btn-info-border-color-s: var(--btn-info-fg-s);
+  --btn-info-border-color-l:  var(--btn-info-fg-l);
   --btn-info-border-color: hsl(var(--btn-info-border-color-h), var(--btn-info-border-color-s), var(--btn-info-border-color-l));
-
-  /* warning colors */
-  --btn-warning-fg-h: 220;
-  --btn-warning-fg-s: 6%;
-  --btn-warning-fg-l: 10%;
-  --btn-warning-fg: hsl(var(--btn-warning-fg-h), var(--btn-warning-fg-s), var(--btn-warning-fg-l));
-
-  --btn-warning-bg-h: 53;
-  --btn-warning-bg-s: 75%;
-  --btn-warning-bg-l: 95%;
-  --btn-warning-bg: hsl(var(--btn-warning-bg-h), var(--btn-warning-bg-s), var(--btn-warning-bg-l));
-
-  --btn-warning-border-color-h: 51;
-  --btn-warning-border-color-s: 100%;
-  --btn-warning-border-color-l: 64%;
-  --btn-warning-border-color: hsl(var(--btn-warning-border-color-h), var(--btn-warning-border-color-s), var(--btn-warning-border-color-l));
-
-  /* danger colors */
-  --btn-danger-fg-h: 357;
-  --btn-danger-fg-s: 89%;
-  --btn-danger-fg-l: 40%;
-  --btn-danger-fg: hsl(var(--btn-danger-fg-h), var(--btn-danger-fg-s), var(--btn-danger-fg-l));
-
-  --btn-danger-bg-h: 356;
-  --btn-danger-bg-s: 94%;
-  --btn-danger-bg-l: 87%;
-  --btn-danger-bg: hsl(var(--btn-danger-bg-h), var(--btn-danger-bg-s), var(--btn-danger-bg-l));
-
-  --btn-danger-border-color-h: 357;
-  --btn-danger-border-color-s: 89%;
-  --btn-danger-border-color-l: 40%;
-  --btn-danger-border-color: hsl(var(--btn-danger-border-color-h), var(--btn-danger-border-color-s), var(--btn-danger-border-color-l));
 
   /* hover, focus colors */
   --color-eosc-pacific-cyan-darker-h: var(--color-eosc-pacific-cyan-h);
@@ -234,13 +170,13 @@
   border-width: 1px;
 }
 
-/* .one-button:focus-visible::before {
+.one-button:focus-visible::before {
   content: '';
   position: absolute;
   inset: -6px;
   border: 2px solid #001e22;
   pointer-events: none;
-} */
+}
 
 .one-button.btn-danger, .btn.one-button, .one-button.btn-primary {
   &:focus {
@@ -248,47 +184,17 @@
   }
 }
 
-.one-button:focus-visible {
-  outline: 2px solid red !important;
-  outline-offset: 4px;
-  z-index: 10000;
-  position: relative;
-}
-
 .one-button.btn-primary:hover {
   background-color: var(--color-eosc-pacific-cyan-darker);
   border-color: var(--color-eosc-pacific-cyan-darker);
 }
 
-.one-button.btn-secondary:hover {
-  background-color: var(--color-eosc-burgundy);
-  border-color: var(--color-eosc-burgundy);
-}
-
-.one-button.btn-danger:hover {
-  background-color: var(--color-eosc-coral-darker);
-  border-color: var(--color-eosc-pacific-cyan-darker);
-}
-
-.one-button.btn-danger:focus {
-  background-color: var(--color-eosc-coral-darker);
-}
-
-.one-button.btn-warning:hover {
-  background-color: var(--color-eosc-yellow-darker);
-  border-color: var(--color-eosc-pacific-cyan-darker);
-}
-
-.one-button.btn-warning:focus {
-  background-color: var(--color-eosc-yellow-darker);
-}
-
-.one-button.btn-default:hover {
+.one-button.btn-default:not(.btn-danger):hover {
   background-color: var(--color-eosc-light-blue);
   border-color: var(--color-eosc-pacific-cyan-darker);
 }
 
-.one-button.btn-default:focus {
+.one-button.btn-default:not(.btn-danger):focus {
   background-color: var(--color-eosc-light-blue);
 }
 
@@ -302,12 +208,12 @@
 }
 
 .one-button.btn-info:hover {
-  background-color: var(--color-eosc-grey-darker);
+  background-color: var(--color-eosc-light-blue);
   border-color: var(--color-eosc-pacific-cyan-darker);
 }
 
 .one-button.btn-info:focus {
-  background-color: var(--color-eosc-grey-darker);
+  background-color: var(--color-eosc-light-blue);
 }
 
 .one-button[disabled], .one-button[disabled]:hover, .one-button[disabled]:focus-visible {
@@ -315,4 +221,22 @@
   border-color: var(--color-eosc-grey-darker);
   color: #5a6168;
   opacity: 1;
+}
+
+.btn-group .btn.btn-default.active {
+  background-color: var(--btn-primary-bg);
+  border-color: var(--btn-primary-border-color);
+  color: var(--btn-primary-fg);
+}
+
+.btn-group .btn.btn-default.active:hover {
+  background-color: var(--color-eosc-pacific-cyan-darker);
+}
+
+.btn-group .btn.btn-default:hover {
+  background-color: var(--color-eosc-light-blue);
+}
+
+.btn-group .btn.btn-default:focus {
+  background-color: var(--color-eosc-light-blue);
 }
