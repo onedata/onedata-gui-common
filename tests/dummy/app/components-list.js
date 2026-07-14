@@ -1,4 +1,5 @@
 export default [
+  'readme',
   'animations',
   'atm-workflow/chart-dashboard-editor',
   'atm-workflow/data-spec-editor',
