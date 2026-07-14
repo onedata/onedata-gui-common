@@ -120,4 +120,5 @@ $color-provider-mixed: $color-one-yellow;
   --sidebar-primary-color: hsl(var(--sidebar-primary-color-h), var(--sidebar-primary-color-s), var(--sidebar-primary-color-l));
   --sidebar-upload-color: hsl(var(--sidebar-upload-color-h), var(--sidebar-upload-color-s), var(--sidebar-upload-color-l));
   --sidebar-secondary-color: hsl(var(--sidebar-secondary-color-h), var(--sidebar-secondary-color-s), var(--sidebar-secondary-color-l));
+  --sidebar-secondary-text-color: #{$color-one-white};
 }
