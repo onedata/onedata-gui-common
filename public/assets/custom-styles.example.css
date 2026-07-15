@@ -204,7 +204,7 @@
   border-color: var(--color-eosc-pacific-cyan-darker);
 }
 
-.one-button.btn-default:not(.btn-danger):hover {
+.one-button.btn-default:not(.btn-danger):not([disabled]):hover {
   background-color: var(--color-eosc-light-blue);
   border-color: var(--color-eosc-pacific-cyan-darker);
 }
@@ -244,14 +244,15 @@
   color: var(--btn-primary-fg);
 }
 
+.btn-group .btn.btn-default.active:focus {
+  background-color: var(--btn-primary-bg);
+}
+
 .btn-group .btn.btn-default.active:hover {
   background-color: var(--color-eosc-pacific-cyan-darker);
 }
 
-.btn-group .btn.btn-default:hover {
-  background-color: var(--color-eosc-light-blue);
-}
-
+.btn-group .btn.btn-default:hover,
 .btn-group .btn.btn-default:focus {
   background-color: var(--color-eosc-light-blue);
 }
