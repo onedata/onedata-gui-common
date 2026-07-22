@@ -33,4 +33,35 @@ describe('Integration | Component | one-form-field-static', function () {
 
     expect(find('.form-control-static')).to.have.class('field-one');
   });
+
+  it('renders rightText with spacing by default', async function () {
+    this.set('fieldWithSpacing', {
+      name: 'one',
+      type: 'static',
+      rightText: '.example.com',
+    });
+    this.set('value', 'provider');
+
+    await render(hbs `
+      <OneFormFieldStatic @field={{fieldWithSpacing}} @value={{value}} />
+    `);
+
+    expect(find('.field-one').textContent).to.contain('provider .example.com');
+  });
+
+  it('renders rightText with spacing when noRightTextSpacing=true', async function () {
+    this.set('fieldWithoutSpacing', {
+      name: 'two',
+      type: 'static',
+      rightText: '.example.com',
+      noRightTextSpacing: true,
+    });
+    this.set('value', 'provider');
+
+    await render(hbs `
+      <OneFormFieldStatic @field={{fieldWithoutSpacing}} @value={{value}} />
+    `);
+
+    expect(find('.field-two').textContent).to.contain('provider.example.com');
+  });
 });

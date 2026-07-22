@@ -39,6 +39,8 @@ const {
  *   it renders a clipboard line to copy value
  * @property {string} [rightText=undefined] text that will be shown on
  *     the right side of the input
+ * @property {boolean} [noRightTextSpacing=undefined] if true and field is static,
+ *    there will be no spacing between value and `rightText`
  * @property {string} [lockHint=undefined] text that will be shown in tooltip
  *     after hovering locked icon (works only on disabled elements)
  * @property {number|object} [lt=undefined] 'lower than' bounding for number
