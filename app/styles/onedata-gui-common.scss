@@ -97,17 +97,17 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
   --one-pill-button-default-border-color-h: var(--btn-default-border-color-h);
   --one-pill-button-default-border-color-s: var(--btn-default-border-color-s);
   --one-pill-button-default-border-color-l: var(--btn-default-border-color-l);
-  --one-pill-button-default-border-color: var(--btn-default-border-color);
+  --one-pill-button-default-border-color: hsl(var(--one-pill-button-default-border-color-h), var(--one-pill-button-default-border-color-s), var(--one-pill-button-default-border-color-l));
 
   --one-pill-button-default-bg-h: var(--btn-default-bg-h);
   --one-pill-button-default-bg-s: var(--btn-default-bg-s);
   --one-pill-button-default-bg-l: var(--btn-default-bg-l);
-  --one-pill-button-default-bg: var(--btn-default-bg);
+  --one-pill-button-default-bg: hsl(var(--one-pill-button-default-bg-h), var(--one-pill-button-default-bg-s), var(--one-pill-button-default-bg-l));
 
   --one-pill-button-default-fg-h: var(--btn-default-color-h);
   --one-pill-button-default-fg-s: var(--btn-default-color-s);
   --one-pill-button-default-fg-l: var(--btn-default-color-l);
-  --one-pill-button-default-fg: var(--btn-default-fg);
+  --one-pill-button-default-fg: hsl(var(--one-pill-button-default-fg-h), var(--one-pill-button-default-fg-s), var(--one-pill-button-default-fg-l));
 }
 
 @import 'onedata-gui-common/animate';
