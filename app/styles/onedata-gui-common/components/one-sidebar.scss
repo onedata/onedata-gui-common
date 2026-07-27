@@ -74,7 +74,7 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
     }
   }
 
-  .btn-default, .btn-group .btn.btn-default.active {
+  .btn.btn-default, .btn-group .btn.btn-default.active {
     background-color: var(--sidebar-secondary-color);
     border-color: var(--sidebar-secondary-color);
     color: var(--sidebar-secondary-text-color);
