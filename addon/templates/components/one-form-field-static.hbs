@@ -22,8 +22,8 @@
           @size="sm"
         />
       {{else}}
-        {{one-form-field-formatter value field.format}}
-        {{#if field.rightText}}<span class="field-suffix">{{field.rightText}}</span>{{/if}}
+        {{!-- keep single line to control spacing between value and right text --}}
+        {{one-form-field-formatter value field.format}}{{#unless field.noRightTextSpacing}} {{/unless}}{{#if field.rightText}}<span class="field-suffix">{{field.rightText}}</span>{{/if}}
       {{/if}}
     {{/if}}
   </span>
