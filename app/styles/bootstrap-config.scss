@@ -158,9 +158,6 @@ label {
     @include button-variant($btn-primary-color, btn-primary-bg, btn-primary-border-color);
     @include button-box-shadow();
   }
-  &.btn-success {
-    @include button-variant($btn-success-color, btn-success-bg, btn-success-border-color);
-  }
   &.btn-info {
     @include button-variant($btn-info-color, btn-info-bg, btn-info-border-color);
     @include button-box-shadow();

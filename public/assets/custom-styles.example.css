@@ -195,18 +195,12 @@
   pointer-events: none;
 }
 
-.btn.btn-danger, .btn, .btn.btn-primary {
-  &:focus {
-    box-shadow: none;
-  }
+/* Override more specific focus styles defined for primary and danger buttons. */
+.btn:focus, .btn.btn-primary:focus, .btn.btn-danger:focus {
+  box-shadow: none;
 }
 
 /* Override style - by default button color changes on hover */
-.btn.btn-primary:hover {
-  background-color: var(--color-eosc-pacific-cyan-darker);
-  border-color: var(--color-eosc-pacific-cyan-darker);
-}
-
 .btn.btn-default:hover {
   background-color: var(--color-eosc-light-blue);
   border-color: var(--color-eosc-pacific-cyan-darker);
@@ -216,9 +210,15 @@
   background-color: var(--color-eosc-light-blue);
 }
 
+.btn.btn-primary:hover {
+  background-color: var(--color-eosc-pacific-cyan-darker);
+  border-color: var(--color-eosc-pacific-cyan-darker);
+}
+
 .btn.btn-danger:hover, .btn.btn-danger:focus {
-  background-color: hsl(var(--btn-danger-bg-h), var(--btn-danger-bg-s), calc(var(--btn-danger-bg-l) - 10%));
-  border-color: hsl(var(--btn-danger-bg-h), var(--btn-danger-bg-s), calc(var(--btn-danger-bg-l) - 10%));
+  --btn-danger-bg-darker: hsl(var(--btn-danger-bg-h), var(--btn-danger-bg-s), calc(var(--btn-danger-bg-l) - 10%));
+  background-color: var(--btn-danger-bg-darker);
+  border-color: var(--btn-danger-bg-darker);
 }
 
 .btn.btn-info:hover {
@@ -230,13 +230,13 @@
   background-color: var(--color-eosc-light-blue);
 }
 
-.btn.btn-default, .btn.btn-primary, .btn.btn-info, .btn.btn-warning, .btn.btn-danger {
-  &[disabled], &[disabled]:hover, &[disabled]:focus-visible {
-    background-color: var(--color-eosc-grey-darker);
-    border-color: var(--color-eosc-grey-darker);
-    color: #5a6168;
-    opacity: 1;
-  }
+.btn:is(.btn-default, .btn-primary, .btn-info, .btn-warning, .btn-danger)[disabled],
+.btn:is(.btn-default, .btn-primary, .btn-info, .btn-warning, .btn-danger)[disabled]:hover,
+.btn:is(.btn-default, .btn-primary, .btn-info, .btn-warning, .btn-danger)[disabled]:focus-visible {
+  background-color: var(--color-eosc-grey-darker);
+  border-color: var(--color-eosc-grey-darker);
+  color: #5a6168;
+  opacity: 1;
 }
 
 .btn-group .btn.btn-default.active {
