@@ -182,6 +182,7 @@ $btn-success-color:              var(--btn-success-fg, #fff);
 $btn-success-bg:                 var(--btn-success-bg, #{$brand-success});
 $btn-success-border:             var(--btn-success-border-color, #{$btn-success-bg});
 
+// TODO: VFS-13750 Remove btn-info class
 $btn-info-color:                 var(--btn-info-fg, #{$color-one-white});
 $btn-info-bg:                    var(--btn-info-bg, #{$color-one-info});
 $btn-info-border:                var(--btn-info-border-color, #{$color-one-info});
