@@ -96,6 +96,17 @@ export default Component.extend(I18n, {
     return `clipboard-btn-${this.get('type')}`;
   }),
 
+  clipboardSourceSelector: computed(
+    'type',
+    'rawValue',
+    function clipboardSourceSelector() {
+      if (this.rawValue) {
+        return '.hidden-clipboard-source';
+      }
+      return this.type === 'text' ? '.clipboard-input .truncated-string' : '.clipboard-input';
+    }
+  ),
+
   actions: {
     notify() {
       const {

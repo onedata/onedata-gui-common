@@ -44,7 +44,7 @@
 <OneCopyButton
   class={{concat-classes "clipboard-btn" clipboardBtnClass}}
   @parentElementId={{elementId}}
-  @localTarget={{if rawValue ".hidden-clipboard-source" ".clipboard-input"}}
+  @localTarget={{this.clipboardSourceSelector}}
   @notify={{action "notify"}}
 >
   <div class="copy-btn-background"></div>

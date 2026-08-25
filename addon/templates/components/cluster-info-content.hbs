@@ -8,7 +8,12 @@
     <tr class="row-with-text">
       <td class="property-name">{{tt this "name"}}</td>
       <td class="property-value">
-        <OneClipboardLine @size="sm" @value={{record.name}} @type="text" />
+        <OneClipboardLine
+          @size="sm"
+          @value={{record.name}}
+          @rawValue={{record.name}}
+          @type="text"
+        />
       </td>
     </tr>
     {{#if showDetails}}
@@ -21,14 +26,24 @@
       <tr class="row-with-text">
         <td class="property-name">{{tt this "domain"}}</td>
         <td class="property-value">
-          <OneClipboardLine @size="sm" @value={{record.domain}} @type="text" />
+          <OneClipboardLine
+            @size="sm"
+            @value={{record.domain}}
+            @rawValue={{record.domain}}
+            @type="text"
+          />
         </td>
       </tr>
     {{/if}}
     <tr class="row-with-text">
       <td class="property-name">{{tt this "id"}}</td>
       <td class="property-value id">
-        <OneClipboardLine @size="sm" @value={{record.entityId}} @type="text" />
+        <OneClipboardLine
+          @size="sm"
+          @value={{record.entityId}}
+          @rawValue={{record.entityId}}
+          @type="text"
+        />
       </td>
     </tr>
   </tbody>

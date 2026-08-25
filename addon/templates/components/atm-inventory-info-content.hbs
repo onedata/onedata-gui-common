@@ -8,13 +8,23 @@
     <tr class="row-with-text">
       <td class="property-name">{{tt this "name"}}</td>
       <td class="property-value">
-        <OneClipboardLine @size="sm" @value={{record.name}} @type="text" />
+        <OneClipboardLine
+          @size="sm"
+          @value={{record.name}}
+          @rawValue={{record.name}}
+          @type="text"
+        />
       </td>
     </tr>
     <tr class="row-with-text">
       <td class="property-name">{{tt this "id"}}</td>
       <td class="property-value">
-        <OneClipboardLine @size="sm" @value={{record.entityId}} @type="text" />
+        <OneClipboardLine
+          @size="sm"
+          @value={{record.entityId}}
+          @rawValue={{record.entityId}}
+          @type="text"
+        />
       </td>
     </tr>
   </tbody>
