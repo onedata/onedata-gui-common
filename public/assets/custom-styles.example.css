@@ -12,7 +12,7 @@
   --color-eosc-white-s: 0%;
   --color-eosc-white-l: 100%;
 
-  --color-eosc-pacific-cyan-darker-h: var(--color-eosc-pacific-cyan-lighter-h);
+  --color-eosc-pacific-cyan-darker-h: var(--color-eosc-pacific-cyan-h);
   --color-eosc-pacific-cyan-darker-s: 97%;
   --color-eosc-pacific-cyan-darker-l: 14%;
   --color-eosc-pacific-cyan-darker: hsl(var(--color-eosc-pacific-cyan-darker-h), var(--color-eosc-pacific-cyan-darker-s), var(--color-eosc-pacific-cyan-darker-l));
@@ -52,9 +52,13 @@
   --sidebar-primary-color-s: var(--color-eosc-pacific-cyan-lighter-s);
   --sidebar-primary-color-l: var(--color-eosc-pacific-cyan-lighter-l);
 
-  --sidebar-secondary-color-h: var(--color-eosc-pacific-cyan-h);
-  --sidebar-secondary-color-s: var(--color-eosc-pacific-cyan-s);
-  --sidebar-secondary-color-l: var(--color-eosc-pacific-cyan-l);
+  --sidebar-secondary-color-h: var(--color-eosc-pacific-cyan-lighter-h);
+  --sidebar-secondary-color-s: var(--color-eosc-pacific-cyan-lighter-s);
+  --sidebar-secondary-color-l: var(--color-eosc-pacific-cyan-lighter-l);
+
+  --sidebar-button-color-h: var(--color-eosc-pacific-cyan-h);
+  --sidebar-button-color-s: var(--color-eosc-pacific-cyan-s);
+  --sidebar-button-color-l: var(--color-eosc-pacific-cyan-l);
 
   --sidebar-upload-color-h: var(--color-eosc-pacific-cyan-lighter-h);
   --sidebar-upload-color-s: 65%;
@@ -119,17 +123,17 @@
   --one-pill-button-default-border-color-h: var(--btn-primary-border-color-h);
   --one-pill-button-default-border-color-s: var(--btn-primary-border-color-s);
   --one-pill-button-default-border-color-l: var(--btn-primary-border-color-l);
-  --one-pill-button-default-border-color: var(--btn-primary-border-color);
+  --one-pill-button-default-border-color: hsl(var(--one-pill-button-default-border-color-h), var(--one-pill-button-default-border-color-s), var(--one-pill-button-default-border-color-l));
 
   --one-pill-button-default-bg-h: var(--btn-primary-bg-h);
   --one-pill-button-default-bg-s: var(--btn-primary-bg-s);
   --one-pill-button-default-bg-l: var(--btn-primary-bg-l);
-  --one-pill-button-default-bg: var(--btn-primary-bg);
+  --one-pill-button-default-bg: hsl(var(--one-pill-button-default-bg-h), var(--one-pill-button-default-bg-s), var(--one-pill-button-default-bg-l));
 
   --one-pill-button-default-fg-h: var(--btn-primary-color-h);
   --one-pill-button-default-fg-s: var(--btn-primary-color-s);
   --one-pill-button-default-fg-l: var(--btn-primary-color-l);
-  --one-pill-button-default-fg: var(--btn-primary-fg);
+  --one-pill-button-default-fg: hsl(var(--one-pill-button-default-fg-h), var(--one-pill-button-default-fg-s), var(--one-pill-button-default-fg-l));
 }
 
 /* Styles for logo */
@@ -200,13 +204,18 @@
 }
 
 /* Override more specific focus styles defined for primary and danger buttons. */
-.btn:focus, .btn.btn-primary:focus, .btn.btn-danger:focus, .btn-tooltip-container:active {
+.btn:focus,
+.btn.btn-primary:focus,
+.btn.btn-danger:focus,
+.btn.btn-warning:focus,
+.btn.btn-default:focus,
+.btn.btn-info:focus,
+.btn-tooltip-container:active {
   box-shadow: none;
 }
 
 /* Override style - by default button color changes on focus and hover */
-.btn.btn-default:focus,
-.btn.btn-default:active:focus {
+.btn.btn-default:is(:focus, :active:focus) {
   background-color: hsl(var(--color-eosc-white-h), var(--color-eosc-white-s), calc(var(--color-eosc-white-l)));
 }
 .btn.btn-default:hover {
@@ -219,7 +228,7 @@
   border-color: var(--color-eosc-pacific-cyan-darker);
 }
 
-.btn.btn-danger:hover, .btn.btn-danger:focus, .btn.btn-danger:active:focus {
+.btn.btn-danger:is(:hover, :focus, :active:focus) {
   --btn-danger-bg-darker: hsl(var(--btn-danger-bg-h), var(--btn-danger-bg-s), calc(var(--btn-danger-bg-l) - 10%));
   background-color: var(--btn-danger-bg-darker);
   border-color: var(--btn-danger-bg-darker);
@@ -234,9 +243,11 @@
   background-color: var(--color-eosc-light-blue);
 }
 
-.btn:is(.btn-default, .btn-primary, .btn-info, .btn-warning, .btn-danger)[disabled],
-.btn:is(.btn-default, .btn-primary, .btn-info, .btn-warning, .btn-danger)[disabled]:hover,
-.btn:is(.btn-default, .btn-primary, .btn-info, .btn-warning, .btn-danger)[disabled]:focus-visible {
+.btn:is(.btn-default, .btn-primary, .btn-info, .btn-warning, .btn-danger):is(
+  [disabled],
+  [disabled]:hover,
+  [disabled]:focus-visible
+) {
   background-color: var(--color-eosc-grey-darker);
   border-color: var(--color-eosc-grey-darker);
   color: #5a6168;
@@ -249,16 +260,19 @@
   color: var(--btn-primary-fg);
 }
 
+.btn-group .btn.btn-default:is(:hover, :focus, :not(.active):hover) {
+  background-color: var(--color-eosc-light-blue);
+}
+
+.btn-group .btn.btn-default:not(.active):hover {
+  color: #555555;
+  border-color: #d6d6d6;
+}
+
 .btn-group .btn.btn-default.active:focus {
   background-color: var(--btn-primary-bg);
 }
 
 .btn-group .btn.btn-default.active:hover {
   background-color: var(--color-eosc-pacific-cyan-darker);
-}
-
-.btn-group .btn.btn-default:hover,
-.btn-group .btn.btn-default:focus,
-.btn-group .btn.btn-default:not(.active):hover {
-  background-color: var(--color-eosc-light-blue);
 }
