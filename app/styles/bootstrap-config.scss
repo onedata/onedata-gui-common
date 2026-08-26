@@ -175,9 +175,6 @@ label {
   &.btn-outline-primary {
     @include button-outline-variant($text-color, btn-primary-border-color);
   }
-  &.btn-outline-success {
-    @include button-outline-variant($text-color, btn-success-border-color);
-  }
   &.btn-outline-info {
     @include button-outline-variant($text-color, btn-info-border-color);
   }

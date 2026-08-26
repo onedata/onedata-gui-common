@@ -178,9 +178,9 @@ $btn-primary-bg:                 var(--btn-primary-bg, #{$brand-primary});
 $btn-primary-border:             var(--btn-primary-border-color, #{$brand-primary});
 
 // should not be used, use primary color instead
-$btn-success-color:              var(--btn-success-fg, #fff);
-$btn-success-bg:                 var(--btn-success-bg, #{$brand-success});
-$btn-success-border:             var(--btn-success-border-color, #{$btn-success-bg});
+$btn-success-color:              #fff !default;
+$btn-success-bg:                 $brand-success !default;
+$btn-success-border:             $btn-success-bg;
 
 // TODO: VFS-13750 Remove btn-info class
 $btn-info-color:                 var(--btn-info-fg, #{$color-one-white});
@@ -979,22 +979,6 @@ $hr-border:                   $gray-lighter !default;
   --btn-primary-border-color-s: var(--btn-primary-bg-s);
   --btn-primary-border-color-l: var(--btn-primary-bg-l);
   --btn-primary-border-color: hsl(var(--btn-primary-border-color-h), var(--btn-primary-border-color-s), var(--btn-primary-border-color-l));
-
-  // success color
-  --btn-success-fg-h: #{$color-one-white-h};
-  --btn-success-fg-s: #{$color-one-white-s};
-  --btn-success-fg-l: #{$color-one-white-l};
-  --btn-success-fg: hsl(var(--btn-success-fg-h), var(--btn-success-fg-s), var(--btn-success-fg-l));
-
-  --btn-success-bg-h: #{$color-one-mint-h};
-  --btn-success-bg-s: #{$color-one-mint-s};
-  --btn-success-bg-l: #{$color-one-mint-l};
-  --btn-success-bg: hsl(var(--btn-success-bg-h), var(--btn-success-bg-s), var(--btn-success-bg-l));
-
-  --btn-success-border-color-h: var(--btn-success-bg-h);
-  --btn-success-border-color-s: var(--btn-success-bg-s);
-  --btn-success-border-color-l: var(--btn-success-bg-l);
-  --btn-success-border-color: hsl(var(--btn-success-border-color-h), var(--btn-success-border-color-s), var(--btn-success-border-color-l));
 
   // info color
   --btn-info-fg-h: #{$color-one-white-h};
