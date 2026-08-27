@@ -38,13 +38,13 @@
     {{/if}}
   </span>
 {{/if}}
-{{#if rawValue}}
-  <input class="hidden-clipboard-source" value={{rawValue}} readonly>
+{{#if isHiddenInputRendered}}
+  <input class="hidden-clipboard-source" value={{if rawValue rawValue value}} readonly>
 {{/if}}
 <OneCopyButton
   class={{concat-classes "clipboard-btn" clipboardBtnClass}}
   @parentElementId={{elementId}}
-  @localTarget={{this.clipboardSourceSelector}}
+  @localTarget={{if isHiddenInputRendered ".hidden-clipboard-source" ".clipboard-input"}}
   @notify={{action "notify"}}
 >
   <div class="copy-btn-background"></div>
