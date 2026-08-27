@@ -78,14 +78,6 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
     background-color: var(--sidebar-button-color);
     border-color: var(--sidebar-button-color);
     color: var(--sidebar-secondary-text-color);
-    &:focus,
-    &.focus,
-    &:hover,
-    &:active {
-      background-color: darken-custom(sidebar-button-color, 7%);
-      border-color: darken-custom(sidebar-button-color, 7%);
-      color: var(--sidebar-secondary-text-color);
-    }
   }
 
   font-size: 13px;

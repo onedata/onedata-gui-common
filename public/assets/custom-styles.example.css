@@ -264,11 +264,6 @@
   background-color: var(--color-eosc-light-blue);
 }
 
-.btn-group .btn.btn-default:not(.active):hover {
-  color: #555555;
-  border-color: #d6d6d6;
-}
-
 .btn-group .btn.btn-default.active:focus {
   background-color: var(--btn-primary-bg);
 }
