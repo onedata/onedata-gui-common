@@ -169,9 +169,9 @@ $table-border-color:            #ddd !default;
 
 $btn-font-weight:                normal !default;
 
-$btn-default-color:              var(--btn-default-fg, #{$color-one-white});
-$btn-default-bg:                 var(--btn-default-bg, #{$color-one-default});
-$btn-default-border:             var(--btn-default-border-color, #{$color-one-default});
+$btn-default-color:              var(--btn-default-fg);
+$btn-default-bg:                 btn-default-bg;
+$btn-default-border:             btn-default-border-color;
 
 $btn-primary-color:              var(--btn-primary-fg, #{$color-one-white});
 $btn-primary-bg:                 var(--btn-primary-bg, #{$brand-primary});

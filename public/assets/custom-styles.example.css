@@ -56,10 +56,6 @@
   --sidebar-secondary-color-s: var(--color-eosc-pacific-cyan-lighter-s);
   --sidebar-secondary-color-l: var(--color-eosc-pacific-cyan-lighter-l);
 
-  --sidebar-button-color-h: var(--color-eosc-pacific-cyan-h);
-  --sidebar-button-color-s: var(--color-eosc-pacific-cyan-s);
-  --sidebar-button-color-l: var(--color-eosc-pacific-cyan-l);
-
   --sidebar-upload-color-h: var(--color-eosc-pacific-cyan-lighter-h);
   --sidebar-upload-color-s: 65%;
   --sidebar-upload-color-l: 55%;
@@ -203,20 +199,9 @@
   pointer-events: none;
 }
 
-/* Override more specific focus styles defined for primary and danger buttons. */
-.btn:focus,
-.btn.btn-primary:focus,
-.btn.btn-danger:focus,
-.btn.btn-warning:focus,
-.btn.btn-default:focus,
-.btn.btn-info:focus,
-.btn-tooltip-container:active {
-  box-shadow: none;
-}
-
 /* Override style - by default button color changes on focus and hover */
 .btn.btn-default:is(:focus, :active:focus) {
-  background-color: hsl(var(--color-eosc-white-h), var(--color-eosc-white-s), calc(var(--color-eosc-white-l)));
+  background-color: var(--color-eosc-light-blue);
 }
 .btn.btn-default:hover {
   background-color: var(--color-eosc-light-blue);
@@ -264,10 +249,8 @@
   background-color: var(--color-eosc-light-blue);
 }
 
-.btn-group .btn.btn-default.active:focus {
-  background-color: var(--btn-primary-bg);
-}
-
+.btn-group .btn.btn-default.active:focus,
 .btn-group .btn.btn-default.active:hover {
   background-color: var(--color-eosc-pacific-cyan-darker);
+  border-color: var(--color-eosc-pacific-cyan-darker);
 }
