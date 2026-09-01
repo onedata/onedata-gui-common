@@ -108,10 +108,6 @@ $color-provider-mixed: $color-one-yellow;
   --sidebar-secondary-color-s: #{$color-dark-blue-s};
   --sidebar-secondary-color-l: #{$color-dark-blue-l};
 
-  --sidebar-button-color-h: #{$color-dark-blue-h};
-  --sidebar-button-color-s: #{$color-dark-blue-s};
-  --sidebar-button-color-l: #{$color-dark-blue-l};
-
   --sidebar-upload-color-h: #{$color-one-mint-h};
   --sidebar-upload-color-s: #{$color-one-mint-s};
   --sidebar-upload-color-l: #{$color-one-mint-l};
@@ -130,5 +126,4 @@ $color-provider-mixed: $color-one-yellow;
   --sidebar-upload-color: hsl(var(--sidebar-upload-color-h), var(--sidebar-upload-color-s), var(--sidebar-upload-color-l));
   --sidebar-secondary-color: hsl(var(--sidebar-secondary-color-h), var(--sidebar-secondary-color-s), var(--sidebar-secondary-color-l));
   --sidebar-secondary-text-color: #{$color-one-white};
-  --sidebar-button-color: hsl(var(--sidebar-button-color-h), var(--sidebar-button-color-s), var(--sidebar-button-color-l));
 }
