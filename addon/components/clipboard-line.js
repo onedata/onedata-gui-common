@@ -96,6 +96,10 @@ export default Component.extend(I18n, {
     return `clipboard-btn-${this.get('type')}`;
   }),
 
+  isHiddenInputRendered: computed('rawValue', function isHiddenInputRendered() {
+    return Boolean(this.rawValue || this.type === 'html' || this.type === 'text');
+  }),
+
   actions: {
     notify() {
       const {
