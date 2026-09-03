@@ -9,19 +9,23 @@ $var-color-inactive-amount: 15%;
   @return lighten($color, $var-color-inactive-amount);
 }
 
-@function inactive-color-custom($color-name) {
-  @return lighten-custom($color-name, var(--var-color-inactive-amount-custom));
+@function inactive-color-custom($color-var-name) {
+  @return lighten-custom($color-var-name, var(--var-color-inactive-amount-custom));
 }
 
-@function lighten-custom($color-name, $lightness) {
-  @return hsl(var(--#{$color-name}-h), var(--#{$color-name}-s), calc(var(--#{$color-name}-l) + $lightness));
+@function lighten-custom($color-var-name, $lightness) {
+  @return hsl(var(--#{$color-var-name}-h), var(--#{$color-var-name}-s), calc(var(--#{$color-var-name}-l) + $lightness));
 }
 
-@function darken-custom($color-name, $darken) {
-  @return hsl(var(--#{$color-name}-h), var(--#{$color-name}-s), calc(var(--#{$color-name}-l) - $darken));
+@function darken-custom($color-var-name, $darken) {
+  @return hsl(var(--#{$color-var-name}-h), var(--#{$color-var-name}-s), calc(var(--#{$color-var-name}-l) - $darken));
 }
 
-$color-one-white: #fff;
+$color-one-white-h: 0;
+$color-one-white-s: 0%;
+$color-one-white-l: 100%;
+$color-one-white: hsl($color-one-white-h, $color-one-white-s, $color-one-white-l);
+
 $color-one-semiwhite: #EFEFEF;
 $color-one-semiblack: #363636;
 $color-one-dark-gray: #555555;
@@ -36,14 +40,28 @@ $color-one-mint-s: 59%;
 $color-one-mint-l: 56%;
 $color-one-mint: hsl($color-one-mint-h, $color-one-mint-s, $color-one-mint-l);
 
+$color-dark-blue-h: 219;
+$color-dark-blue-s: 30%;
+$color-dark-blue-l: 41%;
+$color-dark-blue: hsl($color-dark-blue-h, $color-dark-blue-s, $color-dark-blue-l);
+
 $color-one-light-gray: #BEBEBE;
-$color-one-blue-gray: #4A6089;
+
+$color-one-blue-gray-h: 219;
+$color-one-blue-gray-s: 30%;
+$color-one-blue-gray-l: 41%;
+$color-one-blue-gray: hsl($color-one-blue-gray-h, $color-one-blue-gray-s, $color-one-blue-gray-l);
+
 $color-one-gray-sand: #E2E1E0;
 $color-one-dark-blue: #555d72;
 $color-one-light-blue: #F2F4FA;
 $color-one-azure: color-one-azure();
 $color-one-yellow: color-one-yellow();
-$color-one-orange: #ffac30;
+
+$color-one-orange-h: 36;
+$color-one-orange-s: 100%;
+$color-one-orange-l: 59%;
+$color-one-orange: hsl($color-one-orange-h, $color-one-orange-s, $color-one-orange-l);
 
 $color-one-default: $color-one-blue-gray;
 $color-one-info: $color-one-blue-gray;
@@ -86,9 +104,9 @@ $color-provider-mixed: $color-one-yellow;
   --sidebar-primary-color-s: #{$color-one-red-s};
   --sidebar-primary-color-l: #{$color-one-red-l};
 
-  --sidebar-secondary-color-h: 219;
-  --sidebar-secondary-color-s: 30%;
-  --sidebar-secondary-color-l: 41%;
+  --sidebar-secondary-color-h: #{$color-dark-blue-h};
+  --sidebar-secondary-color-s: #{$color-dark-blue-s};
+  --sidebar-secondary-color-l: #{$color-dark-blue-l};
 
   --sidebar-upload-color-h: #{$color-one-mint-h};
   --sidebar-upload-color-s: #{$color-one-mint-s};
@@ -107,4 +125,5 @@ $color-provider-mixed: $color-one-yellow;
   --sidebar-primary-color: hsl(var(--sidebar-primary-color-h), var(--sidebar-primary-color-s), var(--sidebar-primary-color-l));
   --sidebar-upload-color: hsl(var(--sidebar-upload-color-h), var(--sidebar-upload-color-s), var(--sidebar-upload-color-l));
   --sidebar-secondary-color: hsl(var(--sidebar-secondary-color-h), var(--sidebar-secondary-color-s), var(--sidebar-secondary-color-l));
+  --sidebar-secondary-text-color: #{$color-one-white};
 }

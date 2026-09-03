@@ -74,18 +74,6 @@ $sidebar-separator-border: 1px solid $color-one-list-item-separator;
     }
   }
 
-  .btn-default, .btn-group .btn.btn-default.active {
-    background-color: var(--sidebar-secondary-color);
-    border-color: var(--sidebar-secondary-color);
-    &:focus,
-    &.focus,
-    &:hover,
-    &:active {
-      background-color: darken-custom(sidebar-secondary-color, 7%);
-      border-color: darken-custom(sidebar-secondary-color, 7%);
-    }
-  }
-
   font-size: 13px;
   @include font-semibold();
   padding-bottom: 20px;

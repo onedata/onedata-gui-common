@@ -1,0 +1,260 @@
+:root {
+  /* Colors */
+  --color-eosc-pacific-cyan-h: 186;
+  --color-eosc-pacific-cyan-s: 56%;
+  --color-eosc-pacific-cyan-l: 33%;
+
+  --color-eosc-pacific-cyan-lighter-h: var(--color-eosc-pacific-cyan-h);
+  --color-eosc-pacific-cyan-lighter-s: 84%;
+  --color-eosc-pacific-cyan-lighter-l: 35%;
+
+  --color-eosc-white-h: 0;
+  --color-eosc-white-s: 0%;
+  --color-eosc-white-l: 100%;
+
+  --color-eosc-pacific-cyan-darker-h: var(--color-eosc-pacific-cyan-h);
+  --color-eosc-pacific-cyan-darker-s: 97%;
+  --color-eosc-pacific-cyan-darker-l: 14%;
+  --color-eosc-pacific-cyan-darker: hsl(var(--color-eosc-pacific-cyan-darker-h), var(--color-eosc-pacific-cyan-darker-s), var(--color-eosc-pacific-cyan-darker-l));
+
+  --color-eosc-grey-darker-h: 210;
+  --color-eosc-grey-darker-s: 5%;
+  --color-eosc-grey-darker-l: 84%;
+  --color-eosc-grey-darker: hsl(var(--color-eosc-grey-darker-h), var(--color-eosc-grey-darker-s), var(--color-eosc-grey-darker-l));
+
+  --color-eosc-yellow-darker-h: 52;
+  --color-eosc-yellow-darker-s: 96%;
+  --color-eosc-yellow-darker-l: 81%;
+  --color-eosc-yellow-darker: hsl(var(--color-eosc-yellow-darker-h), var(--color-eosc-yellow-darker-s), var(--color-eosc-yellow-darker-l));
+
+  --color-eosc-green-darker-h: 132;
+  --color-eosc-green-darker-s: 32%;
+  --color-eosc-green-darker-l: 62%;
+  --color-eosc-green-darker: hsl(var(--color-eosc-green-darker-h), var(--color-eosc-green-darker-s), var(--color-eosc-green-darker-l));
+
+  --color-eosc-light-blue-h: 185;
+  --color-eosc-light-blue-s: 35%;
+  --color-eosc-light-blue-l: 93%;
+  --color-eosc-light-blue: hsl(var(--color-eosc-light-blue-h), var(--color-eosc-light-blue-s), var(--color-eosc-light-blue-l));
+
+  --color-eosc-burgundy-h: 345;
+  --color-eosc-burgundy-s: 72%;
+  --color-eosc-burgundy-l: 33%;
+  --color-eosc-burgundy: hsl(var(--color-eosc-burgundy-h), var(--color-eosc-burgundy-s), var(--color-eosc-burgundy-l));
+
+  --color-eosc-coral-darker-h: 357;
+  --color-eosc-coral-darker-s: 97%;
+  --color-eosc-coral-darker-l: 76%;
+  --color-eosc-coral-darker: hsl(var(--color-eosc-coral-darker-h), var(--color-eosc-coral-darker-s), var(--color-eosc-coral-darker-l));
+
+  /* Sidebar */
+  --sidebar-primary-color-h: var(--color-eosc-pacific-cyan-lighter-h);
+  --sidebar-primary-color-s: var(--color-eosc-pacific-cyan-lighter-s);
+  --sidebar-primary-color-l: var(--color-eosc-pacific-cyan-lighter-l);
+
+  --sidebar-secondary-color-h: var(--color-eosc-pacific-cyan-lighter-h);
+  --sidebar-secondary-color-s: var(--color-eosc-pacific-cyan-lighter-s);
+  --sidebar-secondary-color-l: var(--color-eosc-pacific-cyan-lighter-l);
+
+  --sidebar-upload-color-h: var(--color-eosc-pacific-cyan-lighter-h);
+  --sidebar-upload-color-s: 65%;
+  --sidebar-upload-color-l: 55%;
+
+  /* Logo */
+  --onedata-logo-height: 40px;
+  --onedata-logo-margin-bottom: 24px;
+
+  /* Buttons */
+  /* primary colors */
+  --btn-primary-fg-h: var(--color-eosc-white-h);
+  --btn-primary-fg-s: var(--color-eosc-white-s);
+  --btn-primary-fg-l: var(--color-eosc-white-l);
+  --btn-primary-fg: hsl(var(--btn-primary-fg-h), var(--btn-primary-fg-s), var(--btn-primary-fg-l));
+
+  --btn-primary-bg-h: var(--color-eosc-pacific-cyan-h);
+  --btn-primary-bg-s: var(--color-eosc-pacific-cyan-s);
+  --btn-primary-bg-l: var(--color-eosc-pacific-cyan-l);
+  --btn-primary-bg: hsl(var(--btn-primary-bg-h), var(--btn-primary-bg-s), var(--btn-primary-bg-l));
+
+  --btn-primary-border-color-h: var(--btn-primary-bg-h);
+  --btn-primary-border-color-s: var(--btn-primary-bg-s);
+  --btn-primary-border-color-l: var(--btn-primary-bg-l);
+  --btn-primary-border-color: hsl(var(--btn-primary-border-color-h), var(--btn-primary-border-color-s), var(--btn-primary-border-color-l));
+
+  /* default colors */
+  --btn-default-fg-h: var(--color-eosc-pacific-cyan-h);
+  --btn-default-fg-s: var(--color-eosc-pacific-cyan-s);
+  --btn-default-fg-l: var(--color-eosc-pacific-cyan-l);
+  --btn-default-fg: hsl(var(--btn-default-fg-h), var(--btn-default-fg-s), var(--btn-default-fg-l));
+
+  --btn-default-bg-h: var(--color-eosc-white-h);
+  --btn-default-bg-s: var(--color-eosc-white-s);
+  --btn-default-bg-l: var(--color-eosc-white-l);
+  --btn-default-bg: hsl(var(--btn-default-bg-h), var(--btn-default-bg-s), var(--btn-default-bg-l));
+
+  --btn-default-border-color-h: var(--btn-default-fg-h);
+  --btn-default-border-color-s: var(--btn-default-fg-s);
+  --btn-default-border-color-l: var(--btn-default-fg-l);
+  --btn-default-border-color: hsl(var(--btn-default-border-color-h), var(--btn-default-border-color-s), var(--btn-default-border-color-l));
+
+  /* info colors */
+  --btn-info-fg-h: var(--btn-default-fg-h);
+  --btn-info-fg-s: var(--btn-default-fg-s);
+  --btn-info-fg-l: var(--btn-default-fg-l);
+  --btn-info-fg: hsl(var(--btn-info-fg-h), var(--btn-info-fg-s), var(--btn-info-fg-l));
+
+  --btn-info-bg-h: var(--btn-default-bg-h);
+  --btn-info-bg-s: var(--btn-default-bg-s);
+  --btn-info-bg-l: var(--btn-default-bg-l);
+  --btn-info-bg: hsl(var(--btn-info-bg-h), var(--btn-info-bg-s), var(--btn-info-bg-l));
+
+  --btn-info-border-color-h: var(--btn-info-fg-h);
+  --btn-info-border-color-s: var(--btn-info-fg-s);
+  --btn-info-border-color-l:  var(--btn-info-fg-l);
+  --btn-info-border-color: hsl(var(--btn-info-border-color-h), var(--btn-info-border-color-s), var(--btn-info-border-color-l));
+
+  /* One Pill Button */
+  --one-pill-button-border-width: 1px;
+
+  --one-pill-button-default-border-color-h: var(--btn-primary-border-color-h);
+  --one-pill-button-default-border-color-s: var(--btn-primary-border-color-s);
+  --one-pill-button-default-border-color-l: var(--btn-primary-border-color-l);
+  --one-pill-button-default-border-color: hsl(var(--one-pill-button-default-border-color-h), var(--one-pill-button-default-border-color-s), var(--one-pill-button-default-border-color-l));
+
+  --one-pill-button-default-bg-h: var(--btn-primary-bg-h);
+  --one-pill-button-default-bg-s: var(--btn-primary-bg-s);
+  --one-pill-button-default-bg-l: var(--btn-primary-bg-l);
+  --one-pill-button-default-bg: hsl(var(--one-pill-button-default-bg-h), var(--one-pill-button-default-bg-s), var(--one-pill-button-default-bg-l));
+
+  --one-pill-button-default-fg-h: var(--btn-primary-color-h);
+  --one-pill-button-default-fg-s: var(--btn-primary-color-s);
+  --one-pill-button-default-fg-l: var(--btn-primary-color-l);
+  --one-pill-button-default-fg: hsl(var(--one-pill-button-default-fg-h), var(--one-pill-button-default-fg-s), var(--one-pill-button-default-fg-l));
+}
+
+/* Styles for logo */
+.one-animated-logo {
+  --logo-size: var(--onedata-logo-height);
+}
+
+.onedata-logo,
+.one-animated-logo .logo-container {
+  background-image: url('./assets/eosc-top.png');
+}
+
+.one-animated-logo .left {
+  width: var(--logo-size);
+}
+
+.one-animated-logo .left .shadow {
+  left: var(--logo-size);
+}
+
+.one-animated-logo.opened .left {
+  width: 150px;
+}
+
+.one-animated-logo.opened .right {
+  width: 0;
+}
+
+.onedata-logo .right {
+  width: 0;
+}
+
+.app-layout .side-menu-header .row-onedata-logo .onedata-logo {
+  display: block;
+  height: 50px;
+  width: 300px;
+}
+
+.app-layout .col-main-menu.collapsed .onedata-logo {
+  margin-left: 10px;
+}
+
+.app-layout .col-main-menu .onedata-logo {
+  top: -2px;
+  margin-left: 24px;
+}
+
+.main-menu-column .onedata-logo {
+  display: block;
+}
+
+.main-menu-column .powered-by-container {
+  visibility: visible;
+}
+
+/* Styles for buttons */
+.btn, a.btn {
+  border-radius: 64px;
+  border-width: 1px;
+}
+
+.btn:focus-visible::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: 2px solid #001e22;
+  pointer-events: none;
+}
+
+/* Override style - by default button color changes on focus and hover */
+.btn.btn-default:is(:focus, :active:focus) {
+  background-color: var(--color-eosc-light-blue);
+}
+.btn.btn-default:hover {
+  background-color: var(--color-eosc-light-blue);
+  border-color: var(--color-eosc-pacific-cyan-darker);
+}
+
+.btn.btn-primary:hover {
+  background-color: var(--color-eosc-pacific-cyan-darker);
+  border-color: var(--color-eosc-pacific-cyan-darker);
+}
+
+.btn.btn-danger:is(:hover, :focus, :active:focus) {
+  --btn-danger-bg-darker: hsl(var(--btn-danger-bg-h), var(--btn-danger-bg-s), calc(var(--btn-danger-bg-l) - 10%));
+  background-color: var(--btn-danger-bg-darker);
+  border-color: var(--btn-danger-bg-darker);
+}
+
+.btn.btn-info:hover {
+  background-color: var(--color-eosc-light-blue);
+  border-color: var(--color-eosc-pacific-cyan-darker);
+}
+
+.btn.btn-info:focus {
+  background-color: var(--color-eosc-light-blue);
+}
+
+.btn:is(.btn-default, .btn-primary, .btn-info, .btn-warning, .btn-danger):is(
+  [disabled],
+  [disabled]:hover,
+  [disabled]:focus-visible
+) {
+  background-color: var(--color-eosc-grey-darker);
+  border-color: var(--color-eosc-grey-darker);
+  color: #5a6168;
+  opacity: 1;
+}
+
+.btn-group .btn.btn-default.active {
+  background-color: var(--btn-primary-bg);
+  border-color: var(--btn-primary-border-color);
+  color: var(--btn-primary-fg);
+}
+
+.btn-group .btn.btn-default:is(:hover, :focus, :not(.active):hover) {
+  background-color: var(--color-eosc-light-blue);
+}
+
+.btn-group .btn.btn-default.active:focus,
+.btn-group .btn.btn-default.active:hover {
+  background-color: var(--color-eosc-pacific-cyan-darker);
+  border-color: var(--color-eosc-pacific-cyan-darker);
+}
+
+.btn-tooltip-container:active {
+  box-shadow: none;
+}

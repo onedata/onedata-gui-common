@@ -42,3 +42,6 @@ libpeerconnection.log
 npm-debug.log*
 yarn-error.log
 testem.log
+
+# custom styles
+custom-styles.css

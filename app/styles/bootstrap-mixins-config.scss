@@ -1,37 +1,38 @@
 // Override original Bootstrap mixins
 
 $btn-active-boxshadow-size: 0 0 7px;
-@mixin button-variant($color, $background, $border) {
+
+@mixin button-variant($color, $background-var-name, $border-var-name) {
   color: $color;
-  background-color: $background;
-  border-color: $border;
+  background-color: var(--#{$background-var-name});
+  border-color: var(--#{$border-var-name});
 
   &:focus,
   &.focus {
     color: $color;
-    background-color: darken($background, 7%);
-        border-color: darken($border, 7%);
+    background-color: darken-custom($background-var-name, 7%);
+    border-color: darken-custom($border-var-name, 7%);
     @include box-shadow($btn-active-boxshadow-size lighten($color-one-semiblack, 10%));
   }
   &:hover {
     color: $color;
-    background-color: darken($background, 10%);
-        border-color: darken($border, 10%);
+    background-color: darken-custom($background-var-name, 10%);
+    border-color: darken-custom($border-var-name, 10%);
   }
   &:active,
   &.active,
   .open > &.dropdown-toggle {
     color: $color;
-    background-color: darken($background, 10%);
-        border-color: darken($border, 10%);
+    background-color: darken-custom($background-var-name, 10%);
+    border-color: darken-custom($border-var-name, 10%);
     @include box-shadow($btn-active-boxshadow-size lighten($color-one-semiblack, 10%));
 
     &:hover,
     &:focus,
     &.focus {
       color: $color;
-      background-color: darken($background, 7%);
-          border-color: darken($border, 7%);
+      background-color: darken-custom($background-var-name, 7%);
+      border-color: darken-custom($border-var-name, 7%);
     }
   }
 
@@ -51,36 +52,36 @@ $btn-active-boxshadow-size: 0 0 7px;
   }
 }
 
-@mixin button-outline-variant($color, $border) {
+@mixin button-outline-variant($color, $border-var-name) {
   color: $color;
   background-color: inherit;
-  border-color: $border;
+  border-color: var(--#{$border-var-name});
 
   &:focus,
   &.focus {
-    background-color: lighten($border, 40%);
-        border-color: darken($border, 7%);
+    background-color: lighten-custom($border-var-name, 40%);
+    border-color: darken-custom($border-var-name, 7%);
     @include box-shadow($btn-active-boxshadow-size lighten($color-one-semiblack, 10%));
   }
   &:hover {
     color: $color;
-    background-color: lighten($border, 50%);
-        border-color: darken($border, 10%);
+    background-color: lighten-custom($border-var-name, 50%);
+    border-color: darken-custom($border-var-name, 10%);
   }
   &:active,
   &.active,
   .open > &.dropdown-toggle {
     color: $color;
-    background-color: lighten($border, 50%);
-        border-color: darken($border, 10%);
+    background-color: lighten-custom($border-var-name, 50%);
+    border-color: darken-custom($border-var-name, 10%);
     @include box-shadow($btn-active-boxshadow-size lighten($color-one-semiblack, 10%));
 
     &:hover,
     &:focus,
     &.focus {
       color: $color;
-      background-color: lighten($border, 45%);
-          border-color: darken($border, 8%);
+      background-color: lighten-custom($border-var-name, 45%);
+      border-color: darken-custom($border-var-name, 8%);
     }
   }
 
@@ -100,6 +101,6 @@ $btn-active-boxshadow-size: 0 0 7px;
   }
 }
 
-@mixin input-btn-variant($border-color) {
-  border: 1px solid darken($border-color, 10%);
+@mixin input-btn-variant($border-var-name) {
+  border: 1px solid darken-custom($border-var-name, 10%);
 }

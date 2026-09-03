@@ -79,7 +79,7 @@
               </div>
             {{/if}}
           </div>
-          <div class="form-control-column">
+          <div class="form-control-column {{layoutConfig.formInputColumns}}">
             {{#if (eq entryType "readonly")}}
               <ClipboardLine
                 @value={{editRecord.value}}

@@ -169,41 +169,31 @@ $table-border-color:            #ddd !default;
 
 $btn-font-weight:                normal !default;
 
-$btn-default-color:              #333 !default;
-$btn-default-color:              $color-one-white;
-$btn-default-bg:                 #fff !default;
-$btn-default-bg:                 $color-one-default;
-$btn-default-border:             #ccc !default;
-$btn-default-border:             $color-one-default;
+$btn-default-color:              var(--btn-default-fg);
+$btn-default-bg:                 btn-default-bg;
+$btn-default-border:             btn-default-border-color;
 
-$btn-primary-color:              #fff !default;
-$btn-primary-color:              $color-one-white;
-$btn-primary-bg:                 $brand-primary !default;
-$btn-primary-bg:                 $brand-primary;
-$btn-primary-border:             darken($btn-primary-bg, 5%) !default;
-$btn-primary-border:             $brand-primary;
+$btn-primary-color:              var(--btn-primary-fg, #{$color-one-white});
+$btn-primary-bg:                 var(--btn-primary-bg, #{$brand-primary});
+$btn-primary-border:             var(--btn-primary-border-color, #{$brand-primary});
 
+// should not be used, use primary color instead
 $btn-success-color:              #fff !default;
 $btn-success-bg:                 $brand-success !default;
-$btn-success-border:             darken($btn-success-bg, 5%) !default;
 $btn-success-border:             $btn-success-bg;
 
-$btn-info-color:                 #fff !default;
-$btn-info-color:                 $color-one-white;
-$btn-info-bg:                    $brand-info !default;
-$btn-info-bg:                    $color-one-info;
-$btn-info-border:                darken($btn-info-bg, 5%) !default;
-$btn-info-border:                $color-one-info;
+// TODO: VFS-13750 Remove btn-info class
+$btn-info-color:                 var(--btn-info-fg, #{$color-one-white});
+$btn-info-bg:                    var(--btn-info-bg, #{$color-one-info});
+$btn-info-border:                var(--btn-info-border-color, #{$color-one-info});
 
-$btn-warning-color:              #fff !default;
-$btn-warning-bg:                 $brand-warning !default;
-$btn-warning-border:             darken($btn-warning-bg, 5%) !default;
-$btn-warning-border:             $btn-warning-bg;
+$btn-warning-color:              var(--btn-warning-fg, #fff);
+$btn-warning-bg:                 var(--btn-warning-bg, #{$brand-warning});
+$btn-warning-border:             var(--btn-warning-border-color, #{$btn-warning-bg});
 
-$btn-danger-color:               #fff !default;
-$btn-danger-bg:                  $brand-danger !default;
-$btn-danger-border:              darken($btn-danger-bg, 5%) !default;
-$btn-danger-border:              $btn-danger-bg;
+$btn-danger-color:               var(--btn-danger-fg, #fff);
+$btn-danger-bg:                  var(--btn-danger-bg, #{$brand-danger});
+$btn-danger-border:              var(--btn-danger-border-color, #{$btn-danger-bg});
 
 $btn-link-disabled-color:        $gray-light !default;
 
@@ -955,3 +945,86 @@ $dl-horizontal-offset:        $component-offset-horizontal !default;
 $dl-horizontal-breakpoint:    $grid-float-breakpoint !default;
 //** Horizontal line color.
 $hr-border:                   $gray-lighter !default;
+
+
+:root {
+  // default color
+  --btn-default-fg-h: #{$color-one-white-h};
+  --btn-default-fg-s: #{$color-one-white-s};
+  --btn-default-fg-l: #{$color-one-white-l};
+  --btn-default-fg: hsl(var(--btn-default-fg-h), var(--btn-default-fg-s), var(--btn-default-fg-l));
+
+  --btn-default-bg-h: #{$color-one-blue-gray-h};
+  --btn-default-bg-s: #{$color-one-blue-gray-s};
+  --btn-default-bg-l: #{$color-one-blue-gray-l};
+  --btn-default-bg: hsl(var(--btn-default-bg-h), var(--btn-default-bg-s), var(--btn-default-bg-l));
+
+  --btn-default-border-color-h: var(--btn-default-bg-h);
+  --btn-default-border-color-s: var(--btn-default-bg-s);
+  --btn-default-border-color-l: var(--btn-default-bg-l);
+  --btn-default-border-color: hsl(var(--btn-default-border-color-h), var(--btn-default-border-color-s), var(--btn-default-border-color-l));
+
+  // primary color
+  --btn-primary-fg-h: #{$color-one-white-h};
+  --btn-primary-fg-s: #{$color-one-white-s};
+  --btn-primary-fg-l: #{$color-one-white-l};
+  --btn-primary-fg: hsl(var(--btn-primary-fg-h), var(--btn-primary-fg-s), var(--btn-primary-fg-l));
+
+  --btn-primary-bg-h: #{$color-one-mint-h};
+  --btn-primary-bg-s: #{$color-one-mint-s};
+  --btn-primary-bg-l: #{$color-one-mint-l};
+  --btn-primary-bg: hsl(var(--btn-primary-bg-h), var(--btn-primary-bg-s), var(--btn-primary-bg-l));
+
+  --btn-primary-border-color-h: var(--btn-primary-bg-h);
+  --btn-primary-border-color-s: var(--btn-primary-bg-s);
+  --btn-primary-border-color-l: var(--btn-primary-bg-l);
+  --btn-primary-border-color: hsl(var(--btn-primary-border-color-h), var(--btn-primary-border-color-s), var(--btn-primary-border-color-l));
+
+  // info color
+  --btn-info-fg-h: #{$color-one-white-h};
+  --btn-info-fg-s: #{$color-one-white-s};
+  --btn-info-fg-l: #{$color-one-white-l};
+  --btn-info-fg: hsl(var(--btn-info-fg-h), var(--btn-info-fg-s), var(--btn-info-fg-l));
+
+  --btn-info-bg-h: #{$color-one-blue-gray-h};
+  --btn-info-bg-s: #{$color-one-blue-gray-s};
+  --btn-info-bg-l: #{$color-one-blue-gray-l};
+  --btn-info-bg: hsl(var(--btn-info-bg-h), var(--btn-info-bg-s), var(--btn-info-bg-l));
+
+  --btn-info-border-color-h: var(--btn-info-bg-h);
+  --btn-info-border-color-s: var(--btn-info-bg-s);
+  --btn-info-border-color-l: var(--btn-info-bg-l);
+  --btn-info-border-color: hsl(var(--btn-info-border-color-h), var(--btn-info-border-color-s), var(--btn-info-border-color-l));
+
+  // warning color
+  --btn-warning-fg-h: #{$color-one-white-h};
+  --btn-warning-fg-s: #{$color-one-white-s};
+  --btn-warning-fg-l: #{$color-one-white-l};
+  --btn-warning-fg: hsl(var(--btn-warning-fg-h), var(--btn-warning-fg-s), var(--btn-warning-fg-l));
+
+  --btn-warning-bg-h: #{$color-one-orange-h};
+  --btn-warning-bg-s: #{$color-one-orange-s};
+  --btn-warning-bg-l: #{$color-one-orange-l};
+  --btn-warning-bg: hsl(var(--btn-warning-bg-h), var(--btn-warning-bg-s), var(--btn-warning-bg-l));
+
+  --btn-warning-border-color-h: var(--btn-warning-bg-h);
+  --btn-warning-border-color-s: var(--btn-warning-bg-s);
+  --btn-warning-border-color-l: var(--btn-warning-bg-l);
+  --btn-warning-border-color: hsl(var(--btn-warning-border-color-h), var(--btn-warning-border-color-s), var(--btn-warning-border-color-l));
+
+  // danger color
+  --btn-danger-fg-h: #{$color-one-white-h};
+  --btn-danger-fg-s: #{$color-one-white-s};
+  --btn-danger-fg-l: #{$color-one-white-l};
+  --btn-danger-fg: hsl(var(--btn-danger-fg-h), var(--btn-danger-fg-s), var(--btn-danger-fg-l));
+
+  --btn-danger-bg-h: #{$color-one-red-h};
+  --btn-danger-bg-s: #{$color-one-red-s};
+  --btn-danger-bg-l: #{$color-one-red-l};
+  --btn-danger-bg: hsl(var(--btn-danger-bg-h), var(--btn-danger-bg-s), var(--btn-danger-bg-l));
+
+  --btn-danger-border-color-h: var(--btn-danger-bg-h);
+  --btn-danger-border-color-s: var(--btn-danger-bg-s);
+  --btn-danger-border-color-l: var(--btn-danger-bg-l);
+  --btn-danger-border-color: hsl(var(--btn-danger-border-color-h), var(--btn-danger-border-color-s), var(--btn-danger-border-color-l));
+}

@@ -152,25 +152,31 @@ label {
   }
   // special style for btn-primary, as it is "filled"
   &.btn-primary {
-    @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+    @include button-variant($btn-primary-color, btn-primary-bg, btn-primary-border-color);
   }
   &.btn-info {
-    @include button-variant($btn-info-color, $btn-info-bg, $btn-info-border);
+    @include button-variant($btn-info-color, btn-info-bg, btn-info-border-color);
+  }
+  &.btn-warning {
+    @include button-variant($btn-warning-color, btn-warning-bg, btn-warning-border-color);
   }
   &.btn-danger {
-    @include button-variant($btn-danger-color, $btn-danger-bg, $btn-danger-border);
+    @include button-variant($btn-danger-color, btn-danger-bg, btn-danger-border-color);
   }
   &.btn-outline-default {
-    @include button-outline-variant($text-color, $btn-default-border);
+    @include button-outline-variant($text-color, btn-default-border-color);
   }
   &.btn-outline-primary {
-    @include button-outline-variant($text-color, $btn-primary-border);
+    @include button-outline-variant($text-color, btn-primary-border-color);
   }
   &.btn-outline-info {
-    @include button-outline-variant($text-color, $btn-info-border);
+    @include button-outline-variant($text-color, btn-info-border-color);
+  }
+  &.btn-outline-warning {
+    @include button-outline-variant($text-color, btn-warning-border-color);
   }
   &.btn-outline-danger {
-    @include button-outline-variant($text-color, $btn-danger-border);
+    @include button-outline-variant($text-color, btn-danger-border-color);
   }
   .one-icon {
     font-size: 1.7em;
