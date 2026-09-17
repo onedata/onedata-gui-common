@@ -5,7 +5,7 @@
  * For example for:
  * `product="oneprovider" page="tag/user"`
  * generates:
- * `https://onedata.org/api/stable/onezone/tag/user`
+ * `https://onedata.org/api/stable/oneprovider/tag/user`
  *
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH

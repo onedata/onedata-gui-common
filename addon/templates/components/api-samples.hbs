@@ -91,6 +91,7 @@
           @href={{if (eq effSelectedApiCommand.type "xrootd")
             "https://xrootd.slac.stanford.edu/"
             (one-api-doc-url
+              product=this.product
               path=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
             )
           }}
@@ -118,7 +119,8 @@
               {{tt this "coverIn"}}
               <a
                 href={{one-api-doc-url
-                  path=(concat "operation/" effSelectedApiCommand.swaggerOperationId)
+                  product=this.product
+                  version="latest"
                 }}
                 target="_blank"
               >{{tt this "documentation"}}</a>.
