@@ -39,6 +39,12 @@ export default Component.extend(I18n, {
   apiSubject: undefined,
 
   /**
+   * @virtual
+   * @type {'onezone'|'oneprovider'|'onepanel'}
+   */
+  product: undefined,
+
+  /**
    * @type {Object}
    */
   selectedApiCommand: null,
