@@ -1,5 +1,6 @@
 /**
- * A component responsible for rendering clipboard secret field.
+ * A component responsible for rendering a secret field
+ * with a copy button and a view/hide button.
  *
  * @author Agnieszka Raczek
  * @copyright (C) 2026 Onedata (onedata.org)
@@ -21,12 +22,12 @@ export default FieldComponentBase.extend(I18n, {
   i18nPrefix: 'components.formComponent.clipboardSecretField',
 
   /**
-   * @type {ComputedProperty<String>}
+   * @type {ComputedProperty<string>}
    */
   secret: reads('field.value'),
 
   /**
-   * @type {ComputedProperty<String>}
+   * @type {ComputedProperty<string>}
    */
   displayedText: reads('field.displayedText'),
 
@@ -38,11 +39,11 @@ export default FieldComponentBase.extend(I18n, {
   /**
    * @type {boolean}
    */
-  isSecretShow: false,
+  isSecretShown: false,
 
   actions: {
     toggleSecretShow() {
-      this.toggleProperty('isSecretShow');
+      this.toggleProperty('isSecretShown');
     },
   },
 });
