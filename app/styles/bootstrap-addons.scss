@@ -262,9 +262,6 @@ $first-table-column-padding-left: 16px;
     &.btn-primary {
       @include input-btn-variant(btn-primary-border-color);
     }
-    &.btn-info {
-      @include input-btn-variant(btn-info-border-color);
-    }
     &.btn-default {
       @include input-btn-variant(btn-default-border-color);
     }
