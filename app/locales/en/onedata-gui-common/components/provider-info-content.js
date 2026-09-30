@@ -5,4 +5,6 @@ export default {
   version: 'Version',
   id: 'ID',
   build: '(build: {{buildVersion}})',
+  current: 'current',
+  remote: 'remote',
 };

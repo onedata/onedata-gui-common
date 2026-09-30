@@ -8,6 +8,7 @@
 import Component from '@ember/component';
 import I18n from 'onedata-gui-common/mixins/i18n';
 import layout from '../templates/components/provider-info-content';
+import { computed } from '@ember/object';
 
 export default Component.extend(I18n, {
   layout,
@@ -24,4 +25,28 @@ export default Component.extend(I18n, {
    * @type {Models.Provider|OneproviderTabItem}
    */
   record: undefined,
+
+  /**
+   * @virtual optional
+   * @type {string}
+   */
+  currentProviderId: undefined,
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isCurrentProvider: computed(
+    'currentProviderId',
+    'record.entityId',
+    function isCurrentProvider() {
+      return this.currentProviderId === this.record.entityId;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  badgeText: computed('isCurrentProvider', function badgeText() {
+    return this.isCurrentProvider ? this.t('current') : this.t('remote');
+  }),
 });
