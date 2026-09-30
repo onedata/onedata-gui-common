@@ -255,7 +255,8 @@ $form-component-view-margin: $padding-base-vertical;
       }
     }
 
-    .field-view-mode.clipboard-field-renderer {
+    .field-view-mode.clipboard-field-renderer,
+    .field-view-mode.clipboard-secret-field-renderer {
       .control-label {
         padding-top: $padding-base-vertical;
       }
