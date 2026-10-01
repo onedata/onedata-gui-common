@@ -12,7 +12,7 @@
  * ```
  * {{#one-collapsible-list as |list|}}
  *   {{#list.header title="List title"}}
- *     {{#one-button class="btn-sm" type="info"}}some button{{/one-button}}
+ *     {{#one-button class="btn-sm" type="default"}}some button{{/one-button}}
  *   {{/list.header}}
  *   {{#list.item as |listItem|}}
  *     {{#listItem.header}}

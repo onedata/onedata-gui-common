@@ -1,7 +1,6 @@
 {{#if isValueCreatorButtonVisible}}
   <span class="btn-tooltip-container">
     <OneButton
-      @type="default"
       @size="sm"
       class="create-value-btn"
       @disabled={{or isInViewMode (not isEffectivelyEnabled) hasInvalidAtmDataSpec}}

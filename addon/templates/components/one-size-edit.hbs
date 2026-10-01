@@ -21,7 +21,6 @@
       <OneIcon @icon="checked" />
     </OneButton>
     <OneButton
-      @type="default"
       @onClick={{action "cancelEdition"}}
       class="btn-confirm-choose btn-cancel"
       @disabled={{_whileSaving}}
@@ -37,7 +36,7 @@
     readonly=true
   >
   <span class="input-group-btn">
-    <OneButton @type="default" class="btn-modify" @onClick={{action "startEdition"}}>
+    <OneButton class="btn-modify" @onClick={{action "startEdition"}}>
       <OneIcon @icon="browser-rename" />
       <span class="btn-label">{{tt this "modify"}}</span>
     </OneButton>

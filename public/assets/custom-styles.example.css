@@ -97,22 +97,6 @@
   --btn-default-border-color-l: var(--btn-default-fg-l);
   --btn-default-border-color: hsl(var(--btn-default-border-color-h), var(--btn-default-border-color-s), var(--btn-default-border-color-l));
 
-  /* info colors */
-  --btn-info-fg-h: var(--btn-default-fg-h);
-  --btn-info-fg-s: var(--btn-default-fg-s);
-  --btn-info-fg-l: var(--btn-default-fg-l);
-  --btn-info-fg: hsl(var(--btn-info-fg-h), var(--btn-info-fg-s), var(--btn-info-fg-l));
-
-  --btn-info-bg-h: var(--btn-default-bg-h);
-  --btn-info-bg-s: var(--btn-default-bg-s);
-  --btn-info-bg-l: var(--btn-default-bg-l);
-  --btn-info-bg: hsl(var(--btn-info-bg-h), var(--btn-info-bg-s), var(--btn-info-bg-l));
-
-  --btn-info-border-color-h: var(--btn-info-fg-h);
-  --btn-info-border-color-s: var(--btn-info-fg-s);
-  --btn-info-border-color-l:  var(--btn-info-fg-l);
-  --btn-info-border-color: hsl(var(--btn-info-border-color-h), var(--btn-info-border-color-s), var(--btn-info-border-color-l));
-
   /* One Pill Button */
   --one-pill-button-border-width: 1px;
 
@@ -219,16 +203,7 @@
   border-color: var(--btn-danger-bg-darker);
 }
 
-.btn.btn-info:hover {
-  background-color: var(--color-eosc-light-blue);
-  border-color: var(--color-eosc-pacific-cyan-darker);
-}
-
-.btn.btn-info:focus {
-  background-color: var(--color-eosc-light-blue);
-}
-
-.btn:is(.btn-default, .btn-primary, .btn-info, .btn-warning, .btn-danger):is(
+.btn:is(.btn-default, .btn-primary, .btn-warning, .btn-danger):is(
   [disabled],
   [disabled]:hover,
   [disabled]:focus-visible
