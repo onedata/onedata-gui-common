@@ -27,7 +27,6 @@ export default Component.extend(I18n, {
   record: undefined,
 
   /**
-   * @virtual optional
    * @type {string}
    */
   currentProviderId: undefined,
