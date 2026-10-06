@@ -49,4 +49,11 @@ export default Component.extend(I18n, {
   badgeText: computed('isCurrentProvider', function badgeText() {
     return this.isCurrentProvider ? this.t('current') : this.t('remote');
   }),
+
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  badgeTipText: computed('isCurrentProvider', function badgeTipText() {
+    return this.isCurrentProvider ? this.t('currentTip') : this.t('remoteTip');
+  }),
 });
