@@ -5,7 +5,6 @@ export default Component.extend({
   buttonTypes: Object.freeze([
     'default',
     'primary',
-    'info',
     'warning',
     'danger',
     'link',

@@ -154,9 +154,6 @@ label {
   &.btn-primary {
     @include button-variant($btn-primary-color, btn-primary-bg, btn-primary-border-color);
   }
-  &.btn-info {
-    @include button-variant($btn-info-color, btn-info-bg, btn-info-border-color);
-  }
   &.btn-warning {
     @include button-variant($btn-warning-color, btn-warning-bg, btn-warning-border-color);
   }
@@ -168,9 +165,6 @@ label {
   }
   &.btn-outline-primary {
     @include button-outline-variant($text-color, btn-primary-border-color);
-  }
-  &.btn-outline-info {
-    @include button-outline-variant($text-color, btn-info-border-color);
   }
   &.btn-outline-warning {
     @include button-outline-variant($text-color, btn-warning-border-color);

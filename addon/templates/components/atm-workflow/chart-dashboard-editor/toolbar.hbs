@@ -1,5 +1,5 @@
 {{#if editedChart}}
-  <OneButton class="back-btn" @type="default" @size="sm" @onClick={{action "back"}}>
+  <OneButton class="back-btn" @size="sm" @onClick={{action "back"}}>
     <OneIcon @icon="arrow-left" />
     <span class="text">{{tt this "back"}}</span>
   </OneButton>
@@ -15,7 +15,6 @@
 {{#if (not editorContext.isReadOnly)}}
   <OneButton
     class="undo-btn"
-    @type="default"
     @size="sm"
     @disabled={{not undoManager.canUndo}}
     @onClick={{action "undo"}}
@@ -26,7 +25,6 @@
 
   <OneButton
     class="redo-btn"
-    @type="default"
     @size="sm"
     @disabled={{not undoManager.canRedo}}
     @onClick={{action "redo"}}

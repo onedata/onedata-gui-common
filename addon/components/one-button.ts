@@ -20,7 +20,6 @@ interface OneButtonSignature {
 type OneButtonStyleType =
   | 'default'
   | 'primary'
-  | 'info'
   | 'warning'
   | 'danger'
   | 'link';
