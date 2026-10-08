@@ -2,6 +2,17 @@
   <span class="one-label">
     {{tt this "title"}}
   </span>
+  {{#if this.currentProviderId}}
+    <span class="labels-container">
+      <span class={{concat-classes
+        "label"
+        (if this.isCurrentProvider "label-primary" "label-default")
+      }}>
+        {{this.badgeText}}
+      </span>
+      <OneTooltip @title={{this.badgeTipText}} />
+    </span>
+  {{/if}}
 </h1>
 <table class="table table-condensed table-info">
   <tbody>
