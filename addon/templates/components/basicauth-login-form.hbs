@@ -55,6 +55,7 @@
           @type="primary"
           @buttonType="submit"
           @onClick={{action "submitLogin" username password}}
+          @disabled={{this.isSignInButtonDisabled}}
         >
           {{tt this "signIn"}}
         </OneButton>

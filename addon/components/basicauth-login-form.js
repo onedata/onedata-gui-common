@@ -13,6 +13,7 @@ import layout from 'onedata-gui-common/templates/components/basicauth-login-form
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import I18n from 'onedata-gui-common/mixins/i18n';
+import { computed } from '@ember/object';
 
 export default Component.extend(I18n, {
   layout,
@@ -93,6 +94,17 @@ export default Component.extend(I18n, {
    * @type {boolean}
    */
   areCredentialsInvalid: false,
+
+  /**
+   * @type {boolean}
+   */
+  isSignInButtonDisabled: computed(
+    'username',
+    'password',
+    function isSignInButtonDisabled() {
+      return !this.username || !this.password;
+    }
+  ),
 
   //#endregion
 
